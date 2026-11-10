@@ -1349,6 +1349,80 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         .boot-ln { display: inline-flex; align-items: center; gap: .7rem; font-size: .9375rem; font-weight: 600; color: var(--ink-2); }
         .boot-ring { width: 1.15rem; height: 1.15rem; border-radius: 50%; border: .18rem solid rgba(var(--lt), .22); border-top-color: var(--brand); animation: spin .9s linear infinite; }
         @keyframes bootIn { to { opacity: 1; } }
+
+        /* ---------- Fila de chamados (10/11): tipo, filas, técnicos e catálogo com mais serviços ---------- */
+        /* Catálogo: 10 serviços em colunas que se ajustam à largura */
+        .svc-grid { grid-template-columns: repeat(auto-fill, minmax(15.5rem, 1fr)); }
+        .svc { padding: 1.1rem 1.2rem; gap: .8rem; }
+        .svc-ico { width: 2.6rem; height: 2.6rem; margin-bottom: .75rem; }
+        .svc.amber { --k: var(--amber-rgb); --kl: var(--t-amber); }
+        .svc.orange { --k: var(--orange-rgb); --kl: var(--t-orange); }
+        .svc.blue { --k: var(--blue-rgb); --kl: var(--t-blue); }
+        .svc.slate { --k: var(--slate-rgb); --kl: var(--t-slate); }
+        .svc-tag { display: inline-flex; align-items: center; gap: .35rem; margin-top: .55rem; padding: .08rem .55rem; border-radius: 99px; font-size: .6875rem; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; color: var(--kl); background: rgba(var(--k), .12); border: 1px solid rgba(var(--k), .34); }
+        .hero-acts { display: flex; flex-wrap: wrap; gap: .7rem; position: relative; }
+
+        /* Tipo do chamado (requisição / incidente): selo na lista e cartões grandes na abertura */
+        .tpill { display: inline-flex; align-items: center; gap: .3rem; padding: .02rem .5rem; border-radius: 99px; font-size: .6875rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; vertical-align: middle; --c: var(--sky-rgb); --cl: var(--t-sky); color: var(--cl); background: rgba(var(--c), .13); border: 1px solid rgba(var(--c), .4); }
+        .tpill.inc { --c: var(--orange-rgb); --cl: var(--t-orange); }
+        .tpill.q { --c: var(--purple-rgb); --cl: var(--t-purple); }
+        .t-sub .tpill { margin-right: .35rem; }
+        .picks.typ { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .pick.k-req { --p: var(--sky-rgb); --tc: var(--t-sky); }
+        .pick.k-inc { --p: var(--orange-rgb); --tc: var(--t-orange); }
+        .picks.typ .pick > i { color: var(--tc); }
+        .picks.cat .pick { align-items: center; }
+        .picks.cat .pick small { white-space: normal; }
+
+        /* Andamento do solicitante: 4 etapas (Novo, Atendimento atribuído, Resolvido, Fechado) */
+        .stepper { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+        .step span { overflow-wrap: anywhere; line-height: 1.25; }
+
+        /* Fila: filtros extras e a coluna de fila/técnico */
+        .toolbar-l .select-sm { min-width: 0; max-width: 100%; }
+        .fchips { row-gap: .5rem; }
+
+        /* Filas e técnicos (só administrador) */
+        .team-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(21rem, 1fr)); }
+        .qcard { display: grid; gap: .75rem; padding: 1.15rem 1.25rem; align-content: start; }
+        .qcard.is-off { opacity: .72; }
+        .qc-head { display: flex; align-items: flex-start; justify-content: space-between; gap: .8rem; }
+        .qc-head h4 { font-size: 1.02rem; font-weight: 800; letter-spacing: -.01em; color: var(--white); }
+        .qc-head p { margin-top: .2rem; font-size: .8125rem; line-height: 1.5; color: var(--muted); }
+        .qc-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .5rem; }
+        .qc-stats div { padding: .55rem .6rem; text-align: center; border-radius: .75rem; background: rgba(var(--dk), .4); border: 1px solid var(--line-soft); }
+        .qc-stats b { display: block; font-family: var(--font-mono); font-size: 1.15rem; color: var(--white); }
+        .qc-stats small { display: block; font-size: .72rem; color: var(--muted); }
+        .qc-list { display: flex; flex-wrap: wrap; gap: .4rem; }
+        .qc-list .lbl2 { flex: none; width: 100%; font-size: .6875rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+        .chipx { display: inline-flex; align-items: center; gap: .35rem; max-width: 100%; padding: .12rem .6rem; border-radius: 99px; font-size: .75rem; font-weight: 700; color: var(--ink-2); background: rgba(var(--lt), .07); border: 1px solid var(--line); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .chipx.none { font-style: italic; font-weight: 500; color: var(--faint); }
+        .qc-acts { display: flex; flex-wrap: wrap; gap: .5rem; padding-top: .8rem; border-top: 1px solid var(--line-soft); }
+        .modal-sm { max-width: 40rem; }
+        .modal-sm .modal-body { padding: 1.3rem 1.5rem 1.5rem; }
+        .chk-grid { display: grid; gap: .45rem; grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr)); max-height: 13rem; overflow-y: auto; padding: .15rem; }
+        .chk { display: flex; align-items: center; gap: .6rem; padding: .5rem .7rem; border-radius: .75rem; font-size: .8125rem; font-weight: 600; color: var(--ink-2); cursor: pointer; background: rgba(var(--lt), .05); border: 1px solid var(--line-soft); transition: border-color .15s, background .15s; }
+        .chk:hover { border-color: rgba(var(--acc-rgb), .5); }
+        .chk input { flex: none; width: 1.05rem; height: 1.05rem; accent-color: var(--brand); }
+        .chk span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .chk small { margin-left: auto; padding-left: .4rem; font-size: .6875rem; font-weight: 700; color: var(--faint); white-space: nowrap; }
+        .chk:has(input:checked) { color: var(--white); border-color: rgba(var(--acc-rgb), .7); background: rgba(var(--acc-rgb), .14); }
+        .form-note { font-size: .78rem; line-height: 1.5; color: var(--muted); }
+        .team-h { display: flex; align-items: center; gap: .6rem; font-size: 1rem; font-weight: 800; color: var(--white); }
+        .team-h small { font-size: .8125rem; font-weight: 500; color: var(--muted); }
+        /* "Atendimento atribuído" é um nome longo: o selo de status quebra em duas linhas nos cartões e o rótulo do indicador também */
+        .kpi-label { white-space: normal; overflow-wrap: anywhere; }
+        /* Cartões (quadro estreito): severidade e status na mesma linha e o prazo (SLA) numa linha só dele, sem espremer ninguém */
+        @container (max-width: 54rem) {
+            .tbl.cards tbody tr { grid-template-columns: 5.6rem minmax(0, 1fr) auto; grid-template-areas: "id id act" "title title title" "urg status status" "sla sla sla"; }
+            .tbl.cards tbody tr:has(td.c-chk) { grid-template-columns: 1.6rem 5.6rem minmax(0, 1fr) auto; grid-template-areas: "chk id id act" "chk title title title" "chk urg status status" "chk sla sla sla"; }
+            .tbl.cards td.c-status { justify-self: end; max-width: 100%; }
+            .tbl.cards td.c-status .badge { max-width: 100%; white-space: normal; line-height: 1.25; }
+            .tbl.cards .tech-inline { white-space: normal; overflow-wrap: anywhere; }
+            .tbl.cards .sla-cell { display: flex; flex-wrap: wrap; align-items: baseline; gap: .1rem .6rem; }
+        }
+        @media (max-width: 767px) { .picks.typ { grid-template-columns: 1fr; } .team-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 380px) { .stepper { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: .8rem; } .step::before { display: none; } }
     </style>
 </head>
 <body>
@@ -1465,7 +1539,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
 
                 <ul class="lg-feat">
                     <li><i class="fa-solid fa-ticket"></i> Chamados com protocolo único</li>
-                    <li><i class="fa-solid fa-stopwatch"></i> SLA calculado por urgência</li>
+                    <li><i class="fa-solid fa-stopwatch"></i> SLA calculado pela severidade</li>
                     <li><i class="fa-solid fa-server"></i> Ativos de TI (CMDB) vinculados</li>
                 </ul>
             </section>
@@ -1509,6 +1583,9 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 </a>
                 <a href="#" onclick="navTech('unassigned'); return false;" id="tech-nav-unassigned" class="tech-nav-item nav-item tech">
                     <i class="fa-solid fa-inbox"></i><span class="nv-t">Sem Técnico</span><span id="sidebar-tech-unassigned-count" class="count">0</span>
+                </a>
+                <a href="#" onclick="navTech('teams'); return false;" id="tech-nav-teams" class="tech-nav-item nav-item tech">
+                    <i class="fa-solid fa-people-group"></i><span class="nv-t">Filas &amp; Técnicos</span>
                 </a>
             </div>
         </nav>
@@ -1573,9 +1650,14 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                                 <h2 id="user-greeting">Como podemos ajudar?</h2>
                                 <p>Escolha o serviço, descreva o problema e acompanhe cada resposta em tempo real. Seus chamados ficam sempre em "Meus Chamados".</p>
                             </div>
-                            <button type="button" onclick="openFormModal()" class="btn btn-blue btn-lg">
-                                <i class="fa-solid fa-circle-plus"></i> Abrir Solicitação Geral
-                            </button>
+                            <div class="hero-acts">
+                                <button type="button" onclick="openFormModal('', 'Requisição')" class="btn btn-blue btn-lg">
+                                    <i class="fa-solid fa-hand-holding-hand"></i> Abrir Requisição
+                                </button>
+                                <button type="button" onclick="openFormModal('', 'Incidente')" class="btn btn-ghost btn-lg">
+                                    <i class="fa-solid fa-triangle-exclamation c-amber"></i> Reportar Incidente
+                                </button>
+                            </div>
                         </div>
 
                         <div id="user-summary" class="usum" aria-label="Resumo dos seus chamados"></div>
@@ -1583,40 +1665,104 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                         <div id="user-attention" class="attention hidden" role="status"></div>
 
                         <div class="svc-grid">
-                            <div class="glass svc" role="button" tabindex="0" onclick="openFormModal('Sistema Financeiro & ERP')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
-                                <div>
-                                    <div class="svc-ico"><i class="fa-solid fa-file-invoice-dollar"></i></div>
-                                    <h4>Sistema Financeiro &amp; ERP</h4>
-                                    <p>NF-e, liquidação de boletos, relatórios de faturamento e divergências.</p>
-                                </div>
-                                <div class="svc-foot"><span>Solicitar Suporte</span><i class="fa-solid fa-arrow-right"></i></div>
-                            </div>
-
-                            <div class="glass svc sky" role="button" tabindex="0" onclick="openFormModal('Gestão de Acessos & Reset de Senha')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
+                            <div class="glass svc" role="button" tabindex="0" data-cat="Reset de senha" onclick="openFormModal(this.dataset.cat)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
                                 <div>
                                     <div class="svc-ico"><i class="fa-solid fa-key"></i></div>
-                                    <h4>Reset de Senha &amp; Acessos</h4>
-                                    <p>Desbloqueio de usuários, reset de MFA, perfis de acesso e privilégios.</p>
+                                    <h4>Reset de senha</h4>
+                                    <p>Esqueci a senha ou o link de recuperação não chega.</p>
+                                    <span class="svc-tag"><i class="fa-solid fa-hand-holding-hand"></i> Requisição</span>
                                 </div>
-                                <div class="svc-foot"><span>Solicitar Acesso</span><i class="fa-solid fa-arrow-right"></i></div>
+                                <div class="svc-foot"><span>Pedir reset</span><i class="fa-solid fa-arrow-right"></i></div>
                             </div>
 
-                            <div class="glass svc rose" role="button" tabindex="0" onclick="openFormModal('Suporte Técnico & Infraestrutura')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
+                            <div class="glass svc amber" role="button" tabindex="0" data-cat="Pagamento não reconhecido" onclick="openFormModal(this.dataset.cat)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
                                 <div>
-                                    <div class="svc-ico"><i class="fa-solid fa-server"></i></div>
-                                    <h4>Falhas &amp; Infraestrutura</h4>
-                                    <p>Quedas de servidor, travamentos de sistema e instabilidades de rede/VPN.</p>
+                                    <div class="svc-ico"><i class="fa-solid fa-file-invoice-dollar"></i></div>
+                                    <h4>Pagamento não reconhecido</h4>
+                                    <p>Paguei e o plano ou o acesso não foi liberado.</p>
+                                    <span class="svc-tag"><i class="fa-solid fa-triangle-exclamation"></i> Incidente</span>
                                 </div>
-                                <div class="svc-foot"><span>Reportar Erro</span><i class="fa-solid fa-arrow-right"></i></div>
+                                <div class="svc-foot"><span>Informar pagamento</span><i class="fa-solid fa-arrow-right"></i></div>
                             </div>
 
-                            <div class="glass svc purple" role="button" tabindex="0" onclick="openFormModal('Projetos & Melhorias')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
+                            <div class="glass svc sky" role="button" tabindex="0" data-cat="Desbloqueio de usuário" onclick="openFormModal(this.dataset.cat)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
                                 <div>
-                                    <div class="svc-ico"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
-                                    <h4>Projetos &amp; Melhorias</h4>
-                                    <p>Solicitações de novos relatórios, ajustes de fluxo e integração via API.</p>
+                                    <div class="svc-ico"><i class="fa-solid fa-user-lock"></i></div>
+                                    <h4>Desbloqueio de usuário</h4>
+                                    <p>Conta bloqueada por tentativas ou por segurança.</p>
+                                    <span class="svc-tag"><i class="fa-solid fa-hand-holding-hand"></i> Requisição</span>
                                 </div>
-                                <div class="svc-foot"><span>Solicitar Projeto</span><i class="fa-solid fa-arrow-right"></i></div>
+                                <div class="svc-foot"><span>Pedir desbloqueio</span><i class="fa-solid fa-arrow-right"></i></div>
+                            </div>
+
+                            <div class="glass svc blue" role="button" tabindex="0" data-cat="Conta/Login" onclick="openFormModal(this.dataset.cat)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
+                                <div>
+                                    <div class="svc-ico"><i class="fa-solid fa-right-to-bracket"></i></div>
+                                    <h4>Conta / Login</h4>
+                                    <p>Não consigo entrar, erro de e-mail, senha ou perfil.</p>
+                                    <span class="svc-tag"><i class="fa-solid fa-triangle-exclamation"></i> Incidente</span>
+                                </div>
+                                <div class="svc-foot"><span>Reportar problema</span><i class="fa-solid fa-arrow-right"></i></div>
+                            </div>
+
+                            <div class="glass svc purple" role="button" tabindex="0" data-cat="Dados Cadastrais" onclick="openFormModal(this.dataset.cat)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
+                                <div>
+                                    <div class="svc-ico"><i class="fa-solid fa-id-card"></i></div>
+                                    <h4>Dados cadastrais</h4>
+                                    <p>Corrigir nome, CPF, telefone ou e-mail da conta.</p>
+                                    <span class="svc-tag"><i class="fa-solid fa-hand-holding-hand"></i> Requisição</span>
+                                </div>
+                                <div class="svc-foot"><span>Pedir correção</span><i class="fa-solid fa-arrow-right"></i></div>
+                            </div>
+
+                            <div class="glass svc" role="button" tabindex="0" data-cat="Liberação de degustação" onclick="openFormModal(this.dataset.cat)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
+                                <div>
+                                    <div class="svc-ico"><i class="fa-solid fa-gift"></i></div>
+                                    <h4>Liberação de degustação</h4>
+                                    <p>Quero testar o plano completo por alguns dias.</p>
+                                    <span class="svc-tag"><i class="fa-solid fa-hand-holding-hand"></i> Requisição</span>
+                                </div>
+                                <div class="svc-foot"><span>Pedir liberação</span><i class="fa-solid fa-arrow-right"></i></div>
+                            </div>
+
+                            <div class="glass svc orange" role="button" tabindex="0" data-cat="2ª Via de fatura" onclick="openFormModal(this.dataset.cat)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
+                                <div>
+                                    <div class="svc-ico"><i class="fa-solid fa-receipt"></i></div>
+                                    <h4>2ª via de fatura</h4>
+                                    <p>Preciso de outra via do boleto ou da fatura.</p>
+                                    <span class="svc-tag"><i class="fa-solid fa-hand-holding-hand"></i> Requisição</span>
+                                </div>
+                                <div class="svc-foot"><span>Pedir 2ª via</span><i class="fa-solid fa-arrow-right"></i></div>
+                            </div>
+
+                            <div class="glass svc rose" role="button" tabindex="0" data-cat="Atendimento Técnico" onclick="openFormModal(this.dataset.cat)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
+                                <div>
+                                    <div class="svc-ico"><i class="fa-solid fa-headset"></i></div>
+                                    <h4>Atendimento técnico</h4>
+                                    <p>Preciso de ajuda de um técnico com o sistema.</p>
+                                    <span class="svc-tag"><i class="fa-solid fa-triangle-exclamation"></i> Incidente</span>
+                                </div>
+                                <div class="svc-foot"><span>Chamar um técnico</span><i class="fa-solid fa-arrow-right"></i></div>
+                            </div>
+
+                            <div class="glass svc rose" role="button" tabindex="0" data-cat="Falhas/Bugs/Correções" onclick="openFormModal(this.dataset.cat)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
+                                <div>
+                                    <div class="svc-ico"><i class="fa-solid fa-bug"></i></div>
+                                    <h4>Falhas, bugs e correções</h4>
+                                    <p>Algo travou, deu erro ou mostra um valor errado.</p>
+                                    <span class="svc-tag"><i class="fa-solid fa-triangle-exclamation"></i> Incidente</span>
+                                </div>
+                                <div class="svc-foot"><span>Reportar erro</span><i class="fa-solid fa-arrow-right"></i></div>
+                            </div>
+
+                            <div class="glass svc slate" role="button" tabindex="0" data-cat="Outros" onclick="openFormModal(this.dataset.cat)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
+                                <div>
+                                    <div class="svc-ico"><i class="fa-solid fa-circle-question"></i></div>
+                                    <h4>Outros assuntos</h4>
+                                    <p>Dúvidas, sugestões e o que não está na lista.</p>
+                                    <span class="svc-tag"><i class="fa-solid fa-hand-holding-hand"></i> Requisição</span>
+                                </div>
+                                <div class="svc-foot"><span>Falar com a equipe</span><i class="fa-solid fa-arrow-right"></i></div>
                             </div>
                         </div>
 
@@ -1624,8 +1770,8 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                         <div class="glass sla-strip">
                             <div class="ss-t"><i class="fa-solid fa-stopwatch"></i><div><b>Prazos de atendimento</b><small>O prazo começa a contar quando o chamado é aberto</small></div></div>
                             <ul class="ss-list">
-                                <li style="--s: var(--rose-rgb);">Crítica <b>30 min</b></li>
-                                <li style="--s: var(--orange-rgb);">Alta <b>1 hora</b></li>
+                                <li style="--s: var(--rose-rgb);">Crítica <b>4 horas</b></li>
+                                <li style="--s: var(--orange-rgb);">Alta <b>8 horas</b></li>
                                 <li style="--s: var(--sky-rgb);">Média <b>24 horas</b></li>
                                 <li style="--s: var(--slate-rgb);">Baixa <b>5 dias úteis</b></li>
                             </ul>
@@ -1650,7 +1796,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                                             <th>Protocolo</th>
                                             <th>Solicitação / Categoria</th>
                                             <th class="c-date">Data Abertura</th>
-                                            <th>Urgência</th>
+                                            <th>Severidade</th>
                                             <th>SLA / Prazo</th>
                                             <th>Status</th>
                                             <th class="ta-r">Ação</th>
@@ -1698,7 +1844,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                                             <th>Protocolo</th>
                                             <th>Solicitação / Categoria</th>
                                             <th class="c-date">Data Abertura</th>
-                                            <th>Urgência</th>
+                                            <th>Severidade</th>
                                             <th>SLA / Prazo</th>
                                             <th>Status</th>
                                             <th class="ta-r">Ação</th>
@@ -1722,7 +1868,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                             <div>
                                 <div class="crumbs"><i class="fa-solid fa-house"></i> ITSM Operations <i class="fa-solid fa-chevron-right"></i> <span class="here">Dashboard Executivo</span></div>
                                 <h2>Dashboard Executivo</h2>
-                                <p>Visão consolidada do Service Desk: volume de chamados, prioridades e prazos de SLA em tempo real.</p>
+                                <p>Visão consolidada do Service Desk: volume de chamados, severidades e prazos de SLA em tempo real.</p>
                             </div>
                             <div class="ph-actions">
                                 <button type="button" onclick="navTech('unassigned')" class="btn btn-ghost">
@@ -1749,11 +1895,11 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                                 <div class="kpi-sub">Aguardando N1/N2</div>
                             </div>
 
-                            <div class="glass kpi" onclick="goQueue('progress')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
-                                <div class="kpi-label">Em Atendimento</div>
+                            <div class="glass kpi" onclick="goQueue('assigned')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
+                                <div class="kpi-label">Atendimento atribuído</div>
                                 <div class="kpi-ico"><i class="fa-solid fa-gears"></i></div>
                                 <div id="kpi-tech-progress" class="kpi-value">0</div>
-                                <div class="kpi-sub">Com analistas</div>
+                                <div class="kpi-sub">Com um técnico</div>
                             </div>
 
                             <div class="glass kpi rose" onclick="goQueue('open','Crítica')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
@@ -1763,25 +1909,25 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                                 <div id="kpi-tech-critical-sub" class="kpi-sub">SLA prioritário</div>
                             </div>
 
-                            <div class="glass kpi green" onclick="goQueue('closed')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
+                            <div class="glass kpi green" onclick="goQueue('resolved')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
                                 <div class="kpi-label">Resolvidos</div>
                                 <div class="kpi-ico"><i class="fa-solid fa-circle-check"></i></div>
                                 <div id="kpi-tech-resolved" class="kpi-value">0</div>
-                                <div class="kpi-sub">Fechados com sucesso</div>
+                                <div id="kpi-tech-resolved-sub" class="kpi-sub">Solução entregue</div>
                             </div>
                         </div>
 
                         <div class="charts">
                             <div class="glass panel">
                                 <div class="panel-head">
-                                    <h3><i class="fa-solid fa-chart-bar c-amber"></i> Incidentes por Categoria ITSM</h3>
+                                    <h3><i class="fa-solid fa-chart-bar c-amber"></i> Chamados por Categoria</h3>
                                 </div>
                                 <div class="chart-box"><canvas id="chartCategory"></canvas></div>
                             </div>
 
                             <div class="glass panel">
                                 <div class="panel-head">
-                                    <h3><i class="fa-solid fa-chart-pie c-blue"></i> Distribuição por Prioridade / Urgência</h3>
+                                    <h3><i class="fa-solid fa-chart-pie c-blue"></i> Distribuição por Severidade</h3>
                                 </div>
                                 <div class="chart-box"><canvas id="chartUrgency"></canvas></div>
                             </div>
@@ -1805,7 +1951,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                                         <tr>
                                             <th>Protocolo</th>
                                             <th>Solicitação / Solicitante</th>
-                                            <th>Prioridade</th>
+                                            <th>Severidade</th>
                                             <th>SLA / Prazo</th>
                                             <th>Status</th>
                                             <th class="ta-r">Ação</th>
@@ -1839,15 +1985,26 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                                 <div class="toolbar-l">
                                     <div class="input-icon">
                                         <i class="fa-solid fa-magnifying-glass"></i>
-                                        <input type="text" id="tech-queue-search" oninput="renderTechQueue()" placeholder="Buscar por protocolo, solicitante, e-mail, título ou técnico..." class="input">
+                                        <input type="text" id="tech-queue-search" oninput="renderTechQueue()" placeholder="Buscar por protocolo, solicitante, e-mail, título, técnico ou fila..." class="input">
                                     </div>
 
-                                    <select id="tech-filter-urgency" onchange="renderTechQueue()" class="select select-sm" aria-label="Filtrar por prioridade">
-                                        <option value="ALL">Todas Prioridades</option>
-                                        <option value="Crítica">Crítica</option>
-                                        <option value="Alta">Alta</option>
-                                        <option value="Média">Média</option>
-                                        <option value="Baixa">Baixa</option>
+                                    <select id="tech-filter-urgency" onchange="renderTechQueue()" class="select select-sm" aria-label="Filtrar por severidade">
+                                        <option value="ALL">Todas as severidades</option>
+                                        <option value="Crítica">Crítica · 4 horas</option>
+                                        <option value="Alta">Alta · 8 horas</option>
+                                        <option value="Média">Média · 24 horas</option>
+                                        <option value="Baixa">Baixa · 5 dias úteis</option>
+                                    </select>
+
+                                    <select id="tech-filter-type" onchange="renderTechQueue()" class="select select-sm" aria-label="Filtrar por tipo de chamado">
+                                        <option value="ALL">Requisição e incidente</option>
+                                        <option value="Requisição">Só requisições</option>
+                                        <option value="Incidente">Só incidentes</option>
+                                    </select>
+
+                                    <select id="tech-filter-queue" onchange="renderTechQueue()" class="select select-sm" aria-label="Filtrar por fila de atendimento">
+                                        <option value="ALL">Todas as filas</option>
+                                        <option value="__none">Sem fila</option>
                                     </select>
 
                                     <select id="tech-sort" onchange="renderTechQueue()" class="select select-sm" aria-label="Ordenar a fila">
@@ -1888,7 +2045,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                                             </th>
                                             <th>Protocolo</th>
                                             <th>Solicitação / Solicitante</th>
-                                            <th>Prioridade</th>
+                                            <th>Severidade</th>
                                             <th>SLA / Prazo</th>
                                             <th class="col-tech">Técnico Atribuído</th>
                                             <th>Status</th>
@@ -1900,6 +2057,49 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                             </div>
                         </div>
 
+                    </div>
+
+                    <!-- Filas de atendimento e técnicos que as atendem -->
+                    <div id="tech-subview-teams" class="stack hidden">
+                        <div class="page-head">
+                            <div>
+                                <div class="crumbs"><i class="fa-solid fa-house"></i> ITSM Operations <i class="fa-solid fa-chevron-right"></i> <span class="here">Filas &amp; Técnicos</span></div>
+                                <h2>Filas &amp; Técnicos</h2>
+                                <p>Cada fila reúne os técnicos que atendem certos tipos de chamado. O chamado entra na fila da sua categoria e só os técnicos dela aparecem na primeira escolha.</p>
+                            </div>
+                            <div class="ph-actions">
+                                <button type="button" onclick="openTechModal()" class="btn btn-ghost"><i class="fa-solid fa-user-plus c-amber"></i> Cadastrar técnico</button>
+                                <button type="button" onclick="openQueueModal()" class="btn btn-amber"><i class="fa-solid fa-circle-plus"></i> Nova fila</button>
+                            </div>
+                        </div>
+
+                        <div class="team-h"><i class="fa-solid fa-layer-group c-amber"></i> Filas de atendimento <small id="teams-queues-count"></small></div>
+                        <div id="teams-queues" class="team-grid"><!-- JS --></div>
+
+                        <div class="glass panel">
+                            <div class="panel-head">
+                                <div>
+                                    <h3><i class="fa-solid fa-user-gear c-amber"></i> Técnicos</h3>
+                                    <p>Quem atende os chamados. Administradores ativos do Nexus atendem automaticamente e também podem ser colocados em uma fila.</p>
+                                </div>
+                                <button type="button" onclick="openTechModal()" class="btn btn-ghost btn-sm"><i class="fa-solid fa-user-plus"></i> Cadastrar técnico</button>
+                            </div>
+                            <div class="table-wrap">
+                                <table class="tbl" style="min-width:40rem;">
+                                    <thead>
+                                        <tr>
+                                            <th>Técnico</th>
+                                            <th>Especialidade</th>
+                                            <th>Filas</th>
+                                            <th>Abertos</th>
+                                            <th>Situação</th>
+                                            <th class="ta-r">Ação</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="teams-techs-tbody"><!-- JS --></tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
 
                 </div>
@@ -1941,47 +2141,87 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                     </div>
 
                     <section class="fs-step">
-                        <h4 class="fs-h"><span class="n">1</span> O que você precisa?</h4>
-                        <div class="picks cat" role="radiogroup" aria-label="Categoria do chamado">
-                            <button type="button" class="pick" role="radio" data-cat="Sistema Financeiro & ERP" onclick="pickCategory(this.dataset.cat)">
-                                <i class="fa-solid fa-file-invoice-dollar"></i><span><b>Sistema Financeiro &amp; ERP</b><small>NF-e, boletos, faturamento</small></span>
+                        <h4 class="fs-h"><span class="n">1</span> Que tipo de chamado?</h4>
+                        <div class="picks typ" role="radiogroup" aria-label="Tipo do chamado">
+                            <button type="button" class="pick k-req" role="radio" data-typ="Requisição" onclick="pickType(this.dataset.typ)">
+                                <i class="fa-solid fa-hand-holding-hand"></i><span><b>Requisição</b><small>Quero pedir algo: acesso, segunda via, alteração de cadastro, liberação</small></span>
                             </button>
-                            <button type="button" class="pick" role="radio" data-cat="Gestão de Acessos & Reset de Senha" onclick="pickCategory(this.dataset.cat)">
-                                <i class="fa-solid fa-key"></i><span><b>Acessos &amp; Reset de Senha</b><small>Bloqueio, MFA, perfis</small></span>
-                            </button>
-                            <button type="button" class="pick" role="radio" data-cat="Suporte Técnico & Infraestrutura" onclick="pickCategory(this.dataset.cat)">
-                                <i class="fa-solid fa-server"></i><span><b>Falhas &amp; Infraestrutura</b><small>Quedas, VPN, lentidão</small></span>
-                            </button>
-                            <button type="button" class="pick" role="radio" data-cat="Projetos & Melhorias" onclick="pickCategory(this.dataset.cat)">
-                                <i class="fa-solid fa-wand-magic-sparkles"></i><span><b>Projetos &amp; Melhorias</b><small>Relatórios, ajustes, API</small></span>
+                            <button type="button" class="pick k-inc" role="radio" data-typ="Incidente" onclick="pickType(this.dataset.typ)">
+                                <i class="fa-solid fa-triangle-exclamation"></i><span><b>Incidente</b><small>Algo parou ou está errado: erro, falha, cobrança ou acesso que não funciona</small></span>
                             </button>
                         </div>
-                        <select id="form-category" onchange="onFormCategoryChange()" class="sr-only" tabindex="-1" aria-hidden="true">
-                            <option value="Sistema Financeiro & ERP">Sistema Financeiro &amp; ERP</option>
-                            <option value="Gestão de Acessos & Reset de Senha">Gestão de Acessos &amp; Reset de Senha</option>
-                            <option value="Suporte Técnico & Infraestrutura">Suporte Técnico &amp; Infraestrutura</option>
-                            <option value="Projetos & Melhorias">Projetos &amp; Melhorias</option>
+                        <select id="form-type" onchange="onFormTypeChange()" class="sr-only" tabindex="-1" aria-hidden="true">
+                            <option value="Requisição" selected>Requisição</option>
+                            <option value="Incidente">Incidente</option>
                         </select>
                     </section>
 
                     <section class="fs-step">
-                        <h4 class="fs-h"><span class="n">2</span> Qual o impacto?</h4>
-                        <div class="picks urg" role="radiogroup" aria-label="Impacto e urgência">
+                        <h4 class="fs-h"><span class="n">2</span> Sobre o que é?</h4>
+                        <div class="picks cat" role="radiogroup" aria-label="Categoria do chamado">
+                            <button type="button" class="pick" role="radio" data-cat="Reset de senha" onclick="pickCategory(this.dataset.cat)">
+                                <i class="fa-solid fa-key"></i><span><b>Reset de senha</b><small>Esqueci a senha</small></span>
+                            </button>
+                            <button type="button" class="pick" role="radio" data-cat="Pagamento não reconhecido" onclick="pickCategory(this.dataset.cat)">
+                                <i class="fa-solid fa-file-invoice-dollar"></i><span><b>Pagamento não reconhecido</b><small>Paguei e não liberou</small></span>
+                            </button>
+                            <button type="button" class="pick" role="radio" data-cat="Desbloqueio de usuário" onclick="pickCategory(this.dataset.cat)">
+                                <i class="fa-solid fa-user-lock"></i><span><b>Desbloqueio de usuário</b><small>Conta bloqueada</small></span>
+                            </button>
+                            <button type="button" class="pick" role="radio" data-cat="Conta/Login" onclick="pickCategory(this.dataset.cat)">
+                                <i class="fa-solid fa-right-to-bracket"></i><span><b>Conta/Login</b><small>Não consigo entrar</small></span>
+                            </button>
+                            <button type="button" class="pick" role="radio" data-cat="Dados Cadastrais" onclick="pickCategory(this.dataset.cat)">
+                                <i class="fa-solid fa-id-card"></i><span><b>Dados Cadastrais</b><small>Nome, CPF, telefone</small></span>
+                            </button>
+                            <button type="button" class="pick" role="radio" data-cat="Liberação de degustação" onclick="pickCategory(this.dataset.cat)">
+                                <i class="fa-solid fa-gift"></i><span><b>Liberação de degustação</b><small>Testar o plano completo</small></span>
+                            </button>
+                            <button type="button" class="pick" role="radio" data-cat="2ª Via de fatura" onclick="pickCategory(this.dataset.cat)">
+                                <i class="fa-solid fa-receipt"></i><span><b>2ª Via de fatura</b><small>Boleto ou fatura</small></span>
+                            </button>
+                            <button type="button" class="pick" role="radio" data-cat="Atendimento Técnico" onclick="pickCategory(this.dataset.cat)">
+                                <i class="fa-solid fa-headset"></i><span><b>Atendimento Técnico</b><small>Falar com um técnico</small></span>
+                            </button>
+                            <button type="button" class="pick" role="radio" data-cat="Falhas/Bugs/Correções" onclick="pickCategory(this.dataset.cat)">
+                                <i class="fa-solid fa-bug"></i><span><b>Falhas/Bugs/Correções</b><small>Erro, travamento, valor errado</small></span>
+                            </button>
+                            <button type="button" class="pick" role="radio" data-cat="Outros" onclick="pickCategory(this.dataset.cat)">
+                                <i class="fa-solid fa-circle-question"></i><span><b>Outros</b><small>Dúvidas e sugestões</small></span>
+                            </button>
+                        </div>
+                        <select id="form-category" onchange="onFormCategoryChange()" class="sr-only" tabindex="-1" aria-hidden="true">
+                            <option value="Reset de senha">Reset de senha</option>
+                            <option value="Pagamento não reconhecido">Pagamento não reconhecido</option>
+                            <option value="Desbloqueio de usuário">Desbloqueio de usuário</option>
+                            <option value="Conta/Login">Conta/Login</option>
+                            <option value="Dados Cadastrais">Dados Cadastrais</option>
+                            <option value="Liberação de degustação">Liberação de degustação</option>
+                            <option value="2ª Via de fatura">2ª Via de fatura</option>
+                            <option value="Atendimento Técnico">Atendimento Técnico</option>
+                            <option value="Falhas/Bugs/Correções">Falhas/Bugs/Correções</option>
+                            <option value="Outros">Outros</option>
+                        </select>
+                    </section>
+
+                    <section class="fs-step">
+                        <h4 class="fs-h"><span class="n">3</span> Qual a severidade?</h4>
+                        <div class="picks urg" role="radiogroup" aria-label="Severidade do chamado">
                             <button type="button" class="pick u-baixa" role="radio" data-urg="Baixa" onclick="pickUrgency(this.dataset.urg)"><b>Baixa</b><small>Dúvida ou operação normal</small><em>5 dias úteis</em></button>
                             <button type="button" class="pick u-media" role="radio" data-urg="Média" onclick="pickUrgency(this.dataset.urg)"><b>Média</b><small>Impacto parcial, dá para contornar</small><em>24 horas</em></button>
-                            <button type="button" class="pick u-alta" role="radio" data-urg="Alta" onclick="pickUrgency(this.dataset.urg)"><b>Alta</b><small>Impacto relevante no setor</small><em>1 hora</em></button>
-                            <button type="button" class="pick u-critica" role="radio" data-urg="Crítica" onclick="pickUrgency(this.dataset.urg)"><b>Crítica</b><small>Parada total de sistema</small><em>30 minutos</em></button>
+                            <button type="button" class="pick u-alta" role="radio" data-urg="Alta" onclick="pickUrgency(this.dataset.urg)"><b>Alta</b><small>Impacto relevante no seu trabalho</small><em>8 horas</em></button>
+                            <button type="button" class="pick u-critica" role="radio" data-urg="Crítica" onclick="pickUrgency(this.dataset.urg)"><b>Crítica</b><small>Parada total, sem alternativa</small><em>4 horas</em></button>
                         </div>
                         <select id="form-urgency" onchange="calculateSLA()" class="sr-only" tabindex="-1" aria-hidden="true">
                             <option value="Baixa">Baixa · dúvida ou operação normal</option>
                             <option value="Média" selected>Média · impacto parcial, dá para contornar</option>
-                            <option value="Alta">Alta · impacto relevante no setor</option>
-                            <option value="Crítica">Crítica · parada total de sistema</option>
+                            <option value="Alta">Alta · impacto relevante no seu trabalho</option>
+                            <option value="Crítica">Crítica · parada total, sem alternativa</option>
                         </select>
                     </section>
 
                     <section class="fs-step">
-                        <h4 class="fs-h"><span class="n">3</span> Conte o que está acontecendo</h4>
+                        <h4 class="fs-h"><span class="n">4</span> Conte o que está acontecendo</h4>
                         <div class="field">
                             <label for="form-subject">Assunto *</label>
                             <input type="text" id="form-subject" maxlength="200" autocomplete="off" oninput="onFormInput()" class="input focus-blue" placeholder="Ex: Lentidão ao emitir relatórios de faturamento">
@@ -2006,8 +2246,9 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                     <div class="fs-card">
                         <div class="fs-card-t"><i class="fa-solid fa-list-check"></i> Seu pedido</div>
                         <ul class="fs-check" id="form-check">
+                            <li data-k="typ"><i class="fa-solid fa-check"></i><span>Tipo</span><b></b></li>
                             <li data-k="cat"><i class="fa-solid fa-check"></i><span>Categoria</span><b></b></li>
-                            <li data-k="urg"><i class="fa-solid fa-check"></i><span>Urgência</span><b></b></li>
+                            <li data-k="urg"><i class="fa-solid fa-check"></i><span>Severidade</span><b></b></li>
                             <li data-k="subj"><i class="fa-solid fa-check"></i><span>Assunto</span><b></b></li>
                             <li data-k="desc"><i class="fa-solid fa-check"></i><span>Descrição</span><b></b></li>
                         </ul>
@@ -2026,9 +2267,9 @@ html[data-bg="vidro"] .l-glass{opacity:1}
 
                     <div id="form-tips" class="cat-tips"></div>
 
-                    <div class="sla-policy" aria-label="Prazos de atendimento por urgência">
-                        <div class="sla-chip" data-urgency="Crítica" style="--s: var(--rose-rgb);">Crítica<b>30 min</b></div>
-                        <div class="sla-chip" data-urgency="Alta" style="--s: var(--orange-rgb);">Alta<b>1 hora</b></div>
+                    <div class="sla-policy" aria-label="Prazos de atendimento por severidade">
+                        <div class="sla-chip" data-urgency="Crítica" style="--s: var(--rose-rgb);">Crítica<b>4 horas</b></div>
+                        <div class="sla-chip" data-urgency="Alta" style="--s: var(--orange-rgb);">Alta<b>8 horas</b></div>
                         <div class="sla-chip is-on" data-urgency="Média" style="--s: var(--sky-rgb);">Média<b>24 horas</b></div>
                         <div class="sla-chip" data-urgency="Baixa" style="--s: var(--slate-rgb);">Baixa<b>5 dias úteis</b></div>
                     </div>
@@ -2056,14 +2297,15 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                         <button type="button" id="btn-copy-protocol" onclick="copyProtocol(document.getElementById('success-protocol').textContent, this)" class="btn btn-ghost btn-sm"><i class="fa-regular fa-copy"></i> Copiar</button>
                     </div>
                     <div class="success-grid">
+                        <div><small>Tipo</small><span id="success-type">—</span></div>
                         <div><small>Categoria</small><span id="success-cat">—</span></div>
-                        <div><small>Urgência</small><span id="success-urg">—</span></div>
+                        <div><small>Severidade</small><span id="success-urg">—</span></div>
                         <div><small>Previsão de atendimento</small><span id="success-sla">—</span></div>
                     </div>
                     <div class="success-next">
                         <b>O que acontece agora</b>
                         <ol>
-                            <li>A equipe de TI recebe o chamado e confere a urgência.</li>
+                            <li>A equipe de TI recebe o chamado e o encaminha para a fila certa.</li>
                             <li>Um técnico assume e começa o atendimento dentro do prazo de SLA.</li>
                             <li>Você é avisado aqui, em "Meus Chamados", a cada resposta ou mudança de status.</li>
                         </ol>
@@ -2235,7 +2477,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                         <div class="reply-foot">
                             <span class="kb"><kbd>Ctrl</kbd>+<kbd>Enter</kbd> envia · <span id="ws-reply-count" class="mono">0/2000</span></span>
                             <div class="btns">
-                                <button type="button" id="btn-reply-wait" onclick="submitTechReply(true)" class="btn btn-ghost" title="Envia a resposta e deixa o chamado como 'Pendente Cliente'">
+                                <button type="button" id="btn-reply-wait" onclick="submitTechReply(true)" class="btn btn-ghost" title="Envia a resposta e deixa o chamado como 'Pendente' (aguardando o retorno do solicitante)">
                                     <i class="fa-solid fa-hourglass-half c-amber"></i> Enviar e aguardar cliente
                                 </button>
                                 <button type="button" id="btn-reply-send" onclick="submitTechReply(false)" class="btn btn-green">
@@ -2254,11 +2496,37 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                         <div class="field">
                             <label for="prop-status">Status Atual</label>
                             <select id="prop-status" onchange="onPropChange('status')" class="select">
-                                <option value="Novo">Novo (Sem Técnico)</option>
-                                <option value="Em Atendimento">Em Atendimento</option>
-                                <option value="Pendente Cliente">Pendente Resposta Cliente</option>
+                                <option value="Novo">Novo</option>
+                                <option value="Pendente">Pendente (aguardando retorno)</option>
+                                <option value="Atendimento atribuído">Atendimento atribuído</option>
                                 <option value="Resolvido">Resolvido</option>
-                                <option value="Cancelado">Cancelado</option>
+                                <option value="Fechado">Fechado</option>
+                            </select>
+                        </div>
+
+                        <div class="row2">
+                            <div class="field">
+                                <label for="prop-type">Tipo</label>
+                                <select id="prop-type" onchange="onPropChange('type')" class="select">
+                                    <option value="Requisição">Requisição</option>
+                                    <option value="Incidente">Incidente</option>
+                                </select>
+                            </div>
+                            <div class="field">
+                                <label for="prop-urgency">Severidade <small>(muda o SLA)</small></label>
+                                <select id="prop-urgency" onchange="onPropChange('urgency')" class="select">
+                                    <option value="Baixa">Baixa · 5 dias úteis</option>
+                                    <option value="Média">Média · 24 horas</option>
+                                    <option value="Alta">Alta · 8 horas</option>
+                                    <option value="Crítica">Crítica · 4 horas</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label for="prop-queue">Fila de atendimento</label>
+                            <select id="prop-queue" onchange="onPropChange('queue')" class="select">
+                                <option value="">-- Sem fila --</option>
                             </select>
                         </div>
 
@@ -2270,41 +2538,27 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                         </div>
 
                         <div class="field">
-                            <label for="prop-category">Categoria ITSM</label>
+                            <label for="prop-category">Categoria</label>
                             <select id="prop-category" onchange="onPropChange('category')" class="select">
-                                <option value="Sistema Financeiro & ERP">Sistema Financeiro &amp; ERP</option>
-                                <option value="Gestão de Acessos & Reset de Senha">Gestão de Acessos &amp; Reset de Senha</option>
-                                <option value="Suporte Técnico & Infraestrutura">Suporte Técnico &amp; Infraestrutura</option>
-                                <option value="Projetos & Melhorias">Projetos &amp; Melhorias</option>
+                                <option value="Reset de senha">Reset de senha</option>
                             </select>
                         </div>
 
                         <div class="row2">
                             <div class="field">
-                                <label for="prop-urgency">Urgência <small>(muda o SLA)</small></label>
-                                <select id="prop-urgency" onchange="onPropChange('urgency')" class="select">
-                                    <option value="Baixa">Baixa</option>
-                                    <option value="Média">Média</option>
-                                    <option value="Alta">Alta</option>
-                                    <option value="Crítica">Crítica</option>
-                                </select>
-                            </div>
-                            <div class="field">
                                 <label for="prop-hours">Horas Trabalhadas</label>
                                 <input type="number" id="prop-hours" step="0.25" min="0" max="999" inputmode="decimal" placeholder="0" onchange="onPropChange('hours')" class="input num-input">
                             </div>
+                            <div class="field">
+                                <label for="prop-asset">Ativo CMDB</label>
+                                <select id="prop-asset" onchange="onPropChange('asset')" class="select">
+                                    <option value="Nenhum">Nenhum Ativo</option>
+                                    <option value="SRV-DB-PROD-01 (Servidor SQL)">SRV-DB-PROD-01 (Servidor SQL)</option>
+                                    <option value="SW-CORE-02 (Switch Cisco)">SW-CORE-02 (Switch Cisco)</option>
+                                    <option value="API-GATEWAY-FIN (SaaS ERP)">API-GATEWAY-FIN (SaaS ERP)</option>
+                                </select>
+                            </div>
                         </div>
-
-                        <div class="field">
-                            <label for="prop-asset">Ativo CMDB Vinculado</label>
-                            <select id="prop-asset" onchange="onPropChange('asset')" class="select">
-                                <option value="Nenhum">Nenhum Ativo</option>
-                                <option value="SRV-DB-PROD-01 (Servidor SQL)">SRV-DB-PROD-01 (Servidor SQL)</option>
-                                <option value="SW-CORE-02 (Switch Cisco)">SW-CORE-02 (Switch Cisco)</option>
-                                <option value="API-GATEWAY-FIN (SaaS ERP)">API-GATEWAY-FIN (SaaS ERP)</option>
-                            </select>
-                        </div>
-
                         <div id="box-resolve-solution" class="solution">
                             <label for="prop-solution">Solução Definitiva</label>
                             <textarea id="prop-solution" rows="3" maxlength="4000" placeholder="Descreva a solução para encerramento..." class="textarea focus-green"></textarea>
@@ -2312,13 +2566,16 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                                 <i class="fa-solid fa-circle-check"></i> Encerrar como RESOLVIDO
                             </button>
                             <button type="button" id="btn-cancel-ticket" onclick="cancelTicketAdmin()" class="btn btn-danger btn-block">
-                                <i class="fa-solid fa-ban"></i> Cancelar chamado
+                                <i class="fa-solid fa-ban"></i> Fechar sem resolver
                             </button>
                         </div>
 
                         <div id="box-closed" class="solution hidden">
-                            <label>Chamado encerrado</label>
+                            <label id="closed-label">Chamado encerrado</label>
                             <div id="closed-info" class="notice slate"></div>
+                            <button type="button" id="btn-close-ticket" onclick="closeResolvedTicket()" class="btn btn-ghost btn-block hidden">
+                                <i class="fa-solid fa-lock"></i> Fechar chamado
+                            </button>
                             <button type="button" id="btn-reopen-admin" onclick="reopenTicketAdmin()" class="btn btn-amber btn-block">
                                 <i class="fa-solid fa-rotate-left"></i> Reabrir chamado
                             </button>
@@ -2327,6 +2584,98 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 </div>
 
             </div>
+        </div>
+    </div>
+
+
+    <!-- JANELA D: CADASTRO / EDIÇÃO DE FILA DE ATENDIMENTO -->
+    <div id="modal-queue" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="queue-modal-title">
+        <div class="slab modal modal-sm">
+            <div class="modal-head">
+                <div class="mh-l">
+                    <div class="mh-ico"><i class="fa-solid fa-layer-group"></i></div>
+                    <div>
+                        <h3 id="queue-modal-title" class="mh-title">Nova fila de atendimento</h3>
+                        <p class="mh-sub">Quais chamados caem nela e quem atende</p>
+                    </div>
+                </div>
+                <button type="button" onclick="closeModal('modal-queue')" class="btn btn-icon" aria-label="Fechar"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="queue-form" class="modal-body" onsubmit="saveQueue(event)" novalidate>
+                <div id="queue-banner" class="notice rose hidden" role="alert"><i class="fa-solid fa-triangle-exclamation"></i><div id="queue-banner-text"></div></div>
+                <input type="hidden" id="queue-id">
+                <div class="field">
+                    <label for="queue-name">Nome da fila *</label>
+                    <input type="text" id="queue-name" maxlength="60" autocomplete="off" class="input focus-blue" placeholder="Ex.: Suporte Técnico N2">
+                </div>
+                <div class="field">
+                    <label for="queue-desc">Descrição <span class="opt">(opcional)</span></label>
+                    <input type="text" id="queue-desc" maxlength="200" autocomplete="off" class="input focus-blue" placeholder="Para que serve esta fila">
+                </div>
+                <div class="field">
+                    <label>Categorias que entram nesta fila</label>
+                    <div id="queue-cats" class="chk-grid"><!-- JS --></div>
+                    <p class="form-note" style="margin-top:.4rem;">O chamado aberto nessas categorias já cai nesta fila. Sem categoria marcada, a fila só recebe chamados encaminhados por um técnico.</p>
+                </div>
+                <div class="field">
+                    <label>Técnicos que atendem a fila</label>
+                    <div id="queue-members" class="chk-grid"><!-- JS --></div>
+                </div>
+                <label class="chk" for="queue-active"><input type="checkbox" id="queue-active" checked><span>Fila ativa (recebe chamados novos)</span></label>
+                <div class="modal-foot">
+                    <button type="button" id="btn-queue-delete" onclick="deleteQueue()" class="btn btn-danger hidden" style="margin-right:auto;"><i class="fa-solid fa-trash"></i> Excluir fila</button>
+                    <button type="button" onclick="closeModal('modal-queue')" class="btn btn-ghost">Cancelar</button>
+                    <button type="submit" id="btn-queue-save" class="btn btn-amber"><i class="fa-solid fa-floppy-disk"></i> Salvar fila</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- JANELA E: CADASTRO / EDIÇÃO DE TÉCNICO -->
+    <div id="modal-tech" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="tech-modal-title">
+        <div class="slab modal modal-sm">
+            <div class="modal-head">
+                <div class="mh-l">
+                    <div class="mh-ico"><i class="fa-solid fa-user-gear"></i></div>
+                    <div>
+                        <h3 id="tech-modal-title" class="mh-title">Cadastrar técnico</h3>
+                        <p class="mh-sub">Quem atende os chamados e em quais filas</p>
+                    </div>
+                </div>
+                <button type="button" onclick="closeModal('modal-tech')" class="btn btn-icon" aria-label="Fechar"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="tech-form" class="modal-body" onsubmit="saveTech(event)" novalidate>
+                <div id="tech-banner" class="notice rose hidden" role="alert"><i class="fa-solid fa-triangle-exclamation"></i><div id="tech-banner-text"></div></div>
+                <input type="hidden" id="tech-id">
+                <div class="form-grid cols-2">
+                    <div class="field">
+                        <label for="tech-name">Nome *</label>
+                        <input type="text" id="tech-name" maxlength="120" autocomplete="off" class="input focus-blue" placeholder="Nome do técnico">
+                    </div>
+                    <div class="field">
+                        <label for="tech-email">E-mail *</label>
+                        <input type="email" id="tech-email" maxlength="150" autocomplete="off" class="input focus-blue" placeholder="tecnico@empresa.com">
+                    </div>
+                    <div class="field">
+                        <label for="tech-phone">Telefone <span class="opt">(opcional)</span></label>
+                        <input type="tel" id="tech-phone" maxlength="25" autocomplete="off" class="input focus-blue" placeholder="(62) 99999-9999">
+                    </div>
+                    <div class="field">
+                        <label for="tech-specialty">Especialidade</label>
+                        <input type="text" id="tech-specialty" maxlength="100" autocomplete="off" class="input focus-blue" placeholder="Ex.: Suporte N2, Financeiro">
+                    </div>
+                </div>
+                <div class="field">
+                    <label>Filas que este técnico atende</label>
+                    <div id="tech-queues" class="chk-grid"><!-- JS --></div>
+                </div>
+                <label class="chk" for="tech-active"><input type="checkbox" id="tech-active" checked><span>Técnico ativo (pode receber chamados)</span></label>
+                <div class="modal-foot">
+                    <button type="button" id="btn-tech-delete" onclick="deleteTech()" class="btn btn-danger hidden" style="margin-right:auto;"><i class="fa-solid fa-trash"></i> Excluir técnico</button>
+                    <button type="button" onclick="closeModal('modal-tech')" class="btn btn-ghost">Cancelar</button>
+                    <button type="submit" id="btn-tech-save" class="btn btn-amber"><i class="fa-solid fa-floppy-disk"></i> Salvar técnico</button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -2499,9 +2848,12 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         let techReplyMode = 'public';
         let chartCategoryInstance = null;
         let chartUrgencyInstance = null;
-        let queueQuick = 'open';        // filtro rápido da fila: open | unassigned | mine | progress | late | waiting | closed | all
+        let queueQuick = 'open';        // filtro rápido da fila: open | new | pending | assigned | resolved | closed | unassigned | mine | late | all
         let userTab = 'all';            // abas de "Meus Chamados": all | open | waiting | closed
-        let technicians = [];
+        let technicians = [];           // nomes de quem pode receber chamados (técnicos cadastrados + administradores ativos)
+        let techDirectory = [];         // { id, name, email, phone, specialty, active, filas: [ids], kind: 'tecnico' | 'admin' }
+        let queuesList = [];            // filas de atendimento: { id, nome, descricao, categorias, tecnicos (e-mails), ativa }
+        let formTypeTouched = false;    // a pessoa escolheu o tipo na mão (então trocar a categoria não muda mais o tipo)
         let selectedIds = new Set();
         let snapshot = new Map();       // protocolo -> { updatedAt, len, status } (para avisar o que mudou)
         let syncTimer = null;
@@ -2527,27 +2879,65 @@ html[data-bg="vidro"] .l-glass{opacity:1}
 
         // Orientações por categoria: o que informar para o chamado ser resolvido mais rápido
         const CATEGORY_HELP = {
-            'Sistema Financeiro & ERP': {
-                subject: 'Ex: Boleto pago não baixou na conciliação',
-                desc: 'Informe a tela ou relatório, o valor e a data envolvidos, a mensagem de erro exata e desde quando acontece...',
-                tips: ['Diga a tela, o relatório ou a rotina onde acontece', 'Cole a mensagem de erro exatamente como aparece', 'Informe valores, datas ou números de documento envolvidos']
+            'Reset de senha': {
+                subject: 'Ex: Não recebo o e-mail para criar uma nova senha',
+                desc: 'Informe o e-mail da conta, quando tentou entrar pela última vez e se o link de recuperação chegou (olhe também o spam)...',
+                tips: ['O e-mail cadastrado na conta', 'Se o e-mail de recuperação chegou ou não', 'O que aparece na tela quando você tenta entrar']
             },
-            'Gestão de Acessos & Reset de Senha': {
-                subject: 'Ex: Usuário bloqueado após 3 tentativas de login',
-                desc: 'Informe o sistema, o usuário (login) e o que acontece ao tentar entrar. Diga se já tentou redefinir a senha...',
-                tips: ['Qual sistema e qual usuário (login) precisa de acesso', 'O que aparece na tela quando você tenta entrar', 'Se precisa do acesso com urgência, explique o motivo']
+            'Pagamento não reconhecido': {
+                subject: 'Ex: Paguei o plano por Pix e o acesso não foi liberado',
+                desc: 'Informe a forma de pagamento (Pix, boleto ou cartão), o valor, a data e a hora, e anexe o comprovante no texto (banco, protocolo ou ID da transação)...',
+                tips: ['Valor, data, hora e forma de pagamento', 'Banco ou instituição e o ID/protocolo do comprovante', 'Plano que você contratou']
             },
-            'Suporte Técnico & Infraestrutura': {
-                subject: 'Ex: VPN desconecta a cada 10 minutos',
-                desc: 'Descreva o que parou ou ficou lento, desde quando, quantas pessoas ou setores são afetados e o que já foi tentado...',
-                tips: ['Quantas pessoas ou setores são afetados', 'Horário em que começou e se é constante ou intermitente', 'Equipamento, rede ou VPN envolvidos']
+            'Desbloqueio de usuário': {
+                subject: 'Ex: Conta bloqueada depois de 5 tentativas de login',
+                desc: 'Informe o e-mail da conta bloqueada, quando o bloqueio apareceu e a mensagem exibida na tela...',
+                tips: ['E-mail da conta bloqueada', 'Mensagem que aparece na tela', 'Se foi você quem errou a senha várias vezes']
             },
-            'Projetos & Melhorias': {
-                subject: 'Ex: Novo relatório de fluxo de caixa por centro de custo',
-                desc: 'Explique o objetivo, quem vai usar, o resultado esperado e o prazo desejado...',
-                tips: ['Qual problema a melhoria resolve e quem vai usar', 'Resultado esperado (com um exemplo, se possível)', 'Prazo desejado e o que acontece se atrasar']
+            'Conta/Login': {
+                subject: 'Ex: Entro com o e-mail certo e volta para a tela de login',
+                desc: 'Descreva o que acontece ao entrar: mensagem de erro, se acontece em outro aparelho ou navegador e desde quando...',
+                tips: ['Mensagem de erro exata', 'Aparelho e navegador usados', 'Se funcionava antes e quando parou']
+            },
+            'Dados Cadastrais': {
+                subject: 'Ex: Corrigir o telefone e o nome da minha conta',
+                desc: 'Diga qual dado precisa mudar (nome, telefone, e-mail, CPF), como está hoje e como deve ficar. E-mail e CPF podem exigir confirmação da equipe...',
+                tips: ['Qual dado deve ser alterado', 'Como está hoje e como deve ficar', 'Por que a alteração é necessária (para e-mail e CPF)']
+            },
+            'Liberação de degustação': {
+                subject: 'Ex: Quero testar o plano completo por 7 dias',
+                desc: 'Conte para que você quer usar o sistema e por quanto tempo precisa testar. A equipe confere se a conta pode receber a degustação...',
+                tips: ['E-mail da conta que vai testar', 'O que você quer avaliar no sistema', 'Se já usou uma degustação antes']
+            },
+            '2ª Via de fatura': {
+                subject: 'Ex: Preciso da 2ª via do boleto de outubro',
+                desc: 'Informe o mês de referência, o valor e a forma de pagamento. Diga se o boleto venceu ou se perdeu o original...',
+                tips: ['Mês de referência e valor', 'Se o boleto já venceu', 'O e-mail para onde enviar a nova via']
+            },
+            'Atendimento Técnico': {
+                subject: 'Ex: Preciso de ajuda para configurar a importação de extratos',
+                desc: 'Explique o que você tenta fazer, em qual tela, o que já tentou e como prefere ser atendido (por aqui ou por telefone)...',
+                tips: ['O que você tenta fazer e em qual tela', 'O que já tentou', 'Melhor horário e telefone para contato']
+            },
+            'Falhas/Bugs/Correções': {
+                subject: 'Ex: O saldo do dashboard não bate com as transações',
+                desc: 'Descreva o erro: tela, passos para repetir, o que esperava e o que aconteceu. Cole a mensagem de erro exatamente como aparece...',
+                tips: ['Tela e passos para repetir o erro', 'O que esperava e o que aconteceu', 'Mensagem de erro, valores ou datas envolvidos']
+            },
+            'Outros': {
+                subject: 'Ex: Dúvida sobre como exportar meus dados',
+                desc: 'Conte o que você precisa com o máximo de detalhes. Se for sugestão de melhoria, explique o resultado esperado...',
+                tips: ['O que você precisa, em poucas palavras', 'Qual é o resultado esperado', 'Prazo desejado, se houver']
             }
         };
+
+        // Tipo sugerido por categoria (a pessoa pode trocar; é o mesmo que o servidor usa quando nenhum é escolhido)
+        const CATEGORY_TYPE = {
+            'Reset de senha': 'Requisição', 'Pagamento não reconhecido': 'Incidente', 'Desbloqueio de usuário': 'Requisição',
+            'Conta/Login': 'Incidente', 'Dados Cadastrais': 'Requisição', 'Liberação de degustação': 'Requisição',
+            '2ª Via de fatura': 'Requisição', 'Atendimento Técnico': 'Incidente', 'Falhas/Bugs/Correções': 'Incidente', 'Outros': 'Requisição'
+        };
+        const TICKET_CATEGORIES = Object.keys(CATEGORY_TYPE);
 
         // ============================== UTILIDADES ==============================
         // O servidor guarda título, descrição e nomes já "escapados" (&amp; &lt; &#39;...): aqui voltam ao texto normal e
@@ -2591,24 +2981,40 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             return String(name || '').trim().split(/\s+/)[0] || 'cliente';
         }
 
-        // Nomes de status do servidor (e apelidos antigos) -> os 5 que a tela usa
+        // Os 5 status da fila: Novo, Pendente, Atendimento atribuído, Resolvido, Fechado (o servidor já manda esses nomes;
+        // os nomes antigos só aparecem se uma rotina antiga gravar direto no banco)
         function normStatus(raw) {
             switch (String(raw || '')) {
-                case 'Pendente': case 'Novo': case 'Em Aberto': return 'Novo';
-                case 'Em Andamento': case 'Em Atendimento': return 'Em Atendimento';
-                case 'Pendente Cliente': case 'Aguardando Peça': return 'Pendente Cliente';
+                case 'Novo': case 'Em Aberto': return 'Novo';
+                case 'Pendente': case 'Pendente Cliente': case 'Aguardando Peça': return 'Pendente';
+                case 'Atendimento atribuído': case 'Em Andamento': case 'Em Atendimento': return 'Atendimento atribuído';
                 case 'Resolvido': case 'Concluído': return 'Resolvido';
-                case 'Cancelado': return 'Cancelado';
+                case 'Fechado': case 'Cancelado': return 'Fechado';
                 default: return 'Novo';
             }
         }
-        const isClosed = (t) => t.status === 'Resolvido' || t.status === 'Cancelado';
+        // Resolvido = solução entregue (o solicitante pode reabrir por 7 dias); Fechado = encerrado de vez
+        const isClosed = (t) => t.status === 'Resolvido' || t.status === 'Fechado';
         const isOpenTicket = (t) => !isClosed(t);
         const hasTech = (t) => Boolean(t.technician) && t.technician !== 'Não Atribuído';
         const getTicket = (protocol) => ticketsList.find((t) => t.protocol === protocol) || null;
 
-        function statusLabel(status, forUser) {
-            return forUser && status === 'Pendente Cliente' ? 'Aguardando você' : status;
+        function statusLabel(status) {
+            return status;
+        }
+
+        // Selos de tipo e de fila (lista e gaveta)
+        function typePill(type) {
+            return type === 'Incidente'
+                ? '<span class="tpill inc"><i class="fa-solid fa-triangle-exclamation"></i>Incidente</span>'
+                : '<span class="tpill"><i class="fa-solid fa-hand-holding-hand"></i>Requisição</span>';
+        }
+
+        // Lista do select de categorias: as 10 de hoje + a categoria que o chamado já tem (chamados antigos)
+        function categoryOptions(current) {
+            const list = TICKET_CATEGORIES.slice();
+            if (current && !list.includes(current)) list.push(current);
+            return list.map((c) => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
         }
 
         function lastHumanEntry(t, includeInternal) {
@@ -2616,8 +3022,9 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         }
 
         // O solicitante respondeu e a equipe ainda não retornou
+        // (a abertura do chamado é a primeira mensagem do solicitante: só conta como resposta a partir da segunda mensagem humana)
         function needsTechReply(t) {
-            if (!isOpenTicket(t) || t.timeline.length < 2) return false;
+            if (!isOpenTicket(t) || t.timeline.filter((i) => !i.event).length < 2) return false;
             const last = lastHumanEntry(t, false);
             return Boolean(last && last.sender === 'Solicitante');
         }
@@ -2799,7 +3206,9 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 email: email,
                 phone: decodeEntities(o.client_phone || ''),
                 channel: decodeEntities(o.canal_atendimento || ''),
-                category: o.service_type || 'Sistema Financeiro & ERP',
+                category: o.service_type || 'Outros',
+                type: o.ticket_type === 'Incidente' ? 'Incidente' : 'Requisição',
+                queue: o.fila || '',
                 urgency: urgency,
                 subject: decodeEntities(o.title) || 'Solicitação Técnica',
                 description: decodeEntities(o.description),
@@ -2898,15 +3307,40 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         async function loadTechnicians() {
             if (!currentUser || !currentUser.isAdmin) return;
             const nomes = [];
+            const diretorio = [];
             const add = (n) => { n = String(n || '').trim(); if (n && !nomes.includes(n)) nomes.push(n); };
-            const r = await api('GET', '/api/tecnicos');
-            if (r.ok && Array.isArray(r.data.tecnicos)) {
-                r.data.tecnicos.filter((x) => x && x.name && x.active !== false).forEach((x) => add(x.name));
+            const [rq, rt, ru] = await Promise.all([api('GET', '/api/filas'), api('GET', '/api/tecnicos'), api('GET', '/api/users')]);
+            if (rq.ok && Array.isArray(rq.data.filas)) queuesList = rq.data.filas;
+            if (rt.ok && Array.isArray(rt.data.tecnicos)) {
+                rt.data.tecnicos.filter((x) => x && x.name).forEach((x) => {
+                    diretorio.push({ id: String(x.id), name: x.name, email: String(x.email || '').toLowerCase(), phone: x.phone || '', specialty: x.specialty || '', active: x.active !== false, filas: Array.isArray(x.filas) ? x.filas : [], kind: 'tecnico' });
+                    if (x.active !== false) add(x.name);
+                });
             }
-            const u = await api('GET', '/api/users');
-            const lista = Array.isArray(u.data) ? u.data : (Array.isArray(u.data.users) ? u.data.users : []);
-            lista.filter((x) => x && x.role === 'Administrador' && x.active !== false && x.active !== 0 && x.name).forEach((x) => add(x.name));
+            const lista = Array.isArray(ru.data) ? ru.data : (Array.isArray(ru.data.users) ? ru.data.users : []);
+            lista.filter((x) => x && x.role === 'Administrador' && x.active !== false && x.active !== 0 && x.name).forEach((x) => {
+                const email = String(x.email || '').toLowerCase();
+                if (!diretorio.some((d) => d.email === email)) {
+                    diretorio.push({ id: '', name: x.name, email: email, phone: '', specialty: 'Administrador (Nexus + GLPI)', active: true, filas: [], kind: 'admin' });
+                }
+                add(x.name);
+            });
+            // O administrador participa da fila pela lista de e-mails da própria fila
+            diretorio.filter((d) => d.kind === 'admin').forEach((d) => { d.filas = queuesList.filter((q) => (q.tecnicos || []).includes(d.email)).map((q) => q.id); });
+            techDirectory = diretorio;
             technicians = nomes;
+            refreshQueueSelects();
+        }
+
+        // Os selects de fila (filtro da fila e propriedade do chamado) seguem a lista de filas cadastradas
+        function refreshQueueSelects() {
+            const f = $('tech-filter-queue');
+            if (f) {
+                const atual = f.value;
+                f.innerHTML = '<option value="ALL">Todas as filas</option><option value="__none">Sem fila</option>' +
+                    queuesList.map((q) => `<option value="${escapeHtml(q.nome)}">${escapeHtml(q.nome)}${q.ativa === false ? ' (inativa)' : ''}</option>`).join('');
+                f.value = Array.from(f.options).some((o) => o.value === atual) ? atual : 'ALL';
+            }
         }
 
         // ============================== ATUALIZAÇÃO AUTOMÁTICA ==============================
@@ -2953,6 +3387,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             if (isTechMode()) {
                 renderTechQueue();
                 if (!$('tech-subview-dashboard').classList.contains('hidden')) initCharts();
+                if (!$('tech-subview-teams').classList.contains('hidden') && !document.querySelector('.overlay:not(.hidden)')) renderTeams();
                 if (activeProtocol) {
                     if (getTicket(activeProtocol)) renderWorkspace(false); else closeModal('modal-tech-workspace');
                 }
@@ -3158,6 +3593,9 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             try { if (expired !== true && new URLSearchParams(window.location.search).get('embedded') !== '1') sessionStorage.setItem('glpi_manual_logout', '1'); } catch (e) {}
             currentUser = null;
             ticketsList = [];
+            queuesList = [];
+            techDirectory = [];
+            technicians = [];
             snapshot = new Map();
             selectedIds = new Set();
             activeProtocol = null;
@@ -3217,17 +3655,21 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             }
         }
 
-        // Lista do campo "Técnico responsável": não atribuído, você, os técnicos cadastrados e quem já está no chamado
-        function fillTechnicianOptions(selected) {
+        // Lista do campo "Técnico responsável": não atribuído, os técnicos da fila do chamado (se ele tem fila com técnicos),
+        // depois você e os demais técnicos cadastrados e, por fim, quem já está no chamado
+        function fillTechnicianOptions(selected, queueName) {
             const sel = $('prop-technician');
             if (!sel) return;
-            const names = [];
-            const add = (n) => { if (n && n !== 'Não Atribuído' && !names.includes(n)) names.push(n); };
-            if (currentUser) add(currentUser.name);
-            technicians.forEach(add);
-            add(selected);
-            sel.innerHTML = '<option value="Não Atribuído">-- Não Atribuído --</option>' + names.map((n) =>
-                `<option value="${escapeHtml(n)}">${escapeHtml(n)}${currentUser && n === currentUser.name ? ' (você)' : ''}</option>`).join('');
+            const opt = (n) => `<option value="${escapeHtml(n)}">${escapeHtml(n)}${currentUser && n === currentUser.name ? ' (você)' : ''}</option>`;
+            const queue = queuesList.find((q) => q.nome === queueName);
+            const members = queue ? techDirectory.filter((d) => d.active && (queue.tecnicos || []).includes(d.email)).map((d) => d.name) : [];
+            const used = new Set(['Não Atribuído']);
+            const group = (names) => names.filter((n) => n && !used.has(n) && used.add(n));
+            const fromQueue = group(members);
+            const others = group([currentUser && currentUser.name].concat(technicians, [selected]));
+            sel.innerHTML = '<option value="Não Atribuído">-- Não Atribuído --</option>'
+                + (fromQueue.length ? `<optgroup label="Fila: ${escapeHtml(queueName)}">${fromQueue.map(opt).join('')}</optgroup>` : '')
+                + (fromQueue.length && others.length ? `<optgroup label="Outros técnicos">${others.map(opt).join('')}</optgroup>` : others.map(opt).join(''));
             sel.value = selected && selected !== '' ? selected : 'Não Atribuído';
         }
 
@@ -3320,22 +3762,33 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             toggleSidebar(false);
             const dash = $('tech-subview-dashboard');
             const queue = $('tech-subview-queue');
+            const teams = $('tech-subview-teams');
             if (tab === 'dashboard') {
                 setActiveNav('.tech-nav-item', 'tech-nav-dash');
                 dash.classList.remove('hidden');
                 queue.classList.add('hidden');
+                teams.classList.add('hidden');
                 initCharts();
+            } else if (tab === 'teams') {
+                setActiveNav('.tech-nav-item', 'tech-nav-teams');
+                teams.classList.remove('hidden');
+                dash.classList.add('hidden');
+                queue.classList.add('hidden');
+                renderTeams();
+                // Atualiza o cadastro (outra pessoa pode ter mexido) sem travar a tela
+                loadTechnicians().then(() => { if (!teams.classList.contains('hidden')) renderTeams(); });
             } else {
                 const unassigned = tab === 'unassigned';
                 setActiveNav('.tech-nav-item', unassigned ? 'tech-nav-unassigned' : 'tech-nav-queue');
                 queue.classList.remove('hidden');
                 dash.classList.add('hidden');
+                teams.classList.add('hidden');
                 queueQuick = unassigned ? 'unassigned' : 'open';
                 $('tech-queue-title').innerText = unassigned ? 'Chamados sem Técnico' : 'Fila de Chamados';
                 $('tech-queue-crumb').innerText = unassigned ? 'Sem Técnico (Novos)' : 'Fila de Chamados';
                 $('tech-queue-sub').innerText = unassigned
-                    ? 'Chamados novos aguardando um técnico: assuma para iniciar o atendimento e o relógio do SLA.'
-                    : 'Chamados em aberto: filtre, assuma e atenda direto da lista. A fila atualiza sozinha a cada 20 segundos.';
+                    ? 'Chamados abertos aguardando um técnico: assuma para iniciar o atendimento e o relógio do SLA.'
+                    : 'Novo, Pendente, Atendimento atribuído, Resolvido e Fechado: filtre, assuma e atenda direto da lista. A fila atualiza sozinha a cada 20 segundos.';
                 renderTechQueue();
             }
             scrollMainTop();
@@ -3404,7 +3857,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         function saveDraft() {
             try {
                 sessionStorage.setItem(draftKey(), JSON.stringify({
-                    category: $('form-category').value, urgency: $('form-urgency').value,
+                    category: $('form-category').value, urgency: $('form-urgency').value, type: $('form-type').value, typeTouched: formTypeTouched,
                     subject: $('form-subject').value, desc: $('form-desc').value, phone: $('form-req-phone').value
                 }));
             } catch (e) {}
@@ -3445,7 +3898,8 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             ['form-subject', 'form-desc', 'form-req-phone'].forEach((id) => $(id).classList.remove('is-invalid'));
         }
 
-        function openFormModal(category = '') {
+        // category / type opcionais: os cartões do catálogo e os botões "Abrir Requisição" / "Reportar Incidente" já chegam escolhidos
+        function openFormModal(category = '', type = '') {
             resetFormView();
             $('form-req-name').value = currentUser ? currentUser.name : '';
             $('form-req-email').value = currentUser ? currentUser.email : '';
@@ -3454,15 +3908,36 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             $('form-desc').value = draft && draft.desc ? draft.desc : '';
             $('form-req-phone').value = draft && draft.phone ? draft.phone : formatPhoneDigits(((currentUser && currentUser.phone) || '').replace(/\D/g, '').replace(/^55(?=\d{10,11}$)/, ''));
             if (draft && draft.urgency) $('form-urgency').value = draft.urgency;
-            if (draft && draft.category) $('form-category').value = draft.category;
-            if (category) $('form-category').value = category;
+            if (draft && draft.category && CATEGORY_TYPE[draft.category]) $('form-category').value = draft.category;
+            formTypeTouched = Boolean(draft && draft.typeTouched);
+            $('form-type').value = draft && draft.type ? draft.type : CATEGORY_TYPE[$('form-category').value] || 'Requisição';
+            if (category && CATEGORY_TYPE[category]) {
+                $('form-category').value = category;
+                formTypeTouched = false;
+                $('form-type').value = CATEGORY_TYPE[category];
+            }
+            if (type === 'Requisição' || type === 'Incidente') { $('form-type').value = type; formTypeTouched = true; }
             onFormCategoryChange();
             onFormInput(true);
             openModal('modal-form', '#modal-form .pick.is-on');
         }
 
+        // Escolher o tipo na mão vale mais que a sugestão da categoria
+        function pickType(value) {
+            $('form-type').value = value;
+            formTypeTouched = true;
+            onFormTypeChange();
+        }
+
+        function onFormTypeChange() {
+            syncFormPickers();
+            saveDraft();
+        }
+
         function onFormCategoryChange() {
-            const help = CATEGORY_HELP[$('form-category').value] || CATEGORY_HELP['Sistema Financeiro & ERP'];
+            // A categoria sugere o tipo (pedir algo ou reportar um problema), até a pessoa escolher o tipo na mão
+            if (!formTypeTouched && CATEGORY_TYPE[$('form-category').value]) $('form-type').value = CATEGORY_TYPE[$('form-category').value];
+            const help = CATEGORY_HELP[$('form-category').value] || CATEGORY_HELP['Outros'];
             $('form-subject').placeholder = help.subject;
             $('form-desc').placeholder = help.desc;
             $('form-tips').innerHTML = '<b><i class="fa-solid fa-lightbulb"></i> Para resolver mais rápido, informe</b><ul>' + help.tips.map((t) => '<li>' + escapeHtml(t) + '</li>').join('') + '</ul>';
@@ -3546,6 +4021,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 desc: $('form-desc').value.trim(),
                 phone: $('form-req-phone').value.trim(),
                 category: $('form-category').value,
+                type: $('form-type').value,
                 urgency: $('form-urgency').value
             };
             const errs = validateTicketForm(v);
@@ -3560,6 +4036,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 client_phone: v.phone || '',
                 client_cpf: (currentUser && currentUser.cpf) || '',
                 service_type: v.category,
+                ticket_type: v.type,
                 priority: v.urgency,
                 title: v.subject,
                 description: v.desc,
@@ -3602,6 +4079,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 ? 'Identificamos um chamado igual enviado há pouco, então não criamos outro. Guarde o protocolo para acompanhar o andamento.'
                 : 'Guarde o protocolo: com ele você acompanha o andamento a qualquer momento em "Meus Chamados".';
             $('success-protocol').textContent = lastCreatedProtocol;
+            $('success-type').textContent = v.type;
             $('success-cat').textContent = v.category;
             $('success-urg').textContent = v.urgency;
             const sla = slaForUrgency(v.urgency);
@@ -3620,12 +4098,12 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         function userStatusBadge(t) { return getStatusBadge(t.status, true); }
 
         function userTicketRow(t) {
-            const waiting = t.status === 'Pendente Cliente';
+            const waiting = t.status === 'Pendente';
             return `
                 <td class="mono strong c-blue c-id">${escapeHtml(t.id)}</td>
                 <td class="t-cell">
                     <div class="t-title">${escapeHtml(t.subject)}${waiting ? '<span class="t-flag you"><i class="fa-solid fa-reply"></i> Responder</span>' : ''}</div>
-                    <div class="t-sub">${escapeHtml(t.category)}${relTime(t.updatedAt || t.createdAt) ? '<span class="sep">•</span>Atualizado ' + relTime(t.updatedAt || t.createdAt) : ''}</div>
+                    <div class="t-sub">${typePill(t.type)}${escapeHtml(t.category)}${relTime(t.updatedAt || t.createdAt) ? '<span class="sep">•</span>Atualizado ' + relTime(t.updatedAt || t.createdAt) : ''}</div>
                 </td>
                 <td class="c-muted nw c-date">${escapeHtml(t.date)}</td>
                 <td class="c-urg">${getUrgencyBadge(t.urgency)}</td>
@@ -3651,10 +4129,10 @@ html[data-bg="vidro"] .l-glass{opacity:1}
 
             // Já vem só do solicitante (o servidor filtra pela conta), do mais novo para o mais antigo
             const mine = ticketsList.slice().sort((a, b) => String(b.createdAt || '').localeCompare(String(a.createdAt || '')));
-            const waitingList = mine.filter((t) => t.status === 'Pendente Cliente');
+            const waitingList = mine.filter((t) => t.status === 'Pendente');
             const tabs = {
                 all: mine,
-                open: mine.filter((t) => isOpenTicket(t) && t.status !== 'Pendente Cliente'),
+                open: mine.filter((t) => isOpenTicket(t) && t.status !== 'Pendente'),
                 waiting: waitingList,
                 closed: mine.filter(isClosed)
             };
@@ -3706,7 +4184,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             }
             userTickets.forEach((t) => {
                 const tr = document.createElement('tr');
-                tr.className = 'is-click' + (t.status === 'Pendente Cliente' ? ' is-wait' : '');
+                tr.className = 'is-click' + (t.status === 'Pendente' ? ' is-wait' : '');
                 tr.dataset.p = t.protocol;
                 tr.innerHTML = userTicketRow(t);
                 tbody.appendChild(tr);
@@ -3716,13 +4194,12 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         // ---- Janela do chamado (visão do solicitante) ----
         function stepperHtml(status) {
             const step = (cls, icon, label) => `<div class="step ${cls}"><i class="fa-solid ${icon}"></i><span>${label}</span></div>`;
-            if (status === 'Cancelado') {
-                return step('is-done', 'fa-inbox', 'Aberto') + step('is-off', 'fa-ban', 'Cancelado') + step('', 'fa-check', 'Resolvido');
-            }
-            if (status === 'Novo') return step('is-now', 'fa-inbox', 'Aberto') + step('', 'fa-gears', 'Em atendimento') + step('', 'fa-check', 'Resolvido');
-            if (status === 'Em Atendimento') return step('is-done', 'fa-inbox', 'Aberto') + step('is-now', 'fa-gears', 'Em atendimento') + step('', 'fa-check', 'Resolvido');
-            if (status === 'Pendente Cliente') return step('is-done', 'fa-inbox', 'Aberto') + step('is-wait', 'fa-hourglass-half', 'Aguardando você') + step('', 'fa-check', 'Resolvido');
-            return step('is-done', 'fa-inbox', 'Aberto') + step('is-done', 'fa-gears', 'Em atendimento') + step('is-done', 'fa-check', 'Resolvido');
+            // Novo -> Atendimento atribuído -> Resolvido -> Fechado (Pendente é uma espera dentro do atendimento)
+            if (status === 'Novo') return step('is-now', 'fa-inbox', 'Novo') + step('', 'fa-user-gear', 'Atendimento atribuído') + step('', 'fa-check', 'Resolvido') + step('', 'fa-lock', 'Fechado');
+            if (status === 'Atendimento atribuído') return step('is-done', 'fa-inbox', 'Novo') + step('is-now', 'fa-user-gear', 'Atendimento atribuído') + step('', 'fa-check', 'Resolvido') + step('', 'fa-lock', 'Fechado');
+            if (status === 'Pendente') return step('is-done', 'fa-inbox', 'Novo') + step('is-wait', 'fa-hourglass-half', 'Pendente: aguarda você') + step('', 'fa-check', 'Resolvido') + step('', 'fa-lock', 'Fechado');
+            if (status === 'Resolvido') return step('is-done', 'fa-inbox', 'Novo') + step('is-done', 'fa-user-gear', 'Atendimento atribuído') + step('is-now', 'fa-check', 'Resolvido') + step('', 'fa-lock', 'Fechado');
+            return step('is-done', 'fa-inbox', 'Novo') + step('is-done', 'fa-user-gear', 'Atendimento atribuído') + step('is-done', 'fa-check', 'Resolvido') + step('is-done', 'fa-lock', 'Fechado');
         }
 
         function renderTimelineHtml(items, tech, requesterName) {
@@ -3782,12 +4259,12 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             $('my-desc').textContent = t.description;
 
             let notice = '';
-            if (t.status === 'Pendente Cliente') {
-                notice = '<div class="notice amber" role="status"><i class="fa-solid fa-hourglass-half"></i><div><b>A equipe aguarda a sua resposta.</b><br>Responda abaixo para o atendimento continuar.</div></div>';
+            if (t.status === 'Pendente') {
+                notice = '<div class="notice amber" role="status"><i class="fa-solid fa-hourglass-half"></i><div><b>Pendente: a equipe aguarda a sua resposta.</b><br>Responda abaixo para o atendimento continuar.</div></div>';
             } else if (t.status === 'Resolvido') {
                 notice = `<div class="notice green" role="status"><i class="fa-solid fa-circle-check"></i><div><b>Chamado resolvido${t.closedAt ? ' em ' + escapeHtml(formatDateBr(t.closedAt)) : ''}.</b>${t.solution ? `<div class="notice-sol">${escapeHtml(t.solution)}</div>` : ''}</div></div>`;
-            } else if (t.status === 'Cancelado') {
-                notice = '<div class="notice slate" role="status"><i class="fa-solid fa-ban"></i><div><b>Este chamado foi cancelado.</b><br>Se ainda precisar de ajuda, abra um novo chamado.</div></div>';
+            } else if (t.status === 'Fechado') {
+                notice = `<div class="notice slate" role="status"><i class="fa-solid fa-lock"></i><div><b>Este chamado está fechado${t.closedAt ? ' desde ' + escapeHtml(formatDateBr(t.closedAt)) : ''}.</b><br>Se ainda precisar de ajuda, abra um novo chamado${t.solution ? '.' : ' informando o protocolo <b>' + escapeHtml(t.protocol) + '</b>.'}${t.solution ? `<div class="notice-sol">${escapeHtml(t.solution)}</div>` : ''}</div></div>`;
             }
             $('my-notice').innerHTML = notice;
 
@@ -3805,8 +4282,10 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             const row = (label, value, cls) => `<div><dt>${label}</dt><dd${cls ? ' class="' + cls + '"' : ''}>${value}</dd></div>`;
             $('my-summary').innerHTML =
                 row('Status', getStatusBadge(t.status, true)) +
-                row('Urgência', getUrgencyBadge(t.urgency)) +
+                row('Tipo', typePill(t.type)) +
+                row('Severidade', getUrgencyBadge(t.urgency)) +
                 row('Categoria', escapeHtml(t.category)) +
+                (t.queue ? row('Equipe responsável', escapeHtml(t.queue)) : '') +
                 row('Prazo (SLA)', escapeHtml(s.label) + (s.text ? '<br><span class="c-muted" style="font-weight:500;">' + escapeHtml(s.text) + '</span>' : '')) +
                 row('Responsável', hasTech(t) ? escapeHtml(t.technician) : '<span class="c-muted" style="font-weight:600;">Aguardando atribuição</span>') +
                 row('Aberto em', escapeHtml(t.date), 'mono') +
@@ -3902,14 +4381,17 @@ html[data-bg="vidro"] .l-glass{opacity:1}
 
         function isLate(t) { return isOpenTicket(t) && slaInfo(t).state === 'late'; }
 
+        // Fila de chamados: um filtro para cada status (Novo, Pendente, Atendimento atribuído, Resolvido, Fechado) e os atalhos de trabalho
         const QUICK_FILTERS = [
             ['open', 'Abertos', (t) => isOpenTicket(t)],
+            ['new', 'Novo', (t) => t.status === 'Novo'],
+            ['pending', 'Pendente', (t) => t.status === 'Pendente'],
+            ['assigned', 'Atendimento atribuído', (t) => t.status === 'Atendimento atribuído'],
+            ['resolved', 'Resolvido', (t) => t.status === 'Resolvido'],
+            ['closed', 'Fechado', (t) => t.status === 'Fechado'],
             ['unassigned', 'Sem técnico', (t) => isOpenTicket(t) && !hasTech(t)],
             ['mine', 'Meus', (t) => isOpenTicket(t) && currentUser && t.technician === currentUser.name],
-            ['progress', 'Em atendimento', (t) => t.status === 'Em Atendimento'],
             ['late', 'SLA vencido', (t) => isLate(t)],
-            ['waiting', 'Aguardando cliente', (t) => t.status === 'Pendente Cliente'],
-            ['closed', 'Encerrados', (t) => isClosed(t)],
             ['all', 'Todos', () => true]
         ];
 
@@ -3923,7 +4405,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             if (!box) return;
             box.innerHTML = QUICK_FILTERS.map(([key, label, fn]) => {
                 const n = ticketsList.filter(fn).length;
-                const extra = (key === 'late' && n) ? ' late' : (key === 'unassigned' && n) ? ' warn' : '';
+                const extra = (key === 'late' && n) ? ' late' : ((key === 'unassigned' || key === 'new') && n) ? ' warn' : '';
                 return `<button type="button" class="fchip${queueQuick === key ? ' is-on' : ''}${extra}" onclick="setQueueQuick('${key}')" aria-pressed="${queueQuick === key}">${label}<b>${n}</b></button>`;
             }).join('');
         }
@@ -3936,13 +4418,13 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             const reply = needsTechReply(t) ? '<span class="t-flag reply"><i class="fa-solid fa-reply"></i> Respondeu</span>' : '';
             const attr = `data-p="${escapeHtml(t.protocol)}"`;
             return {
-                cls: 'is-click' + (hot ? ' is-hot' : '') + (t.status === 'Pendente Cliente' ? ' is-wait' : ''),
+                cls: 'is-click' + (hot ? ' is-hot' : '') + (t.status === 'Pendente' ? ' is-wait' : ''),
                 html: `
                     ${withCheckbox ? `<td class="ta-c c-chk"><input type="checkbox" ${attr} class="queue-checkbox"${selectedIds.has(t.protocol) ? ' checked' : ''} aria-label="Selecionar ${escapeHtml(t.id)}"></td>` : ''}
                     <td class="mono strong c-amber c-id">${escapeHtml(t.id)}</td>
                     <td class="t-cell">
                         <div class="t-title">${escapeHtml(t.subject)}${reply}</div>
-                        <div class="t-sub"><i class="fa-solid fa-user"></i>${escapeHtml(t.name)}<span class="sep">•</span>${escapeHtml(t.category)}${relTime(t.updatedAt || t.createdAt) ? '<span class="sep">•</span>' + relTime(t.updatedAt || t.createdAt) : ''}</div>
+                        <div class="t-sub">${typePill(t.type)}<i class="fa-solid fa-user"></i>${escapeHtml(t.name)}<span class="sep">•</span>${escapeHtml(t.category)}${t.queue ? '<span class="sep">•</span><i class="fa-solid fa-layer-group"></i>' + escapeHtml(t.queue) : ''}${relTime(t.updatedAt || t.createdAt) ? '<span class="sep">•</span>' + relTime(t.updatedAt || t.createdAt) : ''}</div>
                     </td>
                     <td class="c-urg">${getUrgencyBadge(t.urgency)}</td>
                     <td class="c-sla">${slaCell(t)}</td>
@@ -3967,6 +4449,8 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             if (!tbody) return;
             const searchVal = ($('tech-queue-search').value || '').toLowerCase().trim();
             const filterUrgency = $('tech-filter-urgency').value;
+            const filterType = $('tech-filter-type').value;
+            const filterQueue = $('tech-filter-queue').value;
             const sortBy = $('tech-sort').value;
 
             // KPIs e contadores (sobre todos os chamados, sem filtro)
@@ -3975,11 +4459,13 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             const lateCount = open.filter(isLate).length;
             $('kpi-tech-total').innerText = ticketsList.length;
             $('kpi-tech-unassigned').innerText = unassignedCount;
-            $('kpi-tech-progress').innerText = ticketsList.filter((t) => t.status === 'Em Atendimento').length;
+            $('kpi-tech-progress').innerText = ticketsList.filter((t) => t.status === 'Atendimento atribuído').length;
             $('kpi-tech-critical').innerText = open.filter((t) => t.urgency === 'Crítica').length;
             const critSub = $('kpi-tech-critical-sub');
-            if (critSub) critSub.innerText = lateCount ? lateCount + ' com SLA vencido' : 'SLA prioritário';
+            if (critSub) critSub.innerText = lateCount ? lateCount + ' com SLA vencido' : 'SLA de 4 horas';
             $('kpi-tech-resolved').innerText = ticketsList.filter((t) => t.status === 'Resolvido').length;
+            const resSub = $('kpi-tech-resolved-sub');
+            if (resSub) { const nf = ticketsList.filter((t) => t.status === 'Fechado').length; resSub.innerText = nf ? nf + ' já fechado(s)' : 'Solução entregue'; }
             $('sidebar-tech-queue-count').innerText = open.length;
             $('sidebar-tech-unassigned-count').innerText = unassignedCount;
             $('sidebar-tech-unassigned-count').classList.toggle('amber', unassignedCount > 0);
@@ -3993,8 +4479,10 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             let filtered = ticketsList.filter((t) => {
                 if (!quick(t)) return false;
                 if (filterUrgency !== 'ALL' && t.urgency !== filterUrgency) return false;
+                if (filterType !== 'ALL' && t.type !== filterType) return false;
+                if (filterQueue === '__none' ? Boolean(t.queue) : (filterQueue !== 'ALL' && t.queue !== filterQueue)) return false;
                 if (!searchVal) return true;
-                return [t.protocol, t.subject, t.name, t.email, t.technician, t.category].some((v) => String(v || '').toLowerCase().includes(searchVal));
+                return [t.protocol, t.subject, t.name, t.email, t.technician, t.category, t.queue, t.type].some((v) => String(v || '').toLowerCase().includes(searchVal));
             });
             filtered = filtered.slice().sort((a, b) => {
                 if (sortBy === 'new') return String(b.createdAt).localeCompare(String(a.createdAt));
@@ -4069,7 +4557,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                     <td class="mono strong c-amber c-id">${escapeHtml(t.id)}</td>
                     <td class="t-cell">
                         <div class="t-title">${escapeHtml(t.subject)}</div>
-                        <div class="t-sub"><i class="fa-solid fa-user"></i>${escapeHtml(t.name)}<span class="sep">•</span>${escapeHtml(t.category)}${relTime(t.updatedAt || t.createdAt) ? '<span class="sep">•</span>' + relTime(t.updatedAt || t.createdAt) : ''}</div>
+                        <div class="t-sub">${typePill(t.type)}<i class="fa-solid fa-user"></i>${escapeHtml(t.name)}<span class="sep">•</span>${escapeHtml(t.category)}${relTime(t.updatedAt || t.createdAt) ? '<span class="sep">•</span>' + relTime(t.updatedAt || t.createdAt) : ''}</div>
                     </td>
                     <td class="c-urg">${getUrgencyBadge(t.urgency)}</td>
                     <td class="c-sla">${slaCell(t)}</td>
@@ -4119,13 +4607,13 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         function renderUserSummary(mine, waitingList) {
             const box = $('user-summary');
             if (!box) return;
-            const doing = mine.filter((t) => isOpenTicket(t) && t.status !== 'Pendente Cliente').length;
-            const done = mine.filter((t) => t.status === 'Resolvido').length;
+            const doing = mine.filter((t) => isOpenTicket(t) && t.status !== 'Pendente').length;
+            const done = mine.filter(isClosed).length;
             const tile = (cls, icon, n, label, tab, hot) =>
                 `<button type="button" class="usum-t ${cls}${hot ? ' is-hot' : ''}" onclick="goMine('${tab}')"><i class="fa-solid ${icon}"></i><span><b>${n}</b><small>${label}</small></span></button>`;
             box.innerHTML = tile('', 'fa-gears', doing, 'Em andamento', 'open', false)
                 + tile('amber', 'fa-reply', waitingList.length, 'Aguardando você', 'waiting', waitingList.length > 0)
-                + tile('green', 'fa-circle-check', done, 'Resolvidos', 'closed', false)
+                + tile('green', 'fa-circle-check', done, 'Resolvidos e fechados', 'closed', false)
                 + tile('slate', 'fa-ticket', mine.length, 'Todos os chamados', 'all', false);
         }
 
@@ -4133,6 +4621,8 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         function goQueue(key, urgency) {
             navTech('queue');
             $('tech-filter-urgency').value = urgency || 'ALL';
+            $('tech-filter-type').value = 'ALL';
+            $('tech-filter-queue').value = 'ALL';
             setQueueQuick(key);
         }
 
@@ -4161,6 +4651,12 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 b.classList.toggle('is-on', on);
                 b.setAttribute('aria-checked', String(on));
             });
+            const typ = $('form-type').value;
+            document.querySelectorAll('#modal-form .pick[data-typ]').forEach((b) => {
+                const on = b.dataset.typ === typ;
+                b.classList.toggle('is-on', on);
+                b.setAttribute('aria-checked', String(on));
+            });
             const mark = (key, ok, text) => {
                 const li = document.querySelector('#form-check li[data-k="' + key + '"]');
                 if (!li) return;
@@ -4168,6 +4664,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 const b = li.querySelector('b');
                 if (b) b.textContent = text || '';
             };
+            mark('typ', !!typ, typ);
             mark('cat', !!cat, shortLabel(cat, 24));
             mark('urg', !!urg, urg);
             mark('subj', ($('form-subject').value || '').trim().length >= 3, '');
@@ -4276,7 +4773,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
 
             $('workspace-id').innerText = t.protocol;
             $('workspace-title').innerText = t.subject;
-            $('workspace-status-badge').innerHTML = getStatusBadge(t.status, false);
+            $('workspace-status-badge').innerHTML = getStatusBadge(t.status, false) + ' ' + typePill(t.type);
             $('workspace-urgency-badge').innerHTML = getUrgencyBadge(t.urgency);
             $('workspace-date').innerText = 'Aberto ' + t.date + (relTime(t.createdAt) ? ' (' + relTime(t.createdAt) + ')' : '');
             const wsSla = slaInfo(t);
@@ -4296,8 +4793,10 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             const focusedId = document.activeElement && document.activeElement.id;
             const setVal = (id, value) => { if (focusedId !== id) $(id).value = value; };
             setVal('prop-status', t.status);
-            if (focusedId !== 'prop-technician') fillTechnicianOptions(t.technician);
-            setVal('prop-category', t.category);
+            setVal('prop-type', t.type);
+            if (focusedId !== 'prop-queue') fillQueueOptions(t.queue);
+            if (focusedId !== 'prop-technician') fillTechnicianOptions(t.technician, t.queue);
+            if (focusedId !== 'prop-category') { $('prop-category').innerHTML = categoryOptions(t.category); $('prop-category').value = t.category; }
             setVal('prop-urgency', t.urgency);
             setVal('prop-hours', t.timeSpent ? String(t.timeSpent) : '');
             setVal('prop-asset', t.asset || 'Nenhum');
@@ -4308,9 +4807,11 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             $('box-resolve-solution').classList.toggle('hidden', closed);
             $('box-closed').classList.toggle('hidden', !closed);
             if (closed) {
-                $('closed-info').innerHTML = t.status === 'Cancelado'
-                    ? '<i class="fa-solid fa-ban"></i><div><b>Chamado cancelado.</b></div>'
-                    : `<i class="fa-solid fa-circle-check"></i><div><b>Resolvido${t.closedAt ? ' em ' + escapeHtml(formatDateBr(t.closedAt)) : ''}.</b>${t.solution ? '<div class="notice-sol">' + escapeHtml(t.solution) + '</div>' : ''}</div>`;
+                const fechado = t.status === 'Fechado';
+                $('closed-label').textContent = fechado ? 'Chamado fechado' : 'Chamado resolvido';
+                $('closed-info').innerHTML = `<i class="fa-solid ${fechado ? 'fa-lock' : 'fa-circle-check'}"></i><div><b>${fechado ? 'Fechado' : 'Resolvido'}${t.closedAt ? ' em ' + escapeHtml(formatDateBr(t.closedAt)) : ''}.</b>${t.solution ? '<div class="notice-sol">' + escapeHtml(t.solution) + '</div>' : ''}</div>`;
+                // Resolvido ainda pode ser reaberto pelo solicitante; "Fechar chamado" encerra de vez
+                $('btn-close-ticket').classList.toggle('hidden', fechado);
             }
 
             setTimeline('workspace-timeline', t.timeline, true, !full);
@@ -4369,8 +4870,8 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             const patch = { timeline_entry: { sender: 'Técnico', author: me, text: text, internal: internal } };
             if (!internal && isOpenTicket(t)) {
                 if (!hasTech(t)) patch.tecnico_responsavel = me;
-                if (waitClient === true) patch.status = 'Pendente Cliente';
-                else if (t.status === 'Novo') patch.status = 'Em Atendimento';
+                if (waitClient === true) patch.status = 'Pendente';
+                else if (t.status === 'Novo') patch.status = 'Atendimento atribuído';
             }
             const btn = waitClient === true ? $('btn-reply-wait') : $('btn-reply-send');
             setBusy(btn, true, 'Enviando...');
@@ -4380,7 +4881,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             ta.value = '';
             onWsReplyInput();
             afterTicketChange();
-            showToast(internal ? 'Nota interna salva.' : (waitClient === true ? 'Resposta enviada. Chamado aguardando o cliente.' : 'Interação registrada com sucesso.'), 'success');
+            showToast(internal ? 'Nota interna salva.' : (waitClient === true ? 'Resposta enviada. Chamado Pendente, aguardando o solicitante.' : 'Interação registrada com sucesso.'), 'success');
         }
 
         async function onPropChange(field) {
@@ -4399,15 +4900,27 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                     sol.focus();
                     return;
                 }
-                if (v === 'Cancelado') { $('prop-status').value = t.status; showToast('Para cancelar use o botão "Cancelar chamado".', 'warning'); return; }
+                if (v === 'Fechado') {
+                    // Fechar é encerrar de vez: direto só depois de resolvido; sem solução, pelo botão "Fechar sem resolver"
+                    if (t.status === 'Resolvido') { closeResolvedTicket(); return; }
+                    $('prop-status').value = t.status;
+                    showToast(t.status === 'Fechado' ? 'O chamado já está fechado.' : 'Para fechar sem resolver use o botão "Fechar sem resolver".', 'warning');
+                    return;
+                }
                 patch.status = v;
+                // Reabrir um chamado encerrado: volta para o atendimento (com técnico) ou para o início da fila
                 if (isClosed(t) && v !== 'Novo' && !hasTech(t)) patch.tecnico_responsavel = me;
             } else if (field === 'technician') {
                 const v = $('prop-technician').value;
                 patch.tecnico_responsavel = v === 'Não Atribuído' ? '' : v;
-                if (v !== 'Não Atribuído' && t.status === 'Novo') patch.status = 'Em Atendimento';
+                if (v !== 'Não Atribuído' && t.status === 'Novo') patch.status = 'Atendimento atribuído';
+                if (v === 'Não Atribuído' && t.status === 'Atendimento atribuído') patch.status = 'Novo';
             } else if (field === 'category') {
                 patch.service_type = $('prop-category').value;
+            } else if (field === 'type') {
+                patch.ticket_type = $('prop-type').value;
+            } else if (field === 'queue') {
+                patch.fila = $('prop-queue').value;
             } else if (field === 'urgency') {
                 patch.priority = $('prop-urgency').value;
             } else if (field === 'hours') {
@@ -4426,7 +4939,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             if (!t || wsBusy) return;
             const me = currentUser ? currentUser.name : 'Administrador';
             const patch = { tecnico_responsavel: me };
-            if (t.status === 'Novo') patch.status = 'Em Atendimento';
+            if (t.status === 'Novo') patch.status = 'Atendimento atribuído';
             const updated = await saveTicketPatch(t, patch);
             if (updated) { afterTicketChange(); showToast('Chamado atribuído a você.', 'info'); }
         }
@@ -4437,7 +4950,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             if (!t) return;
             const me = currentUser ? currentUser.name : 'Administrador';
             const patch = { tecnico_responsavel: me };
-            if (t.status === 'Novo') patch.status = 'Em Atendimento';
+            if (t.status === 'Novo') patch.status = 'Atendimento atribuído';
             const updated = await saveTicketPatch(t, patch, { quiet: true });
             if (updated) { afterTicketChange(); showToast('Chamado ' + t.protocol + ' assumido por você.', 'success'); }
         }
@@ -4468,22 +4981,31 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             showToast('Chamado ' + t.protocol + ' encerrado como RESOLVIDO.', 'success');
         }
 
+        // Fechar sem resolver (era "cancelar"): o chamado vai direto para Fechado, com uma nota interna
         function cancelTicketAdmin() {
-            armConfirm($('btn-cancel-ticket'), 'Clique de novo para cancelar', async () => {
+            armConfirm($('btn-cancel-ticket'), 'Clique de novo para fechar sem resolver', async () => {
                 const t = getTicket(activeProtocol);
                 if (!t || wsBusy) return;
                 const me = currentUser ? currentUser.name : 'Administrador';
-                const updated = await saveTicketPatch(t, { status: 'Cancelado', timeline_entry: { sender: 'Técnico', author: me, text: 'Chamado cancelado pela equipe de TI.', internal: true } });
-                if (updated) { afterTicketChange(); showToast('Chamado ' + t.protocol + ' cancelado.', 'info'); }
+                const updated = await saveTicketPatch(t, { status: 'Fechado', timeline_entry: { sender: 'Técnico', author: me, text: 'Chamado fechado sem solução pela equipe de TI.', internal: true } });
+                if (updated) { afterTicketChange(); showToast('Chamado ' + t.protocol + ' fechado.', 'info'); }
             });
+        }
+
+        // Resolvido -> Fechado: encerra de vez (depois disso o solicitante não pode mais reabrir)
+        async function closeResolvedTicket() {
+            const t = getTicket(activeProtocol);
+            if (!t || wsBusy || t.status !== 'Resolvido') return;
+            const me = currentUser ? currentUser.name : 'Administrador';
+            const updated = await saveTicketPatch(t, { status: 'Fechado', timeline_entry: { sender: 'Técnico', author: me, text: 'Chamado fechado pela equipe de TI.', internal: true } });
+            if (updated) { afterTicketChange(); showToast('Chamado ' + t.protocol + ' fechado.', 'success'); }
         }
 
         async function reopenTicketAdmin() {
             const t = getTicket(activeProtocol);
             if (!t || wsBusy) return;
             const me = currentUser ? currentUser.name : 'Administrador';
-            const patch = { status: 'Em Atendimento', timeline_entry: { sender: 'Técnico', author: me, text: 'Chamado reaberto pela equipe de TI.', internal: true } };
-            if (!hasTech(t)) patch.tecnico_responsavel = me;
+            const patch = { status: hasTech(t) ? 'Atendimento atribuído' : 'Novo', timeline_entry: { sender: 'Técnico', author: me, text: 'Chamado reaberto pela equipe de TI.', internal: true } };
             const updated = await saveTicketPatch(t, patch);
             if (updated) { afterTicketChange(); showToast('Chamado reaberto.', 'success'); }
         }
@@ -4501,7 +5023,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             for (const t of chosen) {
                 if (isClosed(t) || t.technician === me) { skipped++; continue; }
                 const patch = { tecnico_responsavel: me };
-                if (t.status === 'Novo') patch.status = 'Em Atendimento';
+                if (t.status === 'Novo') patch.status = 'Atendimento atribuído';
                 const updated = await saveTicketPatch(t, patch, { quiet: true });
                 if (updated) done++; else failed++;
             }
@@ -4528,6 +5050,204 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             else if (id === 'my-reply-text') { ev.preventDefault(); sendMyReply(); }
             else if (id === 'form-subject' || id === 'form-desc' || id === 'form-req-phone') { ev.preventDefault(); handleCreateTicket(); }
         });
+
+        // ============================== ADMINISTRADOR: FILAS & TÉCNICOS ==============================
+        // Campo "Fila de atendimento" do chamado: as filas ativas + a fila que o chamado já tem (mesmo se foi excluída depois)
+        function fillQueueOptions(selected) {
+            const sel = $('prop-queue');
+            if (!sel) return;
+            const names = queuesList.filter((q) => q.ativa !== false).map((q) => q.nome);
+            if (selected && !names.includes(selected)) names.push(selected);
+            sel.innerHTML = '<option value="">-- Sem fila --</option>' + names.map((n) => `<option value="${escapeHtml(n)}">${escapeHtml(n)}</option>`).join('');
+            sel.value = selected || '';
+        }
+
+        const techByEmail = (email) => techDirectory.find((d) => d.email === email) || null;
+        const openCountForQueue = (name) => ticketsList.filter((t) => isOpenTicket(t) && t.queue === name).length;
+        const openCountForTech = (name) => ticketsList.filter((t) => isOpenTicket(t) && t.technician === name).length;
+
+        function renderTeams() {
+            const box = $('teams-queues');
+            const body = $('teams-techs-tbody');
+            if (!box || !body) return;
+            $('teams-queues-count').textContent = queuesList.length ? '· ' + queuesList.length + (queuesList.length === 1 ? ' fila' : ' filas') : '';
+
+            if (!queuesList.length) {
+                box.innerHTML = '<div class="glass qcard"><p class="form-note">Nenhuma fila cadastrada. Use "Nova fila" para criar a primeira.</p></div>';
+            } else {
+                box.innerHTML = queuesList.map((q) => {
+                    const members = (q.tecnicos || []).map(techByEmail).filter(Boolean);
+                    const open = openCountForQueue(q.nome);
+                    const noTech = ticketsList.filter((t) => isOpenTicket(t) && t.queue === q.nome && !hasTech(t)).length;
+                    const cats = (q.categorias || []).map((c) => `<span class="chipx">${escapeHtml(c)}</span>`).join('') || '<span class="chipx none">nenhuma: só recebe chamados encaminhados</span>';
+                    const people = members.map((m) => `<span class="chipx" title="${escapeHtml(m.email)}"><i class="fa-solid ${m.kind === 'admin' ? 'fa-user-shield' : 'fa-user'}"></i>${escapeHtml(m.name)}</span>`).join('') || '<span class="chipx none">nenhum técnico: cadastre ou escolha na fila</span>';
+                    return `<article class="glass qcard${q.ativa === false ? ' is-off' : ''}">
+                        <div class="qc-head">
+                            <div><h4>${escapeHtml(q.nome)}</h4>${q.descricao ? `<p>${escapeHtml(q.descricao)}</p>` : ''}</div>
+                            ${q.ativa === false ? '<span class="badge b-slate">Inativa</span>' : '<span class="badge b-green"><span class="dot live"></span>Ativa</span>'}
+                        </div>
+                        <div class="qc-stats">
+                            <div><b>${open}</b><small>abertos</small></div>
+                            <div><b>${noTech}</b><small>sem técnico</small></div>
+                            <div><b>${members.length}</b><small>técnicos</small></div>
+                        </div>
+                        <div class="qc-list"><span class="lbl2">Categorias que entram</span>${cats}</div>
+                        <div class="qc-list"><span class="lbl2">Técnicos da fila</span>${people}</div>
+                        <div class="qc-acts">
+                            <button type="button" data-n="${escapeHtml(q.nome)}" onclick="goQueueByName(this.dataset.n)" class="btn btn-ghost btn-sm"><i class="fa-solid fa-list-check c-amber"></i> Ver chamados</button>
+                            <button type="button" data-id="${escapeHtml(q.id)}" onclick="openQueueModal(this.dataset.id)" class="btn btn-ghost btn-sm"><i class="fa-solid fa-pen"></i> Editar</button>
+                        </div>
+                    </article>`;
+                }).join('');
+            }
+
+            if (!techDirectory.length) {
+                body.innerHTML = emptyRow(6, 'Nenhum técnico cadastrado. Use "Cadastrar técnico" para incluir o primeiro.');
+                return;
+            }
+            const queueNames = (d) => queuesList.filter((q) => (d.filas || []).includes(q.id)).map((q) => `<span class="chipx">${escapeHtml(q.nome)}</span>`).join('') || '<span class="chipx none">nenhuma fila</span>';
+            body.innerHTML = techDirectory.map((d) => `<tr>
+                <td class="t-cell"><div class="t-title">${escapeHtml(d.name)}</div><div class="t-sub">${escapeHtml(d.email)}${d.phone ? '<span class="sep">•</span>' + escapeHtml(d.phone) : ''}</div></td>
+                <td class="nw">${d.kind === 'admin' ? '<span class="badge b-amber">Administrador</span>' : escapeHtml(d.specialty || 'Suporte Geral')}</td>
+                <td><div class="qc-list">${queueNames(d)}</div></td>
+                <td class="mono">${openCountForTech(d.name)}</td>
+                <td>${d.active ? '<span class="badge b-green"><span class="dot"></span>Ativo</span>' : '<span class="badge b-slate">Inativo</span>'}</td>
+                <td class="ta-r">${d.kind === 'tecnico'
+                    ? `<button type="button" data-id="${escapeHtml(d.id)}" onclick="openTechModal(this.dataset.id)" class="btn btn-ghost btn-sm"><i class="fa-solid fa-pen"></i> Editar</button>`
+                    : '<span class="c-muted" title="Administradores são gerenciados em Cadastros &amp; Contas; as filas dele são escolhidas em Editar fila.">via Nexus</span>'}</td>
+            </tr>`).join('');
+        }
+
+        function goQueueByName(name) {
+            navTech('queue');
+            const sel = $('tech-filter-queue');
+            if (sel) sel.value = Array.from(sel.options).some((o) => o.value === name) ? name : 'ALL';
+            setQueueQuick('all');
+        }
+
+        function showModalBanner(prefix, msg) {
+            $(prefix + '-banner-text').textContent = msg || '';
+            $(prefix + '-banner').classList.toggle('hidden', !msg);
+        }
+
+        // ---- Fila: criar, editar, excluir ----
+        function openQueueModal(id) {
+            const q = id ? queuesList.find((x) => x.id === id) : null;
+            showModalBanner('queue', '');
+            $('queue-id').value = q ? q.id : '';
+            $('queue-modal-title').textContent = q ? 'Editar fila' : 'Nova fila de atendimento';
+            $('queue-name').value = q ? q.nome : '';
+            $('queue-desc').value = q ? (q.descricao || '') : '';
+            $('queue-active').checked = q ? q.ativa !== false : true;
+            $('btn-queue-delete').classList.toggle('hidden', !q);
+            const taken = (cat) => { const other = queuesList.find((o) => (!q || o.id !== q.id) && o.ativa !== false && (o.categorias || []).includes(cat)); return other ? other.nome : ''; };
+            $('queue-cats').innerHTML = TICKET_CATEGORIES.map((c) => {
+                const other = taken(c);
+                return `<label class="chk"><input type="checkbox" value="${escapeHtml(c)}"${q && (q.categorias || []).includes(c) ? ' checked' : ''}><span>${escapeHtml(c)}</span>${other ? `<small title="Já cai na fila ${escapeHtml(other)}">em: ${escapeHtml(shortLabel(other, 14))}</small>` : ''}</label>`;
+            }).join('');
+            const people = techDirectory.filter((d) => d.active || (q && (q.tecnicos || []).includes(d.email)));
+            $('queue-members').innerHTML = people.length
+                ? people.map((d) => `<label class="chk"><input type="checkbox" value="${escapeHtml(d.email)}"${q && (q.tecnicos || []).includes(d.email) ? ' checked' : ''}><span>${escapeHtml(d.name)}</span><small>${d.kind === 'admin' ? 'admin' : 'técnico'}</small></label>`).join('')
+                : '<p class="form-note">Nenhum técnico cadastrado ainda. Salve a fila e cadastre os técnicos depois.</p>';
+            openModal('modal-queue', '#queue-name');
+        }
+
+        async function saveQueue(e) {
+            if (e && e.preventDefault) e.preventDefault();
+            const btn = $('btn-queue-save');
+            const picked = (box) => Array.from($(box).querySelectorAll('input:checked')).map((i) => i.value);
+            const body = {
+                id: $('queue-id').value || undefined,
+                nome: $('queue-name').value.trim(),
+                descricao: $('queue-desc').value.trim(),
+                categorias: picked('queue-cats'),
+                tecnicos: picked('queue-members'),
+                ativa: $('queue-active').checked
+            };
+            if (body.nome.length < 3) { showModalBanner('queue', 'Informe o nome da fila (mínimo de 3 caracteres).'); $('queue-name').focus(); return; }
+            showModalBanner('queue', '');
+            setBusy(btn, true, 'Salvando...');
+            const r = await api('POST', '/api/filas', body);
+            setBusy(btn, false);
+            if (r.status === 401) { handleAuthExpired(); return; }
+            if (!r.ok) { showModalBanner('queue', r.network ? 'Sem conexão com o servidor. Nada foi salvo.' : ((r.data && r.data.message) || 'Não foi possível salvar a fila.')); return; }
+            closeModal('modal-queue');
+            showToast('Fila "' + r.data.fila.nome + '" salva.', 'success');
+            await loadTechnicians();
+            renderTeams();
+            renderTechQueue();
+        }
+
+        function deleteQueue() {
+            armConfirm($('btn-queue-delete'), 'Clique de novo para excluir', async () => {
+                const id = $('queue-id').value;
+                if (!id) return;
+                const r = await api('DELETE', '/api/filas?id=' + encodeURIComponent(id));
+                if (r.status === 401) { handleAuthExpired(); return; }
+                if (!r.ok) { showModalBanner('queue', (r.data && r.data.message) || 'Não foi possível excluir a fila.'); return; }
+                closeModal('modal-queue');
+                showToast('Fila excluída.', 'info');
+                await loadTechnicians();
+                renderTeams();
+            });
+        }
+
+        // ---- Técnico: cadastrar, editar, excluir ----
+        function openTechModal(id) {
+            const d = id ? techDirectory.find((x) => x.kind === 'tecnico' && x.id === id) : null;
+            showModalBanner('tech', '');
+            $('tech-id').value = d ? d.id : '';
+            $('tech-modal-title').textContent = d ? 'Editar técnico' : 'Cadastrar técnico';
+            $('tech-name').value = d ? d.name : '';
+            $('tech-email').value = d ? d.email : '';
+            $('tech-phone').value = d ? d.phone : '';
+            $('tech-specialty').value = d ? d.specialty : '';
+            $('tech-active').checked = d ? d.active : true;
+            $('btn-tech-delete').classList.toggle('hidden', !d);
+            $('tech-queues').innerHTML = queuesList.length
+                ? queuesList.map((q) => `<label class="chk"><input type="checkbox" value="${escapeHtml(q.id)}"${d && (d.filas || []).includes(q.id) ? ' checked' : ''}><span>${escapeHtml(q.nome)}</span>${q.ativa === false ? '<small>inativa</small>' : ''}</label>`).join('')
+                : '<p class="form-note">Ainda não há filas. Crie uma fila e depois escolha os técnicos nela.</p>';
+            openModal('modal-tech', '#tech-name');
+        }
+
+        async function saveTech(e) {
+            if (e && e.preventDefault) e.preventDefault();
+            const btn = $('btn-tech-save');
+            const body = {
+                id: $('tech-id').value || undefined,
+                name: $('tech-name').value.trim(),
+                email: $('tech-email').value.trim().toLowerCase(),
+                phone: $('tech-phone').value.trim(),
+                specialty: $('tech-specialty').value.trim(),
+                active: $('tech-active').checked,
+                filas: Array.from($('tech-queues').querySelectorAll('input:checked')).map((i) => i.value)
+            };
+            if (!body.name || !body.email) { showModalBanner('tech', 'Informe o nome e o e-mail do técnico.'); (body.name ? $('tech-email') : $('tech-name')).focus(); return; }
+            showModalBanner('tech', '');
+            setBusy(btn, true, 'Salvando...');
+            const r = await api('POST', '/api/tecnicos', body);
+            setBusy(btn, false);
+            if (r.status === 401) { handleAuthExpired(); return; }
+            if (!r.ok) { showModalBanner('tech', r.network ? 'Sem conexão com o servidor. Nada foi salvo.' : ((r.data && r.data.message) || 'Não foi possível salvar o técnico.')); return; }
+            closeModal('modal-tech');
+            showToast('Técnico ' + body.name + ' salvo.', 'success');
+            await loadTechnicians();
+            renderTeams();
+        }
+
+        function deleteTech() {
+            armConfirm($('btn-tech-delete'), 'Clique de novo para excluir', async () => {
+                const id = $('tech-id').value;
+                if (!id) return;
+                const r = await api('DELETE', '/api/tecnicos?id=' + encodeURIComponent(id));
+                if (r.status === 401) { handleAuthExpired(); return; }
+                if (!r.ok) { showModalBanner('tech', (r.data && r.data.message) || 'Não foi possível excluir o técnico.'); return; }
+                closeModal('modal-tech');
+                showToast('Técnico excluído. Os chamados dele continuam com o nome registrado.', 'info');
+                await loadTechnicians();
+                renderTeams();
+            });
+        }
 
         // CHARTS & UTILS
         function initCharts() {
@@ -4728,16 +5448,22 @@ html[data-bg="vidro"] .l-glass{opacity:1}
 
         // Cada categoria usa a mesma cor do cartão do catálogo (verde, azul, rosa, roxo) e um nome curto no gráfico
         const CATEGORY_STYLE = {
-            'Sistema Financeiro & ERP': { short: 'Financeiro & ERP', rgb: '52, 211, 153' },
-            'Gestão de Acessos & Reset de Senha': { short: 'Acessos & Senhas', rgb: '56, 189, 248' },
-            'Suporte Técnico & Infraestrutura': { short: 'Infraestrutura', rgb: '251, 113, 133' },
-            'Projetos & Melhorias': { short: 'Projetos', rgb: '192, 132, 252' }
+            'Reset de senha': { short: 'Reset de senha', rgb: '52, 211, 153' },
+            'Pagamento não reconhecido': { short: 'Pagamento', rgb: '251, 191, 36' },
+            'Desbloqueio de usuário': { short: 'Desbloqueio', rgb: '56, 189, 248' },
+            'Conta/Login': { short: 'Conta / Login', rgb: '96, 165, 250' },
+            'Dados Cadastrais': { short: 'Cadastro', rgb: '192, 132, 252' },
+            'Liberação de degustação': { short: 'Degustação', rgb: '74, 222, 128' },
+            '2ª Via de fatura': { short: '2ª via', rgb: '251, 146, 60' },
+            'Atendimento Técnico': { short: 'Técnico', rgb: '251, 113, 133' },
+            'Falhas/Bugs/Correções': { short: 'Falhas e bugs', rgb: '244, 63, 94' },
+            'Outros': { short: 'Outros', rgb: '148, 163, 184' }
         };
 
         // ---- Política de SLA: prazo de atendimento por urgência ----
-        // Crítica 30 min e Alta 1 h; Média 24 horas corridas; Baixa 5 dias úteis (sábado e domingo não contam).
+        // Crítica 4 horas e Alta 8 horas; Média 24 horas corridas; Baixa 5 dias úteis (sábado e domingo não contam).
         // É a mesma regra que o servidor grava no chamado (atendimento.js).
-        const SLA_POLICY = { 'Crítica': '30 Minutos', 'Alta': '1 Hora', 'Média': '24 Horas', 'Baixa': '5 Dias Úteis' };
+        const SLA_POLICY = { 'Crítica': '4 Horas', 'Alta': '8 Horas', 'Média': '24 Horas', 'Baixa': '5 Dias Úteis' };
         const SLA_WEEKDAYS = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'];
 
         function slaForUrgency(urgency) {
@@ -4781,7 +5507,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             const due = slaDueDate(start, label);
             if (!due) return info;
             info.due = due;
-            if (t.status === 'Resolvido' || t.status === 'Cancelado') { info.state = 'done'; info.text = t.status === 'Cancelado' ? 'Cancelado' : 'Encerrado'; return info; }
+            if (t.status === 'Resolvido' || t.status === 'Fechado') { info.state = 'done'; info.text = t.status === 'Fechado' ? 'Fechado' : 'Resolvido'; return info; }
             const left = due.getTime() - Date.now();
             const total = due.getTime() - start.getTime();
             if (left <= 0) { info.state = 'late'; info.text = 'Vencido em ' + fmtDue(due); }
@@ -4803,24 +5529,19 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             toggleProfileMenu(true);
         });
 
-        function getStatusBadge(status, forUser) {
-            switch(status) {
+        // Selos dos 5 status da fila (os mesmos nomes para o solicitante e para a equipe)
+        function getStatusBadge(status) {
+            switch (normStatus(status)) {
                 case 'Novo':
-                case 'Em Aberto':
+                    return `<span class="badge b-amber"><span class="dot"></span>Novo</span>`;
                 case 'Pendente':
-                    return `<span class="badge b-amber"><span class="dot"></span>${forUser ? 'Aberto' : 'Novo'}</span>`;
-                case 'Em Atendimento':
-                case 'Em Andamento':
-                    return `<span class="badge b-blue"><span class="dot live"></span>Em Atendimento</span>`;
-                case 'Pendente Cliente':
-                    return forUser
-                        ? `<span class="badge b-amber"><span class="dot live"></span>Aguardando você</span>`
-                        : `<span class="badge b-purple"><span class="dot"></span>Pendente Cliente</span>`;
+                    return `<span class="badge b-purple"><span class="dot live"></span>Pendente</span>`;
+                case 'Atendimento atribuído':
+                    return `<span class="badge b-blue"><span class="dot live"></span>Atendimento atribuído</span>`;
                 case 'Resolvido':
-                case 'Concluído':
                     return `<span class="badge b-green"><i class="fa-solid fa-check" style="font-size:.6rem;"></i>Resolvido</span>`;
-                case 'Cancelado':
-                    return `<span class="badge b-slate"><i class="fa-solid fa-ban" style="font-size:.6rem;"></i>Cancelado</span>`;
+                case 'Fechado':
+                    return `<span class="badge b-slate"><i class="fa-solid fa-lock" style="font-size:.6rem;"></i>Fechado</span>`;
                 default:
                     return `<span class="badge b-slate">${escapeHtml(status)}</span>`;
             }

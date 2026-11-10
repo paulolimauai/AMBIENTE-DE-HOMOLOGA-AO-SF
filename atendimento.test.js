@@ -70,10 +70,12 @@ test('validarAbertura normaliza e escapa o pedido do público', () => {
   assert.equal(d.client_email, 'maria@exemplo.com');
   assert.equal(d.client_phone, '(62) 99234-5372');
   assert.equal(d.client_cpf, '52998224725');
-  assert.equal(d.service_type, 'Reset de Senha');
+  assert.equal(d.service_type, 'Reset de senha');
+  assert.equal(d.ticket_type, 'Requisição'); // sem escolha, vale o tipo sugerido pela categoria
   assert.equal(d.priority, 'Alta');
+  assert.equal(d.sla, '8 Horas');
   assert.equal(d.title, 'Erro &lt;b&gt;grave&lt;/b&gt; &amp; &quot;urgente&quot;');
-  assert.equal(d.status, 'Pendente');
+  assert.equal(d.status, 'Novo');
   assert.equal(d.tecnico_responsavel, null);
   assert.equal(d.canal_atendimento, 'Tela de Login');
 });
@@ -83,10 +85,11 @@ test('validarAbertura do público ignora status, técnico, notas e canal interno
     ...pedidoValido(), status: 'Concluído', tecnico_responsavel: 'Fulano', admin_notes: 'nota', canal_atendimento: 'Telefone'
   });
   assert.equal(r.ok, true);
-  assert.equal(r.dados.status, 'Pendente');
+  assert.equal(r.dados.status, 'Novo');
   assert.equal(r.dados.tecnico_responsavel, null);
   assert.equal(r.dados.admin_notes, '');
   assert.equal(r.dados.canal_atendimento, 'Portal Web');
+  assert.equal(r.dados.fila, null); // quem não é administrador não escolhe a fila
 });
 
 test('validarAbertura recusa pedido incompleto com mensagem específica', () => {
@@ -96,7 +99,8 @@ test('validarAbertura recusa pedido incompleto com mensagem específica', () => 
     [{ client_email: '<img onerror=x>@x.com' }, 'Informe um e-mail válido.'],
     [{ client_phone: '123' }, 'Informe o telefone com DDD (ex.: (62) 99999-9999).'],
     [{ service_type: 'Hackear o sistema' }, 'Selecione uma categoria válida.'],
-    [{ priority: 'Crítica máxima' }, 'Prioridade inválida.'],
+    [{ priority: 'Crítica máxima' }, 'Severidade inválida. Use: Crítica, Alta, Média, Baixa.'],
+    [{ ticket_type: 'Reclamação' }, 'Escolha o tipo do chamado: Requisição ou Incidente.'],
     [{ title: 'ab' }, 'Informe o assunto do chamado.'],
     [{ description: 'curta' }, 'Descreva o que você precisa com um pouco mais de detalhes (mínimo de 10 caracteres).']
   ];
@@ -134,13 +138,16 @@ test('validarAbertura como administrador define status, técnico e notas e aceit
     ...pedidoValido(), description: 'bug', canal_atendimento: 'Telefone', tecnico_responsavel: 'Carlos', admin_notes: 'Cliente ligou'
   }, { admin: true });
   assert.equal(r.ok, true);
-  assert.equal(r.dados.status, 'Em Andamento'); // técnico definido => em andamento
+  assert.equal(r.dados.status, 'Atendimento atribuído'); // técnico definido => atendimento atribuído
   assert.equal(r.dados.tecnico_responsavel, 'Carlos');
   assert.equal(r.dados.admin_notes, 'Cliente ligou');
   assert.equal(r.dados.canal_atendimento, 'Telefone');
   const invalido = A.validarAbertura({ ...pedidoValido(), status: 'Qualquer coisa' }, { admin: true });
   assert.equal(invalido.ok, false);
-  assert.equal(invalido.mensagem, 'Status inválido.');
+  assert.equal(invalido.mensagem, 'Status inválido. Use: Novo, Pendente, Atendimento atribuído, Resolvido, Fechado.');
+  // sem técnico e sem status, o chamado nasce "Novo"; nomes antigos de status ainda são aceitos
+  assert.equal(A.validarAbertura(pedidoValido(), { admin: true }).dados.status, 'Novo');
+  assert.equal(A.validarAbertura({ ...pedidoValido(), status: 'Concluído' }, { admin: true }).dados.status, 'Resolvido');
 });
 
 test('validarAbertura usa o validador de e-mail do servidor quando informado', () => {
@@ -160,14 +167,14 @@ test('montarOrdem preenche datas e marca assumido/concluído conforme o status',
   assert.equal(aberta.concluido_em, null);
 });
 
-test('encontrarDuplicada acha o mesmo pedido recente e ignora antigos, cancelados e de outro e-mail', () => {
+test('encontrarDuplicada acha o mesmo pedido recente e ignora antigos, fechados e de outro e-mail', () => {
   const dados = A.validarAbertura(pedidoValido()).dados;
   const agora = Date.parse(AGORA);
-  const base = { client_email: dados.client_email, title: dados.title, description: dados.description, status: 'Pendente' };
+  const base = { client_email: dados.client_email, title: dados.title, description: dados.description, status: 'Novo' };
   const recente = { ...base, protocol: 'A', created_at: new Date(agora - 60 * 1000).toISOString() };
   assert.equal(A.encontrarDuplicada([recente], dados, { agora }).protocol, 'A');
   assert.equal(A.encontrarDuplicada([{ ...recente, created_at: new Date(agora - 3600 * 1000).toISOString() }], dados, { agora }), null);
-  assert.equal(A.encontrarDuplicada([{ ...recente, status: 'Cancelado' }], dados, { agora }), null);
+  assert.equal(A.encontrarDuplicada([{ ...recente, status: 'Fechado' }], dados, { agora }), null);
   assert.equal(A.encontrarDuplicada([{ ...recente, client_email: 'outro@exemplo.com' }], dados, { agora }), null);
   assert.equal(A.encontrarDuplicada([], dados, { agora }), null);
 });
@@ -175,42 +182,47 @@ test('encontrarDuplicada acha o mesmo pedido recente e ignora antigos, cancelado
 // ---------- Atualização ----------
 const ordemBase = () => A.montarOrdem(A.validarAbertura(pedidoValido()).dados, { protocolo: 'OS-261106-K7QX', id: 1, agoraIso: '2026-11-06T12:00:00.000Z' });
 
-test('aplicarAtualizacao só com notas não muda o status (antes voltava para Pendente)', () => {
-  const concluida = { ...ordemBase(), status: 'Concluído', concluido_em: '2026-11-06T13:00:00.000Z' };
+test('aplicarAtualizacao só com notas não muda o status (antes voltava para o início da fila)', () => {
+  const concluida = { ...ordemBase(), status: 'Resolvido', concluido_em: '2026-11-06T13:00:00.000Z' };
   const r = A.aplicarAtualizacao(concluida, { id: 1, admin_notes: 'Resolvido por telefone.' }, { agoraIso: AGORA });
   assert.equal(r.ok, true);
-  assert.equal(r.ordem.status, 'Concluído');
+  assert.equal(r.ordem.status, 'Resolvido');
   assert.equal(r.ordem.concluido_em, '2026-11-06T13:00:00.000Z');
   assert.equal(r.ordem.admin_notes, 'Resolvido por telefone.');
   assert.deepEqual(r.mudancas, ['parecer atualizado']);
 });
 
 test('aplicarAtualizacao assume e conclui com carimbos de data corretos', () => {
-  const assumida = A.aplicarAtualizacao(ordemBase(), { status: 'em andamento', tecnico_responsavel: 'Carlos' }, { agoraIso: AGORA });
-  assert.equal(assumida.ordem.status, 'Em Andamento');
+  const assumida = A.aplicarAtualizacao(ordemBase(), { status: 'atendimento atribuído', tecnico_responsavel: 'Carlos' }, { agoraIso: AGORA });
+  assert.equal(assumida.ordem.status, 'Atendimento atribuído');
   assert.equal(assumida.ordem.assumido_em, AGORA);
   assert.equal(assumida.ordem.concluido_em, null);
-  const concluida = A.aplicarAtualizacao(assumida.ordem, { status: 'Concluído' }, { agoraIso: '2026-11-06T16:00:00.000Z' });
+  const concluida = A.aplicarAtualizacao(assumida.ordem, { status: 'Resolvido' }, { agoraIso: '2026-11-06T16:00:00.000Z' });
   assert.equal(concluida.ordem.concluido_em, '2026-11-06T16:00:00.000Z');
   assert.equal(concluida.ordem.assumido_em, AGORA);
-  const reaberta = A.aplicarAtualizacao(concluida.ordem, { status: 'Pendente', tecnico_responsavel: '' }, { agoraIso: '2026-11-06T17:00:00.000Z' });
+  // Resolvido -> Fechado mantém a data em que foi resolvido
+  const fechada = A.aplicarAtualizacao(concluida.ordem, { status: 'Fechado' }, { agoraIso: '2026-11-07T09:00:00.000Z' });
+  assert.equal(fechada.ordem.status, 'Fechado');
+  assert.equal(fechada.ordem.concluido_em, '2026-11-06T16:00:00.000Z');
+  const reaberta = A.aplicarAtualizacao(concluida.ordem, { status: 'Novo', tecnico_responsavel: '' }, { agoraIso: '2026-11-06T17:00:00.000Z' });
   assert.equal(reaberta.ordem.concluido_em, null);
   assert.equal(reaberta.ordem.assumido_em, null);
   assert.equal(reaberta.ordem.tecnico_responsavel, null);
 });
 
-test('aplicarAtualizacao recusa status, prioridade e categoria inválidos mas mantém categoria antiga do histórico', () => {
+test('aplicarAtualizacao recusa status, severidade e categoria inválidos mas mantém categoria antiga do histórico', () => {
   assert.equal(A.aplicarAtualizacao(ordemBase(), { status: 'Sumiu' }, { agoraIso: AGORA }).ok, false);
   assert.equal(A.aplicarAtualizacao(ordemBase(), { priority: 'Imediata' }, { agoraIso: AGORA }).ok, false);
   assert.equal(A.aplicarAtualizacao(ordemBase(), { service_type: 'Outra coisa' }, { agoraIso: AGORA }).ok, false);
+  assert.equal(A.aplicarAtualizacao(ordemBase(), { ticket_type: 'Dúvida' }, { agoraIso: AGORA }).ok, false);
   const antiga = { ...ordemBase(), service_type: 'Categoria Antiga' };
-  assert.equal(A.aplicarAtualizacao(antiga, { service_type: 'Categoria Antiga', status: 'Concluído' }, { agoraIso: AGORA }).ok, true);
+  assert.equal(A.aplicarAtualizacao(antiga, { service_type: 'Categoria Antiga', status: 'Resolvido' }, { agoraIso: AGORA }).ok, true);
 });
 
 test('aplicarAtualizacao não altera o chamado original (imutável)', () => {
   const original = ordemBase();
   const copia = JSON.stringify(original);
-  A.aplicarAtualizacao(original, { status: 'Concluído', admin_notes: 'x' }, { agoraIso: AGORA });
+  A.aplicarAtualizacao(original, { status: 'Resolvido', admin_notes: 'x' }, { agoraIso: AGORA });
   assert.equal(JSON.stringify(original), copia);
 });
 
@@ -227,7 +239,7 @@ test('paraIso converte o texto de data do SQL Server (Brasília) e datas comuns'
 test('normalizarOrdem troca nulos por texto vazio e padroniza datas', () => {
   const o = A.normalizarOrdem({ id: 1, protocol: ' OS-1234567 ', client_email: 'A@B.COM', client_phone: null, status: null, concluido_em: 'Nov  2 2026 12:24PM', created_at: '2026-11-02T15:10:44.484Z' });
   assert.equal(o.client_phone, '');
-  assert.equal(o.status, 'Pendente');
+  assert.equal(o.status, 'Novo');
   assert.equal(o.client_email, 'a@b.com');
   assert.equal(o.concluido_em, '2026-11-02T15:24:00.000Z');
   assert.equal(o.tecnico_responsavel, null);
@@ -235,7 +247,7 @@ test('normalizarOrdem troca nulos por texto vazio e padroniza datas', () => {
 });
 
 test('mesclarOrdens: banco vence, o que só existe localmente é mantido, mais recentes primeiro', () => {
-  const banco = [{ id: 5, protocol: 'OS-261106-AAAA', status: 'Concluído', created_at: '2026-11-06T10:00:00Z' }];
+  const banco = [{ id: 5, protocol: 'OS-261106-AAAA', status: 'Resolvido', ticket_type: 'Incidente', created_at: '2026-11-06T10:00:00Z' }];
   const local = [
     { id: 'x', protocol: 'OS-261106-AAAA', status: 'Pendente', created_at: '2026-11-06T10:00:00Z' },
     { id: 'y', protocol: 'OS-261105-BBBB', status: 'Pendente', created_at: '2026-11-05T10:00:00Z' },
@@ -243,7 +255,7 @@ test('mesclarOrdens: banco vence, o que só existe localmente é mantido, mais r
   ];
   const r = A.mesclarOrdens(banco, local);
   assert.deepEqual(r.map((o) => o.protocol), ['OS-261107-CCCC', 'OS-261106-AAAA', 'OS-261105-BBBB']);
-  assert.equal(r.find((o) => o.protocol === 'OS-261106-AAAA').status, 'Concluído');
+  assert.equal(r.find((o) => o.protocol === 'OS-261106-AAAA').status, 'Resolvido');
 });
 
 // ---------- Consulta pública ----------
@@ -272,7 +284,7 @@ test('ordemCorresponde exige correspondência exata (não aceita pedaço de e-ma
 test('visaoPublica nunca expõe dados pessoais, parecer interno nem id; resumo não mostra título/descrição', () => {
   const ordem = {
     id: 6, protocol: 'OS-24448467', client_name: 'PAULO', client_email: 'p@x.com', client_phone: '62999999999', client_cpf: '04023326100',
-    service_type: 'Correção de Dados', priority: 'Alta', title: 'ajuste', description: 'bug no cartão', status: 'Concluído',
+    service_type: 'Dados Cadastrais', priority: 'Alta', title: 'ajuste', description: 'bug no cartão', status: 'Resolvido',
     admin_notes: 'Protocolo LIB-ADMIN-PIX interno', tecnico_responsavel: 'Carlos', assumido_em: AGORA, canal_atendimento: 'Tela de Login',
     concluido_em: 'Nov  2 2026 12:24PM', created_at: AGORA, updated_at: AGORA
   };
@@ -290,7 +302,7 @@ test('visaoPublica nunca expõe dados pessoais, parecer interno nem id; resumo n
   assert.equal(resumo.title, undefined);
   assert.equal(resumo.description, undefined);
   assert.equal(resumo.tecnico_responsavel, undefined);
-  assert.equal(resumo.status, 'Concluído');
+  assert.equal(resumo.status, 'Resolvido');
 });
 
 test('validarCpf', () => {
@@ -300,15 +312,16 @@ test('validarCpf', () => {
   assert.ok(!A.validarCpf('123'));
 });
 
-test('política de SLA: Crítica 30 min, Alta 1 h, Média 24 h e Baixa 5 dias úteis (padrão = Média)', () => {
-  assert.equal(A.calcularSlaPorPrioridade('Crítica'), '30 Minutos');
-  assert.equal(A.calcularSlaPorPrioridade('Urgente'), '30 Minutos');
-  assert.equal(A.calcularSlaPorPrioridade('Alta'), '1 Hora');
+test('política de SLA: Crítica 4 h, Alta 8 h, Média 24 h e Baixa 5 dias úteis (padrão = Média)', () => {
+  assert.equal(A.calcularSlaPorPrioridade('Crítica'), '4 Horas');
+  assert.equal(A.calcularSlaPorPrioridade('critica'), '4 Horas');
+  assert.equal(A.calcularSlaPorPrioridade('Urgente'), '4 Horas');
+  assert.equal(A.calcularSlaPorPrioridade('Alta'), '8 Horas');
   assert.equal(A.calcularSlaPorPrioridade('Média'), '24 Horas');
   assert.equal(A.calcularSlaPorPrioridade('Normal'), '24 Horas');
   assert.equal(A.calcularSlaPorPrioridade(''), '24 Horas');
   assert.equal(A.calcularSlaPorPrioridade('Baixa'), '5 Dias Úteis');
-  const base = { client_name: 'Ana', client_email: 'ana@empresa.com.br', service_type: 'Sistema Financeiro & ERP', title: 'Duvida sobre relatorio', description: 'Gostaria de entender o relatorio de faturamento', canal_atendimento: 'GLPI Tela de Login' };
+  const base = { client_name: 'Ana', client_email: 'ana@empresa.com.br', service_type: 'Dados Cadastrais', title: 'Duvida sobre relatorio', description: 'Gostaria de entender o relatorio de faturamento', canal_atendimento: 'GLPI Tela de Login' };
   const media = A.validarAbertura({ ...base, priority: 'Média' });
   assert.ok(media.ok);
   assert.equal(media.dados.sla, '24 Horas');
@@ -322,20 +335,21 @@ test('integração GLPI 10: SLA automático, ativo CMDB, horas, timeline públic
   const r = A.validarAbertura({
     client_name: 'Ana',
     client_email: 'ana@empresa.com.br',
-    service_type: 'Sistema Financeiro & ERP',
+    service_type: 'Falhas/Bugs/Correções',
     priority: 'Crítica',
     title: 'Erro na conciliação bancária',
     description: 'Falha ao importar arquivo OFX na tela de lançamentos',
     canal_atendimento: 'GLPI Tela de Login'
   });
   assert.ok(r.ok);
-  assert.equal(r.dados.sla, '30 Minutos');
+  assert.equal(r.dados.sla, '4 Horas');
+  assert.equal(r.dados.ticket_type, 'Incidente');
   const ordem = A.montarOrdem(r.dados, { protocolo: 'OS-261102-GLPI', id: 10, agoraIso: AGORA });
-  assert.equal(ordem.sla, '30 Minutos');
+  assert.equal(ordem.sla, '4 Horas');
   assert.equal(ordem.timeline.length, 1);
 
   const att1 = A.aplicarAtualizacao(ordem, {
-    status: 'Em Atendimento',
+    status: 'Atendimento atribuído',
     tecnico_responsavel: 'Eng. Carlos Silva (N2)',
     asset: 'SRV-ERP-01 (Cluster Produção)',
     time_spent: 1.5,
@@ -366,28 +380,29 @@ test('integração GLPI 10: SLA automático, ativo CMDB, horas, timeline públic
 
 // ---------- Histórico automático, visão e ações do solicitante ----------
 const ordemAberta = () => A.montarOrdem(A.validarAbertura({
-  client_name: 'Ana Souza', client_email: 'ana@empresa.com.br', service_type: 'Sistema Financeiro & ERP', priority: 'Média',
+  client_name: 'Ana Souza', client_email: 'ana@empresa.com.br', service_type: 'Pagamento não reconhecido', priority: 'Média',
   title: 'Boleto não liquidou', description: 'O boleto pago ontem continua em aberto na conciliação.', canal_atendimento: 'Central GLPI'
 }).dados, { protocolo: 'OS-261107-ABCD', id: 77, agoraIso: AGORA });
 
-test('aplicarAtualizacao registra no histórico quem assumiu, status e prioridade, e recalcula o SLA', () => {
-  const r = A.aplicarAtualizacao(ordemAberta(), { status: 'Em Atendimento', tecnico_responsavel: 'Carlos', priority: 'Alta' }, { agoraIso: AGORA, ator: 'Admin Paulo' });
+test('aplicarAtualizacao registra no histórico quem assumiu, status e severidade, e recalcula o SLA', () => {
+  const r = A.aplicarAtualizacao(ordemAberta(), { status: 'Atendimento atribuído', tecnico_responsavel: 'Carlos', priority: 'Alta' }, { agoraIso: AGORA, ator: 'Admin Paulo' });
   assert.ok(r.ok);
-  assert.equal(r.ordem.sla, '1 Hora');
+  assert.equal(r.ordem.sla, '8 Horas');
   const eventos = r.ordem.timeline.filter((i) => i.event);
   assert.deepEqual(eventos.map((e) => e.sender), ['Sistema', 'Sistema', 'Sistema']);
-  assert.ok(eventos.some((e) => /de "Novo" para "Em Atendimento"/.test(e.text)));
+  assert.ok(eventos.some((e) => /de "Novo" para "Atendimento atribuído"/.test(e.text)));
   assert.ok(eventos.some((e) => /assumido por Carlos/.test(e.text)));
-  assert.ok(eventos.some((e) => /Prioridade alterada de "Média" para "Alta"/.test(e.text) && /1 Hora/.test(e.text)));
+  assert.ok(eventos.some((e) => /Severidade alterada de "Média" para "Alta"/.test(e.text) && /8 Horas/.test(e.text)));
   assert.ok(eventos.every((e) => e.author === 'Admin Paulo' && e.internal === false));
 });
 
 test('aplicarAtualizacao: a resposta vem antes das linhas automáticas; sem mudança não cria linha; SLA enviado vale', () => {
-  const r = A.aplicarAtualizacao(ordemAberta(), { status: 'Pendente Cliente', timeline_entry: { sender: 'Técnico', author: 'Carlos', text: 'Pode enviar o comprovante?' } }, { agoraIso: AGORA });
+  const r = A.aplicarAtualizacao(ordemAberta(), { status: 'Pendente', timeline_entry: { sender: 'Técnico', author: 'Carlos', text: 'Pode enviar o comprovante?' } }, { agoraIso: AGORA });
   const t = r.ordem.timeline;
+  assert.equal(r.ordem.status, 'Pendente');
   assert.equal(t[t.length - 2].text, 'Pode enviar o comprovante?');
   assert.equal(t[t.length - 1].event, true);
-  const igual = A.aplicarAtualizacao(r.ordem, { status: 'Pendente Cliente', priority: 'Média' }, { agoraIso: AGORA });
+  const igual = A.aplicarAtualizacao(r.ordem, { status: 'Pendente', priority: 'Média' }, { agoraIso: AGORA });
   assert.equal(igual.ordem.timeline.length, r.ordem.timeline.length);
   const sla = A.aplicarAtualizacao(ordemAberta(), { priority: 'Baixa', sla: '3 Dias Úteis' }, { agoraIso: AGORA });
   assert.equal(sla.ordem.sla, '3 Dias Úteis');
@@ -396,10 +411,23 @@ test('aplicarAtualizacao: a resposta vem antes das linhas automáticas; sem muda
 test('aplicarAtualizacao: apelidos antigos de status não geram linha de "mudança" falsa', () => {
   const r = A.aplicarAtualizacao(ordemAberta(), { status: 'Novo' }, { agoraIso: AGORA });
   assert.equal(r.ordem.timeline.filter((i) => i.event).length, 0);
+  const antigo = A.aplicarAtualizacao({ ...ordemAberta(), status: 'Atendimento atribuído', tecnico_responsavel: 'Carlos' }, { status: 'Em Andamento' }, { agoraIso: AGORA });
+  assert.equal(antigo.ordem.status, 'Atendimento atribuído');
+  assert.equal(antigo.ordem.timeline.filter((i) => i.event).length, 0);
+});
+
+test('aplicarAtualizacao: atribuir técnico tira o chamado de "Novo" e tirar o técnico o devolve', () => {
+  const atribuida = A.aplicarAtualizacao(ordemAberta(), { tecnico_responsavel: 'Carlos' }, { agoraIso: AGORA });
+  assert.equal(atribuida.ordem.status, 'Atendimento atribuído');
+  const solta = A.aplicarAtualizacao(atribuida.ordem, { tecnico_responsavel: '' }, { agoraIso: AGORA });
+  assert.equal(solta.ordem.status, 'Novo');
+  // quem manda o status junto decide: "Pendente" com técnico continua "Pendente"
+  const espera = A.aplicarAtualizacao(ordemAberta(), { tecnico_responsavel: 'Carlos', status: 'Pendente' }, { agoraIso: AGORA });
+  assert.equal(espera.ordem.status, 'Pendente');
 });
 
 test('linhas internas (categoria, ativo, horas) só aparecem para a equipe', () => {
-  const r = A.aplicarAtualizacao(ordemAberta(), { service_type: 'Projetos & Melhorias', asset: 'SW-CORE-02 (Switch Cisco)', time_spent: 2 }, { agoraIso: AGORA });
+  const r = A.aplicarAtualizacao(ordemAberta(), { service_type: 'Dados Cadastrais', asset: 'SW-CORE-02 (Switch Cisco)', time_spent: 2 }, { agoraIso: AGORA });
   assert.equal(r.ordem.timeline.filter((i) => i.event && i.internal).length, 3);
   const v = A.visaoSolicitante(r.ordem);
   assert.equal(v.timeline.length, 1);
@@ -408,7 +436,7 @@ test('linhas internas (categoria, ativo, horas) só aparecem para a equipe', () 
 
 test('visaoSolicitante mostra título, andamento e conversa pública, sem parecer interno, dados pessoais nem id', () => {
   const base = A.aplicarAtualizacao(ordemAberta(), {
-    status: 'Em Atendimento', tecnico_responsavel: 'Carlos', admin_notes: 'cliente chato', solution: '',
+    status: 'Atendimento atribuído', tecnico_responsavel: 'Carlos', admin_notes: 'cliente chato', solution: '',
     timeline_entry: { sender: 'Técnico', author: 'Carlos', text: 'Estou analisando.' }
   }, { agoraIso: AGORA });
   const nota = A.aplicarAtualizacao(base.ordem, { timeline_entry: { sender: 'Técnico', author: 'Carlos', text: 'Nota privada', internal: true } }, { agoraIso: AGORA });
@@ -424,12 +452,12 @@ test('visaoSolicitante mostra título, andamento e conversa pública, sem parece
   assert.equal(v.pode_reabrir, false);
 });
 
-test('responder: registra a mensagem, devolve "Pendente Cliente" ao atendimento e ignora o duplo clique', () => {
-  const aguardando = A.aplicarAtualizacao(ordemAberta(), { status: 'Pendente Cliente', tecnico_responsavel: 'Carlos' }, { agoraIso: AGORA }).ordem;
+test('responder: registra a mensagem, devolve "Pendente" ao atendimento e ignora o duplo clique', () => {
+  const aguardando = A.aplicarAtualizacao(ordemAberta(), { status: 'Pendente', tecnico_responsavel: 'Carlos' }, { agoraIso: AGORA }).ordem;
   const agora = Date.parse('2026-11-07T12:00:30.000Z');
   const r = A.aplicarAcaoSolicitante(aguardando, { acao: 'responder', texto: '  Segue o comprovante em anexo.  ' }, { agoraIso: '2026-11-07T12:00:00.000Z', agora });
   assert.ok(r.ok);
-  assert.equal(r.ordem.status, 'Em Atendimento');
+  assert.equal(r.ordem.status, 'Atendimento atribuído');
   const t = r.ordem.timeline;
   assert.equal(t[t.length - 2].sender, 'Solicitante');
   assert.equal(t[t.length - 2].text, 'Segue o comprovante em anexo.');
@@ -442,7 +470,7 @@ test('responder: registra a mensagem, devolve "Pendente Cliente" ao atendimento 
   assert.equal(r.ordem.updated_at, '2026-11-07T12:00:00.000Z');
 });
 
-test('responder: recusa texto vazio, chamado encerrado e cancelado', () => {
+test('responder: recusa texto vazio, chamado resolvido e chamado fechado', () => {
   assert.equal(A.aplicarAcaoSolicitante(ordemAberta(), { acao: 'responder', texto: ' ' }, { agoraIso: AGORA }).codigo, 400);
   const resolvida = A.aplicarAtualizacao(ordemAberta(), { status: 'Resolvido', solution: 'ok' }, { agoraIso: AGORA }).ordem;
   const r = A.aplicarAcaoSolicitante(resolvida, { acao: 'responder', texto: 'Obrigado!' }, { agoraIso: AGORA });
@@ -461,7 +489,7 @@ test('reabrir: só chamado resolvido, com motivo e dentro de 7 dias', () => {
 
   const dentro = A.aplicarAcaoSolicitante(resolvida, { acao: 'reabrir', texto: 'O erro voltou hoje cedo.' }, { agoraIso: '2026-11-08T10:00:00.000Z', agora: Date.parse('2026-11-08T10:00:00.000Z') });
   assert.ok(dentro.ok);
-  assert.equal(dentro.ordem.status, 'Em Atendimento');
+  assert.equal(dentro.ordem.status, 'Atendimento atribuído');
   assert.equal(dentro.ordem.concluido_em, null);
   assert.ok(dentro.ordem.timeline.some((i) => i.event && /reaberto/.test(i.text)));
 
@@ -473,11 +501,14 @@ test('reabrir: só chamado resolvido, com motivo e dentro de 7 dias', () => {
   assert.equal(A.visaoSolicitante(resolvida, { agora: Date.parse('2026-11-08T10:00:00.000Z') }).pode_reabrir, true);
 });
 
-test('cancelar: só enquanto ninguém assumiu o chamado', () => {
+test('cancelar: só enquanto ninguém assumiu o chamado (ele fica Fechado e não pode ser reaberto)', () => {
   const r = A.aplicarAcaoSolicitante(ordemAberta(), { acao: 'cancelar', texto: 'Resolvi por conta própria' }, { agoraIso: AGORA });
   assert.ok(r.ok);
-  assert.equal(r.ordem.status, 'Cancelado');
-  assert.equal(r.ordem.concluido_em, null);
+  assert.equal(r.ordem.status, 'Fechado');
+  assert.equal(r.ordem.concluido_em, AGORA);
+  assert.equal(A.visaoSolicitante(r.ordem).pode_reabrir, false);
+  assert.equal(A.visaoSolicitante(r.ordem).pode_responder, false);
+  assert.equal(A.aplicarAcaoSolicitante(r.ordem, { acao: 'reabrir', texto: 'Quero reabrir agora' }, { agoraIso: AGORA }).codigo, 409);
   assert.equal(r.ordem.timeline.filter((i) => i.sender === 'Solicitante').length, 2);
   const assumida = A.aplicarAtualizacao(ordemAberta(), { tecnico_responsavel: 'Carlos' }, { agoraIso: AGORA }).ordem;
   const negada = A.aplicarAcaoSolicitante(assumida, { acao: 'cancelar' }, { agoraIso: AGORA });
@@ -495,4 +526,161 @@ test('aplicarAcaoSolicitante não altera o chamado original e respeita o limite 
   assert.equal(JSON.stringify(original), copia);
   const cheia = { ...original, timeline: Array.from({ length: 300 }, (_, i) => ({ sender: 'Técnico', author: 'x', text: 'm' + i, date: AGORA })) };
   assert.equal(A.aplicarAcaoSolicitante(cheia, { acao: 'responder', texto: 'Mais uma' }, { agoraIso: AGORA }).codigo, 409);
+});
+// ---------- Fila de chamados 10/11: status, severidade, tipo, categorias e filas ----------
+test('catálogos: 5 status, 4 severidades, 2 tipos e as 9 categorias pedidas (mais "Outros")', () => {
+  assert.deepEqual([...A.STATUS], ['Novo', 'Pendente', 'Atendimento atribuído', 'Resolvido', 'Fechado']);
+  assert.deepEqual([...A.PRIORIDADES], ['Crítica', 'Alta', 'Média', 'Baixa']);
+  assert.deepEqual([...A.TIPOS], ['Requisição', 'Incidente']);
+  for (const c of ['Reset de senha', 'Pagamento não reconhecido', 'Desbloqueio de usuário', 'Conta/Login', 'Dados Cadastrais', 'Liberação de degustação', '2ª Via de fatura', 'Atendimento Técnico', 'Falhas/Bugs/Correções']) {
+    assert.ok(A.CATEGORIAS.includes(c), c);
+  }
+  assert.deepEqual({ ...A.SLA_POLITICA }, { 'Crítica': '4 Horas', 'Alta': '8 Horas', 'Média': '24 Horas', 'Baixa': '5 Dias Úteis' });
+});
+
+test('validarAbertura: requisição ou incidente (o tipo sugerido vem da categoria, mas o solicitante escolhe)', () => {
+  const sugerido = A.validarAbertura({ ...pedidoValido(), service_type: 'Falhas/Bugs/Correções' });
+  assert.equal(sugerido.dados.ticket_type, 'Incidente');
+  const escolhido = A.validarAbertura({ ...pedidoValido(), service_type: 'Falhas/Bugs/Correções', ticket_type: 'requisição' });
+  assert.equal(escolhido.dados.ticket_type, 'Requisição');
+  const incidente = A.validarAbertura({ ...pedidoValido(), ticket_type: 'INCIDENTE' });
+  assert.equal(incidente.dados.ticket_type, 'Incidente');
+  assert.equal(A.validarAbertura({ ...pedidoValido(), tipo: 'Incidente' }).dados.ticket_type, 'Incidente');
+});
+
+test('validarAbertura: categorias novas, sem acento e nomes antigos de categoria e severidade', () => {
+  assert.equal(A.validarAbertura({ ...pedidoValido(), service_type: '2a via de fatura' }).dados.service_type, '2ª Via de fatura');
+  assert.equal(A.validarAbertura({ ...pedidoValido(), service_type: 'liberacao de degustacao' }).dados.service_type, 'Liberação de degustação');
+  assert.equal(A.validarAbertura({ ...pedidoValido(), service_type: 'conta/login' }).dados.service_type, 'Conta/Login');
+  // aba antiga aberta: o nome velho cai na categoria nova mais próxima
+  assert.equal(A.validarAbertura({ ...pedidoValido(), service_type: 'Gestão de Acessos & Reset de Senha' }).dados.service_type, 'Reset de senha');
+  assert.equal(A.validarAbertura({ ...pedidoValido(), service_type: 'Sistema Financeiro & ERP' }).dados.service_type, 'Outros');
+  assert.equal(A.validarAbertura({ ...pedidoValido(), priority: 'Urgente' }).dados.priority, 'Crítica');
+  assert.equal(A.validarAbertura({ ...pedidoValido(), priority: 'Normal' }).dados.priority, 'Média');
+  assert.equal(A.validarAbertura({ ...pedidoValido(), priority: '' }).dados.priority, 'Média');
+});
+
+test('SLA: Crítica 4 h e Alta 8 h entram no chamado; a severidade recalcula o prazo', () => {
+  const critica = A.validarAbertura({ ...pedidoValido(), priority: 'Crítica' }).dados;
+  assert.equal(critica.sla, '4 Horas');
+  const ordem = A.montarOrdem(critica, { protocolo: 'OS-261110-AAAA', id: 1, agoraIso: AGORA });
+  const alta = A.aplicarAtualizacao(ordem, { priority: 'Alta' }, { agoraIso: AGORA });
+  assert.equal(alta.ordem.sla, '8 Horas');
+  assert.ok(alta.ordem.timeline.some((i) => i.event && /Severidade alterada de "Crítica" para "Alta"/.test(i.text) && /8 Horas/.test(i.text)));
+});
+
+test('filas: a categoria cai na fila que a atende ("Suporte Técnico N2") e a abertura registra isso', () => {
+  const filas = A.filasIniciais(AGORA);
+  assert.equal(filas.length, 1);
+  assert.equal(filas[0].nome, 'Suporte Técnico N2');
+  assert.deepEqual(filas[0].categorias, ['Atendimento Técnico', 'Falhas/Bugs/Correções']);
+  assert.equal(A.filaDaCategoria(filas, 'falhas/bugs/correções'), 'Suporte Técnico N2');
+  assert.equal(A.filaDaCategoria(filas, 'Reset de senha'), null);
+  assert.equal(A.filaDaCategoria([{ ...filas[0], ativa: false }], 'Atendimento Técnico'), null); // fila desativada não recebe
+
+  const bug = A.validarAbertura({ ...pedidoValido(), service_type: 'Falhas/Bugs/Correções' }, { filas }).dados;
+  assert.equal(bug.fila, 'Suporte Técnico N2');
+  const ordem = A.montarOrdem(bug, { protocolo: 'OS-261110-BBBB', id: 2, agoraIso: AGORA });
+  assert.equal(ordem.fila, 'Suporte Técnico N2');
+  assert.ok(ordem.timeline.some((i) => i.event && /fila "Suporte Técnico N2"/.test(i.text)));
+  const senha = A.validarAbertura(pedidoValido(), { filas }).dados;
+  assert.equal(senha.fila, null);
+  assert.equal(A.montarOrdem(senha, { protocolo: 'OS-261110-CCCC', id: 3, agoraIso: AGORA }).timeline.length, 1);
+});
+
+test('filas: o público não escolhe a fila; o administrador escolhe uma fila cadastrada', () => {
+  const filas = A.filasIniciais(AGORA);
+  assert.equal(A.validarAbertura({ ...pedidoValido(), fila: 'Suporte Técnico N2' }, { filas }).dados.fila, null);
+  assert.equal(A.validarAbertura({ ...pedidoValido(), fila: 'suporte-tecnico-n2' }, { admin: true, filas }).dados.fila, 'Suporte Técnico N2');
+  const ruim = A.validarAbertura({ ...pedidoValido(), fila: 'Fila que não existe' }, { admin: true, filas });
+  assert.equal(ruim.ok, false);
+  assert.equal(ruim.erros.fila, 'Fila inválida.');
+});
+
+test('aplicarAtualizacao: tipo e fila viram linhas públicas no histórico; fila só aceita as cadastradas', () => {
+  const filas = A.filasIniciais(AGORA);
+  const r = A.aplicarAtualizacao(ordemAberta(), { ticket_type: 'Incidente', fila: 'Suporte Técnico N2' }, { agoraIso: AGORA, filas });
+  assert.ok(r.ok);
+  assert.equal(r.ordem.ticket_type, 'Incidente');
+  assert.equal(r.ordem.fila, 'Suporte Técnico N2');
+  const publicos = r.ordem.timeline.filter((i) => i.event && !i.internal).map((i) => i.text);
+  assert.ok(!publicos.some((t) => /Tipo do chamado alterado/.test(t))); // já era Incidente: sem mudança, sem linha
+  assert.ok(publicos.some((t) => /encaminhado para a fila "Suporte Técnico N2"/.test(t)));
+  const virouRequisicao = A.aplicarAtualizacao(r.ordem, { ticket_type: 'Requisição' }, { agoraIso: AGORA, filas });
+  assert.ok(virouRequisicao.ordem.timeline.some((i) => i.event && !i.internal && /Tipo do chamado alterado de "Incidente" para "Requisição"/.test(i.text)));
+  assert.equal(A.aplicarAtualizacao(ordemAberta(), { fila: 'Outra' }, { agoraIso: AGORA, filas }).ok, false);
+  const tirada = A.aplicarAtualizacao(r.ordem, { fila: '' }, { agoraIso: AGORA, filas });
+  assert.equal(tirada.ordem.fila, null);
+  assert.ok(tirada.ordem.timeline.some((i) => i.event && /retirado da fila "Suporte Técnico N2"/.test(i.text)));
+  // uma fila que o chamado já tinha (e foi excluída depois) não trava a edição de outros campos
+  const orfa = { ...r.ordem, fila: 'Fila Antiga' };
+  assert.equal(A.aplicarAtualizacao(orfa, { fila: 'Fila Antiga', admin_notes: 'ok' }, { agoraIso: AGORA, filas }).ok, true);
+  // sem catálogo (uso interno) qualquer nome é aceito
+  assert.equal(A.aplicarAtualizacao(ordemAberta(), { fila: 'Qualquer' }, { agoraIso: AGORA }).ordem.fila, 'Qualquer');
+});
+
+test('validarFila: nome, categorias e técnicos; nome repetido e fila inexistente', () => {
+  const existentes = A.filasIniciais(AGORA);
+  const nova = A.validarFila({ nome: '  Suporte   Financeiro N1 ', descricao: 'Boletos e faturas', categorias: ['2a via de fatura', 'Pagamento não reconhecido', '2ª Via de fatura'], tecnicos: ['Ana@Empresa.com', 'ana@empresa.com'] }, { existentes, agoraIso: AGORA });
+  assert.ok(nova.ok, nova.mensagem);
+  assert.equal(nova.fila.id, 'suporte-financeiro-n1');
+  assert.equal(nova.fila.nome, 'Suporte Financeiro N1');
+  assert.deepEqual(nova.fila.categorias, ['2ª Via de fatura', 'Pagamento não reconhecido']);
+  assert.deepEqual(nova.fila.tecnicos, ['ana@empresa.com']);
+  assert.equal(nova.fila.ativa, true);
+  assert.equal(nova.anterior, null);
+
+  assert.equal(A.validarFila({ nome: 'ab' }, { existentes }).ok, false);
+  assert.equal(A.validarFila({ nome: '<script>x</script>' }, { existentes }).ok, false);
+  assert.equal(A.validarFila({ nome: 'suporte técnico n2' }, { existentes }).erros.nome, 'Já existe uma fila com esse nome.');
+  assert.equal(A.validarFila({ nome: 'Fila X', categorias: ['Inexistente'] }, { existentes }).ok, false);
+  assert.equal(A.validarFila({ nome: 'Fila X', tecnicos: ['sem-arroba'] }, { existentes }).ok, false);
+  assert.equal(A.validarFila({ id: 'nao-existe', nome: 'Fila Y' }, { existentes }).ok, false);
+
+  // editar: mantém id e data de criação, aceita o próprio nome e permite desativar
+  const edicao = A.validarFila({ id: 'suporte-tecnico-n2', nome: 'Suporte Técnico N2', ativa: false, categorias: [], tecnicos: ['t@x.com'] }, { existentes, agoraIso: '2026-12-01T00:00:00.000Z' });
+  assert.ok(edicao.ok, edicao.mensagem);
+  assert.equal(edicao.fila.id, 'suporte-tecnico-n2');
+  assert.equal(edicao.fila.criada_em, AGORA);
+  assert.equal(edicao.fila.ativa, false);
+  assert.equal(edicao.anterior.nome, 'Suporte Técnico N2');
+});
+
+test('normalizarOrdem: chamado gravado antes da mudança migra os nomes sem perder o sentido', () => {
+  // modelo antigo: "Pendente" era o recém-aberto
+  assert.equal(A.normalizarOrdem({ protocol: 'OS-1', status: 'Pendente' }).status, 'Novo');
+  assert.equal(A.normalizarOrdem({ protocol: 'OS-1', status: 'Pendente', tecnico_responsavel: 'Carlos' }).status, 'Atendimento atribuído');
+  assert.equal(A.normalizarOrdem({ protocol: 'OS-1', status: 'Em Andamento' }).status, 'Atendimento atribuído');
+  assert.equal(A.normalizarOrdem({ protocol: 'OS-1', status: 'Em Atendimento' }).status, 'Atendimento atribuído');
+  assert.equal(A.normalizarOrdem({ protocol: 'OS-1', status: 'Pendente Cliente' }).status, 'Pendente');
+  assert.equal(A.normalizarOrdem({ protocol: 'OS-1', status: 'Concluído' }).status, 'Resolvido');
+  assert.equal(A.normalizarOrdem({ protocol: 'OS-1', status: 'Cancelado' }).status, 'Fechado');
+  // modelo novo (tem o tipo): "Pendente" é aguardando retorno e fica como está
+  assert.equal(A.normalizarOrdem({ protocol: 'OS-1', status: 'Pendente', ticket_type: 'Incidente' }).status, 'Pendente');
+  // normalizar duas vezes não muda mais nada
+  const uma = A.normalizarOrdem({ protocol: 'OS-1', status: 'Pendente' });
+  assert.deepEqual(A.normalizarOrdem(uma), uma);
+
+  const antigo = A.normalizarOrdem({ protocol: 'OS-2', priority: 'Urgente', sla: '30 Minutos', service_type: 'Relato de Bug' });
+  assert.equal(antigo.priority, 'Crítica');
+  assert.equal(antigo.sla, '4 Horas'); // prazo padrão antigo passa à política nova
+  assert.equal(antigo.ticket_type, 'Incidente');
+  assert.equal(antigo.service_type, 'Relato de Bug'); // categoria antiga é preservada no chamado antigo
+  assert.equal(A.normalizarOrdem({ protocol: 'OS-3', priority: 'Alta', sla: '1 Hora' }).sla, '8 Horas');
+  assert.equal(A.normalizarOrdem({ protocol: 'OS-4', priority: 'Média', sla: '1 Hora' }).sla, '1 Hora'); // prazo combinado à mão não muda
+  assert.equal(A.normalizarOrdem({ protocol: 'OS-5', priority: 'Normal' }).priority, 'Média');
+});
+
+test('visões do solicitante e pública trazem tipo e fila; a atualização aceita chamado antigo (Concluído)', () => {
+  const resolvida = A.aplicarAtualizacao(ordemAberta(), { status: 'Resolvido', solution: 'ok' }, { agoraIso: AGORA, filas: A.filasIniciais(AGORA) }).ordem;
+  const v = A.visaoSolicitante({ ...resolvida, fila: 'Suporte Técnico N2' }, { agora: Date.parse(AGORA) });
+  assert.equal(v.ticket_type, 'Incidente');
+  assert.equal(v.fila, 'Suporte Técnico N2');
+  assert.equal(v.pode_reabrir, true);
+  assert.equal(A.visaoPublica(resolvida, { detalhada: true }).ticket_type, 'Incidente');
+  // chamado gravado como "Concluído" (modelo antigo) ainda pode ser reaberto e atualizado
+  const velho = { ...ordemAberta(), ticket_type: undefined, status: 'Concluído', concluido_em: AGORA };
+  delete velho.ticket_type;
+  assert.equal(A.visaoSolicitante(velho, { agora: Date.parse(AGORA) }).status, 'Resolvido');
+  assert.equal(A.aplicarAcaoSolicitante(velho, { acao: 'reabrir', texto: 'Voltou a dar erro' }, { agoraIso: AGORA, agora: Date.parse(AGORA) }).ordem.status, 'Novo');
 });
