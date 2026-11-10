@@ -747,4 +747,81 @@ html.nexus-farewell #authPage { display: none !important; }
   html.user-logged-in #mobileDrawer.open { transition: none !important; }
 }
 
+/* =====================================================================================
+   8. Barra superior do perfil Administrador: ícones maiores e ajustáveis (pedido de 10/11/2026)
+   --nx-tb = lado do botão e --nx-tb-ic = tamanho do desenho. A pessoa escolhe em "Tamanho / Resolução > Ícones da barra superior":
+   normal 40px, grande 48px (padrão) e extra 56px (atributo data-top-ic no <html>, preferência nexus_top_icons).
+   A barra tem altura fixa (76px no computador e 64px no celular), então até o maior botão (56px) cabe sem empurrar o menu.
+   No celular os botões já são alvos de toque de 44px: abaixo de 481px nada muda; de 481 a 860px o "extra" sobe para 48px.
+   Só vale para o administrador (html.is-admin); o usuário comum mantém a barra de antes.
+   ===================================================================================== */
+html.user-logged-in.is-admin { --nx-tb: 48px; --nx-tb-ic: 22px; --nx-tb-fs: 14px; }
+html.user-logged-in.is-admin[data-top-ic="normal"] { --nx-tb: 40px; --nx-tb-ic: 18px; --nx-tb-fs: 13px; }
+html.user-logged-in.is-admin[data-top-ic="extra"] { --nx-tb: 56px; --nx-tb-ic: 26px; --nx-tb-fs: 15px; }
+@media (max-width: 860px) {
+  html.user-logged-in.is-admin[data-top-ic] { --nx-tb: 44px; --nx-tb-ic: 20px; --nx-tb-fs: 13px; }
+}
+@media (min-width: 481px) and (max-width: 860px) {
+  html.user-logged-in.is-admin[data-top-ic="extra"] { --nx-tb: 48px; --nx-tb-ic: 22px; }
+}
+
+html.user-logged-in.is-admin .topheader .aether-header-right { gap: calc(var(--nx-tb) * .2) !important; }
+html.user-logged-in.is-admin .topheader .icon-btn,
+html.user-logged-in.is-admin .topheader #notifBtn,
+html.user-logged-in.is-admin .topheader #nxPaletteBtn {
+  width: var(--nx-tb) !important;
+  min-width: var(--nx-tb) !important;
+  height: var(--nx-tb) !important;
+  min-height: var(--nx-tb) !important;
+  padding: 0 !important;
+  border-radius: calc(var(--nx-tb) * .3) !important;
+}
+html.user-logged-in.is-admin .topheader .icon-btn svg { width: var(--nx-tb-ic) !important; height: var(--nx-tb-ic) !important; }
+html.user-logged-in.is-admin .topheader #notifBtn .dot { top: calc(var(--nx-tb) * .22) !important; right: calc(var(--nx-tb) * .22) !important; width: 8px !important; height: 8px !important; }
+/* Escala: ícone + rótulo na mesma linha (antes o "Auto (100%)" quebrava em duas linhas dentro de um botão de 36px) */
+html.user-logged-in.is-admin .topheader #scaleMenuBtn {
+  width: auto !important;
+  padding: 0 calc(var(--nx-tb) * .3) !important;
+  gap: 8px !important;
+  font-size: var(--nx-tb-fs) !important;
+  white-space: nowrap !important;
+}
+html.user-logged-in.is-admin .topheader #scaleMenuBtn #currentScaleLabel { white-space: nowrap !important; line-height: 1 !important; }
+html.user-logged-in.is-admin .topheader #logoutBtn {
+  height: var(--nx-tb) !important;
+  min-height: var(--nx-tb) !important;
+  padding: 0 calc(var(--nx-tb) * .38) !important;
+  gap: 8px !important;
+  font-size: var(--nx-tb-fs) !important;
+  border-radius: calc(var(--nx-tb) * .3) !important;
+}
+html.user-logged-in.is-admin .topheader #logoutBtn svg { width: var(--nx-tb-ic) !important; height: var(--nx-tb-ic) !important; }
+html.user-logged-in.is-admin .topheader #headerMirrorExitBtn { height: var(--nx-tb) !important; min-height: var(--nx-tb) !important; font-size: var(--nx-tb-fs) !important; padding: 0 16px !important; }
+@media (max-width: 860px) {
+  /* No celular o "Sair" e o botão de escala mostram só o ícone: ficam quadrados como os outros */
+  html.user-logged-in.is-admin .topheader #logoutBtn { width: var(--nx-tb) !important; min-width: var(--nx-tb) !important; padding: 0 !important; }
+}
+
+/* Controle do tamanho (dentro da lista "Tamanho / Resolução"; só o administrador vê) */
+html.user-logged-in:not(.is-admin) .scale-dropdown .nx-topic-sec { display: none !important; }
+html.user-logged-in.is-admin .scale-dropdown .nx-topic-sec { margin: 6px 0 0 !important; padding: 10px 10px 6px !important; border-top: 1px solid var(--nx-sh-line) !important; }
+html.user-logged-in .scale-dropdown .nx-topic-lbl { margin: 0 0 7px !important; font-size: 11px !important; font-weight: 800 !important; letter-spacing: .06em !important; text-transform: uppercase !important; color: var(--nx-sh-muted) !important; }
+html.user-logged-in .scale-dropdown .nx-topic-row { display: flex !important; gap: 6px !important; }
+html.user-logged-in .scale-dropdown .nx-topic-btn {
+  flex: 1 1 0 !important;
+  min-width: 0 !important;
+  height: 34px !important;
+  padding: 0 6px !important;
+  border: 1px solid var(--nx-sh-line) !important;
+  border-radius: 10px !important;
+  background: var(--nx-sh-wash) !important;
+  color: var(--nx-sh-ink-2) !important;
+  font-size: 12.5px !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  justify-content: center !important;
+}
+html.user-logged-in .scale-dropdown .nx-topic-btn[aria-pressed="true"] { background: rgba(var(--nx-sh-acc), .2) !important; border-color: rgba(var(--nx-sh-acc), .65) !important; color: #fff !important; }
+html.user-logged-in .scale-dropdown .nx-topic-btn:focus-visible { outline: 2px solid rgb(var(--nx-sh-acc)) !important; outline-offset: 2px !important; }
+
 } /* fim da layer nx-shell */

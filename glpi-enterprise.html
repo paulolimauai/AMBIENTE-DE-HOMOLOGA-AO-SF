@@ -2893,12 +2893,20 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             } catch (e) {}
         }
 
+        // Técnicos que podem receber chamados: os cadastrados como técnicos + TODOS os administradores ativos do Nexus
+        // (quem é cadastrado como Administrador em "Cadastros & Contas" administra o Nexus e também atende no GLPI)
         async function loadTechnicians() {
             if (!currentUser || !currentUser.isAdmin) return;
+            const nomes = [];
+            const add = (n) => { n = String(n || '').trim(); if (n && !nomes.includes(n)) nomes.push(n); };
             const r = await api('GET', '/api/tecnicos');
             if (r.ok && Array.isArray(r.data.tecnicos)) {
-                technicians = r.data.tecnicos.filter((x) => x && x.name && x.active !== false).map((x) => String(x.name));
+                r.data.tecnicos.filter((x) => x && x.name && x.active !== false).forEach((x) => add(x.name));
             }
+            const u = await api('GET', '/api/users');
+            const lista = Array.isArray(u.data) ? u.data : (Array.isArray(u.data.users) ? u.data.users : []);
+            lista.filter((x) => x && x.role === 'Administrador' && x.active !== false && x.active !== 0 && x.name).forEach((x) => add(x.name));
+            technicians = nomes;
         }
 
         // ============================== ATUALIZAÇÃO AUTOMÁTICA ==============================
