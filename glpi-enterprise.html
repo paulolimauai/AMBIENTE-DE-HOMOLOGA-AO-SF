@@ -1484,7 +1484,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         .team-h small { font-size: .8125rem; font-weight: 500; color: var(--muted); }
         /* "Atendimento atribuído" é um nome longo: o selo de status quebra em duas linhas nos cartões e o rótulo do indicador também */
         .kpi-label { white-space: normal; overflow-wrap: anywhere; }
-        /* Cartões (quadro estreito): severidade e status na mesma linha e o prazo (SLA) numa linha só dele, sem espremer ninguém */
+        /* Cartões (quadro estreito): prioridade e status na mesma linha e o prazo (SLA) numa linha só dele, sem espremer ninguém */
         @container (max-width: 54rem) {
             .tbl.cards tbody tr { grid-template-columns: 5.6rem minmax(0, 1fr) auto; grid-template-areas: "id id act" "title title title" "urg status status" "sla sla sla"; }
             .tbl.cards tbody tr:has(td.c-chk) { grid-template-columns: 1.6rem 5.6rem minmax(0, 1fr) auto; grid-template-areas: "chk id id act" "chk title title title" "chk urg status status" "chk sla sla sla"; }
@@ -1835,7 +1835,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
 
                 <ul class="lg-feat">
                     <li><i class="fa-solid fa-ticket"></i> Chamados com protocolo e histórico completos</li>
-                    <li><i class="fa-solid fa-stopwatch"></i> Prazos de atendimento (SLA) por severidade</li>
+                    <li><i class="fa-solid fa-stopwatch"></i> Prazos de atendimento (SLA) por prioridade</li>
                     <li><i class="fa-solid fa-server"></i> Ativos de TI vinculados a cada chamado</li>
                 </ul>
 
@@ -2041,7 +2041,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                             <ul class="ss-list">
                                 <li style="--s: var(--rose-rgb);">Crítica <b>4 horas</b></li>
                                 <li style="--s: var(--orange-rgb);">Alta <b>8 horas</b></li>
-                                <li style="--s: var(--sky-rgb);">Média <b>24 horas</b></li>
+                                <li style="--s: var(--sky-rgb);">Média <b>3 dias úteis</b></li>
                                 <li style="--s: var(--slate-rgb);">Baixa <b>5 dias úteis</b></li>
                             </ul>
                         </div>
@@ -2065,7 +2065,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                                             <th>Protocolo</th>
                                             <th>Solicitação / Categoria</th>
                                             <th class="c-date">Data Abertura</th>
-                                            <th>Severidade</th>
+                                            <th>Prioridade</th>
                                             <th>SLA / Prazo</th>
                                             <th>Status</th>
                                             <th class="ta-r">Ação</th>
@@ -2113,7 +2113,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                                             <th>Protocolo</th>
                                             <th>Solicitação / Categoria</th>
                                             <th class="c-date">Data Abertura</th>
-                                            <th>Severidade</th>
+                                            <th>Prioridade</th>
                                             <th>SLA / Prazo</th>
                                             <th>Status</th>
                                             <th class="ta-r">Ação</th>
@@ -2137,7 +2137,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                             <div>
                                 <div class="crumbs"><i class="fa-solid fa-house"></i> ITSM Operations <i class="fa-solid fa-chevron-right"></i> <span class="here">Dashboard Executivo</span></div>
                                 <h2>Dashboard Executivo</h2>
-                                <p>Visão consolidada da Central de Chamados: volume de atendimentos, severidades e prazos de SLA em tempo real.</p>
+                                <p>Visão consolidada da Central de Chamados: volume de atendimentos, prioridades e prazos de SLA em tempo real.</p>
                             </div>
                             <div class="ph-actions">
                                 <button type="button" onclick="navTech('queue')" class="btn btn-amber">
@@ -2193,7 +2193,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
 
                             <div class="glass panel">
                                 <div class="panel-head">
-                                    <h3><i class="fa-solid fa-chart-pie c-blue"></i> Distribuição por Severidade</h3>
+                                    <h3><i class="fa-solid fa-chart-pie c-blue"></i> Distribuição por Prioridade</h3>
                                 </div>
                                 <div class="chart-box"><canvas id="chartUrgency"></canvas></div>
                             </div>
@@ -2206,7 +2206,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                             </div>
                         </div>
 
-                        <!-- Prazos de atendimento (SLA) por severidade -->
+                        <!-- Prazos de atendimento (SLA) por prioridade -->
                         <div class="glass panel sla-strip">
                             <div class="sla-strip-l">
                                 <b><i class="fa-solid fa-stopwatch"></i> Prazos de atendimento</b>
@@ -2215,7 +2215,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                             <div class="sla-pills">
                                 <span class="sla-pill"><i class="dot" style="background:var(--t-rose)"></i>Crítica · 4 horas</span>
                                 <span class="sla-pill"><i class="dot" style="background:var(--t-amber)"></i>Alta · 8 horas</span>
-                                <span class="sla-pill"><i class="dot" style="background:var(--t-blue)"></i>Média · 24 horas</span>
+                                <span class="sla-pill"><i class="dot" style="background:var(--t-blue)"></i>Média · 3 dias úteis</span>
                                 <span class="sla-pill"><i class="dot" style="background:var(--t-slate)"></i>Baixa · 5 dias úteis</span>
                             </div>
                         </div>
@@ -2238,7 +2238,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                                         <tr>
                                             <th>Protocolo</th>
                                             <th>Solicitação / Solicitante</th>
-                                            <th>Severidade</th>
+                                            <th>Prioridade</th>
                                             <th>SLA / Prazo</th>
                                             <th>Status</th>
                                             <th class="ta-r">Ação</th>
@@ -2275,11 +2275,11 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                                         <input type="text" id="tech-queue-search" oninput="renderTechQueue()" placeholder="Buscar chamado..." title="Busca por protocolo, solicitante, e-mail, título, técnico ou fila" class="input">
                                     </div>
 
-                                    <select id="tech-filter-urgency" onchange="renderTechQueue()" class="select select-sm" aria-label="Filtrar por severidade">
-                                        <option value="ALL">Todas as severidades</option>
+                                    <select id="tech-filter-urgency" onchange="renderTechQueue()" class="select select-sm" aria-label="Filtrar por prioridade">
+                                        <option value="ALL">Todas as prioridades</option>
                                         <option value="Crítica">Crítica · 4 horas</option>
                                         <option value="Alta">Alta · 8 horas</option>
-                                        <option value="Média">Média · 24 horas</option>
+                                        <option value="Média">Média · 3 dias úteis</option>
                                         <option value="Baixa">Baixa · 5 dias úteis</option>
                                     </select>
 
@@ -2332,7 +2332,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                                             </th>
                                             <th>Protocolo</th>
                                             <th>Solicitação / Solicitante</th>
-                                            <th>Severidade</th>
+                                            <th>Prioridade</th>
                                             <th>SLA / Prazo</th>
                                             <th class="col-tech">Técnico Atribuído</th>
                                             <th>Status</th>
@@ -2495,18 +2495,15 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                     </section>
 
                     <section class="fs-step">
-                        <h4 class="fs-h"><span class="n">3</span> Qual a severidade?</h4>
-                        <div class="picks urg" role="radiogroup" aria-label="Severidade do chamado">
+                        <h4 class="fs-h"><span class="n">3</span> Qual a prioridade?</h4>
+                        <div class="picks urg" role="radiogroup" aria-label="Prioridade do chamado">
+                            <button type="button" class="pick u-media" role="radio" data-urg="Média" onclick="pickUrgency(this.dataset.urg)"><b>Média</b><small>Impacto parcial, dá para contornar</small><em>3 dias úteis</em></button>
                             <button type="button" class="pick u-baixa" role="radio" data-urg="Baixa" onclick="pickUrgency(this.dataset.urg)"><b>Baixa</b><small>Dúvida ou operação normal</small><em>5 dias úteis</em></button>
-                            <button type="button" class="pick u-media" role="radio" data-urg="Média" onclick="pickUrgency(this.dataset.urg)"><b>Média</b><small>Impacto parcial, dá para contornar</small><em>24 horas</em></button>
-                            <button type="button" class="pick u-alta" role="radio" data-urg="Alta" onclick="pickUrgency(this.dataset.urg)"><b>Alta</b><small>Impacto relevante no seu trabalho</small><em>8 horas</em></button>
-                            <button type="button" class="pick u-critica" role="radio" data-urg="Crítica" onclick="pickUrgency(this.dataset.urg)"><b>Crítica</b><small>Parada total, sem alternativa</small><em>4 horas</em></button>
                         </div>
+                        <p class="fs-note">Chamados urgentes são priorizados pela equipe de TI após a triagem.</p>
                         <select id="form-urgency" onchange="calculateSLA()" class="sr-only" tabindex="-1" aria-hidden="true">
-                            <option value="Baixa">Baixa · dúvida ou operação normal</option>
                             <option value="Média" selected>Média · impacto parcial, dá para contornar</option>
-                            <option value="Alta">Alta · impacto relevante no seu trabalho</option>
-                            <option value="Crítica">Crítica · parada total, sem alternativa</option>
+                            <option value="Baixa">Baixa · dúvida ou operação normal</option>
                         </select>
                     </section>
 
@@ -2538,7 +2535,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                         <ul class="fs-check" id="form-check">
                             <li data-k="typ"><i class="fa-solid fa-check"></i><span>Tipo</span><b></b></li>
                             <li data-k="cat"><i class="fa-solid fa-check"></i><span>Categoria</span><b></b></li>
-                            <li data-k="urg"><i class="fa-solid fa-check"></i><span>Severidade</span><b></b></li>
+                            <li data-k="urg"><i class="fa-solid fa-check"></i><span>Prioridade</span><b></b></li>
                             <li data-k="subj"><i class="fa-solid fa-check"></i><span>Assunto</span><b></b></li>
                             <li data-k="desc"><i class="fa-solid fa-check"></i><span>Descrição</span><b></b></li>
                         </ul>
@@ -2552,7 +2549,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                                 <small id="form-sla-due"></small>
                             </div>
                         </div>
-                        <b id="form-sla-preview">24 Horas</b>
+                        <b id="form-sla-preview">3 Dias Úteis</b>
                     </div>
 
                     <div id="form-tips" class="cat-tips"></div>
@@ -2582,7 +2579,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                     <div class="success-grid">
                         <div><small>Tipo</small><span id="success-type">—</span></div>
                         <div><small>Categoria</small><span id="success-cat">—</span></div>
-                        <div><small>Severidade</small><span id="success-urg">—</span></div>
+                        <div><small>Prioridade</small><span id="success-urg">—</span></div>
                         <div><small>Previsão de atendimento</small><span id="success-sla">—</span></div>
                     </div>
                     <div class="success-next">
@@ -2800,10 +2797,10 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                                 </select>
                             </div>
                             <div class="field">
-                                <label for="prop-urgency">Severidade <small>(muda o SLA)</small></label>
+                                <label for="prop-urgency">Prioridade <small>(muda o SLA)</small></label>
                                 <select id="prop-urgency" onchange="onPropChange('urgency')" class="select">
                                     <option value="Baixa">Baixa · 5 dias úteis</option>
-                                    <option value="Média">Média · 24 horas</option>
+                                    <option value="Média">Média · 3 dias úteis</option>
                                     <option value="Alta">Alta · 8 horas</option>
                                     <option value="Crítica">Crítica · 4 horas</option>
                                 </select>
@@ -4316,7 +4313,9 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         }
 
         function calculateSLA() {
-            const urgency = $('form-urgency').value;
+            // Abertura só permite Média ou Baixa: rascunho antigo com outra prioridade volta para a padrão
+            let urgency = $('form-urgency').value;
+            if (urgency !== 'Média' && urgency !== 'Baixa') { urgency = 'Média'; $('form-urgency').value = 'Média'; }
             const sla = slaForUrgency(urgency);
             $('form-sla-preview').innerText = sla;
 
@@ -4631,7 +4630,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             $('my-summary').innerHTML =
                 row('Status', getStatusBadge(t.status, true)) +
                 row('Tipo', typePill(t.type)) +
-                row('Severidade', getUrgencyBadge(t.urgency)) +
+                row('Prioridade', getUrgencyBadge(t.urgency)) +
                 row('Categoria', escapeHtml(t.category)) +
                 (t.queue ? row('Equipe responsável', escapeHtml(t.queue)) : '') +
                 row('Prazo (SLA)', escapeHtml(s.label) + (s.text ? '<br><span class="c-muted" style="font-weight:500;">' + escapeHtml(s.text) + '</span>' : '')) +
@@ -5887,9 +5886,9 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         };
 
         // ---- Política de SLA: prazo de atendimento por urgência ----
-        // Crítica 4 horas e Alta 8 horas; Média 24 horas corridas; Baixa 5 dias úteis (sábado e domingo não contam).
+        // Crítica 4 horas e Alta 8 horas; Média 3 dias úteis; Baixa 5 dias úteis (sábado e domingo não contam).
         // É a mesma regra que o servidor grava no chamado (atendimento.js).
-        const SLA_POLICY = { 'Crítica': '4 Horas', 'Alta': '8 Horas', 'Média': '24 Horas', 'Baixa': '5 Dias Úteis' };
+        const SLA_POLICY = { 'Crítica': '4 Horas', 'Alta': '8 Horas', 'Média': '3 Dias Úteis', 'Baixa': '5 Dias Úteis' };
         const SLA_WEEKDAYS = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'];
 
         function slaForUrgency(urgency) {
@@ -5907,7 +5906,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             return d;
         }
 
-        // Converte o texto do SLA ("30 Minutos", "1 Hora", "24 Horas", "5 Dias Úteis") em data-limite a partir da abertura
+        // Converte o texto do SLA ("30 Minutos", "1 Hora", "3 Dias Úteis", "5 Dias Úteis") em data-limite a partir da abertura
         function slaDueDate(start, slaText) {
             if (!(start instanceof Date) || isNaN(start.getTime())) return null;
             const m = /(\d+)\s*(minuto|min|hora|h|dia)/i.exec(String(slaText || ''));

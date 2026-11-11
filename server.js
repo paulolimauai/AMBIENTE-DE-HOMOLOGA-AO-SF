@@ -1818,7 +1818,7 @@ async function setupDatabaseTablesAndSync() {
       const localOrdens = JSON.parse(fs.readFileSync(localOrdensFile, 'utf8')) || [];
       for (const bruta of localOrdens) {
         if (!bruta || !bruta.protocol) continue;
-        const ord = Atendimento.normalizarOrdem(bruta); // status, severidade e tipo já nos nomes atuais
+        const ord = Atendimento.normalizarOrdem(bruta); // status, prioridade e tipo já nos nomes atuais
         const existOrd = await pool.query('SELECT id FROM ordens_servico WHERE protocol = $1', [ord.protocol]);
         if (existOrd.rows.length === 0) {
           await pool.query(
@@ -36233,7 +36233,7 @@ async function handleNexusRequest(req, res) {
     saveLocalOrdens(achada.todas);
 
     recordSystemLog(ator.nome, ator.email, 'Atualização de O.S.', 'Ordem de Serviço',
-      'Atualizou O.S. #' + ordem.protocol + ' para status: ' + ordem.status + ' (Severidade: ' + ordem.priority + ')' +
+      'Atualizou O.S. #' + ordem.protocol + ' para status: ' + ordem.status + ' (Prioridade: ' + ordem.priority + ')' +
       (ordem.tecnico_responsavel ? ' (Técnico: ' + ordem.tecnico_responsavel + ')' : '') +
       (ordem.fila ? ' (Fila: ' + ordem.fila + ')' : '') +
       (resultado.mudancas.length ? ' — ' + resultado.mudancas.join('; ') : ''));
