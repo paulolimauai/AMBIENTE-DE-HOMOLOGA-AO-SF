@@ -11,10 +11,12 @@
 // ---------- Catálogos ----------
 // Fila de chamados: Novo -> Atendimento atribuído (-> Pendente, quando espera retorno) -> Resolvido -> Fechado
 const STATUS = Object.freeze(['Novo', 'Pendente', 'Atendimento atribuído', 'Resolvido', 'Fechado']);
-// Severidade (antes "prioridade"): quatro níveis. "Normal" e "Urgente" são nomes antigos.
+// Prioridade: quatro níveis. "Normal" e "Urgente" são nomes antigos.
 const PRIORIDADES = Object.freeze(['Crítica', 'Alta', 'Média', 'Baixa']);
 const PRIORIDADES_ANTIGAS = Object.freeze({ 'normal': 'Média', 'urgente': 'Crítica' });
 const PRIORIDADE_PADRAO = 'Média';
+// Quem abre o chamado (solicitante) só escolhe Média ou Baixa; Crítica e Alta ficam para a triagem da equipe
+const PRIORIDADES_ABERTURA = Object.freeze(['Média', 'Baixa']);
 
 // Tipo do chamado: o solicitante escolhe entre pedir algo (requisição) ou relatar algo que parou (incidente)
 const TIPOS = Object.freeze(['Requisição', 'Incidente']);
@@ -62,10 +64,10 @@ const CANAIS_PUBLICOS = Object.freeze(['Tela de Login', 'Portal Web', 'App Mobil
 
 const LIMITES = Object.freeze({ nome: 120, email: 254, telefone: 40, titulo: 200, descricao: 5000, notas: 2000, tecnico: 150, canal: 60, categoria: 100, sla: 40, asset: 150, solution: 4000, fila: 60 });
 
-// Política de SLA por severidade: Crítica 4 h, Alta 8 h, Média 24 h (corridas), Baixa 5 dias úteis (sáb. e dom. não contam)
-const SLA_POLITICA = Object.freeze({ 'Crítica': '4 Horas', 'Alta': '8 Horas', 'Média': '24 Horas', 'Baixa': '5 Dias Úteis' });
-// Prazos padrão da política anterior (Crítica 30 min, Alta 1 h): chamado que ainda guarda um deles passa a seguir a política nova
-const SLA_ANTIGO_PADRAO = Object.freeze({ 'Crítica': ['30 minutos', '30 minuto'], 'Alta': ['1 hora'] });
+// Política de SLA por prioridade: Crítica 4 h, Alta 8 h, Média 3 dias úteis, Baixa 5 dias úteis (sáb. e dom. não contam)
+const SLA_POLITICA = Object.freeze({ 'Crítica': '4 Horas', 'Alta': '8 Horas', 'Média': '3 Dias Úteis', 'Baixa': '5 Dias Úteis' });
+// Prazos padrão de políticas anteriores: chamado que ainda guarda um deles passa a seguir a política nova
+const SLA_ANTIGO_PADRAO = Object.freeze({ 'Crítica': ['30 minutos', '30 minuto'], 'Alta': ['1 hora'], 'Média': ['24 horas', '24 hora'] });
 
 // Sem acento, minúsculo e sem espaços nas pontas: chave de comparação dos catálogos
 function chaveDe(valor) {
@@ -322,8 +324,10 @@ function validarAbertura(payload, { admin = false, isEmail, filas } = {}) {
   let prioridade = PRIORIDADE_PADRAO;
   if (prioridadeBruta) {
     prioridade = prioridadeCanonica(prioridadeBruta);
-    if (!prioridade) erros.priority = 'Severidade inválida. Use: ' + PRIORIDADES.join(', ') + '.';
+    if (!prioridade) erros.priority = 'Prioridade inválida. Use: ' + PRIORIDADES.join(', ') + '.';
   }
+  // Abertura pelo solicitante: fora de Média/Baixa cai na padrão (a equipe eleva a prioridade na triagem)
+  if (!admin && !PRIORIDADES_ABERTURA.includes(prioridade)) prioridade = PRIORIDADE_PADRAO;
 
   // Requisição (pedir algo) ou incidente (algo que parou): sem escolha, vale o tipo sugerido pela categoria
   const tipoBruto = limparTexto(p.ticket_type !== undefined ? p.ticket_type : p.tipo, 30);
@@ -567,8 +571,8 @@ function eventoDeSistema(texto, { agoraIso, autor, interno = false }) {
 /**
  * Aplica as mudanças do administrador sobre um chamado existente.
  * Só altera o que veio no pedido (antes, enviar apenas as notas devolvia o chamado para o início da fila).
- * Cada mudança relevante (status, técnico, severidade, tipo, fila) vira uma linha automática no histórico; categoria, ativo e
- * horas viram linhas internas. Se a severidade mudar e o pedido não trouxer o SLA, o prazo é recalculado pela política.
+ * Cada mudança relevante (status, técnico, prioridade, tipo, fila) vira uma linha automática no histórico; categoria, ativo e
+ * horas viram linhas internas. Se a prioridade mudar e o pedido não trouxer o SLA, o prazo é recalculado pela política.
  * Coerência do status: ao atribuir um técnico a um chamado "Novo" ele passa a "Atendimento atribuído"; ao tirar o técnico de
  * um chamado "Atendimento atribuído" ele volta a "Novo" (a menos que o pedido já traga o status).
  * `filas` (opcional) é o catálogo de filas: com ele, só se aceita uma fila cadastrada.
@@ -603,9 +607,9 @@ function aplicarAtualizacao(ordemBruta, payload, { agoraIso, ator, filas } = {})
   let prioridadeMudou = false;
   if (veio(p.priority)) {
     const prioridade = prioridadeCanonica(p.priority);
-    if (!prioridade) return { ok: false, mensagem: 'Severidade inválida. Use: ' + PRIORIDADES.join(', ') + '.' };
+    if (!prioridade) return { ok: false, mensagem: 'Prioridade inválida. Use: ' + PRIORIDADES.join(', ') + '.' };
     if (prioridade !== ordem.priority) {
-      mudancas.push('severidade: ' + (ordem.priority || '—') + ' → ' + prioridade);
+      mudancas.push('prioridade: ' + (ordem.priority || '—') + ' → ' + prioridade);
       prioridadeMudou = true;
     }
     novo.priority = prioridade;
@@ -696,12 +700,12 @@ function aplicarAtualizacao(ordemBruta, payload, { agoraIso, ator, filas } = {})
     }
   }
 
-  // O prazo acompanha a severidade, a menos que o pedido já traga um SLA próprio
+  // O prazo acompanha a prioridade, a menos que o pedido já traga um SLA próprio
   if (prioridadeMudou && !veio(p.sla)) {
     novo.sla = calcularSlaPorPrioridade(novo.priority);
   }
   if (prioridadeMudou) {
-    publico('Severidade alterada de "' + (ordem.priority || '—') + '" para "' + novo.priority + '". Prazo de atendimento (SLA): ' + (veio(p.sla) ? limparTexto(p.sla, LIMITES.sla) : novo.sla) + '.');
+    publico('Prioridade alterada de "' + (ordem.priority || '—') + '" para "' + novo.priority + '". Prazo de atendimento (SLA): ' + (veio(p.sla) ? limparTexto(p.sla, LIMITES.sla) : novo.sla) + '.');
   }
 
   if (veio(p.sla)) {
@@ -907,7 +911,7 @@ function aplicarAcaoSolicitante(ordemBruta, payload, { agoraIso, agora = Date.no
 
 // ---------- Leitura ----------
 // Padroniza o que vem do SQL Server e do arquivo local: textos nunca nulos, datas sempre em ISO 8601 e os nomes de status,
-// severidade e tipo sempre os atuais. Chamado gravado antes de existir o "tipo" (ticket_type vazio) é do modelo antigo, em que
+// prioridade e tipo sempre os atuais. Chamado gravado antes de existir o "tipo" (ticket_type vazio) é do modelo antigo, em que
 // "Pendente" era o chamado recém-aberto: vira "Novo" (ou "Atendimento atribuído", se já tinha técnico).
 function normalizarOrdem(linha) {
   if (!linha || typeof linha !== 'object') return null;

@@ -98,8 +98,8 @@ test('validarAbertura normaliza e escapa o pedido do público', () => {
   assert.equal(d.client_cpf, '52998224725');
   assert.equal(d.service_type, 'Reset de senha');
   assert.equal(d.ticket_type, 'Requisição'); // sem escolha, vale o tipo sugerido pela categoria
-  assert.equal(d.priority, 'Alta');
-  assert.equal(d.sla, '8 Horas');
+  assert.equal(d.priority, 'Média'); // solicitante só abre com Média ou Baixa ("alta" cai na padrão)
+  assert.equal(d.sla, '3 Dias Úteis');
   assert.equal(d.title, 'Erro &lt;b&gt;grave&lt;/b&gt; &amp; &quot;urgente&quot;');
   assert.equal(d.status, 'Novo');
   assert.equal(d.tecnico_responsavel, null);
@@ -125,7 +125,7 @@ test('validarAbertura recusa pedido incompleto com mensagem específica', () => 
     [{ client_email: '<img onerror=x>@x.com' }, 'Informe um e-mail válido.'],
     [{ client_phone: '123' }, 'Informe o telefone com DDD (ex.: (62) 99999-9999).'],
     [{ service_type: 'Hackear o sistema' }, 'Selecione uma categoria válida.'],
-    [{ priority: 'Crítica máxima' }, 'Severidade inválida. Use: Crítica, Alta, Média, Baixa.'],
+    [{ priority: 'Crítica máxima' }, 'Prioridade inválida. Use: Crítica, Alta, Média, Baixa.'],
     [{ ticket_type: 'Reclamação' }, 'Escolha o tipo do chamado: Requisição ou Incidente.'],
     [{ title: 'ab' }, 'Informe o assunto do chamado.'],
     [{ description: 'curta' }, 'Descreva o que você precisa com um pouco mais de detalhes (mínimo de 10 caracteres).']
@@ -236,7 +236,7 @@ test('aplicarAtualizacao assume e conclui com carimbos de data corretos', () => 
   assert.equal(reaberta.ordem.tecnico_responsavel, null);
 });
 
-test('aplicarAtualizacao recusa status, severidade e categoria inválidos mas mantém categoria antiga do histórico', () => {
+test('aplicarAtualizacao recusa status, prioridade e categoria inválidos mas mantém categoria antiga do histórico', () => {
   assert.equal(A.aplicarAtualizacao(ordemBase(), { status: 'Sumiu' }, { agoraIso: AGORA }).ok, false);
   assert.equal(A.aplicarAtualizacao(ordemBase(), { priority: 'Imediata' }, { agoraIso: AGORA }).ok, false);
   assert.equal(A.aplicarAtualizacao(ordemBase(), { service_type: 'Outra coisa' }, { agoraIso: AGORA }).ok, false);
@@ -343,14 +343,14 @@ test('política de SLA: Crítica 4 h, Alta 8 h, Média 24 h e Baixa 5 dias útei
   assert.equal(A.calcularSlaPorPrioridade('critica'), '4 Horas');
   assert.equal(A.calcularSlaPorPrioridade('Urgente'), '4 Horas');
   assert.equal(A.calcularSlaPorPrioridade('Alta'), '8 Horas');
-  assert.equal(A.calcularSlaPorPrioridade('Média'), '24 Horas');
-  assert.equal(A.calcularSlaPorPrioridade('Normal'), '24 Horas');
-  assert.equal(A.calcularSlaPorPrioridade(''), '24 Horas');
+  assert.equal(A.calcularSlaPorPrioridade('Média'), '3 Dias Úteis');
+  assert.equal(A.calcularSlaPorPrioridade('Normal'), '3 Dias Úteis');
+  assert.equal(A.calcularSlaPorPrioridade(''), '3 Dias Úteis');
   assert.equal(A.calcularSlaPorPrioridade('Baixa'), '5 Dias Úteis');
   const base = { client_name: 'Ana', client_email: 'ana@empresa.com.br', service_type: 'Dados Cadastrais', title: 'Duvida sobre relatorio', description: 'Gostaria de entender o relatorio de faturamento', canal_atendimento: 'GLPI Tela de Login' };
   const media = A.validarAbertura({ ...base, priority: 'Média' });
   assert.ok(media.ok);
-  assert.equal(media.dados.sla, '24 Horas');
+  assert.equal(media.dados.sla, '3 Dias Úteis');
   const baixa = A.validarAbertura({ ...base, priority: 'Baixa' });
   assert.ok(baixa.ok);
   assert.equal(baixa.dados.sla, '5 Dias Úteis');
@@ -366,7 +366,7 @@ test('integração GLPI 10: SLA automático, ativo CMDB, horas, timeline públic
     title: 'Erro na conciliação bancária',
     description: 'Falha ao importar arquivo OFX na tela de lançamentos',
     canal_atendimento: 'GLPI Tela de Login'
-  });
+  }, { admin: true });
   assert.ok(r.ok);
   assert.equal(r.dados.sla, '4 Horas');
   assert.equal(r.dados.ticket_type, 'Incidente');
@@ -410,7 +410,7 @@ const ordemAberta = () => A.montarOrdem(A.validarAbertura({
   title: 'Boleto não liquidou', description: 'O boleto pago ontem continua em aberto na conciliação.', canal_atendimento: 'Central GLPI'
 }).dados, { protocolo: 'OS-261107-ABCD', id: 77, agoraIso: AGORA });
 
-test('aplicarAtualizacao registra no histórico quem assumiu, status e severidade, e recalcula o SLA', () => {
+test('aplicarAtualizacao registra no histórico quem assumiu, status e prioridade, e recalcula o SLA', () => {
   const r = A.aplicarAtualizacao(ordemAberta(), { status: 'Atendimento atribuído', tecnico_responsavel: 'Carlos', priority: 'Alta' }, { agoraIso: AGORA, ator: 'Admin Paulo' });
   assert.ok(r.ok);
   assert.equal(r.ordem.sla, '8 Horas');
@@ -418,7 +418,7 @@ test('aplicarAtualizacao registra no histórico quem assumiu, status e severidad
   assert.deepEqual(eventos.map((e) => e.sender), ['Sistema', 'Sistema', 'Sistema']);
   assert.ok(eventos.some((e) => /de "Novo" para "Atendimento atribuído"/.test(e.text)));
   assert.ok(eventos.some((e) => /assumido por Carlos/.test(e.text)));
-  assert.ok(eventos.some((e) => /Severidade alterada de "Média" para "Alta"/.test(e.text) && /8 Horas/.test(e.text)));
+  assert.ok(eventos.some((e) => /Prioridade alterada de "Média" para "Alta"/.test(e.text) && /8 Horas/.test(e.text)));
   assert.ok(eventos.every((e) => e.author === 'Admin Paulo' && e.internal === false));
 });
 
@@ -553,15 +553,15 @@ test('aplicarAcaoSolicitante não altera o chamado original e respeita o limite 
   const cheia = { ...original, timeline: Array.from({ length: 300 }, (_, i) => ({ sender: 'Técnico', author: 'x', text: 'm' + i, date: AGORA })) };
   assert.equal(A.aplicarAcaoSolicitante(cheia, { acao: 'responder', texto: 'Mais uma' }, { agoraIso: AGORA }).codigo, 409);
 });
-// ---------- Fila de chamados 10/11: status, severidade, tipo, categorias e filas ----------
-test('catálogos: 5 status, 4 severidades, 2 tipos e as 9 categorias pedidas (mais "Outros")', () => {
+// ---------- Fila de chamados 10/11: status, prioridade, tipo, categorias e filas ----------
+test('catálogos: 5 status, 4 prioridades, 2 tipos e as 9 categorias pedidas (mais "Outros")', () => {
   assert.deepEqual([...A.STATUS], ['Novo', 'Pendente', 'Atendimento atribuído', 'Resolvido', 'Fechado']);
   assert.deepEqual([...A.PRIORIDADES], ['Crítica', 'Alta', 'Média', 'Baixa']);
   assert.deepEqual([...A.TIPOS], ['Requisição', 'Incidente']);
   for (const c of ['Reset de senha', 'Pagamento não reconhecido', 'Desbloqueio de usuário', 'Conta/Login', 'Dados Cadastrais', 'Liberação de degustação', '2ª Via de fatura', 'Atendimento Técnico', 'Falhas/Bugs/Correções']) {
     assert.ok(A.CATEGORIAS.includes(c), c);
   }
-  assert.deepEqual({ ...A.SLA_POLITICA }, { 'Crítica': '4 Horas', 'Alta': '8 Horas', 'Média': '24 Horas', 'Baixa': '5 Dias Úteis' });
+  assert.deepEqual({ ...A.SLA_POLITICA }, { 'Crítica': '4 Horas', 'Alta': '8 Horas', 'Média': '3 Dias Úteis', 'Baixa': '5 Dias Úteis' });
 });
 
 test('validarAbertura: requisição ou incidente (o tipo sugerido vem da categoria, mas o solicitante escolhe)', () => {
@@ -574,25 +574,28 @@ test('validarAbertura: requisição ou incidente (o tipo sugerido vem da categor
   assert.equal(A.validarAbertura({ ...pedidoValido(), tipo: 'Incidente' }).dados.ticket_type, 'Incidente');
 });
 
-test('validarAbertura: categorias novas, sem acento e nomes antigos de categoria e severidade', () => {
+test('validarAbertura: categorias novas, sem acento e nomes antigos de categoria e prioridade', () => {
   assert.equal(A.validarAbertura({ ...pedidoValido(), service_type: '2a via de fatura' }).dados.service_type, '2ª Via de fatura');
   assert.equal(A.validarAbertura({ ...pedidoValido(), service_type: 'liberacao de degustacao' }).dados.service_type, 'Liberação de degustação');
   assert.equal(A.validarAbertura({ ...pedidoValido(), service_type: 'conta/login' }).dados.service_type, 'Conta/Login');
   // aba antiga aberta: o nome velho cai na categoria nova mais próxima
   assert.equal(A.validarAbertura({ ...pedidoValido(), service_type: 'Gestão de Acessos & Reset de Senha' }).dados.service_type, 'Reset de senha');
   assert.equal(A.validarAbertura({ ...pedidoValido(), service_type: 'Sistema Financeiro & ERP' }).dados.service_type, 'Outros');
-  assert.equal(A.validarAbertura({ ...pedidoValido(), priority: 'Urgente' }).dados.priority, 'Crítica');
+  // Solicitante só abre com Média ou Baixa: "Urgente"/"Crítica" caem na padrão; a equipe (admin) mantém os 4 níveis
+  assert.equal(A.validarAbertura({ ...pedidoValido(), priority: 'Urgente' }).dados.priority, 'Média');
+  assert.equal(A.validarAbertura({ ...pedidoValido(), priority: 'Crítica' }).dados.priority, 'Média');
+  assert.equal(A.validarAbertura({ ...pedidoValido(), priority: 'Urgente' }, { admin: true }).dados.priority, 'Crítica');
   assert.equal(A.validarAbertura({ ...pedidoValido(), priority: 'Normal' }).dados.priority, 'Média');
   assert.equal(A.validarAbertura({ ...pedidoValido(), priority: '' }).dados.priority, 'Média');
 });
 
-test('SLA: Crítica 4 h e Alta 8 h entram no chamado; a severidade recalcula o prazo', () => {
-  const critica = A.validarAbertura({ ...pedidoValido(), priority: 'Crítica' }).dados;
+test('SLA: Crítica 4 h e Alta 8 h entram no chamado; a prioridade recalcula o prazo', () => {
+  const critica = A.validarAbertura({ ...pedidoValido(), priority: 'Crítica' }, { admin: true }).dados;
   assert.equal(critica.sla, '4 Horas');
   const ordem = A.montarOrdem(critica, { protocolo: 'OS-261110-AAAA', id: 1, agoraIso: AGORA });
   const alta = A.aplicarAtualizacao(ordem, { priority: 'Alta' }, { agoraIso: AGORA });
   assert.equal(alta.ordem.sla, '8 Horas');
-  assert.ok(alta.ordem.timeline.some((i) => i.event && /Severidade alterada de "Crítica" para "Alta"/.test(i.text) && /8 Horas/.test(i.text)));
+  assert.ok(alta.ordem.timeline.some((i) => i.event && /Prioridade alterada de "Crítica" para "Alta"/.test(i.text) && /8 Horas/.test(i.text)));
 });
 
 test('filas: a categoria cai na fila que a atende ("Suporte Técnico N2") e a abertura registra isso', () => {
