@@ -3572,9 +3572,19 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 : (lastSyncAt ? 'Atualizado às ' + lastSyncAt.toLocaleTimeString('pt-BR') : 'Atualizando...');
         }
 
+        // Assinatura do conteúdo renderizado: se os chamados não mudaram, o redraw é pulado
+        // (evita que cada sincronização/visibilitychange redesenhe tabelas e gráficos = tremor visual)
+        let lastQueueSig = '';
+        function queueSignature() {
+            return ticketsList.map((t) => (t.protocol || '') + '#' + (t.updatedAt || '') + '#' + (t.status || '') + '#' + (t.technician || '')).join('|');
+        }
+
         // Redesenha o que está na tela depois de uma atualização, sem tirar o foco de quem está digitando
         function refreshViews() {
             if (!currentUser) return;
+            const sig = queueSignature();
+            if (sig === lastQueueSig) { renderSyncStamp(); return; }
+            lastQueueSig = sig;
             if (isTechMode()) {
                 renderTechQueue();
                 if (!$('tech-subview-dashboard').classList.contains('hidden')) initCharts();
@@ -3937,6 +3947,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             document.body.classList.add('in-app');
             if (currentUser.role === 'user') navUser('catalog');
             else navTech('dashboard');
+            lastQueueSig = queueSignature();
             startSync();
         }
 
@@ -5556,6 +5567,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                     }]
                 },
                 options: {
+                    animation: false,
                     indexAxis: 'y',
                     responsive: true,
                     maintainAspectRatio: false,
@@ -5607,6 +5619,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                     }]
                 },
                 options: {
+                    animation: false,
                     responsive: true,
                     maintainAspectRatio: false,
                     cutout: '68%',
