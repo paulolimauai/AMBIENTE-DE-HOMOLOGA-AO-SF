@@ -84,7 +84,7 @@
     "priority": "Baixa",
     "title": "mudar tipo de abertura de chamado",
     "description": "quando for requisição aparecer #REQ-\nQuando for Incidente aparece #INC-\n\ncaso tenha quer alterar de REQ para INC permitir o chamado mudar apenas a inicial",
-    "status": "Atendimento atribuído",
+    "status": "Resolvido",
     "admin_notes": "",
     "tecnico_responsavel": "PAULO DE LIMA PEREIRA",
     "assumido_em": "2026-11-11T12:17:20.453Z",
@@ -148,11 +148,26 @@
         "date": "2026-11-11T12:25:15.615Z",
         "internal": false,
         "event": true
+      },
+      {
+        "sender": "Técnico",
+        "author": "ADMINISTRADOR DO SISTEMA",
+        "text": "[SOLUÇÃO APLICADA]: Implementado.",
+        "date": "2026-11-11T23:39:58.720Z",
+        "internal": false
+      },
+      {
+        "sender": "Sistema",
+        "author": "ADMINISTRADOR DO SISTEMA",
+        "text": "Status alterado de \"Atendimento atribuído\" para \"Resolvido\".",
+        "date": "2026-11-11T23:39:58.720Z",
+        "internal": false,
+        "event": true
       }
     ],
-    "concluido_em": null,
+    "concluido_em": "2026-11-11T23:39:58.720Z",
     "created_at": "2026-11-11T12:16:53.082Z",
-    "updated_at": "2026-11-11T12:25:15.615Z",
+    "updated_at": "2026-11-11T23:39:58.720Z",
     "ticket_type": "Requisição",
     "fila": "Desenvolvedor"
   },
