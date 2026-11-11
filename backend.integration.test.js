@@ -334,11 +334,19 @@ test('SSE: limite de conexões por usuário e resposta 429 acima dele', async ()
   assert.equal(statuses.filter((s) => s === 429).length, 3, 'statuses: ' + statuses.join(','));
 });
 
-test('perfil: troca de senha exige a atual e invalida o token antigo', async () => {
+test('perfil: troca de senha com sessão ativa não exige a senha atual e invalida o token antigo', async () => {
   const antigo = (await login('bia@teste.nexus', 'Bia@12345')).token;
-  const semAtual = await api('POST', '/api/user/profile', { token: antigo, body: { newPassword: 'Nova@123456', currentPassword: 'errada' } });
-  assert.equal(semAtual.status, 400);
-  const ok = await api('POST', '/api/user/profile', { token: antigo, body: { newPassword: 'Nova@123456', currentPassword: 'Bia@12345' } });
+  // Sem token não troca senha
+  const semSessao = await api('POST', '/api/user/profile', { body: { newPassword: 'Nova@123456' } });
+  assert.equal(semSessao.status, 401);
+  // Senha fraca é recusada
+  const fraca = await api('POST', '/api/user/profile', { token: antigo, body: { newPassword: 'fraca' } });
+  assert.equal(fraca.status, 400);
+  // Nova senha igual à atual é recusada (sem precisar enviar a atual)
+  const igual = await api('POST', '/api/user/profile', { token: antigo, body: { newPassword: 'Bia@12345' } });
+  assert.equal(igual.status, 400);
+  // Com a sessão ativa basta a nova senha — o campo currentPassword foi aposentado
+  const ok = await api('POST', '/api/user/profile', { token: antigo, body: { newPassword: 'Nova@123456' } });
   assert.equal(ok.status, 200, ok.texto);
   assert.ok(ok.json.token);
   // sem esperar: o token antigo foi emitido no mesmo segundo da troca (antes valia, porque a comparação era em segundos)

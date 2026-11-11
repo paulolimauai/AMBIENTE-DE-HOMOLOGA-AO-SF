@@ -373,6 +373,17 @@
     const maiorEntrada = entradas.reduce((m, l) => Math.max(m, l.valor), 0);
     const maiorSaida = saidas.reduce((m, l) => Math.max(m, l.valor), 0);
 
+    // ---------- Acumulado de todos os meses com lançamento realizado (entradas − saídas de toda a base) ----------
+    const mesesCadastrados = new Set();
+    let acumEntradas = 0;
+    let acumSaidas = 0;
+    lancsFluxo.forEach((l) => {
+      if (!l.realizado) return;
+      mesesCadastrados.add(l.ano + '-' + l.mes);
+      if (l.tipo === 'in') acumEntradas += l.valor; else acumSaidas += l.valor;
+    });
+    const acumulado = { entradas: arred(acumEntradas), saidas: arred(acumSaidas), resultado: arred(acumEntradas - acumSaidas), meses: mesesCadastrados.size };
+
     // ---------- Saúde financeira (0 a 100) ----------
     let score = 55;
     if (receitas.realizado > 0) {
@@ -429,7 +440,7 @@
       totais: { receitas, despesas, resultadoRealizado, resultadoPrevisto, taxaPoupanca, comprometimento },
       comparativo,
       contas: { saldoInicial, saldoAtual, saldoProjetadoFim, saldoMinimo, primeiroDiaNegativo, bancarias: contasBancarias, cartoes: cartoesResumo },
-      serieDiaria, serieMensal, categorias, totalDespesaCats: arred(totalDespesaCats),
+      serieDiaria, serieMensal, categorias, totalDespesaCats: arred(totalDespesaCats), acumulado,
       agenda, ultimas, orcamentos, tempoDecorridoPct,
       ritmo: { mediaDiaria30, autonomiaDias, maiorEntrada: arred(maiorEntrada), maiorSaida: arred(maiorSaida) },
       saude, insights: insights.slice(0, 3)
@@ -552,6 +563,13 @@
   }
 
   const valorTile = (v, prefixo) => '<div class="fd-tile-valor fd-money" data-anim-val="' + v + '"' + (prefixo ? ' data-prefix="' + prefixo + '"' : '') + '>' + esc((prefixo || '') + fmtU(v)) + '</div>';
+  // Linha de apoio dos tiles de fluxo: "R$ X já recebido · R$ Y a receber (N entradas)" — realizado e previsto sempre visíveis
+  const resumoFluxo = (s, pago, aFazer, un) => {
+    if (!s.qtd) return 'Sem lançamentos no período';
+    return '<span class="fd-money">' + esc(fmtU(s.realizado)) + '</span> ' + pago +
+      (s.previsto > 0 ? ' · ' + dinheiro(s.previsto) + ' ' + aFazer : '') +
+      ' <span class="fd-tile-qtd">(' + s.qtd + ' ' + un + (s.qtd === 1 ? '' : 's') + ')</span>';
+  };
   const progresso = (real, previsto, rotulo) => {
     if (!(previsto > 0)) return '';
     const pct = Math.max(2, Math.min(100, Math.round((real / (real + previsto)) * 100)));
@@ -607,8 +625,22 @@
       '<div class="fd-hero-valor fd-money" data-anim-val="' + c.saldoAtual + '">' + esc(fmtU(c.saldoAtual)) + '</div>' +
       '<div class="fd-hero-proj"><span class="fd-hero-proj-rot">' + esc(fimRotulo) + '</span> ' + dinheiro(c.saldoProjetadoFim) +
         (Math.abs(projDiff) >= 0.01 ? ' <span class="fd-delta fd-money ' + (projDiff >= 0 ? 'fd-bom' : 'fd-ruim') + '">' + (projDiff >= 0 ? '▲ ' : '▼ ') + esc(fmtU(Math.abs(projDiff))) + '</span>' : '') + '</div>' +
+      blocoAcumulado(m) +
       '<div class="fd-hero-grafico">' + graficoSaldo(m) + '</div>' +
       '<div class="fd-mini">' + itens + '</div></section>';
+  }
+
+  // Acumulado de todos os meses cadastrados: quanto entrou menos quanto saiu em toda a base (só o realizado),
+  // deixando claro quanto desse total é saldo positivo disponível
+  function blocoAcumulado(m) {
+    const a = m.acumulado || { resultado: 0, meses: 0 };
+    const positivo = a.resultado > 0.004;
+    const negativo = a.resultado < -0.004;
+    const selo = positivo ? 'fd-selo-bom' : negativo ? 'fd-selo-ruim' : '';
+    const texto = positivo ? 'saldo positivo disponível' : negativo ? 'déficit acumulado' : 'sem movimentações';
+    return '<div class="fd-hero-acum"><span class="fd-hero-acum-rot">Acumulado de todos os meses' +
+      (a.meses ? ' (' + a.meses + (a.meses === 1 ? ' mês' : ' meses') + ')' : '') + ':</span> ' +
+      dinheiro(a.resultado) + ' <span class="fd-selo ' + (selo || 'fd-selo') + '">' + texto + '</span></div>';
   }
 
   function tileKpi(o) {
@@ -624,20 +656,20 @@
     const cartoes = c.cartoes;
     const tiles =
       tileKpi({
-        rotulo: 'Receitas', tom: 'fd-ic-in', icone: ICONES.receita, ir: { tipo: 'in' }, dica: 'Ver as receitas em Movimentações',
-        valorHtml: valorTile(t.receitas.realizado),
+        rotulo: 'Receitas', tom: 'fd-ic-in', icone: ICONES.receita, ir: { tipo: 'in' }, dica: 'Ver as receitas em Movimentações', classe: 'fd-tile-in',
+        valorHtml: valorTile(t.receitas.total),
         linhas: [
           cmp ? chipVariacao(cmp.receitas, 'subir', cmp.rotulo) : '',
-          t.receitas.previsto > 0 ? '+ ' + dinheiro(t.receitas.previsto) + ' a receber' : (t.receitas.qtd + ' entrada' + (t.receitas.qtd === 1 ? '' : 's')),
+          resumoFluxo(t.receitas, 'já recebido', 'a receber', 'entrada'),
           progresso(t.receitas.realizado, t.receitas.previsto, 'Receitas')
         ]
       }) +
       tileKpi({
-        rotulo: 'Despesas', tom: 'fd-ic-out', icone: ICONES.despesa, ir: { tipo: 'out' }, dica: 'Ver as despesas em Movimentações',
-        valorHtml: valorTile(t.despesas.realizado),
+        rotulo: 'Despesas', tom: 'fd-ic-out', icone: ICONES.despesa, ir: { tipo: 'out' }, dica: 'Ver as despesas em Movimentações', classe: 'fd-tile-out',
+        valorHtml: valorTile(t.despesas.total),
         linhas: [
           cmp ? chipVariacao(cmp.despesas, 'descer', cmp.rotulo) : '',
-          t.despesas.previsto > 0 ? '+ ' + dinheiro(t.despesas.previsto) + ' a pagar' : (t.despesas.qtd + ' saída' + (t.despesas.qtd === 1 ? '' : 's')),
+          resumoFluxo(t.despesas, 'já pago', 'a pagar', 'saída'),
           progresso(t.despesas.realizado, t.despesas.previsto, 'Despesas')
         ]
       }) +
