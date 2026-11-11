@@ -541,13 +541,25 @@
         .ws-id { padding: .3rem .7rem; border-radius: .6rem; font-family: var(--font-mono); font-size: 0.8125rem; font-weight: 700; color: var(--t-amber); background: rgba(var(--amber-rgb), .16); border: 1px solid rgba(var(--amber-rgb), .38); white-space: nowrap; }
         .ws-meta { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; font-size: 0.78rem; color: var(--muted); }
         .ws-meta b { color: var(--ink-2); font-weight: 600; }
-        .ws-body { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); overflow: hidden; }
+        .ws-body { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); overflow: hidden; position: relative; }
         .ws-left { min-height: 0; display: flex; flex-direction: column; border-right: 1px solid var(--line-soft); background: rgba(var(--dk), .22); }
-        .ws-desc-wrap { flex: none; padding: 1rem 1.2rem; border-bottom: 1px solid var(--line-soft); }
+        .ws-desc-wrap { flex: 1 1 auto; min-height: 0; padding: 1rem 1.2rem; border-bottom: 1px solid var(--line-soft); }
         .eyebrow { display: flex; align-items: center; gap: .45rem; margin-bottom: .55rem; font-size: max(0.72rem, 11px); font-weight: 800; letter-spacing: .11em; text-transform: uppercase; color: var(--muted); }
         .eyebrow i { color: var(--t-blue); }
         .ws-desc { max-height: 9rem; overflow-y: auto; padding: .85rem 1rem; border-radius: .85rem; font-size: 0.8125rem; line-height: 1.65; color: var(--ink-2); white-space: pre-wrap; background: rgba(var(--dk), .5); border: 1px solid var(--line-soft); }
-        .ws-timeline { flex: 1; min-height: 8rem; overflow-y: auto; padding: 1rem 1.2rem; display: grid; gap: .7rem; align-content: start; }
+        /* Movimentação/histórico fora do fluxo principal: abre como painel lateral pelo botão "Histórico" do topo */
+        .ws-timeline { display: none; flex: 1; min-height: 8rem; overflow-y: auto; padding: 1rem 1.2rem; gap: .7rem; align-content: start; }
+        .overlay.hist-open .ws-timeline {
+            display: grid; position: absolute; top: 0; right: 0; bottom: 0; z-index: 8;
+            width: min(24rem, 88%);
+            background: rgba(var(--dk), .97);
+            -webkit-backdrop-filter: blur(22px) saturate(170%); backdrop-filter: blur(22px) saturate(170%);
+            border-left: 1px solid var(--line);
+            box-shadow: -30px 0 60px -30px rgba(0, 0, 0, .6);
+            animation: histin .25s ease both;
+        }
+        @keyframes histin { from { transform: translateX(2rem); opacity: 0; } }
+        .ws-hist-btn[aria-pressed="true"] { color: var(--acc-l); background: rgba(var(--acc-rgb), .14); border-color: rgba(var(--acc-rgb), .4); }
         .tl { padding: .85rem 1rem; border-radius: 1rem; font-size: 0.8125rem; background: rgba(var(--dk), .5); border: 1px solid var(--line-soft); color: var(--ink-2); }
         .tl.tech { background: linear-gradient(145deg, rgba(var(--blue-rgb), .16), rgba(var(--blue-rgb), .05)); border-color: rgba(var(--blue-rgb), .38); color: var(--ink); }
         .tl.internal { background: linear-gradient(145deg, rgba(var(--amber-rgb), .17), rgba(var(--amber-rgb), .05)); border-color: rgba(var(--amber-rgb), .42); color: var(--ink); }
@@ -2580,6 +2592,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                     </div>
                 </div>
                 <div class="mh-actions" style="display:flex; align-items:center; gap:.7rem;">
+                    <button type="button" class="btn btn-ghost btn-sm ws-hist-btn" aria-pressed="false" onclick="toggleTicketHistory(this)" title="Ver movimentação e histórico"><i class="fa-solid fa-clock-rotate-left"></i> Histórico</button>
                     <button type="button" class="btn btn-icon ws-full-btn" title="Abrir em tela cheia" aria-label="Abrir chamado em tela cheia" onclick="toggleTicketFull(this)"><i class="fa-solid fa-expand"></i></button>
                     <button type="button" onclick="copyProtocol(document.getElementById('my-id').textContent, this)" class="btn btn-ghost btn-sm"><i class="fa-regular fa-copy"></i> Copiar protocolo</button>
                     <button type="button" onclick="closeModal('modal-my-ticket')" class="btn btn-icon" aria-label="Fechar">
@@ -2667,6 +2680,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                         <i class="fa-solid fa-user-plus"></i> Assumir Chamado
                     </button>
                     <button type="button" class="btn btn-icon ws-full-btn" title="Abrir em tela cheia" aria-label="Abrir chamado em tela cheia" onclick="toggleTicketFull(this)"><i class="fa-solid fa-expand"></i></button>
+                    <button type="button" class="btn btn-ghost btn-sm ws-hist-btn" aria-pressed="false" onclick="toggleTicketHistory(this)" title="Ver movimentação e histórico"><i class="fa-solid fa-clock-rotate-left"></i> Histórico</button>
                     <button type="button" onclick="closeModal('modal-tech-workspace')" class="btn btn-icon" aria-label="Fechar">
                         <i class="fa-solid fa-xmark"></i>
                     </button>
@@ -4097,10 +4111,21 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             if (ov) setTicketFull(ov, !ov.classList.contains('is-full'));
         }
 
+        // Abre/fecha o painel lateral de movimentação (histórico) do chamado
+        function toggleTicketHistory(btn) {
+            const ov = btn.closest('.overlay');
+            if (!ov) return;
+            const open = ov.classList.toggle('hist-open');
+            btn.setAttribute('aria-pressed', String(open));
+        }
+
         function closeModal(id) {
             const el = $(id);
             if (!el) return;
             el.classList.add('hidden');
+            el.classList.remove('hist-open');
+            const hb = el.querySelector('.ws-hist-btn');
+            if (hb) hb.setAttribute('aria-pressed', 'false');
             if (el.classList.contains('is-full')) setTicketFull(el, false);
             if (id === 'modal-tech-workspace') { activeProtocol = null; markActiveRow(); }
             if (id === 'modal-my-ticket') myProtocol = null;
