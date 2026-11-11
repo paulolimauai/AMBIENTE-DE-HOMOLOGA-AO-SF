@@ -163,6 +163,21 @@ test('entrada registrada no cartão (pagamento de fatura) não conta como receit
   assert.ok(!m.ultimas.some((u) => u.desc === 'Pagamento da fatura'));
 });
 
+test('acumulado soma o realizado de todos os meses cadastrados (entradas − saídas)', () => {
+  const m = D.calcular(ctx());
+  // realizado em toda a base: 5000+5000 (salários) − (200+300+150+250+100) = 10000 − 1000 = 9000; meses: out e nov = 2
+  assert.equal(m.acumulado.entradas, 10000);
+  assert.equal(m.acumulado.saidas, 1000);
+  assert.equal(m.acumulado.resultado, 9000);
+  assert.equal(m.acumulado.meses, 2);
+  const vazio = D.calcular(ctx({ transacoes: [], contas: [] }));
+  assert.equal(vazio.acumulado.resultado, 0);
+  assert.equal(vazio.acumulado.meses, 0);
+  const html = D.pagina({ ...ctx(), util: {} });
+  assert.ok(html.includes('Acumulado de todos os meses'));
+  assert.ok(html.includes('saldo positivo disponível'));
+});
+
 test('"Todas as datas" soma tudo e não compara com mês anterior', () => {
   const m = D.calcular(ctx({ periodo: { year: 2026, month: 0 } }));
   assert.equal(m.comparativo, null);

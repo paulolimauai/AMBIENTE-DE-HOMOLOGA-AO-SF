@@ -24378,16 +24378,9 @@ function pageConfig(){
           </h3>
         </div>
         <p class="cfg-hint" style="font-size:12px; margin-bottom:14px; color:var(--text-dim);">
-          Preencha só se quiser trocar a senha: informe a atual e uma nova com 8+ caracteres, maiúscula, minúscula, número e símbolo.
+          Sessão ativa: para trocar a senha basta informar a nova senha e a confirmação — não é preciso digitar a senha atual. Use 8+ caracteres, maiúscula, minúscula, número e símbolo.
         </p>
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px;">
-          <div class="field" style="margin-bottom:0;">
-            <label style="font-size:12px; font-weight:700; margin-bottom:6px; display:block; color:var(--text-dim);">Senha Atual</label>
-            <div class="pass-field">
-              <input id="cfgPasswordCurrent" type="password" placeholder="••••••••" autocomplete="current-password" style="width:100%; height:44px; font-size:13.5px;">
-              <button type="button" class="pass-toggle" id="cfgPasswordCurrentToggle" tabindex="-1" aria-label="Mostrar senha">\${EYE_ICON}</button>
-            </div>
-          </div>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
           <div class="field" style="margin-bottom:0;">
             <label style="font-size:12px; font-weight:700; margin-bottom:6px; display:block; color:var(--text-dim);">Nova Senha</label>
             <div class="pass-field">
@@ -30627,7 +30620,6 @@ function attachPageEvents(){
     };
     bindPasswordToggle('cfgPassword', 'cfgPasswordToggle');
     bindPasswordToggle('cfgPasswordConfirm', 'cfgPasswordConfirmToggle');
-    bindPasswordToggle('cfgPasswordCurrent', 'cfgPasswordCurrentToggle');
     const cfgScaleEl = document.getElementById('cfgScale');
     if(cfgScaleEl) {
       cfgScaleEl.value = localStorage.getItem('nexus_display_scale') || 'auto';
@@ -30674,7 +30666,6 @@ function attachPageEvents(){
       const newCpf = valor('cfgCpf');
       const newBirthDate = valor('cfgBirthDate');
       const newPhone = valor('cfgPhone');
-      const curPass = bruto('cfgPasswordCurrent');
       const newPass = bruto('cfgPassword');
       const newPassConfirm = bruto('cfgPasswordConfirm');
 
@@ -30684,16 +30675,14 @@ function attachPageEvents(){
       if (phoneDigits && phoneDigits.length !== 10 && phoneDigits.length !== 11) { showToast('Informe o celular com DDD (10 ou 11 dígitos)'); return; }
       if (newBirthDate && newBirthDate > new Date().toLocaleDateString('sv-SE')) { showToast('A data de nascimento não pode ser futura'); return; }
 
-      // Senha: se qualquer um dos três campos foi preenchido, os três são obrigatórios (antes um campo sozinho era ignorado em silêncio)
-      const quertrocarSenha = !!(curPass || newPass || newPassConfirm);
+      // Senha: com a sessão ativa não pede a senha atual — basta a nova senha e a confirmação (antes um campo sozinho era ignorado em silêncio)
+      const quertrocarSenha = !!(newPass || newPassConfirm);
       if (quertrocarSenha) {
-        if (!curPass) { showToast('Informe a senha atual para trocar a senha'); return; }
         if (!newPass || !newPassConfirm) { showToast('Preencha a nova senha e a confirmação'); return; }
         if (newPass !== newPassConfirm) { showToast('As senhas de confirmação não coincidem'); return; }
         if (newPass.length < 8 || !/[a-z]/.test(newPass) || !/[A-Z]/.test(newPass) || !/[0-9]/.test(newPass) || !/[^A-Za-z0-9]/.test(newPass)) {
           showToast('A nova senha deve ter 8+ caracteres, maiúscula, minúscula, número e símbolo'); return;
         }
-        if (newPass === curPass) { showToast('A nova senha precisa ser diferente da atual'); return; }
       }
 
       const payload = { name: newName, phone: newPhone, birth_date: newBirthDate };
@@ -30701,7 +30690,7 @@ function attachPageEvents(){
       if (cpfEl && !cpfEl.readOnly) payload.cpf = newCpf;
       const avatarAtual = nexusSafeAvatar(currentUser.avatar);
       if (avatarAtual) payload.avatar = avatarAtual;
-      if (quertrocarSenha) { payload.currentPassword = curPass; payload.newPassword = newPass; }
+      if (quertrocarSenha) { payload.newPassword = newPass; }
 
       saveCfg.disabled = true;
       let resp = null;
@@ -30733,7 +30722,7 @@ function attachPageEvents(){
       saveToStorage('nexus_cached_user', currentUser);
       updateHeaderUser();
 
-      ['cfgPasswordCurrent', 'cfgPassword', 'cfgPasswordConfirm'].forEach(function(id){ const el = document.getElementById(id); if (el) el.value = ''; });
+      ['cfgPassword', 'cfgPasswordConfirm'].forEach(function(id){ const el = document.getElementById(id); if (el) el.value = ''; });
       const scaleEl = document.getElementById('cfgScale');
       if(scaleEl) applyDisplayScale(scaleEl.value);
 
@@ -34632,7 +34621,6 @@ async function handleNexusRequest(req, res) {
 
         let newHash = null;
         if (parsed.newPassword !== undefined && String(parsed.newPassword) !== '') {
-          const currentPassword = String(parsed.currentPassword || '');
           const newPassword = String(parsed.newPassword);
           if (!pool) { try { kickDatabaseReconnect(); } catch (connErr) {} }
           let storedHash = selfUser.password;
@@ -34642,9 +34630,7 @@ async function handleNexusRequest(req, res) {
               if (pwRes.rows && pwRes.rows[0] && pwRes.rows[0].password) storedHash = pwRes.rows[0].password;
             } catch (pwErr) {}
           }
-          if (!currentPassword || !verifyPassword(currentPassword, storedHash)) {
-            return fail(400, 'A senha atual não confere.', 'currentPassword');
-          }
+          // Sessão ativa (token Bearer já validado): não exige a senha atual, só a nova senha forte e diferente da atual
           if (newPassword.length < 8 || !/[a-z]/.test(newPassword) || !/[A-Z]/.test(newPassword) || !/[0-9]/.test(newPassword) || !/[^A-Za-z0-9]/.test(newPassword)) {
             return fail(400, 'A nova senha deve ter 8+ caracteres, maiúscula, minúscula, número e símbolo.', 'newPassword');
           }
