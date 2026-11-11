@@ -3,11 +3,11 @@
     "id": "39",
     "name": "ADMINISTRADOR DO SISTEMA",
     "email": "paulolp0101@gmail.com",
-    "password": "scrypt:be25c5d38b17fb051b74cb648ef00ac3:f9c2d806789e5683939bb0935aa3d3d54873e4b2e1958514a76d16c5d02fa5015a04b048127ed89902edaf230cee4c5ef1ad43bf34804b6560447c4bd1ed9f60",
+    "password": "scrypt:f017b91e1b4ed07a2656f4a3b513dbb9:c66abe7a01786b256e6b6d6d7334bc6c406169afd591bce51b61e36b10b02e62e48fc561c816340f3055747b9a47a0167fb92b41833b9d3f61d9057c2d107227",
     "role": "Administrador",
     "active": true,
     "created_at": "2026-09-09T11:20:49-03:00",
-    "last_login": "2026-11-10T22:16:35-03:00",
+    "last_login": "2026-11-11T09:18:52-03:00",
     "cpf": "04023326100",
     "phone": "(62) 99234-5372",
     "birth_date": "02/06/1992",
@@ -20,17 +20,17 @@
     "subscription_expires_at": "2026-12-01T12:24:34-03:00",
     "subscription_method": "pix",
     "subscription_payment_id": "LIB-ADMIN-PIX-1793633074915-OSOS24448467",
-    "password_changed_at": "2026-11-10T05:41:10.424Z"
+    "password_changed_at": "2026-11-11T12:02:24.174Z"
   },
   {
     "id": "73",
     "name": "PAULO DE LIMA PEREIRA",
     "email": "paulodelima21@gmail.com",
-    "password": "scrypt:c080e19c7e5ecb0601f30f578545c8dc:5521f581e417f367fd8e586a78eb4bbec9f4b187e5079118edbe0d6cfa2c4c641c66eaf2a9ba82d4a46a7f6288e009b9dc5f35edd23715762197e0de85abb802",
+    "password": "scrypt:9ea6131579100c23d5d45a556b53c3ee:6a1cba653ac3867674743989d78958a29599041ef7417c68e4213c847639ad88d6893ac4761b3c53aee06005a959b8c2de76d83c101056809de783013ad7ef7a",
     "role": "Usuário",
     "active": true,
     "created_at": "2026-10-21T22:48:59-03:00",
-    "last_login": "2026-11-10T23:00:46-03:00",
+    "last_login": "2026-11-11T09:18:43-03:00",
     "cpf": "04023326100",
     "phone": "(62) 98626-6049",
     "birth_date": "02/06/1992",
@@ -43,7 +43,7 @@
     "subscription_expires_at": "2026-12-10T08:47:34-03:00",
     "subscription_method": "pix",
     "subscription_payment_id": "NEXUS-SUB-1794322010128-B8F470-REF-NX21994554",
-    "password_changed_at": "2026-11-10T13:14:05.725Z"
+    "password_changed_at": "2026-11-11T02:18:40.576Z"
   },
   {
     "id": "1070",

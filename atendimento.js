@@ -175,42 +175,65 @@ function dataOuOriginal(valor) {
 }
 
 // ---------- Protocolo ----------
-// Formato atual: sequência a partir de OS-0001 (OS-0001, OS-0002, ... OS-9999, OS-10000...). Cada chamado novo pega o número seguinte.
-// Os formatos antigos continuam válidos para consulta e atendimento: OS-AAMMDD-XXXX (ex.: OS-261106-K7QX) e OS-12345678 (só números).
-const RE_PROTOCOLO_ALEATORIO = /^OS-?(\d{6})-?([A-HJ-NP-Z2-9]{4})$/;
-const RE_PROTOCOLO_SEQUENCIAL = /^OS-?(\d{1,5})$/;
-const RE_PROTOCOLO_LEGADO = /^OS-?(\d{6,10})$/;
+// Formato atual: sequência a partir de REQ-0001/INC-0001 (o prefixo diz o tipo: REQ = Requisição, INC = Incidente).
+// Os formatos antigos continuam válidos para consulta e atendimento: OS-0001 (sequencial antigo), OS-AAMMDD-XXXX
+// (ex.: OS-261106-K7QX) e OS-12345678 (só números). Na leitura, o sequencial antigo OS-NNNN já sai com o prefixo do tipo.
+const RE_PROTOCOLO_ALEATORIO = /^(OS|REQ|INC)-?(\d{6})-?([A-HJ-NP-Z2-9]{4})$/i;
+const RE_PROTOCOLO_SEQUENCIAL = /^(OS|REQ|INC)-?(\d{1,5})$/i;
+const RE_PROTOCOLO_LEGADO = /^(OS|REQ|INC)-?(\d{6,10})$/i;
 const PROTOCOLO_SEQUENCIAL_MAXIMO = 99999;
 
-const formatarProtocoloSequencial = (numero) => 'OS-' + String(numero).padStart(4, '0');
+const prefixoDoTipo = (tipo) => (tipo === 'Incidente' ? 'INC' : 'REQ');
+const formatarProtocoloSequencial = (numero, tipo) => prefixoDoTipo(tipo) + '-' + String(numero).padStart(4, '0');
 
 function normalizarProtocolo(valor) {
   const texto = String(valor == null ? '' : valor).trim().replace(/^#/, '').replace(/\s+/g, '').toUpperCase();
   const aleatorio = RE_PROTOCOLO_ALEATORIO.exec(texto);
-  if (aleatorio) return 'OS-' + aleatorio[1] + '-' + aleatorio[2];
+  if (aleatorio) return aleatorio[1].toUpperCase() + '-' + aleatorio[2] + '-' + aleatorio[3];
   const sequencial = RE_PROTOCOLO_SEQUENCIAL.exec(texto);
-  if (sequencial) return Number(sequencial[1]) >= 1 ? formatarProtocoloSequencial(Number(sequencial[1])) : null; // OS-1 = OS-0001
+  if (sequencial) {
+    const num = Number(sequencial[2]);
+    return num >= 1 ? sequencial[1].toUpperCase() + '-' + String(num).padStart(4, '0') : null; // OS-1/REQ-1 = REQ-0001; OS-0000 não existe
+  }
   const legado = RE_PROTOCOLO_LEGADO.exec(texto);
-  if (legado) return 'OS-' + legado[1];
+  if (legado) return legado[1].toUpperCase() + '-' + legado[2];
   return null;
 }
 
-// Número de um protocolo sequencial (OS-0007 -> 7); 0 para qualquer outro formato
+// Número de um protocolo sequencial (REQ-0007/OS-0007/INC-0007 -> 7); 0 para qualquer outro formato
 function numeroDoProtocolo(protocolo) {
-  const m = /^OS-(\d{4,5})$/.exec(normalizarProtocolo(protocolo) || '');
+  const m = /^(?:OS|REQ|INC)-(\d{4,5})$/.exec(normalizarProtocolo(protocolo) || '');
   return m ? Number(m[1]) : 0;
+}
+
+// Dois protocolos sequenciais são o mesmo chamado qualquer que seja a inicial (OS-0007 = REQ-0007 = INC-0007)
+function mesmoProtocolo(a, b) {
+  const na = numeroDoProtocolo(a);
+  const nb = numeroDoProtocolo(b);
+  if (na && nb) return na === nb;
+  const pa = normalizarProtocolo(a) || String(a == null ? '' : a).trim().toUpperCase();
+  const pb = normalizarProtocolo(b) || String(b == null ? '' : b).trim().toUpperCase();
+  return Boolean(pa) && pa === pb;
+}
+
+// Variantes de escrita de um protocolo sequencial (para consultas que não sabem a inicial gravada)
+function variantesProtocoloSequencial(protocolo) {
+  const n = numeroDoProtocolo(protocolo);
+  if (!n) return null;
+  const digitos = String(n).padStart(4, '0');
+  return ['OS-' + digitos, 'REQ-' + digitos, 'INC-' + digitos];
 }
 
 /**
  * Próximo protocolo da sequência: o maior número já usado nos chamados (+ o `minimo`, que o servidor alimenta com o contador
- * gravado e com o maior número do banco) mais um. Sem nenhum chamado numerado, começa em OS-0001.
+ * gravado e com o maior número do banco) mais um. O prefixo sai do tipo do chamado (REQ-/INC-).
  * É síncrona de propósito: o servidor a chama junto com a gravação do chamado, e assim dois pedidos ao mesmo tempo não repetem número.
  */
-function proximoProtocolo(ordens, { minimo = 0 } = {}) {
+function proximoProtocolo(ordens, { minimo = 0, tipo } = {}) {
   let maior = Number.isFinite(Number(minimo)) ? Math.max(0, Math.floor(Number(minimo))) : 0;
   for (const o of Array.isArray(ordens) ? ordens : []) maior = Math.max(maior, numeroDoProtocolo(o && o.protocol));
   if (maior >= PROTOCOLO_SEQUENCIAL_MAXIMO) throw new Error('Limite de protocolos sequenciais atingido.');
-  return formatarProtocoloSequencial(maior + 1);
+  return formatarProtocoloSequencial(maior + 1, tipo);
 }
 
 function mesmaReferencia(ordem, referencia) {
@@ -218,9 +241,7 @@ function mesmaReferencia(ordem, referencia) {
   const ref = String(referencia == null ? '' : referencia).trim();
   if (!ref) return false;
   if (String(ordem.id) === ref) return true;
-  const a = normalizarProtocolo(ordem.protocol) || String(ordem.protocol || '').trim().toUpperCase();
-  const b = normalizarProtocolo(ref) || ref.toUpperCase();
-  return Boolean(a) && a === b;
+  return mesmoProtocolo(ordem.protocol, ref);
 }
 
 // ---------- Telefone e CPF ----------
@@ -596,6 +617,15 @@ function aplicarAtualizacao(ordemBruta, payload, { agoraIso, ator, filas } = {})
     if (tipo !== ordem.ticket_type) {
       mudancas.push('tipo: ' + (ordem.ticket_type || '—') + ' → ' + tipo);
       publico('Tipo do chamado alterado de "' + (ordem.ticket_type || '—') + '" para "' + tipo + '".');
+      // O protocolo sequencial muda só a inicial (REQ-0007 ⇄ INC-0007), mantendo o número
+      const seq = /^(?:OS|REQ|INC)-(\d{4,5})$/.exec(String(ordem.protocol || ''));
+      if (seq) {
+        const protoNovo = prefixoDoTipo(tipo) + '-' + seq[1];
+        if (protoNovo !== ordem.protocol) {
+          mudancas.push('protocolo: ' + ordem.protocol + ' → ' + protoNovo);
+          novo.protocol = protoNovo;
+        }
+      }
     }
     novo.ticket_type = tipo;
   }
@@ -911,18 +941,24 @@ function normalizarOrdem(linha) {
   else status = statusCanonico(statusBruto) || statusBruto;
 
   const serviceType = texto(linha.service_type).trim() || CATEGORIA_PADRAO;
+  const ticketTypeFinal = tipoCanonico(linha.ticket_type) || tipoSugerido(serviceType);
+  // Sequencial antigo (OS-NNNN) sai já com a inicial do tipo (REQ-/INC-): a migração acontece na leitura
+  const protocolBruto = texto(linha.protocol).trim();
+  const protocolNorm = normalizarProtocolo(protocolBruto) || protocolBruto;
+  const seqAntigo = /^(?:OS|REQ|INC)-(\d{4,5})$/.exec(protocolNorm);
+  const protocolFinal = seqAntigo ? prefixoDoTipo(ticketTypeFinal) + '-' + seqAntigo[1] : protocolBruto;
   let sla = texto(linha.sla).trim();
   if (!sla || (SLA_ANTIGO_PADRAO[priority] || []).includes(chaveDe(sla))) sla = calcularSlaPorPrioridade(priority);
 
   return {
     ...linha,
-    protocol: texto(linha.protocol).trim(),
+    protocol: protocolFinal,
     client_name: texto(linha.client_name),
     client_email: texto(linha.client_email).toLowerCase().trim(),
     client_phone: texto(linha.client_phone),
     client_cpf: texto(linha.client_cpf),
     service_type: serviceType,
-    ticket_type: tipoCanonico(linha.ticket_type) || tipoSugerido(serviceType),
+    ticket_type: ticketTypeFinal,
     fila: texto(linha.fila).trim() || null,
     priority,
     title: texto(linha.title),
@@ -947,7 +983,11 @@ function normalizarOrdem(linha) {
 // (arquivo local, por exemplo quando o banco estava fora do ar na abertura) não se perde. Mais recentes primeiro.
 function mesclarOrdens(preferidas, outras) {
   const porChave = new Map();
-  const chaveDaOrdem = (o) => normalizarProtocolo(o.protocol) || String(o.protocol || '').trim().toUpperCase() || 'id:' + o.id;
+  // Sequencial casa pelo número (a inicial pode divergir entre banco e arquivo durante a migração OS-→REQ-/INC-)
+  const chaveDaOrdem = (o) => {
+    const n = numeroDoProtocolo(o.protocol);
+    return n ? 'seq:' + n : (normalizarProtocolo(o.protocol) || String(o.protocol || '').trim().toUpperCase() || 'id:' + o.id);
+  };
   for (const lista of [outras, preferidas]) {
     for (const bruta of Array.isArray(lista) ? lista : []) {
       const ordem = normalizarOrdem(bruta);
@@ -995,7 +1035,7 @@ function ordemCorresponde(ordem, consulta) {
   if (!ordem || !consulta) return false;
   switch (consulta.tipo) {
     case 'protocolo':
-      return (normalizarProtocolo(ordem.protocol) || String(ordem.protocol || '').toUpperCase()) === consulta.valor;
+      return mesmoProtocolo(ordem.protocol, consulta.valor);
     case 'email':
       return String(ordem.client_email || '').toLowerCase().trim() === consulta.valor;
     case 'numero':
@@ -1050,7 +1090,7 @@ module.exports = {
   calcularSlaPorPrioridade, prioridadeCanonica, statusCanonico, tipoCanonico, categoriaCanonica, tipoSugerido,
   acharFila, filaDaCategoria, filasIniciais, validarFila,
   limparTexto, escaparHtml, paraIso,
-  proximoProtocolo, numeroDoProtocolo, normalizarProtocolo, mesmaReferencia,
+  proximoProtocolo, numeroDoProtocolo, normalizarProtocolo, mesmaReferencia, mesmoProtocolo, variantesProtocoloSequencial,
   formatarTelefone, mesmoNumero, validarCpf, soDigitos,
   validarAbertura, montarOrdem, encontrarDuplicada, aplicarAtualizacao,
   normalizarOrdem, mesclarOrdens,
