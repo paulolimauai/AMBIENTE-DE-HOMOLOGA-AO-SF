@@ -1702,10 +1702,13 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         .msec { display: flex; align-items: center; gap: .55rem; font-size: .88rem; font-weight: 800; color: var(--white); }
         .msec i { flex: none; width: 1.15rem; text-align: center; font-size: .85rem; color: var(--t-amber); }
         .field + .msec, .form-grid + .msec { margin-top: .2rem; padding-top: .85rem; border-top: 1px solid var(--line-soft); }
-        /* Categorias da fila: grade mais baixa e cartões mais finos */
-        #queue-cats { grid-template-columns: repeat(auto-fill, minmax(10.5rem, 1fr)); gap: .4rem; max-height: 8.5rem; }
-        #queue-cats .chk { gap: .45rem; padding: .32rem .6rem; font-size: .78rem; }
-        #queue-cats .chk input { width: .9rem; height: .9rem; }
+        /* Categorias e equipe da fila: duas colunas lado a lado com listas roláveis */
+        .mcols { align-items: start; }
+        .mcols .field { min-width: 0; }
+        .sub-l { display: block; margin-bottom: .4rem; font-size: .75rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+        #queue-cats, #queue-members { grid-template-columns: minmax(0, 1fr); gap: .35rem; max-height: 14rem; }
+        #queue-cats .chk, #queue-members .chk { gap: .45rem; padding: .35rem .6rem; font-size: .78rem; }
+        #queue-cats .chk input, #queue-members .chk input { width: .9rem; height: .9rem; }
         /* Janelas de fila e técnico: Cancelar/Salvar ficam fixos no rodapé, como na janela de abertura de chamado */
         .modal-sm .modal-foot { position: sticky; bottom: -1.2rem; z-index: 3; margin: .2rem -1.3rem -1.2rem; padding: .75rem 1.3rem; background: rgba(var(--dk), .94); border-top: 1px solid var(--line); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
         @media (max-width: 767px) {
@@ -2931,15 +2934,17 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                     </div>
                 </div>
 
-                <div class="msec"><i class="fa-solid fa-tags"></i> Categorias de chamados</div>
-                <div class="field">
-                    <div id="queue-cats" class="chk-grid"><!-- JS --></div>
-                    <p class="form-note" style="margin-top:.45rem;">O chamado aberto nessas categorias já cai nesta fila. Sem categoria marcada, a fila só recebe chamados encaminhados por um técnico.</p>
-                </div>
-
-                <div class="msec"><i class="fa-solid fa-users-gear"></i> Equipe de atendimento</div>
-                <div class="field">
-                    <div id="queue-members" class="chk-grid"><!-- JS --></div>
+                <div class="msec"><i class="fa-solid fa-tags"></i> Categorias e equipe</div>
+                <div class="form-grid cols-2 mcols">
+                    <div class="field">
+                        <label class="sub-l">Categorias que entram</label>
+                        <div id="queue-cats" class="chk-grid"><!-- JS --></div>
+                        <p class="form-note" style="margin-top:.45rem;">O chamado aberto nessas categorias já cai nesta fila. Sem categoria marcada, a fila só recebe chamados encaminhados.</p>
+                    </div>
+                    <div class="field">
+                        <label class="sub-l">Técnicos que atendem</label>
+                        <div id="queue-members" class="chk-grid"><!-- JS --></div>
+                    </div>
                 </div>
 
                 <label class="chk" for="queue-active"><input type="checkbox" id="queue-active" checked><span>Fila ativa — recebe chamados novos automaticamente</span></label>
