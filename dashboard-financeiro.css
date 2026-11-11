@@ -313,8 +313,8 @@ body.light .fd-root .fd-selo-medio, html.light .fd-root .fd-selo-medio { color: 
 .fd-mini-neg strong { color: var(--fd-chip-ruim); }
 
 /* ---------- KPIs ---------- */
-.fd-kpis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
-.fd-tile { display: flex; flex-direction: column; justify-content: center; gap: 4px; min-width: 0; padding: 11px 14px 10px; border-radius: 14px; transition: transform .2s ease, box-shadow .2s ease; }
+.fd-kpis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; align-items: start; }
+.fd-tile { display: flex; flex-direction: column; justify-content: center; gap: 4px; min-width: 0; height: fit-content; padding: 11px 14px 10px; border-radius: 14px; transition: transform .2s ease, box-shadow .2s ease; }
 .fd-tile:hover { transform: translateY(-2px); }
 .fd-tile-topo { display: flex; align-items: center; gap: 8px; }
 .fd-tile-rotulo { font-size: 12px; font-weight: 650; color: var(--fd-ink-2); }
