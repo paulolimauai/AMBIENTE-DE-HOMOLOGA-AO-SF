@@ -157,6 +157,7 @@
         desc: String(primeiro(t.desc, t.description, t.name, t.titulo, t.descricao) || ''),
         cat: String(primeiro(t.cat, t.category, t.categoria) || 'Sem categoria'),
         conta: String(primeiro(t.acc, t.account, t.accountName, t.card, t.conta) || ''),
+        pm: String(primeiro(t.paymentMethod, t.payment_method, t.meio, t.formaPagamento) || ''),
         noCartao: idsDeCartao.has(String(t.id))
       });
     });
@@ -374,10 +375,17 @@
     const cartoes = contas.filter((c) => c.ehCartao);
     const limiteCartoes = cartoes.reduce((s, c) => s + c.limiteTotal, 0);
     const faturaCartoes = cartoes.reduce((s, c) => s + c.fatura, 0);
+    // Compras de cartão que não foram vinculadas a um cartão específico (paymentMethod/cat/conta genéricos):
+    // entram na dívida total para não ficar nada de fora — só saídas, e nunca as já contadas na fatura de um cartão
+    const ehCartaoTxt = (s) => /cart/i.test(String(s || ''));
+    const dividaExtra = arred(lancsFluxo
+      .filter((l) => l.tipo === 'out' && !l.noCartao && (ehCartaoTxt(l.pm) || ehCartaoTxt(l.cat) || ehCartaoTxt(l.conta)))
+      .reduce((s, l) => s + l.valor, 0));
     const cartoesResumo = {
       itens: cartoes, limite: arred(limiteCartoes), fatura: arred(faturaCartoes),
-      // Dívida total no cartão = fatura atual (compras − pagamentos já lançados no cartão)
-      divida: arred(faturaCartoes),
+      // Dívida total no cartão = faturas atuais + compras de cartão ainda não alocadas a um cartão específico
+      divida: arred(faturaCartoes + dividaExtra),
+      dividaExtra,
       disponivel: arred(cartoes.reduce((s, c) => s + c.disponivel, 0)),
       usoPct: limiteCartoes > 0 ? Math.min(100, Math.round((faturaCartoes / limiteCartoes) * 100)) : 0
     };
@@ -916,7 +924,8 @@
       : '<p class="fd-legenda">Nenhuma conta bancária cadastrada.</p>';
     const cartoes = c.cartoes.itens.length
       ? '<p class="fd-legenda" style="margin:0 0 6px">Dívida total nos cartões: <strong class="fd-money">' + esc(fmtU(c.cartoes.divida != null ? c.cartoes.divida : c.cartoes.fatura)) + '</strong>' +
-        ' <span style="opacity:.75">(' + c.cartoes.itens.map((k) => esc(k.nome) + ' ' + esc(fmtU(k.fatura))).join(' · ') + ')</span></p>' +
+        ' <span style="opacity:.75">(' + c.cartoes.itens.map((k) => esc(k.nome) + ' ' + esc(fmtU(k.fatura))).join(' · ') +
+        (c.cartoes.dividaExtra > 0 ? ' · não identificados ' + esc(fmtU(c.cartoes.dividaExtra)) : '') + ')</span></p>' +
         '<ul class="fd-cartoes">' + c.cartoes.itens.map((k) => '<li class="fd-clicavel"' + atalho({ conta: k.nome }) + ' title="Ver as movimentações de ' + esc(k.nome) + '"><div class="fd-cartao-topo"><span>' + esc(k.nome) + '</span><strong>' + k.usoPct + '%</strong></div>' +
         medidor(k.usoPct, k.usoPct >= 85 ? 'fd-m-ruim' : k.usoPct >= 60 ? 'fd-m-medio' : 'fd-m-bom', k.nome + ' ' + k.usoPct + '% do limite') +
         '<div class="fd-cartao-nota"><span>Fatura ' + dinheiro(k.fatura) + '</span><span>Livre ' + dinheiro(k.disponivel) + '</span></div></li>').join('') + '</ul>'
