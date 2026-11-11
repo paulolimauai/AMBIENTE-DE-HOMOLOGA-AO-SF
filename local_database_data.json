@@ -1325,7 +1325,7 @@
         "color": "#e8b04b",
         "type": "despesa",
         "icon": "💳",
-        "count": 7
+        "count": 8
       },
       {
         "id": 12,
@@ -1614,6 +1614,13 @@
     "attachments": [],
     "notifications": [
       {
+        "id": 20,
+        "text": "Nova transação cadastrada: cartao — R$ 625,77",
+        "icon": "💸",
+        "time": 1794359220577,
+        "read": false
+      },
+      {
         "id": 19,
         "text": "Nova transação cadastrada: Moto — R$ 950,00",
         "icon": "💸",
@@ -1748,15 +1755,15 @@
       }
     ],
     "nextAccId": 4,
-    "nextTxId": 17,
+    "nextTxId": 18,
     "nextBudgetId": 2,
     "nextGoalId": 1,
     "nextRecId": 1,
     "nextAlertId": 1,
     "nextAttId": 2,
-    "nextNotifId": 20,
-    "updated_at": "2026-11-11T00:45:39.775Z",
-    "updated_at_ms": 1794357939776
+    "nextNotifId": 21,
+    "updated_at": "2026-11-11T01:07:31.197Z",
+    "updated_at_ms": 1794359251197
   },
   "lucasano2010@gmail.com": {
     "categories": [
