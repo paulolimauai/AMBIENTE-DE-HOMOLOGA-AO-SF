@@ -229,8 +229,9 @@
     const efetiva = (l) => (l.realizado ? (l.data < hojeStr ? l.data : hojeStr) : (l.data < hojeStr ? hojeStr : l.data));
     const movimentos = caixa.map((l) => ({ data: efetiva(l), delta: l.tipo === 'in' ? l.valor : -l.valor, realizado: l.realizado }));
     const saldoAtual = arred(saldoInicial + movimentos.filter((m) => m.realizado).reduce((s, m) => s + m.delta, 0));
-    // Disponível para gastar = Receitas − Despesas do período (totais: realizado + previsto) — quanto do dinheiro do mês ainda pode ser gasto
-    const disponivelGastar = arred(receitas.total - despesas.total);
+    // Disponível para gastar = saldo em contas + receitas previstas − despesas previstas do período.
+    // O realizado já está dentro do saldoAtual, então só entram as pendências (previsto) para não contar duas vezes.
+    const disponivelGastar = arred(saldoAtual + receitas.previsto - despesas.previsto);
     const saldoRealEm = (ds) => arred(saldoInicial + movimentos.filter((m) => m.realizado && m.data <= ds).reduce((s, m) => s + m.delta, 0));
     const saldoProjetadoEm = (ds) => (ds <= hojeStr
       ? saldoRealEm(ds)
@@ -774,15 +775,15 @@
         classe: c.disponivelGastar < 0 ? 'fd-tile-out' : 'fd-tile-in',
         valorHtml: valorTile(c.disponivelGastar),
         linhas: [
-          'Receitas ' + dinheiro(t.receitas.total) + ' − Despesas ' + dinheiro(t.despesas.total),
-          'Realizado ' + dinheiro(t.resultadoRealizado) + ' · Previsto ' + dinheiro(t.resultadoPrevisto)
+          'Saldo ' + dinheiro(c.saldoAtual) + ' + a receber ' + dinheiro(t.receitas.previsto) + ' − a pagar ' + dinheiro(t.despesas.previsto),
+          'Receitas ' + dinheiro(t.receitas.total) + ' − Despesas ' + dinheiro(t.despesas.total) + ' no período'
         ]
       }) +
       tileKpi({
-        rotulo: 'Dívida no cartão', tom: 'fd-ic-out', icone: ICONES.cartao, ir: { pagina: 'cartoes' }, dica: 'Total devido nos cartões de crédito (fatura atual de todos os cartões)',
+        rotulo: 'Dívida nos cartões', tom: 'fd-ic-out', icone: ICONES.cartao, ir: { pagina: 'cartoes' }, dica: 'Total acumulado devido em todos os cartões de crédito (todas as faturas, de todos os meses e cartões cadastrados)',
         valorHtml: valorTile(cartoes.divida != null ? cartoes.divida : cartoes.fatura),
         linhas: [
-          cartoes.itens.length ? cartoes.usoPct + '% do limite · ' + dinheiro(cartoes.disponivel) + ' livres' : 'Nenhum cartão cadastrado',
+          cartoes.itens.length ? 'Acumulado de todas as faturas · ' + cartoes.usoPct + '% do limite · ' + dinheiro(cartoes.disponivel) + ' livres' : 'Nenhum cartão cadastrado',
           cartoes.itens.length ? '<div class="fd-meter" role="img" aria-label="Uso do limite ' + cartoes.usoPct + '%"><i class="' + (cartoes.usoPct >= 85 ? 'fd-m-ruim' : cartoes.usoPct >= 60 ? 'fd-m-medio' : 'fd-m-bom') + '" style="width:' + Math.min(100, cartoes.usoPct) + '%"></i></div>' : ''
         ]
       });
@@ -810,8 +811,8 @@
       '<div class="fd-grafico-caixa fd-grafico-caixa-saldo" id="fdGraficoCaixa"' + (estado.tabela ? ' hidden' : '') + '><canvas id="fdChartPrincipal" role="img" aria-label="Gráfico de fluxo de caixa"></canvas></div>' +
       '<div class="fd-tabela-caixa" id="fdTabelaCaixa"' + (estado.tabela ? '' : ' hidden') + '>' + tabelaDados(m) + '</div>' +
       '<div class="fd-metricas">' +
-        metrica('Média diária de gastos', dinheiro(r.mediaDiaria30), 'últimos 30 dias') +
-        metrica('Autonomia', r.autonomiaDias == null ? '—' : r.autonomiaDias + (r.autonomiaDias === 1 ? ' dia' : ' dias'), 'saldo ÷ gasto diário') +
+        metrica('Média diária de gastos', r.mediaDiaria30 > 0 ? dinheiro(r.mediaDiaria30) : '—', r.mediaDiaria30 > 0 ? 'últimos 30 dias' : 'Aguardando lançamentos pagos') +
+        metrica('Autonomia', r.autonomiaDias == null ? (r.mediaDiaria30 <= 0 && m.contas.saldoAtual > 0 ? 'Sem limite' : '—') : r.autonomiaDias + (r.autonomiaDias === 1 ? ' dia' : ' dias'), r.mediaDiaria30 > 0 ? 'saldo ÷ gasto diário' : 'Sem gastos pagos p/ calcular') +
         metrica('Maior entrada', dinheiro(r.maiorEntrada), esc(m.periodo.rotulo)) +
         metrica('Maior saída', dinheiro(r.maiorSaida), esc(m.periodo.rotulo)) +
       '</div></article>';
