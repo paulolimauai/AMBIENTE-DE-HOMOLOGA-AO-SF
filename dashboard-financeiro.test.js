@@ -209,6 +209,17 @@ test('dados legados: type receita/despesa, amount/description/category e status 
   assert.equal(nov.totais.despesas.previsto, 1500);
 });
 
+test('dívida no cartão inclui compras de cartão não alocadas a um cartão específico', () => {
+  const lista = transacoes().concat([
+    tx(20, 'out', 'Compra mercado', 120, '2026-11-06', 'Mercado', 'Pago', 'Cartão de Crédito'),
+    { id: 21, desc: 'Farmácia', val: 80, date: '2026-11-07', cat: 'Saúde', type: 'out', status: 'Pendente', acc: 'Boleto / Pix / Outros', paymentMethod: 'Cartão de Crédito' }
+  ]);
+  const m = D.calcular(ctx({ transacoes: lista }));
+  // fatura do cartão continua 300; as duas compras genéricas de cartão (200) entram como "não identificadas"
+  assert.equal(m.contas.cartoes.dividaExtra, 200);
+  assert.equal(m.contas.cartoes.divida, 500);
+});
+
 test('"Todas as datas" soma tudo e não compara com mês anterior', () => {
   const m = D.calcular(ctx({ periodo: { year: 2026, month: 0 } }));
   assert.equal(m.comparativo, null);
