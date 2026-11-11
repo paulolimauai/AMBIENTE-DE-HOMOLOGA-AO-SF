@@ -621,14 +621,12 @@
 
   function cabecalho(m, util) {
     const saud = util.saudacao ? util.saudacao() : { text: 'Olá' };
-    const agora = new Date();
-    const hhmm = pad(agora.getHours()) + ':' + pad(agora.getMinutes());
     const oculto = typeof document !== 'undefined' && document.body && document.body.classList.contains('hide-sensitive-balances');
     const movs = m.totais.receitas.qtd + m.totais.despesas.qtd;
     return '<header class="fd-cabecalho fd-vidro">' +
       '<div class="fd-cab-esq"><div class="fd-data">' + esc(util.dataHoje ? util.dataHoje() : m.hoje) + '</div>' +
       '<h1 class="fd-saudacao">' + esc(saud.text) + ', <span>' + esc(util.primeiroNome || 'Usuário') + '</span></h1>' +
-      '<p class="fd-sub">' + esc(m.periodo.rotulo) + ' · ' + movs + ' movimentaç' + (movs === 1 ? 'ão' : 'ões') + ' · atualizado às ' + hhmm + '</p></div>' +
+      '<p class="fd-sub">' + esc(m.periodo.rotulo) + ' · ' + movs + ' movimentaç' + (movs === 1 ? 'ão' : 'ões') + ' · atualizado às <span id="fdAtualizadoEm">--:--</span></p></div>' +
       '<div class="fd-cab-dir">' + (util.periodPickerHTML ? util.periodPickerHTML() : '') +
       '<button type="button" class="fd-btn fd-btn-icone" data-fd-acao="atualizar" title="Atualizar os dados" aria-label="Atualizar os dados">' + ICONES.atualizar + '</button>' +
       '<button type="button" class="fd-btn fd-privacidade" onclick="window.toggleSensitiveBalances()" id="btnToggleBalances" title="Ocultar ou exibir saldos">' +
@@ -1012,6 +1010,7 @@
         if (document.querySelector('.fd-root')) return;
         document.documentElement.classList.remove('fd-vidro-ativo');
         if (estado.grafico && estado.grafico.destroy) { estado.grafico.destroy(); estado.grafico = null; }
+        if (estado.relogioId) { clearInterval(estado.relogioId); estado.relogioId = null; }
       });
       observadorSaida.observe(conteudo, { childList: true });
     }
@@ -1227,8 +1226,22 @@
     };
   }
 
+  // Carimbo "atualizado às HH:MM": preenchido via textContent para NÃO alterar o HTML renderizado.
+  // Se o horário fosse gerado no HTML, o painel inteiro seria reconstruído a cada virada de minuto (htmlChanged → tremor).
+  function carimbarAtualizacao() {
+    if (typeof document === 'undefined') return;
+    const el = document.getElementById('fdAtualizadoEm');
+    if (!el) return;
+    const n = new Date();
+    el.textContent = pad(n.getHours()) + ':' + pad(n.getMinutes());
+  }
+
   let tentativas = 0;
   function desenhar() {
+    carimbarAtualizacao();
+    if (!estado.relogioId && typeof document !== 'undefined') {
+      estado.relogioId = setInterval(carimbarAtualizacao, 20000);
+    }
     const m = estado.modelo;
     if (!m || typeof document === 'undefined') return;
     const canvas = document.getElementById('fdChartPrincipal');
