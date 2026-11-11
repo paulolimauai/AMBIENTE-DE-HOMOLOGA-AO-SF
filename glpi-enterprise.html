@@ -516,6 +516,9 @@
         .modal { width: 100%; min-width: 0; display: flex; flex-direction: column; max-height: calc(100dvh - 2rem); animation: rise .35s cubic-bezier(.2, .7, .2, 1) both; }
         .modal-form { max-width: 42rem; }
         .modal-ws { max-width: 74rem; height: min(56rem, calc(100dvh - 2rem)); }
+        /* Tela cheia do chamado: o painel cobre a viewport inteira */
+        .overlay.is-full { padding: 0; }
+        .overlay.is-full .modal-ws { width: 100%; max-width: none; height: 100dvh; max-height: none; border-radius: 0; }
         .modal-head { flex: none; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.1rem 1.5rem; background: rgba(var(--dk), .4); border-bottom: 1px solid var(--line); }
         .modal-head .mh-l { display: flex; align-items: center; gap: .85rem; min-width: 0; }
         .mh-ico { width: 2.4rem; height: 2.4rem; flex: none; display: grid; place-items: center; border-radius: .8rem; font-size: 1.0125rem; color: var(--white); background: linear-gradient(145deg, #2f6ff2, #1d4ed8); box-shadow: 0 8px 20px -8px rgba(37, 99, 235, .8), inset 0 1px 0 rgba(255, 255, 255, .35); }
@@ -1273,6 +1276,9 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             /* sem a animação de opacidade do overlay (ela o torna "raiz do desfoque" e a gaveta deixaria de desfocar o que está atrás) */
             #modal-tech-workspace.overlay { animation: none; justify-content: flex-end; align-items: stretch; padding: 0; pointer-events: none; background: linear-gradient(90deg, rgba(var(--dk), .08), rgba(var(--dk), .42)); -webkit-backdrop-filter: none; backdrop-filter: none; }
             #modal-tech-workspace .modal-ws { pointer-events: auto; max-width: min(66rem, 78vw); height: 100vh; height: 100dvh; max-height: none; border-radius: 1.75rem 0 0 1.75rem; animation: drawerin .35s cubic-bezier(.2, .7, .2, 1) both; }
+            /* Tela cheia na gaveta: volta a ser uma janela central de largura total */
+            #modal-tech-workspace.overlay.is-full { pointer-events: auto; justify-content: center; align-items: stretch; padding: 0; background: radial-gradient(80% 70% at 50% 40%, rgba(var(--dk), .5), rgba(var(--dk), .78)); -webkit-backdrop-filter: blur(14px) saturate(140%); backdrop-filter: blur(14px) saturate(140%); }
+            #modal-tech-workspace.overlay.is-full .modal-ws { max-width: none; width: 100%; border-radius: 0; animation: none; }
         }
         :root[data-mode="light"] #modal-tech-workspace.overlay { background: linear-gradient(90deg, rgba(15, 60, 55, .04), rgba(15, 60, 55, .3)); }
         .kpi[onclick] { cursor: pointer; transition: transform .2s ease, border-color .2s ease; }
@@ -2574,6 +2580,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                     </div>
                 </div>
                 <div class="mh-actions" style="display:flex; align-items:center; gap:.7rem;">
+                    <button type="button" class="btn btn-icon ws-full-btn" title="Abrir em tela cheia" aria-label="Abrir chamado em tela cheia" onclick="toggleTicketFull(this)"><i class="fa-solid fa-expand"></i></button>
                     <button type="button" onclick="copyProtocol(document.getElementById('my-id').textContent, this)" class="btn btn-ghost btn-sm"><i class="fa-regular fa-copy"></i> Copiar protocolo</button>
                     <button type="button" onclick="closeModal('modal-my-ticket')" class="btn btn-icon" aria-label="Fechar">
                         <i class="fa-solid fa-xmark"></i>
@@ -2659,6 +2666,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                     <button type="button" id="btn-take-ticket" onclick="takeCurrentTicket()" class="btn btn-amber btn-sm">
                         <i class="fa-solid fa-user-plus"></i> Assumir Chamado
                     </button>
+                    <button type="button" class="btn btn-icon ws-full-btn" title="Abrir em tela cheia" aria-label="Abrir chamado em tela cheia" onclick="toggleTicketFull(this)"><i class="fa-solid fa-expand"></i></button>
                     <button type="button" onclick="closeModal('modal-tech-workspace')" class="btn btn-icon" aria-label="Fechar">
                         <i class="fa-solid fa-xmark"></i>
                     </button>
@@ -4069,10 +4077,30 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             if (target) setTimeout(() => { try { target.focus(); } catch (e) {} }, 40);
         }
 
+        // Alterna o chamado entre janela e tela cheia (o mesmo botão serve para os dois modais de chamado)
+        function toggleTicketFull(btn) {
+            const ov = btn.closest('.overlay');
+            if (!ov) return;
+            const full = ov.classList.toggle('is-full');
+            const ic = btn.querySelector('i');
+            if (ic) ic.className = 'fa-solid ' + (full ? 'fa-compress' : 'fa-expand');
+            const txt = full ? 'Sair da tela cheia' : 'Abrir em tela cheia';
+            btn.title = txt;
+            btn.setAttribute('aria-label', txt);
+        }
+
         function closeModal(id) {
             const el = $(id);
             if (!el) return;
             el.classList.add('hidden');
+            el.classList.remove('is-full');
+            const fb = el.querySelector('.ws-full-btn');
+            if (fb) {
+                const ic = fb.querySelector('i');
+                if (ic) ic.className = 'fa-solid fa-expand';
+                fb.title = 'Abrir em tela cheia';
+                fb.setAttribute('aria-label', 'Abrir chamado em tela cheia');
+            }
             if (id === 'modal-tech-workspace') { activeProtocol = null; markActiveRow(); }
             if (id === 'modal-my-ticket') myProtocol = null;
             const back = modalReturnFocus[id];
