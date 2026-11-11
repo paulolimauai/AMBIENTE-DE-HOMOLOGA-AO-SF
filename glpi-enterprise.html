@@ -498,7 +498,16 @@
         /* ---------- Gráficos ---------- */
         .charts { display: grid; gap: 1.5rem; grid-template-columns: 1fr; }
         @container (min-width: 56rem) { .charts { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+        @container (min-width: 78rem) { .charts { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
         .chart-box { position: relative; height: 17rem; }
+        .sla-strip { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; padding: .9rem 1.3rem; }
+        .sla-strip-l { display: grid; gap: .15rem; }
+        .sla-strip-l b { display: flex; align-items: center; gap: .5rem; font-size: .95rem; }
+        .sla-strip-l b i { color: var(--acc-l); }
+        .sla-strip-l small { color: var(--muted); font-size: .8rem; }
+        .sla-pills { display: flex; gap: .5rem; flex-wrap: wrap; }
+        .sla-pill { display: inline-flex; align-items: center; gap: .45rem; height: 1.9rem; padding: 0 .8rem; border-radius: 99px; font-size: .8rem; font-weight: 600; color: var(--ink-2); background: rgba(var(--dk), .5); border: 1px solid var(--line-soft); }
+        .sla-pill .dot { width: .5rem; height: .5rem; border-radius: 50%; }
 
         /* ---------- Fila ---------- */
         .toolbar { padding: 1rem; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .8rem; }
@@ -2188,6 +2197,27 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                                 </div>
                                 <div class="chart-box"><canvas id="chartUrgency"></canvas></div>
                             </div>
+
+                            <div class="glass panel">
+                                <div class="panel-head">
+                                    <h3><i class="fa-solid fa-list-check c-green"></i> Chamados por Status</h3>
+                                </div>
+                                <div class="chart-box"><canvas id="chartStatus"></canvas></div>
+                            </div>
+                        </div>
+
+                        <!-- Prazos de atendimento (SLA) por severidade -->
+                        <div class="glass panel sla-strip">
+                            <div class="sla-strip-l">
+                                <b><i class="fa-solid fa-stopwatch"></i> Prazos de atendimento</b>
+                                <small>O prazo começa a contar quando o chamado é aberto.</small>
+                            </div>
+                            <div class="sla-pills">
+                                <span class="sla-pill"><i class="dot" style="background:var(--t-rose)"></i>Crítica · 4 horas</span>
+                                <span class="sla-pill"><i class="dot" style="background:var(--t-amber)"></i>Alta · 8 horas</span>
+                                <span class="sla-pill"><i class="dot" style="background:var(--t-blue)"></i>Média · 24 horas</span>
+                                <span class="sla-pill"><i class="dot" style="background:var(--t-slate)"></i>Baixa · 5 dias úteis</span>
+                            </div>
                         </div>
 
                         <!-- Chamados abertos mais urgentes, já com o prazo de SLA -->
@@ -3104,6 +3134,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         let lastCreatedProtocol = null;
         let techReplyMode = 'public';
         let chartCategoryInstance = null;
+        let chartStatusInstance = null;
         let chartUrgencyInstance = null;
         let queueQuick = 'open';        // filtro rápido da fila: open | new | pending | assigned | resolved | closed | unassigned | mine | late | all
         let userTab = 'all';            // abas de "Meus Chamados": all | open | waiting | closed
@@ -5594,16 +5625,21 @@ html[data-bg="vidro"] .l-glass{opacity:1}
 
             const categories = {};
             const urgencies = {};
+            const statuses = {};
 
             ticketsList.forEach(t => {
                 categories[t.category] = (categories[t.category] || 0) + 1;
                 urgencies[t.urgency] = (urgencies[t.urgency] || 0) + 1;
+                const st = t.status || 'Novo';
+                statuses[st] = (statuses[st] || 0) + 1;
             });
 
             if (chartCategoryInstance) chartCategoryInstance.destroy();
             if (chartUrgencyInstance) chartUrgencyInstance.destroy();
+            if (chartStatusInstance) chartStatusInstance.destroy();
             chartCategoryInstance = null;
             chartUrgencyInstance = null;
+            chartStatusInstance = null;
 
             const canvasCat = document.getElementById('chartCategory');
             const canvasUrg = document.getElementById('chartUrgency');
@@ -5613,7 +5649,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
             const cssVar = (n, d) => (getComputedStyle(document.documentElement).getPropertyValue(n) || '').trim() || d;
             const dkRgb = cssVar('--dk', '9, 13, 32');
-            const fontBase = { family: '"Plus Jakarta Sans", "Segoe UI", system-ui, sans-serif', size: Math.round(rem * 0.8) };
+            const fontBase = { family: '"IBM Plex Sans", "Segoe UI", system-ui, sans-serif', size: Math.round(rem * 0.8) };
             const tickColor = cssVar('--muted', '#b4bedb');
             const gridColor = cssVar('--line-soft', 'rgba(255, 255, 255, 0.08)');
             const tooltip = {
@@ -5647,7 +5683,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 afterDatasetsDraw(chart) {
                     const { ctx } = chart;
                     ctx.save();
-                    ctx.font = `700 ${Math.round(rem * 0.8)}px "JetBrains Mono", Consolas, monospace`;
+                    ctx.font = `700 ${Math.round(rem * 0.8)}px "IBM Plex Mono", ui-monospace, Consolas, monospace`;
                     ctx.fillStyle = cssVar('--white', '#ffffff');
                     ctx.textBaseline = 'middle';
                     chart.getDatasetMeta(0).data.forEach((bar, i) => {
@@ -5703,10 +5739,10 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                     ctx.textAlign = 'center';
                     ctx.textBaseline = 'middle';
                     ctx.fillStyle = cssVar('--white', '#ffffff');
-                    ctx.font = `700 ${Math.round(rem * 1.9)}px "JetBrains Mono", Consolas, monospace`;
+                    ctx.font = `700 ${Math.round(rem * 1.9)}px "IBM Plex Mono", ui-monospace, Consolas, monospace`;
                     ctx.fillText(String(urgTotal), x, y - rem * 0.35);
                     ctx.fillStyle = cssVar('--muted', '#9ba6c4');
-                    ctx.font = `600 ${Math.round(rem * 0.7)}px "Plus Jakarta Sans", "Segoe UI", sans-serif`;
+                    ctx.font = `600 ${Math.round(rem * 0.7)}px "IBM Plex Sans", "Segoe UI", sans-serif`;
                     ctx.fillText('CHAMADOS', x, y + rem * 1.1);
                     ctx.restore();
                 }
@@ -5736,6 +5772,54 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 },
                 plugins: [centerText]
             });
+
+            const canvasStatus = document.getElementById('chartStatus');
+            if (canvasStatus) {
+                const statusLabels = Object.keys(statuses);
+                const statusTotal = Object.values(statuses).reduce((a, b) => a + b, 0);
+                chartStatusInstance = new Chart(canvasStatus.getContext('2d'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: statusLabels,
+                        datasets: [{
+                            data: Object.values(statuses),
+                            backgroundColor: statusLabels.map(l => STATUS_COLORS[l] || '#64748b'),
+                            borderColor: `rgb(${dkRgb})`,
+                            borderWidth: Math.max(2, Math.round(rem * 0.2)),
+                            hoverOffset: Math.round(rem * 0.4)
+                        }]
+                    },
+                    options: {
+                        animation: false,
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        cutout: '68%',
+                        plugins: {
+                            legend: { position: 'bottom', labels: { color: cssVar('--ink-2', '#dbe2f3'), font: fontBase, usePointStyle: true, pointStyle: 'circle', padding: Math.round(rem * 0.9) } },
+                            tooltip
+                        }
+                    },
+                    plugins: [{
+                        id: 'centerTextStatus',
+                        afterDraw(chart) {
+                            const { ctx, chartArea } = chart;
+                            if (!chartArea) return;
+                            const x = (chartArea.left + chartArea.right) / 2;
+                            const y = (chartArea.top + chartArea.bottom) / 2;
+                            ctx.save();
+                            ctx.textAlign = 'center';
+                            ctx.textBaseline = 'middle';
+                            ctx.fillStyle = cssVar('--white', '#ffffff');
+                            ctx.font = `700 ${Math.round(rem * 1.9)}px "IBM Plex Mono", ui-monospace, Consolas, monospace`;
+                            ctx.fillText(String(statusTotal), x, y - rem * 0.35);
+                            ctx.fillStyle = cssVar('--muted', '#9ba6c4');
+                            ctx.font = `600 ${Math.round(rem * 0.7)}px "IBM Plex Sans", "Segoe UI", sans-serif`;
+                            ctx.fillText('CHAMADOS', x, y + rem * 1.1);
+                            ctx.restore();
+                        }
+                    }]
+                });
+            }
         }
 
         function showToast(msg, type = 'info') {
@@ -5781,6 +5865,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         }
 
         const URGENCY_COLORS = { 'Crítica': '#f43f5e', 'Alta': '#fb923c', 'Média': '#38bdf8', 'Baixa': '#94a3b8' };
+        const STATUS_COLORS = { 'Novo': '#38bdf8', 'Pendente': '#fbbf24', 'Atendimento atribuído': '#a78bfa', 'Resolvido': '#34d399', 'Fechado': '#64748b' };
 
         function shortLabel(text, max) {
             const s = String(text || '');
