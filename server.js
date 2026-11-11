@@ -20430,6 +20430,32 @@ if (typeof document !== 'undefined') {
   });
 }
 
+/* Envio remoto coalescido: rajadas de salvamentos (cliques seguidos, digitação, várias transações)
+   viram um único POST /api/data. O localStorage já guarda a versão mais recente na hora;
+   o servidor recebe em até ~400 ms sem travar a tela. */
+let _remoteSaveTimer = null;
+let _remoteSaveBody = null;
+function nexusFlushRemoteSave() {
+  if (_remoteSaveTimer) { clearTimeout(_remoteSaveTimer); _remoteSaveTimer = null; }
+  const body = _remoteSaveBody;
+  _remoteSaveBody = null;
+  if (!body) return;
+  fetch(window.location.origin + '/api/data', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: body,
+    // keepalive só em payloads pequenos (limite de ~64 KB do navegador); o resto depende do timer normal
+    keepalive: body.length < 60000
+  }).catch(() => {});
+}
+function nexusQueueRemoteSave(email, dataJson) {
+  // O JSON já vem serializado (mesma string gravada no localStorage): zero stringify extra
+  _remoteSaveBody = '{"email":' + JSON.stringify(email) + ',"data":' + dataJson + '}';
+  if (_remoteSaveTimer) return;
+  _remoteSaveTimer = setTimeout(nexusFlushRemoteSave, 400);
+}
+window.addEventListener('pagehide', nexusFlushRemoteSave);
+
 async function saveUserData() {
   if (!currentUser) return;
   if (isViewingOtherUser) return;
@@ -20449,15 +20475,14 @@ async function saveUserData() {
     updated_at_ms: Date.now()
   };
   
-  saveToStorage(userKey, payloadData);
-
+  // Serializa uma única vez: a mesma string alimenta o localStorage e o POST remoto
+  const serializedData = JSON.stringify(payloadData);
   try {
-    await fetch(window.location.origin + '/api/data', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: currentUser.email, data: payloadData })
-    });
-  } catch(e) {}
+    localStorage.setItem(userKey, serializedData);
+  } catch(e) {
+    console.warn('Aviso: Armazenamento local (localStorage) excedeu a cota máxima. Os dados são mantidos e salvos no SQL Server.', e);
+  }
+  nexusQueueRemoteSave(cleanEmail, serializedData);
 }
 
 /* ==================== Admin: Visualizar dados de outro usuário ==================== */
@@ -28732,7 +28757,8 @@ async function saveTransaction(){
     const catObj = categories.find(c=>c.name===cat);
     if(catObj) catObj.count = (catObj.count||0)+1;
     showToast('Transação adicionada!');
-    await pushNotification(\`Nova transação cadastrada: \${desc} — \${fmt(val)}\`, currentType==='in' ? '💰' : '💸');
+    // Notificação + persistência em segundo plano: não bloqueia o fechamento do modal nem o render
+    pushNotification(\`Nova transação cadastrada: \${desc} — \${fmt(val)}\`, currentType==='in' ? '💰' : '💸').catch(() => {});
   }
   closeModal();
   render();
