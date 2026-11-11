@@ -182,6 +182,22 @@ test('acumulado soma o realizado de todos os meses cadastrados (entradas − sa�
   assert.ok(html.includes('fd-acum-svg'));
 });
 
+test('dados legados: type receita/despesa, amount/description/category e status Efetivado entram nos totais', () => {
+  const lista = [
+    { id: 1, description: 'Salário Mensal', amount: 8500, type: 'receita', date: '2026-11-05', category: 'Salário' },
+    { id: 2, desc: 'Consultoria', val: 4500, type: 'in', date: '2026-09-07', cat: 'Consultoria', status: 'Efetivado' },
+    { id: 3, description: 'Aluguel', amount: '1.500,00', type: 'despesa', date: '2026-11-10', category: 'Moradia', status: 'Pendente' },
+    { id: 4, description: 'Cancelada', amount: 999, type: 'receita', date: '2026-11-01', status: 'Cancelado' }
+  ];
+  const m = D.calcular(ctx({ transacoes: lista, contas: [], periodo: { year: 2026, month: 0 } }));
+  assert.equal(m.totais.receitas.realizado, 13000); // salário + consultoria efetivada; a cancelada ficou de fora
+  assert.equal(m.totais.receitas.previsto, 0);
+  assert.equal(m.totais.despesas.previsto, 1500); // aluguel pendente conta como previsto
+  const nov = D.calcular(ctx({ transacoes: lista, contas: [], periodo: { year: 2026, month: 11 } }));
+  assert.equal(nov.totais.receitas.realizado, 8500);
+  assert.equal(nov.totais.despesas.previsto, 1500);
+});
+
 test('"Todas as datas" soma tudo e não compara com mês anterior', () => {
   const m = D.calcular(ctx({ periodo: { year: 2026, month: 0 } }));
   assert.equal(m.comparativo, null);

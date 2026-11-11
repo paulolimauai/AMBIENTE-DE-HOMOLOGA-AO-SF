@@ -20903,10 +20903,12 @@ function isTxForAccount(t, account) {
   if (!t || !account) return false;
 
   const accNameLower = (account.name || '').toLowerCase().trim();
-  const tAccLower = (t.acc || '').toLowerCase().trim();
-  const tCardLower = (t.card || '').toLowerCase().trim();
-  const descLower = (t.desc || '').toLowerCase().trim();
-  const catLower = (t.cat || '').toLowerCase().trim();
+  const tAccRaw = t.acc || t.account || t.accountName || '';
+  const tAccLower = String(tAccRaw).toLowerCase().trim();
+  const tCardRaw = t.card || '';
+  const tCardLower = String(tCardRaw).toLowerCase().trim();
+  const descLower = String(t.desc || t.description || t.name || '').toLowerCase().trim();
+  const catLower = String(t.cat || t.category || '').toLowerCase().trim();
 
   // 1. Prioridade Máxima: Se accId for especificado e coincidir com o ID da conta
   if (t.accId != null && account.id != null && String(t.accId) === String(account.id)) {
@@ -20922,8 +20924,8 @@ function isTxForAccount(t, account) {
 
   // 4. Correspondência normalizada (removendo "cartão", "crédito", etc.)
   const normAccName = normalizeAccName(account.name);
-  const normTAcc = normalizeAccName(t.acc);
-  const normTCard = normalizeAccName(t.card);
+  const normTAcc = normalizeAccName(String(tAccRaw || ''));
+  const normTCard = normalizeAccName(String(tCardRaw || ''));
 
   if (normAccName.length >= 2) {
     if (normTAcc === normAccName || normTCard === normAccName) return true;
@@ -20959,9 +20961,11 @@ function isTxForAccount(t, account) {
 }
 
 function isPgtoFaturaOrEstorno(t) {
-  if (!t || t.type !== 'in') return false;
-  const catLower = (t.cat || '').toLowerCase().trim();
-  const descLower = (t.desc || '').toLowerCase().trim();
+  if (!t) return false;
+  const tType = String(t.type || t.tipo || '').toLowerCase();
+  if (tType !== 'in' && tType !== 'receita' && tType !== 'income') return false;
+  const catLower = String(t.cat || t.category || '').toLowerCase().trim();
+  const descLower = String(t.desc || t.description || t.name || '').toLowerCase().trim();
   
   if (catLower.includes('fatura') || catLower.includes('estorno') || catLower.includes('reembolso')) return true;
   if (descLower.includes('fatura') || descLower.includes('estorno') || descLower.includes('reembolso') || descLower.includes('pgto cartão') || descLower.includes('pgto cartao') || descLower.includes('pagamento de cartão') || descLower.includes('pagamento cartao')) return true;
@@ -20984,11 +20988,14 @@ function isPgtoFaturaOrEstorno(t) {
   return true;
 }
 
-// Lançamento já realizado? Pago/Recebido; sem status (dados antigos) vale se a data já passou. Mesma regra do dashboard.
+// Lançamento já realizado? Pago/Recebido e demais status de baixa (Efetivado, Confirmado etc.); sem status (dados antigos)
+// vale se a data já passou. Mesma regra do dashboard (dashboard-financeiro.js > STATUS_PAGOS).
+const NEXUS_STATUS_REALIZADO = ['Pago', 'Paga', 'Recebido', 'Recebida', 'Efetivado', 'Efetuado', 'Efetuada', 'Confirmado', 'Confirmada',
+  'Liquidado', 'Liquidada', 'Concluído', 'Concluída', 'Concluido', 'Concluida', 'Baixado', 'Baixada', 'Quitado', 'Quitada', 'Paid', 'Received', 'Settled'];
 function nexusTxRealizada(t) {
   if (!t) return false;
   const st = String(t.status || '');
-  if (st === 'Pago' || st === 'Recebido') return true;
+  if (NEXUS_STATUS_REALIZADO.includes(st)) return true;
   if (st) return false;
   const m = String(t.date || '').match(/^(\\d{4})-(\\d{2})-(\\d{2})/);
   if (!m) return true;

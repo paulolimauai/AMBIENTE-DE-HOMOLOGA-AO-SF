@@ -110,7 +110,12 @@
   // ======================================================================
   // Modelo
   // ======================================================================
-  const STATUS_PAGOS = ['Pago', 'Recebido'];
+  const STATUS_PAGOS = ['Pago', 'Paga', 'Recebido', 'Recebida', 'Efetivado', 'Efetuado', 'Efetuada', 'Confirmado', 'Confirmada',
+    'Liquidado', 'Liquidada', 'Concluído', 'Concluída', 'Concluido', 'Concluida', 'Baixado', 'Baixada', 'Quitado', 'Quitada',
+    'Paid', 'Received', 'Settled'];
+  const STATUS_IGNORADOS = ['Cancelado', 'Cancelada', 'Cancelled', 'Estornado', 'Estornada', 'Reversed', 'Excluído', 'Excluída', 'Deleted'];
+  const TIPOS_ENTRADA = ['in', 'receita', 'income', 'entrada'];
+  const TIPOS_SAIDA = ['out', 'despesa', 'expense', 'saida', 'saída'];
   const BASE_MINIMA_PERCENTUAL = 50;
 
   // Registro sem status (dados antigos): vale como realizado se a data já passou
@@ -120,25 +125,38 @@
     return false;
   }
 
+  // Aceita o formato atual (type 'in'/'out') e o legado (type 'receita'/'despesa', amount, description, category)
+  function tipoDe(t) {
+    const v = String(t.type || t.tipo || t.kind || '').toLowerCase();
+    if (TIPOS_ENTRADA.includes(v)) return 'in';
+    if (TIPOS_SAIDA.includes(v)) return 'out';
+    return '';
+  }
+  const primeiro = (...vals) => { for (const v of vals) { if (v !== undefined && v !== null && v !== '') return v; } return undefined; };
+
   function normalizarLancamentos(transacoes, idsDeCartao, hojeStr) {
     const lista = [];
     (Array.isArray(transacoes) ? transacoes : []).forEach((t) => {
-      if (!t || (t.type !== 'in' && t.type !== 'out')) return;
-      const p = parseData(t.date);
+      if (!t) return;
+      const status = String(t.status || t.situacao || '');
+      if (STATUS_IGNORADOS.includes(status)) return; // cancelado/estornado não é nem previsto nem realizado
+      const tipo = tipoDe(t);
+      if (!tipo) return;
+      const p = parseData(primeiro(t.date, t.data, t.dueDate, t.vencimento));
       if (!p || !p.year || !p.month || !p.day) return;
       const data = chave(p.year, p.month, p.day);
       lista.push({
         id: t.id,
-        tipo: t.type,
-        valor: parseValor(t.val),
+        tipo,
+        valor: parseValor(primeiro(t.val, t.amount, t.value, t.valor, t.valorTotal)),
         ano: p.year,
         mes: p.month,
         dia: p.day,
         data,
-        realizado: estaRealizado(t.status, data, hojeStr),
-        desc: String(t.desc || ''),
-        cat: String(t.cat || 'Sem categoria'),
-        conta: String(t.acc || t.card || ''),
+        realizado: estaRealizado(status, data, hojeStr),
+        desc: String(primeiro(t.desc, t.description, t.name, t.titulo, t.descricao) || ''),
+        cat: String(primeiro(t.cat, t.category, t.categoria) || 'Sem categoria'),
+        conta: String(primeiro(t.acc, t.account, t.accountName, t.card, t.conta) || ''),
         noCartao: idsDeCartao.has(String(t.id))
       });
     });
