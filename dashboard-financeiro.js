@@ -971,7 +971,7 @@
   function paginaHtml(m, util) {
     const raiz = (miolo) => '<div class="dashboard-cockpit-frame fd-root">' + cabecalho(m, util) + miolo + '</div>';
     const baixo = [blocoSaude(m), blocoContas(m), blocoOrcamentos(m)].filter(Boolean);
-    return raiz('<div class="fd-corpo">' + blocoAvisos(m) +
+    return raiz('<div class="fd-corpo">' +
       '<div class="fd-linha fd-linha-a">' + blocoSaldo(m) + blocoKpis(m) + '</div>' +
       '<div class="fd-linha fd-linha-b">' + blocoGrafico(m) + blocoCategorias(m) + '</div>' +
       '<div class="fd-linha fd-linha-c">' + blocoAgenda(m) + blocoUltimas(m) + '</div>' +
