@@ -1698,6 +1698,10 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         .modal-sm .modal-foot { padding-top: .75rem; }
         .chk-grid { grid-template-columns: repeat(auto-fill, minmax(13.5rem, 1fr)); gap: .5rem; max-height: 11.5rem; }
         .chk { gap: .55rem; padding: .5rem .75rem; }
+        /* Seções internas das janelas de fila e técnico: título com ícone separado por linha */
+        .msec { display: flex; align-items: center; gap: .55rem; font-size: .88rem; font-weight: 800; color: var(--white); }
+        .msec i { flex: none; width: 1.15rem; text-align: center; font-size: .85rem; color: var(--t-amber); }
+        .field + .msec, .form-grid + .msec { margin-top: .2rem; padding-top: .85rem; border-top: 1px solid var(--line-soft); }
         /* Janelas de fila e técnico: Cancelar/Salvar ficam fixos no rodapé, como na janela de abertura de chamado */
         .modal-sm .modal-foot { position: sticky; bottom: -1.2rem; z-index: 3; margin: .2rem -1.3rem -1.2rem; padding: .75rem 1.3rem; background: rgba(var(--dk), .94); border-top: 1px solid var(--line); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
         @media (max-width: 767px) {
@@ -2910,24 +2914,31 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             <form id="queue-form" class="modal-body" onsubmit="saveQueue(event)" novalidate>
                 <div id="queue-banner" class="notice rose hidden" role="alert"><i class="fa-solid fa-triangle-exclamation"></i><div id="queue-banner-text"></div></div>
                 <input type="hidden" id="queue-id">
-                <div class="field">
-                    <label for="queue-name">Nome da fila *</label>
-                    <input type="text" id="queue-name" maxlength="60" autocomplete="off" class="input focus-blue" placeholder="Ex.: Suporte Técnico N2">
+
+                <div class="msec"><i class="fa-solid fa-id-card"></i> Identificação da fila</div>
+                <div class="form-grid cols-2">
+                    <div class="field">
+                        <label for="queue-name">Nome da fila *</label>
+                        <input type="text" id="queue-name" maxlength="60" autocomplete="off" class="input focus-blue" placeholder="Ex.: Suporte Técnico N2">
+                    </div>
+                    <div class="field">
+                        <label for="queue-desc">Descrição <span class="opt">(opcional)</span></label>
+                        <input type="text" id="queue-desc" maxlength="200" autocomplete="off" class="input focus-blue" placeholder="Para que serve esta fila">
+                    </div>
                 </div>
+
+                <div class="msec"><i class="fa-solid fa-tags"></i> Categorias de chamados</div>
                 <div class="field">
-                    <label for="queue-desc">Descrição <span class="opt">(opcional)</span></label>
-                    <input type="text" id="queue-desc" maxlength="200" autocomplete="off" class="input focus-blue" placeholder="Para que serve esta fila">
-                </div>
-                <div class="field">
-                    <label>Categorias que entram nesta fila</label>
                     <div id="queue-cats" class="chk-grid"><!-- JS --></div>
-                    <p class="form-note" style="margin-top:.4rem;">O chamado aberto nessas categorias já cai nesta fila. Sem categoria marcada, a fila só recebe chamados encaminhados por um técnico.</p>
+                    <p class="form-note" style="margin-top:.45rem;">O chamado aberto nessas categorias já cai nesta fila. Sem categoria marcada, a fila só recebe chamados encaminhados por um técnico.</p>
                 </div>
+
+                <div class="msec"><i class="fa-solid fa-users-gear"></i> Equipe de atendimento</div>
                 <div class="field">
-                    <label>Técnicos que atendem a fila</label>
                     <div id="queue-members" class="chk-grid"><!-- JS --></div>
                 </div>
-                <label class="chk" for="queue-active"><input type="checkbox" id="queue-active" checked><span>Fila ativa (recebe chamados novos)</span></label>
+
+                <label class="chk" for="queue-active"><input type="checkbox" id="queue-active" checked><span>Fila ativa — recebe chamados novos automaticamente</span></label>
                 <div class="modal-foot">
                     <button type="button" id="btn-queue-delete" onclick="deleteQueue()" class="btn btn-danger hidden" style="margin-right:auto;"><i class="fa-solid fa-trash"></i> Excluir fila</button>
                     <button type="button" onclick="closeModal('modal-queue')" class="btn btn-ghost">Cancelar</button>
@@ -2953,6 +2964,8 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             <form id="tech-form" class="modal-body" onsubmit="saveTech(event)" novalidate>
                 <div id="tech-banner" class="notice rose hidden" role="alert"><i class="fa-solid fa-triangle-exclamation"></i><div id="tech-banner-text"></div></div>
                 <input type="hidden" id="tech-id">
+
+                <div class="msec"><i class="fa-solid fa-user-gear"></i> Dados do técnico</div>
                 <div class="form-grid cols-2">
                     <div class="field">
                         <label for="tech-name">Nome *</label>
@@ -2967,15 +2980,18 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                         <input type="tel" id="tech-phone" maxlength="25" autocomplete="off" class="input focus-blue" placeholder="(62) 99999-9999">
                     </div>
                     <div class="field">
-                        <label for="tech-specialty">Especialidade</label>
+                        <label for="tech-specialty">Especialidade <span class="opt">(opcional)</span></label>
                         <input type="text" id="tech-specialty" maxlength="100" autocomplete="off" class="input focus-blue" placeholder="Ex.: Suporte N2, Financeiro">
                     </div>
                 </div>
+
+                <div class="msec"><i class="fa-solid fa-layer-group"></i> Filas de atendimento</div>
                 <div class="field">
-                    <label>Filas que este técnico atende</label>
                     <div id="tech-queues" class="chk-grid"><!-- JS --></div>
+                    <p class="form-note" style="margin-top:.45rem;">Marque as filas que este técnico pode assumir. Administradores ativos do Nexus já atendem automaticamente.</p>
                 </div>
-                <label class="chk" for="tech-active"><input type="checkbox" id="tech-active" checked><span>Técnico ativo (pode receber chamados)</span></label>
+
+                <label class="chk" for="tech-active"><input type="checkbox" id="tech-active" checked><span>Técnico ativo — pode receber chamados</span></label>
                 <div class="modal-foot">
                     <button type="button" id="btn-tech-delete" onclick="deleteTech()" class="btn btn-danger hidden" style="margin-right:auto;"><i class="fa-solid fa-trash"></i> Excluir técnico</button>
                     <button type="button" onclick="closeModal('modal-tech')" class="btn btn-ghost">Cancelar</button>

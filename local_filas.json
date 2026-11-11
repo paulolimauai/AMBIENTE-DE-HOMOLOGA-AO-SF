@@ -34,7 +34,6 @@
       "Liberação de degustação",
       "2ª Via de fatura",
       "Atendimento Técnico",
-      "Falhas/Bugs/Correções",
       "Outros"
     ],
     "tecnicos": [
@@ -42,6 +41,6 @@
     ],
     "ativa": true,
     "criada_em": "2026-11-10T06:05:51.843Z",
-    "atualizada_em": "2026-11-10T06:05:51.843Z"
+    "atualizada_em": "2026-11-11T23:37:45.177Z"
   }
 ]
