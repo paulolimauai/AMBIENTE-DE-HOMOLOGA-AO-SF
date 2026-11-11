@@ -84,7 +84,7 @@
     "priority": "Baixa",
     "title": "mudar tipo de abertura de chamado",
     "description": "quando for requisição aparecer #REQ-\nQuando for Incidente aparece #INC-\n\ncaso tenha quer alterar de REQ para INC permitir o chamado mudar apenas a inicial",
-    "status": "Resolvido",
+    "status": "Atendimento atribuído",
     "admin_notes": "",
     "tecnico_responsavel": "PAULO DE LIMA PEREIRA",
     "assumido_em": "2026-11-11T12:17:20.453Z",
@@ -148,26 +148,11 @@
         "date": "2026-11-11T12:25:15.615Z",
         "internal": false,
         "event": true
-      },
-      {
-        "sender": "Técnico",
-        "author": "ADMINISTRADOR DO SISTEMA",
-        "text": "[SOLUÇÃO APLICADA]: Implementado.",
-        "date": "2026-11-11T23:39:58.720Z",
-        "internal": false
-      },
-      {
-        "sender": "Sistema",
-        "author": "ADMINISTRADOR DO SISTEMA",
-        "text": "Status alterado de \"Atendimento atribuído\" para \"Resolvido\".",
-        "date": "2026-11-11T23:39:58.720Z",
-        "internal": false,
-        "event": true
       }
     ],
-    "concluido_em": "2026-11-11T23:39:58.720Z",
+    "concluido_em": null,
     "created_at": "2026-11-11T12:16:53.082Z",
-    "updated_at": "2026-11-11T23:39:58.720Z",
+    "updated_at": "2026-11-11T12:25:15.615Z",
     "ticket_type": "Requisição",
     "fila": "Desenvolvedor"
   },
@@ -817,7 +802,7 @@
     "priority": "Média",
     "title": "sistema lentidao",
     "description": "lento demais",
-    "status": "Resolvido",
+    "status": "Fechado",
     "admin_notes": "",
     "tecnico_responsavel": null,
     "assumido_em": null,
@@ -840,13 +825,36 @@
         "text": "[SOLUÇÃO APLICADA]: resolvido",
         "date": "2026-11-07T18:07:55.558Z",
         "internal": false
+      },
+      {
+        "sender": "Sistema",
+        "author": "ADMINISTRADOR DO SISTEMA",
+        "text": "Chamado encaminhado para a fila \"Desenvolvedor\".",
+        "date": "2026-11-11T23:40:14.363Z",
+        "internal": false,
+        "event": true
+      },
+      {
+        "sender": "Técnico",
+        "author": "ADMINISTRADOR DO SISTEMA",
+        "text": "Chamado fechado pela equipe de TI.",
+        "date": "2026-11-11T23:40:16.318Z",
+        "internal": true
+      },
+      {
+        "sender": "Sistema",
+        "author": "ADMINISTRADOR DO SISTEMA",
+        "text": "Status alterado de \"Resolvido\" para \"Fechado\".",
+        "date": "2026-11-11T23:40:16.318Z",
+        "internal": false,
+        "event": true
       }
     ],
     "concluido_em": "2026-11-07T18:07:55.558Z",
     "created_at": "2026-11-07T16:04:56.120Z",
-    "updated_at": "2026-11-07T18:07:55.558Z",
+    "updated_at": "2026-11-11T23:40:16.318Z",
     "ticket_type": "Incidente",
-    "fila": null
+    "fila": "Desenvolvedor"
   },
   {
     "id": "6",
