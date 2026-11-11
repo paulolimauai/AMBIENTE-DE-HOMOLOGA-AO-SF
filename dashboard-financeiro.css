@@ -241,7 +241,7 @@ body.hide-sensitive-balances .fd-root .fd-hero-grafico { filter: blur(9px); user
 /* ---------- Grade ---------- */
 .fd-corpo { display: flex; flex-direction: column; gap: 12px; container-type: inline-size; container-name: fd; min-width: 0; }
 .fd-linha { display: grid; gap: 12px; min-width: 0; }
-.fd-linha-a { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
+.fd-linha-a { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); }
 .fd-linha-b { grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); }
 .fd-linha-c { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); }
 .fd-linha-d.fd-n3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
