@@ -26,7 +26,7 @@
     "id": "73",
     "name": "PAULO DE LIMA PEREIRA",
     "email": "paulodelima21@gmail.com",
-    "password": "scrypt:4dbcb12437dbe17fb0adf5554f84c755:1764b7be2001e39882ff0f26a2275f2c5e6330dcafb65e9efeb25c207db875e59bb23cd429b8b3a91d12cfc3b993a6e5b49d4c77b9d140d5227ec525f6dd4429",
+    "password": "scrypt:4eab9831b4d24196145b619e1348cd82:1052f8d2e57758484c76bdfccb26cbcb6e7152345cdf295b26bcc090088551acfdb65f40e9b99a2f8ef891812befdacf847a09322a02259e71e472ab7159f3d1",
     "role": "Usuário",
     "active": true,
     "created_at": "2026-10-21T22:48:59-03:00",
@@ -43,7 +43,7 @@
     "subscription_expires_at": "2026-12-10T08:47:34.000Z",
     "subscription_method": "pix",
     "subscription_payment_id": "NEXUS-SUB-1794322010128-B8F470-REF-NX21994554",
-    "password_changed_at": "2026-11-11T23:55:20.806Z"
+    "password_changed_at": "2026-11-11T23:57:36.366Z"
   },
   {
     "id": "1070",
