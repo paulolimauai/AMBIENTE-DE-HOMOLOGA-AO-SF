@@ -14526,16 +14526,10 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
           <span>Confirmação Cadastral para Recuperação</span>
         </div>
         <p style="font-size:12.5px; color:#CBD5E1; margin-bottom:16px; line-height:1.5;">
-          Para gerar uma nova senha provisória, escolha como deseja se identificar (e-mail ou CPF) e confirme sua data de nascimento:
+          Para gerar uma nova senha provisória, confirme os três dados cadastrados na conta: e-mail, CPF e data de nascimento:
         </p>
 
         <form id="forgotStep1" onsubmit="window.handleServerForgotSubmit(event); return false;">
-          <div class="forgot-mode-switch" role="group" aria-label="Identificar conta por">
-            <button type="button" class="forgot-mode-btn active" data-mode="email" onclick="window.setForgotMode('email')">E-mail</button>
-            <button type="button" class="forgot-mode-btn" data-mode="cpf" onclick="window.setForgotMode('cpf')">CPF</button>
-            <button type="button" class="forgot-mode-btn" data-mode="both" onclick="window.setForgotMode('both')">E-mail + CPF</button>
-          </div>
-
           <div class="auth-field" id="forgotEmailField">
             <label>E-mail Cadastrado</label>
             <div class="auth-input-wrapper">
@@ -14546,7 +14540,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
             </div>
           </div>
 
-          <div class="auth-field" id="forgotCpfField" style="display:none;">
+          <div class="auth-field" id="forgotCpfField">
             <label>CPF do Titular</label>
             <div class="auth-input-wrapper">
               <span class="auth-input-icon">
@@ -17135,22 +17129,21 @@ window.handleServerForgotSubmit = async function(e) {
   const birthInput = document.getElementById('forgotBirthDate');
   const btn = document.getElementById('btnSendPassword');
 
-  const mode = window.forgotMode || 'email';
-  const email = (mode !== 'cpf' && emailInput) ? emailInput.value.trim() : '';
-  const cpf = (mode !== 'email' && cpfInput) ? cpfInput.value.replace(/[^0-9]/g, '') : '';
+  const email = emailInput ? emailInput.value.trim() : '';
+  const cpf = cpfInput ? cpfInput.value.replace(/[^0-9]/g, '') : '';
   const birth_date = birthInput ? birthInput.value.trim() : '';
 
-  if (mode !== 'cpf' && !email) {
+  if (!email) {
     window.showAuthFeedback('forgot', 'error', 'E-mail não informado', 'Por favor, informe o e-mail cadastrado da sua conta.');
     if (emailInput) emailInput.focus();
     return;
   }
-  if (mode !== 'email' && cpf.length !== 11) {
+  if (cpf.length !== 11) {
     window.showAuthFeedback('forgot', 'error', 'CPF Inválido', 'Por favor, informe os 11 dígitos do CPF do titular.');
     if (cpfInput) cpfInput.focus();
     return;
   }
-  if (mode !== 'both' && birth_date.length !== 10) {
+  if (birth_date.length !== 10) {
     window.showAuthFeedback('forgot', 'error', 'Data de Nascimento Obrigatória', 'Informe a data de nascimento (DD/MM/AAAA) para confirmar que a conta é sua.');
     if (birthInput) birthInput.focus();
     return;
