@@ -1357,10 +1357,10 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         .user-name { font-size: .8125rem; }
         .user-email { font-size: .75rem; }
 
-        /* Retomada de sessão (F5): sem tela de login piscando; o aviso só aparece se a retomada demorar mais que ~0,2 s */
+        /* Retomada de sessão (F5): sem tela de login piscando e sem splash animado - o fundo fica estático
+           até o app abrir de uma vez (data-boot="restore" só esconde o login; o .boot nunca é exibido) */
         html[data-boot="restore"] #view-login { display: none !important; }
-        .boot { position: fixed; inset: 0; z-index: 60; display: none; flex-direction: column; align-items: center; justify-content: center; gap: .4rem; pointer-events: none; }
-        html[data-boot="restore"] .boot { display: flex; opacity: 0; animation: bootIn .3s ease .2s forwards; }
+        .boot { position: fixed; inset: 0; z-index: 60; display: none !important; flex-direction: column; align-items: center; justify-content: center; gap: .4rem; pointer-events: none; }
         .boot .lg-logo { margin-bottom: .6rem; }
         .boot-ln { display: inline-flex; align-items: center; gap: .7rem; font-size: .9375rem; font-weight: 600; color: var(--ink-2); }
         .boot-ring { width: 1.15rem; height: 1.15rem; border-radius: 50%; border: .18rem solid rgba(var(--lt), .22); border-top-color: var(--brand); animation: spin .9s linear infinite; }
