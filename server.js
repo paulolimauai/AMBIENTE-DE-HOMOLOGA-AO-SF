@@ -29,6 +29,8 @@ const BackendUtils = require('./backend-utils'); // utilitários puros e testado
 const PORT = process.env.PORT || 3000;
 const SERVER_START_TIME = Date.now();
 const RUNTIME_DATA_DIR = process.env.NEXUS_DATA_DIR || __dirname;
+// Versão dos assets estáticos por inicialização do servidor: muda a cada deploy/restart e invalida o cache do navegador
+const ASSETS_V = 'v' + SERVER_START_TIME.toString(36);
 
 // Segredo de assinatura dos tokens: nunca fica no código-fonte. Vem do ambiente (JWT_SECRET) ou é gerado
 // aleatoriamente na primeira execução e guardado em arquivo local (fora do Git) para sobreviver a reinícios.
@@ -14203,15 +14205,15 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 #authPage #loginSubmitBtn:hover, #authPage #regSubmitBtn:hover, #authPage #btnSendPassword:hover { background: #047857 !important; }
 .sidebar-search { display: none !important; }
 </style>
-<link rel="stylesheet" href="/nexus-shell.css?v=20261110-2" />
-<link rel="stylesheet" href="/frontend-polish.css?v=20261103-orcamentos" />
-<link rel="stylesheet" href="/dashboard-financeiro.css?v=20261107-4" />
-<script src="/dashboard-financeiro.js?v=20261107-4"></script>
-<link rel="stylesheet" href="/transacoes.css?v=20261108-2" />
-<script src="/transacoes.js?v=20261108-2"></script>
-<link rel="stylesheet" href="/administracao.css?v=20261110-9" />
-<script src="/administracao.js?v=20261110-9"></script>
-<script src="/importacao.js?v=20261107-1"></script>
+<link rel="stylesheet" href="/nexus-shell.css?v=${ASSETS_V}" />
+<link rel="stylesheet" href="/frontend-polish.css?v=${ASSETS_V}" />
+<link rel="stylesheet" href="/dashboard-financeiro.css?v=${ASSETS_V}" />
+<script src="/dashboard-financeiro.js?v=${ASSETS_V}"></script>
+<link rel="stylesheet" href="/transacoes.css?v=${ASSETS_V}" />
+<script src="/transacoes.js?v=${ASSETS_V}"></script>
+<link rel="stylesheet" href="/administracao.css?v=${ASSETS_V}" />
+<script src="/administracao.js?v=${ASSETS_V}"></script>
+<script src="/importacao.js?v=${ASSETS_V}"></script>
 </head>
 <body>
 <!-- CAMADA PERMANENTE DE FUNDO 4K (Zero-Flicker / Sem Piscar) -->
