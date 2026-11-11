@@ -21012,12 +21012,21 @@ function getCardStats(account) {
   const isCreditCard = isAccountCreditCard(account);
   const cardTx = transactions.filter(t => isTxForAccount(t, account));
 
-  const totalDespesas = cardTx.filter(t => t.type === 'out').reduce((s, t) => s + parseInputValue(t.val), 0);
-  const totalPagamentos = cardTx.filter(t => t.type === 'in').reduce((s, t) => s + parseInputValue(t.val), 0);
-  
+  // Aceita o formato atual (in/out, val) e o legado (receita/despesa, amount) — mesma regra do dashboard
+  const tipoTx = (t) => {
+    const v = String((t && (t.type || t.tipo)) || '').toLowerCase();
+    if (v === 'in' || v === 'receita' || v === 'income' || v === 'entrada') return 'in';
+    if (v === 'out' || v === 'despesa' || v === 'expense' || v === 'saida' || v === 'saída') return 'out';
+    return '';
+  };
+  const valTx = (t) => parseInputValue(t.val != null ? t.val : (t.amount != null ? t.amount : (t.value != null ? t.value : t.valor)));
+
+  const totalDespesas = cardTx.filter(t => tipoTx(t) === 'out').reduce((s, t) => s + valTx(t), 0);
+  const totalPagamentos = cardTx.filter(t => tipoTx(t) === 'in').reduce((s, t) => s + valTx(t), 0);
+
   const periodCardTx = cardTx.filter(inPeriod);
-  const periodDespesas = periodCardTx.filter(t => t.type === 'out').reduce((s, t) => s + parseInputValue(t.val), 0);
-  const periodPagamentos = periodCardTx.filter(t => t.type === 'in').reduce((s, t) => s + parseInputValue(t.val), 0);
+  const periodDespesas = periodCardTx.filter(t => tipoTx(t) === 'out').reduce((s, t) => s + valTx(t), 0);
+  const periodPagamentos = periodCardTx.filter(t => tipoTx(t) === 'in').reduce((s, t) => s + valTx(t), 0);
 
   const rawBalanceVal = parseInputValue(account.balance) || parseInputValue(account.limit) || parseInputValue(account.initialBalance) || 0;
   // Saldo inicial de contas bancárias puxa sempre 0 se não cadastrado manualmente; para cartões de crédito usa o limite informado (ou 0)
@@ -21052,8 +21061,8 @@ function getCardStats(account) {
     // Saldo da conta = só o que JÁ aconteceu (Pago/Recebido; sem status, data já passada). Pendências não saem da conta até serem
     // pagas: é a mesma regra do dashboard (antes o saldo daqui descontava contas a pagar e divergia do "Saldo em contas hoje").
     const realizadas = cardTx.filter(nexusTxRealizada);
-    const entradasReais = realizadas.filter(t => t.type === 'in').reduce((s, t) => s + parseInputValue(t.val), 0);
-    const saidasReais = realizadas.filter(t => t.type === 'out').reduce((s, t) => s + parseInputValue(t.val), 0);
+    const entradasReais = realizadas.filter(t => tipoTx(t) === 'in').reduce((s, t) => s + valTx(t), 0);
+    const saidasReais = realizadas.filter(t => tipoTx(t) === 'out').reduce((s, t) => s + valTx(t), 0);
     const currentBalance = initialBalance + entradasReais - saidasReais;
     const availableLimit = currentBalance;
     const totalLimit = initialBalance;

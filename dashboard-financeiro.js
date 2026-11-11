@@ -376,6 +376,8 @@
     const faturaCartoes = cartoes.reduce((s, c) => s + c.fatura, 0);
     const cartoesResumo = {
       itens: cartoes, limite: arred(limiteCartoes), fatura: arred(faturaCartoes),
+      // Dívida total no cartão = fatura atual (compras − pagamentos já lançados no cartão)
+      divida: arred(faturaCartoes),
       disponivel: arred(cartoes.reduce((s, c) => s + c.disponivel, 0)),
       usoPct: limiteCartoes > 0 ? Math.min(100, Math.round((faturaCartoes / limiteCartoes) * 100)) : 0
     };
@@ -774,8 +776,8 @@
         ]
       }) +
       tileKpi({
-        rotulo: 'Cartões', tom: 'fd-ic-neutro', icone: ICONES.cartao, ir: { pagina: 'cartoes' }, dica: 'Abrir Contas e cartões',
-        valorHtml: valorTile(cartoes.fatura),
+        rotulo: 'Dívida no cartão', tom: 'fd-ic-out', icone: ICONES.cartao, ir: { pagina: 'cartoes' }, dica: 'Total devido nos cartões de crédito (fatura atual de todos os cartões)',
+        valorHtml: valorTile(cartoes.divida != null ? cartoes.divida : cartoes.fatura),
         linhas: [
           cartoes.itens.length ? cartoes.usoPct + '% do limite · ' + dinheiro(cartoes.disponivel) + ' livres' : 'Nenhum cartão cadastrado',
           cartoes.itens.length ? '<div class="fd-meter" role="img" aria-label="Uso do limite ' + cartoes.usoPct + '%"><i class="' + (cartoes.usoPct >= 85 ? 'fd-m-ruim' : cartoes.usoPct >= 60 ? 'fd-m-medio' : 'fd-m-bom') + '" style="width:' + Math.min(100, cartoes.usoPct) + '%"></i></div>' : ''
@@ -913,7 +915,8 @@
       ? '<ul class="fd-lista-simples">' + c.bancarias.map((b) => '<li class="fd-clicavel"' + atalho({ conta: b.nome }) + ' title="Ver as movimentações de ' + esc(b.nome) + '"><span>' + esc(b.nome) + '</span><strong class="' + (b.saldo < 0 ? 'fd-sai' : '') + '">' + dinheiro(b.saldo) + '</strong></li>').join('') + '</ul>'
       : '<p class="fd-legenda">Nenhuma conta bancária cadastrada.</p>';
     const cartoes = c.cartoes.itens.length
-      ? '<ul class="fd-cartoes">' + c.cartoes.itens.map((k) => '<li class="fd-clicavel"' + atalho({ conta: k.nome }) + ' title="Ver as movimentações de ' + esc(k.nome) + '"><div class="fd-cartao-topo"><span>' + esc(k.nome) + '</span><strong>' + k.usoPct + '%</strong></div>' +
+      ? '<p class="fd-legenda" style="margin:0 0 6px">Dívida total nos cartões: <strong class="fd-money">' + esc(fmtU(c.cartoes.divida != null ? c.cartoes.divida : c.cartoes.fatura)) + '</strong></p>' +
+        '<ul class="fd-cartoes">' + c.cartoes.itens.map((k) => '<li class="fd-clicavel"' + atalho({ conta: k.nome }) + ' title="Ver as movimentações de ' + esc(k.nome) + '"><div class="fd-cartao-topo"><span>' + esc(k.nome) + '</span><strong>' + k.usoPct + '%</strong></div>' +
         medidor(k.usoPct, k.usoPct >= 85 ? 'fd-m-ruim' : k.usoPct >= 60 ? 'fd-m-medio' : 'fd-m-bom', k.nome + ' ' + k.usoPct + '% do limite') +
         '<div class="fd-cartao-nota"><span>Fatura ' + dinheiro(k.fatura) + '</span><span>Livre ' + dinheiro(k.disponivel) + '</span></div></li>').join('') + '</ul>'
       : '';

@@ -148,6 +148,7 @@ test('cartões e contas: usa o resumo do app e calcula o saldo por conta pelas m
   const c = D.calcular(ctx()).contas;
   assert.equal(c.cartoes.itens.length, 1);
   assert.equal(c.cartoes.fatura, 300);
+  assert.equal(c.cartoes.divida, 300); // dívida total no cartão = fatura atual
   assert.equal(c.cartoes.usoPct, 6);
   assert.deepEqual(c.bancarias, [{ id: 1, nome: 'Conta', saldo: 10300 }]);
 });
