@@ -1076,8 +1076,8 @@ button,a,label{touch-action:manipulation}
       if(!pareceEmail(email)){
         email=await pedir({
           title:'Recuperação de senha',step:'Identificação da conta',
-          message:'Informe o e-mail cadastrado da sua conta:',
-          placeholder:'seu.email@exemplo.com',hint:'É o e-mail utilizado na criação da conta.',
+          message:'Informe o e-mail do cadastro que será recuperado:',
+          placeholder:'seu.email@exemplo.com',hint:'É o e-mail cadastrado na conta que receberá a senha provisória.',
           icon:'mail',okText:'Continuar',
           validate:function(v){
             if(!v)return 'Por favor, informe seu e-mail.';
