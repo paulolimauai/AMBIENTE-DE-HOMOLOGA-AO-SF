@@ -758,30 +758,6 @@
         ]
       }) +
       tileKpi({
-        rotulo: 'Resultado', tom: 'fd-ic-neutro', icone: ICONES.resultado, ir: {}, dica: 'Ver todas as movimentações do período', classe: t.resultadoRealizado < 0 ? 'fd-tile-neg' : '',
-        valorHtml: valorTile(t.resultadoRealizado, t.resultadoRealizado > 0 ? '+' : ''),
-        linhas: [
-          cmp ? chipVariacao(cmp.resultado, 'subir', cmp.rotulo, true) : '',
-          t.taxaPoupanca == null ? 'Sem receita realizada' : (t.taxaPoupanca >= 0 ? 'Guardou ' : 'Gastou além: ') + Math.abs(t.taxaPoupanca) + '% da renda'
-        ]
-      }) +
-      tileKpi({
-        rotulo: 'A receber', tom: 'fd-ic-in', icone: ICONES.receita, ir: { tipo: 'in', status: 'Pendente' }, dica: 'Receitas previstas (pendentes) do período',
-        valorHtml: valorTile(t.receitas.previsto),
-        linhas: [
-          t.receitas.qtdPrevisto ? t.receitas.qtdPrevisto + ' recebimento' + (t.receitas.qtdPrevisto === 1 ? '' : 's') + ' previsto' + (t.receitas.qtdPrevisto === 1 ? '' : 's') : 'Nada previsto para receber',
-          t.receitas.previsto > 0 ? progresso(t.receitas.realizado, t.receitas.previsto, 'Receitas a receber') : ''
-        ]
-      }) +
-      tileKpi({
-        rotulo: 'A pagar', tom: 'fd-ic-out', icone: ICONES.despesa, ir: { tipo: 'out', status: 'Pendente' }, dica: 'Despesas previstas (pendentes) do período',
-        valorHtml: valorTile(t.despesas.previsto),
-        linhas: [
-          t.despesas.qtdPrevisto ? t.despesas.qtdPrevisto + ' conta' + (t.despesas.qtdPrevisto === 1 ? '' : 's') + ' prevista' + (t.despesas.qtdPrevisto === 1 ? '' : 's') : 'Nada previsto para pagar',
-          t.despesas.previsto > 0 ? progresso(t.despesas.realizado, t.despesas.previsto, 'Despesas a pagar') : ''
-        ]
-      }) +
-      tileKpi({
         rotulo: 'Dívida no cartão', tom: 'fd-ic-out', icone: ICONES.cartao, ir: { pagina: 'cartoes' }, dica: 'Total devido nos cartões de crédito (fatura atual de todos os cartões)',
         valorHtml: valorTile(cartoes.divida != null ? cartoes.divida : cartoes.fatura),
         linhas: [
