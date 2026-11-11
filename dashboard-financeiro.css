@@ -265,6 +265,7 @@ body.light .fd-root .fd-selo-medio, html.light .fd-root .fd-selo-medio { color: 
 .fd-hero-rotulo { font-size: 12px; font-weight: 600; color: var(--fd-ink-2); display: flex; align-items: center; gap: 8px; }
 .fd-dica { display: inline-grid; place-items: center; width: 17px; height: 17px; border-radius: 50%; border: 1px solid var(--fd-zero); font-size: 10.5px; font-weight: 700; color: var(--fd-muted); cursor: help; }
 .fd-hero-valor { font-size: clamp(32px, 2.9vw, 40px); font-weight: 760; letter-spacing: -.035em; line-height: 1.02; color: var(--fd-ink); font-variant-numeric: proportional-nums; }
+.fd-hero-valor.fd-hero-in { color: var(--fd-in); }
 .fd-hero-proj { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 12.5px; color: var(--fd-ink-2); }
 .fd-hero-proj .fd-money { font-weight: 700; color: var(--fd-ink); }
 /* Acumulado de todos os meses cadastrados na seção de saldo */

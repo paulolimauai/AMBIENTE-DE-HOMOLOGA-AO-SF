@@ -636,7 +636,7 @@
       '<div><strong>' + esc(i.titulo) + '</strong><span>' + esc(i.texto) + '</span></div></div>').join('') + '</div>';
   }
 
-  // Número-herói: saldo em contas hoje, projeção do fim do mês, a curva do mês e os três pontos que mudam a decisão
+  // Número-herói: receitas do período em destaque; o saldo em contas, a projeção e a curva do mês ficam logo abaixo
   function blocoSaldo(m) {
     const c = m.contas;
     const a = m.agenda;
@@ -653,10 +653,14 @@
       (minimo ? mini('Menor saldo previsto', dinheiro(minimo.valor), quando(minimo.dia), { pagina: 'transacoes' }, minimo.valor < 0 ? 'fd-mini-neg' : '') : '') +
       mini('A receber · 30 dias', dinheiro(a.totalAReceber), aReceber ? aReceber + (aReceber === 1 ? ' lançamento' : ' lançamentos') : 'nada pendente', { tipo: 'in', status: 'Pendente' }) +
       mini('A pagar · 30 dias', dinheiro(a.totalAPagar), a.qtdVencidas ? '<span class="fd-delta fd-ruim">' + a.qtdVencidas + (a.qtdVencidas === 1 ? ' vencida' : ' vencidas') + '</span>' : (aPagar ? aPagar + (aPagar === 1 ? ' lançamento' : ' lançamentos') : 'em dia'), { tipo: 'out', status: 'Pendente' });
-    return '<section class="fd-card fd-vidro fd-saldo" aria-label="Saldo em contas">' +
-      '<div class="fd-hero-rotulo">Saldo em contas hoje <span class="fd-dica" tabindex="0" title="Saldo inicial das contas + entradas − saídas já realizadas. Cartões de crédito entram quando a fatura é paga.">?</span></div>' +
-      '<div class="fd-hero-valor fd-money" data-anim-val="' + c.saldoAtual + '">' + esc(fmtU(c.saldoAtual)) + '</div>' +
-      '<div class="fd-hero-proj"><span class="fd-hero-proj-rot">' + esc(fimRotulo) + '</span> ' + dinheiro(c.saldoProjetadoFim) +
+    const t = m.totais;
+    return '<section class="fd-card fd-vidro fd-saldo" aria-label="Receitas e saldo">' +
+      '<div class="fd-hero-rotulo">Receitas <span class="fd-dica" tabindex="0" title="Total de receitas do período: já recebido + a receber. O saldo das contas aparece logo abaixo.">?</span></div>' +
+      '<div class="fd-hero-valor fd-money fd-hero-in" data-anim-val="' + t.receitas.total + '">' + esc(fmtU(t.receitas.total)) + '</div>' +
+      '<div class="fd-hero-proj"><span class="fd-hero-proj-rot">Já recebido</span> ' + dinheiro(t.receitas.realizado) +
+        ' · <span class="fd-hero-proj-rot">A receber</span> ' + dinheiro(t.receitas.previsto) + '</div>' +
+      '<div class="fd-hero-proj"><span class="fd-hero-proj-rot">Saldo em contas hoje</span> ' + dinheiro(c.saldoAtual) +
+        ' · <span class="fd-hero-proj-rot">' + esc(fimRotulo) + '</span> ' + dinheiro(c.saldoProjetadoFim) +
         (Math.abs(projDiff) >= 0.01 ? ' <span class="fd-delta fd-money ' + (projDiff >= 0 ? 'fd-bom' : 'fd-ruim') + '">' + (projDiff >= 0 ? '▲ ' : '▼ ') + esc(fmtU(Math.abs(projDiff))) + '</span>' : '') + '</div>' +
       blocoAcumulado(m) +
       '<div class="fd-hero-grafico">' + graficoSaldo(m) + '</div>' +
