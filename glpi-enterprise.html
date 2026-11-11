@@ -815,6 +815,7 @@
             .topbar { padding: 0 1rem; }
             .main { padding: 1rem; }
             .hero { padding: 1.4rem; }
+            .hero-acts { flex: 1 1 100%; }
             .hero .btn { width: 100%; }
             .form-grid.cols-2 { grid-template-columns: 1fr; }
             .modal-head, .modal-body { padding-left: 1.1rem; padding-right: 1.1rem; }
@@ -1432,7 +1433,10 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         .svc.blue { --k: var(--blue-rgb); --kl: var(--t-blue); }
         .svc.slate { --k: var(--slate-rgb); --kl: var(--t-slate); }
         .svc-tag { display: inline-flex; align-items: center; gap: .35rem; margin-top: .55rem; padding: .08rem .55rem; border-radius: 99px; font-size: max(.6875rem, 11px); font-weight: 800; letter-spacing: .07em; text-transform: uppercase; color: var(--kl); background: rgba(var(--k), .12); border: 1px solid rgba(var(--k), .34); }
-        .hero-acts { display: flex; flex-wrap: wrap; gap: .7rem; position: relative; }
+        .hero-acts { display: flex; flex-wrap: wrap; gap: .7rem; position: relative; align-items: center; }
+        .hero-acts .btn i { display: inline-flex; align-items: center; justify-content: center; width: 1rem; flex: none; font-size: .9rem; line-height: 1; }
+        .hero-acts .btn-ghost { border-color: rgba(var(--lt), .22); }
+        .hero-acts .btn-ghost:hover { border-color: rgba(var(--lt), .4); }
 
         /* Tipo do chamado (requisição / incidente): selo na lista e cartões grandes na abertura */
         .tpill { display: inline-flex; align-items: center; gap: .3rem; padding: .02rem .5rem; border-radius: 99px; font-size: max(.6875rem, 11px); font-weight: 800; letter-spacing: .05em; text-transform: uppercase; vertical-align: middle; --c: var(--sky-rgb); --cl: var(--t-sky); color: var(--cl); background: rgba(var(--c), .13); border: 1px solid rgba(var(--c), .4); }
@@ -1540,6 +1544,8 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         .hero h2 { font-size: clamp(1.3rem, 2vw, 1.65rem); }
         .hero p { margin-top: .25rem; max-width: 32rem; font-size: .84rem; }
         .hero-acts { gap: .5rem; }
+        .hero-acts .btn { height: 2.6rem; padding: 0 1.15rem; font-size: .84rem; border-radius: .85rem; }
+        .hero-acts .btn i { width: 1rem; font-size: .9rem; }
         .usum { gap: .6rem; }
         .usum-t { padding: .55rem .8rem; gap: .65rem; border-radius: .95rem; }
         .usum-t > i { width: 2.1rem; height: 2.1rem; font-size: .85rem; border-radius: .7rem; }
