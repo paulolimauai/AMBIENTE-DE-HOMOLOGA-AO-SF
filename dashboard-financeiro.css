@@ -268,9 +268,26 @@ body.light .fd-root .fd-selo-medio, html.light .fd-root .fd-selo-medio { color: 
 .fd-hero-proj { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 12.5px; color: var(--fd-ink-2); }
 .fd-hero-proj .fd-money { font-weight: 700; color: var(--fd-ink); }
 /* Acumulado de todos os meses cadastrados na seção de saldo */
-.fd-hero-acum { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; margin-top: 3px; font-size: 12px; color: var(--fd-muted); }
+.fd-acum { display: flex; flex-direction: column; gap: 7px; margin-top: 3px; padding: 9px 11px; border-radius: 12px; background: var(--fd-wash); box-shadow: inset 0 0 0 1px var(--fd-line); }
+.fd-acum-topo { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 12px; color: var(--fd-muted); }
 .fd-hero-acum-rot { font-weight: 600; }
-.fd-hero-acum .fd-money { font-weight: 750; color: var(--fd-ink); }
+.fd-acum-valor { margin-left: auto; font-size: 17px; font-weight: 780; letter-spacing: -.02em; color: var(--fd-ink); }
+.fd-acum-corpo { display: flex; align-items: center; gap: 14px; }
+.fd-acum-grafico { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.fd-acum-svg { width: 100%; height: 40px; display: block; overflow: visible; }
+.fd-acum-area { fill: var(--fd-accent); opacity: .13; }
+.fd-acum-linha { fill: none; stroke: var(--fd-accent); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.fd-acum-zero { stroke: var(--fd-zero); stroke-width: 1; stroke-dasharray: 3 3; vector-effect: non-scaling-stroke; }
+.fd-acum-ponto { fill: var(--fd-accent); }
+.fd-acum-eixo { display: flex; justify-content: space-between; font-size: 10px; font-weight: 600; color: var(--fd-faint); }
+.fd-acum-lado { flex: none; width: 190px; display: flex; flex-direction: column; gap: 5px; }
+.fd-acum-barra { display: flex; height: 9px; border-radius: 99px; overflow: hidden; background: var(--fd-track); }
+.fd-acum-barra i { display: block; height: 100%; }
+.fd-acum-in { background: var(--fd-in); }
+.fd-acum-out { background: var(--fd-out); }
+.fd-acum-legenda { display: flex; justify-content: space-between; gap: 8px; font-size: 11px; color: var(--fd-muted); }
+.fd-acum-legenda span { display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
+.fd-acum-legenda .fd-money { font-weight: 700; color: var(--fd-ink); }
 .fd-hero-grafico { margin: 6px 0 2px; }
 .fd-spark-caixa { position: relative; }
 .fd-spark { width: 100%; height: 84px; display: block; overflow: visible; }
@@ -454,6 +471,9 @@ body.light .fd-root .fd-link, html.light .fd-root .fd-link { color: #1D5FB8; }
   .fd-saldo { padding: 13px 13px 11px; }
   .fd-ag-item { grid-template-columns: 42px minmax(0, 1fr) auto; }
   .fd-ag-item .fd-btn-baixa { grid-column: 2 / -1; justify-self: start; }
+  .fd-acum-corpo { flex-direction: column; align-items: stretch; gap: 8px; }
+  .fd-acum-lado { width: auto; }
+  .fd-acum-svg { height: 48px; }
 }
 @container fd (max-width: 520px) {
   .fd-kpis { gap: 12px; }

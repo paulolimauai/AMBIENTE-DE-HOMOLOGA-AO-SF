@@ -375,14 +375,26 @@
 
     // ---------- Acumulado de todos os meses com lançamento realizado (entradas − saídas de toda a base) ----------
     const mesesCadastrados = new Set();
+    const porMesAcum = new Map(); // 'AAAA-MM' -> { e, s }
     let acumEntradas = 0;
     let acumSaidas = 0;
     lancsFluxo.forEach((l) => {
       if (!l.realizado) return;
+      const chave = l.ano + '-' + String(l.mes).padStart(2, '0');
       mesesCadastrados.add(l.ano + '-' + l.mes);
-      if (l.tipo === 'in') acumEntradas += l.valor; else acumSaidas += l.valor;
+      const mm = porMesAcum.get(chave) || { e: 0, s: 0 };
+      if (l.tipo === 'in') { acumEntradas += l.valor; mm.e += l.valor; } else { acumSaidas += l.valor; mm.s += l.valor; }
+      porMesAcum.set(chave, mm);
     });
-    const acumulado = { entradas: arred(acumEntradas), saidas: arred(acumSaidas), resultado: arred(acumEntradas - acumSaidas), meses: mesesCadastrados.size };
+    // Curva do acumulado mês a mês (ordem cronológica), para o mini-gráfico da seção de saldo
+    let accAcum = 0;
+    const serieAcumulado = [...porMesAcum.keys()].sort().map((chave) => {
+      const partes = chave.split('-');
+      const mm = porMesAcum.get(chave);
+      accAcum = arred(accAcum + mm.e - mm.s);
+      return { ano: Number(partes[0]), mes: Number(partes[1]), rotulo: MESES_CURTOS[Number(partes[1]) - 1] + '/' + partes[0].slice(2), liquido: arred(mm.e - mm.s), acumulado: accAcum };
+    });
+    const acumulado = { entradas: arred(acumEntradas), saidas: arred(acumSaidas), resultado: arred(acumEntradas - acumSaidas), meses: mesesCadastrados.size, serie: serieAcumulado };
 
     // ---------- Saúde financeira (0 a 100) ----------
     let score = 55;
@@ -630,17 +642,56 @@
       '<div class="fd-mini">' + itens + '</div></section>';
   }
 
-  // Acumulado de todos os meses cadastrados: quanto entrou menos quanto saiu em toda a base (só o realizado),
-  // deixando claro quanto desse total é saldo positivo disponível
+  // Acumulado de todos os meses cadastrados: mini-gráfico da evolução do acumulado + barra do que entrou vs saiu,
+  // deixando claro quanto do total é saldo positivo disponível
+  function graficoAcumulado(serie) {
+    const n = serie.length;
+    if (n === 0) return '';
+    const W = 100;
+    const H = 34;
+    const pts = serie.map((p) => p.acumulado);
+    const min = Math.min(0, ...pts);
+    const max = Math.max(0, ...pts);
+    const span = max - min || 1;
+    const x = (i) => (n === 1 ? W / 2 : (i / (n - 1)) * W);
+    const y = (v) => (H - 4) - ((v - min) / span) * (H - 8);
+    const linha = pts.map((v, i) => x(i).toFixed(2) + ',' + y(v).toFixed(2)).join(' ');
+    const area = 'M' + x(0).toFixed(2) + ',' + (H - 1) + ' L' + linha.replace(/ /g, ' L') + ' L' + x(n - 1).toFixed(2) + ',' + (H - 1) + ' Z';
+    const zeroY = y(0);
+    const cruzou = min < 0 && max > 0;
+    const primeiro = serie[0].rotulo;
+    const ultimo = serie[n - 1].rotulo;
+    return '<svg class="fd-acum-svg" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none" role="img" aria-label="Evolução do acumulado de ' + esc(primeiro) + ' a ' + esc(ultimo) + '">' +
+      '<path class="fd-acum-area" d="' + area + '"></path>' +
+      (cruzou ? '<line class="fd-acum-zero" x1="0" y1="' + zeroY.toFixed(2) + '" x2="' + W + '" y2="' + zeroY.toFixed(2) + '"></line>' : '') +
+      '<polyline class="fd-acum-linha" points="' + linha + '"></polyline>' +
+      '<circle class="fd-acum-ponto" cx="' + x(n - 1).toFixed(2) + '" cy="' + y(pts[n - 1]).toFixed(2) + '" r="1.6"></circle>' +
+      '</svg>';
+  }
+
   function blocoAcumulado(m) {
-    const a = m.acumulado || { resultado: 0, meses: 0 };
+    const a = m.acumulado || { resultado: 0, meses: 0, serie: [] };
     const positivo = a.resultado > 0.004;
     const negativo = a.resultado < -0.004;
     const selo = positivo ? 'fd-selo-bom' : negativo ? 'fd-selo-ruim' : '';
     const texto = positivo ? 'saldo positivo disponível' : negativo ? 'déficit acumulado' : 'sem movimentações';
-    return '<div class="fd-hero-acum"><span class="fd-hero-acum-rot">Acumulado de todos os meses' +
-      (a.meses ? ' (' + a.meses + (a.meses === 1 ? ' mês' : ' meses') + ')' : '') + ':</span> ' +
-      dinheiro(a.resultado) + ' <span class="fd-selo ' + (selo || 'fd-selo') + '">' + texto + '</span></div>';
+    const totalFluxo = a.entradas + a.saidas;
+    const pctIn = totalFluxo > 0 ? Math.max(0, Math.min(100, (a.entradas / totalFluxo) * 100)) : 0;
+    const corpo = (a.serie && a.serie.length > 0) || totalFluxo > 0
+      ? '<div class="fd-acum-corpo">' +
+        (a.serie && a.serie.length > 1 ? '<div class="fd-acum-grafico">' + graficoAcumulado(a.serie) +
+          '<div class="fd-acum-eixo"><span>' + esc(a.serie[0].rotulo) + '</span><span>' + esc(a.serie[a.serie.length - 1].rotulo) + '</span></div></div>' : '') +
+        (totalFluxo > 0 ? '<div class="fd-acum-lado">' +
+          '<div class="fd-acum-barra" role="img" aria-label="Entradas ' + esc(fmtU(a.entradas)) + ' e saídas ' + esc(fmtU(a.saidas)) + ' no acumulado"><i class="fd-acum-in" style="width:' + pctIn.toFixed(1) + '%"></i><i class="fd-acum-out" style="width:' + (100 - pctIn).toFixed(1) + '%"></i></div>' +
+          '<div class="fd-acum-legenda"><span><i class="fd-bolinha" style="background:var(--fd-in)"></i>' + dinheiro(a.entradas) + ' entrou</span>' +
+          '<span><i class="fd-bolinha" style="background:var(--fd-out)"></i>' + dinheiro(a.saidas) + ' saiu</span></div>' +
+        '</div>' : '') +
+      '</div>'
+      : '';
+    return '<div class="fd-acum"><div class="fd-acum-topo"><span class="fd-hero-acum-rot">Acumulado de todos os meses' +
+      (a.meses ? ' (' + a.meses + (a.meses === 1 ? ' mês' : ' meses') + ')' : '') + '</span>' +
+      '<span class="fd-acum-valor fd-money" data-anim-val="' + a.resultado + '">' + esc(fmtU(a.resultado)) + '</span>' +
+      '<span class="fd-selo ' + (selo || 'fd-selo') + '">' + texto + '</span></div>' + corpo + '</div>';
   }
 
   function tileKpi(o) {
