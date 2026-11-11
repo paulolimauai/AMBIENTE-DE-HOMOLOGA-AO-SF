@@ -63,6 +63,27 @@ test('disponível para gastar = receitas totais − despesas totais do período'
   }
 });
 
+test('menor saldo de mês encerrado usa a série realizada (não o saldo de hoje)', () => {
+  const out = D.calcular(ctx({ periodo: { year: 2026, month: 10 } }));
+  // Em outubro o caixa vai de 1000 a 750 (1000 − 100 − 150 antes do salário de +5000 no dia 5): o mínimo é 750 no dia 3
+  assert.equal(out.contas.saldoMinimo, 750);
+  const html = D.pagina({ ...ctx({ periodo: { year: 2026, month: 10 } }), util: {} });
+  assert.ok(html.includes('Menor saldo'), 'mini-item de menor saldo deveria aparecer em mês encerrado');
+});
+
+test('movimentações sem conta vinculada aparecem como "Sem conta vinculada" para fechar com o saldo em contas', () => {
+  const lista = transacoes().concat([
+    { id: 99, type: 'in', desc: 'Pix recebido', val: 700, date: '2026-11-04', cat: 'Outros', status: 'Recebido', acc: 'Boleto / Pix / Outros', accId: null }
+  ]);
+  const m = D.calcular(ctx({ transacoes: lista }));
+  const semConta = m.contas.bancarias.find((b) => b.nome === 'Sem conta vinculada');
+  assert.ok(semConta, 'linha "Sem conta vinculada" ausente');
+  assert.equal(semConta.saldo, 700);
+  // a soma das contas bancárias agora bate com o saldo em contas (10300 + 700 = 11000)
+  const soma = m.contas.bancarias.reduce((s, b) => s + b.saldo, 0);
+  assert.equal(soma, m.contas.saldoAtual);
+});
+
 test('projeção do fim do mês soma as pendências (vencidas caem logo depois de hoje, futuras na própria data)', () => {
   const m = D.calcular(ctx());
   // 10300 - aluguel 1500 + freela 800 - seguro vencido 400
@@ -77,7 +98,7 @@ test('projeção do fim do mês soma as pendências (vencidas caem logo depois d
   assert.equal(s.saldoProj[9], 8400); // aluguel no dia 10
   assert.equal(s.saldoProj[19], 9200); // freela no dia 20
   assert.equal(s.saldoProj[29], 9200);
-  assert.equal(m.contas.saldoMinimo, 8400);
+  assert.equal(m.contas.saldoMinimo, 5300); // menor saldo do período: realizado (5300 após o mercado de 03/11) ou projetado (8400)
 });
 
 test('saldo real dia a dia usa só o realizado até aquele dia', () => {
@@ -314,7 +335,8 @@ test('menorSaldoProjetado: acha o fundo da curva e o dia (null quando não há p
   const menor = D.menorSaldoProjetado(m.serieDiaria);
   assert.equal(menor.valor, 8400); // depois do aluguel do dia 10, antes do freela do dia 20
   assert.equal(menor.dia, 10);
-  assert.equal(menor.valor, m.contas.saldoMinimo);
+  // saldoMinimo do modelo cobre realizado + projetado: o realizado chegou a 5300 (mercado de 03/11)
+  assert.equal(m.contas.saldoMinimo, 5300);
   // mês já encerrado: todas as projeções são null
   const out = D.calcular(ctx({ periodo: { year: 2026, month: 10 } }));
   assert.equal(D.menorSaldoProjetado(out.serieDiaria), null);
