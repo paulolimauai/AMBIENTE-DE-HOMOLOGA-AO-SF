@@ -53,12 +53,13 @@ test('saldo em contas = saldo inicial + realizado (cartão fica de fora) e não 
   assert.equal(todas.contas.saldoAtual, 10300);
 });
 
-test('disponível para gastar = receitas totais − despesas totais do período', () => {
+test('disponível para gastar = saldo em contas + receitas previstas − despesas previstas do período', () => {
   const m = D.calcular(ctx());
-  // receitas.total 5800 − despesas.total 2400 = 3400 (realizado + previsto dos dois lados)
-  assert.equal(m.contas.disponivelGastar, 3400);
+  // saldoAtual 10300 + receitas.previsto 800 − despesas.previsto 1900 = 9200
+  // (o realizado já está dentro do saldo, então só as pendências entram na conta)
+  assert.equal(m.contas.disponivelGastar, 9200);
   const html = D.pagina({ ...ctx(), util: {} });
-  for (const trecho of ['Despesas', 'Disponível p/ gastar', 'Dívida no cartão', 'Dívida total nos cartões']) {
+  for (const trecho of ['Despesas', 'Disponível p/ gastar', 'Dívida nos cartões', 'Dívida total nos cartões']) {
     assert.ok(html.includes(trecho), 'faltou: ' + trecho);
   }
 });
