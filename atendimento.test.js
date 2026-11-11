@@ -19,25 +19,29 @@ const pedidoValido = () => ({
 });
 
 // ---------- Protocolo ----------
-test('proximoProtocolo começa em OS-0001 e segue em sequência', () => {
-  assert.equal(A.proximoProtocolo([]), 'OS-0001');
-  assert.equal(A.proximoProtocolo(undefined), 'OS-0001');
+test('proximoProtocolo começa em REQ-0001 e segue em sequência (INC- para incidente)', () => {
+  assert.equal(A.proximoProtocolo([]), 'REQ-0001');
+  assert.equal(A.proximoProtocolo(undefined), 'REQ-0001');
+  assert.equal(A.proximoProtocolo([], { tipo: 'Incidente' }), 'INC-0001');
+  assert.equal(A.proximoProtocolo([], { tipo: 'Requisição' }), 'REQ-0001');
   const lista = [];
   for (let i = 0; i < 12; i++) lista.unshift({ protocol: A.proximoProtocolo(lista) });
-  assert.deepEqual(lista.map((o) => o.protocol).reverse().slice(0, 3), ['OS-0001', 'OS-0002', 'OS-0003']);
-  assert.equal(lista[0].protocol, 'OS-0012');
+  assert.deepEqual(lista.map((o) => o.protocol).reverse().slice(0, 3), ['REQ-0001', 'REQ-0002', 'REQ-0003']);
+  assert.equal(lista[0].protocol, 'REQ-0012');
   assert.equal(new Set(lista.map((o) => o.protocol)).size, 12);
 });
 
 test('proximoProtocolo ignora protocolos antigos, usa o maior número e respeita o mínimo (contador/banco)', () => {
   const antigos = [{ protocol: 'OS-261107-PJKK' }, { protocol: 'OS-24448467' }, { protocol: 'OS-15330677' }, { protocol: '' }, null];
-  assert.equal(A.proximoProtocolo(antigos), 'OS-0001'); // só os formatos antigos: a sequência começa do zero
-  assert.equal(A.proximoProtocolo([...antigos, { protocol: 'OS-0007' }, { protocol: 'OS-0003' }]), 'OS-0008');
-  assert.equal(A.proximoProtocolo([{ protocol: 'OS-0003' }], { minimo: 41 }), 'OS-0042'); // contador gravado ou banco à frente do arquivo
-  assert.equal(A.proximoProtocolo([{ protocol: 'OS-0003' }], { minimo: 'lixo' }), 'OS-0004');
-  assert.equal(A.proximoProtocolo([{ protocol: 'OS-9999' }]), 'OS-10000'); // depois do 9999 segue com 5 dígitos
+  assert.equal(A.proximoProtocolo(antigos), 'REQ-0001'); // só os formatos antigos: a sequência começa do zero
+  assert.equal(A.proximoProtocolo([...antigos, { protocol: 'OS-0007' }, { protocol: 'REQ-0003' }]), 'REQ-0008');
+  assert.equal(A.proximoProtocolo([{ protocol: 'OS-0003' }], { minimo: 41 }), 'REQ-0042'); // contador gravado ou banco à frente do arquivo
+  assert.equal(A.proximoProtocolo([{ protocol: 'OS-0003' }], { minimo: 'lixo' }), 'REQ-0004');
+  assert.equal(A.proximoProtocolo([{ protocol: 'OS-9999' }]), 'REQ-10000'); // depois do 9999 segue com 5 dígitos
   assert.throws(() => A.proximoProtocolo([{ protocol: 'OS-99999' }]), /Limite/);
   assert.equal(A.numeroDoProtocolo('OS-0042'), 42);
+  assert.equal(A.numeroDoProtocolo('REQ-0042'), 42);
+  assert.equal(A.numeroDoProtocolo('INC-0007'), 7);
   assert.equal(A.numeroDoProtocolo('OS-261106-K7QX'), 0);
   assert.equal(A.numeroDoProtocolo('OS-24448467'), 0);
 });
@@ -63,6 +67,24 @@ test('mesmaReferencia compara por id ou por protocolo normalizado', () => {
   assert.ok(!A.mesmaReferencia(ordem, 'OS-24448468'));
   assert.ok(!A.mesmaReferencia(ordem, ''));
   assert.ok(!A.mesmaReferencia(null, '6'));
+});
+
+test('protocolo sequencial casa por número entre OS-/REQ-/INC- e a troca de tipo muda só a inicial', () => {
+  assert.ok(A.mesmoProtocolo('OS-0007', 'REQ-0007'));
+  assert.ok(A.mesmoProtocolo('req-7', 'INC-00007'));
+  assert.ok(!A.mesmoProtocolo('REQ-0007', 'INC-0008'));
+  assert.ok(!A.mesmoProtocolo('OS-261106-K7QX', 'REQ-261106-K7QX'));
+  // normalizarOrdem migra OS-NNNN para a inicial do tipo na leitura
+  assert.equal(A.normalizarOrdem({ protocol: 'OS-0007', ticket_type: 'Requisição' }).protocol, 'REQ-0007');
+  assert.equal(A.normalizarOrdem({ protocol: 'OS-0007', ticket_type: 'Incidente' }).protocol, 'INC-0007');
+  assert.equal(A.normalizarOrdem({ protocol: 'OS-1', service_type: 'Conta/Login' }).protocol, 'INC-0001'); // tipo sugerido pela categoria
+  assert.equal(A.normalizarOrdem({ protocol: 'OS-261106-K7QX', ticket_type: 'Incidente' }).protocol, 'OS-261106-K7QX'); // formato antigo não muda
+  // trocar o tipo troca só a inicial do protocolo
+  const ordem = A.normalizarOrdem({ id: 1, protocol: 'REQ-0007', ticket_type: 'Requisição', client_name: 'A', client_email: 'a@b.com', title: 't', description: 'desc', status: 'Novo', created_at: '2026-11-01T00:00:00Z' });
+  const r = A.aplicarAtualizacao(ordem, { ticket_type: 'Incidente' }, { agoraIso: '2026-11-02T00:00:00Z' });
+  assert.ok(r.ok);
+  assert.equal(r.ordem.protocol, 'INC-0007');
+  assert.equal(r.ordem.ticket_type, 'Incidente');
 });
 
 // ---------- Abertura ----------

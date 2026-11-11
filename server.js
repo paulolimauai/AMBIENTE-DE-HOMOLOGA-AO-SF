@@ -32659,7 +32659,7 @@ function gravarUltimoNumeroDeProtocolo(numero) {
 async function maiorNumeroDeProtocoloNoBanco() {
   if (!pool) return 0;
   try {
-    const r = await pool.query("SELECT protocol FROM ordens_servico WHERE protocol LIKE 'OS-[0-9][0-9][0-9][0-9]' OR protocol LIKE 'OS-[0-9][0-9][0-9][0-9][0-9]'");
+    const r = await pool.query("SELECT protocol FROM ordens_servico WHERE protocol LIKE 'OS-[0-9]%' OR protocol LIKE 'REQ-[0-9]%' OR protocol LIKE 'INC-[0-9]%'");
     return (r && r.rows ? r.rows : []).reduce((maior, linha) => Math.max(maior, Atendimento.numeroDoProtocolo(linha.protocol)), 0);
   } catch (e) {
     return 0; // sem banco: vale o contador gravado e o arquivo local
@@ -32694,7 +32694,9 @@ async function buscarOrdemPorReferencia(referencia) {
   if (!pool) return null;
   try {
     const protocolo = Atendimento.normalizarProtocolo(referencia) || String(referencia).trim().toUpperCase();
-    const r = await pool.query(`SELECT TOP 1 ${ORDEM_COLUNAS_SQL} FROM ordens_servico WHERE id = $1 OR UPPER(protocol) = $2`, [idNumericoDeOrdem(referencia), protocolo]);
+    // Sequencial aceita qualquer inicial gravada (OS-/REQ-/INC-): a migração pode deixar banco e arquivo com prefixos diferentes
+    const variantes = Atendimento.variantesProtocoloSequencial(protocolo) || [protocolo];
+    const r = await pool.query(`SELECT TOP 1 ${ORDEM_COLUNAS_SQL} FROM ordens_servico WHERE id = $1 OR UPPER(protocol) = ANY($2)`, [idNumericoDeOrdem(referencia), variantes]);
     const linha = r && r.rows && r.rows[0] ? Atendimento.normalizarOrdem(r.rows[0]) : null;
     if (!linha) return null;
     const frescas = getLocalOrdens(); // o arquivo pode ter mudado durante a consulta ao banco
@@ -32706,25 +32708,28 @@ async function buscarOrdemPorReferencia(referencia) {
   }
 }
 
-// Grava no SQL Server o estado atual de um chamado já salvo no arquivo local (se o banco falhar, o arquivo local mantém tudo)
-async function atualizarOrdemNoBanco(ordem, agoraIso) {
+// Grava no SQL Server o estado atual de um chamado já salvo no arquivo local (se o banco falhar, o arquivo local mantém tudo).
+// `protocoloAnterior`: quando a troca de tipo muda a inicial (REQ-⇄INC-), o UPDATE precisa achar a linha pelo protocolo antigo.
+async function atualizarOrdemNoBanco(ordem, agoraIso, protocoloAnterior) {
   if (!pool) return;
   try {
+    const protocoloAntigo = String(protocoloAnterior || ordem.protocol).trim().toUpperCase();
     await pool.query(
       `UPDATE ordens_servico
-       SET status = $1, admin_notes = $2, priority = $3, service_type = $4,
-           tecnico_responsavel = $5, assumido_em = $6, canal_atendimento = $7,
-           sla = $8, asset = $9, time_spent = $10, solution = $11, timeline = $12,
-           concluido_em = $13, updated_at = $14, ticket_type = $15, fila = $16
-       WHERE id = $17 OR UPPER(protocol) = $18`,
+       SET protocol = $1, status = $2, admin_notes = $3, priority = $4, service_type = $5,
+           tecnico_responsavel = $6, assumido_em = $7, canal_atendimento = $8,
+           sla = $9, asset = $10, time_spent = $11, solution = $12, timeline = $13,
+           concluido_em = $14, updated_at = $15, ticket_type = $16, fila = $17
+       WHERE id = $18 OR UPPER(protocol) = $19 OR UPPER(protocol) = $20`,
       [
+        String(ordem.protocol).toUpperCase(),
         ordem.status, ordem.admin_notes || '', ordem.priority, ordem.service_type,
         ordem.tecnico_responsavel || null, ordem.assumido_em || null, ordem.canal_atendimento || 'Portal Web',
         ordem.sla || Atendimento.calcularSlaPorPrioridade(ordem.priority), ordem.asset || 'Nenhum', Number(ordem.time_spent) || 0,
         ordem.solution || '', Array.isArray(ordem.timeline) ? JSON.stringify(ordem.timeline) : null,
         ordem.concluido_em || null, agoraIso,
         ordem.ticket_type || 'Requisição', ordem.fila || null,
-        idNumericoDeOrdem(ordem.id), String(ordem.protocol).toUpperCase()
+        idNumericoDeOrdem(ordem.id), String(ordem.protocol).toUpperCase(), protocoloAntigo
       ]
     );
     console.log(`[BANCO] O.S. GLPI #${ordem.protocol} atualizada com sucesso no SQL Server.`);
@@ -32742,8 +32747,15 @@ async function consultarOrdensPublico(consulta) {
       let onde;
       let parametros;
       if (consulta.tipo === 'protocolo') {
-        onde = 'UPPER(protocol) = $1';
-        parametros = [consulta.valor];
+        // Sequencial: casa qualquer inicial (OS-/REQ-/INC-) porque a migração pode deixar o banco com o prefixo antigo
+        const variantes = Atendimento.variantesProtocoloSequencial(consulta.valor);
+        if (variantes) {
+          onde = 'UPPER(protocol) = ANY($1)';
+          parametros = [variantes];
+        } else {
+          onde = 'UPPER(protocol) = $1';
+          parametros = [consulta.valor];
+        }
       } else if (consulta.tipo === 'email') {
         onde = 'LOWER(client_email) = $1';
         parametros = [consulta.valor];
@@ -36049,7 +36061,7 @@ async function handleNexusRequest(req, res) {
     if (consulta.tipo === 'invalida') {
       return sendJson(res, corsHeaders, 400, {
         success: false,
-        message: 'Informe o número do protocolo (ex.: OS-0001) junto com o e-mail usado no chamado, ou o e-mail, CPF ou telefone do chamado.',
+        message: 'Informe o número do protocolo (ex.: REQ-0001 ou INC-0001) junto com o e-mail usado no chamado, ou o e-mail, CPF ou telefone do chamado.',
         ordens: []
       });
     }
@@ -36112,10 +36124,10 @@ async function handleNexusRequest(req, res) {
       });
     }
 
-    // Protocolo em sequência (OS-0001, OS-0002...): o maior entre o contador gravado, o banco e os chamados do arquivo, mais um
+    // Protocolo em sequência (REQ-0001 para requisição, INC-0001 para incidente): o maior entre o contador gravado, o banco e os chamados do arquivo, mais um
     let protocolo;
     try {
-      protocolo = Atendimento.proximoProtocolo(lista, { minimo: Math.max(lerUltimoNumeroDeProtocolo(), maiorNumeroNoBanco) });
+      protocolo = Atendimento.proximoProtocolo(lista, { minimo: Math.max(lerUltimoNumeroDeProtocolo(), maiorNumeroNoBanco), tipo: dados.ticket_type });
     } catch (err) {
       return sendJson(res, corsHeaders, 503, { success: false, message: 'Não foi possível registrar o chamado agora. Tente novamente em instantes.' });
     }
@@ -36212,6 +36224,7 @@ async function handleNexusRequest(req, res) {
 
     const agoraIso = new Date().toISOString();
     const ator = atorDaRequisicao(req);
+    const protocoloAnterior = achada.todas[achada.indice].protocol;
     const resultado = Atendimento.aplicarAtualizacao(achada.todas[achada.indice], payload, { agoraIso, ator: ator.nome, filas: getLocalFilas() });
     if (!resultado.ok) return sendJson(res, corsHeaders, 400, { success: false, message: resultado.mensagem });
 
@@ -36243,7 +36256,7 @@ async function handleNexusRequest(req, res) {
       updated_at: agoraIso
     });
 
-    await atualizarOrdemNoBanco(ordem, agoraIso);
+    await atualizarOrdemNoBanco(ordem, agoraIso, protocoloAnterior);
 
     return sendJson(res, corsHeaders, 200, { success: true, ordem });
   }

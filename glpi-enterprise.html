@@ -3477,11 +3477,19 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             return true;
         }
 
-        // Troca um chamado pela versão que o servidor devolveu (e evita avisar a própria alteração)
-        function applyServerOrder(ordem, own) {
+        // Troca um chamado pela versão que o servidor devolveu (e evita avisar a própria alteração).
+        // `protocoloAnterior`: quando a troca de tipo muda a inicial (REQ-⇄INC-), o chamado é achado pelo protocolo antigo.
+        function applyServerOrder(ordem, own, protocoloAnterior) {
             const t = mapOrdem(ordem, own);
-            const idx = ticketsList.findIndex((x) => x.protocol === t.protocol);
+            const anterior = protocoloAnterior || t.protocol;
+            const idx = ticketsList.findIndex((x) => x.protocol === t.protocol || (anterior && x.protocol === anterior));
             if (idx === -1) ticketsList.unshift(t); else ticketsList[idx] = t;
+            if (anterior && anterior !== t.protocol) {
+                snapshot.delete(anterior);
+                selectedIds.delete(anterior);
+                if (activeProtocol === anterior) activeProtocol = t.protocol;
+                if (myProtocol === anterior) myProtocol = t.protocol;
+            }
             snapshot.set(t.protocol, { updatedAt: t.updatedAt, len: t.timeline.length, status: t.status });
             return t;
         }
@@ -4290,7 +4298,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             $('success-sub').textContent = data.duplicate
                 ? 'Identificamos um chamado igual enviado há pouco, então não criamos outro. Guarde o protocolo para acompanhar o andamento.'
                 : 'Guarde o protocolo: com ele você acompanha o andamento a qualquer momento em "Meus Chamados".';
-            $('success-protocol').textContent = lastCreatedProtocol;
+            $('success-protocol').textContent = '#' + lastCreatedProtocol;
             $('success-type').textContent = v.type;
             $('success-cat').textContent = v.category;
             $('success-urg').textContent = v.urgency;
@@ -4337,7 +4345,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             const tbody = $('user-tickets-tbody');
             const recentBody = $('user-recent-tbody');
             if (!tbody) return;
-            const searchVal = ($('user-search-input').value || '').toLowerCase().trim();
+            const searchVal = ($('user-search-input').value || '').toLowerCase().trim().replace(/^#/, '');
 
             // Já vem só do solicitante (o servidor filtra pela conta), do mais novo para o mais antigo
             const mine = ticketsList.slice().sort((a, b) => String(b.createdAt || '').localeCompare(String(a.createdAt || '')));
@@ -4460,7 +4468,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         function renderMyTicket(reset) {
             const t = getTicket(myProtocol);
             if (!t) return;
-            $('my-id').textContent = t.protocol;
+            $('my-id').textContent = '#' + t.protocol;
             $('my-title').textContent = t.subject;
             $('my-status-badge').innerHTML = getStatusBadge(t.status, true);
             $('my-date').textContent = t.date;
@@ -4659,7 +4667,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         function renderTechQueue() {
             const tbody = $('tech-queue-tbody');
             if (!tbody) return;
-            const searchVal = ($('tech-queue-search').value || '').toLowerCase().trim();
+            const searchVal = ($('tech-queue-search').value || '').toLowerCase().trim().replace(/^#/, '');
             const filterUrgency = $('tech-filter-urgency').value;
             const filterType = $('tech-filter-type').value;
             const filterQueue = $('tech-filter-queue').value;
@@ -4978,7 +4986,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 if (!quiet && activeProtocol === t.protocol) renderWorkspace(false);
                 return null;
             }
-            const updated = applyServerOrder(r.data.ordem, false);
+            const updated = applyServerOrder(r.data.ordem, false, t.protocol);
             notifyParentOrdersChanged();
             if (!quiet) setSaveState('saved', 'Salvo às ' + new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }));
             return updated;
@@ -5005,7 +5013,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             if (!t) return;
             const closed = isClosed(t);
 
-            $('workspace-id').innerText = t.protocol;
+            $('workspace-id').innerText = '#' + t.protocol;
             $('workspace-title').innerText = t.subject;
             $('workspace-status-badge').innerHTML = getStatusBadge(t.status, false) + ' ' + typePill(t.type);
             $('workspace-urgency-badge').innerHTML = getUrgencyBadge(t.urgency);

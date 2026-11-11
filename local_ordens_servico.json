@@ -1,7 +1,312 @@
 [
   {
+    "id": "16",
+    "protocol": "REQ-0006",
+    "client_name": "PAULO DE LIMA PEREIRA",
+    "client_email": "paulodelima21@gmail.com",
+    "client_phone": "(62) 98626-6049",
+    "client_cpf": "04023326100",
+    "service_type": "Falhas/Bugs/Correções",
+    "priority": "Baixa",
+    "title": "mudar tipo de abertura de chamado",
+    "description": "quando for requisição aparecer #REQ-\nQuando for Incidente aparece #INC-\n\ncaso tenha quer alterar de REQ para INC permitir o chamado mudar apenas a inicial",
+    "status": "Atendimento atribuído",
+    "admin_notes": "",
+    "tecnico_responsavel": "PAULO DE LIMA PEREIRA",
+    "assumido_em": "2026-11-11T12:17:20.453Z",
+    "canal_atendimento": "Central GLPI",
+    "sla": "5 Dias Úteis",
+    "asset": "Nenhum",
+    "time_spent": 0,
+    "solution": "",
+    "timeline": [
+      {
+        "sender": "Solicitante",
+        "author": "PAULO DE LIMA PEREIRA",
+        "text": "Chamado aberto via GLPI Service Desk (requisição). Aguardando atribuição técnica.",
+        "date": "2026-11-11T12:16:53.082Z",
+        "internal": false
+      },
+      {
+        "sender": "Sistema",
+        "author": "Sistema",
+        "text": "Chamado encaminhado para a fila \"Desenvolvedor\".",
+        "date": "2026-11-11T12:16:53.082Z",
+        "internal": false,
+        "event": true
+      },
+      {
+        "sender": "Sistema",
+        "author": "ADMINISTRADOR DO SISTEMA",
+        "text": "Status alterado de \"Novo\" para \"Atendimento atribuído\".",
+        "date": "2026-11-11T12:17:20.453Z",
+        "internal": false,
+        "event": true
+      },
+      {
+        "sender": "Sistema",
+        "author": "ADMINISTRADOR DO SISTEMA",
+        "text": "Chamado assumido por ADMINISTRADOR DO SISTEMA.",
+        "date": "2026-11-11T12:17:20.453Z",
+        "internal": false,
+        "event": true
+      },
+      {
+        "sender": "Sistema",
+        "author": "ADMINISTRADOR DO SISTEMA",
+        "text": "Chamado reatribuído de ADMINISTRADOR DO SISTEMA para PAULO DE LIMA PEREIRA.",
+        "date": "2026-11-11T12:25:09.582Z",
+        "internal": false,
+        "event": true
+      },
+      {
+        "sender": "Sistema",
+        "author": "ADMINISTRADOR DO SISTEMA",
+        "text": "Chamado reatribuído de PAULO DE LIMA PEREIRA para ADMINISTRADOR DO SISTEMA.",
+        "date": "2026-11-11T12:25:11.538Z",
+        "internal": false,
+        "event": true
+      },
+      {
+        "sender": "Sistema",
+        "author": "ADMINISTRADOR DO SISTEMA",
+        "text": "Chamado reatribuído de ADMINISTRADOR DO SISTEMA para PAULO DE LIMA PEREIRA.",
+        "date": "2026-11-11T12:25:15.615Z",
+        "internal": false,
+        "event": true
+      }
+    ],
+    "concluido_em": null,
+    "created_at": "2026-11-11T12:16:53.082Z",
+    "updated_at": "2026-11-11T12:25:15.615Z",
+    "ticket_type": "Requisição",
+    "fila": "Desenvolvedor"
+  },
+  {
+    "id": "15",
+    "protocol": "REQ-0005",
+    "client_name": "PAULO DE LIMA PEREIRA",
+    "client_email": "paulodelima21@gmail.com",
+    "client_phone": "(62) 98626-6049",
+    "client_cpf": "04023326100",
+    "service_type": "Falhas/Bugs/Correções",
+    "priority": "Baixa",
+    "title": "quando clica ta muito lento eu quero que seja mais rapido e ao cadastrar as transaçoes a tela ta com lentidao eu quero que ajusta",
+    "description": "quando clica ta muito lento eu quero que seja mais rapido e ao cadastrar as transaçoes a tela ta com lentidao eu quero que ajusta",
+    "status": "Resolvido",
+    "admin_notes": "",
+    "tecnico_responsavel": "ADMINISTRADOR DO SISTEMA",
+    "assumido_em": "2026-11-11T12:17:19.524Z",
+    "canal_atendimento": "Central GLPI",
+    "sla": "5 Dias Úteis",
+    "asset": "Nenhum",
+    "time_spent": 0,
+    "solution": "Problema no servidor gratuito, so quando pagar que o erro sera corrigido o codigo ok",
+    "timeline": [
+      {
+        "sender": "Solicitante",
+        "author": "PAULO DE LIMA PEREIRA",
+        "text": "Chamado aberto via GLPI Service Desk (requisição). Aguardando atribuição técnica.",
+        "date": "2026-11-11T12:15:11.484Z",
+        "internal": false
+      },
+      {
+        "sender": "Sistema",
+        "author": "Sistema",
+        "text": "Chamado encaminhado para a fila \"Desenvolvedor\".",
+        "date": "2026-11-11T12:15:11.484Z",
+        "internal": false,
+        "event": true
+      },
+      {
+        "sender": "Sistema",
+        "author": "ADMINISTRADOR DO SISTEMA",
+        "text": "Status alterado de \"Novo\" para \"Atendimento atribuído\".",
+        "date": "2026-11-11T12:17:19.524Z",
+        "internal": false,
+        "event": true
+      },
+      {
+        "sender": "Sistema",
+        "author": "ADMINISTRADOR DO SISTEMA",
+        "text": "Chamado assumido por ADMINISTRADOR DO SISTEMA.",
+        "date": "2026-11-11T12:17:19.524Z",
+        "internal": false,
+        "event": true
+      },
+      {
+        "sender": "Técnico",
+        "author": "ADMINISTRADOR DO SISTEMA",
+        "text": "[SOLUÇÃO APLICADA]: Problema no servidor gratuito, so quando pagar que o erro sera corrigido o codigo ok",
+        "date": "2026-11-11T12:18:00.401Z",
+        "internal": false
+      },
+      {
+        "sender": "Sistema",
+        "author": "ADMINISTRADOR DO SISTEMA",
+        "text": "Status alterado de \"Atendimento atribuído\" para \"Resolvido\".",
+        "date": "2026-11-11T12:18:00.401Z",
+        "internal": false,
+        "event": true
+      }
+    ],
+    "concluido_em": "2026-11-11T12:18:00.401Z",
+    "created_at": "2026-11-11T12:15:11.484Z",
+    "updated_at": "2026-11-11T12:18:00.401Z",
+    "ticket_type": "Requisição",
+    "fila": "Desenvolvedor"
+  },
+  {
+    "id": "14",
+    "protocol": "REQ-0004",
+    "client_name": "PAULO DE LIMA PEREIRA",
+    "client_email": "paulodelima21@gmail.com",
+    "client_phone": "(62) 98626-6049",
+    "client_cpf": "04023326100",
+    "service_type": "Falhas/Bugs/Correções",
+    "priority": "Baixa",
+    "title": "correcao",
+    "description": "❭ C:\\Users\\Nitro\\Desktop\\PRINTS\\Screenshot_8.png pode deixar essa tela mais profissional em 4 k\n\n ✓ Viewed image ~\\Desktop\\PRINTS\\Screenshot_8.png View image ~\\Desktop\\PRINTS\\Screenshot_8.png (679x339)\n\n Não consigo visualizar imagens neste ambiente — o modelo não suporta leitura de PNG/JPG, então não consegui abrir o  Screenshot_8.png .\n\n Para eu aplicar o visual profissional em 4K na tela certa, me diga uma destas opções:\n\n   1. Qual é a tela? — a rota ou nome da página (ex: login, dashboard, usuários, ordens de serviço, finanças...)\n   2. Ou me mande o print por outro caminho — descreva os elementos principais da tela (título, tabelas, botões, cores atuais).\n\n Assim que eu souber qual tela é, eu ajusto o template/CSS correspondente (layout, tipografia, espaçamentos, gradientes, responsividade 4K) e reinicio o  localhost:3000  automaticamente.\n\n❭ na tela de login do glpi\n\n ✓ Get-ChildItem -Path &quot;C:\\AMBIENTE DE HOMOLOGAÇAO&quot; -Recurse -File | Where-Object { $_.FullName -notmatch &#39;node_modules|\\.git\\\\&#39; } | Select-String -List -Pattern &#39;glpi&#39; | Select-Object -ExpandProperty Path -U…\n ✓ Searched for glpi in .\\\n ✓ (Get-Content &quot;C:\\AMBIENTE DE HOMOLOGAÇAO\\glpi-enterprise.html&quot; | Measure-Object -Line).Lines\n ✓ Searched for login|password|senha|entrar|autenticar in .\\glpi-enterprise.html\n ✓ Read lines 1700-1839 in .\\glpi-enterprise.html 140 lines\n ✓ Read lines 280-319 in .\\glpi-enterprise.html 40 lines\n ✓ Searched for \\.lg-(main|logo|card|feat|foot)|\\.glass\\b|\\.btn-blue|\\.field|\\.input-icon|\\.sub\\b|\\.boot\\b in .\\glpi-enterprise.html\n ✓ Read lines 160-259 in .\\glpi-enterprise.html 100 lines\n ✓ Read lines 975-1034 in .\\glpi-enterprise.html 60 lines\n ✓ Searched for login\\.html|glpi-enterprise|/glpi in .\\server.js\n ✓ Searched for --acc(-rgb|-l)?\\s*:|--amber\\s*:|--brand\\s*:|--glass-fill|--glass-shadow|--line-soft|--faint|--muted|--ink-2|--font-display in .\\glpi-enterprise.html\n ✓ Read lines 3745-3784 in .\\glpi-enterprise.html 40 lines\n\n Aplicando o redesign 4K da tela de login.\n\n ✓ Edited .\\glpi-enterprise.html +25 -16\n ✓ Edited .\\glpi-enterprise.html +5 -1\n ✓ Edited .\\glpi-enterprise.html +4 -0\n ✓ Edited .\\glpi-enterprise.html +11 -0\n ✓ Read lines 36610-36624 in .\\server.js 15 lines\n\n O arquivo é servido com cache por mtime (já invalida sozinho), mas vou reiniciar o servidor conforme a diretriz do projeto.\n\n ✓ $p = (Get-NetTCPConnection -LocalPort 3000 -State Listen -ErrorAction SilentlyContinue | Select-Object -First 1).OwningProcess; if ($p) { Stop-Process -Id $p -Force; &quot;killed $p&quot; } else { &quot;no listener&quot; }\n ✓ node server.js Running in shell ff7e83\n ✓ Start-Sleep -Seconds 4; try { (Invoke-RestMethod -Uri http://localhost:3000/api/health -TimeoutSec 5).status } catch { $_.Exception.Message }; $r = Invoke-WebRequest -Uri http://localhost:3000/glpi.html -U…\n ✗ git status --short; git log -3 --oneline Exited with code 1\n ✓ git status --short; git log -3 --oneline\n ✓ git add glpi-enterprise.html; git commit -m &quot;ui(glpi): tela de login em visual 4K - cartao maior, eyebrow, olho de senha, link voltar e tipografia ampliada&quot;\n ✓ git push origin main\n\n Tela de login do GLPI atualizada para visual 4K profissional. Servidor reiniciado e no ar em  localhost:3000  — acesse  /glpi.html .\n\n Arquivo: glpi-enterprise.html (file:///C:/AMBIENTE%20DE%20HOMOLOGA%C3%87AO/glpi-enterprise.html)\n\n O que mudou:\n\n   @@ CSS (linhas 977-1005) — bloco &quot;Tela de acesso&quot; @@\n   -.lg-main { max-width: 30rem; ... }\n   -.lg-card { padding: 2.1rem 2rem 1.6rem; border-radius: 1.4rem; }\n   -.lg-card h2 { font-size: 1.8rem; }\n   -.lg-card .input { height: 3.1rem; font-size: 1rem; }\n   +.lg-main { max-width: 34rem; ... }\n   +.lg-card { padding: 2.7rem 2.5rem 1.9rem; border-radius: 1.75rem; overflow: hidden; }\n   +.lg-card::before { /* faixa de luz em degradê no topo do cartão */ }\n   +.lg-eyebrow { /* selo &quot;SERVICE DESK ENTERPRISE&quot; em caixa alta */ }\n   +.lg-card h2 { font-size: 2.15rem; }\n   +.lg-card .input { height: 3.4rem; font-size: 1.05rem; }\n   +.pw-eye { /* botão olho de senha */ }\n   +.lg-back a { /* link &quot;Voltar ao Sistema Financeiro&quot; */ }\n\n HTML (linhas 1737-1775):\n\n   • Eyebrow  Service Desk Enterprise  acima do título\n   • Botão 👁 para mostrar/ocultar senha (com   togglePasswordVisibility()  em JS, linha 3770)\n   • Link &quot;Voltar ao Sistema Financeiro&quot; →  /login.html\n\n Verificação:  /api/health  →  healthy ;  /glpi.html  → 200 com as novas classes presentes.\n\n Git: commit  ec7fcca  enviado para  origin/main .",
+    "status": "Resolvido",
+    "admin_notes": "",
+    "tecnico_responsavel": "ADMINISTRADOR DO SISTEMA",
+    "assumido_em": "2026-11-11T12:02:40.972Z",
+    "canal_atendimento": "Central GLPI",
+    "sla": "5 Dias Úteis",
+    "asset": "Nenhum",
+    "time_spent": 0,
+    "solution": "corrigido.\ntestar novamente.",
+    "timeline": [
+      {
+        "sender": "Solicitante",
+        "author": "PAULO DE LIMA PEREIRA",
+        "text": "Chamado aberto via GLPI Service Desk (requisição). Aguardando atribuição técnica.",
+        "date": "2026-11-11T12:01:39.178Z",
+        "internal": false
+      },
+      {
+        "sender": "Sistema",
+        "author": "Sistema",
+        "text": "Chamado encaminhado para a fila \"Desenvolvedor\".",
+        "date": "2026-11-11T12:01:39.178Z",
+        "internal": false,
+        "event": true
+      },
+      {
+        "sender": "Sistema",
+        "author": "ADMINISTRADOR DO SISTEMA",
+        "text": "Status alterado de \"Novo\" para \"Atendimento atribuído\".",
+        "date": "2026-11-11T12:02:40.972Z",
+        "internal": false,
+        "event": true
+      },
+      {
+        "sender": "Sistema",
+        "author": "ADMINISTRADOR DO SISTEMA",
+        "text": "Chamado assumido por ADMINISTRADOR DO SISTEMA.",
+        "date": "2026-11-11T12:02:40.972Z",
+        "internal": false,
+        "event": true
+      },
+      {
+        "sender": "Técnico",
+        "author": "ADMINISTRADOR DO SISTEMA",
+        "text": "[SOLUÇÃO APLICADA]: corrigido.\ntestar novamente.",
+        "date": "2026-11-11T12:18:13.920Z",
+        "internal": false
+      },
+      {
+        "sender": "Sistema",
+        "author": "ADMINISTRADOR DO SISTEMA",
+        "text": "Status alterado de \"Atendimento atribuído\" para \"Resolvido\".",
+        "date": "2026-11-11T12:18:13.920Z",
+        "internal": false,
+        "event": true
+      }
+    ],
+    "concluido_em": "2026-11-11T12:18:13.920Z",
+    "created_at": "2026-11-11T12:01:39.178Z",
+    "updated_at": "2026-11-11T12:18:13.920Z",
+    "ticket_type": "Requisição",
+    "fila": "Desenvolvedor"
+  },
+  {
+    "id": "13",
+    "protocol": "REQ-0003",
+    "client_name": "PAULO DE LIMA PEREIRA",
+    "client_email": "paulodelima21@gmail.com",
+    "client_phone": "(62) 98626-6049",
+    "client_cpf": "04023326100",
+    "service_type": "Falhas/Bugs/Correções",
+    "priority": "Baixa",
+    "title": "Corrigir bug tela atualizar",
+    "description": "Bom dia!\nGentileza corrigir quando clica na tela de login fica tremendo.",
+    "status": "Resolvido",
+    "admin_notes": "",
+    "tecnico_responsavel": "ADMINISTRADOR DO SISTEMA",
+    "assumido_em": "2026-11-11T12:02:39.486Z",
+    "canal_atendimento": "Central GLPI",
+    "sla": "5 Dias Úteis",
+    "asset": "Nenhum",
+    "time_spent": 0,
+    "solution": "corrigido.",
+    "timeline": [
+      {
+        "sender": "Solicitante",
+        "author": "PAULO DE LIMA PEREIRA",
+        "text": "Chamado aberto via GLPI Service Desk (requisição). Aguardando atribuição técnica.",
+        "date": "2026-11-11T12:00:12.172Z",
+        "internal": false
+      },
+      {
+        "sender": "Sistema",
+        "author": "Sistema",
+        "text": "Chamado encaminhado para a fila \"Desenvolvedor\".",
+        "date": "2026-11-11T12:00:12.172Z",
+        "internal": false,
+        "event": true
+      },
+      {
+        "sender": "Sistema",
+        "author": "ADMINISTRADOR DO SISTEMA",
+        "text": "Status alterado de \"Novo\" para \"Atendimento atribuído\".",
+        "date": "2026-11-11T12:02:39.486Z",
+        "internal": false,
+        "event": true
+      },
+      {
+        "sender": "Sistema",
+        "author": "ADMINISTRADOR DO SISTEMA",
+        "text": "Chamado assumido por ADMINISTRADOR DO SISTEMA.",
+        "date": "2026-11-11T12:02:39.486Z",
+        "internal": false,
+        "event": true
+      },
+      {
+        "sender": "Técnico",
+        "author": "ADMINISTRADOR DO SISTEMA",
+        "text": "[SOLUÇÃO APLICADA]: corrigido.",
+        "date": "2026-11-11T12:19:46.638Z",
+        "internal": false
+      },
+      {
+        "sender": "Sistema",
+        "author": "ADMINISTRADOR DO SISTEMA",
+        "text": "Status alterado de \"Atendimento atribuído\" para \"Resolvido\".",
+        "date": "2026-11-11T12:19:46.638Z",
+        "internal": false,
+        "event": true
+      }
+    ],
+    "concluido_em": "2026-11-11T12:19:46.638Z",
+    "created_at": "2026-11-11T12:00:12.172Z",
+    "updated_at": "2026-11-11T12:19:46.638Z",
+    "ticket_type": "Requisição",
+    "fila": "Desenvolvedor"
+  },
+  {
     "id": "12",
-    "protocol": "OS-0002",
+    "protocol": "REQ-0002",
     "client_name": "PAULO DE LIMA PEREIRA",
     "client_email": "paulodelima21@gmail.com",
     "client_phone": "(62) 98626-6049",
@@ -96,7 +401,7 @@
   },
   {
     "id": "11",
-    "protocol": "OS-0001",
+    "protocol": "REQ-0001",
     "client_name": "PAULO DE LIMA PEREIRA",
     "client_email": "paulodelima21@gmail.com",
     "client_phone": "(62) 98626-6049",
