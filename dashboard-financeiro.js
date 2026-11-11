@@ -228,8 +228,8 @@
     const efetiva = (l) => (l.realizado ? (l.data < hojeStr ? l.data : hojeStr) : (l.data < hojeStr ? hojeStr : l.data));
     const movimentos = caixa.map((l) => ({ data: efetiva(l), delta: l.tipo === 'in' ? l.valor : -l.valor, realizado: l.realizado }));
     const saldoAtual = arred(saldoInicial + movimentos.filter((m) => m.realizado).reduce((s, m) => s + m.delta, 0));
-    // Quanto ainda dá para gastar: saldo realizado menos as despesas previstas (pendentes) do período — receitas a receber ainda não entram
-    const disponivelGastar = arred(saldoAtual - despesas.previsto);
+    // Disponível para gastar = Receitas − Despesas do período (totais: realizado + previsto) — quanto do dinheiro do mês ainda pode ser gasto
+    const disponivelGastar = arred(receitas.total - despesas.total);
     const saldoRealEm = (ds) => arred(saldoInicial + movimentos.filter((m) => m.realizado && m.data <= ds).reduce((s, m) => s + m.delta, 0));
     const saldoProjetadoEm = (ds) => (ds <= hojeStr
       ? saldoRealEm(ds)
@@ -746,12 +746,12 @@
         ]
       }) +
       tileKpi({
-        rotulo: 'Disponível p/ gastar', tom: 'fd-ic-neutro', icone: ICONES.carteira, ir: {}, dica: 'Saldo em contas menos as despesas previstas não pagas — quanto ainda dá para gastar',
+        rotulo: 'Disponível p/ gastar', tom: 'fd-ic-neutro', icone: ICONES.carteira, ir: {}, dica: 'Receitas menos despesas do período — quanto do dinheiro ainda pode ser gasto',
         classe: c.disponivelGastar < 0 ? 'fd-tile-out' : 'fd-tile-in',
         valorHtml: valorTile(c.disponivelGastar),
         linhas: [
-          'Comprometido: ' + dinheiro(t.despesas.previsto) + ' a pagar',
-          'Saldo projetado: ' + dinheiro(c.saldoProjetadoFim)
+          'Receitas ' + dinheiro(t.receitas.total) + ' − Despesas ' + dinheiro(t.despesas.total),
+          'Realizado ' + dinheiro(t.resultadoRealizado) + ' · Previsto ' + dinheiro(t.resultadoPrevisto)
         ]
       }) +
       tileKpi({
