@@ -1662,44 +1662,44 @@ html[data-bg="vidro"] .l-glass{opacity:1}
 
         /* Técnicos & Filas: filas em coluna estreita à esquerda e técnicos à direita (telas largas); cartões e janelas compactos */
         .teams-layout { display: grid; gap: 1.1rem; align-items: start; }
-        .teams-col { display: grid; gap: .55rem; align-content: start; min-width: 0; }
+        .teams-col { display: grid; gap: .8rem; align-content: start; min-width: 0; }
         @container (min-width: 70rem) {
-            .teams-layout { grid-template-columns: 23rem minmax(0, 1fr); }
+            .teams-layout { grid-template-columns: 25rem minmax(0, 1fr); }
             .teams-col .team-grid { grid-template-columns: minmax(0, 1fr); }
         }
         .team-h { font-size: .95rem; }
         .team-h small { font-size: .8rem; }
-        .team-grid { gap: .7rem; grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr)); }
-        .qcard { gap: .55rem; padding: .85rem 1rem; border-radius: 1.05rem; }
-        .qc-head h4 { font-size: .95rem; }
-        .qc-head p { margin-top: .15rem; font-size: .78rem; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .qc-stats { gap: .4rem; }
-        .qc-stats div { padding: .3rem .4rem; border-radius: .6rem; }
-        .qc-stats b { font-size: 1rem; }
-        .qc-list { gap: .3rem; }
+        .team-grid { gap: .8rem; grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr)); }
+        .qcard { gap: .7rem; padding: 1rem 1.15rem; border-radius: 1.1rem; }
+        .qc-head h4 { font-size: .98rem; }
+        .qc-head p { margin-top: .2rem; font-size: .8rem; line-height: 1.45; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .qc-stats { gap: .5rem; }
+        .qc-stats div { padding: .45rem .55rem; border-radius: .7rem; }
+        .qc-stats b { font-size: 1.05rem; }
+        .qc-list { gap: .35rem; }
         .qc-list .lbl2 { font-size: max(.6875rem, 11px); }
-        .chipx { padding: .06rem .55rem; }
-        .qc-acts { gap: .4rem; padding-top: .6rem; }
-        .teams-layout .panel { padding: .85rem 1rem; }
-        .teams-layout .panel-head h3 { font-size: .95rem; }
-        .teams-layout .panel-head p { font-size: .78rem; }
-        .teams-layout .tbl th { padding: .6rem .8rem; }
-        .teams-layout .tbl td { padding: .55rem .8rem; }
+        .chipx { padding: .08rem .6rem; }
+        .qc-acts { gap: .45rem; padding-top: .7rem; }
+        .teams-layout .panel { padding: 1rem 1.2rem; }
+        .teams-layout .panel-head h3 { font-size: .98rem; }
+        .teams-layout .panel-head p { font-size: .8rem; }
+        .teams-layout .tbl th { padding: .7rem .9rem; }
+        .teams-layout .tbl td { padding: .65rem .9rem; }
 
-        .modal-sm { max-width: 36rem; }
-        .modal-sm .modal-head { padding: .7rem 1.1rem; }
-        .modal-sm .mh-ico { width: 2rem; height: 2rem; border-radius: .65rem; font-size: .9rem; }
-        .modal-sm .mh-title { font-size: 1rem; }
-        .modal-sm .mh-sub { font-size: .75rem; }
-        .modal-sm .modal-body { padding: 1rem 1.1rem 1.1rem; gap: .7rem; }
-        .modal-sm .field label { margin-bottom: .3rem; font-size: .78rem; }
-        .modal-sm .input { height: var(--ctl-sm); padding: 0 .8rem; border-radius: .7rem; font-size: .84rem; }
-        .modal-sm .form-grid { gap: .7rem; }
-        .modal-sm .modal-foot { padding-top: .7rem; }
-        .chk-grid { grid-template-columns: repeat(auto-fill, minmax(12.5rem, 1fr)); gap: .35rem; max-height: 10.5rem; }
-        .chk { gap: .5rem; padding: .38rem .6rem; }
+        .modal-sm { max-width: 42rem; }
+        .modal-sm .modal-head { padding: .85rem 1.3rem; }
+        .modal-sm .mh-ico { width: 2.2rem; height: 2.2rem; border-radius: .7rem; font-size: .95rem; }
+        .modal-sm .mh-title { font-size: 1.05rem; }
+        .modal-sm .mh-sub { font-size: .78rem; }
+        .modal-sm .modal-body { padding: 1.1rem 1.3rem 1.2rem; gap: .85rem; }
+        .modal-sm .field label { margin-bottom: .35rem; font-size: .82rem; }
+        .modal-sm .input { height: var(--ctl); padding: 0 .9rem; border-radius: .75rem; font-size: .875rem; }
+        .modal-sm .form-grid { gap: .9rem; }
+        .modal-sm .modal-foot { padding-top: .75rem; }
+        .chk-grid { grid-template-columns: repeat(auto-fill, minmax(13.5rem, 1fr)); gap: .5rem; max-height: 11.5rem; }
+        .chk { gap: .55rem; padding: .5rem .75rem; }
         /* Janelas de fila e técnico: Cancelar/Salvar ficam fixos no rodapé, como na janela de abertura de chamado */
-        .modal-sm .modal-foot { position: sticky; bottom: -1.1rem; z-index: 3; margin: .2rem -1.1rem -1.1rem; padding: .7rem 1.1rem; background: rgba(var(--dk), .94); border-top: 1px solid var(--line); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+        .modal-sm .modal-foot { position: sticky; bottom: -1.2rem; z-index: 3; margin: .2rem -1.3rem -1.2rem; padding: .75rem 1.3rem; background: rgba(var(--dk), .94); border-top: 1px solid var(--line); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
         @media (max-width: 767px) {
             .modal-sm .input { height: var(--ctl); }
             /* Na barra inferior os nomes do menu podem quebrar em duas linhas */
