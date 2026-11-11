@@ -1702,6 +1702,10 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         .msec { display: flex; align-items: center; gap: .55rem; font-size: .88rem; font-weight: 800; color: var(--white); }
         .msec i { flex: none; width: 1.15rem; text-align: center; font-size: .85rem; color: var(--t-amber); }
         .field + .msec, .form-grid + .msec { margin-top: .2rem; padding-top: .85rem; border-top: 1px solid var(--line-soft); }
+        /* Categorias da fila: grade mais baixa e cartões mais finos */
+        #queue-cats { grid-template-columns: repeat(auto-fill, minmax(10.5rem, 1fr)); gap: .4rem; max-height: 8.5rem; }
+        #queue-cats .chk { gap: .45rem; padding: .32rem .6rem; font-size: .78rem; }
+        #queue-cats .chk input { width: .9rem; height: .9rem; }
         /* Janelas de fila e técnico: Cancelar/Salvar ficam fixos no rodapé, como na janela de abertura de chamado */
         .modal-sm .modal-foot { position: sticky; bottom: -1.2rem; z-index: 3; margin: .2rem -1.3rem -1.2rem; padding: .75rem 1.3rem; background: rgba(var(--dk), .94); border-top: 1px solid var(--line); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
         @media (max-width: 767px) {
