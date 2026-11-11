@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=optional" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=optional" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
     <script>
     /* Aparência e fundo antes do primeiro desenho (evita piscar entre claro e escuro). Mesmas chaves do login (nexus-modo, nexus-fundo);
@@ -52,17 +52,17 @@
 
             /* Cor de destaque: a paleta escolhida (a mesma do login e do app, chave nexus:cores) define --h, --h2, --sat,
                --acc-rgb, --dk-dark e --on-brand (script de tema); o resto deriva delas. Estes valores são o azul padrão. */
-            --h: 224; --h2: 260; --sat: 100%;
-            --brand: hsl(var(--h) var(--sat) 66%);
-            --brand-d: hsl(var(--h) calc(var(--sat) * .66) 51%);
-            --accent: hsl(var(--h) var(--sat) 78%);
-            --glow-a: hsl(var(--h) calc(var(--sat) * .77) 57%);
-            --glow-b: hsl(var(--h2) calc(var(--sat) * .6) 47%);
-            --base: hsl(var(--h) calc(var(--sat) * .68) 7%);
-            --on-brand: #fff;
-            --acc-rgb: 79, 124, 255;
+            --h: 174; --h2: 190; --sat: 62%;
+            --brand: hsl(var(--h) var(--sat) 55%);
+            --brand-d: hsl(var(--h) calc(var(--sat) * .78) 36%);
+            --accent: hsl(var(--h) var(--sat) 72%);
+            --glow-a: hsl(var(--h) calc(var(--sat) * .8) 50%);
+            --glow-b: hsl(var(--h2) calc(var(--sat) * .7) 40%);
+            --base: hsl(var(--h) calc(var(--sat) * .5) 6%);
+            --on-brand: #04211c;
+            --acc-rgb: 60, 200, 175;
             --acc-l: var(--accent);
-            --dk-dark: 9, 13, 32;
+            --dk-dark: 13, 23, 22;
             --dk: var(--dk-dark);     /* superfícies escuras translúcidas (no modo claro viram brancas) */
             --lt: 255, 255, 255;      /* realces, bordas e preenchimentos claros (no modo claro viram azul-marinho) */
             --ln: rgba(var(--lt), .055);
@@ -95,9 +95,9 @@
             --t-amber: #fcd34d; --t-green: #6ee7b7; --t-rose: #fda4af; --t-blue: #93c5fd;
             --t-sky: #7dd3fc; --t-slate: #cbd5e1; --t-purple: #d8b4fe; --t-orange: #fdba74;
 
-            --font-body: "Plus Jakarta Sans", "Segoe UI", system-ui, sans-serif;
-            --font-display: "Fraunces", Georgia, "Times New Roman", serif;
-            --font-mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+            --font-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+            --font-display: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+            --font-mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
             --sans: var(--font-body);
             --serif: var(--font-display);
 
@@ -864,6 +864,7 @@ html[data-bg="imagem"] .l-img{opacity:1}
 .l-lin{background:linear-gradient(135deg,var(--glow-a),var(--glow-b) 55%,var(--base))}
 .l-lines{background-image:repeating-linear-gradient(115deg,var(--ln) 0 1px,transparent 1px 2.2rem);-webkit-mask-image:radial-gradient(75% 75% at 50% 45%,#000,transparent);mask-image:radial-gradient(75% 75% at 50% 45%,#000,transparent)}
 .l-img{background-size:cover;background-position:center;filter:brightness(.55) saturate(1.1)}
+.l-grain{opacity:.4;mix-blend-mode:overlay;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n' x='0' y='0'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>")}
 html[data-bg="corporativo"] .l-corp{opacity:1}
 html[data-bg="financas"] .l-glow,html[data-bg="financas"] .l-fin{opacity:1}
 html[data-bg="cidade"] .l-glow,html[data-bg="cidade"] .l-city{opacity:1}
@@ -898,11 +899,11 @@ html[data-bg="vidro"] .l-glass{opacity:1}
 /* ---------- personalizar ---------- */
 .cfg{position:fixed;top:1rem;right:1.25rem;top:max(1rem,env(safe-area-inset-top));right:max(1.25rem,env(safe-area-inset-right));z-index:5}
 .cfg-btn{display:inline-flex;align-items:center;gap:.5rem;height:2.75rem;padding:0 1rem;border-radius:99rem;cursor:pointer;
-  font:600 0.9125rem var(--sans);color:var(--text);background:rgba(10,14,34,.55);border:1px solid var(--card-line);
+  font:600 0.9125rem var(--sans);color:var(--text);background:rgba(8,20,18,.55);border:1px solid var(--card-line);
   backdrop-filter:blur(1rem);-webkit-backdrop-filter:blur(1rem);transition:background .2s,border-color .2s}
 .cfg-btn:hover,.cfg-btn[aria-expanded="true"]{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.25)}
 .cfg-pop{position:absolute;right:0;top:3.2rem;width:min(22rem,calc(100vw - 2rem));padding:1.2rem;border-radius:1rem;
-  background:rgba(10,14,34,.92);border:1px solid var(--card-line);box-shadow:0 1.5rem 3.5rem rgba(0,0,0,.55);
+  background:rgba(8,20,18,.92);border:1px solid var(--card-line);box-shadow:0 1.5rem 3.5rem rgba(0,0,0,.55);
   backdrop-filter:blur(1.5rem);-webkit-backdrop-filter:blur(1.5rem)}
 .grp+.grp{margin-top:1.1rem}
 .grp>span{display:block;font-size:0.7969rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:.6rem}
@@ -976,13 +977,30 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         .toast.warning { --t: var(--amber-rgb); --tl: var(--t-amber); }
         .slab::after { background: linear-gradient(135deg, rgba(255, 255, 255, .7), rgba(255, 255, 255, .06) 28%, rgba(255, 255, 255, .04) 68%, rgba(var(--acc-rgb), .6)); }
 
-        /* ---------- Tela de acesso: mesmo cartão de vidro do login do Nexus ---------- */
-        .lg-main { width: 100%; max-width: 34rem; margin: auto; display: flex; flex-direction: column; align-items: center; animation: lgFade .35s ease both; }
-        .lg-logo { display: flex; align-items: center; gap: .9rem; margin-bottom: 1.8rem; font-weight: 800; font-size: 1.5rem; letter-spacing: -.01em; color: var(--white); }
-        .lg-logo small { font-weight: 500; font-size: 1.1rem; color: var(--muted); }
-        .lg-logo .mark { width: 3.1rem; height: 3.1rem; border-radius: 1rem; font-size: 1.75rem; }
-        .lg-card { width: 100%; padding: 2.7rem 2.5rem 1.9rem; border-radius: 1.75rem; background: var(--glass-fill); overflow: hidden; }
-        .lg-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--brand), rgba(var(--amber-rgb), .9) 55%, transparent); }
+        /* ---------- Tela de acesso: painel de marca + cartão de vidro (estilo Central de Serviços) ---------- */
+        .lg-main { width: 100%; max-width: 72rem; min-height: calc(100vh - 3rem); margin: auto; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.6rem; padding: 2rem 1.5rem; animation: lgFade .35s ease both; }
+        .lg-split { width: 100%; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 2rem; align-items: stretch; }
+        .lg-brandpane { position: relative; overflow: hidden; border-radius: 1.75rem; padding: 2.6rem 2.4rem; display: flex; flex-direction: column; justify-content: space-between; gap: 2rem;
+            color: #e8f5f2;
+            background: linear-gradient(160deg, rgba(8, 54, 48, .72), rgba(15, 92, 85, .5) 55%, rgba(31, 157, 132, .34));
+            -webkit-backdrop-filter: blur(24px) saturate(160%); backdrop-filter: blur(24px) saturate(160%);
+            border: 1px solid rgba(255, 255, 255, .16); box-shadow: inset -1px 0 0 rgba(255,255,255,.08), 0 30px 60px -30px rgba(0,0,0,.5); }
+        .lg-brandpane::after { content: ""; position: absolute; right: -9rem; bottom: -9rem; width: 26rem; height: 26rem; border-radius: 50%; border: 1px solid rgba(255,255,255,.14); box-shadow: 0 0 0 4rem rgba(255,255,255,.03), 0 0 0 8rem rgba(255,255,255,.02); pointer-events: none; }
+        .lg-brandcopy h1 { font-family: var(--font-display); font-weight: 600; font-size: clamp(1.9rem, 2.6vw, 2.6rem); line-height: 1.15; letter-spacing: -.02em; margin: 0 0 .9rem; max-width: 15ch; color: #fff; }
+        .lg-brandcopy p { margin: 0; max-width: 44ch; font-size: 1.05rem; line-height: 1.6; opacity: .85; color: #dff2ee; }
+        .lg-status { position: relative; z-index: 1; border: 1px solid rgba(255,255,255,.18); border-radius: .9rem; background: rgba(255,255,255,.07); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); padding: 1rem 1.2rem; max-width: 26rem; }
+        .lg-status h3 { margin: 0 0 .5rem; font-size: .78rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; opacity: .8; color: #e8f5f2; }
+        .lg-status .st-row { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .5rem 0; font-size: .9rem; color: #e8f5f2; border-top: 1px solid rgba(255,255,255,.1); }
+        .lg-status .st-row:first-of-type { border-top: 0; }
+        .lg-status .dot { display: inline-block; width: .5rem; height: .5rem; border-radius: 50%; background: #58e0b0; margin-right: .5rem; }
+        .lg-logo { display: flex; align-items: center; gap: .9rem; margin-bottom: 1.8rem; font-weight: 700; font-size: 1.4rem; letter-spacing: -.01em; color: var(--white); }
+        .lg-brandpane .lg-logo { margin-bottom: 0; color: #fff; }
+        .lg-logo small { font-weight: 500; font-size: 1.05rem; color: var(--muted); }
+        .lg-brandpane .lg-logo small { color: #cdeae4; }
+        .lg-logo .mark { width: 3rem; height: 3rem; border-radius: .9rem; font-size: 1.7rem; }
+        .lg-brandpane .lg-logo .mark { background: #fff; }
+        .lg-card { width: 100%; align-self: center; padding: 2.7rem 2.5rem 1.9rem; border-radius: 1.75rem; background: var(--glass-fill); overflow: hidden; }
+        .lg-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--brand), var(--accent) 55%, transparent); }
         .lg-eyebrow { display: inline-flex; align-items: center; gap: .55rem; margin-bottom: .8rem; font-size: .72rem; font-weight: 800; letter-spacing: .24em; text-transform: uppercase; color: var(--acc-l); }
         .lg-eyebrow::before, .lg-eyebrow::after { content: ""; width: 1.7rem; height: 1px; background: currentColor; opacity: .45; }
         .lg-card h2 { font-family: var(--font-display); font-weight: 600; font-size: 2.15rem; line-height: 1.2; letter-spacing: -.015em; color: var(--white); }
@@ -1005,6 +1023,16 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         .lg-foot { margin-top: 1.7rem; display: grid; gap: .4rem; justify-items: center; font-size: .85rem; color: var(--muted); text-align: center; }
         .lg-foot i { margin-right: .35rem; color: var(--t-green); }
         .lg-foot .mono { font-size: .8rem; color: var(--faint); }
+        @media (max-width: 60rem) {
+            .lg-split { grid-template-columns: 1fr; }
+            .lg-brandpane { padding: 1.8rem 1.6rem; gap: 1.4rem; }
+            .lg-brandcopy p, .lg-status { display: none; }
+            .lg-brandpane { justify-content: flex-start; }
+        }
+        @media (max-width: 40rem) {
+            .lg-main { padding: 1rem .9rem; gap: 1rem; }
+            .lg-card { padding: 2rem 1.5rem 1.5rem; border-radius: 1.4rem; }
+        }
 
         /* Texto que fica direto sobre o fundo (sem placa de vidro): halo na cor da superfície (escura no escuro, branca no claro)
            garante o contraste sobre qualquer um dos 15 fundos e das 10 paletas */
@@ -1045,37 +1073,37 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         /* ---------- Modo claro: mesmas superfícies de vidro, tinta escura ---------- */
         :root[data-mode="light"] {
             color-scheme: light;
-            --lt: 15, 23, 60;
+            --lt: 17, 32, 31;
             --dk: 255, 255, 255;
-            --base: color-mix(in srgb, var(--brand) 7%, #f6f8fd);
+            --base: color-mix(in srgb, var(--brand) 6%, #f3f6f6);
             --accent: color-mix(in srgb, var(--brand-d) 82%, #000);
-            --ln: rgba(20, 30, 80, .07);
-            --ln2: rgba(20, 30, 80, .14);
-            --ink: #1b2440; --ink-2: #333e63; --muted: #4a5675; --faint: #5b6786; --white: #0e1530;
+            --ln: rgba(15, 60, 55, .07);
+            --ln2: rgba(15, 60, 55, .14);
+            --ink: #11201f; --ink-2: #425650; --muted: #5b6e6b; --faint: #6d7f7c; --white: #0b2b27;
             --t-amber: #92400e; --t-green: #047857; --t-rose: #be123c; --t-blue: #1d4ed8;
             --t-sky: #0369a1; --t-slate: #475569; --t-purple: #7e22ce; --t-orange: #c2410c;
             --glass-shadow:
-                0 1px 2px rgba(20, 30, 80, .08),
-                0 20px 44px -22px rgba(30, 45, 110, .3),
+                0 1px 2px rgba(15, 60, 55, .08),
+                0 20px 44px -22px rgba(12, 70, 62, .3),
                 inset 0 1px 0 rgba(255, 255, 255, .9),
-                inset 0 -1px 0 rgba(20, 30, 80, .04);
+                inset 0 -1px 0 rgba(15, 60, 55, .04);
         }
-        :root[data-mode="light"] .input, :root[data-mode="light"] .select, :root[data-mode="light"] .textarea { box-shadow: inset 0 1px 2px rgba(20, 30, 80, .1); }
-        :root[data-mode="light"] .input:focus, :root[data-mode="light"] .select:focus, :root[data-mode="light"] .textarea:focus { background: #fff; box-shadow: 0 0 0 3px rgba(var(--acc-rgb), .22), inset 0 1px 2px rgba(20, 30, 80, .08); }
+        :root[data-mode="light"] .input, :root[data-mode="light"] .select, :root[data-mode="light"] .textarea { box-shadow: inset 0 1px 2px rgba(15, 60, 55, .1); }
+        :root[data-mode="light"] .input:focus, :root[data-mode="light"] .select:focus, :root[data-mode="light"] .textarea:focus { background: #fff; box-shadow: 0 0 0 3px rgba(var(--acc-rgb), .22), inset 0 1px 2px rgba(15, 60, 55, .08); }
         :root[data-mode="light"] .input[readonly] { box-shadow: none; }
         :root[data-mode="light"] .select { background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1.5l5 5 5-5' fill='none' stroke='%23566280' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/></svg>"); }
-        :root[data-mode="light"] .select option { background: #fff; color: #1b2440; }
+        :root[data-mode="light"] .select option { background: #fff; color: #11201f; }
         :root[data-mode="light"] .kpi-value { text-shadow: none; }
-        :root[data-mode="light"] .topbar { box-shadow: 0 10px 30px -18px rgba(30, 45, 110, .35), inset 0 1px 0 #fff; }
-        :root[data-mode="light"] .sidebar { box-shadow: 12px 0 40px -28px rgba(30, 45, 110, .35), inset -1px 0 0 rgba(255, 255, 255, .6); }
-        :root[data-mode="light"] .menu-pop { box-shadow: 0 24px 50px -16px rgba(30, 45, 110, .4), inset 0 1px 0 #fff; }
-        :root[data-mode="light"] .toast { box-shadow: 0 18px 40px -16px rgba(30, 45, 110, .4), inset 0 1px 0 #fff; }
-        :root[data-mode="light"] .slab { box-shadow: 0 2px 4px rgba(20, 30, 80, .08), 0 30px 70px -20px rgba(30, 45, 110, .35), inset 0 1px 0 #fff; }
-        :root[data-mode="light"] .svc:hover { box-shadow: 0 26px 50px -22px rgba(30, 45, 110, .35), 0 0 40px -14px rgba(var(--k), .4), inset 0 1px 0 #fff; }
-        :root[data-mode="light"] .overlay { background: radial-gradient(80% 70% at 50% 40%, rgba(30, 40, 90, .28), rgba(20, 28, 70, .5)); }
-        :root[data-mode="light"] .scrim { background: rgba(30, 40, 90, .35); }
+        :root[data-mode="light"] .topbar { box-shadow: 0 10px 30px -18px rgba(12, 70, 62, .35), inset 0 1px 0 #fff; }
+        :root[data-mode="light"] .sidebar { box-shadow: 12px 0 40px -28px rgba(12, 70, 62, .35), inset -1px 0 0 rgba(255, 255, 255, .6); }
+        :root[data-mode="light"] .menu-pop { box-shadow: 0 24px 50px -16px rgba(12, 70, 62, .4), inset 0 1px 0 #fff; }
+        :root[data-mode="light"] .toast { box-shadow: 0 18px 40px -16px rgba(12, 70, 62, .4), inset 0 1px 0 #fff; }
+        :root[data-mode="light"] .slab { box-shadow: 0 2px 4px rgba(15, 60, 55, .08), 0 30px 70px -20px rgba(12, 70, 62, .35), inset 0 1px 0 #fff; }
+        :root[data-mode="light"] .svc:hover { box-shadow: 0 26px 50px -22px rgba(12, 70, 62, .35), 0 0 40px -14px rgba(var(--k), .4), inset 0 1px 0 #fff; }
+        :root[data-mode="light"] .overlay { background: radial-gradient(80% 70% at 50% 40%, rgba(15, 60, 55, .28), rgba(15, 55, 50, .5)); }
+        :root[data-mode="light"] .scrim { background: rgba(15, 60, 55, .35); }
         :root[data-mode="light"] .nav-item:hover, :root[data-mode="light"] .btn-ghost:hover { color: var(--white); }
-        :root[data-mode="light"] ::-webkit-scrollbar-thumb { background: rgba(20, 30, 80, .28); background-clip: padding-box; }
+        :root[data-mode="light"] ::-webkit-scrollbar-thumb { background: rgba(15, 60, 55, .28); background-clip: padding-box; }
 
         /* =====================================================================
            Interface do GLPI: menu no topo, abertura guiada, gaveta de atendimento
@@ -1246,7 +1274,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             #modal-tech-workspace.overlay { animation: none; justify-content: flex-end; align-items: stretch; padding: 0; pointer-events: none; background: linear-gradient(90deg, rgba(var(--dk), .08), rgba(var(--dk), .42)); -webkit-backdrop-filter: none; backdrop-filter: none; }
             #modal-tech-workspace .modal-ws { pointer-events: auto; max-width: min(66rem, 78vw); height: 100vh; height: 100dvh; max-height: none; border-radius: 1.75rem 0 0 1.75rem; animation: drawerin .35s cubic-bezier(.2, .7, .2, 1) both; }
         }
-        :root[data-mode="light"] #modal-tech-workspace.overlay { background: linear-gradient(90deg, rgba(30, 40, 90, .04), rgba(30, 40, 90, .3)); }
+        :root[data-mode="light"] #modal-tech-workspace.overlay { background: linear-gradient(90deg, rgba(15, 60, 55, .04), rgba(15, 60, 55, .3)); }
         .kpi[onclick] { cursor: pointer; transition: transform .2s ease, border-color .2s ease; }
         .kpi[onclick]:hover { transform: translateY(-3px); border-color: rgba(var(--k), .6); }
         .kpi[onclick]:focus-visible { outline: 2px solid rgba(var(--k), .9); outline-offset: 2px; }
@@ -1673,6 +1701,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
       <path class="w3" d="M0 720C360 660 640 780 960 720S1320 690 1440 710V800H0Z"/>
     </svg>
   </div>
+  <div class="l-grain"></div>
 </div>
 
 <div class="cfg">
@@ -1732,7 +1761,20 @@ html[data-bg="vidro"] .l-glass{opacity:1}
     <!-- 1. TELA DE ACESSO: mesmo cartão de vidro do login do Nexus Financeiro (e-mail e senha do Sistema Financeiro) -->
     <div id="view-login" class="login-wrap">
         <main class="lg-main">
-            <div class="lg-logo"><div class="mark" aria-hidden="true"><svg class="mark-ico"><use href="#glpi-mark"/></svg></div><div>GLPI <small>Chamados &amp; Suporte</small></div></div>
+            <div class="lg-split">
+                <aside class="lg-brandpane">
+                    <div class="lg-logo"><div class="mark" aria-hidden="true"><svg class="mark-ico"><use href="#glpi-mark"/></svg></div><div>GLPI <small>Chamados &amp; Suporte</small></div></div>
+                    <div class="lg-brandcopy">
+                        <h1>Suporte ágil, com prazos que você acompanha.</h1>
+                        <p>Abra requisições, reporte incidentes e veja cada atualização do atendimento em um só lugar.</p>
+                    </div>
+                    <div class="lg-status" aria-label="Status dos serviços">
+                        <h3>Status dos serviços</h3>
+                        <div class="st-row"><span><i class="dot"></i>Portal de atendimento</span><span>Operacional</span></div>
+                        <div class="st-row"><span><i class="dot"></i>Autenticação</span><span>Operacional</span></div>
+                        <div class="st-row"><span><i class="dot"></i>Chamados GLPI</span><span>Operacional</span></div>
+                    </div>
+                </aside>
 
             <section class="glass lg-card" aria-label="Acesso ao GLPI">
                 <span class="lg-eyebrow">Service Desk Enterprise</span>
@@ -1774,6 +1816,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                     <a href="/login.html"><i class="fa-solid fa-arrow-left"></i> Voltar ao Sistema Financeiro</a>
                 </div>
             </section>
+            </div>
 
             <footer class="lg-foot">
                 <span><i class="fa-solid fa-shield-halved"></i> Conexão protegida e criptografada (SSL 256-bit)</span>
@@ -2904,7 +2947,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         var PALETAS = [
             { id: 'multicolor', nome: 'Multicolor', h: [265, 335, 190, 45] },
             { id: 'aurora', nome: 'Aurora', h: [250, 320, 190, 280] },
-            { id: 'oceano', nome: 'Oceano', h: [212, 188, 255, 165] },
+            { id: 'oceano', nome: 'Verde Água', h: [174, 200, 195, 165] },
             { id: 'por-do-sol', nome: 'Pôr do sol', h: [18, 340, 45, 285] },
             { id: 'esmeralda', nome: 'Esmeralda', h: [155, 185, 85, 205] },
             { id: 'rose', nome: 'Rosé', h: [335, 285, 15, 255] },
@@ -2914,7 +2957,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             { id: 'neon', nome: 'Neon', h: [85, 150, 195, 50] }
         ];
         var PADRAO = 'oceano';        /* azul padrão, igual ao do login */
-        var HUE_UI = { oceano: 224 }; /* tom do azul do desenho (a paleta do app usa 212 no fundo do painel) */
+        var HUE_UI = { oceano: 174 }; /* tom teal do desenho (a paleta do app usa 212 no fundo do painel) */
 
         function hsl2rgb(h, s, l) {
             s /= 100; l /= 100;
@@ -2937,7 +2980,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             return { h: h, s: Math.round(s * 100) };
         }
         function pintar(h0, h2, sat) {
-            var s = Math.max(70, Math.min(100, sat == null ? 100 : sat));
+            var s = Math.max(50, Math.min(100, sat == null ? 62 : sat));
             ST.setProperty('--h', String(h0)); ST.setProperty('--h2', String(h2)); ST.setProperty('--sat', s + '%');
             var br = hsl2rgb(h0, s, 66);
             ST.setProperty('--acc-rgb', br.join(', '));
@@ -2953,7 +2996,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         function guardarCores(v) { lsSet('nexus:cores', JSON.stringify(v)); }
         function escolher(id, semSalvar) {
             var p = PALETAS.filter(function (x) { return x.id === id; })[0] || PALETAS.filter(function (x) { return x.id === PADRAO; })[0];
-            pintar(HUE_UI[p.id] || p.h[0], p.h[2], 100); marcar(p.id);
+            pintar(HUE_UI[p.id] || p.h[0], p.h[2], 62); marcar(p.id);
             if (!semSalvar) guardarCores({ id: p.id });
         }
         function personalizada(hex, semSalvar) {
