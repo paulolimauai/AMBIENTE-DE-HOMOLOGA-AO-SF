@@ -101,6 +101,7 @@ const LOCAL_USERS_BACKUP_PATH = path.join(RUNTIME_DATA_DIR, 'local_users.backup.
 const LOCAL_ORDENS_PATH = path.join(RUNTIME_DATA_DIR, 'local_ordens_servico.json');
 const LOCAL_TECNICOS_PATH = path.join(RUNTIME_DATA_DIR, 'local_tecnicos.json');
 const LOCAL_FILAS_PATH = path.join(RUNTIME_DATA_DIR, 'local_filas.json');
+const LOCAL_SEQ_OS_PATH = path.join(RUNTIME_DATA_DIR, 'local_os_sequencia.json');
 const PENDING_LOGINS_PATH = path.join(RUNTIME_DATA_DIR, 'pending_logins.json');
 const DELETED_ACCOUNTS_PATH = path.join(RUNTIME_DATA_DIR, 'deleted_accounts.json');
 const GOOGLE_OAUTH_STATES = new Map();
@@ -14208,6 +14209,8 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 <script src="/dashboard-financeiro.js?v=20261107-4"></script>
 <link rel="stylesheet" href="/transacoes.css?v=20261108-2" />
 <script src="/transacoes.js?v=20261108-2"></script>
+<link rel="stylesheet" href="/administracao.css?v=20261110-9" />
+<script src="/administracao.js?v=20261110-9"></script>
 <script src="/importacao.js?v=20261107-1"></script>
 </head>
 <body>
@@ -14220,8 +14223,6 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
     var isLight = false;
     document.body.classList.remove('light');
     document.documentElement.classList.remove('light');
-<link rel="stylesheet" href="/administracao.css?v=20261110-9" />
-<script src="/administracao.js?v=20261110-9"></script>
     document.addEventListener('DOMContentLoaded', function() {
       var icon = document.getElementById('authThemeIcon');
       if (icon) {
@@ -15426,6 +15427,12 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         <input id="userAdminPhone" placeholder="(00) 00000-0000" maxlength="15" oninput="maskPhoneInput(this)" style="height:35px; border-radius:9px; font-size:12.5px; padding:0 10px;">
       </div>
 
+      <div class="field" style="margin-bottom:0;">
+        <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Data de nascimento</label>
+        <input id="userAdminBirth" type="date" max="2100-12-31" style="height:35px; border-radius:9px; font-size:12.5px; padding:0 10px; color-scheme:dark;">
+      </div>
+      <div style="margin-bottom:0; align-self:end; font-size:10.5px; line-height:1.35; color:var(--text-dim);">Com e-mail ou CPF, o nascimento confirma a identidade na recuperação de senha.</div>
+
       <div class="field" style="grid-column:1 / -1; margin-bottom:0;">
         <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:flex; justify-content:space-between; align-items:center;">
           <span>E-mail de Acesso *</span>
@@ -15438,12 +15445,6 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Perfil / Nível</label>
         <select id="userAdminRole" onchange="updateUserAdminRoleHint()" style="height:35px; border-radius:9px; font-size:12px; font-weight:700; padding:0 8px;">
           <option value="Usuário">Usuário (Padrão)</option>
-      <div class="field" style="margin-bottom:0;">
-        <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Data de nascimento</label>
-        <input id="userAdminBirth" type="date" max="2100-12-31" style="height:35px; border-radius:9px; font-size:12.5px; padding:0 10px; color-scheme:dark;">
-      </div>
-      <div style="margin-bottom:0; align-self:end; font-size:10.5px; line-height:1.35; color:var(--text-dim);">Com e-mail ou CPF, o nascimento confirma a identidade na recuperação de senha.</div>
-
           <option value="Administrador">Administrador (Nexus + GLPI)</option>
         </select>
       </div>
@@ -15532,6 +15533,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         <input id="userAdminPassword" type="password" placeholder="Mín. 8, com maiúscula e símbolo" style="height:35px; border-radius:9px; font-size:12.5px; padding:0 10px;">
         <button type="button" class="pass-toggle" id="userAdminPasswordToggle" tabindex="-1" aria-label="Mostrar senha"></button>
       </div>
+      <button type="button" class="btn-ghost" onclick="admGerarSenhaNoModal()" title="Preenche o campo com uma senha forte e a mostra para você anotar" style="margin-top:6px; height:30px; padding:0 10px; border-radius:8px; font-size:11px; font-weight:700;">🔑 Gerar senha forte</button>
     </div>
 
     <div class="modal-actions" style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-top:10px;">
@@ -15544,7 +15546,6 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 </div>
 
 <!-- Modal Abrir Nova Ordem de Serviço GLPI 10 (Público / Tela de Login -> Recebido Diretamente pelo Admin) -->
-      <button type="button" class="btn-ghost" onclick="admGerarSenhaNoModal()" title="Preenche o campo com uma senha forte e a mostra para você anotar" style="margin-top:6px; height:30px; padding:0 10px; border-radius:8px; font-size:11px; font-weight:700;">🔑 Gerar senha forte</button>
 <div class="overlay" id="overlayNovaOrdem" onclick="if(event.target===this) closeNovaOrdemModal()">
   <div class="modal" style="max-width:640px; border-radius:28px; border:1.5px solid rgba(255,255,255,0.16); border-top:1.5px solid rgba(255,255,255,0.42); border-left:1.5px solid rgba(255,255,255,0.22); background:linear-gradient(145deg, rgba(30,41,65,0.75) 0%, rgba(15,23,42,0.92) 45%, rgba(8,12,26,0.98) 100%); backdrop-filter:blur(40px) saturate(210%); -webkit-backdrop-filter:blur(40px) saturate(210%); box-shadow:0 35px 90px rgba(0,0,0,0.95), 0 0 55px rgba(245, 158, 11, 0.18), inset 0 1.5px 2px rgba(255,255,255,0.38); position:relative; overflow:hidden;">
     <button class="close-x" type="button" onclick="closeNovaOrdemModal()">✕</button>
@@ -15683,7 +15684,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 
       <div style="background:rgba(255,255,255,0.05); border:1px solid rgba(16, 185, 129, 0.35); border-radius:16px; padding:16px; margin-bottom:20px;">
         <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#94A3B8; letter-spacing:0.06em; display:block; margin-bottom:4px;">Protocolo Oficial GLPI</span>
-        <div style="font-size:22px; font-weight:900; color:#34D399; letter-spacing:0.04em;" id="osSuccessProtocol">OS-000000</div>
+        <div style="font-size:22px; font-weight:900; color:#34D399; letter-spacing:0.04em;" id="osSuccessProtocol">OS-0000</div>
         <div style="display:flex; justify-content:center; gap:8px; margin-top:10px; flex-wrap:wrap;">
           <button type="button" onclick="copyOsProtocol()" style="background:rgba(16, 185, 129, 0.2); border:1px solid rgba(52,211,153,0.4); color:#A7F3D0; font-size:12px; font-weight:700; border-radius:8px; padding:6px 14px; cursor:pointer;">📋 Copiar Protocolo</button>
           <button type="button" onclick="consultarProtocoloRecente()" style="background:rgba(14, 165, 233, 0.2); border:1px solid rgba(56, 189, 248, 0.4); color:#BAE6FD; font-size:12px; font-weight:700; border-radius:8px; padding:6px 14px; cursor:pointer;">🔍 Acompanhar Andamento</button>
@@ -15714,7 +15715,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
       <form id="formConsultarOrdem" onsubmit="executarConsultaOrdens(event)" style="margin-bottom:16px;">
         <div style="display:flex; gap:10px; flex-wrap:wrap;">
           <div style="flex:1; min-width:240px; position:relative;">
-            <input id="osConsultarQuery" required placeholder="Digite seu Protocolo (ex: OS-261106-XXXX) ou E-mail..." style="width:100%; height:44px; border-radius:12px; padding:0 14px; background:var(--input-bg, rgba(0,0,0,0.3)); border:1px solid var(--card-border); color:var(--text); font-size:13px; font-weight:600;">
+            <input id="osConsultarQuery" required placeholder="Digite seu Protocolo (ex: OS-0001) ou E-mail..." style="width:100%; height:44px; border-radius:12px; padding:0 14px; background:var(--input-bg, rgba(0,0,0,0.3)); border:1px solid var(--card-border); color:var(--text); font-size:13px; font-weight:600;">
           </div>
           <button type="submit" id="btnExecutarConsultaOs" style="height:44px; padding:0 18px; border-radius:12px; background:linear-gradient(135deg, #0284C7, #0369A1); color:#FFFFFF; font-size:13px; font-weight:800; border:1px solid rgba(255,255,255,0.2); cursor:pointer; display:flex; align-items:center; gap:6px; box-shadow:0 4px 14px rgba(14, 165, 233, 0.35);">
             🔍 Buscar no GLPI
@@ -24845,18 +24846,6 @@ function applyAdminUserFiltering() {
   });
 }
 
-function pageUsuarios(){
-  const isAdmin = currentUser && currentUser.role === 'Administrador';
-  if(!isAdmin || isViewingOtherUser){
-    return \`<div class="placeholder"><div class="big">🔒</div><h3>Acesso restrito</h3><p>Esta área é exclusiva para administradores.</p></div>\`;
-  }
-
-  // Deduplica e garante lista limpa com dados do SQL Server
-  const userMap = new Map();
-  (registeredUsers || []).forEach(u => {
-    if (u && u.email) userMap.set(u.email.toLowerCase(), u);
-  });
-  const users = Array.from(userMap.values());
 /* ==================== Administração: ligação com o módulo administracao.js (menus no topo + Cadastros & Contas) ====================
    O módulo não conhece variáveis do app: tudo chega por admContexto() e pelas ações abaixo. Se o script não carregar, a tela antiga
    (pageUsuariosLegado) continua funcionando. */
@@ -25056,13 +25045,25 @@ function admTopoPagina(icone, titulo, subtitulo, acoesHtml, kpis){
   return '<div class="page-head admin-page-head"><div><h1>' + txEsc(titulo) + '</h1><p>' + txEsc(subtitulo) + '</p></div><div class="admin-head-actions">' + acoesHtml + '</div></div>';
 }
 
-
+function pageUsuarios(){
   if(!window.NexusAdm || !admEhAdmin()) return pageUsuariosLegado();
   if (typeof updateAdminSidebarBadges === 'function') setTimeout(updateAdminSidebarBadges, 0);
   return admEnvolver('usuarios', NexusAdm.html(admContexto));
 }
 
 function pageUsuariosLegado(){
+  const isAdmin = currentUser && currentUser.role === 'Administrador';
+  if(!isAdmin || isViewingOtherUser){
+    return \`<div class="placeholder"><div class="big">🔒</div><h3>Acesso restrito</h3><p>Esta área é exclusiva para administradores.</p></div>\`;
+  }
+
+  // Deduplica e garante lista limpa com dados do SQL Server
+  const userMap = new Map();
+  (registeredUsers || []).forEach(u => {
+    if (u && u.email) userMap.set(u.email.toLowerCase(), u);
+  });
+  const users = Array.from(userMap.values());
+
   const totalUsers = users.length;
   const adminCount = users.filter(u => u.role === 'Administrador').length;
   const activeCount = users.filter(u => u.active !== false).length;
@@ -29780,6 +29781,7 @@ async function openAdminCreateUserModal(){
     emailInput.placeholder = 'email.usuario@exemplo.com';
   }
   document.getElementById('userAdminName').value = '';
+  const birthNovo = document.getElementById('userAdminBirth'); if(birthNovo) birthNovo.value = '';
   document.getElementById('userAdminRole').value = 'Usuário';
   updateUserAdminRoleHint();
   document.getElementById('userAdminPassword').value = '';
@@ -29792,7 +29794,6 @@ async function openAdminCreateUserModal(){
 // Texto de apoio do campo "Perfil / Nível": o que cada perfil libera no Nexus e no GLPI
 function updateUserAdminRoleHint(){
   const sel = document.getElementById('userAdminRole');
-  const birthNovo = document.getElementById('userAdminBirth'); if(birthNovo) birthNovo.value = '';
   const hint = document.getElementById('userAdminRoleHint');
   if(!sel || !hint) return;
   const adm = sel.value === 'Administrador';
@@ -29856,6 +29857,9 @@ async function openUserAdminModal(email){
     cpfInput.value = rawCpf.length === 11 ? rawCpf : (u.cpf || ''); // CPF sempre só com números
   }
 
+  const birthInput = document.getElementById('userAdminBirth');
+  if(birthInput) birthInput.value = window.NexusAdm ? NexusAdm.nascimentoISO(u.birth_date || u.birthDate) : '';
+
   const phoneInput = document.getElementById('userAdminPhone');
   if(phoneInput) {
     const rawPhone = String(u.phone || '').replace(/\\D/g, '');
@@ -29868,9 +29872,6 @@ async function openUserAdminModal(email){
 
   const activeSelect = document.getElementById('userAdminActive');
   if(activeSelect) activeSelect.value = (u.active !== false) ? 'true' : 'false';
-  const birthInput = document.getElementById('userAdminBirth');
-  if(birthInput) birthInput.value = window.NexusAdm ? NexusAdm.nascimentoISO(u.birth_date || u.birthDate) : '';
-
 
   const passInput = document.getElementById('userAdminPassword');
   if(passInput) {
@@ -29898,6 +29899,9 @@ async function saveUserAdmin(){
   const role = document.getElementById('userAdminRole')?.value || 'Usuário';
   const active = document.getElementById('userAdminActive')?.value !== 'false';
   const newPass = (document.getElementById('userAdminPassword')?.value || '').trim();
+  // Nascimento fica gravado como DD/MM/AAAA (formato dos cadastros e da recuperação de senha); o campo de data entrega AAAA-MM-DD. Vazio nunca apaga.
+  const birthIso = (document.getElementById('userAdminBirth')?.value || '').trim();
+  const birthBr = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(birthIso) ? birthIso.slice(8, 10) + '/' + birthIso.slice(5, 7) + '/' + birthIso.slice(0, 4) : '';
   // Mesma regra de senha do cadastro e da troca pelo próprio usuário
   const senhaForte = (p) => p.length >= 8 && /[a-z]/.test(p) && /[A-Z]/.test(p) && /[0-9]/.test(p) && /[^A-Za-z0-9]/.test(p);
 
@@ -29910,9 +29914,6 @@ async function saveUserAdmin(){
       return;
     }
     // Mesma regra do servidor: e-mail fora do padrão era descartado em silêncio e a tela dizia "cadastrado com sucesso"
-  // Nascimento fica gravado como DD/MM/AAAA (formato dos cadastros e da recuperação de senha); o campo de data entrega AAAA-MM-DD. Vazio nunca apaga.
-  const birthIso = (document.getElementById('userAdminBirth')?.value || '').trim();
-  const birthBr = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(birthIso) ? birthIso.slice(8, 10) + '/' + birthIso.slice(5, 7) + '/' + birthIso.slice(0, 4) : '';
     const emailValido = new RegExp('^[A-Za-z0-9._%+-]{1,64}@[A-Za-z0-9.-]{1,190}[.][A-Za-z]{2,24}$').test(rawEmail) && rawEmail.indexOf('..') < 0 && rawEmail.length <= 254;
     if(!emailValido){
       showToast('Informe um e-mail válido (ex.: nome@dominio.com)');
@@ -29928,6 +29929,7 @@ async function saveUserAdmin(){
       email: rawEmail,
       cpf: rawCpf || null, // CPF ajustado sem pontos
       phone: rawPhone || null,
+      birth_date: birthBr || null,
       password: newPass,
       admin_create: true,
       role,
@@ -29940,7 +29942,6 @@ async function saveUserAdmin(){
     try { localStorage.removeItem('nexus_data_' + rawEmail.toLowerCase().trim()); } catch(e) {}
     registeredUsers.push(newUser);
     const salvouNovo = await saveUsersToServer();
-      birth_date: birthBr || null,
     delete newUser.admin_create;
     if(!salvouNovo){
       // o servidor não aceitou: desfaz a inclusão local para a lista não mostrar um cadastro que não existe
@@ -29982,6 +29983,7 @@ async function saveUserAdmin(){
   u.email = rawEmail;
   u.cpf = rawCpf || null; // CPF ajustado sem pontos
   u.phone = rawPhone || null;
+  if(birthBr) u.birth_date = birthBr;
   u.role = role;
   u.active = active;
   if(newPass) {
@@ -29994,7 +29996,6 @@ async function saveUserAdmin(){
     const newKey = 'nexus_data_' + rawEmail.toLowerCase();
     const existingData = loadFromStorage(oldKey, null);
     if(existingData){
-  if(birthBr) u.birth_date = birthBr;
       saveToStorage(newKey, existingData);
       localStorage.removeItem(oldKey);
     }
@@ -30457,6 +30458,8 @@ async function deleteAttachment(id){
 
 /* ==================== Eventos de página ==================== */
 function attachPageEvents(){
+  // Administração (administracao.js): depois de cada desenho da página refaz a gaveta de detalhes e busca o uso real das contas
+  if (window.NexusAdm) { try { NexusAdm.aoRenderizar(); } catch(eAdm) {} }
   document.querySelectorAll('[data-nav]').forEach(el=>el.onclick = ()=>{ navigate(el.getAttribute('data-nav')); });
 
   const nova = document.getElementById('btnNovaTransacao'); if(nova) nova.onclick = ()=>openModal(null);
@@ -30469,8 +30472,6 @@ function attachPageEvents(){
     };
   });
   document.querySelectorAll('[data-del]').forEach(el => {
-  // Administração (administracao.js): depois de cada desenho da página refaz a gaveta de detalhes e busca o uso real das contas
-  if (window.NexusAdm) { try { NexusAdm.aoRenderizar(); } catch(eAdm) {} }
     el.onclick = (e) => {
       if (e) { e.preventDefault(); e.stopPropagation(); }
       const attr = el.getAttribute('data-del');
@@ -32600,14 +32601,35 @@ function proximoIdLocalDeOrdem(lista) {
   return id;
 }
 
-async function protocoloJaExiste(protocolo) {
-  if (getLocalOrdens().some((o) => String(o.protocol || '').toUpperCase() === protocolo)) return true;
-  if (!pool) return false;
+// Protocolo em sequência (OS-0001, OS-0002...): o último número usado fica gravado, para que um número nunca volte a ser
+// usado (nem quando o chamado mais recente é excluído). O maior número do banco e dos chamados do arquivo também contam.
+function lerUltimoNumeroDeProtocolo() {
   try {
-    const r = await pool.query('SELECT 1 AS existe FROM ordens_servico WHERE UPPER(protocol) = $1', [protocolo]);
-    return Boolean(r && r.rows && r.rows.length);
+    if (fs.existsSync(LOCAL_SEQ_OS_PATH)) {
+      const n = Number(JSON.parse(fs.readFileSync(LOCAL_SEQ_OS_PATH, 'utf8')).ultimo);
+      if (Number.isFinite(n) && n > 0) return Math.floor(n);
+    }
   } catch (e) {
-    return false;
+    console.error('Erro ao ler local_os_sequencia.json:', e);
+  }
+  return 0;
+}
+
+function gravarUltimoNumeroDeProtocolo(numero) {
+  try {
+    writeJsonFile(LOCAL_SEQ_OS_PATH, JSON.stringify({ ultimo: numero, atualizado_em: new Date().toISOString() }, null, 2));
+  } catch (e) {
+    console.error('Erro ao salvar local_os_sequencia.json:', e);
+  }
+}
+
+async function maiorNumeroDeProtocoloNoBanco() {
+  if (!pool) return 0;
+  try {
+    const r = await pool.query("SELECT protocol FROM ordens_servico WHERE protocol LIKE 'OS-[0-9][0-9][0-9][0-9]' OR protocol LIKE 'OS-[0-9][0-9][0-9][0-9][0-9]'");
+    return (r && r.rows ? r.rows : []).reduce((maior, linha) => Math.max(maior, Atendimento.numeroDoProtocolo(linha.protocol)), 0);
+  } catch (e) {
+    return 0; // sem banco: vale o contador gravado e o arquivo local
   }
 }
 
@@ -34691,6 +34713,31 @@ async function handleNexusRequest(req, res) {
     return;
   }
 
+  // Uso real de cada conta para a tela Cadastros & Contas do administrador: só contagens (nunca valores, descrições nem saldos)
+  if (req.method === 'GET' && parsedUrl.pathname === '/api/admin/usage') {
+    if (!getAuthenticatedAdmin(req)) {
+      return sendJson(res, corsHeaders, 401, { success: false, error: 'Autenticação de administrador obrigatória.' });
+    }
+    const usage = {};
+    try {
+      const todos = readAllLocalFinancial() || {};
+      Object.keys(todos).forEach(email => {
+        const d = todos[email] || {};
+        const movs = Array.isArray(d.transactions) ? d.transactions : [];
+        let ultimaMov = null;
+        movs.forEach(t => { if (t && t.date && (!ultimaMov || String(t.date) > ultimaMov)) ultimaMov = String(t.date); });
+        usage[String(email).toLowerCase().trim()] = {
+          mov: movs.length,
+          contas: Array.isArray(d.accounts) ? d.accounts.length : 0,
+          orc: Array.isArray(d.budgets) ? d.budgets.length : 0,
+          metas: Array.isArray(d.goals) ? d.goals.length : 0,
+          ultimaMov
+        };
+      });
+    } catch (e) {}
+    return sendJson(res, corsHeaders, 200, { success: true, usage });
+  }
+
   if (req.method === 'POST' && parsedUrl.pathname === '/api/users') {
     if (!hasInternalSyncAccess(req, parsedUrl) && !getAuthenticatedAdmin(req)) {
       res.writeHead(401, { ...corsHeaders, 'Content-Type': 'application/json' });
@@ -34729,31 +34776,6 @@ async function handleNexusRequest(req, res) {
           if (u && u.email && isStrictEmail(String(u.email).trim().toLowerCase()) && !isAccountDeleted(u.email)) {
             acceptedUsers++;
             const emailKey = u.email.toLowerCase().trim();
-  // Uso real de cada conta para a tela Cadastros & Contas do administrador: só contagens (nunca valores, descrições nem saldos)
-  if (req.method === 'GET' && parsedUrl.pathname === '/api/admin/usage') {
-    if (!getAuthenticatedAdmin(req)) {
-      return sendJson(res, corsHeaders, 401, { success: false, error: 'Autenticação de administrador obrigatória.' });
-    }
-    const usage = {};
-    try {
-      const todos = readAllLocalFinancial() || {};
-      Object.keys(todos).forEach(email => {
-        const d = todos[email] || {};
-        const movs = Array.isArray(d.transactions) ? d.transactions : [];
-        let ultimaMov = null;
-        movs.forEach(t => { if (t && t.date && (!ultimaMov || String(t.date) > ultimaMov)) ultimaMov = String(t.date); });
-        usage[String(email).toLowerCase().trim()] = {
-          mov: movs.length,
-          contas: Array.isArray(d.accounts) ? d.accounts.length : 0,
-          orc: Array.isArray(d.budgets) ? d.budgets.length : 0,
-          metas: Array.isArray(d.goals) ? d.goals.length : 0,
-          ultimaMov
-        };
-      });
-    } catch (e) {}
-    return sendJson(res, corsHeaders, 200, { success: true, usage });
-  }
-
             const existing = existingMap.get(emailKey) || userMap.get(emailKey);
             let finalPassword = existing ? existing.password : '';
             if (u.password && typeof u.password === 'string' && u.password.trim() !== '') {
@@ -35970,14 +35992,20 @@ async function handleNexusRequest(req, res) {
   // - Administrador e sincronização interna: busca ampla com os dados completos.
   if ((req.method === 'GET' || req.method === 'POST') && parsedUrl.pathname === '/api/ordens/consultar') {
     let termo = '';
+    // O protocolo é uma sequência (OS-0001, OS-0002...) e qualquer um consegue adivinhar o próximo: por isso o andamento
+    // completo só aparece junto com o e-mail do chamado (`email`, além do `query` com o protocolo)
+    let provaEmail = '';
     if (req.method === 'GET') {
       termo = parsedUrl.query.query || parsedUrl.query.q || parsedUrl.query.email || parsedUrl.query.nome || '';
+      if (parsedUrl.query.query || parsedUrl.query.q) provaEmail = String(parsedUrl.query.email || '');
     } else {
       const leitura = await lerCorpoJson(req, 4 * 1024);
       if (!leitura.ok) return sendJson(res, corsHeaders, leitura.status, { success: false, message: leitura.mensagem, ordens: [] });
       const p = leitura.dados;
       termo = p.query || p.q || p.email || p.name || p.nome || '';
+      if (p.query || p.q) provaEmail = String(p.email || '');
     }
+    provaEmail = provaEmail.toLowerCase().trim();
 
     if (getAuthenticatedAdmin(req) || hasInternalSyncAccess(req)) {
       if (!String(termo).trim()) {
@@ -35991,12 +36019,14 @@ async function handleNexusRequest(req, res) {
     if (consulta.tipo === 'invalida') {
       return sendJson(res, corsHeaders, 400, {
         success: false,
-        message: 'Informe o número do protocolo (ex.: OS-261106-K7QX) ou o e-mail, CPF ou telefone usado no chamado.',
+        message: 'Informe o número do protocolo (ex.: OS-0001) junto com o e-mail usado no chamado, ou o e-mail, CPF ou telefone do chamado.',
         ordens: []
       });
     }
     const encontradas = await consultarOrdensPublico(consulta);
-    const ordens = encontradas.map((o) => Atendimento.visaoPublica(o, { detalhada: consulta.tipo === 'protocolo' }));
+    const ordens = encontradas.map((o) => Atendimento.visaoPublica(o, {
+      detalhada: consulta.tipo === 'protocolo' && Boolean(provaEmail) && String(o.client_email || '').toLowerCase().trim() === provaEmail
+    }));
     return sendJson(res, corsHeaders, 200, { success: true, count: ordens.length, ordens });
   }
 
@@ -36034,14 +36064,12 @@ async function handleNexusRequest(req, res) {
     }
     const dados = validacao.dados;
 
-    let protocolo;
-    try {
-      protocolo = await Atendimento.gerarProtocolo(protocoloJaExiste);
-    } catch (err) {
-      return sendJson(res, corsHeaders, 503, { success: false, message: 'Não foi possível registrar o chamado agora. Tente novamente em instantes.' });
-    }
+    // Maior número de protocolo que o banco já tem (o arquivo local pode não ter tudo): a consulta é a única espera
+    // antes de reservar o número, que é feito logo abaixo, sem nenhuma espera até a gravação
+    const maiorNumeroNoBanco = await maiorNumeroDeProtocoloNoBanco();
 
     // Da leitura da lista até a gravação não há espera: dois envios iguais ao mesmo tempo não geram dois chamados
+    // nem repetem o número do protocolo
     const lista = getLocalOrdens();
     const jaAberta = Atendimento.encontrarDuplicada(lista, dados);
     if (jaAberta) {
@@ -36053,6 +36081,15 @@ async function handleNexusRequest(req, res) {
         ordem: admin ? jaAberta : Atendimento.visaoPublica(jaAberta, { detalhada: true })
       });
     }
+
+    // Protocolo em sequência (OS-0001, OS-0002...): o maior entre o contador gravado, o banco e os chamados do arquivo, mais um
+    let protocolo;
+    try {
+      protocolo = Atendimento.proximoProtocolo(lista, { minimo: Math.max(lerUltimoNumeroDeProtocolo(), maiorNumeroNoBanco) });
+    } catch (err) {
+      return sendJson(res, corsHeaders, 503, { success: false, message: 'Não foi possível registrar o chamado agora. Tente novamente em instantes.' });
+    }
+    gravarUltimoNumeroDeProtocolo(Atendimento.numeroDoProtocolo(protocolo));
 
     const agoraIso = new Date().toISOString();
     const novaOrdem = Atendimento.montarOrdem(dados, { protocolo, id: proximoIdLocalDeOrdem(lista), agoraIso });

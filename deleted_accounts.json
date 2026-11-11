@@ -16,10 +16,6 @@
     "deleted_at": "2026-10-22T01:58:10.215Z"
   },
   {
-    "email": "ciceragyn12@hotmail.com",
-    "deleted_at": "2026-10-22T01:58:10.296Z"
-  },
-  {
     "email": "mobile.auditoria@teste.com",
     "deleted_at": "2026-10-22T01:58:10.497Z"
   },
@@ -38,5 +34,9 @@
   {
     "email": "celular4g@teste.com",
     "deleted_at": "2026-10-22T01:58:10.647Z"
+  },
+  {
+    "email": "admin@gmail.com",
+    "deleted_at": "2026-11-02T15:51:57.871Z"
   }
 ]

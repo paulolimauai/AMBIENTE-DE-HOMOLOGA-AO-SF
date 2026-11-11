@@ -19,30 +19,30 @@ const pedidoValido = () => ({
 });
 
 // ---------- Protocolo ----------
-test('gerarProtocolo cria OS-AAMMDD-XXXX com data de Brasília e alfabeto sem ambiguidade', async () => {
-  // 02:00 UTC de 07/11 ainda é 06/11 (23:00) em Brasília
-  const protocolo = await A.gerarProtocolo(() => false, new Date('2026-11-07T02:00:00.000Z'));
-  assert.match(protocolo, /^OS-261106-[A-HJ-NP-Z2-9]{4}$/);
+test('proximoProtocolo começa em OS-0001 e segue em sequência', () => {
+  assert.equal(A.proximoProtocolo([]), 'OS-0001');
+  assert.equal(A.proximoProtocolo(undefined), 'OS-0001');
+  const lista = [];
+  for (let i = 0; i < 12; i++) lista.unshift({ protocol: A.proximoProtocolo(lista) });
+  assert.deepEqual(lista.map((o) => o.protocol).reverse().slice(0, 3), ['OS-0001', 'OS-0002', 'OS-0003']);
+  assert.equal(lista[0].protocol, 'OS-0012');
+  assert.equal(new Set(lista.map((o) => o.protocol)).size, 12);
 });
 
-test('gerarProtocolo tenta de novo quando o protocolo já existe e falha se não achar um livre', async () => {
-  let chamadas = 0;
-  const protocolo = await A.gerarProtocolo(async () => ++chamadas < 3);
-  assert.equal(chamadas, 3);
-  assert.match(protocolo, /^OS-\d{6}-[A-Z2-9]{4}$/);
-  await assert.rejects(() => A.gerarProtocolo(() => true), /protocolo único/);
+test('proximoProtocolo ignora protocolos antigos, usa o maior número e respeita o mínimo (contador/banco)', () => {
+  const antigos = [{ protocol: 'OS-261107-PJKK' }, { protocol: 'OS-24448467' }, { protocol: 'OS-15330677' }, { protocol: '' }, null];
+  assert.equal(A.proximoProtocolo(antigos), 'OS-0001'); // só os formatos antigos: a sequência começa do zero
+  assert.equal(A.proximoProtocolo([...antigos, { protocol: 'OS-0007' }, { protocol: 'OS-0003' }]), 'OS-0008');
+  assert.equal(A.proximoProtocolo([{ protocol: 'OS-0003' }], { minimo: 41 }), 'OS-0042'); // contador gravado ou banco à frente do arquivo
+  assert.equal(A.proximoProtocolo([{ protocol: 'OS-0003' }], { minimo: 'lixo' }), 'OS-0004');
+  assert.equal(A.proximoProtocolo([{ protocol: 'OS-9999' }]), 'OS-10000'); // depois do 9999 segue com 5 dígitos
+  assert.throws(() => A.proximoProtocolo([{ protocol: 'OS-99999' }]), /Limite/);
+  assert.equal(A.numeroDoProtocolo('OS-0042'), 42);
+  assert.equal(A.numeroDoProtocolo('OS-261106-K7QX'), 0);
+  assert.equal(A.numeroDoProtocolo('OS-24448467'), 0);
 });
 
-test('gerarProtocolo não repete em 5 mil geracoes seguidas', async () => {
-  const vistos = new Set();
-  for (let i = 0; i < 5000; i++) {
-    const p = await A.gerarProtocolo((x) => vistos.has(x));
-    assert.ok(!vistos.has(p));
-    vistos.add(p);
-  }
-});
-
-test('normalizarProtocolo aceita #, minúsculas, espaços e protocolos antigos', () => {
+test('normalizarProtocolo aceita #, minúsculas, espaços, a sequência e protocolos antigos', () => {
   assert.equal(A.normalizarProtocolo('#os-261106-k7qx'), 'OS-261106-K7QX');
   assert.equal(A.normalizarProtocolo(' OS 261106 K7QX '), 'OS-261106-K7QX');
   assert.equal(A.normalizarProtocolo('os261106k7qx'), 'OS-261106-K7QX');
@@ -50,6 +50,10 @@ test('normalizarProtocolo aceita #, minúsculas, espaços e protocolos antigos',
   assert.equal(A.normalizarProtocolo('OS-261106-K0QX'), null); // 0 não existe no alfabeto
   assert.equal(A.normalizarProtocolo('maria@exemplo.com'), null);
   assert.equal(A.normalizarProtocolo(''), null);
+  // sequência: OS-1, os-0001 e "# OS 0001" são o mesmo chamado
+  for (const forma of ['OS-0001', 'os-1', 'OS1', '#OS 0001', ' os-00001 ']) assert.equal(A.normalizarProtocolo(forma), 'OS-0001', forma);
+  assert.equal(A.normalizarProtocolo('OS-12345'), 'OS-12345');
+  assert.equal(A.normalizarProtocolo('OS-0000'), null);
 });
 
 test('mesmaReferencia compara por id ou por protocolo normalizado', () => {
