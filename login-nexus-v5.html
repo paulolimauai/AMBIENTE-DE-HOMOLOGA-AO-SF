@@ -1066,83 +1066,55 @@ button,a,label{touch-action:manipulation}
       aviso('Conta criada. Bem-vindo ao Nexus!',true);
       setTimeout(function(){location.replace('/')},220);
     },
-    /* Identifica a conta por e-mail OU CPF e confirma a identidade (nascimento, ou e-mail + CPF juntos) antes de gerar a senha
-       provisória. Nunca revela se uma conta foi excluída: responde sempre "Usuário não possui conta criada.". */
+    /* Recuperação de senha: confirma a identidade exigindo os TRÊS dados cadastrados —
+       e-mail, CPF e data de nascimento — antes de gerar a senha provisória.
+       Nunca revela se uma conta foi excluída: responde sempre "Usuário não possui conta criada.". */
     async recover(prefill){
       var pareceEmail=function(v){return EMAIL.test(v)};
-      var ident=String(prefill||'').trim();
-      if(!(pareceEmail(ident)||digitos(ident).length===11)){
-        var digitado=await pedir({
+      var email=String(prefill||'').trim();
+
+      if(!pareceEmail(email)){
+        email=await pedir({
           title:'Recuperação de senha',step:'Identificação da conta',
-          message:'Informe o e-mail ou o CPF cadastrado da sua conta:',
-          placeholder:'seu.email@exemplo.com ou CPF',hint:'Pode ser o e-mail OU o CPF do titular da conta.',
+          message:'Informe o e-mail cadastrado da sua conta:',
+          placeholder:'seu.email@exemplo.com',hint:'É o e-mail utilizado na criação da conta.',
           icon:'mail',okText:'Continuar',
-          validate:function(v){
-            if(!v)return 'Por favor, informe seu e-mail ou CPF.';
-            if(v.indexOf('@')!==-1)return pareceEmail(v)?'':'Digite um e-mail válido.';
-            return digitos(v).length===11?'':'Digite um e-mail válido ou os 11 dígitos do CPF.';
-          }
-        });
-        if(!digitado)return;
-        ident=digitado.trim();
-      }
-
-      var porEmail=pareceEmail(ident);
-      var payload=porEmail?{email:ident.toLowerCase()}:{cpf:digitos(ident)};
-      if(porEmail)$('email').value=payload.email;
-
-      var info=null;
-      try{
-        info=await api('/api/send-password',Object.assign({},payload,{step:'check'}));
-      }catch(err){
-        var ed=err.data||{},m=err.message||'Usuário não possui conta criada.';
-        if(ed.errorType==='user_not_found'||ed.errorType==='account_deleted'){
-          m='Usuário não possui conta criada.';
-          if(porEmail)erro('email',m,false);
-        }else if(ed.errorType==='user_inactive')m='Esta conta está desativada pelo administrador.';
-        aviso(m);
-        return;
-      }
-
-      if(info&&info.hasBirthDate){
-        var nasc=await pedir({
-          title:'Data de nascimento',step:'Recuperação de acesso • Confirmação',
-          message:'Informe sua data de nascimento (DD/MM/AAAA):',placeholder:'DD/MM/AAAA',
-          hint:'Confirme a data de nascimento cadastrada na sua conta.',mask:'date',maxLength:10,icon:'cal',okText:'Continuar',
-          validate:function(v){
-            if(!v)return 'Por favor, informe sua data de nascimento.';
-            return dataValida(v)?'':'Informe uma data válida no formato DD/MM/AAAA.';
-          }
-        });
-        if(!nasc)return;
-        payload.birth_date=nasc;
-      }else if(porEmail){
-        var cpf=await pedir({
-          title:'Confirmação de identidade',step:'Recuperação de acesso • Confirmação',
-          message:'Para confirmar sua identidade, informe o CPF cadastrado nesta conta:',placeholder:'000.000.000-00',
-          hint:'Informe os 11 dígitos do CPF do titular.',mask:'cpf',maxLength:14,icon:'id',okText:'Confirmar',
-          validate:function(v){
-            if(!v)return 'Por favor, informe seu CPF.';
-            if(digitos(v).length<11)return 'Informe os 11 dígitos do CPF.';
-            return '';
-          }
-        });
-        if(!cpf)return;
-        payload.cpf=digitos(cpf);
-      }else{
-        var outro=await pedir({
-          title:'Confirmação de identidade',step:'Recuperação de acesso • Confirmação',
-          message:'Para confirmar sua identidade, informe o e-mail cadastrado nesta conta:',placeholder:'seu.email@exemplo.com',
-          hint:'É o e-mail utilizado na criação da conta.',icon:'mail',okText:'Confirmar',
           validate:function(v){
             if(!v)return 'Por favor, informe seu e-mail.';
             return pareceEmail(v)?'':'Digite um e-mail válido.';
           }
         });
-        if(!outro)return;
-        payload.email=outro.trim().toLowerCase();
-        $('email').value=payload.email;
+        if(!email)return;
+        email=email.trim().toLowerCase();
+      }else{
+        email=email.toLowerCase();
       }
+      $('email').value=email;
+
+      var cpf=await pedir({
+        title:'Confirmação de identidade',step:'Recuperação de acesso • Confirmação',
+        message:'Informe o CPF cadastrado nesta conta:',placeholder:'000.000.000-00',
+        hint:'Informe os 11 dígitos do CPF do titular.',mask:'cpf',maxLength:14,icon:'id',okText:'Confirmar',
+        validate:function(v){
+          if(!v)return 'Por favor, informe seu CPF.';
+          if(digitos(v).length!==11)return 'Informe os 11 dígitos do CPF.';
+          return '';
+        }
+      });
+      if(!cpf)return;
+
+      var nasc=await pedir({
+        title:'Data de nascimento',step:'Recuperação de acesso • Confirmação',
+        message:'Informe sua data de nascimento (DD/MM/AAAA):',placeholder:'DD/MM/AAAA',
+        hint:'Confirme a data de nascimento cadastrada na sua conta.',mask:'date',maxLength:10,icon:'cal',okText:'Confirmar',
+        validate:function(v){
+          if(!v)return 'Por favor, informe sua data de nascimento.';
+          return dataValida(v)?'':'Informe uma data válida no formato DD/MM/AAAA.';
+        }
+      });
+      if(!nasc)return;
+
+      var payload={email:email,cpf:digitos(cpf),birth_date:nasc};
 
       try{
         var r=await api('/api/send-password',payload);
