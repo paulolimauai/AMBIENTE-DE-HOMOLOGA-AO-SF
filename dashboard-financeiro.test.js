@@ -170,12 +170,16 @@ test('acumulado soma o realizado de todos os meses cadastrados (entradas − sa�
   assert.equal(m.acumulado.saidas, 1000);
   assert.equal(m.acumulado.resultado, 9000);
   assert.equal(m.acumulado.meses, 2);
+  assert.equal(m.acumulado.serie.length, 2);
+  assert.deepEqual(m.acumulado.serie.map((p) => p.acumulado), [4500, 9000]); // out: 5000−500; nov: +4500
   const vazio = D.calcular(ctx({ transacoes: [], contas: [] }));
   assert.equal(vazio.acumulado.resultado, 0);
   assert.equal(vazio.acumulado.meses, 0);
   const html = D.pagina({ ...ctx(), util: {} });
   assert.ok(html.includes('Acumulado de todos os meses'));
   assert.ok(html.includes('saldo positivo disponível'));
+  assert.ok(html.includes('fd-acum-barra'));
+  assert.ok(html.includes('fd-acum-svg'));
 });
 
 test('"Todas as datas" soma tudo e não compara com mês anterior', () => {
