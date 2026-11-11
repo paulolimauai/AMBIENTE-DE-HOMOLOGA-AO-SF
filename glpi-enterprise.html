@@ -815,7 +815,6 @@
             .topbar { padding: 0 1rem; }
             .main { padding: 1rem; }
             .hero { padding: 1.4rem; }
-            .hero-acts { flex: 1 1 100%; }
             .hero .btn { width: 100%; }
             .form-grid.cols-2 { grid-template-columns: 1fr; }
             .modal-head, .modal-body { padding-left: 1.1rem; padding-right: 1.1rem; }
@@ -1433,10 +1432,18 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         .svc.blue { --k: var(--blue-rgb); --kl: var(--t-blue); }
         .svc.slate { --k: var(--slate-rgb); --kl: var(--t-slate); }
         .svc-tag { display: inline-flex; align-items: center; gap: .35rem; margin-top: .55rem; padding: .08rem .55rem; border-radius: 99px; font-size: max(.6875rem, 11px); font-weight: 800; letter-spacing: .07em; text-transform: uppercase; color: var(--kl); background: rgba(var(--k), .12); border: 1px solid rgba(var(--k), .34); }
-        .hero-acts { display: flex; flex-wrap: wrap; gap: .7rem; position: relative; align-items: center; }
-        .hero-acts .btn i { display: inline-flex; align-items: center; justify-content: center; width: 1rem; flex: none; font-size: .9rem; line-height: 1; }
-        .hero-acts .btn-ghost { border-color: rgba(var(--lt), .22); }
-        .hero-acts .btn-ghost:hover { border-color: rgba(var(--lt), .4); }
+        /* Ações rápidas do catálogo: Requisição x Incidente em cartões de destaque abaixo do hero */
+        .quick-acts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .9rem; }
+        .qact { --k: var(--sky-rgb); --kl: var(--t-sky); flex-direction: row; align-items: center; gap: 1rem; width: 100%; padding: 1.05rem 1.25rem; }
+        .qact-inc { --k: var(--orange-rgb); --kl: var(--t-orange); }
+        .qact-ico { width: 3rem; height: 3rem; flex: none; display: grid; place-items: center; border-radius: .95rem; font-size: 1.2rem; color: var(--kl); background: linear-gradient(145deg, rgba(var(--k), .24), rgba(var(--k), .08)); border: 1px solid rgba(var(--k), .42); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .2); transition: transform .25s ease; }
+        .qact:hover .qact-ico { transform: scale(1.08) rotate(-3deg); }
+        .qact-txt { flex: 1; min-width: 0; }
+        .qact-txt b { display: block; font-size: 1rem; font-weight: 800; letter-spacing: -.01em; color: var(--white); }
+        .qact-txt small { display: block; margin-top: .2rem; font-size: .78rem; line-height: 1.45; color: var(--muted); }
+        .qact-go { flex: none; font-size: .85rem; color: var(--kl); transition: transform .25s ease; }
+        .qact:hover .qact-go { transform: translateX(4px); }
+        @media (max-width: 767px) { .quick-acts { grid-template-columns: 1fr; } }
 
         /* Tipo do chamado (requisição / incidente): selo na lista e cartões grandes na abertura */
         .tpill { display: inline-flex; align-items: center; gap: .3rem; padding: .02rem .5rem; border-radius: 99px; font-size: max(.6875rem, 11px); font-weight: 800; letter-spacing: .05em; text-transform: uppercase; vertical-align: middle; --c: var(--sky-rgb); --cl: var(--t-sky); color: var(--cl); background: rgba(var(--c), .13); border: 1px solid rgba(var(--c), .4); }
@@ -1543,9 +1550,11 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         .hero-tag { margin-bottom: .45rem; padding: .18rem .65rem; font-size: .75rem; }
         .hero h2 { font-size: clamp(1.3rem, 2vw, 1.65rem); }
         .hero p { margin-top: .25rem; max-width: 32rem; font-size: .84rem; }
-        .hero-acts { gap: .5rem; }
-        .hero-acts .btn { height: 2.6rem; padding: 0 1.15rem; font-size: .84rem; border-radius: .85rem; }
-        .hero-acts .btn i { width: 1rem; font-size: .9rem; }
+        .quick-acts { gap: .7rem; }
+        .qact { gap: .8rem; padding: .9rem 1.1rem; }
+        .qact-ico { width: 2.6rem; height: 2.6rem; font-size: 1.05rem; border-radius: .8rem; }
+        .qact-txt b { font-size: .92rem; }
+        .qact-txt small { font-size: .74rem; }
         .usum { gap: .6rem; }
         .usum-t { padding: .55rem .8rem; gap: .65rem; border-radius: .95rem; }
         .usum-t > i { width: 2.1rem; height: 2.1rem; font-size: .85rem; border-radius: .7rem; }
@@ -1954,14 +1963,19 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                                 <h2 id="user-greeting">Como podemos ajudar?</h2>
                                 <p>Escolha o serviço, descreva o ocorrido com clareza e acompanhe cada atualização do atendimento em "Meus Chamados".</p>
                             </div>
-                            <div class="hero-acts">
-                                <button type="button" onclick="openFormModal('', 'Requisição')" class="btn btn-blue">
-                                    <i class="fa-solid fa-hand-holding-hand"></i> Abrir Requisição
-                                </button>
-                                <button type="button" onclick="openFormModal('', 'Incidente')" class="btn btn-ghost">
-                                    <i class="fa-solid fa-triangle-exclamation c-amber"></i> Reportar Incidente
-                                </button>
-                            </div>
+                        </div>
+
+                        <div class="quick-acts">
+                            <button type="button" onclick="openFormModal('', 'Requisição')" class="glass svc qact qact-req">
+                                <span class="qact-ico"><i class="fa-solid fa-hand-holding-hand"></i></span>
+                                <span class="qact-txt"><b>Abrir Requisição</b><small>Serviço, acesso ou alteração de dados</small></span>
+                                <i class="fa-solid fa-arrow-right qact-go"></i>
+                            </button>
+                            <button type="button" onclick="openFormModal('', 'Incidente')" class="glass svc qact qact-inc">
+                                <span class="qact-ico"><i class="fa-solid fa-triangle-exclamation"></i></span>
+                                <span class="qact-txt"><b>Reportar Incidente</b><small>Problema, falha ou erro no sistema</small></span>
+                                <i class="fa-solid fa-arrow-right qact-go"></i>
+                            </button>
                         </div>
 
                         <div id="user-summary" class="usum" aria-label="Resumo dos seus chamados"></div>
