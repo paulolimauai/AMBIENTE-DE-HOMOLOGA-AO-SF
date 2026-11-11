@@ -20277,6 +20277,8 @@ function nexusNeutralizeData(node, depth) {
   depth = depth || 0;
   if (depth > 14) return node;
   if (typeof node === 'string') {
+    // data URL base64 pode ter MBs e nunca contém < > ": se o cabeçalho é válido, retorna direto
+    // sem rodar o replace (que varreria a string inteira a cada salvamento)
     if (node.indexOf('data:') === 0 && /^data:[A-Za-z0-9./+-]*(;[A-Za-z0-9=.-]+)*;base64,/.test(node.slice(0, 200))) return node;
     return node.replace(/[<>"]/g, function(ch) { return ch === '<' ? '‹' : ch === '>' ? '›' : '”'; });
   }
@@ -21399,7 +21401,8 @@ function timeAgo(ts){
 async function pushNotification(text, icon){
   notifications.unshift({id: nextNotifId++, text, icon: icon || '🔔', time: Date.now(), read:false});
   if(notifications.length > 40) notifications = notifications.slice(0,40);
-  await saveUserData();
+  // Não salva aqui: todos os chamadores gravam logo em seguida com saveUserData(),
+  // que já inclui notifications no payload. Salvar de novo duplicava a serialização inteira.
   renderNotifications();
 }
 function renderNotifications(){
@@ -21433,6 +21436,20 @@ window.clearAllTxFilters = function(allDates = false) {
   }
   refreshTxTable();
 };
+
+/* Atualização pós-salvamento em dois níveis:
+   - na tela de lançamentos, só a tabela e os cartões de resumo são reconstruídos (refreshTxTable);
+   - nas demais telas, o render completo roda dois frames depois, quando a tela já pintou o feedback
+     (modal fechado + toast), então o clique nunca fica esperando a página inteira ser remontada. */
+function refreshAfterDataChange() {
+  if (document.getElementById('txTableWrap')) { refreshTxTable(); return; }
+  if (window._renderDeferred) return;
+  window._renderDeferred = true;
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    window._renderDeferred = false;
+    render();
+  }));
+}
 
 function refreshTxTable(){
   const search = document.getElementById('txSearch');
@@ -22049,7 +22066,7 @@ async function markTransactionAsPaid(id) {
   logActivity(ehEntrada ? 'Recebimento' : 'Pagamento', 'Transação', ehEntrada ? \`Baixa realizada no recebimento de "\${t.desc}" (\${fmt(t.val)}).\` : \`Baixa realizada no pagamento de "\${t.desc}" (\${fmt(t.val)}).\`);
   await pushNotification(ehEntrada ? \`Recebimento confirmado: \${t.desc} — \${fmt(t.val)}\` : \`Pagamento realizado: \${t.desc} — \${fmt(t.val)}\`, '✅');
   await saveUserData();
-  render();
+  refreshAfterDataChange();
 }
 
 // Dashboard novo (dashboard-financeiro.js): o app entrega as movimentações e os resumos de conta/cartão que só ele sabe calcular
@@ -28761,7 +28778,7 @@ async function saveTransaction(){
     pushNotification(\`Nova transação cadastrada: \${desc} — \${fmt(val)}\`, currentType==='in' ? '💰' : '💸').catch(() => {});
   }
   closeModal();
-  render();
+  refreshAfterDataChange();
   saveUserData().catch(e => console.warn('Erro ao salvar dados em segundo plano:', e));
 }
 async function deleteTransaction(id){
@@ -28770,7 +28787,7 @@ async function deleteTransaction(id){
   transactions = transactions.filter(t => t.id !== id && String(t.id) !== String(id));
   showToast('🗑 Transação ' + (desc ? ('"' + desc + '" ') : '') + 'excluída!');
   logActivity('Exclusão', 'Transação', 'Excluiu transação "' + (desc || id) + '"');
-  render();
+  refreshAfterDataChange();
   saveUserData().catch(e => console.warn('Erro ao salvar exclusão:', e));
 }
 
@@ -28787,7 +28804,7 @@ async function toggleTransactionStatus(id) {
   t.status = newStatus;
   showToast('Status alterado para ' + newStatus);
   logActivity('Status', 'Transação', 'Alterou status de "' + t.desc + '" para ' + newStatus);
-  render();
+  refreshAfterDataChange();
   saveUserData().catch(e => console.warn('Erro ao salvar status:', e));
 }
 
