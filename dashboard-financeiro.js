@@ -732,15 +732,6 @@
     const cartoes = c.cartoes;
     const tiles =
       tileKpi({
-        rotulo: 'Receitas', tom: 'fd-ic-in', icone: ICONES.receita, ir: { tipo: 'in' }, dica: 'Ver as receitas em Movimentações', classe: 'fd-tile-in',
-        valorHtml: valorTile(t.receitas.total),
-        linhas: [
-          cmp ? chipVariacao(cmp.receitas, 'subir', cmp.rotulo) : '',
-          resumoFluxo(t.receitas, 'já recebido', 'a receber', 'entrada'),
-          progresso(t.receitas.realizado, t.receitas.previsto, 'Receitas')
-        ]
-      }) +
-      tileKpi({
         rotulo: 'Despesas', tom: 'fd-ic-out', icone: ICONES.despesa, ir: { tipo: 'out' }, dica: 'Ver as despesas em Movimentações', classe: 'fd-tile-out',
         valorHtml: valorTile(t.despesas.total),
         linhas: [
