@@ -53,10 +53,10 @@ test('saldo em contas = saldo inicial + realizado (cartão fica de fora) e não 
   assert.equal(todas.contas.saldoAtual, 10300);
 });
 
-test('disponível para gastar = saldo realizado − despesas previstas do período (receitas a receber não entram)', () => {
+test('disponível para gastar = receitas totais − despesas totais do período', () => {
   const m = D.calcular(ctx());
-  // 10300 − (aluguel 1500 + seguro 400) = 8400; o freela de 800 previsto NÃO aumenta o disponível
-  assert.equal(m.contas.disponivelGastar, 8400);
+  // receitas.total 5800 − despesas.total 2400 = 3400 (realizado + previsto dos dois lados)
+  assert.equal(m.contas.disponivelGastar, 3400);
   const html = D.pagina({ ...ctx(), util: {} });
   for (const trecho of ['Disponível p/ gastar', 'A receber', 'A pagar', 'data-fd-status="Pendente"']) {
     assert.ok(html.includes(trecho), 'faltou: ' + trecho);
