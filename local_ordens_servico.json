@@ -10,7 +10,7 @@
     "priority": "Baixa",
     "title": "AJUSTE SISTEMA NEXUS FINANCEIRO",
     "description": "Boa tarde,\nReceitas: corrigir o cálculo e deixar o valor mais visual e destacado.\n\nDespesas: também exibir o valor de forma mais visual e destacada.\n\nSaldo: na seção de saldo, mostrar o valor acumulado de todos os meses cadastrados, deixando claro quanto está disponível de saldo positivo.\n\nSegurança e senha: quando o usuário já estiver logado na conta, não solicitar a senha atual para realizar a alteração. Para trocar a senha, solicitar apenas a nova senha e a confirmação da nova senha.",
-    "status": "Atendimento atribuído",
+    "status": "Resolvido",
     "admin_notes": "",
     "tecnico_responsavel": "PAULO DE LIMA PEREIRA",
     "assumido_em": "2026-11-10T14:19:44.667Z",
@@ -18,7 +18,7 @@
     "sla": "5 Dias Úteis",
     "asset": "Nenhum",
     "time_spent": 0,
-    "solution": "",
+    "solution": "Boa noite!\nSolicitaçao atendida.\nGentileza testar.",
     "timeline": [
       {
         "sender": "Solicitante",
@@ -64,11 +64,33 @@
         "text": "Aguardando a renovaçao da IA para implementar",
         "date": "2026-11-10T14:20:37.277Z",
         "internal": true
+      },
+      {
+        "sender": "Solicitante",
+        "author": "PAULO DE LIMA PEREIRA",
+        "text": "Boa tarde, temos posicionamento?",
+        "date": "2026-11-11T01:16:27.083Z",
+        "internal": false
+      },
+      {
+        "sender": "Técnico",
+        "author": "ADMINISTRADOR DO SISTEMA",
+        "text": "[SOLUÇÃO APLICADA]: Boa noite!\nSolicitaçao atendida.\nGentileza testar.",
+        "date": "2026-11-11T01:17:14.335Z",
+        "internal": false
+      },
+      {
+        "sender": "Sistema",
+        "author": "ADMINISTRADOR DO SISTEMA",
+        "text": "Status alterado de \"Atendimento atribuído\" para \"Resolvido\".",
+        "date": "2026-11-11T01:17:14.335Z",
+        "internal": false,
+        "event": true
       }
     ],
-    "concluido_em": null,
+    "concluido_em": "2026-11-11T01:17:14.335Z",
     "created_at": "2026-11-10T14:19:01.628Z",
-    "updated_at": "2026-11-10T14:20:37.277Z",
+    "updated_at": "2026-11-11T01:17:14.335Z",
     "ticket_type": "Requisição",
     "fila": "Desenvolvedor"
   },
