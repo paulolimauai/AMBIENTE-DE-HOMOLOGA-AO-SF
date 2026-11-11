@@ -4073,34 +4073,35 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             if (!el) return;
             modalReturnFocus[id] = document.activeElement;
             el.classList.remove('hidden');
+            // Chamados sempre abrem em tela cheia (o botão no topo permite voltar ao tamanho de janela)
+            if (id === 'modal-my-ticket' || id === 'modal-tech-workspace') setTicketFull(el, true);
             const target = focusSelector ? el.querySelector(focusSelector) : null;
             if (target) setTimeout(() => { try { target.focus(); } catch (e) {} }, 40);
+        }
+
+        // Liga/desliga a tela cheia do chamado e mantém o botão (expandir/comprimir) em sincronia
+        function setTicketFull(el, full) {
+            el.classList.toggle('is-full', full);
+            const fb = el.querySelector('.ws-full-btn');
+            if (!fb) return;
+            const ic = fb.querySelector('i');
+            if (ic) ic.className = 'fa-solid ' + (full ? 'fa-compress' : 'fa-expand');
+            const txt = full ? 'Sair da tela cheia' : 'Abrir em tela cheia';
+            fb.title = txt;
+            fb.setAttribute('aria-label', txt);
         }
 
         // Alterna o chamado entre janela e tela cheia (o mesmo botão serve para os dois modais de chamado)
         function toggleTicketFull(btn) {
             const ov = btn.closest('.overlay');
-            if (!ov) return;
-            const full = ov.classList.toggle('is-full');
-            const ic = btn.querySelector('i');
-            if (ic) ic.className = 'fa-solid ' + (full ? 'fa-compress' : 'fa-expand');
-            const txt = full ? 'Sair da tela cheia' : 'Abrir em tela cheia';
-            btn.title = txt;
-            btn.setAttribute('aria-label', txt);
+            if (ov) setTicketFull(ov, !ov.classList.contains('is-full'));
         }
 
         function closeModal(id) {
             const el = $(id);
             if (!el) return;
             el.classList.add('hidden');
-            el.classList.remove('is-full');
-            const fb = el.querySelector('.ws-full-btn');
-            if (fb) {
-                const ic = fb.querySelector('i');
-                if (ic) ic.className = 'fa-solid fa-expand';
-                fb.title = 'Abrir em tela cheia';
-                fb.setAttribute('aria-label', 'Abrir chamado em tela cheia');
-            }
+            if (el.classList.contains('is-full')) setTicketFull(el, false);
             if (id === 'modal-tech-workspace') { activeProtocol = null; markActiveRow(); }
             if (id === 'modal-my-ticket') myProtocol = null;
             const back = modalReturnFocus[id];
