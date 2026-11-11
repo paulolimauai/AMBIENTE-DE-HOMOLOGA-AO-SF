@@ -1,5 +1,526 @@
 [
   {
+    "id": "12",
+    "protocol": "OS-0002",
+    "client_name": "PAULO DE LIMA PEREIRA",
+    "client_email": "paulodelima21@gmail.com",
+    "client_phone": "(62) 98626-6049",
+    "client_cpf": "04023326100",
+    "service_type": "Falhas/Bugs/Correções",
+    "priority": "Baixa",
+    "title": "AJUSTE SISTEMA NEXUS FINANCEIRO",
+    "description": "Boa tarde,\nReceitas: corrigir o cálculo e deixar o valor mais visual e destacado.\n\nDespesas: também exibir o valor de forma mais visual e destacada.\n\nSaldo: na seção de saldo, mostrar o valor acumulado de todos os meses cadastrados, deixando claro quanto está disponível de saldo positivo.\n\nSegurança e senha: quando o usuário já estiver logado na conta, não solicitar a senha atual para realizar a alteração. Para trocar a senha, solicitar apenas a nova senha e a confirmação da nova senha.",
+    "status": "Atendimento atribuído",
+    "admin_notes": "",
+    "tecnico_responsavel": "PAULO DE LIMA PEREIRA",
+    "assumido_em": "2026-11-10T14:19:44.667Z",
+    "canal_atendimento": "Central GLPI",
+    "sla": "5 Dias Úteis",
+    "asset": "Nenhum",
+    "time_spent": 0,
+    "solution": "",
+    "timeline": [
+      {
+        "sender": "Solicitante",
+        "author": "PAULO DE LIMA PEREIRA",
+        "text": "Chamado aberto via GLPI Service Desk (requisição). Aguardando atribuição técnica.",
+        "date": "2026-11-10T14:19:01.628Z",
+        "internal": false
+      },
+      {
+        "sender": "Sistema",
+        "author": "Sistema",
+        "text": "Chamado encaminhado para a fila \"Desenvolvedor\".",
+        "date": "2026-11-10T14:19:01.628Z",
+        "internal": false,
+        "event": true
+      },
+      {
+        "sender": "Sistema",
+        "author": "PAULO DE LIMA PEREIRA",
+        "text": "Status alterado de \"Novo\" para \"Atendimento atribuído\".",
+        "date": "2026-11-10T14:19:44.667Z",
+        "internal": false,
+        "event": true
+      },
+      {
+        "sender": "Sistema",
+        "author": "PAULO DE LIMA PEREIRA",
+        "text": "Chamado assumido por PAULO DE LIMA PEREIRA.",
+        "date": "2026-11-10T14:19:44.667Z",
+        "internal": false,
+        "event": true
+      },
+      {
+        "sender": "Técnico",
+        "author": "PAULO DE LIMA PEREIRA",
+        "text": "Boa tarde, sua solicitaçao esta em analise para implementaçao.\nGentileza aguardar o atendimento.",
+        "date": "2026-11-10T14:20:12.083Z",
+        "internal": false
+      },
+      {
+        "sender": "Técnico",
+        "author": "PAULO DE LIMA PEREIRA",
+        "text": "Aguardando a renovaçao da IA para implementar",
+        "date": "2026-11-10T14:20:37.277Z",
+        "internal": true
+      }
+    ],
+    "concluido_em": null,
+    "created_at": "2026-11-10T14:19:01.628Z",
+    "updated_at": "2026-11-10T14:20:37.277Z",
+    "ticket_type": "Requisição",
+    "fila": "Desenvolvedor"
+  },
+  {
+    "id": "11",
+    "protocol": "OS-0001",
+    "client_name": "PAULO DE LIMA PEREIRA",
+    "client_email": "paulodelima21@gmail.com",
+    "client_phone": "(62) 98626-6049",
+    "client_cpf": "04023326100",
+    "service_type": "Desbloqueio de usuário",
+    "priority": "Baixa",
+    "title": "Desbloqueio de login",
+    "description": "Favor verificar, ja paguei e meu login ta bloqueado.",
+    "status": "Resolvido",
+    "admin_notes": "",
+    "tecnico_responsavel": "PAULO DE LIMA PEREIRA",
+    "assumido_em": "2026-11-10T14:19:24.287Z",
+    "canal_atendimento": "Central GLPI",
+    "sla": "5 Dias Úteis",
+    "asset": "Nenhum",
+    "time_spent": 0,
+    "solution": "Boa tarde.\nUsuario desbloqueado.\nGentileza testar novamente.",
+    "timeline": [
+      {
+        "sender": "Solicitante",
+        "author": "PAULO DE LIMA PEREIRA",
+        "text": "Chamado aberto via GLPI Service Desk (requisição). Aguardando atribuição técnica.",
+        "date": "2026-11-10T14:17:45.510Z",
+        "internal": false
+      },
+      {
+        "sender": "Sistema",
+        "author": "Sistema",
+        "text": "Chamado encaminhado para a fila \"Desenvolvedor\".",
+        "date": "2026-11-10T14:17:45.510Z",
+        "internal": false,
+        "event": true
+      },
+      {
+        "sender": "Sistema",
+        "author": "PAULO DE LIMA PEREIRA",
+        "text": "Status alterado de \"Novo\" para \"Atendimento atribuído\".",
+        "date": "2026-11-10T14:19:24.287Z",
+        "internal": false,
+        "event": true
+      },
+      {
+        "sender": "Sistema",
+        "author": "PAULO DE LIMA PEREIRA",
+        "text": "Chamado assumido por PAULO DE LIMA PEREIRA.",
+        "date": "2026-11-10T14:19:24.287Z",
+        "internal": false,
+        "event": true
+      },
+      {
+        "sender": "Técnico",
+        "author": "PAULO DE LIMA PEREIRA",
+        "text": "[SOLUÇÃO APLICADA]: Boa tarde.\nUsuario desbloqueado.\nGentileza testar novamente.",
+        "date": "2026-11-10T14:19:42.486Z",
+        "internal": false
+      },
+      {
+        "sender": "Sistema",
+        "author": "PAULO DE LIMA PEREIRA",
+        "text": "Status alterado de \"Atendimento atribuído\" para \"Resolvido\".",
+        "date": "2026-11-10T14:19:42.486Z",
+        "internal": false,
+        "event": true
+      }
+    ],
+    "concluido_em": "2026-11-10T14:19:42.486Z",
+    "created_at": "2026-11-10T14:17:45.510Z",
+    "updated_at": "2026-11-10T14:19:42.486Z",
+    "ticket_type": "Requisição",
+    "fila": "Desenvolvedor"
+  },
+  {
+    "id": "10",
+    "protocol": "OS-261110-G42W",
+    "client_name": "PAULO DE LIMA PEREIRA",
+    "client_email": "paulolp0101@gmail.com",
+    "client_phone": "(62) 99234-5372",
+    "client_cpf": "04023326100",
+    "service_type": "Pagamento não reconhecido",
+    "priority": "Baixa",
+    "title": "pag nao reconhecido",
+    "description": "pag nao reconhecido",
+    "status": "Resolvido",
+    "admin_notes": "",
+    "tecnico_responsavel": "PAULO DE LIMA PEREIRA",
+    "assumido_em": "2026-11-10T06:06:42.196Z",
+    "canal_atendimento": "Central GLPI",
+    "sla": "5 Dias Úteis",
+    "asset": "Nenhum",
+    "time_spent": 0,
+    "solution": "Dado baixo no pag",
+    "timeline": [
+      {
+        "sender": "Solicitante",
+        "author": "PAULO DE LIMA PEREIRA",
+        "text": "Chamado aberto via GLPI Service Desk (incidente). Aguardando atribuição técnica.",
+        "date": "2026-11-10T06:06:24.462Z",
+        "internal": false
+      },
+      {
+        "sender": "Sistema",
+        "author": "Sistema",
+        "text": "Chamado encaminhado para a fila \"Desenvolvedor\".",
+        "date": "2026-11-10T06:06:24.462Z",
+        "internal": false,
+        "event": true
+      },
+      {
+        "sender": "Sistema",
+        "author": "PAULO DE LIMA PEREIRA",
+        "text": "Status alterado de \"Novo\" para \"Atendimento atribuído\".",
+        "date": "2026-11-10T06:06:42.196Z",
+        "internal": false,
+        "event": true
+      },
+      {
+        "sender": "Sistema",
+        "author": "PAULO DE LIMA PEREIRA",
+        "text": "Chamado assumido por PAULO DE LIMA PEREIRA.",
+        "date": "2026-11-10T06:06:42.196Z",
+        "internal": false,
+        "event": true
+      },
+      {
+        "sender": "Sistema",
+        "author": "PAULO DE LIMA PEREIRA",
+        "text": "Chamado transferido da fila \"Desenvolvedor\" para a fila \"Suporte Tecnico N2\".",
+        "date": "2026-11-10T06:06:50.348Z",
+        "internal": false,
+        "event": true
+      },
+      {
+        "sender": "Técnico",
+        "author": "PAULO DE LIMA PEREIRA",
+        "text": "[SOLUÇÃO APLICADA]: Dado baixo no pag",
+        "date": "2026-11-10T06:07:09.093Z",
+        "internal": false
+      },
+      {
+        "sender": "Sistema",
+        "author": "PAULO DE LIMA PEREIRA",
+        "text": "Status alterado de \"Atendimento atribuído\" para \"Resolvido\".",
+        "date": "2026-11-10T06:07:09.093Z",
+        "internal": false,
+        "event": true
+      }
+    ],
+    "concluido_em": "2026-11-10T06:07:09.093Z",
+    "created_at": "2026-11-10T06:06:24.462Z",
+    "updated_at": "2026-11-10T06:07:09.093Z",
+    "ticket_type": "Incidente",
+    "fila": "Suporte Tecnico N2"
+  },
+  {
+    "id": "9",
+    "protocol": "OS-261110-FT6E",
+    "client_name": "CICERA DE LIMA PEREIRA",
+    "client_email": "ciceragyn12@hotmail.com",
+    "client_phone": "",
+    "client_cpf": "99925109191",
+    "service_type": "Pagamento não reconhecido",
+    "priority": "Baixa",
+    "title": "pagamento nao liberado",
+    "description": "paguei por pix e nao desbloqueou",
+    "status": "Resolvido",
+    "admin_notes": "",
+    "tecnico_responsavel": "PAULO DE LIMA PEREIRA",
+    "assumido_em": "2026-11-10T05:20:11.185Z",
+    "canal_atendimento": "Central GLPI",
+    "sla": "5 Dias Úteis",
+    "asset": "Nenhum",
+    "time_spent": 0,
+    "solution": "Desbloqueado, testa novamente.",
+    "timeline": [
+      {
+        "sender": "Solicitante",
+        "author": "CICERA DE LIMA PEREIRA",
+        "text": "Chamado aberto via GLPI Service Desk (incidente). Aguardando atribuição técnica.",
+        "date": "2026-11-10T05:19:49.373Z",
+        "internal": false
+      },
+      {
+        "sender": "Sistema",
+        "author": "Sistema",
+        "text": "Chamado encaminhado para a fila \"Desenvolvedor\".",
+        "date": "2026-11-10T05:19:49.373Z",
+        "internal": false,
+        "event": true
+      },
+      {
+        "sender": "Sistema",
+        "author": "PAULO DE LIMA PEREIRA",
+        "text": "Status alterado de \"Novo\" para \"Atendimento atribuído\".",
+        "date": "2026-11-10T05:20:11.185Z",
+        "internal": false,
+        "event": true
+      },
+      {
+        "sender": "Sistema",
+        "author": "PAULO DE LIMA PEREIRA",
+        "text": "Chamado assumido por PAULO DE LIMA PEREIRA.",
+        "date": "2026-11-10T05:20:11.185Z",
+        "internal": false,
+        "event": true
+      },
+      {
+        "sender": "Técnico",
+        "author": "PAULO DE LIMA PEREIRA",
+        "text": "[SOLUÇÃO APLICADA]: Desbloqueado, testa novamente.",
+        "date": "2026-11-10T05:21:26.513Z",
+        "internal": false
+      },
+      {
+        "sender": "Sistema",
+        "author": "PAULO DE LIMA PEREIRA",
+        "text": "Status alterado de \"Atendimento atribuído\" para \"Resolvido\".",
+        "date": "2026-11-10T05:21:26.513Z",
+        "internal": false,
+        "event": true
+      }
+    ],
+    "concluido_em": "2026-11-10T05:21:26.513Z",
+    "created_at": "2026-11-10T05:19:49.373Z",
+    "updated_at": "2026-11-10T05:21:26.513Z",
+    "ticket_type": "Incidente",
+    "fila": "Desenvolvedor"
+  },
+  {
+    "id": "8",
+    "protocol": "OS-261110-J98P",
+    "client_name": "CICERA DE LIMA PEREIRA",
+    "client_email": "ciceragyn12@hotmail.com",
+    "client_phone": "",
+    "client_cpf": "99925109191",
+    "service_type": "Reset de senha",
+    "priority": "Baixa",
+    "title": "nao consigo reset de senha",
+    "description": "Boa tarde, nao consigo resetar a minh asenha da conta, pode ajudar?",
+    "status": "Resolvido",
+    "admin_notes": "",
+    "tecnico_responsavel": "PAULO DE LIMA PEREIRA",
+    "assumido_em": "2026-11-10T05:20:09.559Z",
+    "canal_atendimento": "Central GLPI",
+    "sla": "5 Dias Úteis",
+    "asset": "Nenhum",
+    "time_spent": 0,
+    "solution": "Feito",
+    "timeline": [
+      {
+        "sender": "Solicitante",
+        "author": "CICERA DE LIMA PEREIRA",
+        "text": "Chamado aberto via GLPI Service Desk (requisição). Aguardando atribuição técnica.",
+        "date": "2026-11-10T05:19:12.497Z",
+        "internal": false
+      },
+      {
+        "sender": "Sistema",
+        "author": "Sistema",
+        "text": "Chamado encaminhado para a fila \"Desenvolvedor\".",
+        "date": "2026-11-10T05:19:12.497Z",
+        "internal": false,
+        "event": true
+      },
+      {
+        "sender": "Sistema",
+        "author": "PAULO DE LIMA PEREIRA",
+        "text": "Status alterado de \"Novo\" para \"Atendimento atribuído\".",
+        "date": "2026-11-10T05:20:09.559Z",
+        "internal": false,
+        "event": true
+      },
+      {
+        "sender": "Sistema",
+        "author": "PAULO DE LIMA PEREIRA",
+        "text": "Chamado assumido por PAULO DE LIMA PEREIRA.",
+        "date": "2026-11-10T05:20:09.559Z",
+        "internal": false,
+        "event": true
+      },
+      {
+        "sender": "Técnico",
+        "author": "PAULO DE LIMA PEREIRA",
+        "text": "Olá, CICERA! Recebemos o seu chamado OS-261110-J98P e ele já está em análise pela equipe de TI. Voltaremos com uma atualização em breve.",
+        "date": "2026-11-10T05:20:25.853Z",
+        "internal": false
+      },
+      {
+        "sender": "Técnico",
+        "author": "PAULO DE LIMA PEREIRA",
+        "text": "Boa noite.\nfeito gentileza testar 123",
+        "date": "2026-11-10T05:21:06.703Z",
+        "internal": false
+      },
+      {
+        "sender": "Técnico",
+        "author": "PAULO DE LIMA PEREIRA",
+        "text": "[SOLUÇÃO APLICADA]: Feito",
+        "date": "2026-11-10T05:21:12.656Z",
+        "internal": false
+      },
+      {
+        "sender": "Sistema",
+        "author": "PAULO DE LIMA PEREIRA",
+        "text": "Status alterado de \"Atendimento atribuído\" para \"Resolvido\".",
+        "date": "2026-11-10T05:21:12.656Z",
+        "internal": false,
+        "event": true
+      }
+    ],
+    "concluido_em": "2026-11-10T05:21:12.656Z",
+    "created_at": "2026-11-10T05:19:12.497Z",
+    "updated_at": "2026-11-10T05:21:12.656Z",
+    "ticket_type": "Requisição",
+    "fila": "Desenvolvedor"
+  },
+  {
+    "id": "7",
+    "protocol": "OS-261107-PJKK",
+    "client_name": "João Silva",
+    "client_email": "joao.silva@empresa.com.br",
+    "client_phone": "",
+    "client_cpf": "",
+    "service_type": "Suporte Técnico & Infraestrutura",
+    "priority": "Média",
+    "title": "sistema lentidao",
+    "description": "lento demais",
+    "status": "Resolvido",
+    "admin_notes": "",
+    "tecnico_responsavel": null,
+    "assumido_em": null,
+    "canal_atendimento": "Portal Web",
+    "sla": "2 Horas",
+    "asset": "Nenhum",
+    "time_spent": 0,
+    "solution": "resolvido",
+    "timeline": [
+      {
+        "sender": "Solicitante",
+        "author": "João Silva",
+        "text": "Chamado aberto via GLPI Service Desk. Aguardando atribuição técnica.",
+        "date": "2026-11-07T16:04:56.120Z",
+        "internal": false
+      },
+      {
+        "sender": "Técnico",
+        "author": "Equipe TI",
+        "text": "[SOLUÇÃO APLICADA]: resolvido",
+        "date": "2026-11-07T18:07:55.558Z",
+        "internal": false
+      }
+    ],
+    "concluido_em": "2026-11-07T18:07:55.558Z",
+    "created_at": "2026-11-07T16:04:56.120Z",
+    "updated_at": "2026-11-07T18:07:55.558Z",
+    "ticket_type": "Incidente",
+    "fila": null
+  },
+  {
+    "id": "6",
+    "protocol": "OS-24448467",
+    "client_name": "PAULO DE LIMA PEREIRA",
+    "client_email": "paulolp0101@gmail.com",
+    "client_phone": "(62) 99234-5372",
+    "client_cpf": "",
+    "service_type": "Sistema Financeiro & ERP",
+    "priority": "Alta",
+    "title": "Recuperação / Reset de Senha de Acesso",
+    "description": "Solicito liberar minha assinatura ja foi feito pix para paulo de lima",
+    "status": "Resolvido",
+    "admin_notes": "✅ Pagamento reconhecido e liberado pelo Administrador (PAULO DE LIMA PEREIRA) na modalidade Pix (SPI / BACEN) - Plano MENSAL. Protocolo de Conciliação: LIB-ADMIN-PIX-1793633074915-OSOS24448467.",
+    "tecnico_responsavel": "PAULO DE LIMA PEREIRA",
+    "assumido_em": "2026-11-02T15:24:51.909Z",
+    "canal_atendimento": "Tela de Login",
+    "sla": "8 Horas",
+    "asset": "Nenhum",
+    "time_spent": 0,
+    "solution": "testar novamente.",
+    "timeline": [
+      {
+        "sender": "Solicitante",
+        "author": "PAULO DE LIMA PEREIRA",
+        "text": "Chamado registrado na Central GLPI Service Desk.",
+        "date": "2026-11-02T15:10:44.484Z",
+        "internal": false
+      },
+      {
+        "sender": "Sistema",
+        "author": "PAULO DE LIMA PEREIRA",
+        "text": "Categoria alterada de \"Pagamento Não Reconhecido\" para \"Sistema Financeiro & ERP\".",
+        "date": "2026-11-10T03:33:41.926Z",
+        "internal": true,
+        "event": true
+      },
+      {
+        "sender": "Técnico",
+        "author": "PAULO DE LIMA PEREIRA",
+        "text": "Resolvido",
+        "date": "2026-11-10T03:33:56.705Z",
+        "internal": false
+      },
+      {
+        "sender": "Técnico",
+        "author": "PAULO DE LIMA PEREIRA",
+        "text": "Chamado reaberto pela equipe de TI.",
+        "date": "2026-11-10T03:33:59.537Z",
+        "internal": true
+      },
+      {
+        "sender": "Sistema",
+        "author": "PAULO DE LIMA PEREIRA",
+        "text": "Status alterado de \"Resolvido\" para \"Em Atendimento\".",
+        "date": "2026-11-10T03:33:59.537Z",
+        "internal": false,
+        "event": true
+      },
+      {
+        "sender": "Técnico",
+        "author": "PAULO DE LIMA PEREIRA",
+        "text": "[SOLUÇÃO APLICADA]: testar novamente.",
+        "date": "2026-11-10T03:34:22.945Z",
+        "internal": false
+      },
+      {
+        "sender": "Sistema",
+        "author": "PAULO DE LIMA PEREIRA",
+        "text": "Status alterado de \"Em Atendimento\" para \"Resolvido\".",
+        "date": "2026-11-10T03:34:22.945Z",
+        "internal": false,
+        "event": true
+      },
+      {
+        "sender": "Sistema",
+        "author": "PAULO DE LIMA PEREIRA",
+        "text": "Chamado encaminhado para a fila \"Suporte Tecnico N2\".",
+        "date": "2026-11-10T06:07:32.343Z",
+        "internal": false,
+        "event": true
+      }
+    ],
+    "concluido_em": "2026-11-10T03:34:22.945Z",
+    "created_at": "2026-11-02T15:10:44.484Z",
+    "updated_at": "2026-11-10T06:07:32.343Z",
+    "ticket_type": "Requisição",
+    "fila": "Suporte Tecnico N2"
+  },
+  {
     "id": "1",
     "protocol": "OS-15330677",
     "client_name": "PAULO DE LIMA PEREIRA",
@@ -7,16 +528,31 @@
     "client_phone": "62992345372",
     "client_cpf": "04023326100",
     "service_type": "Correção de Dados",
-    "priority": "Normal",
+    "priority": "Média",
     "title": "ajuste codigo",
     "description": "ta com bug no cadastro de cartao",
-    "status": "Concluído",
+    "status": "Resolvido",
     "admin_notes": "",
     "tecnico_responsavel": "PAULO DE LIMA PEREIRA",
     "assumido_em": "2026-09-16T01:45:53.306Z",
     "canal_atendimento": "Atendimento Presencial",
+    "sla": "24 Horas",
+    "asset": "Nenhum",
+    "time_spent": 0,
+    "solution": "",
+    "timeline": [
+      {
+        "sender": "Solicitante",
+        "author": "PAULO DE LIMA PEREIRA",
+        "text": "Chamado registrado na Central GLPI Service Desk.",
+        "date": "2026-09-16T01:45:53.306Z",
+        "internal": false
+      }
+    ],
     "concluido_em": "2026-09-16T01:46:28.427Z",
     "created_at": "2026-09-16T01:45:53.306Z",
-    "updated_at": "2026-09-16T01:46:28.427Z"
+    "updated_at": "2026-09-16T01:46:28.427Z",
+    "ticket_type": "Requisição",
+    "fila": null
   }
 ]

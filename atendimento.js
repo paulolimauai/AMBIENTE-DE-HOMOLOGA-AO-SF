@@ -8,8 +8,6 @@
  * pessoa pode ver. Assim as regras ficam num lugar só e têm testes (atendimento.test.js).
  */
 
-const crypto = require('crypto');
-
 // ---------- Catálogos ----------
 // Fila de chamados: Novo -> Atendimento atribuído (-> Pendente, quando espera retorno) -> Resolvido -> Fechado
 const STATUS = Object.freeze(['Novo', 'Pendente', 'Atendimento atribuído', 'Resolvido', 'Fechado']);
@@ -177,39 +175,42 @@ function dataOuOriginal(valor) {
 }
 
 // ---------- Protocolo ----------
-// Formato: OS-AAMMDD-XXXX (data de Brasília + 4 caracteres sem ambiguidade: sem 0/O nem 1/I). Ex.: OS-261106-K7QX.
-// Protocolos antigos (OS-12345678, só números) continuam válidos para consulta.
-const ALFABETO_PROTOCOLO = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-const RE_PROTOCOLO = /^OS-?(\d{6})-?([A-HJ-NP-Z2-9]{4})$/;
+// Formato atual: sequência a partir de OS-0001 (OS-0001, OS-0002, ... OS-9999, OS-10000...). Cada chamado novo pega o número seguinte.
+// Os formatos antigos continuam válidos para consulta e atendimento: OS-AAMMDD-XXXX (ex.: OS-261106-K7QX) e OS-12345678 (só números).
+const RE_PROTOCOLO_ALEATORIO = /^OS-?(\d{6})-?([A-HJ-NP-Z2-9]{4})$/;
+const RE_PROTOCOLO_SEQUENCIAL = /^OS-?(\d{1,5})$/;
 const RE_PROTOCOLO_LEGADO = /^OS-?(\d{6,10})$/;
+const PROTOCOLO_SEQUENCIAL_MAXIMO = 99999;
+
+const formatarProtocoloSequencial = (numero) => 'OS-' + String(numero).padStart(4, '0');
 
 function normalizarProtocolo(valor) {
   const texto = String(valor == null ? '' : valor).trim().replace(/^#/, '').replace(/\s+/g, '').toUpperCase();
-  const novo = RE_PROTOCOLO.exec(texto);
-  if (novo) return 'OS-' + novo[1] + '-' + novo[2];
+  const aleatorio = RE_PROTOCOLO_ALEATORIO.exec(texto);
+  if (aleatorio) return 'OS-' + aleatorio[1] + '-' + aleatorio[2];
+  const sequencial = RE_PROTOCOLO_SEQUENCIAL.exec(texto);
+  if (sequencial) return Number(sequencial[1]) >= 1 ? formatarProtocoloSequencial(Number(sequencial[1])) : null; // OS-1 = OS-0001
   const legado = RE_PROTOCOLO_LEGADO.exec(texto);
   if (legado) return 'OS-' + legado[1];
   return null;
 }
 
-function prefixoDeData(agora) {
-  const brasilia = new Date(agora.getTime() - 3 * 60 * 60 * 1000).toISOString();
-  return brasilia.slice(2, 4) + brasilia.slice(5, 7) + brasilia.slice(8, 10);
+// Número de um protocolo sequencial (OS-0007 -> 7); 0 para qualquer outro formato
+function numeroDoProtocolo(protocolo) {
+  const m = /^OS-(\d{4,5})$/.exec(normalizarProtocolo(protocolo) || '');
+  return m ? Number(m[1]) : 0;
 }
 
-function sufixoAleatorio(tamanho = 4) {
-  let saida = '';
-  for (let i = 0; i < tamanho; i++) saida += ALFABETO_PROTOCOLO[crypto.randomInt(0, ALFABETO_PROTOCOLO.length)];
-  return saida;
-}
-
-// jaExiste(protocolo) pode ser síncrona ou assíncrona (confere o arquivo local e o banco): o protocolo é único por construção
-async function gerarProtocolo(jaExiste, agora = new Date()) {
-  for (let tentativa = 0; tentativa < 20; tentativa++) {
-    const protocolo = 'OS-' + prefixoDeData(agora) + '-' + sufixoAleatorio();
-    if (!(await jaExiste(protocolo))) return protocolo;
-  }
-  throw new Error('Não foi possível gerar um protocolo único.');
+/**
+ * Próximo protocolo da sequência: o maior número já usado nos chamados (+ o `minimo`, que o servidor alimenta com o contador
+ * gravado e com o maior número do banco) mais um. Sem nenhum chamado numerado, começa em OS-0001.
+ * É síncrona de propósito: o servidor a chama junto com a gravação do chamado, e assim dois pedidos ao mesmo tempo não repetem número.
+ */
+function proximoProtocolo(ordens, { minimo = 0 } = {}) {
+  let maior = Number.isFinite(Number(minimo)) ? Math.max(0, Math.floor(Number(minimo))) : 0;
+  for (const o of Array.isArray(ordens) ? ordens : []) maior = Math.max(maior, numeroDoProtocolo(o && o.protocol));
+  if (maior >= PROTOCOLO_SEQUENCIAL_MAXIMO) throw new Error('Limite de protocolos sequenciais atingido.');
+  return formatarProtocoloSequencial(maior + 1);
 }
 
 function mesmaReferencia(ordem, referencia) {
@@ -1049,7 +1050,7 @@ module.exports = {
   calcularSlaPorPrioridade, prioridadeCanonica, statusCanonico, tipoCanonico, categoriaCanonica, tipoSugerido,
   acharFila, filaDaCategoria, filasIniciais, validarFila,
   limparTexto, escaparHtml, paraIso,
-  gerarProtocolo, normalizarProtocolo, mesmaReferencia,
+  proximoProtocolo, numeroDoProtocolo, normalizarProtocolo, mesmaReferencia,
   formatarTelefone, mesmoNumero, validarCpf, soDigitos,
   validarAbertura, montarOrdem, encontrarDuplicada, aplicarAtualizacao,
   normalizarOrdem, mesclarOrdens,

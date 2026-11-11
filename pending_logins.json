@@ -576,11 +576,1019 @@
     "ack": false
   },
   {
-    "id": "1069",
-    "email": "admin@gmail.com",
+    "id": 1793318161519,
+    "email": "lucasano2010@gmail.com",
+    "name": "LUCAS GABRIEL FRANCISCO DOS SANTOS",
+    "last_login": "2026-10-29T20:56:01-03:00",
+    "timestamp": "2026-10-29T23:56:01.631Z",
+    "ack": false
+  },
+  {
+    "id": 1793318161519,
+    "email": "lucasano2010@gmail.com",
+    "name": "LUCAS GABRIEL FRANCISCO DOS SANTOS",
+    "last_login": "2026-10-29T20:56:31-03:00",
+    "timestamp": "2026-10-29T23:56:31.652Z",
+    "ack": false
+  },
+  {
+    "id": 1793318161519,
+    "email": "lucasano2010@gmail.com",
+    "name": "LUCAS GABRIEL FRANCISCO DOS SANTOS",
+    "last_login": "2026-10-29T20:57:04-03:00",
+    "timestamp": "2026-10-29T23:57:04.495Z",
+    "ack": false
+  },
+  {
+    "id": 1793318161519,
+    "email": "lucasano2010@gmail.com",
+    "name": "LUCAS GABRIEL FRANCISCO DOS SANTOS",
+    "last_login": "2026-10-29T20:57:41-03:00",
+    "timestamp": "2026-10-29T23:57:41.631Z",
+    "ack": false
+  },
+  {
+    "id": 1793318161519,
+    "email": "lucasano2010@gmail.com",
+    "name": "LUCAS GABRIEL FRANCISCO DOS SANTOS",
+    "last_login": "2026-10-29T20:58:25-03:00",
+    "timestamp": "2026-10-29T23:58:25.754Z",
+    "ack": false
+  },
+  {
+    "id": 1793318161519,
+    "email": "lucasano2010@gmail.com",
+    "name": "LUCAS GABRIEL FRANCISCO DOS SANTOS",
+    "last_login": "2026-10-29T21:00:43-03:00",
+    "timestamp": "2026-10-30T00:00:43.338Z",
+    "ack": false
+  },
+  {
+    "id": 1793318161519,
+    "email": "lucasano2010@gmail.com",
+    "name": "LUCAS GABRIEL FRANCISCO DOS SANTOS",
+    "last_login": "2026-10-29T21:02:52-03:00",
+    "timestamp": "2026-10-30T00:02:52.929Z",
+    "ack": false
+  },
+  {
+    "id": 1793318161519,
+    "email": "lucasano2010@gmail.com",
+    "name": "LUCAS GABRIEL FRANCISCO DOS SANTOS",
+    "last_login": "2026-10-29T21:04:03-03:00",
+    "timestamp": "2026-10-30T00:04:03.647Z",
+    "ack": false
+  },
+  {
+    "id": 1793318161519,
+    "email": "lucasano2010@gmail.com",
+    "name": "LUCAS GABRIEL FRANCISCO DOS SANTOS",
+    "last_login": "2026-10-29T21:06:26-03:00",
+    "timestamp": "2026-10-30T00:06:27.029Z",
+    "ack": false
+  },
+  {
+    "id": 1793318161519,
+    "email": "lucasano2010@gmail.com",
+    "name": "LUCAS GABRIEL FRANCISCO DOS SANTOS",
+    "last_login": "2026-10-29T21:08:01-03:00",
+    "timestamp": "2026-10-30T00:08:01.049Z",
+    "ack": false
+  },
+  {
+    "id": "73",
+    "email": "paulodelima21@gmail.com",
     "name": "PAULO DE LIMA PEREIRA",
-    "last_login": "2026-10-27T10:36:57-03:00",
-    "timestamp": "2026-10-27T13:36:57.242Z",
+    "last_login": "2026-11-02T11:22:43-03:00",
+    "timestamp": "2026-11-02T14:22:43.910Z",
+    "ack": false
+  },
+  {
+    "id": "39",
+    "email": "paulolp0101@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-02T11:24:44-03:00",
+    "timestamp": "2026-11-02T14:24:44.857Z",
+    "ack": false
+  },
+  {
+    "id": "73",
+    "email": "paulodelima21@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-02T11:25:46-03:00",
+    "timestamp": "2026-11-02T14:25:46.679Z",
+    "ack": false
+  },
+  {
+    "id": "73",
+    "email": "paulodelima21@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-02T11:26:01-03:00",
+    "timestamp": "2026-11-02T14:26:01.453Z",
+    "ack": false
+  },
+  {
+    "id": "73",
+    "email": "paulodelima21@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-02T12:11:34-03:00",
+    "timestamp": "2026-11-02T15:11:34.475Z",
+    "ack": false
+  },
+  {
+    "id": "73",
+    "email": "paulodelima21@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-02T12:11:46-03:00",
+    "timestamp": "2026-11-02T15:11:46.425Z",
+    "ack": false
+  },
+  {
+    "id": "73",
+    "email": "paulodelima21@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-02T12:15:48-03:00",
+    "timestamp": "2026-11-02T15:15:48.054Z",
+    "ack": false
+  },
+  {
+    "id": "73",
+    "email": "paulodelima21@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-02T12:15:58-03:00",
+    "timestamp": "2026-11-02T15:15:58.421Z",
+    "ack": false
+  },
+  {
+    "id": "39",
+    "email": "paulolp0101@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-02T12:24:16-03:00",
+    "timestamp": "2026-11-02T15:24:16.806Z",
+    "ack": false
+  },
+  {
+    "id": "39",
+    "email": "paulolp0101@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-02T18:05:43-03:00",
+    "timestamp": "2026-11-02T21:05:43.564Z",
+    "ack": false
+  },
+  {
+    "id": "39",
+    "email": "paulolp0101@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-02T18:05:56-03:00",
+    "timestamp": "2026-11-02T21:05:56.491Z",
+    "ack": false
+  },
+  {
+    "id": "39",
+    "email": "paulolp0101@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-02T18:06:07-03:00",
+    "timestamp": "2026-11-02T21:06:07.455Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-03T22:48:01-03:00",
+    "timestamp": "2026-11-04T01:48:01.597Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-03T23:01:19-03:00",
+    "timestamp": "2026-11-04T02:01:19.727Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-03T23:06:06-03:00",
+    "timestamp": "2026-11-04T02:06:06.706Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-03T23:28:23-03:00",
+    "timestamp": "2026-11-04T02:28:23.629Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-05T11:07:56-03:00",
+    "timestamp": "2026-11-05T14:07:56.043Z",
+    "ack": false
+  },
+  {
+    "id": "39",
+    "email": "paulolp0101@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-05T11:08:28-03:00",
+    "timestamp": "2026-11-05T14:08:28.776Z",
+    "ack": false
+  },
+  {
+    "id": "39",
+    "email": "paulolp0101@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-05T11:08:43-03:00",
+    "timestamp": "2026-11-05T14:08:43.563Z",
+    "ack": false
+  },
+  {
+    "id": "39",
+    "email": "paulolp0101@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-05T11:19:59-03:00",
+    "timestamp": "2026-11-05T14:19:59.488Z",
+    "ack": false
+  },
+  {
+    "id": "39",
+    "email": "paulolp0101@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-06T00:35:54-03:00",
+    "timestamp": "2026-11-06T03:35:54.731Z",
+    "ack": false
+  },
+  {
+    "id": "73",
+    "email": "paulodelima21@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-06T00:36:32-03:00",
+    "timestamp": "2026-11-06T03:36:32.709Z",
+    "ack": false
+  },
+  {
+    "id": "73",
+    "email": "paulodelima21@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-06T00:36:44-03:00",
+    "timestamp": "2026-11-06T03:36:44.683Z",
+    "ack": false
+  },
+  {
+    "id": "73",
+    "email": "paulodelima21@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-06T11:11:46-03:00",
+    "timestamp": "2026-11-06T14:11:46.171Z",
+    "ack": false
+  },
+  {
+    "id": "73",
+    "email": "paulodelima21@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-06T11:11:58-03:00",
+    "timestamp": "2026-11-06T14:11:58.865Z",
+    "ack": false
+  },
+  {
+    "id": "73",
+    "email": "paulodelima21@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-07T08:08:09-03:00",
+    "timestamp": "2026-11-07T11:08:09.115Z",
+    "ack": false
+  },
+  {
+    "id": "73",
+    "email": "paulodelima21@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-07T08:08:28-03:00",
+    "timestamp": "2026-11-07T11:08:28.500Z",
+    "ack": false
+  },
+  {
+    "id": "73",
+    "email": "paulodelima21@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-07T08:39:40-03:00",
+    "timestamp": "2026-11-07T11:39:40.602Z",
+    "ack": false
+  },
+  {
+    "id": "73",
+    "email": "paulodelima21@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-07T08:39:52-03:00",
+    "timestamp": "2026-11-07T11:39:52.331Z",
+    "ack": false
+  },
+  {
+    "id": "73",
+    "email": "paulodelima21@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-07T11:30:04-03:00",
+    "timestamp": "2026-11-07T14:30:04.454Z",
+    "ack": false
+  },
+  {
+    "id": "73",
+    "email": "paulodelima21@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-07T11:30:16-03:00",
+    "timestamp": "2026-11-07T14:30:16.241Z",
+    "ack": false
+  },
+  {
+    "id": "39",
+    "email": "paulolp0101@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-07T11:30:54-03:00",
+    "timestamp": "2026-11-07T14:30:54.178Z",
+    "ack": false
+  },
+  {
+    "id": "39",
+    "email": "paulolp0101@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-07T11:31:05-03:00",
+    "timestamp": "2026-11-07T14:31:05.993Z",
+    "ack": false
+  },
+  {
+    "id": "39",
+    "email": "paulolp0101@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-07T11:45:34-03:00",
+    "timestamp": "2026-11-07T14:45:34.651Z",
+    "ack": false
+  },
+  {
+    "id": "39",
+    "email": "paulolp0101@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-07T11:45:44-03:00",
+    "timestamp": "2026-11-07T14:45:44.970Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-07T13:36:12-03:00",
+    "timestamp": "2026-11-07T16:36:13.005Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-07T13:36:26-03:00",
+    "timestamp": "2026-11-07T16:36:26.381Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-07T15:03:40-03:00",
+    "timestamp": "2026-11-07T18:03:40.281Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-07T15:03:51-03:00",
+    "timestamp": "2026-11-07T18:03:51.997Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-07T15:04:08-03:00",
+    "timestamp": "2026-11-07T18:04:08.356Z",
+    "ack": false
+  },
+  {
+    "id": "39",
+    "email": "paulolp0101@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-07T15:07:32-03:00",
+    "timestamp": "2026-11-07T18:07:32.197Z",
+    "ack": false
+  },
+  {
+    "id": "39",
+    "email": "paulolp0101@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-07T15:12:19-03:00",
+    "timestamp": "2026-11-07T18:12:20.002Z",
+    "ack": false
+  },
+  {
+    "id": "39",
+    "email": "paulolp0101@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-07T15:13:17-03:00",
+    "timestamp": "2026-11-07T18:13:17.115Z",
+    "ack": false
+  },
+  {
+    "id": "39",
+    "email": "paulolp0101@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-07T15:13:27-03:00",
+    "timestamp": "2026-11-07T18:13:27.523Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-07T15:14:00-03:00",
+    "timestamp": "2026-11-07T18:14:00.618Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-07T15:39:46-03:00",
+    "timestamp": "2026-11-07T18:39:46.326Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-07T15:45:07-03:00",
+    "timestamp": "2026-11-07T18:45:07.223Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-07T15:46:05-03:00",
+    "timestamp": "2026-11-07T18:46:05.916Z",
+    "ack": false
+  },
+  {
+    "id": "39",
+    "email": "paulolp0101@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-07T15:46:42-03:00",
+    "timestamp": "2026-11-07T18:46:42.873Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-07T15:47:38-03:00",
+    "timestamp": "2026-11-07T18:47:38.609Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-07T15:47:49-03:00",
+    "timestamp": "2026-11-07T18:47:49.799Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-07T16:06:12-03:00",
+    "timestamp": "2026-11-07T19:06:12.851Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-07T16:42:26-03:00",
+    "timestamp": "2026-11-07T19:42:26.391Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-07T16:44:12-03:00",
+    "timestamp": "2026-11-07T19:44:12.583Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-07T16:53:14-03:00",
+    "timestamp": "2026-11-07T19:53:14.699Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-07T18:13:57-03:00",
+    "timestamp": "2026-11-07T21:13:57.031Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-07T18:31:09-03:00",
+    "timestamp": "2026-11-07T21:31:09.964Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-07T19:25:50-03:00",
+    "timestamp": "2026-11-07T22:25:50.806Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-07T19:27:12-03:00",
+    "timestamp": "2026-11-07T22:27:12.095Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-08T10:17:39-03:00",
+    "timestamp": "2026-11-08T13:17:39.635Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-08T10:18:13-03:00",
+    "timestamp": "2026-11-08T13:18:13.723Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-08T10:33:45-03:00",
+    "timestamp": "2026-11-08T13:33:45.509Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-08T10:34:48-03:00",
+    "timestamp": "2026-11-08T13:34:48.781Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-08T11:18:48-03:00",
+    "timestamp": "2026-11-08T14:18:48.529Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-08T11:19:07-03:00",
+    "timestamp": "2026-11-08T14:19:07.209Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-08T11:29:19-03:00",
+    "timestamp": "2026-11-08T14:29:19.824Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-09T20:33:31-03:00",
+    "timestamp": "2026-11-09T23:33:31.804Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-09T20:34:46-03:00",
+    "timestamp": "2026-11-09T23:34:46.931Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-09T20:54:24-03:00",
+    "timestamp": "2026-11-09T23:54:24.426Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-09T20:54:39-03:00",
+    "timestamp": "2026-11-09T23:54:39.561Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-09T20:54:53-03:00",
+    "timestamp": "2026-11-09T23:54:53.560Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-09T21:34:22-03:00",
+    "timestamp": "2026-11-10T00:34:22.738Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-09T21:34:38-03:00",
+    "timestamp": "2026-11-10T00:34:38.371Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-09T21:37:10-03:00",
+    "timestamp": "2026-11-10T00:37:10.818Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-09T22:11:45-03:00",
+    "timestamp": "2026-11-10T01:11:45.276Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-09T22:17:57-03:00",
+    "timestamp": "2026-11-10T01:17:57.412Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-09T22:20:33-03:00",
+    "timestamp": "2026-11-10T01:20:34.017Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-09T22:21:11-03:00",
+    "timestamp": "2026-11-10T01:21:11.933Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-09T22:21:28-03:00",
+    "timestamp": "2026-11-10T01:21:28.873Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-09T22:30:40-03:00",
+    "timestamp": "2026-11-10T01:30:40.715Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-09T22:30:55-03:00",
+    "timestamp": "2026-11-10T01:30:55.775Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-09T22:41:34-03:00",
+    "timestamp": "2026-11-10T01:41:34.887Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-10T00:14:45-03:00",
+    "timestamp": "2026-11-10T03:14:45.942Z",
+    "ack": false
+  },
+  {
+    "id": "39",
+    "email": "paulolp0101@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-10T00:31:26-03:00",
+    "timestamp": "2026-11-10T03:31:26.252Z",
+    "ack": false
+  },
+  {
+    "id": "39",
+    "email": "paulolp0101@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-10T00:31:43-03:00",
+    "timestamp": "2026-11-10T03:31:43.638Z",
+    "ack": false
+  },
+  {
+    "id": "39",
+    "email": "paulolp0101@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-10T00:33:16-03:00",
+    "timestamp": "2026-11-10T03:33:17.023Z",
+    "ack": false
+  },
+  {
+    "id": "39",
+    "email": "paulolp0101@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-10T00:37:20-03:00",
+    "timestamp": "2026-11-10T03:37:20.219Z",
+    "ack": false
+  },
+  {
+    "id": "39",
+    "email": "paulolp0101@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-10T00:47:06-03:00",
+    "timestamp": "2026-11-10T03:47:06.822Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-10T01:18:59-03:00",
+    "timestamp": "2026-11-10T04:18:59.407Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-10T01:19:36-03:00",
+    "timestamp": "2026-11-10T04:19:36.402Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-10T01:20:09-03:00",
+    "timestamp": "2026-11-10T04:20:09.384Z",
+    "ack": false
+  },
+  {
+    "id": "39",
+    "email": "paulolp0101@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-10T01:21:07-03:00",
+    "timestamp": "2026-11-10T04:21:07.408Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-10T02:18:30-03:00",
+    "timestamp": "2026-11-10T05:18:30.849Z",
+    "ack": false
+  },
+  {
+    "id": "39",
+    "email": "paulolp0101@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-10T02:20:04-03:00",
+    "timestamp": "2026-11-10T05:20:04.333Z",
+    "ack": false
+  },
+  {
+    "id": "1070",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-11-10T02:21:41-03:00",
+    "timestamp": "2026-11-10T05:21:41.125Z",
+    "ack": false
+  },
+  {
+    "id": "39",
+    "email": "paulolp0101@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-10T02:37:11-03:00",
+    "timestamp": "2026-11-10T05:37:11.433Z",
+    "ack": false
+  },
+  {
+    "id": "73",
+    "email": "paulodelima21@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-10T02:39:53-03:00",
+    "timestamp": "2026-11-10T05:39:53.560Z",
+    "ack": false
+  },
+  {
+    "id": "39",
+    "email": "paulolp0101@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-10T02:41:04-03:00",
+    "timestamp": "2026-11-10T05:41:04.305Z",
+    "ack": false
+  },
+  {
+    "id": "39",
+    "email": "paulolp0101@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-10T02:42:39-03:00",
+    "timestamp": "2026-11-10T05:42:39.639Z",
+    "ack": false
+  },
+  {
+    "id": "39",
+    "email": "paulolp0101@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-10T02:46:21-03:00",
+    "timestamp": "2026-11-10T05:46:21.806Z",
+    "ack": false
+  },
+  {
+    "id": "39",
+    "email": "paulolp0101@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-10T03:02:13-03:00",
+    "timestamp": "2026-11-10T06:02:13.702Z",
+    "ack": false
+  },
+  {
+    "id": "39",
+    "email": "paulolp0101@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-10T03:06:39-03:00",
+    "timestamp": "2026-11-10T06:06:39.329Z",
+    "ack": false
+  },
+  {
+    "id": "39",
+    "email": "paulolp0101@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-10T10:13:22-03:00",
+    "timestamp": "2026-11-10T13:13:22.779Z",
+    "ack": false
+  },
+  {
+    "id": "73",
+    "email": "paulodelima21@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-10T10:13:59-03:00",
+    "timestamp": "2026-11-10T13:13:59.230Z",
+    "ack": false
+  },
+  {
+    "id": "73",
+    "email": "paulodelima21@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-10T11:15:11-03:00",
+    "timestamp": "2026-11-10T14:15:11.637Z",
+    "ack": false
+  },
+  {
+    "id": "73",
+    "email": "paulodelima21@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-10T11:16:32-03:00",
+    "timestamp": "2026-11-10T14:16:32.489Z",
+    "ack": false
+  },
+  {
+    "id": "73",
+    "email": "paulodelima21@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-10T11:16:57-03:00",
+    "timestamp": "2026-11-10T14:16:57.034Z",
+    "ack": false
+  },
+  {
+    "id": "39",
+    "email": "paulolp0101@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-10T11:19:17-03:00",
+    "timestamp": "2026-11-10T14:19:17.271Z",
+    "ack": false
+  },
+  {
+    "id": "73",
+    "email": "paulodelima21@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-10T11:21:38-03:00",
+    "timestamp": "2026-11-10T14:21:38.378Z",
+    "ack": false
+  },
+  {
+    "id": "73",
+    "email": "paulodelima21@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-10T11:24:25-03:00",
+    "timestamp": "2026-11-10T14:24:25.392Z",
+    "ack": false
+  },
+  {
+    "id": "39",
+    "email": "paulolp0101@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-10T11:25:44-03:00",
+    "timestamp": "2026-11-10T14:25:44.955Z",
+    "ack": false
+  },
+  {
+    "id": "73",
+    "email": "paulodelima21@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-10T11:45:12-03:00",
+    "timestamp": "2026-11-10T14:45:12.936Z",
+    "ack": false
+  },
+  {
+    "id": "39",
+    "email": "paulolp0101@gmail.com",
+    "name": "ADMINISTRADOR DO SISTEMA",
+    "last_login": "2026-11-10T11:45:32-03:00",
+    "timestamp": "2026-11-10T14:45:32.200Z",
+    "ack": false
+  },
+  {
+    "id": "73",
+    "email": "paulodelima21@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-10T11:46:33-03:00",
+    "timestamp": "2026-11-10T14:46:33.593Z",
+    "ack": false
+  },
+  {
+    "id": "39",
+    "email": "paulolp0101@gmail.com",
+    "name": "ADMINISTRADOR DO SISTEMA",
+    "last_login": "2026-11-10T11:47:03-03:00",
+    "timestamp": "2026-11-10T14:47:03.027Z",
+    "ack": false
+  },
+  {
+    "id": "73",
+    "email": "paulodelima21@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-10T11:47:50-03:00",
+    "timestamp": "2026-11-10T14:47:50.617Z",
+    "ack": false
+  },
+  {
+    "id": "73",
+    "email": "paulodelima21@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-10T21:12:11-03:00",
+    "timestamp": "2026-11-11T00:12:11.840Z",
     "ack": false
   }
 ]
