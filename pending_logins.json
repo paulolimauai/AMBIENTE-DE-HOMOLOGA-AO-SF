@@ -3,22 +3,6 @@
     "id": "39",
     "email": "paulolp0101@gmail.com",
     "name": "PAULO DE LIMA PEREIRA",
-    "last_login": "2026-10-14T10:09:53-03:00",
-    "timestamp": "2026-10-14T13:09:53.336Z",
-    "ack": false
-  },
-  {
-    "id": "39",
-    "email": "paulolp0101@gmail.com",
-    "name": "PAULO DE LIMA PEREIRA",
-    "last_login": "2026-10-17T17:54:13-03:00",
-    "timestamp": "2026-10-17T20:54:13.709Z",
-    "ack": false
-  },
-  {
-    "id": "39",
-    "email": "paulolp0101@gmail.com",
-    "name": "PAULO DE LIMA PEREIRA",
     "last_login": "2026-10-17T17:55:33-03:00",
     "timestamp": "2026-10-17T20:55:33.330Z",
     "ack": false
@@ -1597,6 +1581,22 @@
     "name": "ADMINISTRADOR DO SISTEMA",
     "last_login": "2026-11-11T09:38:16-03:00",
     "timestamp": "2026-11-11T12:38:16.034Z",
+    "ack": false
+  },
+  {
+    "id": "73",
+    "email": "paulodelima21@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-11T19:48:23-03:00",
+    "timestamp": "2026-11-11T22:48:23.276Z",
+    "ack": false
+  },
+  {
+    "id": "73",
+    "email": "paulodelima21@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-11T19:49:10-03:00",
+    "timestamp": "2026-11-11T22:49:10.432Z",
     "ack": false
   }
 ]
