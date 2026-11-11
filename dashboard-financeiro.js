@@ -915,7 +915,8 @@
       ? '<ul class="fd-lista-simples">' + c.bancarias.map((b) => '<li class="fd-clicavel"' + atalho({ conta: b.nome }) + ' title="Ver as movimentações de ' + esc(b.nome) + '"><span>' + esc(b.nome) + '</span><strong class="' + (b.saldo < 0 ? 'fd-sai' : '') + '">' + dinheiro(b.saldo) + '</strong></li>').join('') + '</ul>'
       : '<p class="fd-legenda">Nenhuma conta bancária cadastrada.</p>';
     const cartoes = c.cartoes.itens.length
-      ? '<p class="fd-legenda" style="margin:0 0 6px">Dívida total nos cartões: <strong class="fd-money">' + esc(fmtU(c.cartoes.divida != null ? c.cartoes.divida : c.cartoes.fatura)) + '</strong></p>' +
+      ? '<p class="fd-legenda" style="margin:0 0 6px">Dívida total nos cartões: <strong class="fd-money">' + esc(fmtU(c.cartoes.divida != null ? c.cartoes.divida : c.cartoes.fatura)) + '</strong>' +
+        ' <span style="opacity:.75">(' + c.cartoes.itens.map((k) => esc(k.nome) + ' ' + esc(fmtU(k.fatura))).join(' · ') + ')</span></p>' +
         '<ul class="fd-cartoes">' + c.cartoes.itens.map((k) => '<li class="fd-clicavel"' + atalho({ conta: k.nome }) + ' title="Ver as movimentações de ' + esc(k.nome) + '"><div class="fd-cartao-topo"><span>' + esc(k.nome) + '</span><strong>' + k.usoPct + '%</strong></div>' +
         medidor(k.usoPct, k.usoPct >= 85 ? 'fd-m-ruim' : k.usoPct >= 60 ? 'fd-m-medio' : 'fd-m-bom', k.nome + ' ' + k.usoPct + '% do limite') +
         '<div class="fd-cartao-nota"><span>Fatura ' + dinheiro(k.fatura) + '</span><span>Livre ' + dinheiro(k.disponivel) + '</span></div></li>').join('') + '</ul>'
