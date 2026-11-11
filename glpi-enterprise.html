@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GLPI 10 Enterprise ITSM | Service Desk Corporativo</title>
+    <title>GLPI Service Desk — Central de Chamados e Suporte</title>
     <!-- Ícones, tipografia e gráficos (versões fixas) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -721,6 +721,7 @@
             .fchip { height: 2.4rem; }
             .row-acts .act-txt { display: none; }
             .modal-foot .hint { display: none; }
+            .props .row2 { grid-template-columns: 1fr; }
         }
 
         /* Celular: cabeçalho das janelas mais limpo e listas em cartões (sem rolar de lado) */
@@ -1699,18 +1700,18 @@ html[data-bg="vidro"] .l-glass{opacity:1}
 
     <!-- Retomando a sessão (só aparece com data-boot="restore" no <html>): no lugar do login que piscava antes do app -->
     <div id="boot-splash" class="boot" role="status" aria-live="polite">
-        <div class="lg-logo"><div class="mark" aria-hidden="true">G</div><div>GLPI <small>Service Desk</small></div></div>
+        <div class="lg-logo"><div class="mark" aria-hidden="true">G</div><div>GLPI <small>Chamados &amp; Suporte</small></div></div>
         <div class="boot-ln"><span class="boot-ring" aria-hidden="true"></span><span>Retomando a sua sessão…</span></div>
     </div>
 
     <!-- 1. TELA DE ACESSO: mesmo cartão de vidro do login do Nexus Financeiro (e-mail e senha do Sistema Financeiro) -->
     <div id="view-login" class="login-wrap">
         <main class="lg-main">
-            <div class="lg-logo"><div class="mark" aria-hidden="true">G</div><div>GLPI <small>Service Desk</small></div></div>
+            <div class="lg-logo"><div class="mark" aria-hidden="true">G</div><div>GLPI <small>Chamados &amp; Suporte</small></div></div>
 
             <section class="glass lg-card" aria-label="Acesso ao GLPI">
-                <h2>Acessar o GLPI</h2>
-                <p class="sub">Use o e-mail e a senha do Nexus Financeiro. Seu perfil (usuário para abrir chamados ou administrador para tratá-los) é carregado automaticamente.</p>
+                <h2>Central de Chamados e Suporte</h2>
+                <p class="sub">Abra, acompanhe e resolva chamados de suporte com protocolo único. Entre com o e-mail e a senha do Nexus Financeiro — seu perfil de acesso é carregado automaticamente.</p>
 
                 <!-- Login manual (mesmo acesso do Sistema Financeiro) -->
                 <form onsubmit="handleManualLogin(event)">
@@ -1730,14 +1731,14 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                     </div>
                     <p id="login-error-msg" class="hidden login-error" role="alert"></p>
                     <button type="submit" id="btn-submit-login" class="btn btn-blue btn-lg btn-block">
-                        <i class="fa-solid fa-right-to-bracket"></i> Entrar na Central GLPI
+                        <i class="fa-solid fa-right-to-bracket"></i> Entrar na Central de Chamados
                     </button>
                 </form>
 
                 <ul class="lg-feat">
-                    <li><i class="fa-solid fa-ticket"></i> Chamados com protocolo único</li>
-                    <li><i class="fa-solid fa-stopwatch"></i> SLA calculado pela severidade</li>
-                    <li><i class="fa-solid fa-server"></i> Ativos de TI (CMDB) vinculados</li>
+                    <li><i class="fa-solid fa-ticket"></i> Chamados com protocolo e histórico completos</li>
+                    <li><i class="fa-solid fa-stopwatch"></i> Prazos de atendimento (SLA) por severidade</li>
+                    <li><i class="fa-solid fa-server"></i> Ativos de TI vinculados a cada chamado</li>
                 </ul>
             </section>
 
@@ -1754,7 +1755,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         <div class="tb-brand">
             <div class="mark sm brand" aria-hidden="true">G</div>
             <div class="tb-brand-t">
-                <div class="tb-title"><b>GLPI</b><span>Service Desk</span></div>
+                <div class="tb-title"><b>GLPI</b><span>Chamados &amp; Suporte</span></div>
                 <span id="header-role-badge" class="badge b-blue caps">Solicitante</span>
             </div>
         </div>
@@ -1842,7 +1843,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                             <div style="position:relative;">
                                 <span class="hero-tag"><i class="fa-solid fa-headset"></i> Central de Suporte &amp; Autoatendimento</span>
                                 <h2 id="user-greeting">Como podemos ajudar?</h2>
-                                <p>Escolha o serviço, descreva o que precisa e acompanhe cada resposta em "Meus Chamados".</p>
+                                <p>Escolha o serviço, descreva o ocorrido com clareza e acompanhe cada atualização do atendimento em "Meus Chamados".</p>
                             </div>
                             <div class="hero-acts">
                                 <button type="button" onclick="openFormModal('', 'Requisição')" class="btn btn-blue">
@@ -2033,7 +2034,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                             <div>
                                 <div class="crumbs"><i class="fa-solid fa-house"></i> ITSM Operations <i class="fa-solid fa-chevron-right"></i> <span class="here">Dashboard Executivo</span></div>
                                 <h2>Dashboard Executivo</h2>
-                                <p>Visão consolidada do Service Desk: volume de chamados, severidades e prazos de SLA em tempo real.</p>
+                                <p>Visão consolidada da Central de Chamados: volume de atendimentos, severidades e prazos de SLA em tempo real.</p>
                             </div>
                             <div class="ph-actions">
                                 <button type="button" onclick="navTech('queue')" class="btn btn-amber">
@@ -2281,8 +2282,8 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 <div class="mh-l">
                     <div class="mh-ico"><i class="fa-solid fa-pen-to-square"></i></div>
                     <div>
-                        <h3 id="modal-form-title" class="mh-title">Abrir Solicitação de Suporte</h3>
-                        <p id="modal-form-sub" class="mh-sub">Preencha os detalhes para envio ao Service Desk</p>
+                        <h3 id="modal-form-title" class="mh-title">Abrir Chamado de Suporte</h3>
+                        <p id="modal-form-sub" class="mh-sub">Preencha os detalhes para abertura do chamado</p>
                     </div>
                 </div>
                 <button type="button" onclick="closeModal('modal-form')" class="btn btn-icon" aria-label="Fechar">
@@ -4047,8 +4048,8 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         function resetFormView() {
             $('form-ticket').classList.remove('hidden');
             $('form-success').classList.add('hidden');
-            $('modal-form-title').textContent = 'Abrir Solicitação de Suporte';
-            $('modal-form-sub').textContent = 'Preencha os detalhes para envio ao Service Desk';
+            $('modal-form-title').textContent = 'Abrir Chamado de Suporte';
+            $('modal-form-sub').textContent = 'Preencha os detalhes para abertura do chamado';
             $('form-banner').classList.add('hidden');
             ['subject', 'desc', 'phone'].forEach((k) => showFieldError('err-' + k, ''));
             ['form-subject', 'form-desc', 'form-req-phone'].forEach((id) => $(id).classList.remove('is-invalid'));
@@ -4229,7 +4230,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             $('form-ticket').classList.add('hidden');
             $('form-success').classList.remove('hidden');
             $('modal-form-title').textContent = data.duplicate ? 'Chamado já registrado' : 'Chamado registrado';
-            $('modal-form-sub').textContent = 'Confirmação do registro no Service Desk';
+            $('modal-form-sub').textContent = 'Confirmação do registro na Central de Chamados';
             $('success-title').textContent = data.duplicate ? 'Este chamado já havia sido registrado' : 'Chamado registrado!';
             $('success-sub').textContent = data.duplicate
                 ? 'Identificamos um chamado igual enviado há pouco, então não criamos outro. Guarde o protocolo para acompanhar o andamento.'
