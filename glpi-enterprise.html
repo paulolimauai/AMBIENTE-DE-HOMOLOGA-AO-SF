@@ -4366,7 +4366,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 <td class="mono strong c-blue c-id">${escapeHtml(t.id)}</td>
                 <td class="t-cell">
                     <div class="t-title">${escapeHtml(t.subject)}${waiting ? '<span class="t-flag you"><i class="fa-solid fa-reply"></i> Responder</span>' : ''}</div>
-                    <div class="t-sub">${typePill(t.type)}${escapeHtml(t.category)}${relTime(t.updatedAt || t.createdAt) ? '<span class="sep">•</span>Atualizado ' + relTime(t.updatedAt || t.createdAt) : ''}</div>
+                    <div class="t-sub">${typePill(t.type)}${escapeHtml(t.category)}${hasTech(t) ? '<span class="sep">•</span><i class="fa-solid fa-user-gear" style="font-size:.85em;"></i> ' + escapeHtml(t.technician) : ''}${relTime(t.updatedAt || t.createdAt) ? '<span class="sep">•</span>Atualizado ' + relTime(t.updatedAt || t.createdAt) : ''}</div>
                 </td>
                 <td class="c-muted nw c-date">${escapeHtml(t.date)}</td>
                 <td class="c-urg">${getUrgencyBadge(t.urgency)}</td>
