@@ -7,20 +7,18 @@
     "client_phone": "(62) 98626-6049",
     "client_cpf": "04023326100",
     "service_type": "Reset de senha",
-    "ticket_type": "Requisição",
-    "fila": "Desenvolvedor",
     "priority": "Baixa",
     "title": "ajuste sistema",
     "description": "❭ na tela de registrar o chamado expandir mais e ficar organizado para registro\n\n ✓ Searched for modal-form|openFormModal|fm-|form-modal in .\\glpi-enterprise.html\n ✓ Read lines 2425-2599 in .\\glpi-enterprise.html 175 lines\n ✓ Searched for \\.modal \\{|\\.modal-body|\\.modal-head|\\.fsplit|\\.fs-main|\\.fs-side|\\.fs-step|\\.fs-h|\\.picks|\\.pick \\{|\\.pick b|\\.pick small|\\.pick em in .\\g…\n\n Vou expandir o modal de registro: mais largo, coluna lateral maior e espaçamentos mais generosos.\n\n ✓ Read lines 1598-1637 in .\\glpi-enterprise.html 40 lines\n ✓ Edited .\\glpi-enterprise.html +31 -31\n ✓ Edited .\\glpi-enterprise.html +1 -1\n ✓ $pid3000 = (Get-NetTCPConnection -LocalPort 3000 -State Listen -ErrorAction SilentlyContinue).OwningProcess; if ($pid3000) { Stop-Process -Id $pid3000 -…\n ✓ node server.js Running in shell 1df950\n ✓ git add .; git commit -m &quot;GLPI: expande e organiza o modal de registro de chamado&quot;; git push origin HEAD\n\n Feito. O modal &quot;Abrir Chamado de Suporte&quot; foi expandido e reorganizado em  glpi-enterprise.html  glpi-enterprise.html:1599-1635 (file:///C:/\n AMBIENTE%20DE%20HOMOLOGA%C3%87AO/glpi-enterprise.html):\n\n Dimensões:\n\n   • Largura:  58rem  →  72rem  (~24% mais largo)\n   • Coluna lateral (resumo/SLA/dicas):  17rem  →  20rem\n   • Textarea de descrição:  rows=4  →  rows=5  e  min-height  5rem → 6rem\n\n Espaçamentos e campos:\n\n   • Padding do corpo:  1rem 1.1rem  →  1.2rem 1.4rem\n   • Inputs na altura padrão ( --ctl ) com fonte  .875rem  — mais legíveis\n   • Passos ( fs-step ) com mais respiro: gap  .5rem  →  .7rem , títulos  .875rem  →  .95rem\n   • Cartões de seleção (tipo, categoria, prioridade): padding  .5/.65  →  .6/.8rem , ícones  1.85rem  →  2.1rem\n   • Grade de categorias: cartões mín.  10.5rem  →  11.5rem  (cabe mais por linha na janela maior)\n   • Rodapé fixo (sticky) realinhado ao novo padding\n\n A estrutura em 2 colunas (formulário à esquerda, resumo do pedido + SLA à direita) se mantém — só que agora com respiro de sobra. No mobile nada quebra\n (regras responsivas preservadas).\n\n Servidor reiniciado e commit  40b5125  enviado para  origin/main .",
-    "status": "Novo",
+    "status": "Resolvido",
     "admin_notes": "",
-    "tecnico_responsavel": null,
-    "assumido_em": null,
+    "tecnico_responsavel": "ADMINISTRADOR DO SISTEMA",
+    "assumido_em": "2026-11-11T23:18:24.192Z",
     "canal_atendimento": "Central GLPI",
     "sla": "5 Dias Úteis",
     "asset": "Nenhum",
     "time_spent": 0,
-    "solution": "",
+    "solution": "Boa tarde\nResolvido.",
     "timeline": [
       {
         "sender": "Solicitante",
@@ -36,11 +34,44 @@
         "date": "2026-11-11T23:17:43.467Z",
         "internal": false,
         "event": true
+      },
+      {
+        "sender": "Sistema",
+        "author": "ADMINISTRADOR DO SISTEMA",
+        "text": "Status alterado de \"Novo\" para \"Atendimento atribuído\".",
+        "date": "2026-11-11T23:18:24.192Z",
+        "internal": false,
+        "event": true
+      },
+      {
+        "sender": "Sistema",
+        "author": "ADMINISTRADOR DO SISTEMA",
+        "text": "Chamado assumido por ADMINISTRADOR DO SISTEMA.",
+        "date": "2026-11-11T23:18:24.192Z",
+        "internal": false,
+        "event": true
+      },
+      {
+        "sender": "Técnico",
+        "author": "ADMINISTRADOR DO SISTEMA",
+        "text": "[SOLUÇÃO APLICADA]: Boa tarde\nResolvido.",
+        "date": "2026-11-11T23:18:51.849Z",
+        "internal": false
+      },
+      {
+        "sender": "Sistema",
+        "author": "ADMINISTRADOR DO SISTEMA",
+        "text": "Status alterado de \"Atendimento atribuído\" para \"Resolvido\".",
+        "date": "2026-11-11T23:18:51.849Z",
+        "internal": false,
+        "event": true
       }
     ],
-    "concluido_em": null,
+    "concluido_em": "2026-11-11T23:18:51.849Z",
     "created_at": "2026-11-11T23:17:43.467Z",
-    "updated_at": "2026-11-11T23:17:43.467Z"
+    "updated_at": "2026-11-11T23:18:51.849Z",
+    "ticket_type": "Requisição",
+    "fila": "Desenvolvedor"
   },
   {
     "id": "16",
@@ -53,7 +84,7 @@
     "priority": "Baixa",
     "title": "mudar tipo de abertura de chamado",
     "description": "quando for requisição aparecer #REQ-\nQuando for Incidente aparece #INC-\n\ncaso tenha quer alterar de REQ para INC permitir o chamado mudar apenas a inicial",
-    "status": "Atendimento atribuído",
+    "status": "Fechado",
     "admin_notes": "",
     "tecnico_responsavel": "PAULO DE LIMA PEREIRA",
     "assumido_em": "2026-11-11T12:17:20.453Z",
@@ -117,11 +148,26 @@
         "date": "2026-11-11T12:25:15.615Z",
         "internal": false,
         "event": true
+      },
+      {
+        "sender": "Técnico",
+        "author": "ADMINISTRADOR DO SISTEMA",
+        "text": "Chamado fechado sem solução pela equipe de TI.",
+        "date": "2026-11-11T23:36:22.105Z",
+        "internal": true
+      },
+      {
+        "sender": "Sistema",
+        "author": "ADMINISTRADOR DO SISTEMA",
+        "text": "Status alterado de \"Atendimento atribuído\" para \"Fechado\".",
+        "date": "2026-11-11T23:36:22.105Z",
+        "internal": false,
+        "event": true
       }
     ],
-    "concluido_em": null,
+    "concluido_em": "2026-11-11T23:36:22.105Z",
     "created_at": "2026-11-11T12:16:53.082Z",
-    "updated_at": "2026-11-11T12:25:15.615Z",
+    "updated_at": "2026-11-11T23:36:22.105Z",
     "ticket_type": "Requisição",
     "fila": "Desenvolvedor"
   },
