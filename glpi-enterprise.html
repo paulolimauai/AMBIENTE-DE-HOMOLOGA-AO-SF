@@ -975,25 +975,34 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         .slab::after { background: linear-gradient(135deg, rgba(255, 255, 255, .7), rgba(255, 255, 255, .06) 28%, rgba(255, 255, 255, .04) 68%, rgba(var(--acc-rgb), .6)); }
 
         /* ---------- Tela de acesso: mesmo cartão de vidro do login do Nexus ---------- */
-        .lg-main { width: 100%; max-width: 30rem; margin: auto; display: flex; flex-direction: column; align-items: center; animation: rise .6s cubic-bezier(.2, .7, .2, 1) both; }
-        .lg-logo { display: flex; align-items: center; gap: .8rem; margin-bottom: 1.4rem; font-weight: 800; font-size: 1.35rem; letter-spacing: -.01em; color: var(--white); }
-        .lg-logo small { font-weight: 500; font-size: 1.05rem; color: var(--muted); }
-        .lg-logo .mark { width: 2.8rem; height: 2.8rem; border-radius: .85rem; font-size: 1.6rem; }
-        .lg-card { width: 100%; padding: 2.1rem 2rem 1.6rem; border-radius: 1.4rem; background: var(--glass-fill); }
-        .lg-card h2 { font-family: var(--font-display); font-weight: 600; font-size: 1.8rem; line-height: 1.2; letter-spacing: -.015em; color: var(--white); }
-        .lg-card .sub { margin-top: .4rem; font-size: 0.9375rem; line-height: 1.6; color: var(--ink-2); }
-        .lg-card form { margin-top: 1.4rem; display: grid; gap: 1rem; }
+        .lg-main { width: 100%; max-width: 34rem; margin: auto; display: flex; flex-direction: column; align-items: center; animation: rise .6s cubic-bezier(.2, .7, .2, 1) both; }
+        .lg-logo { display: flex; align-items: center; gap: .9rem; margin-bottom: 1.8rem; font-weight: 800; font-size: 1.5rem; letter-spacing: -.01em; color: var(--white); }
+        .lg-logo small { font-weight: 500; font-size: 1.1rem; color: var(--muted); }
+        .lg-logo .mark { width: 3.1rem; height: 3.1rem; border-radius: 1rem; font-size: 1.75rem; }
+        .lg-card { width: 100%; padding: 2.7rem 2.5rem 1.9rem; border-radius: 1.75rem; background: var(--glass-fill); overflow: hidden; }
+        .lg-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--brand), rgba(var(--amber-rgb), .9) 55%, transparent); }
+        .lg-eyebrow { display: inline-flex; align-items: center; gap: .55rem; margin-bottom: .8rem; font-size: .72rem; font-weight: 800; letter-spacing: .24em; text-transform: uppercase; color: var(--acc-l); }
+        .lg-eyebrow::before, .lg-eyebrow::after { content: ""; width: 1.7rem; height: 1px; background: currentColor; opacity: .45; }
+        .lg-card h2 { font-family: var(--font-display); font-weight: 600; font-size: 2.15rem; line-height: 1.2; letter-spacing: -.015em; color: var(--white); }
+        .lg-card .sub { margin-top: .55rem; font-size: 1rem; line-height: 1.65; color: var(--ink-2); max-width: 31rem; }
+        .lg-card form { margin-top: 1.9rem; display: grid; gap: 1.15rem; }
         .lg-card .input-icon { display: block; min-width: 0; }
-        .lg-card .input { height: 3.1rem; padding-top: 0; padding-bottom: 0; border-radius: .75rem; font-size: 1rem; }
-        .lg-card .field label { font-size: 0.8625rem; }
-        .lg-card .btn-lg { height: 3.1rem; border-radius: .75rem; font-size: 1.0125rem; }
+        .lg-card .input { height: 3.4rem; padding-top: 0; padding-bottom: 0; border-radius: .85rem; font-size: 1.05rem; }
+        .lg-card .input.has-eye { padding-right: 3.2rem; }
+        .pw-eye { position: absolute; right: .5rem; top: 50%; transform: translateY(-50%); width: 2.5rem; height: 2.5rem; display: grid; place-items: center; border: 0; border-radius: .65rem; background: transparent; color: var(--faint); font-size: .95rem; cursor: pointer; transition: color .18s, background .18s; }
+        .pw-eye:hover { color: var(--acc-l); background: rgba(var(--lt), .1); }
+        .lg-card .field label { font-size: .9rem; }
+        .lg-card .btn-lg { height: 3.4rem; border-radius: .85rem; font-size: 1.05rem; letter-spacing: .01em; }
         .login-error { color: var(--t-rose); }
-        .lg-feat { margin-top: 1.4rem; padding-top: 1.2rem; display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem; border-top: 1px solid var(--line-soft); }
-        .lg-feat li { display: inline-flex; align-items: center; gap: .5rem; padding: .35rem .8rem; border-radius: 99px; font-size: 0.7969rem; font-weight: 600; color: var(--ink-2); background: rgba(var(--lt), .06); border: 1px solid var(--line-soft); }
-        .lg-feat li i { font-size: 0.7969rem; color: var(--acc-l); }
-        .lg-foot { margin-top: 1.4rem; display: grid; gap: .35rem; justify-items: center; font-size: 0.7969rem; color: var(--muted); text-align: center; }
+        .lg-back { margin-top: 1.2rem; display: flex; justify-content: center; }
+        .lg-back a { display: inline-flex; align-items: center; gap: .45rem; font-size: .85rem; font-weight: 700; color: var(--muted); text-decoration: none; transition: color .18s; }
+        .lg-back a:hover { color: var(--acc-l); }
+        .lg-feat { margin-top: 1.7rem; padding-top: 1.5rem; display: flex; flex-wrap: wrap; justify-content: center; gap: .55rem; border-top: 1px solid var(--line-soft); }
+        .lg-feat li { display: inline-flex; align-items: center; gap: .5rem; padding: .4rem .85rem; border-radius: 99px; font-size: .8125rem; font-weight: 600; color: var(--ink-2); background: rgba(var(--lt), .06); border: 1px solid var(--line-soft); }
+        .lg-feat li i { font-size: .8125rem; color: var(--acc-l); }
+        .lg-foot { margin-top: 1.7rem; display: grid; gap: .4rem; justify-items: center; font-size: .85rem; color: var(--muted); text-align: center; }
         .lg-foot i { margin-right: .35rem; color: var(--t-green); }
-        .lg-foot .mono { font-size: 0.744rem; color: var(--faint); }
+        .lg-foot .mono { font-size: .8rem; color: var(--faint); }
 
         /* Texto que fica direto sobre o fundo (sem placa de vidro): halo na cor da superfície (escura no escuro, branca no claro)
            garante o contraste sobre qualquer um dos 15 fundos e das 10 paletas */
@@ -1726,6 +1735,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             <div class="lg-logo"><div class="mark" aria-hidden="true"><svg class="mark-ico"><use href="#glpi-mark"/></svg></div><div>GLPI <small>Chamados &amp; Suporte</small></div></div>
 
             <section class="glass lg-card" aria-label="Acesso ao GLPI">
+                <span class="lg-eyebrow">Service Desk Enterprise</span>
                 <h2>Central de Chamados e Suporte</h2>
                 <p class="sub">Abra, acompanhe e resolva chamados de suporte com protocolo único. Entre com o e-mail e a senha do Nexus Financeiro — seu perfil de acesso é carregado automaticamente.</p>
 
@@ -1742,7 +1752,10 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                         <label for="login-password">Senha</label>
                         <div class="input-icon">
                             <i class="fa-solid fa-lock"></i>
-                            <input type="password" id="login-password" class="input" placeholder="Digite sua senha" required autocomplete="current-password">
+                            <input type="password" id="login-password" class="input has-eye" placeholder="Digite sua senha" required autocomplete="current-password">
+                            <button type="button" class="pw-eye" onclick="togglePasswordVisibility()" aria-label="Mostrar ou ocultar senha" title="Mostrar senha">
+                                <i class="fa-regular fa-eye" id="pw-eye-icon"></i>
+                            </button>
                         </div>
                     </div>
                     <p id="login-error-msg" class="hidden login-error" role="alert"></p>
@@ -1756,6 +1769,10 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                     <li><i class="fa-solid fa-stopwatch"></i> Prazos de atendimento (SLA) por severidade</li>
                     <li><i class="fa-solid fa-server"></i> Ativos de TI vinculados a cada chamado</li>
                 </ul>
+
+                <div class="lg-back">
+                    <a href="/login.html"><i class="fa-solid fa-arrow-left"></i> Voltar ao Sistema Financeiro</a>
+                </div>
             </section>
 
             <footer class="lg-foot">
@@ -3747,6 +3764,17 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 showToast('Falha ao conectar ao servidor.', 'warning');
             } finally {
                 if (submitBtn) setBusy(submitBtn, false);
+            }
+        }
+
+        function togglePasswordVisibility() {
+            const input = $('login-password');
+            const icon = $('pw-eye-icon');
+            if (!input) return;
+            const show = input.type === 'password';
+            input.type = show ? 'text' : 'password';
+            if (icon) {
+                icon.className = show ? 'fa-regular fa-eye-slash' : 'fa-regular fa-eye';
             }
         }
 
