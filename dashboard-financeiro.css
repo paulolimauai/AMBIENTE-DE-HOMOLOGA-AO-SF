@@ -312,7 +312,7 @@ body.light .fd-root .fd-selo-medio, html.light .fd-root .fd-selo-medio { color: 
 .fd-mini-neg strong { color: var(--fd-chip-ruim); }
 
 /* ---------- KPIs ---------- */
-.fd-kpis { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.fd-kpis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
 .fd-tile { display: flex; flex-direction: column; justify-content: center; gap: 4px; min-width: 0; padding: 11px 14px 10px; border-radius: 14px; transition: transform .2s ease, box-shadow .2s ease; }
 .fd-tile:hover { transform: translateY(-2px); }
 .fd-tile-topo { display: flex; align-items: center; gap: 8px; }
@@ -322,7 +322,7 @@ body.light .fd-root .fd-selo-medio, html.light .fd-root .fd-selo-medio { color: 
 .fd-ic { display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 8px; flex: none; background: var(--fd-wash); color: var(--fd-ink-2); box-shadow: inset 0 0 0 1px var(--fd-line); }
 .fd-ic-in { background: var(--fd-chip-bom-bg); color: var(--fd-chip-bom); box-shadow: inset 0 0 0 1px rgba(52, 211, 153, .25); }
 .fd-ic-out { background: var(--fd-chip-ruim-bg); color: var(--fd-chip-ruim); box-shadow: inset 0 0 0 1px rgba(248, 113, 113, .25); }
-.fd-tile-valor { font-size: clamp(20px, 1.7vw, 25px); font-weight: 780; letter-spacing: -.03em; line-height: 1.12; color: var(--fd-ink); font-variant-numeric: proportional-nums; white-space: nowrap; margin-top: 2px; }
+.fd-tile-valor { font-size: clamp(20px, 1.7vw, 25px); font-weight: 780; letter-spacing: -.03em; line-height: 1.12; color: var(--fd-ink); font-variant-numeric: proportional-nums; white-space: nowrap; margin-top: 2px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
 /* Receitas e despesas em destaque: valor grande na cor do fluxo (verde entra, vermelho sai) */
 .fd-tile-in .fd-tile-valor { color: var(--fd-in); }
 .fd-tile-out .fd-tile-valor { color: var(--fd-out); }
@@ -462,6 +462,7 @@ body.light .fd-root .fd-link, html.light .fd-root .fd-link { color: #1D5FB8; }
   .fd-linha-a, .fd-linha-b, .fd-linha-c { grid-template-columns: minmax(0, 1fr); }
   .fd-linha-d.fd-n3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .fd-linha-d.fd-n3 > :last-child { grid-column: 1 / -1; }
+  .fd-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .fd-metricas { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 @container fd (max-width: 700px) {

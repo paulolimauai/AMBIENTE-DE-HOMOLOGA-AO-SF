@@ -228,6 +228,8 @@
     const efetiva = (l) => (l.realizado ? (l.data < hojeStr ? l.data : hojeStr) : (l.data < hojeStr ? hojeStr : l.data));
     const movimentos = caixa.map((l) => ({ data: efetiva(l), delta: l.tipo === 'in' ? l.valor : -l.valor, realizado: l.realizado }));
     const saldoAtual = arred(saldoInicial + movimentos.filter((m) => m.realizado).reduce((s, m) => s + m.delta, 0));
+    // Quanto ainda dá para gastar: saldo realizado menos as despesas previstas (pendentes) do período — receitas a receber ainda não entram
+    const disponivelGastar = arred(saldoAtual - despesas.previsto);
     const saldoRealEm = (ds) => arred(saldoInicial + movimentos.filter((m) => m.realizado && m.data <= ds).reduce((s, m) => s + m.delta, 0));
     const saldoProjetadoEm = (ds) => (ds <= hojeStr
       ? saldoRealEm(ds)
@@ -469,7 +471,7 @@
       vazio: lancs.length === 0,
       totais: { receitas, despesas, resultadoRealizado, resultadoPrevisto, taxaPoupanca, comprometimento },
       comparativo,
-      contas: { saldoInicial, saldoAtual, saldoProjetadoFim, saldoMinimo, primeiroDiaNegativo, bancarias: contasBancarias, cartoes: cartoesResumo },
+      contas: { saldoInicial, saldoAtual, disponivelGastar, saldoProjetadoFim, saldoMinimo, primeiroDiaNegativo, bancarias: contasBancarias, cartoes: cartoesResumo },
       serieDiaria, serieMensal, categorias, totalDespesaCats: arred(totalDespesaCats), acumulado,
       agenda, ultimas, orcamentos, tempoDecorridoPct,
       ritmo: { mediaDiaria30, autonomiaDias, maiorEntrada: arred(maiorEntrada), maiorSaida: arred(maiorSaida) },
@@ -515,6 +517,7 @@
     despesa: svg('<path d="M7 7h10v10"/><path d="M7 17 17 7"/>', 16, 2.4),
     resultado: svg('<polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>', 16),
     cartao: svg('<rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/>', 16),
+    carteira: svg('<path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/>', 16),
     atualizar: svg('<path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/>', 16),
     mais: svg('<path d="M12 5v14"/><path d="M5 12h14"/>', 14, 2.6),
     olho: svg('<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>', 14),
@@ -743,11 +746,36 @@
         ]
       }) +
       tileKpi({
+        rotulo: 'Disponível p/ gastar', tom: 'fd-ic-neutro', icone: ICONES.carteira, ir: {}, dica: 'Saldo em contas menos as despesas previstas não pagas — quanto ainda dá para gastar',
+        classe: c.disponivelGastar < 0 ? 'fd-tile-out' : 'fd-tile-in',
+        valorHtml: valorTile(c.disponivelGastar),
+        linhas: [
+          'Comprometido: ' + dinheiro(t.despesas.previsto) + ' a pagar',
+          'Saldo projetado: ' + dinheiro(c.saldoProjetadoFim)
+        ]
+      }) +
+      tileKpi({
         rotulo: 'Resultado', tom: 'fd-ic-neutro', icone: ICONES.resultado, ir: {}, dica: 'Ver todas as movimentações do período', classe: t.resultadoRealizado < 0 ? 'fd-tile-neg' : '',
         valorHtml: valorTile(t.resultadoRealizado, t.resultadoRealizado > 0 ? '+' : ''),
         linhas: [
           cmp ? chipVariacao(cmp.resultado, 'subir', cmp.rotulo, true) : '',
           t.taxaPoupanca == null ? 'Sem receita realizada' : (t.taxaPoupanca >= 0 ? 'Guardou ' : 'Gastou além: ') + Math.abs(t.taxaPoupanca) + '% da renda'
+        ]
+      }) +
+      tileKpi({
+        rotulo: 'A receber', tom: 'fd-ic-in', icone: ICONES.receita, ir: { tipo: 'in', status: 'Pendente' }, dica: 'Receitas previstas (pendentes) do período',
+        valorHtml: valorTile(t.receitas.previsto),
+        linhas: [
+          t.receitas.qtdPrevisto ? t.receitas.qtdPrevisto + ' recebimento' + (t.receitas.qtdPrevisto === 1 ? '' : 's') + ' previsto' + (t.receitas.qtdPrevisto === 1 ? '' : 's') : 'Nada previsto para receber',
+          t.receitas.previsto > 0 ? progresso(t.receitas.realizado, t.receitas.previsto, 'Receitas a receber') : ''
+        ]
+      }) +
+      tileKpi({
+        rotulo: 'A pagar', tom: 'fd-ic-out', icone: ICONES.despesa, ir: { tipo: 'out', status: 'Pendente' }, dica: 'Despesas previstas (pendentes) do período',
+        valorHtml: valorTile(t.despesas.previsto),
+        linhas: [
+          t.despesas.qtdPrevisto ? t.despesas.qtdPrevisto + ' conta' + (t.despesas.qtdPrevisto === 1 ? '' : 's') + ' prevista' + (t.despesas.qtdPrevisto === 1 ? '' : 's') : 'Nada previsto para pagar',
+          t.despesas.previsto > 0 ? progresso(t.despesas.realizado, t.despesas.previsto, 'Despesas a pagar') : ''
         ]
       }) +
       tileKpi({

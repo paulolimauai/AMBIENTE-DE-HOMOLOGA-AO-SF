@@ -53,6 +53,16 @@ test('saldo em contas = saldo inicial + realizado (cartão fica de fora) e não 
   assert.equal(todas.contas.saldoAtual, 10300);
 });
 
+test('disponível para gastar = saldo realizado − despesas previstas do período (receitas a receber não entram)', () => {
+  const m = D.calcular(ctx());
+  // 10300 − (aluguel 1500 + seguro 400) = 8400; o freela de 800 previsto NÃO aumenta o disponível
+  assert.equal(m.contas.disponivelGastar, 8400);
+  const html = D.pagina({ ...ctx(), util: {} });
+  for (const trecho of ['Disponível p/ gastar', 'A receber', 'A pagar', 'data-fd-status="Pendente"']) {
+    assert.ok(html.includes(trecho), 'faltou: ' + trecho);
+  }
+});
+
 test('projeção do fim do mês soma as pendências (vencidas caem logo depois de hoje, futuras na própria data)', () => {
   const m = D.calcular(ctx());
   // 10300 - aluguel 1500 + freela 800 - seguro vencido 400
