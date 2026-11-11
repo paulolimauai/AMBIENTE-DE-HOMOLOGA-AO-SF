@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=optional" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
     <script>
     /* Aparência e fundo antes do primeiro desenho (evita piscar entre claro e escuro). Mesmas chaves do login (nexus-modo, nexus-fundo);
@@ -291,6 +291,7 @@
             padding: 1.5rem; overflow-y: auto;
         }
         @keyframes rise { from { opacity: 0; transform: translateY(1.4rem) scale(.99); } }
+        @keyframes lgFade { from { opacity: 0; } }
         .mark {
             width: 2.6rem; height: 2.6rem; flex: none; display: grid; place-items: center;
             border-radius: .85rem;
@@ -975,7 +976,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         .slab::after { background: linear-gradient(135deg, rgba(255, 255, 255, .7), rgba(255, 255, 255, .06) 28%, rgba(255, 255, 255, .04) 68%, rgba(var(--acc-rgb), .6)); }
 
         /* ---------- Tela de acesso: mesmo cartão de vidro do login do Nexus ---------- */
-        .lg-main { width: 100%; max-width: 34rem; margin: auto; display: flex; flex-direction: column; align-items: center; animation: rise .6s cubic-bezier(.2, .7, .2, 1) both; }
+        .lg-main { width: 100%; max-width: 34rem; margin: auto; display: flex; flex-direction: column; align-items: center; animation: lgFade .35s ease both; }
         .lg-logo { display: flex; align-items: center; gap: .9rem; margin-bottom: 1.8rem; font-weight: 800; font-size: 1.5rem; letter-spacing: -.01em; color: var(--white); }
         .lg-logo small { font-weight: 500; font-size: 1.1rem; color: var(--muted); }
         .lg-logo .mark { width: 3.1rem; height: 3.1rem; border-radius: 1rem; font-size: 1.75rem; }
