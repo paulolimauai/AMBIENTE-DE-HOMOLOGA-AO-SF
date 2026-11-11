@@ -3,14 +3,6 @@
     "id": "39",
     "email": "paulolp0101@gmail.com",
     "name": "PAULO DE LIMA PEREIRA",
-    "last_login": "2026-10-21T21:14:30-03:00",
-    "timestamp": "2026-10-22T00:14:30.758Z",
-    "ack": false
-  },
-  {
-    "id": "39",
-    "email": "paulolp0101@gmail.com",
-    "name": "PAULO DE LIMA PEREIRA",
     "last_login": "2026-10-21T21:37:15-03:00",
     "timestamp": "2026-10-22T00:37:15.257Z",
     "ack": false
@@ -1597,6 +1589,14 @@
     "name": "ADMINISTRADOR DO SISTEMA",
     "last_login": "2026-11-11T20:18:18-03:00",
     "timestamp": "2026-11-11T23:18:18.193Z",
+    "ack": false
+  },
+  {
+    "id": "73",
+    "email": "paulodelima21@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-11-11T20:45:35-03:00",
+    "timestamp": "2026-11-11T23:45:35.218Z",
     "ack": false
   }
 ]
