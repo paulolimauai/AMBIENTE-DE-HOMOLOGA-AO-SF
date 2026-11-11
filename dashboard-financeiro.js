@@ -258,8 +258,9 @@
     const fimDoMes = chave(refAno, refMes, nDias);
     // Mês já encerrado: saldo real no último dia; mês corrente/futuro: projeção com as pendências cadastradas
     const saldoProjetadoFim = fimDoMes <= hojeStr ? saldoRealEm(fimDoMes) : saldoProjetadoEm(fimDoMes);
-    const projetados = saldoProj.filter((v) => v != null);
-    const saldoMinimo = projetados.length ? Math.min(...projetados) : saldoAtual;
+    // Menor saldo do período: considera o realizado E o projetado (mês encerrado só tem realizado; mês corrente mistura os dois)
+    const serieSaldos = saldoReal.concat(saldoProj).filter((v) => v != null);
+    const saldoMinimo = serieSaldos.length ? arred(Math.min(...serieSaldos)) : saldoAtual;
     let primeiroDiaNegativo = null;
     for (let i = 0; i < nDias; i++) {
       if (saldoProj[i] != null && saldoProj[i] < 0 && dias[i] > (ehMesAtual ? hojeDia : 0)) { primeiroDiaNegativo = chave(refAno, refMes, dias[i]); break; }
@@ -394,6 +395,16 @@
       const saldo = arred(c.saldoInicial + mov.filter((l) => l.realizado).reduce((s, l) => s + (l.tipo === 'in' ? l.valor : -l.valor), 0));
       return { id: c.id, nome: c.nome, saldo };
     });
+    // Movimentações de caixa sem conta vinculada (ex.: conta genérica "Boleto / Pix / Outros"):
+    // entram no "Saldo em contas hoje", então precisam aparecer aqui para a lista fechar com o total
+    const idsVinculados = new Set();
+    contas.forEach((c) => (c.txIds || []).forEach((id) => idsVinculados.add(String(id))));
+    const saldoSemConta = arred(caixa
+      .filter((l) => l.realizado && !idsVinculados.has(String(l.id)))
+      .reduce((s, l) => s + (l.tipo === 'in' ? l.valor : -l.valor), 0));
+    if (Math.abs(saldoSemConta) >= 0.005) {
+      contasBancarias.push({ id: null, nome: 'Sem conta vinculada', saldo: saldoSemConta });
+    }
 
     // ---------- Ritmo ----------
     const inicio30 = somarDias(hojeStr, -29);
@@ -492,9 +503,17 @@
   // Menor saldo previsto nas contas e o dia em que acontece (null quando o período não tem projeção, como um mês já encerrado)
   function menorSaldoProjetado(serie) {
     let melhor = null;
-    ((serie && serie.dias) || []).forEach((dia, i) => {
-      const v = serie.saldoProj[i];
-      if (v != null && (melhor === null || v < melhor.valor)) melhor = { valor: v, dia, idx: i };
+    ((serie && serie.saldoProj) || []).forEach((v, i) => {
+      if (v != null && (melhor === null || v < melhor.valor)) melhor = { valor: v, dia: serie.dias[i], idx: i };
+    });
+    return melhor;
+  }
+
+  // Menor saldo já realizado no período (fallback para meses encerrados, que não têm projeção)
+  function menorSaldoRealizado(serie) {
+    let melhor = null;
+    ((serie && serie.saldoReal) || []).forEach((v, i) => {
+      if (v != null && (melhor === null || v < melhor.valor)) melhor = { valor: v, dia: serie.dias[i], idx: i };
     });
     return melhor;
   }
@@ -652,13 +671,15 @@
     const mesCurto = MESES_CURTOS[m.periodo.mes - 1];
     const encerrado = !m.periodo.ehMesAtual && !m.periodo.ehFuturo && !m.periodo.todasAsDatas;
     const fimRotulo = encerrado ? 'Saldo no fim de ' + mesCurto : (m.periodo.ehFuturo ? 'Projeção para o fim de ' + mesCurto : 'Projeção para o fim do mês');
-    const minimo = menorSaldoProjetado(m.serieDiaria);
+    const minProj = menorSaldoProjetado(m.serieDiaria);
+    const minimo = minProj || menorSaldoRealizado(m.serieDiaria);
+    const rotuloMinimo = minProj ? 'Menor saldo previsto' : 'Menor saldo';
     const quando = (dia) => (m.periodo.ehMesAtual && dia === m.hojeDia ? 'hoje' : 'em ' + pad(dia) + '/' + pad(m.periodo.mes));
     const aReceber = a.itens.filter((i) => i.tipo === 'in').length;
     const aPagar = a.itens.filter((i) => i.tipo === 'out').length;
     const mini = (rot, valorHtml, nota, ir, classe) => '<div class="fd-mini-item fd-clicavel ' + (classe || '') + '"' + atalho(ir) + '><span class="fd-mini-rot">' + rot + '</span><strong>' + valorHtml + '</strong><em>' + nota + '</em></div>';
     const itens =
-      (minimo ? mini('Menor saldo previsto', dinheiro(minimo.valor), quando(minimo.dia), { pagina: 'transacoes' }, minimo.valor < 0 ? 'fd-mini-neg' : '') : '') +
+      (minimo ? mini(rotuloMinimo, dinheiro(minimo.valor), quando(minimo.dia), { pagina: 'transacoes' }, minimo.valor < 0 ? 'fd-mini-neg' : '') : '') +
       mini('A receber · 30 dias', dinheiro(a.totalAReceber), aReceber ? aReceber + (aReceber === 1 ? ' lançamento' : ' lançamentos') : 'nada pendente', { tipo: 'in', status: 'Pendente' }) +
       mini('A pagar · 30 dias', dinheiro(a.totalAPagar), a.qtdVencidas ? '<span class="fd-delta fd-ruim">' + a.qtdVencidas + (a.qtdVencidas === 1 ? ' vencida' : ' vencidas') + '</span>' : (aPagar ? aPagar + (aPagar === 1 ? ' lançamento' : ' lançamentos') : 'em dia'), { tipo: 'out', status: 'Pendente' });
     const t = m.totais;
