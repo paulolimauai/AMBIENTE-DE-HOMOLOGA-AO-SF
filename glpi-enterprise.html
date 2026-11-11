@@ -4083,10 +4083,12 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 initCharts();
             }
 
-            // Sempre abre a tela inicial do perfil: catálogo ou dashboard
+            // Retoma a última tela usada no perfil: atualizar a página (F5) não volta sempre ao início
             document.body.classList.add('in-app');
-            if (currentUser.role === 'user') navUser('catalog');
-            else navTech('dashboard');
+            let lastNav = null;
+            try { lastNav = localStorage.getItem(currentUser.role === 'user' ? 'glpi_nav_user' : 'glpi_nav_tech'); } catch (e) {}
+            if (currentUser.role === 'user') navUser(lastNav === 'my-tickets' ? 'my-tickets' : 'catalog');
+            else navTech(lastNav === 'queue' || lastNav === 'teams' ? lastNav : 'dashboard');
             lastQueueSig = queueSignature();
             startSync();
         }
@@ -4094,6 +4096,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         // ============================== NAVEGAÇÃO ==============================
         // Cada item do menu abre UMA tela (catálogo ou lista; dashboard ou fila), sempre com o mesmo cabeçalho de página
         function navUser(tab) {
+            try { localStorage.setItem('glpi_nav_user', tab); } catch (e) {}
             toggleSidebar(false);
             const catalog = $('user-section-catalog');
             const tickets = $('user-section-tickets');
@@ -4113,6 +4116,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         }
 
         function navTech(tab) {
+            try { localStorage.setItem('glpi_nav_tech', tab); } catch (e) {}
             toggleSidebar(false);
             const dash = $('tech-subview-dashboard');
             const queue = $('tech-subview-queue');
