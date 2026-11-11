@@ -58,7 +58,7 @@ test('disponível para gastar = receitas totais − despesas totais do período'
   // receitas.total 5800 − despesas.total 2400 = 3400 (realizado + previsto dos dois lados)
   assert.equal(m.contas.disponivelGastar, 3400);
   const html = D.pagina({ ...ctx(), util: {} });
-  for (const trecho of ['Disponível p/ gastar', 'A receber', 'A pagar', 'data-fd-status="Pendente"']) {
+  for (const trecho of ['Disponível p/ gastar', 'A receber', 'A pagar', 'data-fd-status="Pendente"', 'Dívida no cartão', 'Dívida total nos cartões']) {
     assert.ok(html.includes(trecho), 'faltou: ' + trecho);
   }
 });
