@@ -1596,43 +1596,43 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         .svc:hover { transform: translateY(-2px); }
 
         /* Abertura de chamado (Abrir Requisição, Reportar Incidente...): janela, passos, cartões e campos mais compactos */
-        #modal-form.overlay { padding: .75rem; }
-        .modal-form { max-width: 58rem; }
-        .modal-form .modal-head { padding: .7rem 1.1rem; }
-        .modal-form .mh-ico { width: 2rem; height: 2rem; border-radius: .65rem; font-size: .9rem; }
-        .modal-form .mh-title { font-size: 1rem; }
-        .modal-form .mh-sub { font-size: .75rem; }
-        .modal-form .modal-body { padding: 1rem 1.1rem; gap: .7rem; }
-        .modal-form .modal-foot { bottom: -1rem; margin: .1rem -1.1rem -1rem; padding: .65rem 1.1rem; }
-        .fsplit { gap: .9rem 1.1rem; }
-        @media (min-width: 900px) { .fsplit { grid-template-columns: minmax(0, 1fr) 17rem; } }
-        .fs-main { gap: .85rem; }
-        .fs-side { gap: .65rem; }
-        .fs-step { gap: .5rem; }
-        .fs-h { gap: .5rem; font-size: .875rem; }
-        .fs-h .n { width: 1.3rem; height: 1.3rem; font-size: max(.72rem, 11px); }
-        .fs-who .input { height: var(--ctl-sm); padding: 0 .75rem; font-size: .8125rem; }
-        .modal-form .field label { margin-bottom: .3rem; font-size: .78rem; }
-        .modal-form .input { height: var(--ctl-sm); padding: 0 .8rem; border-radius: .7rem; font-size: .84rem; }
-        .modal-form .textarea { min-height: 5rem; padding: .5rem .8rem; border-radius: .7rem; font-size: .84rem; line-height: 1.5; }
-        .modal-form .field-foot { min-height: 1rem; margin-top: .25rem; }
-        .modal-form .counter, .modal-form .field-err { font-size: max(.72rem, 11px); }
-        .modal-form .form-grid { gap: .7rem; }
+        #modal-form.overlay { padding: .9rem; }
+        .modal-form { max-width: 72rem; }
+        .modal-form .modal-head { padding: .9rem 1.4rem; }
+        .modal-form .mh-ico { width: 2.3rem; height: 2.3rem; border-radius: .75rem; font-size: 1rem; }
+        .modal-form .mh-title { font-size: 1.1rem; }
+        .modal-form .mh-sub { font-size: .8rem; }
+        .modal-form .modal-body { padding: 1.2rem 1.4rem; gap: .9rem; }
+        .modal-form .modal-foot { bottom: -1.1rem; margin: .15rem -1.4rem -1.1rem; padding: .75rem 1.4rem; }
+        .fsplit { gap: 1.1rem 1.5rem; }
+        @media (min-width: 900px) { .fsplit { grid-template-columns: minmax(0, 1fr) 20rem; } }
+        .fs-main { gap: 1.05rem; }
+        .fs-side { gap: .9rem; }
+        .fs-step { gap: .7rem; }
+        .fs-h { gap: .55rem; font-size: .95rem; }
+        .fs-h .n { width: 1.45rem; height: 1.45rem; font-size: max(.75rem, 11px); }
+        .fs-who .input { height: var(--ctl); padding: 0 .9rem; font-size: .85rem; }
+        .modal-form .field label { margin-bottom: .35rem; font-size: .82rem; }
+        .modal-form .input { height: var(--ctl); padding: 0 .9rem; border-radius: .75rem; font-size: .875rem; }
+        .modal-form .textarea { min-height: 6rem; padding: .65rem .9rem; border-radius: .75rem; font-size: .875rem; line-height: 1.55; }
+        .modal-form .field-foot { min-height: 1rem; margin-top: .3rem; }
+        .modal-form .counter, .modal-form .field-err { font-size: max(.75rem, 11px); }
+        .modal-form .form-grid { gap: .9rem; }
         @media (max-width: 767px) { .modal-form .input { height: var(--ctl); } }
 
-        .picks { gap: .4rem; }
-        .pick { position: relative; gap: .6rem; padding: .5rem .65rem; border-radius: .8rem; }
-        .pick > i { width: 1.85rem; height: 1.85rem; border-radius: .6rem; font-size: .82rem; }
-        .pick b { font-size: .8125rem; }
-        .pick small { margin-top: .1rem; font-size: max(.72rem, 11px); line-height: 1.35; }
-        .pick em { margin-top: .25rem; font-size: max(.72rem, 11px); }
+        .picks { gap: .55rem; }
+        .pick { position: relative; gap: .7rem; padding: .6rem .8rem; border-radius: .85rem; }
+        .pick > i { width: 2.1rem; height: 2.1rem; border-radius: .7rem; font-size: .9rem; }
+        .pick b { font-size: .875rem; }
+        .pick small { margin-top: .12rem; font-size: max(.75rem, 11px); line-height: 1.4; }
+        .pick em { margin-top: .3rem; font-size: max(.75rem, 11px); }
         .picks.typ { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-        .picks.cat { grid-template-columns: repeat(auto-fill, minmax(10.5rem, 1fr)); }
+        .picks.cat { grid-template-columns: repeat(auto-fill, minmax(11.5rem, 1fr)); }
         /* o texto de apoio da categoria fica só para leitores de tela e no balão (title): o cartão fica de uma linha */
         .picks.cat .pick small { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; }
         .picks.cat .pick[data-cat="Outros"] { grid-column: 1 / -1; }
-        .picks.urg { grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr)); }
-        .picks.urg .pick { padding: .45rem .6rem; }
+        .picks.urg { grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr)); }
+        .picks.urg .pick { padding: .55rem .7rem; }
         @media (max-width: 767px) { .picks.typ { grid-template-columns: 1fr; } }
 
         .fs-card { padding: .7rem .85rem; border-radius: .85rem; }
@@ -2539,7 +2539,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
 
                         <div class="field">
                             <label for="form-desc">Descrição detalhada *</label>
-                            <textarea id="form-desc" rows="4" maxlength="5000" oninput="onFormInput()" class="textarea focus-blue" placeholder="Por favor informe mensagens de erro, telas afetadas e passos para reproduzir..."></textarea>
+                            <textarea id="form-desc" rows="5" maxlength="5000" oninput="onFormInput()" class="textarea focus-blue" placeholder="Por favor informe mensagens de erro, telas afetadas e passos para reproduzir..."></textarea>
                             <div class="field-foot"><p id="err-desc" class="field-err hidden"></p><span id="cnt-desc" class="counter">mínimo de 10 caracteres</span></div>
                         </div>
 
