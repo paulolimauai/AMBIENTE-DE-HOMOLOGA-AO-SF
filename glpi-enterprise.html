@@ -289,6 +289,7 @@
             position: fixed; inset: 0; z-index: 50;
             display: flex; align-items: center; justify-content: center;
             padding: 1.5rem; overflow-y: auto;
+            scrollbar-gutter: stable;
         }
         @keyframes rise { from { opacity: 0; transform: translateY(1.4rem) scale(.99); } }
         @keyframes lgFade { from { opacity: 0; } }
@@ -365,7 +366,7 @@
         .count { padding: .1rem .55rem; border-radius: 99px; font-family: var(--font-mono); font-size: max(0.72rem, 11px); font-weight: 700; color: var(--ink-2); background: rgba(var(--lt), .1); border: 1px solid rgba(var(--lt), .12); }
         .count.amber { color: var(--t-amber); background: rgba(var(--amber-rgb), .16); border-color: rgba(var(--amber-rgb), .32); }
 
-        .main { flex: 1; min-width: 0; overflow-y: auto; padding: 1.75rem 2rem 2rem; }
+        .main { flex: 1; min-width: 0; overflow-y: auto; padding: 1.75rem 2rem 2rem; scrollbar-gutter: stable; }
         .page { max-width: 112rem; margin: 0 auto; container-type: inline-size; }
         .stack { display: grid; gap: 1.5rem; }
 
@@ -833,7 +834,7 @@
 .bg>*{position:absolute;inset:0;opacity:0;transition:opacity .6s ease}
 .bg::after{content:"";position:absolute;inset:0;background:radial-gradient(120% 100% at 50% 40%,transparent 55%,rgba(0,0,0,.55))}
 .l-glow{background:radial-gradient(60% 50% at 50% 0%,color-mix(in srgb,var(--glow-a) 38%,transparent),transparent 70%)}
-.l-blobs i{position:absolute;border-radius:50%;filter:blur(7.5rem);animation:drift 28s ease-in-out infinite alternate}
+.l-blobs i{position:absolute;border-radius:50%;filter:blur(7.5rem);animation:none}
 .l-blobs .a{width:52vw;height:52vw;left:-14vw;top:-22vw;background:var(--glow-a);opacity:.5}
 .l-blobs .b{width:46vw;height:46vw;right:-12vw;bottom:-22vw;background:var(--glow-b);opacity:.55;animation-duration:34s}
 .l-blobs .c{width:30vw;height:30vw;left:35vw;top:30vh;background:var(--brand);opacity:.14;animation-duration:40s}
@@ -880,7 +881,7 @@ html[data-bg="topografia"] .l-glow,html[data-bg="topografia"] .l-topo{opacity:1}
 .t{fill:none;stroke:var(--ln2);stroke-width:1;vector-effect:non-scaling-stroke}.t2{stroke:var(--accent);opacity:.35}
 html[data-bg="vidro"] .l-glass{opacity:1}
 .l-glass i,.l-glass b{position:absolute;display:block}
-.l-glass i{border-radius:50%;background:radial-gradient(circle at 30% 28%,var(--accent),var(--brand) 52%,var(--glow-b));animation:drift 26s ease-in-out infinite alternate}
+.l-glass i{border-radius:50%;background:radial-gradient(circle at 30% 28%,var(--accent),var(--brand) 52%,var(--glow-b));animation:none}
 .l-glass .o1{width:clamp(14rem,36vw,60rem);aspect-ratio:1;left:8vw;top:8vh}
 .l-glass .o2{width:clamp(12rem,30vw,52rem);aspect-ratio:1;right:5vw;bottom:6vh;background:radial-gradient(circle at 30% 28%,var(--glow-a),var(--glow-b));animation-duration:32s}
 .l-glass .o3{width:clamp(8rem,16vw,28rem);aspect-ratio:1;left:56vw;top:6vh;background:radial-gradient(circle at 30% 28%,var(--accent),var(--glow-a));animation-duration:22s}
