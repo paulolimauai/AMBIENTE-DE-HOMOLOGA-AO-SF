@@ -2519,13 +2519,13 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                     <section class="fs-step">
                         <h4 class="fs-h"><span class="n">3</span> Qual a prioridade?</h4>
                         <div class="picks urg" role="radiogroup" aria-label="Prioridade do chamado">
-                            <button type="button" class="pick u-media" role="radio" data-urg="Média" onclick="pickUrgency(this.dataset.urg)"><b>Média</b><small>Impacto parcial, dá para contornar</small><em>3 dias úteis</em></button>
                             <button type="button" class="pick u-baixa" role="radio" data-urg="Baixa" onclick="pickUrgency(this.dataset.urg)"><b>Baixa</b><small>Dúvida ou operação normal</small><em>5 dias úteis</em></button>
+                            <button type="button" class="pick u-media" role="radio" data-urg="Média" onclick="pickUrgency(this.dataset.urg)"><b>Média</b><small>Impacto parcial, dá para contornar</small><em>3 dias úteis</em></button>
                         </div>
                         <p class="fs-note">Chamados urgentes são priorizados pela equipe de TI após a triagem.</p>
                         <select id="form-urgency" onchange="calculateSLA()" class="sr-only" tabindex="-1" aria-hidden="true">
-                            <option value="Média" selected>Média · impacto parcial, dá para contornar</option>
                             <option value="Baixa">Baixa · dúvida ou operação normal</option>
+                            <option value="Média" selected>Média · impacto parcial, dá para contornar</option>
                         </select>
                     </section>
 
