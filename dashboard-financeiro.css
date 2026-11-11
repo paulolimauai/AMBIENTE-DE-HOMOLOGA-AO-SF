@@ -456,6 +456,13 @@ body.light .fd-root .fd-link, html.light .fd-root .fd-link { color: #1D5FB8; }
 /* =====================================================================================
    3. Larguras do painel (container query: acompanha o menu lateral aberto/fechado)
    ===================================================================================== */
+@container fd (max-width: 1250px) {
+  /* Notebook/desktop médio: antes que os cards espremidos comecem a cortar textos, as linhas empilham
+     (o conteúdo fica em largura total, como no celular, em vez de dois painéis apertados) */
+  .fd-linha-a, .fd-linha-b, .fd-linha-c { grid-template-columns: minmax(0, 1fr); }
+  .fd-linha-d.fd-n3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .fd-linha-d.fd-n3 > :last-child { grid-column: 1 / -1; }
+}
 @container fd (max-width: 1080px) {
   .fd-metricas { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
@@ -463,7 +470,7 @@ body.light .fd-root .fd-link, html.light .fd-root .fd-link { color: #1D5FB8; }
   .fd-linha-a, .fd-linha-b, .fd-linha-c { grid-template-columns: minmax(0, 1fr); }
   .fd-linha-d.fd-n3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .fd-linha-d.fd-n3 > :last-child { grid-column: 1 / -1; }
-  .fd-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .fd-kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .fd-metricas { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 @container fd (max-width: 700px) {
@@ -478,7 +485,7 @@ body.light .fd-root .fd-link, html.light .fd-root .fd-link { color: #1D5FB8; }
   .fd-acum-svg { height: 48px; }
 }
 @container fd (max-width: 520px) {
-  .fd-kpis { gap: 12px; }
+  .fd-kpis { grid-template-columns: minmax(0, 1fr); gap: 12px; }
   .fd-tile { padding: 10px 11px 9px; }
   .fd-tile-valor { font-size: clamp(18px, 5vw, 23px); }
   .fd-pilares { grid-template-columns: 1fr; }
