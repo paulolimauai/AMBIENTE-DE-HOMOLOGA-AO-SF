@@ -1130,7 +1130,7 @@
 
   function opcoesBase(t, m) {
     return {
-      responsive: true, maintainAspectRatio: false, animation: { duration: 240 },
+      responsive: true, maintainAspectRatio: false, animation: false,
       interaction: { mode: 'index', intersect: false },
       layout: { padding: { top: 4, right: 6, bottom: 0, left: 0 } },
       plugins: {

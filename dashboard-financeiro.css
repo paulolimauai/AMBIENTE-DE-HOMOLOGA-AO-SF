@@ -507,6 +507,9 @@ html.fd-vidro-ativo #pageContent .dashboard-cockpit-frame.fd-root { max-width: n
   .fd-acoes-rapidas { width: 100%; }
   .fd-acoes-rapidas .fd-btn { flex: 1 1 0; }
 }
+/* Atualização suave do painel: fade rápido no lugar do "tremor" do redesenho completo (F5/atualizar) */
+@keyframes fd-entra { from { opacity: 0; } to { opacity: 1; } }
+.fd-root { animation: fd-entra .18s ease-out; }
 @media (prefers-reduced-motion: reduce) {
-  .fd-root *, .fd-btn-icone.girando svg { transition: none !important; animation: none !important; }
+  .fd-root, .fd-root *, .fd-btn-icone.girando svg { transition: none !important; animation: none !important; }
 }
