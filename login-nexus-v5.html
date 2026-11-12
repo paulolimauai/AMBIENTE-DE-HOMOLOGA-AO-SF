@@ -228,19 +228,17 @@ a{color:var(--accent);font-weight:700;text-decoration:none}a:hover{text-decorati
 @keyframes nx-rot{to{transform:rotate(360deg)}}
 
 /* ---------- central GLPI ---------- */
-.central{margin-top:1.5rem;padding:1.1rem;border-radius:1.05rem;background:rgba(255,255,255,.035);border:1px solid var(--card-line);text-align:center}
-.central-h{display:flex;flex-direction:column;align-items:center;gap:.6rem;text-align:center}
+.central{margin-top:1.5rem;padding:1.1rem;border-radius:1.05rem;background:rgba(255,255,255,.035);border:1px solid var(--card-line)}
+.central-h{display:flex;align-items:center;gap:.8rem}
 .central-h .ico{flex:none;width:2.5rem;height:2.5rem;border-radius:.7rem;display:grid;place-items:center;color:var(--on-brand);
   background:linear-gradient(145deg,var(--brand),var(--brand-d));box-shadow:0 .4rem 1rem color-mix(in srgb,var(--brand) 30%,transparent)}
 .central-h .ico svg{width:1.3rem;height:1.3rem}
 .central-h b{display:block;font-size:.98rem;color:var(--white);line-height:1.2}
 .central-h small{display:block;font-size:.78rem;color:var(--muted);margin-top:.1rem}
 .tiles{margin-top:1rem;display:grid;gap:.6rem}
-/* Ação única dentro da Central de Serviços: mesma superfície do campo, separada por filete, tudo centralizado */
-.central>.tile{flex-direction:column;align-items:center;gap:.55rem;margin:.75rem -.35rem -.35rem;padding:.8rem .35rem .75rem;
-  background:transparent;border:0;border-top:1px solid var(--card-line);border-radius:0;text-align:center}
-.central>.tile .tx{flex:none;text-align:center}
-.central>.tile .go-ar{display:none}
+/* Ação única dentro da Central de Serviços: mesma superfície do campo, separada por filete */
+.central>.tile{flex-direction:row;align-items:center;gap:.8rem;margin:.75rem -.35rem -.35rem;padding:.8rem .35rem .75rem;
+  background:transparent;border:0;border-top:1px solid var(--card-line);border-radius:0}
 .central>.tile:hover{background:color-mix(in srgb,var(--brand) 7%,transparent);border-color:var(--card-line);transform:none}
 .central>.tile.prim{background:transparent;border-color:var(--card-line)}
 .central>.tile.prim .ti{width:2.3rem;height:2.3rem}
