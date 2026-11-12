@@ -36903,6 +36903,7 @@ async function syncWithRenderCloud() {
       }
     }
     let cloudUsers = null;
+    let cloudUsersFetched = false;
     let cloudFinancial = {};
     let cloudOrdens = null;
     let cloudTecnicos = null;
@@ -36912,6 +36913,7 @@ async function syncWithRenderCloud() {
         headers: { 'X-Nexus-Sync-Token': SYNC_TOKEN }
       });
       if (resUsers.ok) {
+        cloudUsersFetched = true;
         const remoteUsers = await resUsers.json();
         cloudUsers = Array.isArray(remoteUsers) ? remoteUsers.filter(user => !deletedEmailSet.has(String(user.email || '').toLowerCase().trim())) : remoteUsers;
       }
@@ -36999,6 +37001,16 @@ async function syncWithRenderCloud() {
       }
     } catch(e){}
 
+    // Mapas de apoio para comparar credenciais (senha) entre nuvem e espelho local sem sobrescrever a mais recente
+    const localMirrorByEmail = new Map();
+    try {
+      getLocalUsers().forEach(u => { if (u && u.email) localMirrorByEmail.set(String(u.email).toLowerCase().trim(), u); });
+    } catch (e) {}
+    const cloudUsersByEmail = new Map();
+    if (Array.isArray(cloudUsers)) {
+      cloudUsers.forEach(u => { if (u && u.email) cloudUsersByEmail.set(String(u.email).toLowerCase().trim(), u); });
+    }
+
     // A) Processar e gravar usuários do Render no SQL Server local
     if (Array.isArray(cloudUsers) && cloudUsers.length > 0) {
       for (const cu of cloudUsers) {
@@ -37065,8 +37077,13 @@ async function syncWithRenderCloud() {
           if (cu.device_type && cu.device_type !== currentU.device_type) {
             await pool.query('UPDATE usuarios SET device_type = $1 WHERE LOWER(email) = LOWER($2)', [cu.device_type, cleanEmail]).catch(()=>{});
           }
-          if (cu.password && cu.password.startsWith('scrypt:') && cu.password !== currentU.password) {
+          // A senha da nuvem só entra no SQL se for a mais recente: uma troca feita localmente depois não pode ser revertida pela cópia antiga da nuvem
+          const localMirrorU = localMirrorByEmail.get(cleanEmail);
+          const cloudPwdChanged = Date.parse(cu.password_changed_at || '') || 0;
+          const localPwdChanged = Date.parse((localMirrorU && localMirrorU.password_changed_at) || '') || 0;
+          if (cu.password && cu.password.startsWith('scrypt:') && cu.password !== currentU.password && cloudPwdChanged >= localPwdChanged) {
             await pool.query('UPDATE usuarios SET password = $1 WHERE LOWER(email) = LOWER($2)', [cu.password, cleanEmail]).catch(()=>{});
+            currentU.password = cu.password;
           }
           if (updatedName !== currentU.name || updatedCpf !== currentU.cpf || updatedPhone !== currentU.phone || updatedBirth !== currentU.birth_date) {
             await pool.query(
@@ -37195,12 +37212,25 @@ async function syncWithRenderCloud() {
       }
     }
 
-    // D) Enviar para o Render quaisquer usuários cadastrados localmente no SQL Server (PRESERVANDO SENHAS CRIPTOGRAFADAS E IDS)
+    // D) Enviar para o Render usuários cadastrados localmente (PRESERVANDO SENHAS CRIPTOGRAFADAS E IDS).
+    // IMPORTANTE: o envio é por MESCLAGEM (sem overwrite): a nuvem pode ter cadastros feitos entre o pull e este push
+    // (ou durante uma falha de leitura) — sobrescrever apagaria contas e credenciais do Render. Exclusões já chegam
+    // à nuvem pelo canal próprio /api/sync/deleted-users.
     const localUsersRes = await pool.query('SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted, device_type, must_change_password, trial_started_at, subscription_plan, subscription_status, subscription_expires_at, subscription_method, subscription_payment_id FROM usuarios ORDER BY id ASC');
     const syncableLocalUsers = (localUsersRes.rows || []).filter(u => !deletedEmailSet.has(String(u.email || '').toLowerCase().trim()));
     if (syncableLocalUsers.length > 0) {
       const usersToSync = syncableLocalUsers.map(u => {
         const uCopy = { ...u };
+        // Credencial: se a nuvem não respondeu nesta ciclo, nunca envia senha (a mesclagem preserva a senha do Render).
+        // Se a nuvem tem senha diferente, só envia a do SQL quando ela for comprovadamente mais recente.
+        const emKey = String(u.email || '').toLowerCase().trim();
+        const cloudU = cloudUsersByEmail.get(emKey);
+        if (!cloudUsersFetched || (cloudU && cloudU.password && uCopy.password && cloudU.password !== uCopy.password)) {
+          const cloudPwdChanged = cloudU ? (Date.parse(cloudU.password_changed_at || '') || 0) : 0;
+          const localMirrorU = localMirrorByEmail.get(emKey);
+          const localPwdChanged = localMirrorU ? (Date.parse(localMirrorU.password_changed_at || '') || 0) : 0;
+          if (!cloudUsersFetched || cloudPwdChanged >= localPwdChanged) delete uCopy.password;
+        }
         if (uCopy.last_login) {
           uCopy.last_login = getBrasiliaIsoString(uCopy.last_login);
         }
@@ -37213,7 +37243,7 @@ async function syncWithRenderCloud() {
         return uCopy;
       });
       saveLocalUsers(BackendUtils.mergeUsersMirror(getLocalUsers(), usersToSync), true);
-      await fetchCloud('/api/users?overwrite=true', {
+      await fetchCloud('/api/users', {
         method: 'POST',
         headers: { 'X-Nexus-Sync-Token': SYNC_TOKEN },
         body: JSON.stringify(usersToSync)
