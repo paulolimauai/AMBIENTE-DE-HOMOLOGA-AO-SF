@@ -837,3 +837,209 @@ html.user-logged-in .scale-dropdown .nx-topic-btn:focus-visible { outline: 2px s
 }
 
 } /* fim da layer nx-shell */
+
+
+/* =====================================================================================
+   10. Abas do menu — refinamento global (todas as telas do menu)
+   Vale para o menu lateral expandido, o menu recolhido (trilho), a gaveta do celular e a
+   barra inferior. Um único padrão: pílula de 46px, chip de ícone uniforme, hover com
+   deslize sutil e ativo com barra de acento + fundo em degradê da paleta.
+   ===================================================================================== */
+@layer nx-menu-tabs {
+
+  /* ---------- Item base (sidebar expandido + gaveta) ---------- */
+  html.user-logged-in #menu .menu-btn-user,
+  html.user-logged-in #mobileDrawerMenu .menu-btn-user,
+  html.user-logged-in #mobileDrawer .menu-btn-user {
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    min-height: 46px !important;
+    height: 46px !important;
+    margin-block: 2px !important;
+    padding: 0 12px !important;
+    border: 1px solid transparent !important;
+    border-radius: 12px !important;
+    background: transparent !important;
+    color: var(--nx-sh-ink-2, #BAC6D9) !important;
+    font-size: 13.5px !important;
+    font-weight: 600 !important;
+    letter-spacing: .01em !important;
+    text-align: left !important;
+    cursor: pointer !important;
+    transition: background-color .16s ease, border-color .16s ease, color .16s ease, transform .16s ease, box-shadow .16s ease !important;
+  }
+
+  /* Chip do ícone: coluna e tamanho únicos em todos os itens */
+  html.user-logged-in #menu .menu-btn-user .ic,
+  html.user-logged-in #mobileDrawerMenu .menu-btn-user .ic,
+  html.user-logged-in #mobileDrawer .menu-btn-user .ic {
+    flex: 0 0 34px !important;
+    width: 34px !important;
+    min-width: 34px !important;
+    height: 34px !important;
+    display: inline-grid !important;
+    place-items: center !important;
+    border-radius: 10px !important;
+    border: 1px solid var(--nx-sh-line, rgba(255,255,255,.09)) !important;
+    background: var(--nx-sh-wash, rgba(255,255,255,.065)) !important;
+    color: var(--nx-sh-muted, #96A4BA) !important;
+    transition: background-color .16s ease, border-color .16s ease, color .16s ease !important;
+  }
+  html.user-logged-in #menu .menu-btn-user .ic svg,
+  html.user-logged-in #mobileDrawerMenu .menu-btn-user .ic svg,
+  html.user-logged-in #mobileDrawer .menu-btn-user .ic svg {
+    width: 17px !important;
+    height: 17px !important;
+  }
+
+  html.user-logged-in #menu .menu-btn-user .label,
+  html.user-logged-in #mobileDrawerMenu .menu-btn-user .label,
+  html.user-logged-in #mobileDrawer .menu-btn-user .label {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    text-align: left !important;
+  }
+
+  /* ---------- Hover (inativo) ---------- */
+  @media (hover: hover) {
+    html.user-logged-in #menu .menu-btn-user:not(.active):hover,
+    html.user-logged-in #mobileDrawerMenu .menu-btn-user:not(.active):hover,
+    html.user-logged-in #mobileDrawer .menu-btn-user:not(.active):hover {
+      background: var(--nx-sh-wash, rgba(255,255,255,.065)) !important;
+      border-color: rgba(var(--nx-sh-acc, 250,189,46), .28) !important;
+      color: var(--nx-sh-ink, #EEF3FA) !important;
+      transform: translateX(3px) !important;
+    }
+    html.user-logged-in #menu .menu-btn-user:not(.active):hover .ic,
+    html.user-logged-in #mobileDrawerMenu .menu-btn-user:not(.active):hover .ic,
+    html.user-logged-in #mobileDrawer .menu-btn-user:not(.active):hover .ic {
+      color: rgb(var(--nx-sh-acc, 250,189,46)) !important;
+      border-color: rgba(var(--nx-sh-acc, 250,189,46), .45) !important;
+    }
+  }
+
+  /* ---------- Item ativo ---------- */
+  html.user-logged-in #menu .menu-btn-user.active,
+  html.user-logged-in #mobileDrawerMenu .menu-btn-user.active,
+  html.user-logged-in #mobileDrawer .menu-btn-user.active {
+    background: linear-gradient(100deg, rgba(var(--nx-sh-acc, 250,189,46), .20), rgba(var(--nx-sh-acc, 250,189,46), .07)) !important;
+    border-color: rgba(var(--nx-sh-acc, 250,189,46), .38) !important;
+    color: #fff !important;
+    box-shadow: inset 3px 0 0 rgb(var(--nx-sh-acc, 250,189,46)), 0 6px 18px -10px rgba(var(--nx-sh-acc, 250,189,46), .5) !important;
+  }
+  html.user-logged-in #menu .menu-btn-user.active .ic,
+  html.user-logged-in #mobileDrawerMenu .menu-btn-user.active .ic,
+  html.user-logged-in #mobileDrawer .menu-btn-user.active .ic {
+    color: #1A1408 !important;
+    background: rgb(var(--nx-sh-acc, 250,189,46)) !important;
+    border-color: transparent !important;
+    box-shadow: 0 4px 12px -4px rgba(var(--nx-sh-acc, 250,189,46), .7) !important;
+  }
+
+  /* ---------- Foco de teclado ---------- */
+  html.user-logged-in #menu .menu-btn-user:focus-visible,
+  html.user-logged-in #mobileDrawerMenu .menu-btn-user:focus-visible,
+  html.user-logged-in #mobileDrawer .menu-btn-user:focus-visible {
+    outline: 2px solid rgb(var(--nx-sh-acc, 250,189,46)) !important;
+    outline-offset: 2px !important;
+  }
+
+  /* ---------- Menu recolhido (trilho de ícones): chip maior, tooltip mantido ---------- */
+  @media (min-width: 861px) {
+    html.user-logged-in.sidebar-collapsed #menu .menu-btn-user,
+    html.user-logged-in body.sidebar-collapsed #menu .menu-btn-user {
+      justify-content: center !important;
+      padding: 0 !important;
+      height: 48px !important;
+      min-height: 48px !important;
+    }
+    html.user-logged-in.sidebar-collapsed #menu .menu-btn-user .ic,
+    html.user-logged-in body.sidebar-collapsed #menu .menu-btn-user .ic {
+      flex-basis: 36px !important;
+      width: 36px !important;
+      min-width: 36px !important;
+      height: 36px !important;
+    }
+  }
+
+  /* ---------- Barra inferior do celular: ativo com pílula de acento ---------- */
+  html.user-logged-in #mobileBottomBar button {
+    border-radius: 12px !important;
+    transition: background-color .16s ease, color .16s ease, transform .16s ease !important;
+  }
+  html.user-logged-in #mobileBottomBar button.active,
+  html.user-logged-in #mobileBottomBar button[aria-current] {
+    background: rgba(var(--nx-sh-acc, 250,189,46), .16) !important;
+    color: rgb(var(--nx-sh-acc, 250,189,46)) !important;
+  }
+
+  /* Respeito a quem pediu menos movimento */
+  @media (prefers-reduced-motion: reduce) {
+    html.user-logged-in #menu .menu-btn-user,
+    html.user-logged-in #mobileDrawerMenu .menu-btn-user,
+    html.user-logged-in #mobileDrawer .menu-btn-user,
+    html.user-logged-in #mobileBottomBar button { transition: none !important; }
+    html.user-logged-in #menu .menu-btn-user:hover { transform: none !important; }
+  }
+}
+
+/* Mesmo padrão para os itens do menu do administrador (abas internas do painel admin) */
+@layer nx-menu-tabs {
+  html.user-logged-in #menu .menu-btn-admin {
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    min-height: 54px !important;
+    height: 54px !important;
+    margin-block: 2px !important;
+    padding: 0 12px !important;
+    border: 1px solid transparent !important;
+    border-radius: 12px !important;
+    background: transparent !important;
+    color: var(--nx-sh-ink-2, #BAC6D9) !important;
+    font-size: 13.5px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    transition: background-color .16s ease, border-color .16s ease, color .16s ease, transform .16s ease, box-shadow .16s ease !important;
+  }
+  html.user-logged-in #menu .menu-btn-admin .ic {
+    flex: 0 0 34px !important;
+    width: 34px !important;
+    min-width: 34px !important;
+    height: 34px !important;
+    display: inline-grid !important;
+    place-items: center !important;
+    border-radius: 10px !important;
+    border: 1px solid var(--nx-sh-line, rgba(255,255,255,.09)) !important;
+    background: var(--nx-sh-wash, rgba(255,255,255,.065)) !important;
+    color: var(--nx-sh-muted, #96A4BA) !important;
+    transition: background-color .16s ease, border-color .16s ease, color .16s ease !important;
+  }
+  @media (hover: hover) {
+    html.user-logged-in #menu .menu-btn-admin:not(.active):hover {
+      background: var(--nx-sh-wash, rgba(255,255,255,.065)) !important;
+      border-color: rgba(var(--nx-sh-acc, 250,189,46), .28) !important;
+      color: var(--nx-sh-ink, #EEF3FA) !important;
+      transform: translateX(3px) !important;
+    }
+    html.user-logged-in #menu .menu-btn-admin:not(.active):hover .ic { color: rgb(var(--nx-sh-acc, 250,189,46)) !important; border-color: rgba(var(--nx-sh-acc, 250,189,46), .45) !important; }
+  }
+  html.user-logged-in #menu .menu-btn-admin.active {
+    background: linear-gradient(100deg, rgba(var(--nx-sh-acc, 250,189,46), .20), rgba(var(--nx-sh-acc, 250,189,46), .07)) !important;
+    border-color: rgba(var(--nx-sh-acc, 250,189,46), .38) !important;
+    color: #fff !important;
+    box-shadow: inset 3px 0 0 rgb(var(--nx-sh-acc, 250,189,46)) !important;
+  }
+  html.user-logged-in #menu .menu-btn-admin.active .ic {
+    color: #1A1408 !important;
+    background: rgb(var(--nx-sh-acc, 250,189,46)) !important;
+    border-color: transparent !important;
+  }
+  html.user-logged-in #menu .menu-btn-admin:focus-visible { outline: 2px solid rgb(var(--nx-sh-acc, 250,189,46)) !important; outline-offset: 2px !important; }
+}
