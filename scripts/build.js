@@ -43,7 +43,7 @@ if (fs.existsSync(imgDir)) {
     .filter((e) => e.isFile())
     .reduce((acc, e) => acc + fs.statSync(path.join(imgDir, e.name)).size, 0);
   if (imgSize < 20 * 1024 * 1024) {
-    fs.cpSync(imgDir, path.join(DIST, 'images'), { recursive: true });
+    fs.cpSync(imgDir, path.join(DIST, 'images'), { recursive: true, filter: (src) => path.relative(imgDir, src).split(path.sep)[0] !== 'SITE' });
     console.log('[build] images/ copiada (' + (imgSize / 1024 / 1024).toFixed(1) + ' MB).');
   } else {
     console.log('[build] images/ ignorada (' + (imgSize / 1024 / 1024).toFixed(0) + ' MB — acima do limite de hospedagem estática).');
