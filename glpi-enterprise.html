@@ -51,8 +51,8 @@
             color-scheme: dark;
 
             /* Cor de destaque: a paleta escolhida (a mesma do login e do app, chave nexus:cores) define --h, --h2, --sat,
-               --acc-rgb, --dk-dark e --on-brand (script de tema); o resto deriva delas. Estes valores são o azul padrão. */
-            --h: 174; --h2: 190; --sat: 62%;
+               --acc-rgb, --dk-dark e --on-brand (script de tema); o resto deriva delas. Estes valores são o dourado padrão (mesmo do app). */
+            --h: 42; --h2: 50; --sat: 62%;
             --brand: hsl(var(--h) var(--sat) 55%);
             --brand-d: hsl(var(--h) calc(var(--sat) * .78) 36%);
             --accent: hsl(var(--h) var(--sat) 72%);
@@ -60,9 +60,9 @@
             --glow-b: hsl(var(--h2) calc(var(--sat) * .7) 40%);
             --base: hsl(var(--h) calc(var(--sat) * .5) 6%);
             --on-brand: #04211c;
-            --acc-rgb: 60, 200, 175;
+            --acc-rgb: 222, 190, 115;
             --acc-l: var(--accent);
-            --dk-dark: 13, 23, 22;
+            --dk-dark: 31, 24, 16;
             --dk: var(--dk-dark);     /* superfícies escuras translúcidas (no modo claro viram brancas) */
             --lt: 255, 255, 255;      /* realces, bordas e preenchimentos claros (no modo claro viram azul-marinho) */
             --ln: rgba(var(--lt), .055);
@@ -84,7 +84,7 @@
 
             /* Cores de significado (não seguem a paleta): status, prioridade, SLA, alerta */
             --amber-rgb: 251, 191, 36;
-            --blue-rgb: 96, 165, 250;
+            --blue-rgb: 16, 185, 129;
             --green-rgb: 52, 211, 153;
             --rose-rgb: 251, 113, 133;
             --orange-rgb: 251, 146, 60;
@@ -92,7 +92,7 @@
             --sky-rgb: 56, 189, 248;
             --slate-rgb: 148, 163, 184;
             /* Tons de texto de cada cor de significado (no modo claro ficam escuros) */
-            --t-amber: #fcd34d; --t-green: #6ee7b7; --t-rose: #fda4af; --t-blue: #93c5fd;
+            --t-amber: #fcd34d; --t-green: #6ee7b7; --t-rose: #fda4af; --t-blue: #6EE7B7;
             --t-sky: #7dd3fc; --t-slate: #cbd5e1; --t-purple: #d8b4fe; --t-orange: #fdba74;
 
             --font-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
@@ -207,14 +207,14 @@
         .btn-lg { height: 3rem; padding: 0 1.4rem; font-size: 0.875rem; border-radius: .95rem; }
         .btn-block { width: 100%; }
         .btn-amber { color: #261800; background: linear-gradient(145deg, #fde68a, #f59e0b 55%, #d97706); box-shadow: 0 10px 24px -8px rgba(245, 158, 11, .65), inset 0 1px 0 rgba(255, 255, 255, .55), inset 0 -1px 0 rgba(0, 0, 0, .14); }
-        .btn-blue { color: var(--white); background: linear-gradient(145deg, #2f6ff2, #2563eb 50%, #1d4ed8); box-shadow: 0 10px 24px -8px rgba(37, 99, 235, .7), inset 0 1px 0 rgba(255, 255, 255, .3), inset 0 -1px 0 rgba(0, 0, 0, .18); }
+        .btn-blue { color: var(--white); background: linear-gradient(145deg, #10B981, #059669 50%, #047857); box-shadow: 0 10px 24px -8px rgba(16, 185, 129, .7), inset 0 1px 0 rgba(255, 255, 255, .3), inset 0 -1px 0 rgba(0, 0, 0, .18); }
         .btn-green { color: #032a1c; background: linear-gradient(145deg, #6ee7b7, #10b981 58%, #059669); box-shadow: 0 10px 24px -8px rgba(16, 185, 129, .6), inset 0 1px 0 rgba(255, 255, 255, .5), inset 0 -1px 0 rgba(0, 0, 0, .14); }
         .btn-ghost { color: var(--ink-2); background: rgba(var(--lt), .075); border-color: rgba(var(--lt), .15); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .12); }
         .btn-ghost:hover { background: rgba(var(--lt), .14); color: var(--white); }
         .btn-icon { width: 2.25rem; height: 2.25rem; padding: 0; border-radius: .75rem; color: var(--ink-2); background: transparent; border-color: transparent; }
         .btn-icon:hover { background: rgba(var(--lt), .1); color: var(--white); transform: none; }
         .btn-icon.danger:hover { color: var(--t-rose); background: rgba(var(--rose-rgb), .14); }
-        .row-act-user:hover { background: linear-gradient(145deg, #2f6ff2, #1d4ed8); border-color: transparent; color: var(--white); }
+        .row-act-user:hover { background: linear-gradient(145deg, #10B981, #047857); border-color: transparent; color: var(--white); }
         .row-act-tech:hover { background: linear-gradient(145deg, #fde68a, #f59e0b); border-color: transparent; color: #261800; }
 
         /* ---------- Campos ---------- */
@@ -322,9 +322,9 @@
         .avatar {
             width: 2.2rem; height: 2.2rem; flex: none; display: grid; place-items: center;
             border-radius: .75rem; font-size: 0.8125rem; font-weight: 800; color: var(--white);
-            background: linear-gradient(145deg, #2f6ff2, #1d4ed8);
-            border: 1px solid rgba(147, 197, 253, .6);
-            box-shadow: 0 6px 16px -6px rgba(37, 99, 235, .8), inset 0 1px 0 rgba(255, 255, 255, .35);
+            background: linear-gradient(145deg, #10B981, #047857);
+            border: 1px solid rgba(110, 231, 183, .6);
+            box-shadow: 0 6px 16px -6px rgba(16, 185, 129, .8), inset 0 1px 0 rgba(255, 255, 255, .35);
         }
         .avatar.tech { color: #261800; background: linear-gradient(145deg, #fde68a, #f59e0b); border-color: rgba(253, 230, 138, .8); box-shadow: 0 6px 16px -6px rgba(245, 158, 11, .8), inset 0 1px 0 rgba(255, 255, 255, .5); }
         .user-meta { text-align: left; }
@@ -530,7 +530,7 @@
         .overlay.is-full .modal-ws { width: 100%; max-width: none; height: 100dvh; max-height: none; border-radius: 0; }
         .modal-head { flex: none; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.1rem 1.5rem; background: rgba(var(--dk), .4); border-bottom: 1px solid var(--line); }
         .modal-head .mh-l { display: flex; align-items: center; gap: .85rem; min-width: 0; }
-        .mh-ico { width: 2.4rem; height: 2.4rem; flex: none; display: grid; place-items: center; border-radius: .8rem; font-size: 1.0125rem; color: var(--white); background: linear-gradient(145deg, #2f6ff2, #1d4ed8); box-shadow: 0 8px 20px -8px rgba(37, 99, 235, .8), inset 0 1px 0 rgba(255, 255, 255, .35); }
+        .mh-ico { width: 2.4rem; height: 2.4rem; flex: none; display: grid; place-items: center; border-radius: .8rem; font-size: 1.0125rem; color: var(--white); background: linear-gradient(145deg, #10B981, #047857); box-shadow: 0 8px 20px -8px rgba(16, 185, 129, .8), inset 0 1px 0 rgba(255, 255, 255, .35); }
         .mh-title { font-size: 1rem; font-weight: 800; letter-spacing: -.01em; line-height: 1.25; }
         .mh-sub { font-size: 0.78rem; color: var(--muted); }
         .modal-body { padding: 1.5rem; overflow-y: auto; display: grid; gap: 1rem; }
@@ -581,7 +581,7 @@
         .seg { display: inline-flex; gap: .3rem; padding: .2rem; border-radius: .8rem; background: rgba(var(--dk), .55); border: 1px solid var(--line-soft); }
         .seg-btn { height: 1.8rem; padding: 0 .8rem; border-radius: .6rem; font-size: 0.78rem; font-weight: 700; color: var(--muted); transition: background .18s, color .18s; display: inline-flex; align-items: center; gap: .4rem; }
         .seg-btn:hover { color: var(--white); background: rgba(var(--lt), .08); }
-        .seg-btn.is-public { color: var(--white); background: linear-gradient(145deg, #2f6ff2, #1d4ed8); box-shadow: 0 6px 14px -6px rgba(37, 99, 235, .8), inset 0 1px 0 rgba(255, 255, 255, .3); }
+        .seg-btn.is-public { color: var(--white); background: linear-gradient(145deg, #10B981, #047857); box-shadow: 0 6px 14px -6px rgba(16, 185, 129, .8), inset 0 1px 0 rgba(255, 255, 255, .3); }
         .seg-btn.is-internal { color: #261800; background: linear-gradient(145deg, #fde68a, #f59e0b); box-shadow: 0 6px 14px -6px rgba(245, 158, 11, .8), inset 0 1px 0 rgba(255, 255, 255, .5); }
         .ws-right { min-height: 0; overflow-y: auto; padding: 1.2rem 1.4rem; display: grid; gap: 1rem; align-content: start; background: rgba(var(--dk), .4); }
         .ws-right .eyebrow { padding-bottom: .7rem; border-bottom: 1px solid var(--line-soft); margin-bottom: 0; }
@@ -618,7 +618,7 @@
         .cat-tips b { display: flex; align-items: center; gap: .45rem; font-size: max(0.72rem, 11px); font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--t-blue); }
         .cat-tips ul { display: grid; gap: .2rem; }
         .cat-tips li { display: flex; gap: .5rem; line-height: 1.5; }
-        .cat-tips li::before { content: ""; flex: none; width: .3rem; height: .3rem; margin-top: .5rem; border-radius: 50%; background: #93c5fd; }
+        .cat-tips li::before { content: ""; flex: none; width: .3rem; height: .3rem; margin-top: .5rem; border-radius: 50%; background: #6EE7B7; }
         .modal-form { max-width: 44rem; }
         /* Cancelar/Enviar ficam sempre visíveis, mesmo com o formulário rolando em telas baixas */
         .modal-form .modal-foot { position: sticky; bottom: -1.5rem; z-index: 3; margin: .2rem -1.5rem -1.5rem; padding: .9rem 1.5rem; background: rgba(var(--dk), .94); border-top: 1px solid var(--line); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
@@ -651,7 +651,7 @@
         .fchip b { min-width: 1.35rem; padding: .05rem .4rem; border-radius: 99px; text-align: center; font-family: var(--font-mono); font-size: max(0.72rem, 11px); color: var(--white); background: rgba(var(--lt), .14); }
         .fchip.is-on { color: #261800; background: linear-gradient(145deg, #fde68a, #f59e0b); border-color: transparent; box-shadow: 0 8px 18px -8px rgba(245, 158, 11, .8), inset 0 1px 0 rgba(255, 255, 255, .5); }
         .fchip.is-on b { color: #261800; background: rgba(0, 0, 0, .14); }
-        .fchips.blue .fchip.is-on { color: var(--white); background: linear-gradient(145deg, #2f6ff2, #1d4ed8); box-shadow: 0 8px 18px -8px rgba(37, 99, 235, .8), inset 0 1px 0 rgba(255, 255, 255, .3); }
+        .fchips.blue .fchip.is-on { color: var(--white); background: linear-gradient(145deg, #10B981, #047857); box-shadow: 0 8px 18px -8px rgba(16, 185, 129, .8), inset 0 1px 0 rgba(255, 255, 255, .3); }
         .fchips.blue .fchip.is-on b { color: var(--white); background: rgba(0, 0, 0, .2); }
         .fchip.warn:not(.is-on) b { color: var(--t-amber); background: rgba(var(--amber-rgb), .2); }
         .fchip.late:not(.is-on) b { color: var(--t-rose); background: rgba(var(--rose-rgb), .2); }
@@ -683,7 +683,7 @@
         .step.is-done i { color: #032a1c; background: linear-gradient(145deg, #6ee7b7, #10b981); border-color: transparent; }
         .step.is-done::before, .step.is-now::before { background: linear-gradient(90deg, #10b981, #34d399); }
         .step.is-now { color: var(--white); }
-        .step.is-now i { color: var(--white); background: linear-gradient(145deg, #2f6ff2, #1d4ed8); border-color: rgba(147, 197, 253, .7); box-shadow: 0 0 0 .3rem rgba(var(--blue-rgb), .2); }
+        .step.is-now i { color: var(--white); background: linear-gradient(145deg, #10B981, #047857); border-color: rgba(110, 231, 183, .7); box-shadow: 0 0 0 .3rem rgba(var(--blue-rgb), .2); }
         .step.is-wait i { color: #261800; background: linear-gradient(145deg, #fde68a, #f59e0b); border-color: transparent; box-shadow: 0 0 0 .3rem rgba(var(--amber-rgb), .2); }
         .step.is-off i { color: var(--t-rose); background: rgba(var(--rose-rgb), .14); border-color: rgba(var(--rose-rgb), .5); }
         .sumlist { display: grid; gap: 0; }
@@ -716,7 +716,7 @@
         .tl { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: .75rem; padding: 0; background: none; border: 0; border-radius: 0; }
         .tl.tech, .tl.internal { background: none; border-color: transparent; color: inherit; }
         .tl-av { width: 2.1rem; height: 2.1rem; display: grid; place-items: center; border-radius: .75rem; font-size: 0.78rem; font-weight: 800; color: var(--ink); background: rgba(var(--lt), .1); border: 1px solid var(--line); }
-        .tl.tech .tl-av { color: var(--white); background: linear-gradient(145deg, #2f6ff2, #1d4ed8); border-color: rgba(147, 197, 253, .6); }
+        .tl.tech .tl-av { color: var(--white); background: linear-gradient(145deg, #10B981, #047857); border-color: rgba(110, 231, 183, .6); }
         .tl.internal .tl-av { color: #261800; background: linear-gradient(145deg, #fde68a, #f59e0b); border-color: transparent; }
         .tl-bubble { min-width: 0; padding: .75rem .95rem; border-radius: .2rem 1rem 1rem 1rem; background: rgba(var(--dk), .55); border: 1px solid var(--line-soft); color: var(--ink-2); }
         .tl.tech .tl-bubble { background: linear-gradient(145deg, rgba(var(--blue-rgb), .17), rgba(var(--blue-rgb), .05)); border-color: rgba(var(--blue-rgb), .4); color: var(--ink); }
@@ -1104,7 +1104,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             --ln: rgba(15, 60, 55, .07);
             --ln2: rgba(15, 60, 55, .14);
             --ink: #11201f; --ink-2: #425650; --muted: #5b6e6b; --faint: #6d7f7c; --white: #0b2b27;
-            --t-amber: #92400e; --t-green: #047857; --t-rose: #be123c; --t-blue: #1d4ed8;
+            --t-amber: #92400e; --t-green: #047857; --t-rose: #be123c; --t-blue: #047857;
             --t-sky: #0369a1; --t-slate: #475569; --t-purple: #7e22ce; --t-orange: #c2410c;
             --glass-shadow:
                 0 1px 2px rgba(15, 60, 55, .08),
@@ -3043,7 +3043,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         var PALETAS = [
             { id: 'multicolor', nome: 'Multicolor', h: [265, 335, 190, 45] },
             { id: 'aurora', nome: 'Aurora', h: [250, 320, 190, 280] },
-            { id: 'oceano', nome: 'Verde Água', h: [174, 200, 195, 165] },
+            { id: 'oceano', nome: 'Oceano', h: [212, 188, 255, 165] },
             { id: 'por-do-sol', nome: 'Pôr do sol', h: [18, 340, 45, 285] },
             { id: 'esmeralda', nome: 'Esmeralda', h: [155, 185, 85, 205] },
             { id: 'rose', nome: 'Rosé', h: [335, 285, 15, 255] },
@@ -3052,8 +3052,8 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             { id: 'carmesim', nome: 'Carmesim', h: [352, 20, 285, 320] },
             { id: 'neon', nome: 'Neon', h: [85, 150, 195, 50] }
         ];
-        var PADRAO = 'oceano';        /* azul padrão, igual ao do login */
-        var HUE_UI = { oceano: 174 }; /* tom teal do desenho (a paleta do app usa 212 no fundo do painel) */
+        var PADRAO = 'ouro';         /* mesmo padrão do app Nexus (DEFAULT_ID = 'ouro') */
+        var HUE_UI = { oceano: 212 }; /* mesmo tom do painel do app (a paleta usa 212 no fundo) */
 
         function hsl2rgb(h, s, l) {
             s /= 100; l /= 100;
