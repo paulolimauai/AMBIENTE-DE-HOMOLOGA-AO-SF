@@ -8,7 +8,7 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "Região Fiscal RFB",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-11-11T21:00:49.880Z"
+    "updated_at": "2026-11-11T21:15:23.420Z"
   },
   "12345678909": {
     "cpf": "12345678909",
@@ -19,7 +19,7 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "9ª Região Fiscal (PR, SC)",
     "origem": "Receita Federal do Brasil (Base Cadastral Oficial)",
-    "updated_at": "2026-11-11T21:00:49.893Z"
+    "updated_at": "2026-11-11T21:15:23.426Z"
   },
   "04023326100": {
     "cpf": "04023326100",
@@ -30,7 +30,7 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "1ª Região Fiscal (DF, GO, MT, MS, TO)",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-11-11T21:00:49.906Z"
+    "updated_at": "2026-11-11T21:15:23.433Z"
   },
   "99925109191": {
     "cpf": "99925109191",
@@ -41,7 +41,7 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "1ª Região Fiscal (DF, GO, MT, MS, TO)",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-11-11T21:00:49.930Z"
+    "updated_at": "2026-11-11T21:15:23.440Z"
   },
   "52998224725": {
     "cpf": "52998224725",
@@ -51,7 +51,7 @@
     "email": "teste.cpf.1794441671@teste.local",
     "situacao": "REGULAR",
     "regiao_fiscal": "7ª Região Fiscal (ES, RJ)",
-    "origem": "Receita Federal do Brasil (Base Cadastral Verificada)",
-    "updated_at": "2026-11-12T00:01:14.688Z"
+    "origem": "Cadastro Oficial de Usuário",
+    "updated_at": "2026-11-11T21:15:23.440Z"
   }
 }
