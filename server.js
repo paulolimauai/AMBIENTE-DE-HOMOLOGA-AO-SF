@@ -79,7 +79,7 @@ if (process.env.NEXUS_DATA_DIR) {
     'local_users.json', 'local_users.backup.json',
     'local_database_data.json', 'local_database_data.backup.json',
     'cpf_registry.json', 'cpf_registry.backup.json',
-    'deleted_accounts.json', 'local_ordens_servico.json', 'local_tecnicos.json', 'local_filas.json',
+    'deleted_accounts.json', 'local_ordens_servico.json', 'local_boletos.json', 'local_tecnicos.json', 'local_filas.json',
     'pending_logins.json', 'system_logs.json'
   ];
   for (const fileName of runtimeJsonFiles) {
@@ -32572,6 +32572,39 @@ function saveLocalOrdens(ordens) {
   }
 }
 
+// Boletos/cobranças Pix emitidos pelo admin (2ª via). Persistência local com fallback JSON;
+// o status "vencido" é calculado na leitura a partir de due_date.
+const LOCAL_BOLETOS_PATH = path.join(RUNTIME_DATA_DIR, 'local_boletos.json');
+
+function getLocalBoletos() {
+  try {
+    if (fs.existsSync(LOCAL_BOLETOS_PATH)) {
+      const parsed = JSON.parse(fs.readFileSync(LOCAL_BOLETOS_PATH, 'utf8'));
+      return Array.isArray(parsed) ? parsed : [];
+    }
+  } catch (e) {
+    console.error('Erro ao ler local_boletos.json:', e);
+  }
+  return [];
+}
+
+function saveLocalBoletos(list) {
+  try {
+    writeJsonFile(LOCAL_BOLETOS_PATH, JSON.stringify(list, null, 2));
+  } catch (e) {
+    console.error('Erro ao salvar local_boletos.json:', e);
+  }
+}
+
+function boletoEffectiveStatus(b) {
+  if (!b) return 'pendente';
+  const st = String(b.status || 'pendente').toLowerCase();
+  if (st === 'pago' || st === 'cancelado') return st;
+  const due = b.due_date ? new Date(String(b.due_date) + 'T23:59:59-03:00') : null;
+  if (due && !isNaN(due.getTime()) && due.getTime() < Date.now()) return 'vencido';
+  return b.view_count > 0 ? 'aberto' : 'emitido';
+}
+
 // ==================== Central de Atendimento: apoio das rotas de chamados (as regras ficam em atendimento.js) ====================
 const ORDEM_COLUNAS_SQL = 'id, protocol, client_name, client_email, client_phone, client_cpf, service_type, priority, title, description, status, admin_notes, tecnico_responsavel, assumido_em, canal_atendimento, sla, asset, time_spent, solution, timeline, concluido_em, created_at, updated_at, ticket_type, fila';
 const ATENDIMENTO_LIMITE_CORPO_BYTES = 64 * 1024;
@@ -35978,6 +36011,120 @@ async function handleNexusRequest(req, res) {
         }));
       } catch(err) {
         const failure = publicFailure(err, 'Não foi possível bloquear a assinatura agora.', 500);
+        res.writeHead(failure.status, { ...corsHeaders, 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ success: false, error: failure.error }));
+      }
+    });
+    return;
+  }
+
+  // ===== Boletos / cobranças Pix emitidos (2ª via) — exclusivo do Administrador =====
+  if (req.method === 'GET' && parsedUrl.pathname === '/api/admin/boletos') {
+    const adminUser = getAuthenticatedAdmin(req);
+    if (!adminUser) {
+      res.writeHead(401, { ...corsHeaders, 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({ success: false, error: 'Autenticação de administrador obrigatória.' }));
+    }
+    const boletos = getLocalBoletos()
+      .map(b => ({ ...b, effective_status: boletoEffectiveStatus(b) }))
+      .sort((a, b) => String(b.created_at || '').localeCompare(String(a.created_at || '')));
+    res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+    return res.end(JSON.stringify({ success: true, boletos }));
+  }
+
+  if (req.method === 'POST' && parsedUrl.pathname === '/api/admin/boletos') {
+    let body = '';
+    req.on('data', chunk => body += BackendUtils.decodeBodyChunk(req, chunk));
+    req.on('end', () => {
+      try {
+        const adminUser = getAuthenticatedAdmin(req);
+        if (!adminUser) {
+          res.writeHead(401, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'Autenticação de administrador obrigatória.' }));
+        }
+        const parsed = JSON.parse(body || '{}');
+        const action = String(parsed.action || 'upsert').toLowerCase();
+        const list = getLocalBoletos();
+
+        if (action === 'view') {
+          const ref = String(parsed.reference || '').replace(/[^a-zA-Z0-9]/g, '').slice(0, 25);
+          const rec = list.find(b => String(b.reference || '') === ref);
+          if (rec) {
+            rec.view_count = (Number(rec.view_count) || 0) + 1;
+            if (!rec.first_viewed_at) rec.first_viewed_at = getBrasiliaIsoString(new Date());
+            rec.last_viewed_at = getBrasiliaIsoString(new Date());
+            saveLocalBoletos(list);
+          }
+          res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: true }));
+        }
+
+        if (action === 'status') {
+          const ref = String(parsed.reference || '').replace(/[^a-zA-Z0-9]/g, '').slice(0, 25);
+          const rec = list.find(b => String(b.reference || '') === ref || String(b.id || '') === String(parsed.id || ''));
+          const newStatus = String(parsed.status || '').toLowerCase();
+          if (!rec) {
+            res.writeHead(404, { ...corsHeaders, 'Content-Type': 'application/json' });
+            return res.end(JSON.stringify({ success: false, error: 'Cobrança não encontrada.' }));
+          }
+          if (!['pendente', 'pago', 'cancelado'].includes(newStatus)) {
+            res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+            return res.end(JSON.stringify({ success: false, error: 'Status inválido.' }));
+          }
+          rec.status = newStatus;
+          if (newStatus === 'pago') rec.paid_at = getBrasiliaIsoString(new Date());
+          saveLocalBoletos(list);
+          res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: true, boleto: { ...rec, effective_status: boletoEffectiveStatus(rec) } }));
+        }
+
+        // upsert: atualiza pela referência (2ª via/edição) ou cria um novo registro
+        const reference = String(parsed.reference || '').replace(/[^a-zA-Z0-9]/g, '').slice(0, 25);
+        if (!reference) {
+          res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'Referência da cobrança é obrigatória.' }));
+        }
+        const nowIso = getBrasiliaIsoString(new Date());
+        const dueDate = /^\d{4}-\d{2}-\d{2}$/.test(String(parsed.due_date || '')) ? String(parsed.due_date) : '';
+        const amount = Math.max(0, Math.min(99999, Number(parsed.amount) || 18));
+        const existing = list.find(b => String(b.reference || '') === reference);
+        let rec;
+        if (existing) {
+          rec = existing;
+          rec.client_email = String(parsed.client_email || rec.client_email || '').toLowerCase().trim();
+          rec.client_name = String(parsed.client_name || rec.client_name || '');
+          rec.client_cpf = String(parsed.client_cpf || rec.client_cpf || '');
+          rec.plan = String(parsed.plan || rec.plan || 'mensal');
+          rec.amount = amount;
+          if (dueDate) rec.due_date = dueDate;
+          rec.last_printed_at = nowIso;
+          rec.print_count = (Number(rec.print_count) || 0) + 1;
+          rec.updated_at = nowIso;
+          if (rec.status === 'cancelado') rec.status = 'pendente';
+        } else {
+          rec = {
+            id: 'BX-' + Date.now() + '-' + crypto.randomBytes(2).toString('hex').toUpperCase(),
+            reference,
+            client_email: String(parsed.client_email || '').toLowerCase().trim(),
+            client_name: String(parsed.client_name || ''),
+            client_cpf: String(parsed.client_cpf || ''),
+            plan: String(parsed.plan || 'mensal'),
+            amount,
+            due_date: dueDate,
+            status: 'pendente',
+            view_count: 0,
+            print_count: 1,
+            created_at: nowIso,
+            last_printed_at: nowIso,
+            updated_at: nowIso
+          };
+          list.unshift(rec);
+        }
+        saveLocalBoletos(list);
+        res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ success: true, boleto: { ...rec, effective_status: boletoEffectiveStatus(rec) } }));
+      } catch (err) {
+        const failure = publicFailure(err, 'Não foi possível registrar a cobrança agora.', 500);
         res.writeHead(failure.status, { ...corsHeaders, 'Content-Type': 'application/json' });
         return res.end(JSON.stringify({ success: false, error: failure.error }));
       }
