@@ -222,6 +222,10 @@ a{color:var(--accent);font-weight:700;text-decoration:none}a:hover{text-decorati
   background:linear-gradient(180deg,var(--brand),var(--brand-d));
   box-shadow:0 .6rem 1.4rem color-mix(in srgb,var(--brand) 35%,transparent),inset 0 1px 0 rgba(255,255,255,.25);transition:transform .15s,filter .2s}
 .go:hover{filter:brightness(1.1)}.go:active{transform:translateY(1px)}.go[disabled]{opacity:.65;cursor:wait}
+.go .spin{display:none;width:1.05rem;height:1.05rem;border-radius:50%;border:.16rem solid color-mix(in srgb,currentColor 35%,transparent);border-top-color:currentColor;animation:nx-rot .7s linear infinite;vertical-align:-.18rem}
+.go.loading .spin{display:inline-block}
+.go.loading{pointer-events:none}
+@keyframes nx-rot{to{transform:rotate(360deg)}}
 
 /* ---------- central GLPI ---------- */
 .central{margin-top:1.5rem;padding:1.1rem;border-radius:1.05rem;background:rgba(255,255,255,.035);border:1px solid var(--card-line)}
@@ -511,7 +515,7 @@ button,a,label{touch-action:manipulation}
         <a href="#" id="esqueci">Esqueci minha senha</a>
       </div>
       <p class="msg" id="msg" role="alert" aria-live="polite"></p>
-      <button class="go" id="enviar" type="submit">Entrar no painel</button>
+      <button class="go" id="enviar" type="submit"><span class="spin" aria-hidden="true"></span><span class="go-t">Entrar no painel</span></button>
     </form>
 
     <div class="central">
@@ -1156,6 +1160,7 @@ button,a,label{touch-action:manipulation}
     if(d.errorType==='invalid_name')return erro('nome',msg);
     if(d.errorType==='weak_password')return erro('senha',msg);
     if(d.errorType==='user_inactive')msg='Esta conta está desativada pelo administrador.';
+    if(d.errorType==='rate_limited'||err.status===429)msg=msg||'Muitas tentativas de acesso. Aguarde alguns minutos e tente novamente.';
     aviso(msg);
   }
 
@@ -1170,8 +1175,10 @@ button,a,label{touch-action:manipulation}
       senha:$('senha').value,
       lembrar:$('lembrar').checked
     };
-    var rotulo=b.textContent,entrou=false;
-    b.disabled=true;b.textContent=modo==='criar'?'Criando conta…':'Entrando…';
+    var rotulo=(b.querySelector('.go-t')||b).textContent,entrou=false;
+    b.disabled=true;b.classList.add('loading');
+    if(b.querySelector('.go-t'))b.querySelector('.go-t').textContent=modo==='criar'?'Criando conta…':'Entrando…';
+    else b.textContent=modo==='criar'?'Criando conta…':'Entrando…';
     try{
       if(modo==='criar')await window.nexusAuth.register(d);
       else{
@@ -1183,8 +1190,9 @@ button,a,label{touch-action:manipulation}
     }catch(err){
       mapearErro(err);
     }finally{
-      if(entrou)b.textContent='Pronto';
-      else{b.disabled=false;b.textContent=rotulo}
+      b.classList.remove('loading');
+      if(entrou){if(b.querySelector('.go-t'))b.querySelector('.go-t').textContent='Pronto';else b.textContent='Pronto'}
+      else{b.disabled=false;if(b.querySelector('.go-t'))b.querySelector('.go-t').textContent=rotulo;else b.textContent=rotulo}
     }
   });
 
