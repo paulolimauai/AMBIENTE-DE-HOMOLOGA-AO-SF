@@ -978,14 +978,28 @@ let pool = null;
 const DEFAULT_AUTHORIZED_USERS = [];
 const DEFAULT_ADMIN = null;
 
+// Credenciais SMTP compartilhadas versionadas (.nexus_smtp): o Render não recebe env vars novas sem painel,
+// então host/usuário/senha viajam no repositório privado — mesmo padrão do .nexus_supabase e .nexus_sync_token.
+const nexusSmtpFileCreds = (() => {
+  try {
+    const file = process.env.NEXUS_SMTP_FILE || path.join(__dirname, '.nexus_smtp');
+    const kv = {};
+    for (const line of fs.readFileSync(file, 'utf8').split(/\r?\n/)) {
+      const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.+?)\s*$/);
+      if (m) kv[m[1]] = m[2].replace(/^["']|["']$/g, '');
+    }
+    return kv;
+  } catch (e) { return {}; }
+})();
+
 // Disparo real de e-mail via Socket SMTP Nativo (sem pacotes externos).
 // Suporta TLS implícito (porta 465, ex.: Gmail/Brevo) e STARTTLS (porta 587, ex.: Office 365/Outlook).
 function sendPasswordEmail(toEmail, userName, userPassword) {
   return new Promise((resolve) => {
-    const host = process.env.SMTP_HOST || 'smtp.gmail.com';
-    const port = parseInt(process.env.SMTP_PORT || '465', 10);
-    const user = process.env.SMTP_USER;
-    const pass = process.env.SMTP_PASS;
+    const host = String(process.env.SMTP_HOST || nexusSmtpFileCreds.SMTP_HOST || 'smtp.gmail.com').trim();
+    const port = parseInt(process.env.SMTP_PORT || nexusSmtpFileCreds.SMTP_PORT || '465', 10);
+    const user = process.env.SMTP_USER || nexusSmtpFileCreds.SMTP_USER || '';
+    const pass = process.env.SMTP_PASS || nexusSmtpFileCreds.SMTP_PASS || '';
 
     if (!user || !pass) {
       console.log(`[AVISO] Credenciais SMTP ausentes. E-mail não enviado para ${toEmail}`);
