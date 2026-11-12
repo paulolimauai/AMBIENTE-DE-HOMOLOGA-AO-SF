@@ -995,9 +995,67 @@ const nexusSmtpFileCreds = (() => {
 // Último diagnóstico de falha SMTP (preenchido por done(false)) — vai na resposta 503 para facilitar suporte.
 let lastSmtpFailureInfo = null;
 
-// Disparo real de e-mail via Socket SMTP Nativo (sem pacotes externos).
-// Suporta TLS implícito (porta 465, ex.: Gmail/Brevo) e STARTTLS (porta 587, ex.: Office 365/Outlook).
+// HTML do e-mail de recuperação de senha (compartilhado entre SMTP e API HTTP).
+function buildRecoveryEmailHtml(userName, userPassword) {
+  return '<div style="font-family: \'Inter\', -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, Helvetica, Arial, sans-serif; max-width: 500px; margin: 0 auto; padding: 20px; border: 1px solid #1f2530; border-radius: 10px; background-color: #0b0e12; color: #e9edf3;">'
+    + '  <h2 style="color: #e8b04b; text-align: center;">Nexus Financeiro Hub</h2>'
+    + `  <p>Olá, <strong>${userName}</strong>!</p>`
+    + '  <p>Você solicitou a recuperação de acesso ao sistema Nexus Financeiro.</p>'
+    + '  <p>Use a senha temporária abaixo para entrar. No primeiro login você será obrigado a criar uma nova senha:</p>'
+    + '  <div style="text-align: center; margin: 25px 0;">'
+    + `    <span style="font-size: 24px; font-weight: bold; color: #e8b04b; background: #141821; padding: 10px 20px; border-radius: 8px; border: 1px solid #1f2530;">${userPassword}</span>`
+    + '  </div>'
+    + '  <p style="font-size: 12px; color: #8a93a3;">Se você não solicitou este e-mail, recomendamos alterar sua senha após realizar o login.</p>'
+    + '</div>';
+}
+
+// Envio via API HTTPS da Brevo (api.brevo.com): o Render bloqueia egresso SMTP (portas 465/587),
+// então o e-mail transacional sai por HTTPS/443. Requer BREVO_API_KEY e um remetente verificado
+// (SMTP_USER é usado como endereço do remetente).
+function sendRecoveryEmailViaBrevo(toEmail, userName, userPassword) {
+  return new Promise((resolve) => {
+    const apiKey = String(process.env.BREVO_API_KEY || nexusSmtpFileCreds.BREVO_API_KEY || '').trim();
+    const senderEmail = String(process.env.SMTP_USER || nexusSmtpFileCreds.SMTP_USER || '').trim();
+    if (!apiKey || !senderEmail) return resolve(false);
+    const payload = JSON.stringify({
+      sender: { email: senderEmail, name: 'Nexus Financeiro' },
+      to: [{ email: toEmail }],
+      subject: 'Recuperacao de Senha - Nexus Financeiro',
+      htmlContent: buildRecoveryEmailHtml(userName, userPassword)
+    });
+    const req = https.request({
+      hostname: 'api.brevo.com',
+      path: '/v3/smtp/email',
+      method: 'POST',
+      timeout: 20000,
+      headers: {
+        'api-key': apiKey,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Content-Length': Buffer.byteLength(payload)
+      }
+    }, (res) => {
+      res.resume();
+      res.on('end', () => {
+        if (res.statusCode >= 200 && res.statusCode < 300) { resolve(true); return; }
+        lastSmtpFailureInfo = { host: 'api.brevo.com', port: 443, step: 'api', smtpCode: res.statusCode, smtpLine: '' };
+        console.warn(`[SMTP] Brevo API recusou envio: HTTP ${res.statusCode}`);
+        resolve(false);
+      });
+    });
+    req.on('timeout', () => { try { req.destroy(); } catch (e) {} resolve(false); });
+    req.on('error', (err) => { console.error('Erro na API Brevo:', err && err.message); resolve(false); });
+    req.end(payload);
+  });
+}
+
+// Disparo real de e-mail: prefere a API HTTPS da Brevo quando BREVO_API_KEY está configurada
+// (Render bloqueia SMTP); senão usa socket SMTP nativo.
+// SMTP suporta TLS implícito (porta 465) e STARTTLS (porta 587).
 function sendPasswordEmail(toEmail, userName, userPassword) {
+  if (String(process.env.BREVO_API_KEY || nexusSmtpFileCreds.BREVO_API_KEY || '').trim()) {
+    return sendRecoveryEmailViaBrevo(toEmail, userName, userPassword);
+  }
   return new Promise((resolve) => {
     const host = String(process.env.SMTP_HOST || nexusSmtpFileCreds.SMTP_HOST || 'smtp.gmail.com').trim();
     const port = parseInt(process.env.SMTP_PORT || nexusSmtpFileCreds.SMTP_PORT || '465', 10);
@@ -1124,16 +1182,7 @@ function sendPasswordEmail(toEmail, userName, userPassword) {
               'MIME-Version: 1.0',
               'Content-Type: text/html; charset=UTF-8',
               '',
-              '<div style="font-family: \'Inter\', -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, Helvetica, Arial, sans-serif; max-width: 500px; margin: 0 auto; padding: 20px; border: 1px solid #1f2530; border-radius: 10px; background-color: #0b0e12; color: #e9edf3;">',
-              '  <h2 style="color: #e8b04b; text-align: center;">Nexus Financeiro Hub</h2>',
-              `  <p>Olá, <strong>${userName}</strong>!</p>`,
-              '  <p>Você solicitou a recuperação de acesso ao sistema Nexus Financeiro.</p>',
-              '  <p>Use a senha temporária abaixo para entrar. No primeiro login você será obrigado a criar uma nova senha:</p>',
-              '  <div style="text-align: center; margin: 25px 0;">',
-              `    <span style="font-size: 24px; font-weight: bold; color: #e8b04b; background: #141821; padding: 10px 20px; border-radius: 8px; border: 1px solid #1f2530;">${userPassword}</span>`,
-              '  </div>',
-              '  <p style="font-size: 12px; color: #8a93a3;">Se você não solicitou este e-mail, recomendamos alterar sua senha após realizar o login.</p>',
-              '</div>',
+              buildRecoveryEmailHtml(userName, userPassword),
               '.',
               ''
             ].join('\r\n');
