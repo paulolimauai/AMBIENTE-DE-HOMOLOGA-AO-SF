@@ -8,7 +8,9 @@
       "encrypt": false,
       "trustServerCertificate": true,
       "applicationName": "Antigravity",
-      "applicationIntent": "ReadWrite"
+      "applicationIntent": "ReadWrite",
+      "groupId": "ROOT",
+      "id": "f0326535-b3a2-4f8d-a03a-5c5fa3882e33"
     }
   ],
   "git.autofetch": true,
