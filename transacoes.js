@@ -112,6 +112,11 @@
 
   const ORDEM_STATUS = { overdue: 0, pending: 1, done: 2 };
 
+  // Salário (pela categoria ou descrição) fica sempre no topo da lista; os demais seguem a ordenação escolhida
+  function ehSalario(t) {
+    return /sal[aá]rio/i.test(String((t && t.cat) || '') + ' ' + String((t && t.desc) || ''));
+  }
+
   /** Ordena sem mexer na lista original. Empates: data mais recente e, por fim, o último cadastrado primeiro. */
   function ordenar(lista, chave, dir, parse, hoje) {
     const k = CHAVES.indexOf(chave) >= 0 ? chave : 'date';
@@ -131,13 +136,16 @@
       val: (a, b) => parse(a.val) - parse(b.val),
       status: (a, b) => ORDEM_STATUS[statusInfo(a, hoje).chave] - ORDEM_STATUS[statusInfo(b, hoje).chave]
     }[k];
-    return lista.slice().sort((a, b) => {
+    const comparador = (a, b) => {
       const c = primario(a, b);
       if (c) return c * sinal;
       if (k === 'date') return cmpId(a, b) * sinal;
       const d = cmpStr(dataISO(b.date), dataISO(a.date));
       return d || cmpId(b, a);
-    });
+    };
+    const salarios = [], demais = [];
+    lista.forEach((t) => (ehSalario(t) ? salarios : demais).push(t));
+    return salarios.sort(comparador).concat(demais.sort(comparador));
   }
 
   // ---------------------------------------------------------------- CSV
