@@ -992,6 +992,9 @@ const nexusSmtpFileCreds = (() => {
   } catch (e) { return {}; }
 })();
 
+// Último diagnóstico de falha SMTP (preenchido por done(false)) — vai na resposta 503 para facilitar suporte.
+let lastSmtpFailureInfo = null;
+
 // Disparo real de e-mail via Socket SMTP Nativo (sem pacotes externos).
 // Suporta TLS implícito (porta 465, ex.: Gmail/Brevo) e STARTTLS (porta 587, ex.: Office 365/Outlook).
 function sendPasswordEmail(toEmail, userName, userPassword) {
@@ -1024,7 +1027,10 @@ function sendPasswordEmail(toEmail, userName, userPassword) {
     const done = (ok) => {
       if (finished) return;
       finished = true;
-      if (!ok) console.warn(`[SMTP] Envio de e-mail falhou (host=${host}:${port} step=${smtpStep} smtp=${lastSmtpCode} ${lastSmtpLine.slice(0, 80)})`);
+      if (!ok) {
+        lastSmtpFailureInfo = { host, port, step: smtpStep, smtpCode: lastSmtpCode, smtpLine: String(lastSmtpLine || '').slice(0, 120) };
+        console.warn(`[SMTP] Envio de e-mail falhou (host=${host}:${port} step=${smtpStep} smtp=${lastSmtpCode} ${lastSmtpLine.slice(0, 80)})`);
+      }
       try { if (tlsSocket) tlsSocket.destroy(); else if (rawSocket) rawSocket.destroy(); } catch (e) {}
       resolve(ok);
     };
@@ -34468,8 +34474,9 @@ async function handleNexusRequest(req, res) {
           emailSent = await sendPasswordEmail(user.email, user.name, tempPassword);
         } catch(e){}
         if (!emailSent) {
+          const diag = lastSmtpFailureInfo ? ` [smtp:${lastSmtpFailureInfo.smtpCode || 'conn'}:${lastSmtpFailureInfo.step}]` : '';
           res.writeHead(503, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ success: false, errorType: 'email_unavailable', error: 'Não foi possível enviar o e-mail com a senha temporária no momento. Tente novamente em instantes ou contate o administrador.' }));
+          return res.end(JSON.stringify({ success: false, errorType: 'email_unavailable', smtp: lastSmtpFailureInfo || undefined, error: 'Não foi possível enviar o e-mail com a senha temporária no momento. Tente novamente em instantes ou contate o administrador.' + diag }));
         }
 
         if (pool) {
