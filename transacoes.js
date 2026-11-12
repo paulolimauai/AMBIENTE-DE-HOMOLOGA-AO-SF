@@ -313,13 +313,42 @@
     if (!lista.length) return vazioHTML(op, ctx);
     const visiveis = Math.max(PAGINA, op.visiveis || PAGINA);
     const parte = lista.slice(0, visiveis);
+    const r = resumo(lista, ctx.parseVal, op.hoje);
+    // Totais por dia (para o separador de data no estilo extrato): só faz sentido ordenando por data
+    const porDia = {};
+    if (op.chave === 'date') {
+      lista.forEach((t) => {
+        const iso = dataISO(t.date);
+        if (!iso) return;
+        const d = porDia[iso] || (porDia[iso] = { i: 0, o: 0 });
+        const v = ctx.parseVal(t.val);
+        if (t.type === 'in') d.i += v; else d.o += v;
+      });
+    }
+    const sepDia = (iso) => {
+      const d = porDia[iso];
+      if (!d) return '';
+      const p = iso.split('-');
+      const rotulo = pad(+p[2]) + '/' + pad(+p[1]) + '/' + p[0] + ' · ' + DIAS_CURTOS[diaDaSemana(iso)];
+      return '<tr class="txp-day" aria-hidden="true"><td colspan="7">' +
+        '<span class="txp-day-l">' + rotulo + '</span>' +
+        '<span class="txp-day-t">' +
+          '<em class="txp-in">+' + ctx.fmt(d.i) + '</em>' +
+          '<em class="txp-out">−' + ctx.fmt(d.o) + '</em>' +
+          '<b class="' + (d.i - d.o >= 0 ? 'txp-in' : 'txp-out') + '">' + (d.i - d.o >= 0 ? '+' : '−') + ctx.fmt(Math.abs(d.i - d.o)) + '</b>' +
+        '</span></td></tr>';
+    };
     let ant = null;
+    const diasVistos = new Set();
     const linhas = parte.map((t) => {
-      const h = linhaHTML(t, op, ctx, ant);
-      ant = dataISO(t.date);
+      const iso = dataISO(t.date);
+      // Com o salário fixo no topo, o mesmo dia pode reaparecer depois: o separador sai só na primeira ocorrência
+      const novoDia = op.chave === 'date' && iso !== ant && !diasVistos.has(iso);
+      if (iso) diasVistos.add(iso);
+      const h = (novoDia ? sepDia(iso) : '') + linhaHTML(t, op, ctx, ant);
+      ant = iso;
       return h;
     }).join('');
-    const r = resumo(lista, ctx.parseVal, op.hoje);
     return '<div class="txp-wrap">' +
       '<div class="txp-scroll"><table class="txp-table"><caption class="txp-sr">Lançamentos de ' + esc(op.periodo) + ', ordenados por ' + esc(COLUNAS.filter((c) => c.k === op.chave)[0].t.toLowerCase()) + '</caption>' +
       cabecalhoHTML(op) + '<tbody>' + linhas + '</tbody></table></div>' +
