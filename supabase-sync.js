@@ -14,9 +14,30 @@
 
 const { createClient } = require('@supabase/supabase-js');
 
-const SUPABASE_URL = String(process.env.SUPABASE_URL || '').trim();
-const SUPABASE_KEY = String(process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY || '').trim();
+const fs = require('fs');
+const path = require('path');
+
+// Credencial compartilhada versionada (mesmo padrão do .nexus_sync_token): o Render não recebe env vars
+// novas sem painel, então URL+chave viajam no repositório privado para os dois lados falarem com o mesmo projeto.
+function loadCommittedSupabaseCredentials() {
+  try {
+    const file = process.env.NEXUS_SUPABASE_FILE || path.join(__dirname, '.nexus_supabase');
+    const lines = fs.readFileSync(file, 'utf8').split(/\r?\n/);
+    const kv = {};
+    for (const line of lines) {
+      const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.+?)\s*$/);
+      if (m) kv[m[1]] = m[2].replace(/^["']|["']$/g, '');
+    }
+    return kv;
+  } catch (e) { return {}; }
+}
+const committedCreds = loadCommittedSupabaseCredentials();
+const SUPABASE_URL = String(process.env.SUPABASE_URL || committedCreds.SUPABASE_URL || '').trim();
+const SUPABASE_KEY = String(process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY || committedCreds.SUPABASE_SERVICE_ROLE_KEY || committedCreds.SUPABASE_ANON_KEY || '').trim();
 const TABLE = 'nexus_dados_financeiros';
+// Espelho de credenciais/contas: tabela jsonb já existente no projeto (usuarios do SQL são soberanos localmente;
+// o Supabase guarda uma cópia por e-mail para o site oficial nunca perder os logins em redeploy/restart).
+const USERS_TABLE = 'dados_financeiros';
 
 let client = null;
 let clientInitTried = false;
@@ -157,11 +178,85 @@ async function deleteFinancialData(email) {
   await sb.from(TABLE).delete().eq('email', key).then(() => {});
 }
 
+// ==================== Espelho de credenciais (tabela dados_financeiros) ====================
+// Cada usuário vira uma linha { email, dados: <objeto do usuário>, updated_at }.
+// O campo updated_at do objeto (carimbado no saveLocalUsers quando o cadastro muda) resolve conflitos:
+// na leitura, só adota o remoto quando ele é mais novo que o local.
+
+const pendingUsersPush = new Map();
+let usersPushTimer = null;
+const USERS_PUSH_DEBOUNCE_MS = 2000;
+
+async function upsertUserRow(email, userObj) {
+  const sb = getClient();
+  if (!sb || !enabled) return false;
+  const key = String(email || '').toLowerCase().trim();
+  if (!key || !userObj) return false;
+  const stamp = userObj.updated_at || userObj.last_login || new Date().toISOString();
+  const { error } = await sb.from(USERS_TABLE).upsert(
+    { email: key, dados: userObj, updated_at: stamp },
+    { onConflict: 'email' }
+  );
+  if (error) {
+    registerFailure('Falha ao gravar credencial de ' + key, error.message);
+    return false;
+  }
+  registerSuccess();
+  return true;
+}
+
+/** Enfileira envio das credenciais (chamado a cada saveLocalUsers). */
+function pushUsersDebounced(users) {
+  if (!isEnabled() || !Array.isArray(users)) return;
+  for (const u of users) {
+    const key = String((u && u.email) || '').toLowerCase().trim();
+    if (key) pendingUsersPush.set(key, u);
+  }
+  if (usersPushTimer) return;
+  usersPushTimer = setTimeout(async () => {
+    usersPushTimer = null;
+    const rows = Array.from(pendingUsersPush.entries());
+    pendingUsersPush.clear();
+    for (const [key, obj] of rows) await upsertUserRow(key, obj).catch(() => {});
+  }, USERS_PUSH_DEBOUNCE_MS);
+  if (usersPushTimer.unref) usersPushTimer.unref();
+}
+
+/** Baixa todas as credenciais espelhadas no Supabase: { email: { dados, updated_at } }. */
+async function pullAllUsers() {
+  const sb = getClient();
+  if (!sb || !enabled) return {};
+  const { data, error } = await sb.from(USERS_TABLE).select('email, dados, updated_at');
+  if (error) {
+    registerFailure('Falha ao baixar credenciais', error.message);
+    return {};
+  }
+  registerSuccess();
+  if (!Array.isArray(data)) return {};
+  const map = {};
+  for (const row of data) {
+    if (row && row.email) map[String(row.email).toLowerCase().trim()] = row;
+  }
+  return map;
+}
+
+/** Remove a credencial espelhada de um usuário excluído. */
+async function deleteUserData(email) {
+  const sb = getClient();
+  if (!sb || !enabled) return;
+  const key = String(email || '').toLowerCase().trim();
+  if (!key) return;
+  await sb.from(USERS_TABLE).delete().eq('email', key).then(() => {});
+}
+
 module.exports = {
   isEnabled,
   pushFinancialData,
   pushAllFinancialData,
   pullFinancialData,
   pullAllFinancialData,
-  deleteFinancialData
+  deleteFinancialData,
+  pushUsersDebounced,
+  pullAllUsers,
+  deleteUserData
 };

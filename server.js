@@ -32612,6 +32612,20 @@ function saveLocalUsers(users, overwrite = false) {
       if (copy.created_at) copy.created_at = getBrasiliaIsoString(copy.created_at);
       return copy;
     });
+    // Carimba updated_at só nos cadastros que mudaram de verdade: é o relógio que o Supabase usa
+    // para decidir qual versão (local x nuvem) prevalece na hora de restaurar credenciais.
+    try {
+      const prevRead = jsonCache.read(LOCAL_USERS_PATH);
+      const prevMap = new Map();
+      for (const pu of (prevRead.exists && Array.isArray(prevRead.value) ? prevRead.value : [])) {
+        if (pu && pu.email) prevMap.set(String(pu.email).toLowerCase(), JSON.stringify(pu));
+      }
+      const stamp = getBrasiliaIsoString(new Date());
+      for (const copy of listToSave) {
+        const k = String((copy && copy.email) || '').toLowerCase();
+        if (k && prevMap.get(k) !== JSON.stringify(copy)) copy.updated_at = stamp;
+      }
+    } catch (stampErr) {}
     const jsonContent = JSON.stringify(listToSave, null, 2);
     // Sem mudança real não regrava (GET /api/users com banco conectado e a sincronização salvavam a mesma lista a cada chamada, nos dois arquivos)
     try {
@@ -32622,6 +32636,8 @@ function saveLocalUsers(users, overwrite = false) {
     try {
       writeJsonFile(LOCAL_USERS_BACKUP_PATH, jsonContent);
     } catch (bErr) {}
+    // Espelho de credenciais no Supabase (debounced): se o servidor atualizar/reiniciar, os logins voltam da nuvem.
+    try { SupabaseSync.pushUsersDebounced(listToSave); } catch (sbErr) {}
   } catch (e) {
     console.error('Erro ao salvar local_users.json:', e);
   }
@@ -32636,6 +32652,7 @@ function removeLocalUser(email) {
     const jsonStr = JSON.stringify(filtered, null, 2);
     writeJsonFile(LOCAL_USERS_PATH, jsonStr);
     try { writeJsonFile(LOCAL_USERS_BACKUP_PATH, jsonStr); } catch(e){}
+    try { SupabaseSync.deleteUserData(clean); SupabaseSync.deleteFinancialData(clean); } catch (sbErr) {}
 
     // Limpar de local_database_data.json
     try {
@@ -37560,13 +37577,53 @@ function startSupabaseSyncWorker() {
   if (supabaseSyncStarted || !SupabaseSync.isEnabled()) return;
   supabaseSyncStarted = true;
   setTimeout(async () => {
-    // Migração inicial/autocura: envia ao Supabase tudo que existe localmente
-    try {
-      const total = await SupabaseSync.pushAllFinancialData(getLocalAllFinancialData());
-      if (total > 0) console.log(`[SUPABASE] Migração inicial: ${total} conta(s) de dados financeiros enviadas.`);
-    } catch (e) {}
+    // Ciclo de sincronização: SEMPRE puxa da nuvem primeiro e mescla; só depois empurra o estado local.
+    // Isso garante que um deploy/restart nunca sobrescreva credenciais ou dados mais novos do Supabase
+    // com arquivos JSON locais velhos ou vazios.
+    const runSupabaseCycle = async () => {
+      try {
+        // Restaura credenciais do Supabase: usuário ausente localmente entra; cadastro local mais velho
+        // que o remoto é substituído pelo remoto (updated_at decide quem venceu).
+        const remoteUsers = await SupabaseSync.pullAllUsers();
+        const localUsers = getLocalUsers();
+        let usersChanged = false;
+        for (const [em, row] of Object.entries(remoteUsers)) {
+          if (!row || !row.dados || !em) continue;
+          try { if (isAccountDeleted(em)) continue; } catch (e) {}
+          const ru = row.dados;
+          const remoteT = row.updated_at ? new Date(row.updated_at).getTime() : (ru.updated_at ? new Date(ru.updated_at).getTime() : 0);
+          const idx = localUsers.findIndex(u => u && String(u.email || '').toLowerCase() === em);
+          const lu = idx >= 0 ? localUsers[idx] : null;
+          const localT = lu && lu.updated_at ? new Date(lu.updated_at).getTime() : 0;
+          if (!lu) {
+            localUsers.push({ ...ru, email: ru.email || em });
+            usersChanged = true;
+            console.log(`[SUPABASE] Credencial restaurada do espelho para ${em}`);
+          } else if (remoteT > localT) {
+            localUsers[idx] = { ...lu, ...ru, email: lu.email || em };
+            usersChanged = true;
+            console.log(`[SUPABASE] Credencial atualizada a partir da nuvem para ${em}`);
+          }
+        }
+        if (usersChanged) {
+          saveLocalUsers(localUsers);
+          // Empurra os adotados para o SQL Server para manter as três fontes alinhadas.
+          if (pool) {
+            for (const u of localUsers) {
+              if (!u || !u.email) continue;
+              try {
+                await pool.query(
+                  `IF EXISTS (SELECT 1 FROM usuarios WHERE LOWER(email) = LOWER($1))
+                   BEGIN UPDATE usuarios SET name=$2, password=$3, role=$4, active=$5, cpf=$6, phone=$7, birth_date=$8, terms_accepted=$9, device_type=$10, must_change_password=$11, trial_started_at=$12, subscription_plan=$13, subscription_status=$14, subscription_expires_at=$15, subscription_method=$16, subscription_payment_id=$17 WHERE LOWER(email)=LOWER($1); END
+                   ELSE BEGIN INSERT INTO usuarios (name,email,password,role,active,cpf,phone,birth_date,terms_accepted,device_type,must_change_password,trial_started_at,subscription_plan,subscription_status,subscription_expires_at,subscription_method,subscription_payment_id) VALUES ($2,$1,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17); END`,
+                  [u.email, u.name, u.password, u.role || 'Usuário', u.active !== false, u.cpf || null, u.phone || null, u.birth_date || null, u.terms_accepted !== false, u.device_type || 'Computador', !!u.must_change_password, u.trial_started_at ? getBrasiliaSqlString(new Date(u.trial_started_at)) : null, u.subscription_plan || null, u.subscription_status || 'trial', u.subscription_expires_at ? getBrasiliaSqlString(new Date(u.subscription_expires_at)) : null, u.subscription_method || null, u.subscription_payment_id || null]
+                ).catch(() => {});
+              } catch (e) {}
+            }
+          }
+        }
+      } catch (e) {}
 
-    setInterval(async () => {
       try {
         const remote = await SupabaseSync.pullAllFinancialData();
         for (const [em, row] of Object.entries(remote)) {
@@ -37590,8 +37647,20 @@ function startSupabaseSyncWorker() {
           }
         }
       } catch (e) {}
-    }, 60000);
-    console.log('[SUPABASE] Sincronização de "Meus Dados" ativa (pull a cada 60s + escrita imediata a cada alteração).');
+    };
+
+    // Primeira sincronização imediata: pull/merge ANTES de qualquer push em massa.
+    await runSupabaseCycle();
+
+    // Depois do merge, empurra o estado consolidado (local + o que veio da nuvem) para o Supabase.
+    try {
+      const total = await SupabaseSync.pushAllFinancialData(getLocalAllFinancialData());
+      if (total > 0) console.log(`[SUPABASE] Migração inicial: ${total} conta(s) de dados financeiros enviadas.`);
+    } catch (e) {}
+    try { SupabaseSync.pushUsersDebounced(getLocalUsers()); } catch (e) {}
+
+    setInterval(runSupabaseCycle, 60000);
+    console.log('[SUPABASE] Sincronização ativa (credenciais + "Meus Dados"): pull/merge a cada 60s, escrita imediata a cada alteração.');
   }, 3000);
 }
 
