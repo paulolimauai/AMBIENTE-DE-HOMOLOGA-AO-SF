@@ -3,6 +3,8 @@
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode",
     "ms-mssql.mssql",
+    "mtxr.sqltools",
+    "mtxr.sqltools-driver-mssql",
     "ritwickdey.liveserver",
     "formulahendry.auto-rename-tag",
     "ecmel.vscode-html-css"
