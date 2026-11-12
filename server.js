@@ -14562,20 +14562,10 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
           <span>Confirmação Cadastral para Recuperação</span>
         </div>
         <p style="font-size:12.5px; color:#CBD5E1; margin-bottom:16px; line-height:1.5;">
-          Para gerar uma nova senha provisória, confirme os três dados cadastrados na conta: e-mail, CPF e data de nascimento:
+          Para gerar uma nova senha provisória, confirme o CPF e a data de nascimento cadastrados na conta:
         </p>
 
         <form id="forgotStep1" onsubmit="window.handleServerForgotSubmit(event); return false;">
-          <div class="auth-field" id="forgotEmailField">
-            <label>E-mail Cadastrado</label>
-            <div class="auth-input-wrapper">
-              <span class="auth-input-icon">
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-              </span>
-              <input type="email" id="forgotEmail" placeholder="seu.email@exemplo.com" autocomplete="email" spellcheck="false" autocorrect="off" autocapitalize="none">
-            </div>
-          </div>
-
           <div class="auth-field" id="forgotCpfField">
             <label>CPF do Titular</label>
             <div class="auth-input-wrapper">
@@ -17167,20 +17157,13 @@ window.handleServerForgotSubmit = async function(e) {
   if (e && e.preventDefault) e.preventDefault();
   if (window.clearAuthFeedback) window.clearAuthFeedback('forgot');
 
-  const emailInput = document.getElementById('forgotEmail');
   const cpfInput = document.getElementById('forgotCpf');
   const birthInput = document.getElementById('forgotBirthDate');
   const btn = document.getElementById('btnSendPassword');
 
-  const email = emailInput ? emailInput.value.trim() : '';
   const cpf = cpfInput ? cpfInput.value.replace(/[^0-9]/g, '') : '';
   const birth_date = birthInput ? birthInput.value.trim() : '';
 
-  if (!email) {
-    window.showAuthFeedback('forgot', 'error', 'E-mail não informado', 'Por favor, informe o e-mail cadastrado da sua conta.');
-    if (emailInput) emailInput.focus();
-    return;
-  }
   if (cpf.length !== 11) {
     window.showAuthFeedback('forgot', 'error', 'CPF Inválido', 'Por favor, informe os 11 dígitos do CPF do titular.');
     if (cpfInput) cpfInput.focus();
@@ -17201,7 +17184,7 @@ window.handleServerForgotSubmit = async function(e) {
     const res = await fetch(window.location.origin + '/api/send-password', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, cpf, birth_date })
+      body: JSON.stringify({ cpf, birth_date })
     });
     const data = await res.json();
 
@@ -17210,9 +17193,9 @@ window.handleServerForgotSubmit = async function(e) {
       return;
     }
 
-    // Senha provisória exibida na tela após confirmação de e-mail + CPF + nascimento
+    // Senha provisória exibida na tela após confirmação de CPF + nascimento
     if (data.temp_password) {
-      serverCurrentTempEmail = data.email || email;
+      serverCurrentTempEmail = data.email || '';
       serverCurrentTempPassword = data.temp_password;
       const tempValEl = document.getElementById('tempPasswordValServer');
       if (tempValEl) tempValEl.textContent = data.temp_password;
@@ -17232,7 +17215,7 @@ window.handleServerForgotSubmit = async function(e) {
     // Fallback: senha enviada apenas por e-mail
     window.showAuthFeedback('forgot', 'success', 'Senha Enviada', 'Uma senha temporária foi enviada para o e-mail cadastrado na conta. Verifique a caixa de entrada (e o spam) e use-a para entrar.');
     const emailInput = document.getElementById('loginEmail');
-    if (emailInput && (data.email || email)) emailInput.value = data.email || email;
+    if (emailInput && data.email) emailInput.value = data.email;
     window.switchAuthTab('login');
 
   } catch(err) {
@@ -34531,7 +34514,7 @@ async function handleNexusRequest(req, res) {
           }
         } else if (!(reqEmail && (!accountHasCpf || reqCpf))) {
           res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ success: false, errorType: 'missing_second_factor', error: 'Confirme o e-mail e o CPF cadastrados nesta conta.' }));
+          return res.end(JSON.stringify({ success: false, errorType: 'missing_second_factor', error: 'Não foi possível confirmar a identidade desta conta: ela não possui data de nascimento cadastrada. Contate o suporte.' }));
         }
         const recoveryMethod = (reqEmail && reqCpf) ? 'e-mail e CPF' : (reqCpf ? 'CPF' : 'e-mail');
 

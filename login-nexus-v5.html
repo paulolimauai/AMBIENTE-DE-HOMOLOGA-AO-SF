@@ -1066,35 +1066,14 @@ button,a,label{touch-action:manipulation}
       aviso('Conta criada. Bem-vindo ao Nexus!',true);
       setTimeout(function(){location.replace('/')},220);
     },
-    /* Recuperação de senha: confirma a identidade exigindo os TRÊS dados cadastrados —
-       e-mail, CPF e data de nascimento — antes de gerar a senha provisória.
+    /* Recuperação de senha: confirma a identidade exigindo CPF e data de nascimento
+       cadastrados — antes de gerar a senha provisória exibida na tela.
        Nunca revela se uma conta foi excluída: responde sempre "Usuário não possui conta criada.". */
-    async recover(prefill){
-      var pareceEmail=function(v){return EMAIL.test(v)};
-      var email=String(prefill||'').trim();
-
-      if(!pareceEmail(email)){
-        email=await pedir({
-          title:'Recuperação de senha',step:'Identificação da conta',
-          message:'Informe o e-mail do cadastro que será recuperado:',
-          placeholder:'seu.email@exemplo.com',hint:'É o e-mail cadastrado na conta que receberá a senha provisória.',
-          icon:'mail',okText:'Continuar',
-          validate:function(v){
-            if(!v)return 'Por favor, informe seu e-mail.';
-            return pareceEmail(v)?'':'Digite um e-mail válido.';
-          }
-        });
-        if(!email)return;
-        email=email.trim().toLowerCase();
-      }else{
-        email=email.toLowerCase();
-      }
-      $('email').value=email;
-
+    async recover(){
       var cpf=await pedir({
-        title:'Confirmação de identidade',step:'Recuperação de acesso • Confirmação',
-        message:'Informe o CPF cadastrado nesta conta:',placeholder:'000.000.000-00',
-        hint:'Informe os 11 dígitos do CPF do titular.',mask:'cpf',maxLength:14,icon:'id',okText:'Confirmar',
+        title:'Recuperação de senha',step:'Identificação da conta',
+        message:'Informe o CPF cadastrado na conta que será recuperada:',placeholder:'000.000.000-00',
+        hint:'Informe os 11 dígitos do CPF do titular.',mask:'cpf',maxLength:14,icon:'id',okText:'Continuar',
         validate:function(v){
           if(!v)return 'Por favor, informe seu CPF.';
           if(digitos(v).length!==11)return 'Informe os 11 dígitos do CPF.';
@@ -1114,17 +1093,18 @@ button,a,label{touch-action:manipulation}
       });
       if(!nasc)return;
 
-      var payload={email:email,cpf:digitos(cpf),birth_date:nasc};
+      var payload={cpf:digitos(cpf),birth_date:nasc};
 
       try{
         var r=await api('/api/send-password',payload);
-        var contaEmail=r.email||payload.email||'';
-        if(contaEmail&&!$('email').value)$('email').value=contaEmail;
-        if(r.tempPassword){
-          mostrarProvisoria(r.tempPassword,contaEmail);
+        var contaEmail=r.email||'';
+        if(contaEmail)$('email').value=contaEmail;
+        var provisoria=r.temp_password||r.tempPassword;
+        if(provisoria){
+          mostrarProvisoria(provisoria,contaEmail);
           aviso('Senha provisória gerada com sucesso.',true);
         }else{
-          aviso(r.message||'Senha provisória enviada para seu e-mail.',true);
+          aviso(r.message||'Senha provisória gerada com sucesso.',true);
         }
       }catch(err){
         var d=err.data||{},msg=err.message||'Não foi possível concluir a recuperação.';
@@ -1138,7 +1118,7 @@ button,a,label{touch-action:manipulation}
     }
   };
 
-  $('esqueci').onclick=function(e){e.preventDefault();window.nexusAuth.recover($('email').value.trim())};
+  $('esqueci').onclick=function(e){e.preventDefault();window.nexusAuth.recover()};
 
   /* =====================================================================
      Envio do formulário
