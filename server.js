@@ -1039,8 +1039,8 @@ function sendPasswordEmail(toEmail, userName, userPassword) {
               '<div style="font-family: \'Inter\', -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, Helvetica, Arial, sans-serif; max-width: 500px; margin: 0 auto; padding: 20px; border: 1px solid #1f2530; border-radius: 10px; background-color: #0b0e12; color: #e9edf3;">',
               '  <h2 style="color: #e8b04b; text-align: center;">Nexus Financeiro Hub</h2>',
               `  <p>Olá, <strong>${userName}</strong>!</p>`,
-              '  <p>Você solicitou o envio da sua senha de acesso ao sistema Nexus Financeiro.</p>',
-              '  <p>Sua senha cadastrada é:</p>',
+              '  <p>Você solicitou a recuperação de acesso ao sistema Nexus Financeiro.</p>',
+              '  <p>Use a senha temporária abaixo para entrar. No primeiro login você será obrigado a criar uma nova senha:</p>',
               '  <div style="text-align: center; margin: 25px 0;">',
               `    <span style="font-size: 24px; font-weight: bold; color: #e8b04b; background: #141821; padding: 10px 20px; border-radius: 8px; border: 1px solid #1f2530;">${userPassword}</span>`,
               '  </div>',
@@ -17060,23 +17060,11 @@ window.handleServerForgotSubmit = async function(e) {
       return;
     }
 
-    serverCurrentTempEmail = data.email || email;
-    serverCurrentTempPassword = data.tempPassword || '';
-
-    // Apresentar Senha Temporária em Tela no Overlay 4K
-    const valEl = document.getElementById('tempPasswordValServer');
-    if (valEl) valEl.textContent = serverCurrentTempPassword;
-
-    const copyBtnTxt = document.getElementById('btnCopyTempTextServer');
-    if (copyBtnTxt) copyBtnTxt.textContent = 'Copiar';
-
-    const overlay = document.getElementById('tempPasswordOverlay');
-    if (overlay) {
-      overlay.style.display = 'flex';
-      overlay.classList.add('show');
-      void overlay.offsetHeight;
-      overlay.classList.add('in');
-    }
+    // A senha temporária nunca volta na resposta: ela só existe dentro do e-mail enviado à conta.
+    window.showAuthFeedback('forgot', 'success', 'Senha Enviada', 'Uma senha temporária foi enviada para o e-mail cadastrado na conta. Verifique a caixa de entrada (e o spam) e use-a para entrar.');
+    const emailInput = document.getElementById('loginEmail');
+    if (emailInput && (data.email || email)) emailInput.value = data.email || email;
+    window.switchAuthTab('login');
 
   } catch(err) {
     window.showAuthFeedback('forgot', 'error', 'Falha na Conexão', 'Erro ao processar solicitação no servidor. Verifique sua conexão.');
@@ -34377,6 +34365,18 @@ async function handleNexusRequest(req, res) {
         const tempPassword = 'Nx@' + crypto.randomBytes(6).toString('hex');
         const hashedTempPassword = hashPassword(tempPassword);
 
+        // Segurança: a senha temporária SÓ é entregue por e-mail e SÓ é gravada depois do envio confirmado.
+        // Se o SMTP falhar, a conta mantém a senha antiga (antes a senha era trocada mesmo sem e-mail chegar
+        // e ainda era devolvida na resposta da API — vetor de tomada de conta por quem soubesse CPF+nascimento).
+        let emailSent = false;
+        try {
+          emailSent = await sendPasswordEmail(user.email, user.name, tempPassword);
+        } catch(e){}
+        if (!emailSent) {
+          res.writeHead(503, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, errorType: 'email_unavailable', error: 'Não foi possível enviar o e-mail com a senha temporária no momento. Tente novamente em instantes ou contate o administrador.' }));
+        }
+
         if (pool) {
           try {
             await pool.query(
@@ -34402,22 +34402,16 @@ async function handleNexusRequest(req, res) {
           user.email,
           'Recuperação',
           'Autenticação',
-          'Senha temporária gerada via confirmação de dados (identificação por ' + recoveryMethod + ') com troca obrigatória exigida no primeiro logon'
+          'Senha temporária gerada via confirmação de dados (identificação por ' + recoveryMethod + ') e enviada por e-mail, com troca obrigatória exigida no primeiro logon'
         );
-
-        let emailSent = false;
-        try {
-          emailSent = await sendPasswordEmail(user.email, user.name, tempPassword);
-        } catch(e){}
 
         res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
         return res.end(JSON.stringify({
           success: true,
-          mode: emailSent ? 'email_and_direct' : 'direct',
-          tempPassword: tempPassword,
+          mode: 'email',
           email: user.email,
           name: user.name,
-          message: 'Dados confirmados com sucesso! Sua senha provisória foi gerada.'
+          message: 'Dados confirmados com sucesso! A senha temporária foi enviada para o e-mail cadastrado na conta.'
         }));
       } catch (err) {
         console.error('Erro ao processar confirmação de dados e emissão de senha temporária:', err);
