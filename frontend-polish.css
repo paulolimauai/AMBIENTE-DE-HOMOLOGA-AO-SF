@@ -6965,3 +6965,24 @@ body:has(#authPage) {
   /* Estado vazio mais elegante */
   .placeholder .big { font-size: 44px !important; }
 }
+
+/* Campos do modal "Nova Conta / Cartão": versão compacta */
+@layer nx-contas-cartoes {
+  #overlayAccount .modal { padding: 20px 22px 18px !important; max-width: 430px !important; }
+  #overlayAccount .modal h2 { font-size: 17px !important; margin: 0 0 14px !important; }
+  #overlayAccount .field { margin-bottom: 10px !important; }
+  #overlayAccount .field label { font-size: 11px !important; margin-bottom: 4px !important; }
+  #overlayAccount .field input,
+  #overlayAccount .field select {
+    height: 36px !important;
+    min-height: 36px !important;
+    padding: 0 11px !important;
+    font-size: 13px !important;
+    border-radius: 9px !important;
+  }
+  #overlayAccount .field input[type="color"] { height: 36px !important; padding: 3px !important; }
+  #overlayAccount .field-row { gap: 10px !important; }
+  #overlayAccount .modal-actions { margin-top: 12px !important; gap: 8px !important; }
+  #overlayAccount .modal-actions button { height: 36px !important; font-size: 12.5px !important; padding: 0 16px !important; }
+  #overlayAccount .close-x { top: 12px !important; right: 12px !important; width: 28px !important; height: 28px !important; font-size: 13px !important; }
+}
