@@ -34,3 +34,6 @@ local_filas.json
 pending_logins.json
 
 dist/
+
+# Exportações/dumps de análise do banco de dados (dados gerados em execução)
+analise_banco_dados/
