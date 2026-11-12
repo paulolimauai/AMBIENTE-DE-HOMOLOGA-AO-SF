@@ -25399,9 +25399,13 @@ function pagePagamentosCorpo(){
   const expiredUsers = users.filter(u => u.subscription_status === 'expired');
   const activeUsers = users.filter(u => u.subscription_status === 'active');
   const requestedTab = window.__pagamentosActiveTab || 'pendentes';
-  const activeTab = ['pendentes', 'expirados', 'assinaturas', 'segunda_via_boleto', 'solicitacoes_boleto'].includes(requestedTab) ? requestedTab : 'pendentes';
+  const activeTab = ['pendentes', 'expirados', 'assinaturas', 'segunda_via_boleto', 'boletos', 'solicitacoes_boleto'].includes(requestedTab) ? requestedTab : 'pendentes';
   const preselected = window.__boletoPreselectedUser || {};
   const preselectedEmail = String(preselected.email || '').toLowerCase();
+  if (window.__adminBoletos === undefined) {
+    window.__adminBoletos = [];
+    setTimeout(() => { if (window.loadAdminBoletos) window.loadAdminBoletos(); }, 0);
+  }
 
   const userRow = (u, expired = false) => {
     const email = escapeOsHtml(u.email || '');
@@ -25500,6 +25504,44 @@ function pagePagamentosCorpo(){
       <table class="data-table" style="width:100%;"><thead><tr><th>Cliente</th><th>Plano</th><th>Status</th><th>Meio</th><th>Início</th><th>Vencimento</th><th>Protocolo</th><th style="text-align:right;">Ações</th></tr></thead>
       <tbody>\${subRows || '<tr><td colspan="8" style="text-align:center;padding:24px;color:var(--text-dim);">Nenhuma conta de usuário.</td></tr>'}</tbody></table>
     </div>\`;
+  } else if (activeTab === 'boletos') {
+    const boletos = window.__adminBoletos || [];
+    const statusMeta = {
+      emitido:  { label: 'Emitido', cor: '#7DD3FC', bg: 'rgba(56,189,248,0.15)' },
+      aberto:   { label: 'Aberto/Visualizado', cor: '#C4B5FD', bg: 'rgba(167,139,250,0.15)' },
+      vencido:  { label: 'Vencido', cor: '#FCA5A5', bg: 'rgba(239,68,68,0.15)' },
+      pago:     { label: 'Pago', cor: '#34D399', bg: 'rgba(16,185,129,0.15)' },
+      cancelado:{ label: 'Cancelado', cor: '#94A3B8', bg: 'rgba(148,163,184,0.15)' }
+    };
+    const boletoRows = boletos.map(b => {
+      const st = statusMeta[b.effective_status] || statusMeta.emitido;
+      const ref = escapeOsHtml(b.reference || '—');
+      const cli = escapeOsHtml(b.client_name || b.client_email || '—');
+      const mail = escapeOsHtml(b.client_email || '');
+      const valor = 'R$ ' + Number(b.amount || 18).toFixed(2).replace('.', ',');
+      const venc = b.due_date ? formatDateBR(b.due_date) : '—';
+      const emitido = b.created_at ? formatDateBR(b.created_at) : '—';
+      const views = Number(b.view_count) || 0;
+      const prints = Number(b.print_count) || 0;
+      const acoes = b.effective_status === 'pago' || b.effective_status === 'cancelado'
+        ? \`<button type="button" class="btn-ghost" data-ref="\${ref}" onclick="window.reemitirBoleto(this.dataset.ref)">Reemitir</button>\`
+        : \`<button type="button" class="btn-ghost" data-ref="\${ref}" onclick="window.reemitirBoleto(this.dataset.ref)">Editar/Reemitir</button>
+           <button type="button" class="btn-primary" data-ref="\${ref}" onclick="window.marcarBoletoPago(this.dataset.ref)">Marcar pago</button>
+           <button type="button" class="btn-ghost" data-ref="\${ref}" onclick="window.cancelarBoleto(this.dataset.ref)">Cancelar</button>\`;
+      return \`<tr>
+        <td><strong class="font-mono">\${ref}</strong><small style="display:block;color:var(--text-dim);">\${cli} • \${mail}</small></td>
+        <td>\${valor}</td>
+        <td>\${venc}</td>
+        <td>\${emitido}<small style="display:block;color:var(--text-dim);">\${prints}x emitido • \${views}x aberto</small></td>
+        <td><span class="role-badge" style="background:\${st.bg};color:\${st.cor};border:1px solid \${st.cor}55;">\${st.label}</span></td>
+        <td style="white-space:nowrap;">\${acoes}</td>
+      </tr>\`;
+    }).join('');
+    content = \`<div class="table-panel" style="padding:14px;border-radius:16px;overflow:auto;">
+      <div class="panel-head"><h3>Boletos / cobranças Pix emitidos</h3><span class="tag">\${boletos.length} registro(s)</span></div>
+      <table class="data-table" style="width:100%;"><thead><tr><th>Referência / Cliente</th><th>Valor</th><th>Vencimento</th><th>Emitido</th><th>Status</th><th style="text-align:right;">Ações</th></tr></thead>
+      <tbody>\${boletoRows || '<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text-dim);">Nenhuma cobrança emitida ainda. Use a aba "2ª via / cobrança Pix" para gerar a primeira.</td></tr>'}</tbody></table>
+    </div>\`;
   } else if (activeTab === 'solicitacoes_boleto') {
     content = \`<div class="table-panel" style="padding:14px;border-radius:16px;overflow:auto;">
       <div class="panel-head"><h3>Solicitações de 2ª via</h3><span class="tag">\${requestedOrders.length} pendente(s)</span></div>
@@ -25526,15 +25568,70 @@ function pagePagamentosCorpo(){
     <button class="btn-ghost" onclick="window.setPagamentosActiveTab('expirados')">Acessos expirados</button>
     <button class="btn-ghost" onclick="window.setPagamentosActiveTab('assinaturas')">Assinaturas (\${users.length})</button>
     <button class="btn-ghost" onclick="window.setPagamentosActiveTab('segunda_via_boleto')">2ª via / cobrança Pix</button>
+    <button class="btn-ghost" onclick="window.setPagamentosActiveTab('boletos')">Boletos emitidos (\${(window.__adminBoletos || []).length})</button>
     <button class="btn-ghost" onclick="window.setPagamentosActiveTab('solicitacoes_boleto')">Solicitações de boleto (\${requestedOrders.length})</button>
   </div>\${content}\`;
 }
 
 window.setPagamentosActiveTab = function(tab) {
   window.__pagamentosActiveTab = tab;
+  if (tab === 'boletos') window.loadAdminBoletos();
   _lastRenderedHtml = '';
   render();
 };
+
+window.loadAdminBoletos = async function() {
+  try {
+    const res = await fetch('/api/admin/boletos', { headers: nexusAuthHeaders() });
+    const d = await res.json();
+    if (d && d.success) {
+      window.__adminBoletos = d.boletos || [];
+      _lastRenderedHtml = '';
+      if (window.__pagamentosActiveTab === 'boletos') render();
+    }
+  } catch (e) { /* mantém a última lista carregada */ }
+};
+
+window.reemitirBoleto = function(reference) {
+  const b = (window.__adminBoletos || []).find(x => String(x.reference) === String(reference));
+  if (!b) { if (typeof showToast === 'function') showToast('Cobrança não encontrada.'); return; }
+  const user = (registeredUsers || []).find(u => u && u.email && String(u.email).toLowerCase() === String(b.client_email || '').toLowerCase());
+  window.__boletoPreselectedUser = {
+    email: b.client_email || (user ? user.email : ''),
+    name: b.client_name || (user ? user.name : ''),
+    cpf: b.client_cpf || (user ? user.cpf : ''),
+    phone: user ? user.phone : ''
+  };
+  window.__pagamentosActiveTab = 'segunda_via_boleto';
+  _lastRenderedHtml = '';
+  render();
+  setTimeout(() => {
+    const sel = document.getElementById('paymentNoticeUser');
+    if (sel) sel.value = b.client_email || '';
+    const dueEl = document.getElementById('paymentNoticeDue');
+    if (dueEl && b.due_date) dueEl.value = b.due_date;
+    const refEl = document.getElementById('paymentNoticeReference');
+    if (refEl) refEl.value = b.reference || '';
+    if (refEl) refEl.focus();
+  }, 60);
+};
+
+window.marcarBoletoStatus = async function(reference, status, okMsg) {
+  try {
+    const res = await fetch('/api/admin/boletos', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...nexusAuthHeaders() },
+      body: JSON.stringify({ action: 'status', reference: reference, status: status })
+    });
+    const d = await res.json();
+    if (d && d.success) {
+      if (typeof showToast === 'function') showToast(okMsg || 'Status atualizado.');
+      await window.loadAdminBoletos();
+    } else if (typeof showToast === 'function') showToast((d && d.error) || 'Não foi possível atualizar.');
+  } catch (e) { if (typeof showToast === 'function') showToast('Falha de rede ao atualizar a cobrança.'); }
+};
+window.marcarBoletoPago = function(reference) { window.marcarBoletoStatus(reference, 'pago', '✅ Cobrança marcada como paga.'); };
+window.cancelarBoleto = function(reference) { window.marcarBoletoStatus(reference, 'cancelado', 'Cobrança cancelada.'); };
 
 window.openPaymentSecondCopy = function(email) {
   const user = (registeredUsers || []).find(u => u && u.email && u.email.toLowerCase() === String(email || '').toLowerCase());
@@ -25544,7 +25641,7 @@ window.openPaymentSecondCopy = function(email) {
   navigate('pagamentos');
 };
 
-window.printAdminPaymentNotice = function() {
+window.printAdminPaymentNotice = async function() {
   const email = document.getElementById('paymentNoticeUser')?.value || '';
   const user = (registeredUsers || []).find(u => u && u.email && u.email.toLowerCase() === email.toLowerCase());
   const due = document.getElementById('paymentNoticeDue')?.value || '';
@@ -25565,6 +25662,23 @@ window.printAdminPaymentNotice = function() {
   const clientEmail = safe(user.email);
   const clientCpf = user.cpf ? ' • CPF ' + safe(user.cpf) : '';
   const refSafe = safe(reference);
+  // Registra/atualiza a cobrança no painel (2ª via ou nova emissão) antes de abrir o documento.
+  try {
+    await fetch('/api/admin/boletos', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...nexusAuthHeaders() },
+      body: JSON.stringify({
+        reference: reference,
+        client_email: user.email || '',
+        client_name: user.name || '',
+        client_cpf: user.cpf || '',
+        plan: 'mensal',
+        amount: amount,
+        due_date: due || ''
+      })
+    });
+    window.loadAdminBoletos();
+  } catch (e) { /* segue para a impressão mesmo se o registro falhar */ }
   const html = '<!doctype html><html lang="pt-BR" class="h-full antialiased"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Cobrança Pix ' + refSafe + ' | NEXUS FINANCEIRO HUB</title>' +
     '<script src="https://cdn.tailwindcss.com"><\/script>' +
     '<script>tailwind.config={theme:{extend:{colors:{nexus:{navy:"#060d1a",deep:"#0b172a",slate:"#13233d",blue:"#1d4ed8",cyan:"#0ea5e9",sky:"#38bdf8",green:"#00a859",emerald:"#10b981",orange:"#f59e0b"}},fontFamily:{sans:["Plus Jakarta Sans","Inter","sans-serif"],mono:["JetBrains Mono","monospace"]}}}};<\/script>' +
@@ -25618,7 +25732,7 @@ window.printAdminPaymentNotice = function() {
     '<button onclick="window.print()" type="button" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white hover:bg-slate-100 text-slate-800 font-bold text-xs border border-slate-300 shadow-2xs transition-all duration-150 cursor-pointer no-print"><i data-lucide="printer" class="w-4 h-4 text-slate-600"></i>Imprimir / Salvar em PDF</button></div></div>' +
     '</div><footer class="mt-8 text-center space-y-1.5 no-print"><p class="text-xs font-semibold text-slate-300 tracking-wide">NEXUS FINANCEIRO HUB · Cobrança Digital Inteligente</p><p class="text-[11px] text-slate-400">Dúvidas sobre esta cobrança? Entre em contato com o suporte informando a referência <span class="font-mono text-sky-300">' + refSafe + '</span>.</p></footer></main>' +
     '<div id="copyToast" class="fixed bottom-6 right-6 z-50 transform translate-y-16 opacity-0 transition-all duration-300 pointer-events-none no-print"><div class="bg-[#0b172a] text-white px-4 py-3 rounded-2xl shadow-2xl border border-emerald-500/40 flex items-center gap-3"><div class="w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0"><i data-lucide="check-circle-2" class="w-4 h-4"></i></div><div><p class="text-xs font-bold text-white">Código copiado!</p><p class="text-[11px] text-slate-300">Cole no app do seu banco na opção Pix Copia e Cola.</p></div></div></div>' +
-    '<script>lucide.createIcons();const PIX_PAYLOAD="' + pixCode + '";document.addEventListener("DOMContentLoaded",function(){var qr=document.getElementById("qrcode");qr.innerHTML="";new QRCode(qr,{text:PIX_PAYLOAD,width:176,height:176,colorDark:"#0b172a",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.M});});var toastTimeout;function handleCopyPix(){var input=document.getElementById("pixCodeInput");var btn=document.getElementById("copyPixButton");var btnText=document.getElementById("copyBtnText");input.select();input.setSelectionRange(0,99999);try{document.execCommand("copy");}catch(err){if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(PIX_PAYLOAD).catch(function(){});}}btn.classList.remove("from-[#0f295c]","to-[#1e40af]");btn.classList.add("from-emerald-600","to-emerald-500");btnText.textContent="Código copiado!";var toast=document.getElementById("copyToast");toast.classList.remove("translate-y-16","opacity-0");toast.classList.add("translate-y-0","opacity-100");clearTimeout(toastTimeout);toastTimeout=setTimeout(function(){btn.classList.remove("from-emerald-600","to-emerald-500");btn.classList.add("from-[#0f295c]","to-[#1e40af]");btnText.textContent="Copiar código Pix";toast.classList.remove("translate-y-0","opacity-100");toast.classList.add("translate-y-16","opacity-0");},3000);}<\/script></body></html>';
+    '<script>lucide.createIcons();const PIX_PAYLOAD="' + pixCode + '";document.addEventListener("DOMContentLoaded",function(){var qr=document.getElementById("qrcode");qr.innerHTML="";new QRCode(qr,{text:PIX_PAYLOAD,width:176,height:176,colorDark:"#0b172a",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.M});});var toastTimeout;function handleCopyPix(){var input=document.getElementById("pixCodeInput");var btn=document.getElementById("copyPixButton");var btnText=document.getElementById("copyBtnText");input.select();input.setSelectionRange(0,99999);try{document.execCommand("copy");}catch(err){if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(PIX_PAYLOAD).catch(function(){});}}btn.classList.remove("from-[#0f295c]","to-[#1e40af]");btn.classList.add("from-emerald-600","to-emerald-500");btnText.textContent="Código copiado!";var toast=document.getElementById("copyToast");toast.classList.remove("translate-y-16","opacity-0");toast.classList.add("translate-y-0","opacity-100");clearTimeout(toastTimeout);toastTimeout=setTimeout(function(){btn.classList.remove("from-emerald-600","to-emerald-500");btn.classList.add("from-[#0f295c]","to-[#1e40af]");btnText.textContent="Copiar código Pix";toast.classList.remove("translate-y-0","opacity-100");toast.classList.add("translate-y-16","opacity-0");},3000);}<\/script><script>try{var _t=localStorage.getItem("nexus_token")||"";if(_t){fetch("/api/admin/boletos",{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+_t},body:JSON.stringify({action:"view",reference:"' + reference + '"})}).catch(function(){});}}catch(_e){}<\/script></body></html>';
   popup.document.open(); popup.document.write(html); popup.document.close(); popup.focus();
 };
 
