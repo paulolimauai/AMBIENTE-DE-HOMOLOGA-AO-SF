@@ -236,8 +236,12 @@ a{color:var(--accent);font-weight:700;text-decoration:none}a:hover{text-decorati
 .central-h b{display:block;font-size:.98rem;color:var(--white);line-height:1.2}
 .central-h small{display:block;font-size:.78rem;color:var(--muted);margin-top:.1rem}
 .tiles{margin-top:1rem;display:grid;gap:.6rem}
-/* Ação única dentro da Central de Serviços: linha única em todas as larguras, colada ao cabeçalho */
-.central>.tile{flex-direction:row;margin-top:.9rem}
+/* Ação única dentro da Central de Serviços: mesma superfície do campo, separada por filete */
+.central>.tile{flex-direction:row;align-items:center;gap:.8rem;margin:.75rem -.35rem -.35rem;padding:.8rem .35rem .75rem;
+  background:transparent;border:0;border-top:1px solid var(--card-line);border-radius:0}
+.central>.tile:hover{background:color-mix(in srgb,var(--brand) 7%,transparent);border-color:var(--card-line);transform:none}
+.central>.tile.prim{background:transparent;border-color:var(--card-line)}
+.central>.tile.prim .ti{width:2.3rem;height:2.3rem}
 .tile{display:flex;align-items:center;gap:.9rem;padding:.85rem 1rem;border-radius:.85rem;text-decoration:none!important;
   background:rgba(255,255,255,.04);border:1px solid var(--card-line);transition:background .2s,border-color .2s,transform .2s}
 .tile:hover{background:color-mix(in srgb,var(--brand) 14%,transparent);border-color:color-mix(in srgb,var(--brand) 55%,transparent);transform:translateY(-1px)}
