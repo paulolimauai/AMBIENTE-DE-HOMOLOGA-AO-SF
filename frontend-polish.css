@@ -6859,3 +6859,109 @@ body:has(#authPage) {
     .panel:hover, .card:hover { transform: none !important; }
   }
 }
+
+
+/* =====================================================================================
+   nx-contas-cartoes — aba "Cartões e Contas Bancárias" mais profissional
+   Refina cartões de conta/crédito, painel de resumo de limites e botões de extrato.
+   ===================================================================================== */
+@layer nx-contas-cartoes {
+
+  /* ---------- Cartão de conta/crédito ---------- */
+  .acc-card {
+    border-radius: 18px !important;
+    padding: 20px !important;
+    min-height: 300px !important;
+    border-color: rgba(148, 163, 184, .16) !important;
+  }
+  .acc-card-accent-bar { height: 3px !important; opacity: .9 !important; }
+  .acc-card-emblem {
+    width: 50px !important;
+    height: 50px !important;
+    border-radius: 15px !important;
+    font-size: 16px !important;
+    box-shadow: 0 10px 22px -6px rgba(0, 0, 0, .5), inset 0 1.5px 2px rgba(255,255,255,.55), 0 0 0 1px rgba(255,255,255,.12) !important;
+  }
+  .acc-card .top h3 { letter-spacing: -.02em !important; }
+  .acc-card-chip {
+    font-size: 10.5px !important;
+    letter-spacing: .03em !important;
+    padding: 3px 10px !important;
+    border-radius: 999px !important;
+  }
+  .row-actions .btn-action-edit, .row-actions .btn-action-del {
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 9px !important;
+  }
+
+  /* Painel interno de métricas: mais contraste e hierarquia */
+  .acc-card-metrics {
+    padding: 16px 16px 14px !important;
+    border-radius: 14px !important;
+    background: rgba(255, 255, 255, .045) !important;
+    border: 1px solid rgba(148, 163, 184, .14) !important;
+  }
+  body.light .acc-card-metrics, html.light .acc-card-metrics {
+    background: #F8FAFC !important;
+    border-color: #E8EEF5 !important;
+  }
+  .acc-metric-hero-label { font-size: 10.5px !important; letter-spacing: .09em !important; }
+  .acc-metric-hero-val { font-size: 27px !important; letter-spacing: -.03em !important; }
+  .acc-subgrid { margin-top: 14px !important; padding-top: 12px !important; }
+  .acc-subgrid-label { font-size: 10.5px !important; letter-spacing: .06em !important; text-transform: uppercase !important; font-weight: 700 !important; }
+  .acc-subgrid-val { font-size: 14.5px !important; }
+
+  /* Barra de uso do limite: trilho mais visível e preenchimento com brilho */
+  .acc-card-metrics .bar-split { height: 8px !important; border-radius: 999px !important; background: rgba(148,163,184,.16) !important; border: 0 !important; }
+  .acc-card-metrics .bar-split .g { border-radius: 999px !important; box-shadow: 0 0 10px rgba(52,211,153,.35) !important; }
+
+  /* Botão "Ver Lançamentos": CTA consistente com o restante do app */
+  .acc-view-tx-btn {
+    margin-top: 14px !important;
+    padding: 11px 14px !important;
+    border-radius: 12px !important;
+    background: rgba(148, 163, 184, .07) !important;
+    border: 1px solid rgba(148, 163, 184, .18) !important;
+  }
+  .acc-view-tx-btn .btn-count-pill {
+    background: rgba(148, 163, 184, .16) !important;
+    padding: 2px 9px !important;
+    border-radius: 999px !important;
+    font-variant-numeric: tabular-nums !important;
+  }
+  .acc-view-tx-btn:hover {
+    background: linear-gradient(100deg, rgba(16,185,129,.16), rgba(16,185,129,.06)) !important;
+    border-color: rgba(52, 211, 153, .45) !important;
+    box-shadow: 0 8px 22px -12px rgba(16, 185, 129, .55) !important;
+  }
+  body.light .acc-view-tx-btn { background: #F8FAFC !important; border-color: #E2E8F0 !important; }
+  body.light .acc-view-tx-btn:hover { background: #ECFDF5 !important; border-color: #6EE7B7 !important; }
+
+  /* ---------- Painel "Visão Geral dos Cartões" ---------- */
+  .cards-summary-panel { border-radius: 18px !important; }
+  .cards-summary-panel .kpi {
+    border-radius: 14px !important;
+    padding: 15px !important;
+    transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease !important;
+  }
+  @media (hover: hover) {
+    .cards-summary-panel .kpi:hover {
+      transform: translateY(-2px) !important;
+      border-color: rgba(148, 163, 184, .3) !important;
+      box-shadow: 0 14px 30px -18px rgba(0, 0, 0, .6) !important;
+    }
+  }
+  .cards-summary-panel .kpi .val { font-variant-numeric: tabular-nums !important; letter-spacing: -.02em !important; }
+  .cards-summary-panel .panel-head h3 { letter-spacing: -.01em !important; }
+
+  /* Barra de comprometimento global */
+  .cards-summary-panel .bar-split { height: 9px !important; border-radius: 999px !important; }
+  .cards-summary-panel .bar-split .g { border-radius: 999px !important; }
+
+  /* Grade de cartões: respiro consistente */
+  .grid3 { gap: 18px !important; }
+
+  /* Estado vazio mais elegante */
+  .placeholder .big { font-size: 44px !important; }
+}
