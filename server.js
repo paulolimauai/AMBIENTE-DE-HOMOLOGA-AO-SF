@@ -2487,19 +2487,18 @@ html.is-admin #mobileDrawerAdminBadge,
 #mobileDrawerAdminBadge {
   display: none !important;
 }
-html.is-admin #menuFuncoesBtn,
-html.is-admin #mobileDrawerFuncoesBtn {
-  display: none !important;
-}
 /* ==================== Controle Executivo de Abas por Papel (Perfil) ==================== */
-/* Perfil de Administrador: Permanece APENAS a aba e módulos de Administração */
+/* Administrador enxerga TODAS as funções: módulos do usuário + painel administrativo.
+   Apenas o atalho rápido de nova transação e o botão de conta do topo permanecem ocultos. */
 html.is-admin #menu .menu-btn-user,
 html.is-admin #mobileDrawerMenu .menu-btn-user,
 html.is-admin .menu-section-visao,
 html.is-admin .menu-section-planejamento,
 html.is-admin .menu-section-ferramentas,
 html.is-admin .menu-section-minha-conta,
-html.is-admin #mobileBottomBar .mobile-btn-user,
+html.is-admin #mobileBottomBar .mobile-btn-user {
+  display: flex !important;
+}
 html.is-admin .header-minha-conta-btn,
 html.is-admin #sidebarNovaTransacaoBtn {
   display: none !important;
@@ -14928,6 +14927,21 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         </span>
         <span class="admin-menu-count-pill" id="menuUsersCountBadge">0</span>
       </button>
+      <button data-page="funcoes" id="menuFuncoesBtn" class="menu-btn-admin" style="display:none;" title="Central de Funções & Permissões">
+        <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></span>
+        <span class="admin-menu-field-body">
+          <span class="label">Funções & Permissões</span>
+          <span class="sub-label">Papéis e Acessos</span>
+        </span>
+      </button>
+      <button data-page="ordens" id="menuOrdensBtn" class="menu-btn-admin" style="display:none;" title="Central de Atendimento & Ordens de Serviço">
+        <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span>
+        <span class="admin-menu-field-body">
+          <span class="label">Central de Atendimento</span>
+          <span class="sub-label">Ordens de Serviço & Chamados</span>
+        </span>
+        <span class="admin-menu-count-pill" id="osBadgeCount">0</span>
+      </button>
       <!-- "Central GLPI & O.S." saiu do Painel Administrativo (pedido de 10/11/2026): o atendimento de chamados é feito no GLPI (/glpi.html) por quem tem perfil Administrador -->
       <button data-page="pagamentos" id="menuPagamentosBtn" class="menu-btn-admin" style="display:none;" title="Pagamentos (Pix, Cartão, Boleto), Liberação & 2ª Via de Boleto">
         <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><path d="M6 15h4"/><path d="M14 15h4"/></svg></span>
@@ -15127,6 +15141,8 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
       <!-- Seção Administrativa Móvel (Exclusiva Administrador) -->
       <div class="mobile-drawer-section-title menu-section-admin" style="display:none;">Painel Administrativo</div>
       <button data-page="usuarios" id="mobileDrawerUsuariosBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span class="label">Cadastros & Contas</span></button>
+      <button data-page="funcoes" id="mobileDrawerFuncoesBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></span><span class="label">Funções & Permissões</span></button>
+      <button data-page="ordens" id="mobileDrawerOrdensBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span><span class="label">Central de Atendimento</span></button>
       <button data-page="pagamentos" id="mobileDrawerPagamentosBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></span><span class="label">Pagamentos & Boletos</span></button>
       <button data-page="logs" id="mobileDrawerLogsBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span><span class="label">Auditoria & Logs</span></button>
     </nav>
@@ -20751,8 +20767,10 @@ function pd(day){ return pdCustom(currentPeriod.year, currentPeriod.month, day);
 
 // Perfis de acesso: cada papel enxerga SOMENTE as suas páginas. Menu lateral, gaveta mobile, barra inferior,
 // hash da URL, página salva no navegador e render() usam esta mesma fonte (a primeira página é o destino padrão).
-const NEXUS_ADMIN_PAGES = ['usuarios', 'pagamentos', 'logs'];
 const NEXUS_USER_PAGES = ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'config'];
+// Administrador enxerga TODAS as funções: as páginas do usuário + os módulos exclusivos do painel
+const NEXUS_ADMIN_MENU_PAGES = ['usuarios', 'funcoes', 'ordens', 'pagamentos', 'logs'];
+const NEXUS_ADMIN_PAGES = NEXUS_USER_PAGES.concat(NEXUS_ADMIN_MENU_PAGES);
 function nexusIsAdminUser(u) { return !!(u && u.role === 'Administrador'); }
 // Plano vigente: Mensal R$ 18,00 somente Pix. 'anual'/'vitalicio'/'cortesia_admin' só existem em contas legadas ou concessões do admin.
 function nexusPlanInfo(plan) {
@@ -21816,15 +21834,15 @@ function updateAdminMenuVisibility(force = false){
   const summaryCardAdmin = document.getElementById('adminSidebarSummaryCard');
   if (summaryCardAdmin) summaryCardAdmin.style.display = isAdmin ? 'block' : 'none';
 
-  // Seções e Botões do Usuário Comum: Visão, Planejamento, Ferramentas e Minha Conta
+  // Seções e Botões do Usuário Comum: visíveis para todos os perfis (o admin também usa as funções financeiras)
   const userSections = document.querySelectorAll('.menu-section-visao, .menu-section-planejamento, .menu-section-ferramentas, .menu-section-minha-conta');
   userSections.forEach(function(el) {
-    el.style.display = isAdmin ? 'none' : 'flex';
+    el.style.display = 'flex';
   });
 
   NEXUS_USER_PAGES.forEach(function(pg) {
     document.querySelectorAll('#menu button[data-page="' + pg + '"], #mobileDrawerMenu button[data-page="' + pg + '"]').forEach(function(btn) {
-      btn.style.display = isAdmin ? 'none' : 'flex';
+      btn.style.display = 'flex';
     });
   });
 
@@ -21834,15 +21852,15 @@ function updateAdminMenuVisibility(force = false){
     el.style.display = isAdmin ? 'flex' : 'none';
   });
 
-  NEXUS_ADMIN_PAGES.forEach(function(pg) {
+  NEXUS_ADMIN_MENU_PAGES.forEach(function(pg) {
     document.querySelectorAll('button[data-page="' + pg + '"]').forEach(function(btn) {
       btn.style.display = isAdmin ? 'flex' : 'none';
     });
   });
 
-  // Barra inferior mobile: alternar abas de usuário e administrador
+  // Barra inferior mobile: o administrador vê as abas de usuário E as administrativas
   document.querySelectorAll('#mobileBottomBar .mobile-btn-user').forEach(function(b) {
-    b.style.display = isAdmin ? 'none' : 'flex';
+    b.style.display = 'flex';
   });
   document.querySelectorAll('#mobileBottomBar .mobile-btn-admin').forEach(function(b) {
     b.style.display = isAdmin ? 'flex' : 'none';
