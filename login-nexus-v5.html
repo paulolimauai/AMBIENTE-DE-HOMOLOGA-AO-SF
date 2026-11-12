@@ -236,6 +236,7 @@ a{color:var(--accent);font-weight:700;text-decoration:none}a:hover{text-decorati
 .central-h b{display:block;font-size:.98rem;color:var(--white);line-height:1.2}
 .central-h small{display:block;font-size:.78rem;color:var(--muted);margin-top:.1rem}
 .tiles{margin-top:1rem;display:grid;gap:.6rem}
+.tiles:has(.tile:only-child){grid-template-columns:minmax(0,26rem);justify-content:center}
 .tile{display:flex;align-items:center;gap:.9rem;padding:.85rem 1rem;border-radius:.85rem;text-decoration:none!important;
   background:rgba(255,255,255,.04);border:1px solid var(--card-line);transition:background .2s,border-color .2s,transform .2s}
 .tile:hover{background:color-mix(in srgb,var(--brand) 14%,transparent);border-color:color-mix(in srgb,var(--brand) 55%,transparent);transform:translateY(-1px)}
@@ -273,7 +274,6 @@ a{color:var(--accent);font-weight:700;text-decoration:none}a:hover{text-decorati
 main{transition:max-width .3s ease}
 @media (min-width:480px){
   .tiles{grid-template-columns:1fr 1fr}
-  .tiles:has(.tile:only-child){grid-template-columns:minmax(0,26rem);justify-content:center}
   .tile{flex-direction:column;align-items:flex-start;gap:.6rem}
   .tile .go-ar{display:none}
 }
