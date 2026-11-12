@@ -1,4 +1,4 @@
-SMTP_HOST=smtp.office365.com
-SMTP_PORT=587
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=465
 SMTP_USER=suporte.paulolima@outlook.com
 SMTP_PASS=Pl92345372@
