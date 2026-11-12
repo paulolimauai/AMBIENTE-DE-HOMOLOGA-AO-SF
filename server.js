@@ -16665,7 +16665,7 @@ window.carregarUsuariosLogonServer = async function() {
   }
 
   try {
-    const res = await fetch(window.location.origin + '/api/users');
+    const res = await fetch(window.location.origin + '/api/users', { headers: nexusAuthHeaders() });
     if (res.ok) {
       const data = await res.json();
       if (Array.isArray(data)) {
@@ -16862,12 +16862,22 @@ document.addEventListener('keyup', function(e) {
   }
 });
 
+// GET /api/users exige autenticação: sem o token da sessão a resposta é 401 e a tela ficava
+// refém do espelho velho em localStorage (nexus_users), que podia vir sem o perfil e escondia
+// a seção de Administração até para a conta admin. Com o Bearer da sessão o servidor devolve
+// os dados autoritativos (admin recebe todos os cadastros; usuário comum, só o próprio).
+function nexusAuthHeaders() {
+  const token = loadFromStorage('nexus_token', '');
+  return token ? { 'Authorization': 'Bearer ' + token } : {};
+}
+
 async function syncUsersWithServer() {
   const apiBase = getApiBaseUrl();
+  const authHeaders = nexusAuthHeaders();
   try {
-    let res = await fetch(apiBase + '/api/users');
+    let res = await fetch(apiBase + '/api/users', { headers: authHeaders });
     if (!res.ok && apiBase !== 'http://localhost:3000') {
-      try { res = await fetch('http://localhost:3000/api/users'); } catch(e){}
+      try { res = await fetch('http://localhost:3000/api/users', { headers: authHeaders }); } catch(e){}
     }
     if (res && res.ok) {
       const usersData = await res.json();
@@ -16886,7 +16896,7 @@ async function syncUsersWithServer() {
   } catch(e) {
     if (apiBase !== 'http://localhost:3000') {
       try {
-        const fallbackRes = await fetch('http://localhost:3000/api/users');
+        const fallbackRes = await fetch('http://localhost:3000/api/users', { headers: authHeaders });
         if (fallbackRes.ok) {
           const usersData = await fallbackRes.json();
           if (Array.isArray(usersData) && usersData.length > 0) {
@@ -31625,6 +31635,13 @@ window.applyPostLoginBg = function(theme) {
   }
 
   const realUser = serverUser;
+  // O espelho em cache (nexus_users) pode estar desatualizado e vir sem o perfil: quando isso
+  // acontece, prevalece o perfil gravado no login (nexus_cached_user), senão a conta admin perdia
+  // a seção de Administração na restauração da sessão.
+  if (realUser && cachedUser && cachedUser.email && String(cachedUser.email).toLowerCase() === String(realUser.email).toLowerCase()
+      && (!realUser.role || realUser.role === '') && cachedUser.role) {
+    realUser.role = cachedUser.role;
+  }
 
   if (realUser && realUser.active === false) {
     localStorage.removeItem('nexus_session');
