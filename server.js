@@ -62,7 +62,8 @@ const JWT_SECRET = loadOrCreateJwtSecret();
 // comum aos dois lados, o espelho de usuários da nuvem fica vazio e ninguém consegue entrar no site oficial.
 function loadCommittedSyncToken() {
   try {
-    const committed = fs.readFileSync(path.join(__dirname, '.nexus_sync_token'), 'utf8').trim();
+    const tokenFile = process.env.NEXUS_SYNC_TOKEN_FILE || path.join(__dirname, '.nexus_sync_token');
+    const committed = fs.readFileSync(tokenFile, 'utf8').trim();
     return committed.length >= 32 ? committed : '';
   } catch (e) { return ''; }
 }
@@ -15346,30 +15347,21 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
     <div style="margin-bottom:12px; padding:11px 12px; border-radius:13px; background:linear-gradient(135deg, rgba(245,158,11,0.10) 0%, rgba(16,185,129,0.06) 100%); border:1px solid rgba(245,158,11,0.35);">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; gap:6px;">
         <span style="font-size:11px; font-weight:900; color:#FBBF24; display:flex; align-items:center; gap:5px;">
-          <span>👑</span> LIBERAR PAGAMENTO NÃO RECONHECIDO & 2ª VIA BOLETO
+          <span>👑</span> LIBERAR PAGAMENTO PIX & 2ª VIA DE COBRANÇA
         </span>
         <span id="userAdminCurrentSubBadge" style="font-size:10px; padding:2px 8px; border-radius:6px; background:rgba(255,255,255,0.08); font-weight:800; border:1px solid rgba(255,255,255,0.15);">Carregando...</span>
       </div>
 
-      <div style="display:grid; grid-template-columns:1fr auto; gap:6px; margin-bottom:8px; align-items:center;">
-        <select id="userAdminPaymentMethod" style="height:30px; border-radius:8px; font-size:11px; font-weight:800; padding:0 8px; background:rgba(0,0,0,0.35); border:1px solid rgba(16,185,129,0.4); color:#6EE7B7;" title="Modalidade do pagamento não reconhecido a liberar">
-          <option value="pix">💠 Modalidade: Pix (SPI Instantâneo)</option>
-          <option value="credit_card">💳 Modalidade: Cartão de Crédito</option>
-          <option value="debit_card">🏧 Modalidade: Cartão de Débito</option>
-          <option value="boleto">📄 Modalidade: Boleto Bancário</option>
-        </select>
+      <div style="display:flex; gap:6px; margin-bottom:8px; align-items:center;">
         <button type="button" onclick="window.abrirSegundaViaBoletoParaUsuario(editingUserEmail)" style="height:30px; padding:0 10px; border-radius:8px; background:rgba(56,189,248,0.18); border:1px solid rgba(56,189,248,0.45); color:#BAE6FD; font-size:10.5px; font-weight:800; cursor:pointer; white-space:nowrap;">
-          📄 Imprimir 2ª Via Boleto
+          📄 Imprimir 2ª Via Pix (R$ 18)
         </button>
       </div>
 
       <!-- Botões de Confirmação Oficial de Pagamento / Bloqueio -->
-      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; margin-bottom:8px;">
-        <button type="button" onclick="window.adminConfirmUserPayment(editingUserEmail, 'mensal', document.getElementById('userAdminPaymentMethod')?.value)" style="height:30px; padding:0 6px; border-radius:8px; background:linear-gradient(135deg, #10B981, #059669); color:#FFFFFF; font-size:10.5px; font-weight:800; border:none; cursor:pointer;" title="Reconhecer pagamento e liberar Plano Mensal (30 dias)">
-          🔓 Liberar Mensal (R$ 15)
-        </button>
-        <button type="button" onclick="window.adminConfirmUserPayment(editingUserEmail, 'anual', document.getElementById('userAdminPaymentMethod')?.value)" style="height:30px; padding:0 6px; border-radius:8px; background:linear-gradient(135deg, #F59E0B, #D97706); color:#000000; font-size:10.5px; font-weight:800; border:none; cursor:pointer;" title="Reconhecer pagamento e liberar Plano Anual (1 ano)">
-          🔓 Liberar Anual (R$ 150)
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:8px;">
+        <button type="button" onclick="window.adminConfirmUserPayment(editingUserEmail, 'mensal', 'pix')" style="height:30px; padding:0 6px; border-radius:8px; background:linear-gradient(135deg, #10B981, #059669); color:#FFFFFF; font-size:10.5px; font-weight:800; border:none; cursor:pointer;" title="Reconhecer pagamento Pix e liberar Plano Mensal (30 dias)">
+          🔓 Liberar Mensal Pix (R$ 18)
         </button>
         <button type="button" onclick="window.adminRevokeUserPayment(editingUserEmail)" style="height:30px; padding:0 6px; border-radius:8px; background:rgba(239,68,68,0.16); border:1px solid rgba(239,68,68,0.45); color:#FCA5A5; font-size:10.5px; font-weight:800; cursor:pointer;">
           🔒 Bloquear
@@ -16176,7 +16168,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         <div class="pw-titles">
           <span class="pw-eyebrow">Nexus Pay &bull; assinatura segura</span>
           <h2 id="subModalTitle">Escolha o plano ideal para o seu controle financeiro</h2>
-          <p id="subModalSubtitle">Comece com 1 dia grátis. Depois, escolha o Plano Mensal ou o Plano Anual e pague via Pix.</p>
+          <p id="subModalSubtitle">Comece com 1 dia grátis. Depois, assine o Plano Mensal por R$ 18,00 e pague via Pix.</p>
         </div>
       </div>
 
@@ -16244,19 +16236,10 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
             <div class="pw-plan active" id="subPlanCardMensal" role="radio" aria-checked="true" tabindex="0" onclick="window.selectSubPlan('mensal')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();window.selectSubPlan('mensal');}">
               <span class="pw-radio" aria-hidden="true"></span>
               <div class="pw-plan-body">
-                <div class="pw-plan-title">Plano Mensal</div>
-                <div class="pw-plan-desc">Acesso completo por 30 dias, sem fidelidade</div>
+                <div class="pw-plan-title">Plano Mensal <span class="pw-tag">Único plano</span></div>
+                <div class="pw-plan-desc">Acesso completo por 30 dias, renovação mês a mês, sem fidelidade</div>
               </div>
-              <div class="pw-plan-price"><strong>R$ 15,00</strong><span>por mês</span></div>
-            </div>
-
-            <div class="pw-plan" id="subPlanCardAnual" role="radio" aria-checked="false" tabindex="0" onclick="window.selectSubPlan('anual')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();window.selectSubPlan('anual');}">
-              <span class="pw-radio" aria-hidden="true"></span>
-              <div class="pw-plan-body">
-                <div class="pw-plan-title">Plano Anual <span class="pw-tag">Economize R$ 30,00</span></div>
-                <div class="pw-plan-desc">Acesso completo por 12 meses, com melhor custo-benefício</div>
-              </div>
-              <div class="pw-plan-price"><strong>R$ 150,00</strong><span>por ano</span></div>
+              <div class="pw-plan-price"><strong>R$ 18,00</strong><span>por mês</span></div>
             </div>
           </div>
 
@@ -16266,13 +16249,12 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
           </div>
 
           <div class="pw-summary">
-            <div class="pw-row"><span id="subSummaryPlanName">Plano Mensal (30 dias)</span><strong id="subSummaryPlanPrice">R$ 15,00</strong></div>
-            <div class="pw-row pw-row-discount" id="subSummaryDiscountRow" style="display:none;"><span>Economia do Plano Anual</span><strong>- R$ 30,00</strong></div>
+            <div class="pw-row"><span id="subSummaryPlanName">Plano Mensal (30 dias)</span><strong id="subSummaryPlanPrice">R$ 18,00</strong></div>
             <div class="pw-row pw-total">
               <span class="pw-total-label">Total a pagar</span>
-              <span class="pw-total-val" id="subSummaryTotalPrice">R$ 15,00</span>
+              <span class="pw-total-val" id="subSummaryTotalPrice">R$ 18,00</span>
             </div>
-            <small class="pw-total-note" id="subSummaryPaymentFrequency">Cobrança mês a mês, sem fidelidade</small>
+            <small class="pw-total-note" id="subSummaryPaymentFrequency">Cobrança mês a mês, somente via Pix, sem fidelidade</small>
           </div>
 
           <div class="pw-benefits-title">Todos os planos pagos incluem</div>
@@ -16371,7 +16353,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 
       <!-- Barra de pagamento fixa: o botao principal fica sempre visivel, mesmo em telas baixas -->
       <div class="pw-paybar">
-        <div class="pw-paybar-amount"><span>Total da assinatura</span><strong id="pixDisplayAmount">R$ 15,00</strong></div>
+        <div class="pw-paybar-amount"><span>Total da assinatura</span><strong id="pixDisplayAmount">R$ 18,00</strong></div>
         <button type="button" class="pw-btn pw-btn-primary" id="subBtnConfirmPix" onclick="window.processSubscriptionPayment('pix')">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
           <span id="pixActionBtnLabel">Já paguei via Pix &bull; enviar para confirmação</span>
@@ -18287,7 +18269,7 @@ window.unlockWithConfirmedReceipt = function(data) {
   const expiresEl = document.getElementById('subSuccessExpires');
   const dateTimeEl = document.getElementById('subSuccessDateTime');
 
-  if (planNameEl) planNameEl.textContent = plan === 'anual' ? 'Plano Anual (R$ 150,00 • 12 meses)' : (plan === 'vitalicio' ? 'Acesso administrativo' : 'Plano Mensal (R$ 15,00 • 30 dias)');
+  if (planNameEl) planNameEl.textContent = plan === 'anual' ? 'Plano Anual (legado • 12 meses)' : (plan === 'vitalicio' ? 'Acesso administrativo' : 'Plano Mensal (R$ 18,00 • 30 dias)');
   if (txIdEl) txIdEl.textContent = data.transaction_id || data.subscription_payment_id || ('NEXUS-SUB-' + Date.now());
   if (methodEl) {
     const methodLabels = {
@@ -18540,12 +18522,12 @@ window.openSubscriptionPaywall = function(isLocked = false) {
     document.body.classList.add('paywall-locked');
     document.documentElement.classList.add('paywall-locked');
     if (titleEl) titleEl.textContent = 'Escolha um plano para continuar usando';
-    if (subEl) subEl.textContent = 'Seu período gratuito terminou. Escolha o Plano Mensal ou o Plano Anual, pague via Pix e envie o comprovante para liberar o acesso.';
+    if (subEl) subEl.textContent = 'Seu período gratuito terminou. Assine o Plano Mensal por R$ 18,00, pague via Pix e envie o comprovante para liberar o acesso.';
   } else {
     document.body.classList.remove('paywall-locked');
     document.documentElement.classList.remove('paywall-locked');
     if (titleEl) titleEl.textContent = 'Escolha o plano ideal para o seu controle financeiro';
-    if (subEl) subEl.textContent = 'Comece com 1 dia grátis. Depois, escolha o Plano Mensal ou o Plano Anual e pague via Pix.';
+    if (subEl) subEl.textContent = 'Comece com 1 dia grátis. Depois, assine o Plano Mensal por R$ 18,00 e pague via Pix.';
   }
 
   if (closeBtn) {
@@ -18769,25 +18751,25 @@ if (!window.__paywallSyncPollInterval) {
 }
 
 window.selectSubPlan = function(plan) {
-  plan = plan === 'anual' ? 'anual' : 'mensal';
+  // Plano único vigente: Mensal R$ 18,00 (o Plano Anual foi retirado da oferta).
+  plan = 'mensal';
   window.__selectedSubPlan = plan;
-  const isAnnual = plan === 'anual';
+  const isAnnual = false;
   const cardMensal = document.getElementById('subPlanCardMensal');
   const cardAnual = document.getElementById('subPlanCardAnual');
   const setText = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value; };
 
-  if (cardMensal) { cardMensal.classList.toggle('active', !isAnnual); cardMensal.setAttribute('aria-checked', String(!isAnnual)); }
-  if (cardAnual) { cardAnual.classList.toggle('active', isAnnual); cardAnual.setAttribute('aria-checked', String(isAnnual)); }
+  if (cardMensal) { cardMensal.classList.add('active'); cardMensal.setAttribute('aria-checked', 'true'); }
+  if (cardAnual) { cardAnual.classList.remove('active'); cardAnual.setAttribute('aria-checked', 'false'); }
 
-  const totalLabel = isAnnual ? 'R$ 150,00' : 'R$ 15,00';
+  const totalLabel = 'R$ 18,00';
   setText('pixDisplayAmount', totalLabel);
-  setText('subSummaryPlanName', isAnnual ? 'Plano Anual (12 meses)' : 'Plano Mensal (30 dias)');
-  // Anual: 12 x R$ 15,00 = R$ 180,00, menos R$ 30,00 de desconto = R$ 150,00 (a conta fecha na tela).
-  setText('subSummaryPlanPrice', isAnnual ? 'R$ 180,00' : 'R$ 15,00');
+  setText('subSummaryPlanName', 'Plano Mensal (30 dias)');
+  setText('subSummaryPlanPrice', 'R$ 18,00');
   setText('subSummaryTotalPrice', totalLabel);
-  setText('subSummaryPaymentFrequency', isAnnual ? 'Cobrança única (equivale a R$ 12,50 por mês)' : 'Cobrança mês a mês, sem fidelidade');
+  setText('subSummaryPaymentFrequency', 'Cobrança mês a mês, somente via Pix, sem fidelidade');
   const discountRow = document.getElementById('subSummaryDiscountRow');
-  if (discountRow) discountRow.style.display = isAnnual ? 'flex' : 'none';
+  if (discountRow) discountRow.style.display = 'none';
 
   if (window.__selectedPaymentMethod === 'pix') {
     window.updatePixPayloadAndQr();
@@ -18994,7 +18976,7 @@ window.copyPixKeyDirect = function() {
 
 window.updatePixPayloadAndQr = function() {
   const plan = window.__selectedSubPlan || 'mensal';
-  const amount = (plan === 'anual') ? 150.00 : 15.00;
+  const amount = 18.00;
   const pixKey = '+5562992345372';
   const beneficiaryName = 'PAULO LIMA';
   const city = 'GOIANIA';
@@ -19043,7 +19025,7 @@ window.verifyPendingPaymentNow = async function() {
 
 window.sendPaymentProofWhatsApp = function() {
   const plan = window.__selectedSubPlan || 'mensal';
-  const amountStr = plan === 'anual' ? 'R$ 150,00 (Anual)' : 'R$ 15,00 (Mensal)';
+  const amountStr = 'R$ 18,00 (Mensal)';
   const email = currentUser ? currentUser.email : '';
   const name = currentUser ? currentUser.name : '';
   const pixTx = document.getElementById('subPixTxIdInput')?.value || window.__currentPixSessionTxId || '';
@@ -19096,7 +19078,7 @@ window.processSubscriptionPayment = async function(method, isAutoTriggered = fal
   window.updateAutoRecognitionRadar(
     'processing',
     '2/3 • Enviando para análise...',
-    'Enviando a confirmação de <strong>R$ ' + (plan === 'anual' ? '150,00' : '15,00') + '</strong> e aguardando a validação do recebimento...',
+    'Enviando a confirmação de <strong>R$ 18,00</strong> e aguardando a validação do recebimento...',
     88
   );
 
@@ -19110,7 +19092,7 @@ window.processSubscriptionPayment = async function(method, isAutoTriggered = fal
         email: currentUser.email,
         plan: plan,
         method: payMethod,
-        amount: plan === 'anual' ? 150.00 : 15.00,
+        amount: 18.00,
         receipt_code: window.__currentPixSessionTxId || receiptCode,
         force_pending: true
       })
@@ -20616,6 +20598,18 @@ function pd(day){ return pdCustom(currentPeriod.year, currentPeriod.month, day);
 const NEXUS_ADMIN_PAGES = ['usuarios', 'pagamentos', 'logs'];
 const NEXUS_USER_PAGES = ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'config'];
 function nexusIsAdminUser(u) { return !!(u && u.role === 'Administrador'); }
+// Plano vigente: Mensal R$ 18,00 somente Pix. 'anual'/'vitalicio'/'cortesia_admin' só existem em contas legadas ou concessões do admin.
+function nexusPlanInfo(plan) {
+  const p = String(plan || '').toLowerCase();
+  if (p === 'anual' || p === 'annual') return { id: 'anual', nome: 'Anual (legado)', valor: 'R$ 150,00', dias: 365, vigente: false };
+  if (p === 'vitalicio') return { id: 'vitalicio', nome: 'Vitalício', valor: '—', dias: null, vigente: false };
+  if (p === 'cortesia_admin') return { id: 'cortesia_admin', nome: 'Cortesia Admin', valor: '—', dias: null, vigente: false };
+  return { id: 'mensal', nome: 'Mensal', valor: 'R$ 18,00', dias: 30, vigente: true };
+}
+function nexusPlanLabel(plan) {
+  const info = nexusPlanInfo(plan);
+  return info.id === 'mensal' ? 'Mensal · R$ 18,00' : info.nome + (info.valor !== '—' ? ' · ' + info.valor : '');
+}
 // Pagamento informado e ainda sem confirmação do financeiro. Com o teste esgotado o acesso fica "pending_payment"; mas quem informa o Pix
 // ainda dentro do teste grátis (o caso comum) continua "trial" no acesso e só ganha o protocolo NEXUS-SUB-: sem isto nunca aparecia para o admin.
 function nexusPagamentoAguardando(u) {
@@ -21785,7 +21779,7 @@ function updateHeaderUser(){
     sidebarPlanEl.textContent = nexusIsAdminUser(currentUser)
       ? 'Administrador'
       : plan === 'anual' || plan === 'annual'
-        ? 'Plano Anual'
+        ? 'Plano Anual (legado)'
         : plan === 'mensal'
           ? 'Plano Mensal'
           : plan === 'vitalicio'
@@ -24210,13 +24204,13 @@ function pageConfig(){
         <div style="display:flex; align-items:center; gap:8px;">
           <h3 style="font-size:17px; font-weight:900; margin:0; color:var(--text);">Plano & Assinatura</h3>
           \${(currentUser && currentUser.subscription_status === 'active')
-            ? '<span class="role-badge" style="background:#10B981; color:#fff; font-weight:800;">✓ Assinatura Ativa (' + (currentUser.subscription_plan === 'anual' ? 'Anual R$ 150' : 'Mensal R$ 15') + ')</span>'
+            ? '<span class="role-badge" style="background:#10B981; color:#fff; font-weight:800;">✓ Assinatura Ativa (' + nexusPlanLabel(currentUser.subscription_plan) + ')</span>'
             : '<span class="role-badge" style="background:#F59E0B; color:#fff; font-weight:800;">⏱️ Período Gratuito (1 Dia)</span>'}
         </div>
         <p style="font-size:13px; color:var(--text-dim); margin:4px 0 0 0;">
           \${(currentUser && currentUser.subscription_status === 'active')
             ? 'Válido até ' + (currentUser.subscription_expires_at ? new Date(currentUser.subscription_expires_at).toLocaleDateString('pt-BR') : 'Ativo')
-            : 'Você tem 1 dia grátis para testar todos os recursos. Depois, escolha o Plano Mensal por R$ 15,00 ou o Plano Anual por R$ 150,00 (equivalente a R$ 12,50 por mês).'}
+            : 'Você tem 1 dia grátis para testar todos os recursos. Depois, assine o Plano Mensal por R$ 18,00 e pague via Pix.'}
         </p>
       </div>
     </div>
@@ -25134,12 +25128,12 @@ function pageUsuariosLegado(){
             return '<span class="role-badge" style="background:rgba(16,185,129,0.18); border:1px solid #10B981; color:#34D399;">♾️ Vitalício</span>';
           }
           if (u.subscription_status === 'active') {
-            const planLabel = u.subscription_plan === 'anual' ? 'Anual' : (u.subscription_plan === 'cortesia_admin' ? 'Liberado' : 'Mensal');
+            const planLabel = nexusPlanInfo(u.subscription_plan).nome;
             const expStr = u.subscription_expires_at ? (' • ' + formatDateBR(u.subscription_expires_at.split('T')[0])) : '';
             return '<span class="role-badge" style="background:rgba(16,185,129,0.16); border:1px solid #10B981; color:#34D399;" title="Assinatura ativa">✅ ' + planLabel + methodBadge + expStr + '</span>';
           }
           if (nexusPagamentoAguardando(u)) {
-            const pendingPlan = u.subscription_plan === 'anual' ? 'Anual' : 'Mensal';
+            const pendingPlan = nexusPlanInfo(u.subscription_plan).nome;
             return '<span class="role-badge" style="background:rgba(56,189,248,0.18); border:1px solid #38BDF8; color:#7DD3FC;" title="Pagamento não reconhecido / aguardando liberação">⏳ Pendente • ' + pendingPlan + methodBadge + '</span>';
           }
           if (u.subscription_status === 'expired') {
@@ -25212,7 +25206,7 @@ function pageUsuariosLegado(){
             \` : ''}
             \${!isSelf ? \`
               \${u.subscription_status !== 'active' ? \`
-                <button type="button" class="user-card-btn" onclick="window.adminConfirmUserPayment('\${u.email}', '\${u.subscription_plan === 'anual' ? 'anual' : 'mensal'}', '\${u.subscription_method || 'pix'}')" title="Liberar pagamento não reconhecido imediatamente" style="background:linear-gradient(135deg, #10B981, #059669); color:#ffffff; border:none;">
+                <button type="button" class="user-card-btn" onclick="window.adminConfirmUserPayment('\${u.email}', 'mensal', 'pix')" title="Reconhecer pagamento Pix e liberar o Plano Mensal" style="background:linear-gradient(135deg, #10B981, #059669); color:#ffffff; border:none;">
                   <span>🔓 Liberar Pgto</span>
                 </button>
               \` : \`
@@ -25405,26 +25399,24 @@ function pagePagamentosCorpo(){
   const expiredUsers = users.filter(u => u.subscription_status === 'expired');
   const activeUsers = users.filter(u => u.subscription_status === 'active');
   const requestedTab = window.__pagamentosActiveTab || 'pendentes';
-  const activeTab = ['pendentes', 'expirados', 'segunda_via_boleto', 'solicitacoes_boleto'].includes(requestedTab) ? requestedTab : 'pendentes';
+  const activeTab = ['pendentes', 'expirados', 'assinaturas', 'segunda_via_boleto', 'solicitacoes_boleto'].includes(requestedTab) ? requestedTab : 'pendentes';
   const preselected = window.__boletoPreselectedUser || {};
   const preselectedEmail = String(preselected.email || '').toLowerCase();
 
   const userRow = (u, expired = false) => {
     const email = escapeOsHtml(u.email || '');
     const name = escapeOsHtml(u.name || u.email || 'Usuário');
-    const plan = u.subscription_plan === 'anual' ? 'anual' : 'mensal';
-    const method = ['pix', 'credit_card', 'debit_card', 'boleto'].includes(u.subscription_method) ? u.subscription_method : 'pix';
     const status = expired ? 'Acesso expirado' : 'Aguardando confirmação';
     const protocol = escapeOsHtml(u.subscription_payment_id || 'Sem protocolo');
     const expiry = u.subscription_expires_at ? formatDateBR(u.subscription_expires_at) : '—';
     return \`<tr>
       <td><strong>\${name}</strong><small style="display:block;color:var(--text-dim);">\${email}</small></td>
-      <td>\${plan === 'anual' ? 'Anual · R$ 150,00' : 'Mensal · R$ 15,00'}</td>
-      <td>\${method.toUpperCase()}</td>
+      <td>\${nexusPlanLabel(u.subscription_plan)}</td>
+      <td>PIX</td>
       <td><span class="role-badge" style="background:\${expired ? 'rgba(239,68,68,.15)' : 'rgba(245,158,11,.15)'};color:\${expired ? '#FCA5A5' : '#FBBF24'};">\${status}</span><small style="display:block;color:var(--text-dim);">\${protocol}</small></td>
       <td>\${expiry}</td>
       <td style="white-space:nowrap;">
-        \${expired ? \`<button type="button" class="btn-ghost" data-email="\${email}" onclick="window.openPaymentSecondCopy(this.dataset.email)">2ª via Pix</button>\` : \`<button type="button" class="btn-primary" data-email="\${email}" data-plan="\${plan}" data-method="\${method}" onclick="window.adminConfirmUserPayment(this.dataset.email,this.dataset.plan,this.dataset.method)">Confirmar pagamento</button>\`}
+        \${expired ? \`<button type="button" class="btn-ghost" data-email="\${email}" onclick="window.openPaymentSecondCopy(this.dataset.email)">2ª via Pix</button>\` : \`<button type="button" class="btn-primary" data-email="\${email}" onclick="window.adminConfirmUserPayment(this.dataset.email,'mensal','pix')">Confirmar pagamento</button>\`}
         <button type="button" class="btn-ghost" data-email="\${email}" onclick="window.adminRevokeUserPayment(this.dataset.email)" title="Bloquear e exigir pagamento">Bloquear</button>
       </td>
     </tr>\`;
@@ -25463,7 +25455,7 @@ function pagePagamentosCorpo(){
       </div>
       <div class="grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;">
         <label>Cliente<select id="paymentNoticeUser" class="admin-search-input" style="width:100%;margin-top:5px;"><option value="">Selecione um usuário</option>\${options}</select></label>
-        <label>Plano<select id="paymentNoticePlan" class="admin-search-input" style="width:100%;margin-top:5px;"><option value="mensal">Mensal · R$ 15,00</option><option value="anual">Anual · R$ 150,00</option></select></label>
+        <label>Plano<select id="paymentNoticePlan" class="admin-search-input" style="width:100%;margin-top:5px;"><option value="mensal">Mensal · R$ 18,00 (único plano vigente)</option></select></label>
         <label>Vencimento<input id="paymentNoticeDue" type="date" class="admin-search-input" value="\${dueValue}" style="width:100%;margin-top:5px;"></label>
         <label>Referência<input id="paymentNoticeReference" class="admin-search-input" maxlength="25" value="NX-\${Date.now().toString().slice(-8)}" style="width:100%;margin-top:5px;"></label>
       </div>
@@ -25472,6 +25464,41 @@ function pagePagamentosCorpo(){
         <button type="button" class="btn-ghost" onclick="window.sendAdminPaymentNoticeWhatsApp()">Enviar instruções por WhatsApp</button>
         <button type="button" class="btn-ghost" onclick="window.setPagamentosActiveTab('pendentes')">Voltar aos pagamentos</button>
       </div>
+    </div>\`;
+  } else if (activeTab === 'assinaturas') {
+    const nowMs = Date.now();
+    const subRows = users.map(u => {
+      const email = escapeOsHtml(u.email || '');
+      const name = escapeOsHtml(u.name || u.email || 'Usuário');
+      const info = nexusPlanInfo(u.subscription_plan);
+      const statusRaw = String(u.subscription_status || 'trial').toLowerCase();
+      const isActive = statusRaw === 'active' && u.subscription_expires_at && new Date(u.subscription_expires_at).getTime() > nowMs;
+      const daysLeft = isActive ? Math.ceil((new Date(u.subscription_expires_at).getTime() - nowMs) / 86400000) : null;
+      const statusLabel = isActive ? 'Ativa' : (statusRaw === 'expired' ? 'Expirada' : (nexusPagamentoAguardando(u) ? 'Pendente' : 'Teste'));
+      const statusColor = isActive ? '#34D399' : (statusRaw === 'expired' ? '#FCA5A5' : (nexusPagamentoAguardando(u) ? '#7DD3FC' : '#FBBF24'));
+      const method = escapeOsHtml(String(u.subscription_method || '—').toUpperCase());
+      const startDate = u.trial_started_at || u.created_at || '';
+      const expiry = u.subscription_expires_at ? formatDateBR(u.subscription_expires_at) : '—';
+      const protocol = escapeOsHtml(u.subscription_payment_id || '—');
+      return \`<tr>
+        <td><strong>\${name}</strong><small style="display:block;color:var(--text-dim);">\${email}</small></td>
+        <td>\${info.nome} <small style="color:var(--text-dim);">(\${info.valor})</small></td>
+        <td><span class="role-badge" style="background:rgba(255,255,255,0.06);color:\${statusColor};border:1px solid \${statusColor}55;">\${statusLabel}\${daysLeft !== null ? ' • ' + daysLeft + 'd' : ''}</span></td>
+        <td>\${method}</td>
+        <td>\${startDate ? formatDateBR(startDate) : '—'}</td>
+        <td>\${expiry}</td>
+        <td style="font-size:11px;color:var(--text-dim);">\${protocol}</td>
+        <td style="white-space:nowrap;text-align:right;">
+          <button type="button" class="btn-ghost" data-email="\${email}" onclick="window.openPaymentSecondCopy(this.dataset.email)">2ª via</button>
+          \${statusRaw !== 'active' ? \`<button type="button" class="btn-primary" data-email="\${email}" onclick="window.adminConfirmUserPayment(this.dataset.email,'mensal','pix')">Liberar</button>\` : \`<button type="button" class="btn-ghost" data-email="\${email}" onclick="window.adminRevokeUserPayment(this.dataset.email)">Bloquear</button>\`}
+        </td>
+      </tr>\`;
+    }).join('');
+    const activeMonthly = users.filter(u => nexusPlanInfo(u.subscription_plan).id === 'mensal' && u.subscription_status === 'active' && u.subscription_expires_at && new Date(u.subscription_expires_at).getTime() > nowMs).length;
+    content = \`<div class="table-panel" style="padding:14px;border-radius:16px;overflow:auto;">
+      <div class="panel-head"><h3>Assinaturas contratadas</h3><span class="tag">\${users.length} conta(s) • MRR estimado R$ \${(activeMonthly * 18).toFixed(2).replace('.', ',')}</span></div>
+      <table class="data-table" style="width:100%;"><thead><tr><th>Cliente</th><th>Plano</th><th>Status</th><th>Meio</th><th>Início</th><th>Vencimento</th><th>Protocolo</th><th style="text-align:right;">Ações</th></tr></thead>
+      <tbody>\${subRows || '<tr><td colspan="8" style="text-align:center;padding:24px;color:var(--text-dim);">Nenhuma conta de usuário.</td></tr>'}</tbody></table>
     </div>\`;
   } else if (activeTab === 'solicitacoes_boleto') {
     content = \`<div class="table-panel" style="padding:14px;border-radius:16px;overflow:auto;">
@@ -25497,6 +25524,7 @@ function pagePagamentosCorpo(){
   <div class="admin-toolbar-panel" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
     <button class="btn-ghost" onclick="window.setPagamentosActiveTab('pendentes')">Pagamentos pendentes</button>
     <button class="btn-ghost" onclick="window.setPagamentosActiveTab('expirados')">Acessos expirados</button>
+    <button class="btn-ghost" onclick="window.setPagamentosActiveTab('assinaturas')">Assinaturas (\${users.length})</button>
     <button class="btn-ghost" onclick="window.setPagamentosActiveTab('segunda_via_boleto')">2ª via / cobrança Pix</button>
     <button class="btn-ghost" onclick="window.setPagamentosActiveTab('solicitacoes_boleto')">Solicitações de boleto (\${requestedOrders.length})</button>
   </div>\${content}\`;
@@ -25519,11 +25547,10 @@ window.openPaymentSecondCopy = function(email) {
 window.printAdminPaymentNotice = function() {
   const email = document.getElementById('paymentNoticeUser')?.value || '';
   const user = (registeredUsers || []).find(u => u && u.email && u.email.toLowerCase() === email.toLowerCase());
-  const plan = document.getElementById('paymentNoticePlan')?.value === 'anual' ? 'anual' : 'mensal';
   const due = document.getElementById('paymentNoticeDue')?.value || '';
   const reference = (document.getElementById('paymentNoticeReference')?.value || '').replace(/[^a-zA-Z0-9]/g, '').slice(0, 25);
   if (!user || !reference) { if (typeof showToast === 'function') showToast('Selecione o cliente e informe uma referência válida.'); return; }
-  const amount = plan === 'anual' ? 150 : 15; // mesmos valores da assinatura (Mensal R$ 15,00 / Anual R$ 150,00); estava 10 e 100
+  const amount = 18; // Plano Mensal vigente
   const txid = ('NX' + reference).slice(0, 25);
   const pixCode = window.generatePixEMVPayload('+5562992345372', 'PAULO LIMA', 'GOIANIA', amount, txid);
   const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=' + encodeURIComponent(pixCode);
@@ -25531,14 +25558,17 @@ window.printAdminPaymentNotice = function() {
   if (!popup) { if (typeof showToast === 'function') showToast('Permita a abertura da janela para imprimir a cobrança.'); return; }
   popup.opener = null;
   const safe = escapeOsHtml;
-  const planLabel = plan === 'anual' ? 'Anual · 12 meses' : 'Mensal · 30 dias';
-  const html = '<!doctype html><html lang="pt-BR"><meta charset="utf-8"><title>Cobrança Pix ' + safe(reference) + '</title>' +
-    '<style>body{font:15px Arial,sans-serif;color:#172033;max-width:760px;margin:32px auto;padding:24px}header{border-bottom:2px solid #059669;padding-bottom:14px}h1{font-size:24px;margin:0 0 6px}small{color:#64748b}.box{border:1px solid #cbd5e1;border-radius:12px;padding:18px;margin:18px 0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.qr{width:220px;height:220px;object-fit:contain}.code{font:12px monospace;word-break:break-all;background:#f1f5f9;padding:12px;border-radius:8px}.note{color:#92400e;background:#fffbeb;border:1px solid #fcd34d;padding:12px;border-radius:8px}@media print{button{display:none}body{margin:0 auto}}</style>' +
-    '<body><header><small>NEXUS FINANCEIRO HUB · COBRANÇA</small><h1>Instrução de pagamento via Pix</h1><small>Referência ' + safe(reference) + '</small></header>' +
-    '<section class="box grid"><div><small>CLIENTE</small><p><strong>' + safe(user.name || user.email) + '</strong><br>' + safe(user.email) + '</p></div><div><small>PLANO</small><p><strong>' + safe(planLabel) + '</strong></p></div><div><small>VALOR</small><p><strong>R$ ' + amount.toFixed(2).replace('.', ',') + '</strong></p></div><div><small>VENCIMENTO</small><p><strong>' + safe(due ? formatDateBR(due) : '—') + '</strong></p></div></section>' +
-    '<section class="box" style="text-align:center"><h2>Escaneie o QR Code Pix</h2><img class="qr" src="' + safe(qrUrl) + '" alt="QR Code Pix"><p>Favorecido: <strong>Paulo Lima</strong></p><p>Chave Pix (celular): <strong>(62) 99234-5372</strong></p></section>' +
+  const planLabel = 'Mensal · 30 dias';
+  const issueDate = formatDateBR(new Date().toISOString());
+  const html = '<!doctype html><html lang="pt-BR"><meta charset="utf-8"><title>2ª Via de Cobrança ' + safe(reference) + '</title>' +
+    '<style>body{font:15px Arial,sans-serif;color:#172033;max-width:760px;margin:32px auto;padding:24px}header{border-bottom:3px solid #059669;padding-bottom:14px;position:relative}h1{font-size:24px;margin:0 0 6px}.stamp{position:absolute;top:0;right:0;border:3px solid #DC2626;color:#DC2626;font-weight:900;font-size:13px;padding:4px 12px;transform:rotate(8deg);letter-spacing:1px}small{color:#64748b}.box{border:1px solid #cbd5e1;border-radius:12px;padding:18px;margin:18px 0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.qr{width:220px;height:220px;object-fit:contain}.code{font:12px monospace;word-break:break-all;background:#f1f5f9;padding:12px;border-radius:8px}.note{color:#92400e;background:#fffbeb;border:1px solid #fcd34d;padding:12px;border-radius:8px}.howto{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:14px 18px;font-size:13px;line-height:1.7}footer{margin-top:28px;font-size:11px;color:#94a3b8;text-align:center;border-top:1px solid #e2e8f0;padding-top:12px}@media print{button{display:none}body{margin:0 auto}.stamp{position:static;display:inline-block;margin-bottom:8px}}</style>' +
+    '<body><header><div class="stamp">2ª VIA</div><small>NEXUS FINANCEIRO HUB · ASSINATURA MENSAL</small><h1>Cobrança de assinatura — 2ª via</h1><small>Referência ' + safe(reference) + ' • Emitida em ' + issueDate + '</small></header>' +
+    '<section class="box grid"><div><small>CLIENTE</small><p><strong>' + safe(user.name || user.email) + '</strong><br>' + safe(user.email) + (user.cpf ? '<br>CPF: ' + safe(user.cpf) : '') + '</p></div><div><small>PLANO</small><p><strong>' + safe(planLabel) + '</strong></p></div><div><small>VALOR</small><p><strong>R$ ' + amount.toFixed(2).replace('.', ',') + '</strong></p></div><div><small>VENCIMENTO</small><p><strong>' + safe(due ? formatDateBR(due) : '—') + '</strong></p></div></section>' +
+    '<section class="box" style="text-align:center"><h2>Escaneie o QR Code Pix</h2><img class="qr" src="' + safe(qrUrl) + '" alt="QR Code Pix"><p>Favorecido: <strong>Paulo Lima</strong> — CPF 040.233.261-00</p><p>Chave Pix (celular): <strong>(62) 99234-5372</strong></p></section>' +
     '<section class="box"><strong>Pix copia e cola</strong><p class="code">' + safe(pixCode) + '</p></section>' +
-    '<p class="note"><strong>Importante:</strong> este documento é uma instrução de pagamento via Pix, não é um boleto bancário registrado. O acesso é liberado após a confirmação do recebimento.</p>' +
+    '<section class="howto"><strong>Como pagar:</strong><br>1) Abra o app do seu banco e escolha "Pagar com Pix" (QR Code ou Pix copia e cola).<br>2) Confira o valor de <strong>R$ 18,00</strong> e o favorecido <strong>Paulo Lima</strong> antes de confirmar.<br>3) Envie o comprovante pelo WhatsApp para liberação do acesso.</section>' +
+    '<p class="note"><strong>Importante:</strong> este documento é uma instrução de pagamento via Pix, não é um boleto bancário registrado. O acesso é liberado após a confirmação do recebimento pelo financeiro.</p>' +
+    '<footer>Nexus Financeiro Hub • Homologação SF • Documento gerado pelo painel administrativo</footer>' +
     '<button onclick="window.print()">Imprimir / Salvar em PDF</button></body></html>';
   popup.document.open(); popup.document.write(html); popup.document.close(); popup.focus();
 };
@@ -25549,10 +25579,9 @@ window.sendAdminPaymentNoticeWhatsApp = function() {
   if (!user) { if (typeof showToast === 'function') showToast('Selecione um cliente para enviar a cobrança.'); return; }
   const phone = String(user.phone || '').replace(/\\D/g, '');
   if (phone.length < 10) { if (typeof showToast === 'function') showToast('Esta conta não possui telefone válido para WhatsApp.'); return; }
-  const plan = document.getElementById('paymentNoticePlan')?.value === 'anual' ? 'anual' : 'mensal';
-  const amount = plan === 'anual' ? 'R$ 150,00' : 'R$ 15,00';
+  const amount = 'R$ 18,00';
   const due = document.getElementById('paymentNoticeDue')?.value || '';
-  const message = 'Olá, ' + (user.name || '') + '. Segue a segunda via da cobrança Nexus via Pix. Plano ' + plan + ', valor ' + amount + (due ? ', vencimento ' + formatDateBR(due) : '') + '. Chave Pix: (62) 99234-5372. Após o pagamento, envie o comprovante para confirmação.';
+  const message = 'Olá, ' + (user.name || '') + '. Segue a segunda via da cobrança Nexus via Pix. Plano Mensal · R$ 18,00, valor ' + amount + (due ? ', vencimento ' + formatDateBR(due) : '') + '. Chave Pix: (62) 99234-5372. Após o pagamento, envie o comprovante para confirmação.';
   window.open('https://wa.me/55' + phone.slice(-11) + '?text=' + encodeURIComponent(message), '_blank', 'noopener,noreferrer');
 };
 
@@ -35486,10 +35515,10 @@ async function handleNexusRequest(req, res) {
           res.writeHead(403, { ...corsHeaders, 'Content-Type': 'application/json' });
           return res.end(JSON.stringify({ success: false, error: 'A solicitacao deve pertencer a conta conectada.' }));
         }
-        const validPlans = ['mensal', 'anual'];
+        const validPlans = ['mensal'];
         if (!validPlans.includes(plan)) {
           res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ success: false, error: 'Plano inválido. Escolha mensal (R$ 15,00) ou anual (R$ 150,00).' }));
+          return res.end(JSON.stringify({ success: false, error: 'Plano inválido. A assinatura vigente é o Plano Mensal (R$ 18,00, somente Pix).' }));
         }
 
         if (method !== 'pix') {
@@ -35521,14 +35550,14 @@ async function handleNexusRequest(req, res) {
         const paymentConfirmed = false;
 
         const now = new Date();
-        const amount = plan === 'anual' ? 150.00 : 15.00;
+        const amount = 18.00;
         const suffix = receiptCode ? ('-REF-' + receiptCode.replace(/[^a-zA-Z0-9]/g, '').slice(0, 14).toUpperCase()) : '';
         const txId = 'NEXUS-SUB-' + Date.now() + '-' + crypto.randomBytes(3).toString('hex').toUpperCase() + suffix;
         const methodNames = { pix: 'Pix (SPI / BACEN)', credit_card: 'Cartão de Crédito', debit_card: 'Cartão de Débito', boleto: 'Boleto Bancário' };
 
         if (paymentConfirmed) {
           // Pagamento reconhecido automaticamente e assinatura ativada imediatamente
-          const expiresDate = new Date(now.getTime() + (plan === 'anual' ? 365 : 30) * 24 * 60 * 60 * 1000);
+          const expiresDate = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
           const expiresIso = getBrasiliaIsoString(expiresDate);
           const expiresSql = getBrasiliaSqlString(expiresDate);
 
@@ -35665,7 +35694,6 @@ async function handleNexusRequest(req, res) {
         const targetEmail = (parsed.target_email || '').toLowerCase().trim();
         const rawPlan = (parsed.plan || 'mensal').toLowerCase().trim();
         const plan = (rawPlan === 'anual' || rawPlan === 'vitalicio') ? rawPlan : 'mensal';
-        const rawMethod = (parsed.method || '').toLowerCase().trim();
         const receiptNote = String(parsed.receipt_code || '').trim();
         const osId = parsed.os_id || null;
         const concludeOs = parsed.conclude_os !== false;
@@ -35705,8 +35733,8 @@ async function handleNexusRequest(req, res) {
         const expiresDate = plan === 'vitalicio' ? new Date('2099-12-31T23:59:59Z') : new Date(now.getTime() + days * 24 * 60 * 60 * 1000);
         const expiresIso = getBrasiliaIsoString(expiresDate);
         const expiresSql = getBrasiliaSqlString(expiresDate);
-        const validMethods = ['pix', 'credit_card', 'debit_card', 'boleto'];
-        const method = validMethods.includes(rawMethod) ? rawMethod : (targetUser.subscription_method || 'pix');
+        // Pagamento vigente somente via Pix (cartão/débito/boleto foram retirados da oferta).
+        const method = 'pix';
         const methodLabels = {
           pix: 'Pix (SPI / BACEN)',
           credit_card: 'Cartão de Crédito',
