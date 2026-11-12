@@ -273,6 +273,7 @@ a{color:var(--accent);font-weight:700;text-decoration:none}a:hover{text-decorati
 main{transition:max-width .3s ease}
 @media (min-width:480px){
   .tiles{grid-template-columns:1fr 1fr}
+  .tiles:has(.tile:only-child){grid-template-columns:1fr}
   .tile{flex-direction:column;align-items:flex-start;gap:.6rem}
   .tile .go-ar{display:none}
 }
@@ -527,11 +528,6 @@ button,a,label{touch-action:manipulation}
         <a class="tile prim" id="glpi-abrir" href="/glpi.html?entry=login" target="_blank" rel="noopener noreferrer">
           <span class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg></span>
           <span class="tx"><b>Abrir chamado</b><small>Registre uma solicitação ou incidente</small></span>
-          <svg class="go-ar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-        </a>
-        <a class="tile" id="glpi-consultar" href="/glpi.html?entry=login" target="_blank" rel="noopener noreferrer">
-          <span class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2.5"/><path d="M9 4.5h6M9 11h6M9 15h4"/></svg></span>
-          <span class="tx"><b>Acompanhar chamados</b><small>Veja o andamento e as respostas</small></span>
           <svg class="go-ar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </a>
       </div>
