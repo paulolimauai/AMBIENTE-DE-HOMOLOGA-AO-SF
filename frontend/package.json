@@ -1,0 +1,11 @@
+{
+  "name": "nexus-financeiro-frontend",
+  "version": "1.0.2",
+  "private": true,
+  "description": "Camada de apresentação do Nexus Financeiro Hub. Os módulos de interface ficam na raiz do repositório (servidos diretamente pelo server.js); este manifesto apenas declara o pacote do frontend e centraliza os scripts de validação dos módulos de UI.",
+  "scripts": {
+    "test": "node --check ../transacoes.js && node --check ../dashboard-financeiro.js && node --check ../administracao.js && node --check ../importacao.js && node --check ../atendimento.js && node --check ../backend-utils.js && node --test ../transacoes.test.js ../dashboard-financeiro.test.js ../administracao.test.js ../importacao.test.js ../atendimento.test.js ../backend-utils.test.js",
+    "test:ui": "node --test ../transacoes.test.js ../dashboard-financeiro.test.js ../administracao.test.js ../importacao.test.js ../atendimento.test.js ../backend-utils.test.js",
+    "check:syntax": "node --check ../transacoes.js && node --check ../dashboard-financeiro.js && node --check ../administracao.js && node --check ../importacao.js && node --check ../atendimento.js && node --check ../backend-utils.js"
+  }
+}
