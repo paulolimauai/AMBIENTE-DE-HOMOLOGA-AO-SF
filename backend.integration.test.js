@@ -252,7 +252,7 @@ test('fila de chamados: filas e técnicos, requisição/incidente, SLA 4 h e cic
   assert.equal((await api('POST', '/api/filas', { token: admin, body: { nome: 'Fila Boba', categorias: ['Inventada'] } })).status, 400);
   assert.equal((await api('POST', '/api/filas', { token: ana, body: { nome: 'Fila da Ana' } })).status, 401);
 
-  // o usuário abre um INCIDENTE crítico de falha: cai na fila N2, SLA de 4 horas, status "Novo"
+  // o usuário abre um INCIDENTE: Crítica é rebaixada para Média na triagem do solicitante -> SLA de 3 dias úteis, status "Novo"
   const aberto = await api('POST', '/api/ordens', { token: ana, body: {
     service_type: 'Falhas/Bugs/Correções', ticket_type: 'Incidente', priority: 'Crítica',
     title: 'Erro ao gerar boleto', description: 'O sistema mostra tela branca ao gerar o boleto do mês.', canal_atendimento: 'Central GLPI'
@@ -260,7 +260,15 @@ test('fila de chamados: filas e técnicos, requisição/incidente, SLA 4 h e cic
   assert.equal(aberto.status, 200, aberto.texto);
   const protocolo = aberto.json.protocol;
   assert.equal(aberto.json.ordem.status, 'Novo');
-  assert.equal(aberto.json.ordem.sla, '4 Horas');
+  assert.equal(aberto.json.ordem.sla, '3 Dias Úteis');
+  // a equipe (admin) pode abrir diretamente como Crítica -> SLA de 4 horas
+  const critico = await api('POST', '/api/ordens', { token: admin, body: {
+    service_type: 'Falhas/Bugs/Correções', ticket_type: 'Incidente', priority: 'Crítica',
+    client_name: 'Cliente Externo', client_email: 'cliente@externo.test', client_phone: '11999990000',
+    title: 'Sistema fora do ar', description: 'Nenhum usuário consegue acessar o portal agora.'
+  } });
+  assert.equal(critico.status, 200, critico.texto);
+  assert.equal(critico.json.ordem.sla, '4 Horas');
   assert.equal(aberto.json.ordem.ticket_type, 'Incidente');
   assert.equal(aberto.json.ordem.fila, 'Suporte Técnico N2');
   // uma requisição comum (2ª via) cai na outra fila e sem escolha de tipo vale o sugerido
