@@ -34811,6 +34811,12 @@ async function handleNexusRequest(req, res) {
         existingLocal.forEach(u => {
           if (u && u.email) existingMap.set(u.email.toLowerCase().trim(), u);
         });
+        // Uma conta por CPF: mapa CPF -> e-mail dono. Se outro cadastro já usa o CPF, o usuário novo não pode assumi-lo.
+        const cpfOwnerMap = new Map();
+        existingLocal.forEach(u => {
+          const d = String(u.cpf || '').replace(/\D/g, '');
+          if (d.length === 11 && u.email) cpfOwnerMap.set(d, String(u.email).toLowerCase().trim());
+        });
         if (!isOverwrite) {
           existingLocal.forEach(u => {
             if (u && u.email) userMap.set(u.email.toLowerCase().trim(), u);
@@ -34829,6 +34835,18 @@ async function handleNexusRequest(req, res) {
             acceptedUsers++;
             const emailKey = u.email.toLowerCase().trim();
             const existing = existingMap.get(emailKey) || userMap.get(emailKey);
+            // CPF só pode pertencer a UMA conta: se o CPF informado já é de outro e-mail, este cadastro fica sem CPF
+            // (a conta é criada/atualizada normalmente, mas não duplica o documento).
+            const incomingCpfDigits = String(u.cpf !== undefined ? u.cpf : (existing ? existing.cpf : '') || '').replace(/\D/g, '');
+            let finalCpf = u.cpf !== undefined ? u.cpf : (existing ? existing.cpf : null);
+            if (incomingCpfDigits.length === 11) {
+              const cpfOwner = cpfOwnerMap.get(incomingCpfDigits);
+              if (cpfOwner && cpfOwner !== emailKey) {
+                finalCpf = existing ? existing.cpf : null;
+              } else if (!cpfOwner) {
+                cpfOwnerMap.set(incomingCpfDigits, emailKey);
+              }
+            }
             let finalPassword = existing ? existing.password : '';
             if (u.password && typeof u.password === 'string' && u.password.trim() !== '') {
               finalPassword = u.password.startsWith('scrypt:') ? u.password : hashPassword(u.password);
@@ -34859,7 +34877,7 @@ async function handleNexusRequest(req, res) {
               password: finalPassword,
               role: u.role || (existing ? existing.role : 'Usuário'),
               active: u.active !== false,
-              cpf: u.cpf !== undefined ? u.cpf : (existing ? existing.cpf : null),
+              cpf: finalCpf,
               phone: u.phone !== undefined ? u.phone : (existing ? existing.phone : null),
               birth_date: (u.birth_date || u.birthDate) !== undefined ? (u.birth_date || u.birthDate) : (existing ? (existing.birth_date || existing.birthDate) : null),
               terms_accepted: u.terms_accepted !== undefined ? u.terms_accepted : (existing ? existing.terms_accepted : true),
@@ -36996,14 +37014,23 @@ async function syncWithRenderCloud() {
             const initialLastLogin = (cu.last_login && cu.last_login !== 'null') ? getBrasiliaSqlString(cu.last_login) : null;
             const deviceVal = cu.device_type || cu.device || (cu.is_mobile ? 'Mobile' : 'Computador');
             const rawCuCpf = cu.cpf ? String(cu.cpf).replace(/\D/g, '') : null;
+            // Uma conta por CPF: se outro e-mail já usa este CPF no SQL, o cadastro novo entra sem CPF
+            let safeCuCpf = rawCuCpf;
+            if (safeCuCpf) {
+              const cpfOwnerRes = await pool.query(
+                "SELECT TOP 1 LOWER(email) AS em FROM usuarios WHERE REPLACE(REPLACE(REPLACE(REPLACE(cpf, '.', ''), '-', ''), ' ', ''), '/', '') = $1",
+                [safeCuCpf]
+              ).catch(() => ({ rows: [] }));
+              if (cpfOwnerRes.rows && cpfOwnerRes.rows.length && cpfOwnerRes.rows[0].em !== cleanEmail) safeCuCpf = null;
+            }
             await pool.query(
               `INSERT INTO usuarios (name, email, password, role, active, cpf, phone, birth_date, terms_accepted, last_login, device_type)
                VALUES ($1, $2, $3, $4, 1, $5, $6, $7, $8, $9, $10)`,
-              [cu.name || 'Usuário', cleanEmail, defaultPass, cu.role || 'Usuário', rawCuCpf || null, cu.phone || null, cu.birth_date || null, cu.terms_accepted !== false, initialLastLogin, deviceVal]
+              [cu.name || 'Usuário', cleanEmail, defaultPass, cu.role || 'Usuário', safeCuCpf || null, cu.phone || null, cu.birth_date || null, cu.terms_accepted !== false, initialLastLogin, deviceVal]
             );
             await ensureUserIsConfiguredInDatabase(cleanEmail, {
               name: cu.name,
-              cpf: rawCuCpf,
+              cpf: safeCuCpf,
               phone: cu.phone,
               birth_date: cu.birth_date,
               device_type: deviceVal
@@ -37023,7 +37050,16 @@ async function syncWithRenderCloud() {
           const updatedName = (cu.name && cu.name !== 'Usuário') ? cu.name : currentU.name;
           const rawCuCpf = cu.cpf ? String(cu.cpf).replace(/\D/g, '') : null;
           const currentCleanCpf = currentU.cpf ? String(currentU.cpf).replace(/\D/g, '') : null;
-          const updatedCpf = rawCuCpf || currentCleanCpf;
+          // Uma conta por CPF: CPF novo que já pertence a outro e-mail não é assumido (mantém o atual)
+          let safeUpdatedCpf = rawCuCpf;
+          if (safeUpdatedCpf && safeUpdatedCpf !== currentCleanCpf) {
+            const cpfOwnerRes = await pool.query(
+              "SELECT TOP 1 LOWER(email) AS em FROM usuarios WHERE REPLACE(REPLACE(REPLACE(REPLACE(cpf, '.', ''), '-', ''), ' ', ''), '/', '') = $1 AND LOWER(email) <> LOWER($2)",
+              [safeUpdatedCpf, cleanEmail]
+            ).catch(() => ({ rows: [] }));
+            if (cpfOwnerRes.rows && cpfOwnerRes.rows.length) safeUpdatedCpf = null;
+          }
+          const updatedCpf = safeUpdatedCpf || currentCleanCpf;
           const updatedPhone = cu.phone || currentU.phone;
           const updatedBirth = cu.birth_date || cu.birthDate || currentU.birth_date;
           if (cu.device_type && cu.device_type !== currentU.device_type) {
