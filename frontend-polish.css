@@ -6814,3 +6814,48 @@ body:has(#authPage) {
 @media (max-width: 560px) {
   #authPage.auth-container { padding: 56px 12px 16px !important; height: auto !important; min-height: 100svh !important; }
 }
+
+
+/* =====================================================================================
+   nx-global-polish — melhoria visual global (vale para TODAS as telas do app)
+   Layer no fim do arquivo: o !important de layer vence as regras antigas fora de layer.
+   ===================================================================================== */
+@layer nx-global-polish {
+
+  /* Seleção de texto na cor da marca (dourado Nexus) */
+  ::selection { background: rgba(231, 193, 109, .34) !important; color: inherit !important; }
+
+  /* Scrollbars finas e discretas, na cor do tema */
+  * { scrollbar-width: thin !important; scrollbar-color: rgba(148, 163, 184, .38) transparent !important; }
+  ::-webkit-scrollbar { width: 10px !important; height: 10px !important; }
+  ::-webkit-scrollbar-track { background: transparent !important; }
+  ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, .30) !important; border-radius: 8px !important; border: 2px solid transparent !important; background-clip: content-box !important; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(148, 163, 184, .55) !important; background-clip: content-box !important; border: 2px solid transparent !important; }
+  ::-webkit-scrollbar-corner { background: transparent !important; }
+
+  /* Anel de foco de teclado consistente em qualquer elemento interativo sem estilo próprio */
+  :focus-visible { outline: 2px solid rgba(231, 193, 109, .9) !important; outline-offset: 2px !important; }
+
+  /* Painéis e cartões: transição suave + elevação sutil no hover (só em telas com mouse) */
+  .panel, .card { transition: box-shadow .18s ease, border-color .18s ease, transform .18s ease !important; }
+  @media (hover: hover) {
+    .panel:hover, .card:hover {
+      border-color: rgba(148, 163, 184, .32) !important;
+      box-shadow: 0 18px 38px -22px rgba(0, 0, 0, .65) !important;
+      transform: translateY(-2px) !important;
+    }
+  }
+
+  /* Inputs e selects: realce de foco mais visível em todo o app */
+  input:focus-visible, select:focus-visible, textarea:focus-visible {
+    outline: none !important;
+    border-color: rgba(231, 193, 109, .65) !important;
+    box-shadow: 0 0 0 3px rgba(231, 193, 109, .16) !important;
+  }
+
+  /* Respeito a quem pediu menos movimento */
+  @media (prefers-reduced-motion: reduce) {
+    .panel, .card { transition: none !important; }
+    .panel:hover, .card:hover { transform: none !important; }
+  }
+}
