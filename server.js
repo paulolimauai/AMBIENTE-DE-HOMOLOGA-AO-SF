@@ -37747,6 +37747,11 @@ function startRenderCloudSyncWorker() {
 // ==================== Sincronização Supabase ("Meus Dados") ====================
 // Roda em TODOS os ambientes (local e Render): gravação é write-through no saveLocalData;
 // aqui fazemos a migração inicial em lote e o pull periódico que adota a versão mais recente.
+// Prontidão do banco: o merge de credenciais do Supabase só pode rodar depois que o SQL Server
+// carregou e carimbou (updated_at) os usuários. Se rodar antes, o espelho remoto parece mais novo
+// que o arquivo local desatualizado e reverte senhas para uma versão antiga (credenciais "perdidas").
+let resolveNexusDbReady;
+const nexusDbReady = new Promise((resolve) => { resolveNexusDbReady = resolve; });
 let supabaseSyncStarted = false;
 function startSupabaseSyncWorker() {
   if (supabaseSyncStarted || !SupabaseSync.isEnabled()) return;
@@ -37757,6 +37762,8 @@ function startSupabaseSyncWorker() {
     // com arquivos JSON locais velhos ou vazios.
     const runSupabaseCycle = async () => {
       try {
+        // Espera o SQL terminar de carregar/carimbar os usuários (timeout de segurança: 20s)
+        await Promise.race([nexusDbReady, new Promise(r => setTimeout(r, 20000))]);
         // Restaura credenciais do Supabase: usuário ausente localmente entra; cadastro local mais velho
         // que o remoto é substituído pelo remoto (updated_at decide quem venceu).
         const remoteUsers = await SupabaseSync.pullAllUsers();
@@ -37858,6 +37865,7 @@ server.listen(PORT, '0.0.0.0', () => {
   // Conexão e Auto-Reconexão Contínua com o Microsoft SQL Server (Sem Bloquear o Servidor)
   initDatabase()
     .then(() => {
+      if (typeof resolveNexusDbReady === 'function') resolveNexusDbReady();
       if (pool) {
         const dbNameStr = process.env.MSSQL_DATABASE || 'AMBIENTE DE HOMOLOGAÇAO SF';
         console.log(`[BANCO] Conexão ativa e sincronizada com Microsoft SQL Server (Interno) (banco: ${dbNameStr})`);
@@ -37869,6 +37877,7 @@ server.listen(PORT, '0.0.0.0', () => {
       }
     })
     .catch(err => {
+      if (typeof resolveNexusDbReady === 'function') resolveNexusDbReady();
       console.warn(`[BANCO AVISO] Inicialização do banco SQL tratada autonomamente: ${err.message}`);
     });
 });
