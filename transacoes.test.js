@@ -63,6 +63,18 @@ test('ordenar: data decrescente por padrão, último cadastrado primeiro no mesm
   assert.deepEqual(lista.map((t) => t.id), copia);
 });
 
+test('ordenar: salário (categoria ou descrição) sempre primeiro; demais seguem a ordenação', () => {
+  const lista = [
+    tx(1, 'out', 'Aluguel', 900, '2026-11-10'),
+    tx(2, 'in', 'Salário', 5000, '2026-11-05', 'Recebido', { cat: 'Salário' }),
+    tx(3, 'out', 'Mercado', 300, '2026-11-12'),
+    tx(4, 'in', '13º salário', 2000, '2026-11-20', 'Recebido')
+  ];
+  assert.deepEqual(T.ordenar(lista, 'date', 'desc', parse, HOJE).map((t) => t.id), [4, 2, 3, 1]);
+  assert.deepEqual(T.ordenar(lista, 'date', 'asc', parse, HOJE).map((t) => t.id), [2, 4, 1, 3]);
+  assert.deepEqual(T.ordenar(lista, 'val', 'desc', parse, HOJE).map((t) => t.id), [2, 4, 1, 3]);
+});
+
 test('ordenar: valor por magnitude, descrição sem diferenciar acentos/caixa e status (vencido, pendente, pago)', () => {
   const lista = [
     tx(1, 'out', 'água', 50, '2026-11-01', 'Pago'),
