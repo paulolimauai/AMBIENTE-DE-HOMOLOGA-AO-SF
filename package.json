@@ -9,7 +9,8 @@
     "watch": "node watch-diff.js",
     "watch:diff": "node watch-diff.js",
     "auto:sync": "node auto-sync.js",
-    "deploy": "git add . && git commit -m \"auto: atualizacao homologacao\" && git push origin main"
+    "deploy": "git add . && git commit -m \"auto: atualizacao homologacao\" && git push origin main",
+    "build": "node scripts/build.js"
   },
   "dependencies": {
     "@google/genai": "^2.16.0",

@@ -32,3 +32,5 @@ local_ordens_servico.json
 local_tecnicos.json
 local_filas.json
 pending_logins.json
+
+dist/
