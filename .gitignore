@@ -21,3 +21,15 @@ local_avatars.json
 # Arquivos temporários da gravação atômica dos JSON de dados e arquivos ilegíveis guardados de lado
 *.tmp
 *.corrupt-*
+
+# Estado local de execução (contas, dados financeiros, filas e pendências) — não versionar
+local_users.json
+local_users.backup.json
+local_database_data.json
+local_database_data.backup.json
+cpf_registry.json
+cpf_registry.backup.json
+local_ordens_servico.json
+local_tecnicos.json
+local_filas.json
+pending_logins.json
