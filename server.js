@@ -7,6 +7,7 @@ const path = require('path');
 const http = require('http');
 const url = require('url');
 const tls = require('tls');
+const net = require('net');
 const crypto = require('crypto');
 const zlib = require('zlib');
 const Atendimento = require('./atendimento'); // regras da Central de Atendimento (chamados / O.S.)
@@ -977,16 +978,17 @@ let pool = null;
 const DEFAULT_AUTHORIZED_USERS = [];
 const DEFAULT_ADMIN = null;
 
-// Disparo real de e-mail via Socket SMTP Nativo (compatível com Gmail sem pacotes externos)
+// Disparo real de e-mail via Socket SMTP Nativo (sem pacotes externos).
+// Suporta TLS implícito (porta 465, ex.: Gmail/Brevo) e STARTTLS (porta 587, ex.: Office 365/Outlook).
 function sendPasswordEmail(toEmail, userName, userPassword) {
   return new Promise((resolve) => {
     const host = process.env.SMTP_HOST || 'smtp.gmail.com';
-    const port = parseInt(process.env.SMTP_PORT || '465');
+    const port = parseInt(process.env.SMTP_PORT || '465', 10);
     const user = process.env.SMTP_USER;
     const pass = process.env.SMTP_PASS;
 
     if (!user || !pass) {
-      console.log(`[AVISO] Credenciais SMTP ausentes no Render. E-mail não enviado para ${toEmail}`);
+      console.log(`[AVISO] Credenciais SMTP ausentes. E-mail não enviado para ${toEmail}`);
       return resolve(false);
     }
 
@@ -994,41 +996,107 @@ function sendPasswordEmail(toEmail, userName, userPassword) {
     if (/[\r\n<>]/.test(String(toEmail || ''))) return resolve(false);
     userName = String(userName || '').replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
 
-    // Validação do certificado TLS do servidor SMTP mantida (credenciais trafegam neste canal)
-    const socket = tls.connect(port, host, { servername: host }, () => {
-      let step = 0;
+    const implicitTls = port === 465;
+    let rawSocket = null;
+    let tlsSocket = null;
+    let activeSocket = null;
+    let finished = false;
+    let buf = '';
+    let smtpStep = 0;          // máquina de estados do diálogo SMTP (0..8)
+    let ehloText = '';         // acumulador das linhas 250 do EHLO (detectar STARTTLS)
+    let lastSmtpCode = 0;
+    let lastSmtpLine = '';
 
-      const send = (cmd) => {
-        try { socket.write(cmd + '\r\n'); } catch (e) { }
-      };
+    const done = (ok) => {
+      if (finished) return;
+      finished = true;
+      if (!ok) console.warn(`[SMTP] Envio de e-mail falhou (host=${host}:${port} step=${smtpStep} smtp=${lastSmtpCode} ${lastSmtpLine.slice(0, 80)})`);
+      try { if (tlsSocket) tlsSocket.destroy(); else if (rawSocket) rawSocket.destroy(); } catch (e) {}
+      resolve(ok);
+    };
+    const send = (cmd) => {
+      try { activeSocket.write(cmd + '\r\n'); } catch (e) {}
+    };
+    const attachData = (sock) => {
+      sock.on('data', (d) => {
+        buf += d.toString();
+        let idx;
+        while ((idx = buf.indexOf('\r\n')) >= 0) {
+          const line = buf.slice(0, idx);
+          buf = buf.slice(idx + 2);
+          if (line.trim()) onSmtpLine(line);
+        }
+      });
+    };
 
-      socket.on('data', (data) => {
-        try {
-          const response = data.toString();
+    function onSmtpLine(line) {
+      const code = parseInt(line.slice(0, 3), 10);
+      if (isNaN(code)) return;
+      lastSmtpCode = code;
+      lastSmtpLine = line;
+      const isFinal = line.charAt(3) === ' ';
+      if (!isFinal) {
+        // Linha de continuação (ex.: 250-STARTTLS dentro do EHLO): acumula para inspeção de capacidades
+        if (smtpStep === 1) ehloText += line + '\n';
+        return;
+      }
 
-          if (step === 0 && response.startsWith('220')) {
-            step++;
-            send(`EHLO ${host}`);
-          } else if (step === 1 && response.startsWith('250')) {
-            step++;
-            send('AUTH LOGIN');
-          } else if (step === 2 && response.startsWith('334')) {
-            step++;
-            send(Buffer.from(user).toString('base64'));
-          } else if (step === 3 && response.startsWith('334')) {
-            step++;
-            send(Buffer.from(pass).toString('base64'));
-          } else if (step === 4 && response.startsWith('235')) {
-            step++;
-            send(`MAIL FROM:<${user}>`);
-          } else if (step === 5 && response.startsWith('250')) {
-            step++;
-            send(`RCPT TO:<${toEmail}>`);
-          } else if (step === 6 && response.startsWith('250')) {
-            step++;
-            send('DATA');
-          } else if (step === 7 && response.startsWith('354')) {
-            step++;
+      switch (smtpStep) {
+        case 0: // espera saudação 220 do servidor
+          if (code === 220) { smtpStep = 1; ehloText = ''; send('EHLO ' + host); }
+          else done(false);
+          break;
+        case 1: // resposta final do EHLO (todas as linhas 250 já passaram por aqui/continuação)
+          if (code === 250) {
+            ehloText += line + '\n';
+            if (!implicitTls && !tlsSocket && /STARTTLS/i.test(ehloText)) {
+              smtpStep = 2;
+              send('STARTTLS');
+            } else {
+              smtpStep = 3;
+              send('AUTH LOGIN');
+            }
+          } else done(false);
+          break;
+        case 2: // 220 ao STARTTLS -> faz upgrade TLS e volta ao passo 0 (novo EHLO)
+          if (code === 220) {
+            try {
+              rawSocket.removeAllListeners('data');
+              tlsSocket = tls.connect({ socket: rawSocket, servername: host });
+              tlsSocket.setTimeout(25000, () => done(false));
+              tlsSocket.on('error', () => done(false));
+              tlsSocket.on('secureConnect', () => {
+                activeSocket = tlsSocket;
+                smtpStep = 0;
+                buf = '';
+                attachData(tlsSocket);
+              });
+            } catch (e) { done(false); }
+          } else done(false);
+          break;
+        case 3: // 334 -> envia usuário em base64
+          if (code === 334) { smtpStep = 4; send(Buffer.from(user).toString('base64')); }
+          else done(false);
+          break;
+        case 4: // 334 -> envia senha em base64
+          if (code === 334) { smtpStep = 5; send(Buffer.from(pass).toString('base64')); }
+          else done(false);
+          break;
+        case 5: // 235 autenticado -> MAIL FROM
+          if (code === 235) { smtpStep = 6; send(`MAIL FROM:<${user}>`); }
+          else done(false);
+          break;
+        case 6: // 250 -> RCPT TO
+          if (code === 250) { smtpStep = 7; send(`RCPT TO:<${toEmail}>`); }
+          else done(false);
+          break;
+        case 7: // 250 -> DATA
+          if (code === 250) { smtpStep = 8; send('DATA'); }
+          else done(false);
+          break;
+        case 8: // 354 -> corpo da mensagem
+          if (code === 354) {
+            smtpStep = 9;
             const body = [
               `From: "Nexus Financeiro" <${user}>`,
               `To: <${toEmail}>`,
@@ -1046,29 +1114,42 @@ function sendPasswordEmail(toEmail, userName, userPassword) {
               '  </div>',
               '  <p style="font-size: 12px; color: #8a93a3;">Se você não solicitou este e-mail, recomendamos alterar sua senha após realizar o login.</p>',
               '</div>',
-              '.'
+              '.',
+              ''
             ].join('\r\n');
             send(body);
-          } else if (step === 8 && response.startsWith('250')) {
-            step++;
-            send('QUIT');
-            resolve(true);
-          }
-        } catch (err) {
-          resolve(false);
-        }
-      });
-    });
+          } else done(false);
+          break;
+        case 9: // 250 após DATA -> QUIT e sucesso
+          if (code === 250) { send('QUIT'); done(true); }
+          else done(false);
+          break;
+        default:
+          done(false);
+      }
+    }
 
-    socket.on('error', (err) => {
-      console.error('Erro na conexão SMTP:', err);
-      resolve(false);
-    });
-    // Sem resposta do servidor SMTP: encerra o socket e libera a promessa (antes ficava pendente para sempre)
-    socket.setTimeout(20000, () => {
-      try { socket.destroy(); } catch (e) {}
-      resolve(false);
-    });
+    try {
+      if (implicitTls) {
+        // Porta 465: TLS implícito — handshake já concluído no callback do tls.connect
+        tlsSocket = tls.connect(port, host, { servername: host }, () => {
+          activeSocket = tlsSocket;
+          attachData(tlsSocket);
+        });
+        tlsSocket.setTimeout(25000, () => done(false));
+        tlsSocket.on('error', (err) => { console.error('Erro na conexão SMTP TLS:', err && err.message); done(false); });
+        rawSocket = tlsSocket;
+      } else {
+        // Porta 587/25: texto puro até o STARTTLS (ou AUTH direto se o servidor não exigir TLS)
+        rawSocket = net.connect(port, host);
+        activeSocket = rawSocket;
+        rawSocket.setTimeout(25000, () => done(false));
+        rawSocket.on('error', (err) => { console.error('Erro na conexão SMTP:', err && err.message); done(false); });
+        attachData(rawSocket);
+      }
+    } catch (e) {
+      done(false);
+    }
   });
 }
 
