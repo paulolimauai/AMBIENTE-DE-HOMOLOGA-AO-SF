@@ -503,28 +503,9 @@ html.fd-vidro-ativo #pageContent { max-width: 2200px !important; }
 html.fd-vidro-ativo #pageContent .dashboard-cockpit-frame.fd-root { max-width: none !important; }
 :where(html.nqmax-820) .fd-root,
 :where(html.nqmax-820) .fd-corpo,
-:where(html.nqmax-820) .fd-linha { gap: 10px; }:where(html.nqmax-820) .fd-cabecalho { padding: 11px 13px; border-radius: 14px; }:where(html.nqmax-820) .fd-cab-dir { width: 100%; justify-content: flex-start; }:where(html.nqmax-820) .fd-grafico-caixa { min-height: 200px; }:where(html.nqmax-820) /* Menos vidro nas telas pequenas: desfoque menor e sem placas (poupa bateria e mantém a rolagem fluida) */
-  .fd-root { --fd-vidro-blur: blur(14px) saturate(150%); }:where(html.nqmax-820) .fd-placa { display: none; }
-
-@media (max-width: 460px) {
-  .fd-acoes-rapidas { width: 100%; }
-  .fd-acoes-rapidas .fd-btn { flex: 1 1 0; }
-}
-/* Atualização suave do painel: fade rápido no lugar do "tremor" do redesenho completo (F5/atualizar) */
-@keyframes fd-entra { from { opacity: 0; } to { opacity: 1; } }
-.fd-root { animation: fd-entra .18s ease-out; }
-@media (prefers-reduced-motion: reduce) {
-  .fd-root, .fd-root *, .fd-btn-icone.girando svg { transition: none !important; animation: none !important; }
-}
+:where(html.nqmax-820) .fd-linha { gap: 10px; }:where(html.nqmax-820) .fd-cabecalho { padding: 11px 13px; border-radius: 14px; }:where(html.nqmax-820) .fd-cab-dir { width: 100%; justify-content: flex-start; }:where(html.nqmax-820) .fd-grafico-caixa { min-height: 200px; }:where(html.nqmax-820) .fd-root { --fd-vidro-blur: blur(14px) saturate(150%); }:where(html.nqmax-820) .fd-placa { display: none; }
 
 :where(html.nqmax-460) .fd-acoes-rapidas { width: 100%; }:where(html.nqmax-460) .fd-acoes-rapidas .fd-btn { flex: 1 1 0; }
-
-/* Atualização suave do painel: fade rápido no lugar do "tremor" do redesenho completo (F5/atualizar) */
-@keyframes fd-entra { from { opacity: 0; } to { opacity: 1; } }
-.fd-root { animation: fd-entra .18s ease-out; }
-@media (prefers-reduced-motion: reduce) {
-  .fd-root, .fd-root *, .fd-btn-icone.girando svg { transition: none !important; animation: none !important; }
-}
 
 /* Atualização suave do painel: fade rápido no lugar do "tremor" do redesenho completo (F5/atualizar) */
 @keyframes fd-entra { from { opacity: 0; } to { opacity: 1; } }

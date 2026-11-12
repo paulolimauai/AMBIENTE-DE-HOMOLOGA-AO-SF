@@ -195,10 +195,8 @@
   .txp-more, .txp-export { flex: 1 1 calc(50% - 6px) !important; }
 }
 /* Filtro de tipo ocupa a linha toda no celular (mesmo ponto de quebra da barra de ferramentas) */
-@media (max-width: 760px) {
-  .txp-seg { width: 100% !important; }
-  .txp-seg button { flex: 1 1 0 !important; padding: 0 8px !important; }
-}
+:where(html.nqmax-760) .txp-seg { width: 100% !important; }:where(html.nqmax-760) .txp-seg button { flex: 1 1 0 !important; padding: 0 8px !important; }
+
 
 @media (prefers-reduced-motion: reduce) {
   .txp-table tbody td, .txp-status, .txp-act, .txp-sort, .txp-seg button { transition: none !important; }
