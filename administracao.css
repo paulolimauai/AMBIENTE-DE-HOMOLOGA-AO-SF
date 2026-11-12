@@ -352,34 +352,15 @@ html.adm-gaveta-aberta { overflow: hidden !important; }
 .adm-senha code { flex: 1 1 auto !important; min-width: 0 !important; font-family: ui-monospace, SFMono-Regular, Consolas, monospace !important; font-size: 18px !important; font-weight: 700 !important; letter-spacing: .06em !important; color: #fff !important; overflow-wrap: anywhere !important; user-select: all !important; }
 
 /* ---------- telas pequenas ---------- */
-@media (min-width: 861px) {
-  .adm-cab .adm-btn-pri { display: none !important; }
-}
-@media (max-width: 1180px) {
-  .adm-eu-t { display: none !important; }
-  .adm-eu { padding: 4px !important; }
-}
-@media (max-width: 860px) {
-  .adm-tabs { display: none !important; }
-  .adm-selbar, .adm-tabela thead th { top: 72px !important; }
-  .adm-cab-acoes { width: 100% !important; }
-  .adm-cab-acoes .adm-btn { flex: 1 1 auto !important; }
-  .adm-sinc { display: none !important; }
-}
-@media (max-width: 560px) {
-  .adm-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
-  .adm-ferr { padding: 10px !important; }
-  .adm-sel { flex: 1 1 calc(50% - 10px) !important; }
-  .adm-vista { margin-left: auto !important; }
-  .adm-cartoes { grid-template-columns: 1fr !important; }
-  .adm-dr-painel { width: 100vw !important; }
-  .adm-dl { grid-template-columns: 1fr !important; }
-  .adm-ac-grade { grid-template-columns: 1fr !important; }
-  .adm-uso { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
-  .adm-dr-cab { padding: 14px 14px 12px !important; flex-wrap: wrap !important; }
-  .adm-dr-corpo { padding: 4px 14px 30px !important; }
-  .adm-rodape { justify-content: center !important; }
-}
+:where(html.nqmin-861) .adm-cab .adm-btn-pri { display: none !important; }
+
+:where(html.nqmax-1180) .adm-eu-t { display: none !important; }:where(html.nqmax-1180) .adm-eu { padding: 4px !important; }
+
+:where(html.nqmax-860) .adm-tabs { display: none !important; }:where(html.nqmax-860) .adm-selbar,
+:where(html.nqmax-860) .adm-tabela thead th { top: 72px !important; }:where(html.nqmax-860) .adm-cab-acoes { width: 100% !important; }:where(html.nqmax-860) .adm-cab-acoes .adm-btn { flex: 1 1 auto !important; }:where(html.nqmax-860) .adm-sinc { display: none !important; }
+
+:where(html.nqmax-560) .adm-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }:where(html.nqmax-560) .adm-ferr { padding: 10px !important; }:where(html.nqmax-560) .adm-sel { flex: 1 1 calc(50% - 10px) !important; }:where(html.nqmax-560) .adm-vista { margin-left: auto !important; }:where(html.nqmax-560) .adm-cartoes { grid-template-columns: 1fr !important; }:where(html.nqmax-560) .adm-dr-painel { width: 100vw !important; }:where(html.nqmax-560) .adm-dl { grid-template-columns: 1fr !important; }:where(html.nqmax-560) .adm-ac-grade { grid-template-columns: 1fr !important; }:where(html.nqmax-560) .adm-uso { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }:where(html.nqmax-560) .adm-dr-cab { padding: 14px 14px 12px !important; flex-wrap: wrap !important; }:where(html.nqmax-560) .adm-dr-corpo { padding: 4px 14px 30px !important; }:where(html.nqmax-560) .adm-rodape { justify-content: center !important; }
+
 @media (prefers-reduced-motion: reduce) {
   .adm-dr-painel, .adm-dr-fundo, .adm-kpi, .adm-btn, .adm-tab { transition: none !important; }
 }
