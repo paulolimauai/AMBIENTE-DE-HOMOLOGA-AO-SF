@@ -25,6 +25,7 @@ if (!DB_DISABLED) {
   }
 }
 const BackendUtils = require('./backend-utils'); // utilitários puros e testados (corpo UTF-8, escrita atômica, cache JSON, validações)
+const SupabaseSync = require('./supabase-sync'); // espelho dos dados financeiros no Supabase ("Meus Dados")
 
 const PORT = process.env.PORT || 3000;
 const SERVER_START_TIME = Date.now();
@@ -169,7 +170,8 @@ async function purgeDeletedUserFromDatabase(email) {
     pool.query('DELETE FROM ordens_servico WHERE LOWER(client_email) = LOWER($1)', [cleanEmail]),
     pool.query('DELETE FROM cpf_registry WHERE LOWER(email) = LOWER($1)', [cleanEmail]),
     pool.query('DELETE FROM system_logs WHERE LOWER(user_email) = LOWER($1) OR LOWER(details) LIKE $2', [cleanEmail, `%${cleanEmail}%`]),
-    pool.query('DELETE FROM usuarios WHERE LOWER(email) = LOWER($1)', [cleanEmail])
+    pool.query('DELETE FROM usuarios WHERE LOWER(email) = LOWER($1)', [cleanEmail]),
+    SupabaseSync.deleteFinancialData(cleanEmail)
   ]);
 }
 
@@ -32990,6 +32992,8 @@ function saveLocalData(email, data) {
     const jsonStr = JSON.stringify({ ...current, [key]: data }, null, 2);
     writeJsonFile(LOCAL_DATA_PATH, jsonStr);
     try { writeJsonFile(LOCAL_DATA_BACKUP_PATH, jsonStr); } catch(be){}
+    // Espelha no Supabase ("Meus Dados"): envio debounced, nunca bloqueia a gravação local
+    SupabaseSync.pushFinancialData(key, data);
   } catch (e) {
     console.error('Erro ao salvar local_database_data.json:', e);
   }
@@ -37288,6 +37292,49 @@ function startRenderCloudSyncWorker() {
   }, 1000);
 }
 
+// ==================== Sincronização Supabase ("Meus Dados") ====================
+// Roda em TODOS os ambientes (local e Render): gravação é write-through no saveLocalData;
+// aqui fazemos a migração inicial em lote e o pull periódico que adota a versão mais recente.
+let supabaseSyncStarted = false;
+function startSupabaseSyncWorker() {
+  if (supabaseSyncStarted || !SupabaseSync.isEnabled()) return;
+  supabaseSyncStarted = true;
+  setTimeout(async () => {
+    // Migração inicial/autocura: envia ao Supabase tudo que existe localmente
+    try {
+      const total = await SupabaseSync.pushAllFinancialData(getLocalAllFinancialData());
+      if (total > 0) console.log(`[SUPABASE] Migração inicial: ${total} conta(s) de dados financeiros enviadas.`);
+    } catch (e) {}
+
+    setInterval(async () => {
+      try {
+        const remote = await SupabaseSync.pullAllFinancialData();
+        for (const [em, row] of Object.entries(remote)) {
+          if (!row || !row.dados) continue;
+          const local = getLocalData(em);
+          const localRaw = local && (local.updated_at || local.updated_at_ms);
+          const localT = localRaw ? new Date(localRaw).getTime() : 0;
+          const remoteT = row.updated_at ? new Date(row.updated_at).getTime() : (row.dados.updated_at ? new Date(row.dados.updated_at).getTime() : 0);
+          // Supabase mais novo que o local: adota o conteúdo (gravação local e SQL relacional)
+          if (remoteT > localT) {
+            saveLocalData(em, row.dados);
+            if (pool) {
+              await pool.query(
+                `IF EXISTS (SELECT 1 FROM dados_financeiros WHERE LOWER(email) = LOWER($1))
+                 BEGIN UPDATE dados_financeiros SET dados = $2, updated_at = GETDATE() WHERE LOWER(email) = LOWER($1); END
+                 ELSE BEGIN INSERT INTO dados_financeiros (email, dados, updated_at) VALUES ($1, $2, GETDATE()); END`,
+                [em, JSON.stringify(row.dados)]
+              ).catch(() => {});
+            }
+            console.log(`[SUPABASE] Dados atualizados a partir da nuvem para ${em}`);
+          }
+        }
+      } catch (e) {}
+    }, 60000);
+    console.log('[SUPABASE] Sincronização de "Meus Dados" ativa (pull a cada 60s + escrita imediata a cada alteração).');
+  }, 3000);
+}
+
 server.on('error', (err) => {
   console.warn('[HTTP SERVIDOR] Erro no servidor HTTP tratado com segurança:', err.message);
 });
@@ -37302,6 +37349,7 @@ server.listen(PORT, '0.0.0.0', () => {
   if (!process.env.RENDER && process.env.IS_RENDER !== 'true') {
     startRenderCloudSyncWorker();
   }
+  startSupabaseSyncWorker();
 
   // Conexão e Auto-Reconexão Contínua com o Microsoft SQL Server (Sem Bloquear o Servidor)
   initDatabase()
