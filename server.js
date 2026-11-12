@@ -2466,13 +2466,12 @@ html:not(.user-logged-in) #authPage {
 
 
 /* ==================== Controle de Itens do Menu Administrativo ==================== */
-/* Por padrão (inclusive para usuários comuns), itens administrativos são totalmente ocultos */
+/* Badges/divisores administrativos ficam ocultos; os botões seguem o perfil
+   (html.is-admin exibe todos; html:not(.is-admin) oculta — regras logo abaixo) */
 .menu-admin-divider,
 .menu-admin-badge,
-.menu-btn-admin,
-#menuFuncoesBtn, #menuUsuariosBtn, #menuLogsBtn, #menuOrdensBtn,
-#mobileDrawerAdminDivider, #mobileDrawerAdminBadge,
-#mobileDrawerFuncoesBtn, #mobileDrawerUsuariosBtn, #mobileDrawerLogsBtn, #mobileDrawerOrdensBtn {
+#mobileDrawerAdminDivider,
+#mobileDrawerAdminBadge {
   display: none !important;
 }
 
