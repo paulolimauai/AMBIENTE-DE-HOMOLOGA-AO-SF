@@ -30070,6 +30070,11 @@ async function openAdminCreateUserModal(){
   }
   document.getElementById('userAdminName').value = '';
   const birthNovo = document.getElementById('userAdminBirth'); if(birthNovo) birthNovo.value = '';
+  // CPF, telefone e status também precisam ser zerados: se o admin editou outro usuário antes,
+  // os dados dele ficavam no formulário e eram gravados no cadastro do novo usuário.
+  const cpfNovo = document.getElementById('userAdminCpf'); if(cpfNovo) cpfNovo.value = '';
+  const phoneNovo = document.getElementById('userAdminPhone'); if(phoneNovo) phoneNovo.value = '';
+  const activeNovo = document.getElementById('userAdminActive'); if(activeNovo) activeNovo.value = 'true';
   document.getElementById('userAdminRole').value = 'Usuário';
   updateUserAdminRoleHint();
   document.getElementById('userAdminPassword').value = '';
