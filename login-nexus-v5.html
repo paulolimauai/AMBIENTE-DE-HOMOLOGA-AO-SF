@@ -273,7 +273,7 @@ a{color:var(--accent);font-weight:700;text-decoration:none}a:hover{text-decorati
 main{transition:max-width .3s ease}
 @media (min-width:480px){
   .tiles{grid-template-columns:1fr 1fr}
-  .tiles:has(.tile:only-child){grid-template-columns:1fr}
+  .tiles:has(.tile:only-child){grid-template-columns:minmax(0,26rem);justify-content:center}
   .tile{flex-direction:column;align-items:flex-start;gap:.6rem}
   .tile .go-ar{display:none}
 }
