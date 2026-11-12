@@ -17210,7 +17210,26 @@ window.handleServerForgotSubmit = async function(e) {
       return;
     }
 
-    // A senha temporária nunca volta na resposta: ela só existe dentro do e-mail enviado à conta.
+    // Senha provisória exibida na tela após confirmação de e-mail + CPF + nascimento
+    if (data.temp_password) {
+      serverCurrentTempEmail = data.email || email;
+      serverCurrentTempPassword = data.temp_password;
+      const tempValEl = document.getElementById('tempPasswordValServer');
+      if (tempValEl) tempValEl.textContent = data.temp_password;
+      const tempOverlay = document.getElementById('tempPasswordOverlay');
+      if (tempOverlay) {
+        tempOverlay.style.display = 'flex';
+        tempOverlay.classList.add('show');
+        void tempOverlay.offsetHeight;
+        tempOverlay.classList.add('in');
+      }
+      const loginEmailInput = document.getElementById('loginEmail');
+      if (loginEmailInput && serverCurrentTempEmail) loginEmailInput.value = serverCurrentTempEmail;
+      window.showAuthFeedback('forgot', 'success', 'Senha Provisória Gerada', 'Seus dados foram confirmados. Anote a senha temporária exibida na tela.');
+      return;
+    }
+
+    // Fallback: senha enviada apenas por e-mail
     window.showAuthFeedback('forgot', 'success', 'Senha Enviada', 'Uma senha temporária foi enviada para o e-mail cadastrado na conta. Verifique a caixa de entrada (e o spam) e use-a para entrar.');
     const emailInput = document.getElementById('loginEmail');
     if (emailInput && (data.email || email)) emailInput.value = data.email || email;
@@ -25834,11 +25853,11 @@ window.printAdminPaymentNotice = async function() {
     window.loadAdminBoletos();
   } catch (e) { /* segue para a impressão mesmo se o registro falhar */ }
   const html = '<!doctype html><html lang="pt-BR" class="h-full antialiased"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Cobrança Pix ' + refSafe + ' | NEXUS FINANCEIRO HUB</title>' +
-    '<script src="https://cdn.tailwindcss.com"><\/script>' +
-    '<script>tailwind.config={theme:{extend:{colors:{nexus:{navy:"#060d1a",deep:"#0b172a",slate:"#13233d",blue:"#1d4ed8",cyan:"#0ea5e9",sky:"#38bdf8",green:"#00a859",emerald:"#10b981",orange:"#f59e0b"}},fontFamily:{sans:["Plus Jakarta Sans","Inter","sans-serif"],mono:["JetBrains Mono","monospace"]}}}};<\/script>' +
+    '<script src="https://cdn.tailwindcss.com"><\\/script>' +
+    '<script>tailwind.config={theme:{extend:{colors:{nexus:{navy:"#060d1a",deep:"#0b172a",slate:"#13233d",blue:"#1d4ed8",cyan:"#0ea5e9",sky:"#38bdf8",green:"#00a859",emerald:"#10b981",orange:"#f59e0b"}},fontFamily:{sans:["Plus Jakarta Sans","Inter","sans-serif"],mono:["JetBrains Mono","monospace"]}}}};<\\/script>' +
     '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">' +
-    '<script src="https://unpkg.com/lucide@latest"><\/script>' +
-    '<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script>' +
+    '<script src="https://unpkg.com/lucide@latest"><\\/script>' +
+    '<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\\/script>' +
     '<style>.fintech-bg{background:radial-gradient(ellipse at top,#0b1938 0%,#060d1f 65%,#040914 100%)}.security-microline{background-image:repeating-linear-gradient(-45deg,rgba(14,165,233,.08),rgba(14,165,233,.08) 2px,transparent 2px,transparent 8px)}@media print{@page{size:A4 portrait;margin:10mm}body{background:#fff!important;color:#0f172a!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}.no-print{display:none!important}.print-clean-card{box-shadow:none!important;border:1px solid #cbd5e1!important;margin:0!important;max-width:100%!important;border-radius:16px!important}.print-header-bar{background:linear-gradient(135deg,#0f295c 0%,#1e40af 100%)!important;color:#fff!important}main{padding:0!important}}</style></head>' +
     '<body class="fintech-bg min-h-full font-sans text-slate-200 flex flex-col justify-between selection:bg-nexus-cyan selection:text-white relative overflow-x-hidden">' +
     '<div class="fixed inset-0 pointer-events-none z-0 overflow-hidden no-print" aria-hidden="true"><div class="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[900px] h-[520px] rounded-full bg-gradient-to-r from-blue-600/20 via-sky-400/15 to-emerald-500/15 blur-[120px]"></div><div class="absolute bottom-[-15%] right-[-10%] w-[650px] h-[650px] rounded-full bg-blue-700/15 blur-[130px]"></div><div class="absolute top-[35%] left-[-12%] w-[520px] h-[520px] rounded-full bg-emerald-500/10 blur-[120px]"></div>' +
@@ -25886,7 +25905,7 @@ window.printAdminPaymentNotice = async function() {
     '<button onclick="window.print()" type="button" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white hover:bg-slate-100 text-slate-800 font-bold text-xs border border-slate-300 shadow-2xs transition-all duration-150 cursor-pointer no-print"><i data-lucide="printer" class="w-4 h-4 text-slate-600"></i>Imprimir / Salvar em PDF</button></div></div>' +
     '</div><footer class="mt-8 text-center space-y-1.5 no-print"><p class="text-xs font-semibold text-slate-300 tracking-wide">NEXUS FINANCEIRO HUB · Cobrança Digital Inteligente</p><p class="text-[11px] text-slate-400">Dúvidas sobre esta cobrança? Entre em contato com o suporte informando a referência <span class="font-mono text-sky-300">' + refSafe + '</span>.</p></footer></main>' +
     '<div id="copyToast" class="fixed bottom-6 right-6 z-50 transform translate-y-16 opacity-0 transition-all duration-300 pointer-events-none no-print"><div class="bg-[#0b172a] text-white px-4 py-3 rounded-2xl shadow-2xl border border-emerald-500/40 flex items-center gap-3"><div class="w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0"><i data-lucide="check-circle-2" class="w-4 h-4"></i></div><div><p class="text-xs font-bold text-white">Código copiado!</p><p class="text-[11px] text-slate-300">Cole no app do seu banco na opção Pix Copia e Cola.</p></div></div></div>' +
-    '<script>lucide.createIcons();const PIX_PAYLOAD="' + pixCode + '";document.addEventListener("DOMContentLoaded",function(){var qr=document.getElementById("qrcode");qr.innerHTML="";new QRCode(qr,{text:PIX_PAYLOAD,width:176,height:176,colorDark:"#0b172a",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.M});});var toastTimeout;function handleCopyPix(){var input=document.getElementById("pixCodeInput");var btn=document.getElementById("copyPixButton");var btnText=document.getElementById("copyBtnText");input.select();input.setSelectionRange(0,99999);try{document.execCommand("copy");}catch(err){if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(PIX_PAYLOAD).catch(function(){});}}btn.classList.remove("from-[#0f295c]","to-[#1e40af]");btn.classList.add("from-emerald-600","to-emerald-500");btnText.textContent="Código copiado!";var toast=document.getElementById("copyToast");toast.classList.remove("translate-y-16","opacity-0");toast.classList.add("translate-y-0","opacity-100");clearTimeout(toastTimeout);toastTimeout=setTimeout(function(){btn.classList.remove("from-emerald-600","to-emerald-500");btn.classList.add("from-[#0f295c]","to-[#1e40af]");btnText.textContent="Copiar código Pix";toast.classList.remove("translate-y-0","opacity-100");toast.classList.add("translate-y-16","opacity-0");},3000);}<\/script><script>try{var _t=localStorage.getItem("nexus_token")||"";if(_t){fetch("/api/admin/boletos",{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+_t},body:JSON.stringify({action:"view",reference:"' + reference + '"})}).catch(function(){});}}catch(_e){}<\/script></body></html>';
+    '<script>lucide.createIcons();const PIX_PAYLOAD="' + pixCode + '";document.addEventListener("DOMContentLoaded",function(){var qr=document.getElementById("qrcode");qr.innerHTML="";new QRCode(qr,{text:PIX_PAYLOAD,width:176,height:176,colorDark:"#0b172a",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.M});});var toastTimeout;function handleCopyPix(){var input=document.getElementById("pixCodeInput");var btn=document.getElementById("copyPixButton");var btnText=document.getElementById("copyBtnText");input.select();input.setSelectionRange(0,99999);try{document.execCommand("copy");}catch(err){if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(PIX_PAYLOAD).catch(function(){});}}btn.classList.remove("from-[#0f295c]","to-[#1e40af]");btn.classList.add("from-emerald-600","to-emerald-500");btnText.textContent="Código copiado!";var toast=document.getElementById("copyToast");toast.classList.remove("translate-y-16","opacity-0");toast.classList.add("translate-y-0","opacity-100");clearTimeout(toastTimeout);toastTimeout=setTimeout(function(){btn.classList.remove("from-emerald-600","to-emerald-500");btn.classList.add("from-[#0f295c]","to-[#1e40af]");btnText.textContent="Copiar código Pix";toast.classList.remove("translate-y-0","opacity-100");toast.classList.add("translate-y-16","opacity-0");},3000);}<\\/script><script>try{var _t=localStorage.getItem("nexus_token")||"";if(_t){fetch("/api/admin/boletos",{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+_t},body:JSON.stringify({action:"view",reference:"' + reference + '"})}).catch(function(){});}}catch(_e){}<\\/script></body></html>';
   popup.document.open(); popup.document.write(html); popup.document.close(); popup.focus();
 };
 
@@ -34520,18 +34539,13 @@ async function handleNexusRequest(req, res) {
         const tempPassword = 'Nx@' + crypto.randomBytes(6).toString('hex');
         const hashedTempPassword = hashPassword(tempPassword);
 
-        // Segurança: a senha temporária SÓ é entregue por e-mail e SÓ é gravada depois do envio confirmado.
-        // Se o SMTP falhar, a conta mantém a senha antiga (antes a senha era trocada mesmo sem e-mail chegar
-        // e ainda era devolvida na resposta da API — vetor de tomada de conta por quem soubesse CPF+nascimento).
+        // A senha provisória é EXIBIDA na tela logo após a confirmação de e-mail + CPF + nascimento.
+        // O e-mail continua sendo enviado como canal extra, mas não é obrigatório: se o SMTP falhar,
+        // a conta é atualizada mesmo assim porque a credencial já foi entregue ao titular na tela.
         let emailSent = false;
         try {
           emailSent = await sendPasswordEmail(user.email, user.name, tempPassword);
         } catch(e){}
-        if (!emailSent) {
-          const diag = lastSmtpFailureInfo ? ` [smtp:${lastSmtpFailureInfo.smtpCode || 'conn'}:${lastSmtpFailureInfo.step}]` : '';
-          res.writeHead(503, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ success: false, errorType: 'email_unavailable', smtp: lastSmtpFailureInfo || undefined, error: 'Não foi possível enviar o e-mail com a senha temporária no momento. Tente novamente em instantes ou contate o administrador.' + diag }));
-        }
 
         if (pool) {
           try {
@@ -34558,16 +34572,18 @@ async function handleNexusRequest(req, res) {
           user.email,
           'Recuperação',
           'Autenticação',
-          'Senha temporária gerada via confirmação de dados (identificação por ' + recoveryMethod + ') e enviada por e-mail, com troca obrigatória exigida no primeiro logon'
+          'Senha temporária gerada via confirmação de dados (identificação por ' + recoveryMethod + '), exibida em tela' + (emailSent ? ' e enviada por e-mail' : '') + ', com troca obrigatória exigida no primeiro logon'
         );
 
         res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
         return res.end(JSON.stringify({
           success: true,
-          mode: 'email',
+          mode: 'screen',
           email: user.email,
           name: user.name,
-          message: 'Dados confirmados com sucesso! A senha temporária foi enviada para o e-mail cadastrado na conta.'
+          temp_password: tempPassword,
+          email_sent: emailSent,
+          message: 'Dados confirmados com sucesso! Sua senha temporária está disponível na tela. No primeiro login será obrigatório definir uma nova senha.'
         }));
       } catch (err) {
         console.error('Erro ao processar confirmação de dados e emissão de senha temporária:', err);
