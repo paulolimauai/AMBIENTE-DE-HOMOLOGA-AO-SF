@@ -84,6 +84,27 @@
   .txp-table .txp-c-desc { min-width: 150px !important; }
 }
 
+/* ---------- Resumo financeiro do filtro (Receitas / Despesas / Saldo) ---------- */
+.txp-sum { display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 10px !important; margin-top: 12px !important; }
+.txp-sum-item { display: flex !important; align-items: center !important; gap: 12px !important; min-width: 0 !important; padding: 12px 14px !important; border: 1px solid var(--nx-line, rgba(148, 163, 184, .17)) !important; border-radius: 13px !important; background: rgba(255, 255, 255, .025) !important; }
+.txp-sum-ic { display: grid !important; place-items: center !important; flex: 0 0 auto !important; width: 34px !important; height: 34px !important; border-radius: 10px !important; color: var(--nx-muted, #8ea3bb) !important; background: var(--tx-control, rgba(255, 255, 255, .05)) !important; }
+.txp-sum-item.is-in .txp-sum-ic { color: var(--tx-in, #34d399) !important; background: rgba(52, 211, 153, .12) !important; }
+.txp-sum-item.is-out .txp-sum-ic { color: var(--tx-out, #fb7185) !important; background: rgba(251, 113, 133, .12) !important; }
+.txp-sum-item.is-pos .txp-sum-ic { color: var(--tx-in, #34d399) !important; background: rgba(52, 211, 153, .12) !important; }
+.txp-sum-item.is-neg .txp-sum-ic { color: var(--tx-out, #fb7185) !important; background: rgba(251, 113, 133, .12) !important; }
+.txp-sum-txt { display: flex !important; flex-direction: column !important; min-width: 0 !important; line-height: 1.25 !important; }
+.txp-sum-txt small { font-size: 11px !important; font-weight: 650 !important; letter-spacing: .07em !important; text-transform: uppercase !important; color: var(--nx-faint, #60758e) !important; }
+.txp-sum-txt b { font-size: 16.5px !important; font-weight: 750 !important; font-variant-numeric: tabular-nums !important; color: var(--nx-text, #edf5ff) !important; }
+.txp-sum-item.is-in .txp-sum-txt b { color: var(--tx-in, #34d399) !important; }
+.txp-sum-item.is-out .txp-sum-txt b { color: var(--tx-out, #fb7185) !important; }
+.txp-sum-item.is-pos .txp-sum-txt b { color: var(--tx-in, #34d399) !important; }
+.txp-sum-item.is-neg .txp-sum-txt b { color: var(--tx-out, #fb7185) !important; }
+.txp-sum-txt em { font-style: normal !important; font-size: 11.5px !important; font-weight: 500 !important; color: var(--nx-muted, #8ea3bb) !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; }
+@container txp (max-width: 720px) {
+  .txp-sum { grid-template-columns: 1fr !important; }
+  .txp-sum-item { padding: 10px 12px !important; }
+}
+
 /* ---------- Rodapé da lista ---------- */
 .txp-foot { display: flex !important; flex-wrap: wrap !important; align-items: center !important; gap: 8px 12px !important; padding: 14px 2px 0 !important; }
 .txp-foot-info { margin: 0 !important; font-size: 12.5px !important; color: var(--nx-muted, #8ea3bb) !important; }

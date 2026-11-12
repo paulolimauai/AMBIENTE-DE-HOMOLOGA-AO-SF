@@ -248,6 +248,21 @@
     '</tr>';
   }
 
+  // Resumo financeiro do conjunto filtrado: Receitas, Despesas e Saldo (o que entrou menos o que saiu)
+  function resumoHTML(r, ctx) {
+    if (!r || !r.qtd) return '';
+    const saldoCls = r.saldo > 0 ? 'is-pos' : (r.saldo < 0 ? 'is-neg' : '');
+    const saldoSinal = r.saldo > 0 ? '+' : (r.saldo < 0 ? '-' : '');
+    return '<div class="txp-sum" role="group" aria-label="Resumo dos lançamentos filtrados">' +
+      '<div class="txp-sum-item is-in"><span class="txp-sum-ic">' + svg('up', 14) + '</span>' +
+        '<span class="txp-sum-txt"><small>Receitas</small><b>' + ctx.fmt(r.receitas) + '</b><em>' + plural(r.entradas, 'lançamento', 'lançamentos') + '</em></span></div>' +
+      '<div class="txp-sum-item is-out"><span class="txp-sum-ic">' + svg('down', 14) + '</span>' +
+        '<span class="txp-sum-txt"><small>Despesas</small><b>' + ctx.fmt(r.despesas) + '</b><em>' + plural(r.saidas, 'lançamento', 'lançamentos') + '</em></span></div>' +
+      '<div class="txp-sum-item ' + saldoCls + '"><span class="txp-sum-ic">' + svg('both', 14) + '</span>' +
+        '<span class="txp-sum-txt"><small>Saldo</small><b>' + saldoSinal + ctx.fmt(Math.abs(r.saldo)) + '</b><em>no período filtrado</em></span></div>' +
+    '</div>';
+  }
+
   function rodapeHTML(mostradas, total, r, restante) {
     const info = mostradas < total
       ? 'Exibindo <strong>' + mostradas + '</strong> de <strong>' + total + '</strong> lançamentos'
@@ -300,6 +315,7 @@
     return '<div class="txp-wrap">' +
       '<div class="txp-scroll"><table class="txp-table"><caption class="txp-sr">Lançamentos de ' + esc(op.periodo) + ', ordenados por ' + esc(COLUNAS.filter((c) => c.k === op.chave)[0].t.toLowerCase()) + '</caption>' +
       cabecalhoHTML(op) + '<tbody>' + linhas + '</tbody></table></div>' +
+      resumoHTML(r, ctx) +
       rodapeHTML(parte.length, lista.length, r, lista.length - parte.length) +
     '</div>';
   }
