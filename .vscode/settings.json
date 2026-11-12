@@ -1,4 +1,16 @@
 {
+  "mssql.connections": [
+    {
+      "name": "Nexus Homologacao SF",
+      "server": "localhost",
+      "database": "AMBIENTE DE HOMOLOGAÇAO SF",
+      "authentication": "Windows",
+      "encrypt": false,
+      "trustServerCertificate": true,
+      "applicationName": "Antigravity",
+      "applicationIntent": "ReadWrite"
+    }
+  ],
   "git.autofetch": true,
   "git.enableSmartCommit": true,
   "git.confirmSync": false,

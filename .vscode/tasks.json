@@ -14,6 +14,23 @@
       "problemMatcher": []
     },
     {
+      "label": "🗄️ Abrir Banco Nexus (SQL Server direto)",
+      "type": "shell",
+      "command": "sqlcmd",
+      "args": [
+        "-S", "tcp:localhost,1433",
+        "-d", "AMBIENTE DE HOMOLOGAÇAO SF",
+        "-E", "-C"
+      ],
+      "isBackground": false,
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "focus": true
+      },
+      "problemMatcher": []
+    },
+    {
       "label": "🚀 Subir para GitHub & Render (Auto Deploy)",
       "type": "shell",
       "command": "npm run deploy",
