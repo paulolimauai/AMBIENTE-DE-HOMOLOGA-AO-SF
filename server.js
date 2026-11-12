@@ -57,10 +57,20 @@ const JWT_SECRET = loadOrCreateJwtSecret();
 // Token de sincronização interna (Render <-> servidor local). Vem de NEXUS_SYNC_TOKEN; sem ele é DERIVADO do JWT_SECRET (HMAC),
 // de modo que o próprio segredo de assinatura nunca é enviado pela rede (antes o token era o JWT_SECRET puro, mandado à nuvem a cada 10 s).
 // Os dois lados continuam precisando do mesmo JWT_SECRET (ou do mesmo NEXUS_SYNC_TOKEN) para se entenderem.
-const SYNC_TOKEN = String(process.env.NEXUS_SYNC_TOKEN || '').trim() || BackendUtils.deriveSyncToken(JWT_SECRET);
+// Credencial de sincronização compartilhada: NEXUS_SYNC_TOKEN (ambiente) > arquivo versionado .nexus_sync_token > derivação do JWT_SECRET.
+// O arquivo versionado existe porque o Render não recebe variáveis de ambiente novas sem acesso ao painel: sem um segredo
+// comum aos dois lados, o espelho de usuários da nuvem fica vazio e ninguém consegue entrar no site oficial.
+function loadCommittedSyncToken() {
+  try {
+    const committed = fs.readFileSync(path.join(__dirname, '.nexus_sync_token'), 'utf8').trim();
+    return committed.length >= 32 ? committed : '';
+  } catch (e) { return ''; }
+}
+const EXPLICIT_SYNC_TOKEN = String(process.env.NEXUS_SYNC_TOKEN || '').trim() || loadCommittedSyncToken();
+const SYNC_TOKEN = EXPLICIT_SYNC_TOKEN || BackendUtils.deriveSyncToken(JWT_SECRET);
 // Transição: uma nuvem ainda na versão antiga envia o JWT_SECRET como token. Aceitar isso não amplia o acesso (quem tem o JWT_SECRET já
 // assina tokens de qualquer usuário); remover quando todos os ambientes estiverem atualizados.
-const LEGACY_SYNC_TOKEN = String(process.env.NEXUS_SYNC_TOKEN || '').trim() ? '' : JWT_SECRET;
+const LEGACY_SYNC_TOKEN = EXPLICIT_SYNC_TOKEN ? '' : JWT_SECRET;
 
 if (process.env.NEXUS_DATA_DIR) {
   fs.mkdirSync(RUNTIME_DATA_DIR, { recursive: true });
