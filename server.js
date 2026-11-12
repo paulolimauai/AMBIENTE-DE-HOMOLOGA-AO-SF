@@ -34431,6 +34431,24 @@ async function handleNexusRequest(req, res) {
         if (checkRateLimit(preLimitKey, 15, 60 * 60 * 1000).limited) return rateLimited();
         if (reqEmail && isAccountDeleted(reqEmail)) return notFoundResponse();
 
+        const normalizeDateDigits = (d) => {
+          if (!d) return '';
+          const s = String(d).trim();
+          const m1 = s.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+          if (m1) return `${m1[1]}${m1[2]}${m1[3]}`;
+          const m2 = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+          if (m2) return `${m2[3]}${m2[2]}${m2[1]}`;
+          return s.replace(/\D/g, '');
+        };
+        const reqD = normalizeDateDigits(birth_date);
+        // Quando o identificador (CPF) retorna mais de uma conta, a data de nascimento
+        // informada desempata: só segue se restar exatamente uma conta correspondente.
+        const narrowByBirth = (rows) => {
+          if (!Array.isArray(rows) || rows.length <= 1 || !reqD) return rows;
+          const narrowed = rows.filter(r => normalizeDateDigits(r && r.birth_date) === reqD);
+          return narrowed.length ? narrowed : rows;
+        };
+
         let user = null;
         let ambiguous = false;
         if (!pool) {
@@ -34442,15 +34460,16 @@ async function handleNexusRequest(req, res) {
             const result = reqEmail
               ? await pool.query(selectCols + 'LOWER(email) = LOWER($1)', [reqEmail])
               : await pool.query(selectCols + "REPLACE(REPLACE(REPLACE(cpf, '.', ''), '-', ''), ' ', '') = $1", [reqCpf]);
-            if (result.rows && result.rows.length === 1) user = result.rows[0];
-            else if (result.rows && result.rows.length > 1) ambiguous = true;
+            const rows = narrowByBirth(result.rows);
+            if (rows && rows.length === 1) user = rows[0];
+            else if (rows && rows.length > 1) ambiguous = true;
           } catch(e){}
         }
         if (!user && !ambiguous) {
           const localUsers = getLocalUsers();
-          const localMatches = localUsers.filter(u => u && (reqEmail
+          const localMatches = narrowByBirth(localUsers.filter(u => u && (reqEmail
             ? (u.email && String(u.email).toLowerCase().trim() === reqEmail)
-            : (String(u.cpf || '').replace(/\D/g, '') === reqCpf)));
+            : (String(u.cpf || '').replace(/\D/g, '') === reqCpf))));
           if (localMatches.length === 1) user = localMatches[0];
           else if (localMatches.length > 1) ambiguous = true;
         }
@@ -34470,15 +34489,6 @@ async function handleNexusRequest(req, res) {
         if (accountLimitKey !== preLimitKey && checkRateLimit(accountLimitKey, 15, 60 * 60 * 1000).limited) return rateLimited();
 
         const rawUserCpf = String(user.cpf || '').replace(/\D/g, '');
-        const normalizeDateDigits = (d) => {
-          if (!d) return '';
-          const s = String(d).trim();
-          const m1 = s.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
-          if (m1) return `${m1[1]}${m1[2]}${m1[3]}`;
-          const m2 = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
-          if (m2) return `${m2[3]}${m2[2]}${m2[1]}`;
-          return s.replace(/\D/g, '');
-        };
         const userD = normalizeDateDigits(user.birth_date);
 
         // Etapa de pré-verificação de cenário da conta (sem expor dados sensíveis)
@@ -34506,7 +34516,6 @@ async function handleNexusRequest(req, res) {
           return res.end(JSON.stringify({ success: false, errorType: 'invalid_email_match', error: 'O e-mail informado não corresponde a esta conta.' }));
         }
 
-        const reqD = normalizeDateDigits(birth_date);
         if (userD) {
           if (!reqD || !safeEqual(userD, reqD)) {
             res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
