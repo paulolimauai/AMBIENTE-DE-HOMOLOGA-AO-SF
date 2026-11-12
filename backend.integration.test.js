@@ -374,8 +374,8 @@ test('sem NEXUS_SYNC_TOKEN o token é derivado do segredo; o próprio segredo s�
   const pasta2 = fs.mkdtempSync(path.join(os.tmpdir(), 'nexus-int2-'));
   for (const [nome, conteudo] of Object.entries({ 'local_users.json': [], 'local_users.backup.json': [], 'deleted_accounts.json': [], 'local_database_data.json': {}, 'local_database_data.backup.json': {}, 'cpf_registry.json': {}, 'cpf_registry.backup.json': {}, 'local_ordens_servico.json': [], 'local_tecnicos.json': [], 'local_filas.json': [], 'pending_logins.json': [], 'system_logs.json': [] })) fs.writeFileSync(path.join(pasta2, nome), JSON.stringify(conteudo));
   const porta2 = await portaLivre();
-  const env = { ...process.env, PORT: String(porta2), NEXUS_DATA_DIR: pasta2, NEXUS_DISABLE_DB: '1', JWT_SECRET, RENDER_CLOUD_URL: 'https://127.0.0.1:9', TRUST_PROXY: '1' };
-  delete env.RENDER; delete env.IS_RENDER; delete env.NEXUS_SYNC_TOKEN;
+  const env = { ...process.env, PORT: String(porta2), NEXUS_DATA_DIR: pasta2, NEXUS_DISABLE_DB: '1', JWT_SECRET, RENDER_CLOUD_URL: 'https://127.0.0.1:9', TRUST_PROXY: '1', NEXUS_SYNC_TOKEN_FILE: path.join(pasta2, 'sem_token_versionado'), NEXUS_SYNC_TOKEN: '' };
+  delete env.RENDER; delete env.IS_RENDER; // NEXUS_SYNC_TOKEN fica '' para o dotenv do .env não repor o segredo real
   const p2 = spawn(process.execPath, ['server.js'], { cwd: __dirname, env, stdio: 'ignore' });
   try {
     let no = false;
