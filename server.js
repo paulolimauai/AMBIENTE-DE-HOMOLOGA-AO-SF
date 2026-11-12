@@ -2191,8 +2191,9 @@ const htmlContent = `<!DOCTYPE html>
     }
     var sc = localStorage.getItem('nexus_display_scale') || 'auto';
     // Aparelho e escala: UMA só implementação, reutilizada por detectDeviceType() / getAutoDisplayScale() / applyDisplayScale() mais abaixo.
-    // Escala automática CONTÍNUA pela janela do navegador (antes eram degraus fixos pela tela): Full HD (janela ~1920x970) fica em 100% e a
-    // interface cresce junto com monitores maiores (2K, ultrawide, 4K, 5K), sem passar de 200%. Celular/tablet usam o layout responsivo (sem zoom).
+    // Escala automática CONTÍNUA e BIDIRECIONAL pela janela do navegador: telas menores que Full HD (notebook 14", janela ~1366x768 ou
+    // 1536x864 com escala do Windows) recebem zoom < 100% para que TUDO caiba no visor igual ao monitor maior; monitores 2K/ultrawide/4K/5K
+    // crescem até 200%. Celular/tablet usam o layout responsivo (sem zoom).
     window.__nexusDeviceInfo = function () {
       var w = window.innerWidth || (document.documentElement ? document.documentElement.clientWidth : 0) || screen.width || 1366;
       var h = window.innerHeight || (document.documentElement ? document.documentElement.clientHeight : 0) || screen.height || 768;
@@ -2219,7 +2220,8 @@ const htmlContent = `<!DOCTYPE html>
       var zw = 1 + 0.5 * (i.w / 1920 - 1);
       var zh = 1 + 0.5 * (i.h / 970 - 1);
       var z = Math.min(zw, zh, 2);
-      if (z < 1.03) return 1;
+      // bidirecional: abaixo de ~1920px a interface encolhe proporcionalmente (piso 75%) em vez de cortar no visor
+      if (z < 0.75) z = 0.75;
       return Math.round(z * 20) / 20;
     };
     window.__nexusScaleFor = function (scaleVal, i) {
