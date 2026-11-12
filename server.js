@@ -2336,7 +2336,8 @@ const htmlContent = `<!DOCTYPE html>
     if (loggedIn) {
       document.documentElement.classList.add('user-logged-in');
       var uObj = cu ? JSON.parse(cu) : null;
-      if (uObj && uObj.role === 'Administrador') {
+      var __admRole = function(r){ var x = String(r || '').trim().toLowerCase(); return x === 'administrador' || x === 'admin'; };
+      if (uObj && __admRole(uObj.role)) {
         document.documentElement.classList.add('is-admin');
       }
       // Tamanho dos ícones da barra superior do administrador (normal | grande | extra): preferência do navegador, padrão "grande"
@@ -2346,7 +2347,7 @@ const htmlContent = `<!DOCTYPE html>
         document.documentElement.setAttribute('data-top-ic', topIc);
       } catch (eTopIc) {}
       var vu = localStorage.getItem('nexus_viewing_user');
-      if (vu && uObj && uObj.role === 'Administrador') {
+      if (vu && uObj && __admRole(uObj.role)) {
         document.documentElement.classList.add('has-view-mode-banner');
       }
     }
@@ -17665,7 +17666,7 @@ window.handleLoginSubmit = async function(e) {
     }
 
     // Interceptação de Troca Obrigatória no Primeiro Login com Senha Temporária
-    const mustChange = (data.must_change_password === true || data.must_change_password === 1 || data.must_change_password === '1' ||
+    const mustChange = !nexusIsAdminUser(data.user) && (data.must_change_password === true || data.must_change_password === 1 || data.must_change_password === '1' ||
                         (data.user && (data.user.must_change_password === true || data.user.must_change_password === 1 || data.user.must_change_password === '1')));
     if (mustChange) {
       if (submitBtn) {
@@ -20770,7 +20771,8 @@ const NEXUS_USER_PAGES = ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'm
 // Administrador enxerga TODAS as funções: as páginas do usuário + os módulos exclusivos do painel
 const NEXUS_ADMIN_MENU_PAGES = ['usuarios', 'funcoes', 'ordens', 'pagamentos', 'logs'];
 const NEXUS_ADMIN_PAGES = NEXUS_USER_PAGES.concat(NEXUS_ADMIN_MENU_PAGES);
-function nexusIsAdminUser(u) { return !!(u && u.role === 'Administrador'); }
+function nexusRoleIsAdmin(role) { const r = String(role || '').trim().toLowerCase(); return r === 'administrador' || r === 'admin'; }
+function nexusIsAdminUser(u) { return !!(u && nexusRoleIsAdmin(u.role)); }
 // Plano vigente: Mensal R$ 18,00 somente Pix. 'anual'/'vitalicio'/'cortesia_admin' só existem em contas legadas ou concessões do admin.
 function nexusPlanInfo(plan) {
   const p = String(plan || '').toLowerCase();
@@ -32035,7 +32037,8 @@ window.applyPostLoginBg = function(theme) {
     return;
   }
 
-  if (realUser && (realUser.must_change_password === true || realUser.must_change_password === 1)) {
+  // Administrador é isento da troca obrigatória de senha (senha temporária vale só para usuário comum)
+  if (realUser && !nexusIsAdminUser(realUser) && (realUser.must_change_password === true || realUser.must_change_password === 1)) {
     document.documentElement.classList.remove('user-logged-in');
     const appM = document.getElementById('appMain');
     const authP = document.getElementById('authPage');
@@ -32054,7 +32057,7 @@ window.applyPostLoginBg = function(theme) {
   document.getElementById('appMain').classList.add('show');
 
   // Se o Administrador estava inspecionando outro usuário antes do F5
-  if (realUser.role === 'Administrador' && viewingEmail) {
+  if (nexusIsAdminUser(realUser) && viewingEmail) {
     const target = registeredUsers.find(u => u.email.toLowerCase() === viewingEmail.toLowerCase());
     if (target && target.email.toLowerCase() !== realUser.email.toLowerCase()) {
       adminOriginalUser = realUser;
@@ -33820,7 +33823,21 @@ async function handleNexusRequest(req, res) {
 
         // A troca obrigatória (senha temporária) só é encerrada pelo endpoint de troca de senha: aqui apenas
         // registramos que ela está pendente para avisar o cliente (antes a flag era zerada antes de responder).
-        const mustChangePasswordPending = user.must_change_password === 1 || user.must_change_password === true || user.must_change_password === '1';
+        // Administrador é isento: a flag pendente é limpa na hora para a conta nunca ficar presa no modal de troca.
+        const loginRoleKey = String(user.role || '').trim().toLowerCase();
+        const loginIsAdmin = loginRoleKey === 'administrador' || loginRoleKey === 'admin';
+        const mustChangePasswordPending = !loginIsAdmin && (user.must_change_password === 1 || user.must_change_password === true || user.must_change_password === '1');
+        if (loginIsAdmin && (user.must_change_password === 1 || user.must_change_password === true || user.must_change_password === '1')) {
+          user.must_change_password = false;
+          if (pool) {
+            pool.query('UPDATE usuarios SET must_change_password = 0 WHERE LOWER(email) = LOWER($1)', [cleanEmail]).catch(()=>{});
+          }
+          try {
+            const lus = getLocalUsers();
+            const luAdm = lus.find(u => u && String(u.email || '').toLowerCase() === cleanEmail);
+            if (luAdm && luAdm.must_change_password) { luAdm.must_change_password = false; saveLocalUsers(lus); }
+          } catch(e){}
+        }
 
         // Auto-cura e sincronização transparente: migra senhas legadas (texto puro/MD5/SHA-256) para hash scrypt
         if (!user.password || !String(user.password).startsWith('scrypt:')) {
@@ -37788,6 +37805,12 @@ function startSupabaseSyncWorker() {
           }
         }
         if (usersChanged) {
+          // Administrador nunca carrega troca obrigatória de senha: um espelho antigo não pode recolocar a flag
+          for (const u of localUsers) {
+            if (u && u.must_change_password && ['administrador', 'admin'].includes(String(u.role || '').trim().toLowerCase())) {
+              u.must_change_password = false;
+            }
+          }
           saveLocalUsers(localUsers);
           // Empurra os adotados para o SQL Server para manter as três fontes alinhadas.
           if (pool) {
@@ -37798,7 +37821,7 @@ function startSupabaseSyncWorker() {
                   `IF EXISTS (SELECT 1 FROM usuarios WHERE LOWER(email) = LOWER($1))
                    BEGIN UPDATE usuarios SET name=$2, password=$3, role=$4, active=$5, cpf=$6, phone=$7, birth_date=$8, terms_accepted=$9, device_type=$10, must_change_password=$11, trial_started_at=$12, subscription_plan=$13, subscription_status=$14, subscription_expires_at=$15, subscription_method=$16, subscription_payment_id=$17 WHERE LOWER(email)=LOWER($1); END
                    ELSE BEGIN INSERT INTO usuarios (name,email,password,role,active,cpf,phone,birth_date,terms_accepted,device_type,must_change_password,trial_started_at,subscription_plan,subscription_status,subscription_expires_at,subscription_method,subscription_payment_id) VALUES ($2,$1,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17); END`,
-                  [u.email, u.name, u.password, u.role || 'Usuário', u.active !== false, u.cpf || null, u.phone || null, u.birth_date || null, u.terms_accepted !== false, u.device_type || 'Computador', !!u.must_change_password, u.trial_started_at ? getBrasiliaSqlString(new Date(u.trial_started_at)) : null, u.subscription_plan || null, u.subscription_status || 'trial', u.subscription_expires_at ? getBrasiliaSqlString(new Date(u.subscription_expires_at)) : null, u.subscription_method || null, u.subscription_payment_id || null]
+                  [u.email, u.name, u.password, u.role || 'Usuário', u.active !== false, u.cpf || null, u.phone || null, u.birth_date || null, u.terms_accepted !== false, u.device_type || 'Computador', (['administrador', 'admin'].includes(String(u.role || '').trim().toLowerCase()) ? false : !!u.must_change_password), u.trial_started_at ? getBrasiliaSqlString(new Date(u.trial_started_at)) : null, u.subscription_plan || null, u.subscription_status || 'trial', u.subscription_expires_at ? getBrasiliaSqlString(new Date(u.subscription_expires_at)) : null, u.subscription_method || null, u.subscription_payment_id || null]
                 ).catch(() => {});
               } catch (e) {}
             }
