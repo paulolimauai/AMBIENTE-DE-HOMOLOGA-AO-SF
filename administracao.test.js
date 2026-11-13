@@ -197,10 +197,10 @@ test('csv: cabeçalho, ponto e vírgula, BOM para o Excel e proteção contra f�
 });
 
 /* ----------------------------------------------------------------- HTML ----------------------------------------------------------------- */
-test('shellHTML: três abas no topo, a ativa marcada, contadores e identidade do administrador', () => {
+test('shellHTML: cinco abas no topo, a ativa marcada, contadores e identidade do administrador', () => {
   const h = A.shellHTML('pagamentos', { contagens: { usuarios: 12, pagamentos: 3, logs: 529 }, eu: { nome: 'Ana Admin Teste', email: 'ana@x.com' }, corpo: '<p id="x">corpo</p>' });
-  assert.equal((h.match(/role="tab"/g) || []).length, 3);
-  assert.ok(h.includes('data-adm-ir="usuarios"') && h.includes('data-adm-ir="pagamentos"') && h.includes('data-adm-ir="logs"'));
+  assert.equal((h.match(/role="tab"/g) || []).length, 5);
+  assert.ok(h.includes('data-adm-ir="usuarios"') && h.includes('data-adm-ir="funcoes"') && h.includes('data-adm-ir="ordens"') && h.includes('data-adm-ir="pagamentos"') && h.includes('data-adm-ir="logs"'));
   assert.ok(/data-adm-ir="pagamentos" aria-selected="true" aria-current="page"/.test(h));
   assert.ok(/data-adm-ir="usuarios" aria-selected="false"/.test(h));
   assert.ok(h.includes('>12<') && h.includes('3 pend.') && h.includes('>529<'));
