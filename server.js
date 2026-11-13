@@ -2490,13 +2490,21 @@ html.is-admin #mobileDrawerAdminBadge,
 /* ==================== Controle Executivo de Abas por Papel (Perfil) ==================== */
 /* Administrador enxerga APENAS o painel administrativo (aba/seção de administrador);
    as funções do usuário comum ficam ocultas para o perfil Administrador. */
-html.is-admin #menu .menu-btn-user,
-html.is-admin #mobileDrawerMenu .menu-btn-user,
-html.is-admin .menu-section-visao,
-html.is-admin .menu-section-planejamento,
-html.is-admin .menu-section-ferramentas,
-html.is-admin .menu-section-minha-conta,
-html.is-admin #mobileBottomBar .mobile-btn-user {
+html.is-admin #menu button.menu-btn-user,
+html.is-admin #mobileDrawerMenu button.menu-btn-user,
+html.is-admin #menu .menu-section-visao,
+html.is-admin #menu .menu-section-planejamento,
+html.is-admin #menu .menu-section-ferramentas,
+html.is-admin #menu .menu-section-minha-conta,
+html.is-admin #mobileDrawerMenu .menu-section-visao,
+html.is-admin #mobileDrawerMenu .menu-section-planejamento,
+html.is-admin #mobileDrawerMenu .menu-section-ferramentas,
+html.is-admin #mobileDrawerMenu .menu-section-minha-conta,
+html.is-admin #mobileDrawer .menu-section-visao,
+html.is-admin #mobileDrawer .menu-section-planejamento,
+html.is-admin #mobileDrawer .menu-section-ferramentas,
+html.is-admin #mobileDrawer .menu-section-minha-conta,
+html.is-admin #mobileBottomBar button.mobile-btn-user {
   display: none !important;
 }
 html.is-admin .header-minha-conta-btn,
@@ -15454,22 +15462,6 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Nome Completo *</label>
         <input id="userAdminName" placeholder="Ex: Paulo Lima" style="height:35px; border-radius:9px; font-size:12.5px; padding:0 10px;">
       </div>
-
-      <div class="field" style="margin-bottom:0;">
-        <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">CPF (Titular)</label>
-        <input id="userAdminCpf" placeholder="00000000000" maxlength="11" oninput="maskCpfInput(this)" style="height:35px; border-radius:9px; font-size:12.5px; padding:0 10px;">
-      </div>
-
-      <div class="field" style="margin-bottom:0;">
-        <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Telefone / WhatsApp</label>
-        <input id="userAdminPhone" placeholder="(00) 00000-0000" maxlength="15" oninput="maskPhoneInput(this)" style="height:35px; border-radius:9px; font-size:12.5px; padding:0 10px;">
-      </div>
-
-      <div class="field" style="margin-bottom:0;">
-        <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Data de nascimento</label>
-        <input id="userAdminBirth" type="date" max="2100-12-31" style="height:35px; border-radius:9px; font-size:12.5px; padding:0 10px; color-scheme:dark;">
-      </div>
-      <div style="margin-bottom:0; align-self:end; font-size:10.5px; line-height:1.35; color:var(--text-dim);">Com e-mail ou CPF, o nascimento confirma a identidade na recuperação de senha.</div>
 
       <div class="field" style="grid-column:1 / -1; margin-bottom:0;">
         <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:flex; justify-content:space-between; align-items:center;">
@@ -30215,13 +30207,18 @@ async function saveUserAdmin(){
   await syncUsersWithServer();
   const name = (document.getElementById('userAdminName')?.value || '').trim();
   const rawEmail = (document.getElementById('userAdminEmail')?.value || '').trim().toLowerCase();
-  const rawCpf = (document.getElementById('userAdminCpf')?.value || '').replace(/\\D/g, '').trim();
-  const rawPhone = (document.getElementById('userAdminPhone')?.value || '').trim();
+  // Campos de dados pessoais (CPF, telefone, nascimento) foram removidos do formulário:
+  // quando o input não existe, o valor fica null e a edição preserva o que já está gravado na conta.
+  const cpfEl = document.getElementById('userAdminCpf');
+  const phoneEl = document.getElementById('userAdminPhone');
+  const birthEl = document.getElementById('userAdminBirth');
+  const rawCpf = cpfEl ? (cpfEl.value || '').replace(/\\D/g, '').trim() : null;
+  const rawPhone = phoneEl ? (phoneEl.value || '').trim() : null;
   const role = document.getElementById('userAdminRole')?.value || 'Usuário';
   const active = document.getElementById('userAdminActive')?.value !== 'false';
   const newPass = (document.getElementById('userAdminPassword')?.value || '').trim();
   // Nascimento fica gravado como DD/MM/AAAA (formato dos cadastros e da recuperação de senha); o campo de data entrega AAAA-MM-DD. Vazio nunca apaga.
-  const birthIso = (document.getElementById('userAdminBirth')?.value || '').trim();
+  const birthIso = birthEl ? (birthEl.value || '').trim() : '';
   const birthBr = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(birthIso) ? birthIso.slice(8, 10) + '/' + birthIso.slice(5, 7) + '/' + birthIso.slice(0, 4) : '';
   // Mesma regra de senha do cadastro e da troca pelo próprio usuário
   const senhaForte = (p) => p.length >= 8 && /[a-z]/.test(p) && /[A-Z]/.test(p) && /[0-9]/.test(p) && /[^A-Za-z0-9]/.test(p);
@@ -30298,12 +30295,12 @@ async function saveUserAdmin(){
   }
 
   const oldEmail = u.email;
-  const formattedCpf = rawCpf || null;
 
   u.name = name;
   u.email = rawEmail;
-  u.cpf = rawCpf || null; // CPF ajustado sem pontos
-  u.phone = rawPhone || null;
+  // CPF/telefone/nascimento não são mais editáveis aqui: preserva o que já está gravado na conta
+  if(rawCpf !== null) u.cpf = rawCpf || null;
+  if(rawPhone !== null) u.phone = rawPhone || null;
   if(birthBr) u.birth_date = birthBr;
   u.role = role;
   u.active = active;
@@ -30341,7 +30338,7 @@ async function saveUserAdmin(){
   }
 
   showToast('Cadastro de ' + u.name + ' corrigido e salvo com sucesso!');
-  logActivity('Correção', 'Usuário', 'Administrador corrigiu cadastro de ' + u.email + ' (Nome: ' + name + ', CPF: ' + (formattedCpf || 'N/A') + ', Status: ' + (active ? 'Ativo' : 'Inativo') + ')');
+  logActivity('Correção', 'Usuário', 'Administrador corrigiu cadastro de ' + u.email + ' (Nome: ' + name + ', CPF: ' + (u.cpf || 'N/A') + ', Status: ' + (active ? 'Ativo' : 'Inativo') + ')');
   closeUserAdminModal();
   render();
 }
