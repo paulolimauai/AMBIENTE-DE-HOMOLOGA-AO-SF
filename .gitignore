@@ -37,3 +37,7 @@ dist/
 
 # Exportações/dumps de análise do banco de dados (dados gerados em execução)
 analise_banco_dados/
+
+# Snapshots avulsos da página/JS gerados em execução (o HTML real vive embutido no server.js)
+/page.html
+/script5.js
