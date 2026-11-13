@@ -20765,8 +20765,11 @@ function pd(day){ return pdCustom(currentPeriod.year, currentPeriod.month, day);
 // hash da URL, página salva no navegador e render() usam esta mesma fonte (a primeira página é o destino padrão).
 const NEXUS_USER_PAGES = ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'config'];
 // Administrador enxerga apenas os módulos exclusivos do painel (o painel administrativo fica na aba/seção de administrador)
-const NEXUS_ADMIN_MENU_PAGES = ['usuarios', 'funcoes', 'ordens', 'pagamentos', 'logs'];
+// Pedido do usuário: o administrador fica SEMPRE na Central de Funções & Permissões — as demais telas do painel
+// (Cadastros & Contas, Atendimento, Pagamentos e Logs) deixam de ser páginas válidas e seus botões são ocultados.
+const NEXUS_ADMIN_MENU_PAGES = ['funcoes'];
 const NEXUS_ADMIN_PAGES = NEXUS_ADMIN_MENU_PAGES.slice();
+const NEXUS_ADMIN_ALL_BUTTON_PAGES = ['usuarios', 'funcoes', 'ordens', 'pagamentos', 'logs'];
 // Páginas do admin que desenham as abas do topo (administracao.js): só nelas o menu lateral some (classe adm-topo-pagina)
 const ADM_TOPNAV_PAGES = { usuarios: true, pagamentos: true, logs: true };
 function nexusRoleIsAdmin(role) { const r = String(role || '').trim().toLowerCase(); return r === 'administrador' || r === 'admin'; }
@@ -21853,9 +21856,11 @@ function updateAdminMenuVisibility(force = false){
     el.style.display = isAdmin ? 'flex' : 'none';
   });
 
-  NEXUS_ADMIN_MENU_PAGES.forEach(function(pg) {
+  NEXUS_ADMIN_ALL_BUTTON_PAGES.forEach(function(pg) {
+    const visivel = isAdmin && NEXUS_ADMIN_MENU_PAGES.indexOf(pg) >= 0;
     document.querySelectorAll('button[data-page="' + pg + '"]').forEach(function(btn) {
-      btn.style.display = isAdmin ? 'flex' : 'none';
+      // display inline com !important vence o CSS html.is-admin ... .menu-btn-admin { display:flex !important }
+      btn.style.setProperty('display', visivel ? 'flex' : 'none', 'important');
     });
   });
 
