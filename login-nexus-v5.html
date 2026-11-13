@@ -350,6 +350,15 @@ button,a,label{touch-action:manipulation}
 .gm-pw strong{display:block;font:700 1.3rem ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--white);letter-spacing:.05em;user-select:all;word-break:break-all}
 .gm-pw .gm-cancel{flex:none;height:2.6rem;display:inline-flex;align-items:center;gap:.4rem;padding:0 .9rem;font-size:.85rem}
 .gm-pw .gm-cancel svg{width:1rem;height:1rem}
+/* Senha provisória: bloco de destaque maior, com e-mail da conta e aviso de uso único */
+.gm-pw-big{flex-direction:column;align-items:stretch;gap:.8rem;padding:1.1rem 1.15rem;border:1.5px solid rgba(232,176,75,.45);background:linear-gradient(135deg,rgba(232,176,75,.12),rgba(232,176,75,.04))}
+.gm-pw-big strong{font-size:1.55rem;letter-spacing:.08em}
+.gm-pw-mail{display:block;margin-top:.35rem;font:600 .8rem var(--sans);font-style:normal;color:var(--muted);word-break:break-all}
+.gm-copiar-btn{flex:none;align-self:flex-end;height:2.7rem;display:inline-flex;align-items:center;gap:.45rem;padding:0 1.05rem;border-radius:.8rem;cursor:pointer;font:700 .88rem var(--sans);color:var(--white);background:linear-gradient(135deg,#D97706,#F59E0B);border:1px solid rgba(253,230,138,.5);box-shadow:0 6px 18px -6px rgba(245,158,11,.55);transition:transform .15s ease,box-shadow .15s ease}
+.gm-copiar-btn:hover{transform:translateY(-1px);box-shadow:0 10px 22px -6px rgba(245,158,11,.7)}
+.gm-copiar-btn svg{width:1.05rem;height:1.05rem}
+.gm-aviso{margin-top:.9rem;padding:.7rem .9rem;border-radius:.8rem;font-size:.82rem;line-height:1.45;color:var(--text);background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.35)}
+.gm-aviso strong{color:#FBBF24}
 :root[data-mode="light"] .gm{background:radial-gradient(circle at 50% 38%,color-mix(in srgb,var(--brand) 18%,transparent),transparent 58%),rgba(30,40,90,.38)}
 :root[data-mode="light"] .gm-card{background:linear-gradient(135deg,rgba(255,255,255,.95),rgba(255,255,255,.78));border-color:rgba(255,255,255,.9);box-shadow:0 2rem 4.5rem rgba(30,45,110,.28),inset 0 1px 0 #fff}
 :root[data-mode="light"] .gm-x,:root[data-mode="light"] .gm-cancel{background:rgba(15,23,60,.06)}
@@ -980,10 +989,12 @@ button,a,label{touch-action:manipulation}
       ov.setAttribute('role','dialog');ov.setAttribute('aria-modal','true');ov.setAttribute('aria-labelledby','gm-prov-t');
       ov.innerHTML='<div class="gm-card">'+cabecalho('gm-prov-etapa','gm-prov-x','lock','Recuperação de acesso concluída')+
         '<h3 id="gm-prov-t">Senha provisória gerada</h3>'+
-        '<p class="gm-desc">Seus dados foram confirmados. Copie a senha provisória abaixo para entrar na sua conta:</p>'+
-        '<div class="gm-pw"><div><small>Sua senha provisória</small><strong id="gm-prov-v"></strong></div>'+
-        '<button type="button" class="gm-cancel" id="gm-prov-copiar">'+IC.copiar+'<span id="gm-prov-copiar-t">Copiar</span></button></div>'+
-        '<small class="gm-hint" style="margin-top:.7rem">Por segurança, ao entrar com esta senha provisória será solicitado que você defina sua nova senha pessoal.</small>'+
+        '<p class="gm-desc">Seus dados foram confirmados. Use a senha provisória abaixo para entrar na sua conta:</p>'+
+        '<div class="gm-pw gm-pw-big"><div><small>Sua senha provisória</small><strong id="gm-prov-v"></strong>'+
+        '<em class="gm-pw-mail" id="gm-prov-mail"></em></div>'+
+        '<button type="button" class="gm-copiar-btn" id="gm-prov-copiar">'+IC.copiar+'<span id="gm-prov-copiar-t">Copiar</span></button></div>'+
+        '<div class="gm-aviso"><strong>Importante:</strong> esta senha vale para um único acesso. Ao entrar, você será obrigado a criar sua nova senha pessoal.</div>'+
+        '<small class="gm-hint" style="margin-top:.7rem">Anote ou copie a senha agora — ela não será exibida novamente.</small>'+
         '<div class="gm-acoes"><button type="button" class="gm-cancel" id="gm-prov-fechar">Fechar</button>'+
         '<button type="button" class="go" id="gm-prov-usar">Copiar e preencher no login</button></div></div>';
       document.body.appendChild(ov);
@@ -1013,6 +1024,7 @@ button,a,label{touch-action:manipulation}
     }
     ov._email=email||'';
     $('gm-prov-v').textContent=senha;
+    var mailEl=$('gm-prov-mail');if(mailEl)mailEl.textContent=email?('Conta: '+email):'';
     $('gm-prov-copiar-t').textContent='Copiar';
     ov.classList.add('on');
     setTimeout(function(){$('gm-prov-usar').focus()},40);

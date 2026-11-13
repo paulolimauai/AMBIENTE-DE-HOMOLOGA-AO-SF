@@ -34566,12 +34566,17 @@ async function handleNexusRequest(req, res) {
         const hashedTempPassword = hashPassword(tempPassword);
 
         // A senha provisória é EXIBIDA na tela logo após a confirmação de e-mail + CPF + nascimento.
-        // O e-mail continua sendo enviado como canal extra, mas não é obrigatório: se o SMTP falhar,
-        // a conta é atualizada mesmo assim porque a credencial já foi entregue ao titular na tela.
-        let emailSent = false;
+        // O e-mail é apenas canal extra e NÃO pode atrasar a resposta: SMTP/Brevo levam até ~20 s,
+        // então o disparo acontece em segundo plano e a credencial chega à tela na hora.
+        let emailPromise = null;
         try {
-          emailSent = await sendPasswordEmail(user.email, user.name, tempPassword);
-        } catch(e){}
+          emailPromise = Promise.resolve(sendPasswordEmail(user.email, user.name, tempPassword));
+        } catch(e) {}
+        if (emailPromise && typeof emailPromise.then === 'function') {
+          emailPromise.then((sent) => {
+            if (!sent) console.warn('[SMTP] E-mail de recuperação não entregue para ' + cleanEmail + ' (a senha provisória já foi exibida em tela).');
+          }).catch(() => {});
+        }
 
         if (pool) {
           try {
@@ -34598,7 +34603,7 @@ async function handleNexusRequest(req, res) {
           user.email,
           'Recuperação',
           'Autenticação',
-          'Senha temporária gerada via confirmação de dados (identificação por ' + recoveryMethod + '), exibida em tela' + (emailSent ? ' e enviada por e-mail' : '') + ', com troca obrigatória exigida no primeiro logon'
+          'Senha temporária gerada via confirmação de dados (identificação por ' + recoveryMethod + '), exibida em tela, com envio de e-mail em segundo plano e troca obrigatória exigida no primeiro logon'
         );
 
         res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
@@ -34608,7 +34613,7 @@ async function handleNexusRequest(req, res) {
           email: user.email,
           name: user.name,
           temp_password: tempPassword,
-          email_sent: emailSent,
+          email_sent: null,
           message: 'Dados confirmados com sucesso! Sua senha temporária está disponível na tela. No primeiro login será obrigatório definir uma nova senha.'
         }));
       } catch (err) {
