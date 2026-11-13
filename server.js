@@ -20765,9 +20765,10 @@ function pd(day){ return pdCustom(currentPeriod.year, currentPeriod.month, day);
 // hash da URL, página salva no navegador e render() usam esta mesma fonte (a primeira página é o destino padrão).
 const NEXUS_USER_PAGES = ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'config'];
 // Administrador enxerga apenas os módulos exclusivos do painel (o painel administrativo fica na aba/seção de administrador)
-// Pedido do usuário: o administrador fica SEMPRE na Central de Funções & Permissões — as demais telas do painel
-// (Cadastros & Contas, Atendimento, Pagamentos e Logs) deixam de ser páginas válidas e seus botões são ocultados.
-const NEXUS_ADMIN_MENU_PAGES = ['funcoes'];
+// Pedido do usuário: o administrador fica na Central de Funções & Permissões e no painel de Pagamentos (Pix da
+// assinatura mensal). As demais telas do painel (Cadastros & Contas, Atendimento e Logs) deixam de ser páginas
+// válidas e seus botões são ocultados.
+const NEXUS_ADMIN_MENU_PAGES = ['funcoes', 'pagamentos'];
 const NEXUS_ADMIN_PAGES = NEXUS_ADMIN_MENU_PAGES.slice();
 const NEXUS_ADMIN_ALL_BUTTON_PAGES = ['usuarios', 'funcoes', 'ordens', 'pagamentos', 'logs'];
 // Páginas do admin que desenham as abas do topo (administracao.js): só nelas o menu lateral some (classe adm-topo-pagina)
