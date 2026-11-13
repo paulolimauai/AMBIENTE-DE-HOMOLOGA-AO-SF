@@ -790,7 +790,7 @@ html.user-logged-in .scale-dropdown .nx-topic-btn:focus-visible { outline: 2px s
    no topo da própria página (desenhadas pelo administracao.js). Só no computador/tablet largo (>= 861px): no celular continuam a barra
    inferior e a gaveta. Só liga quando o módulo carregou (html.adm-topo) e fora do modo espelho (o admin vendo a conta de um usuário precisa do menu dele).
    ===================================================================================== */
-html:where(.nqmin-861).user-logged-in.is-admin.adm-topo body:not(.has-view-mode-banner) #menu { display: none !important; }html:where(.nqmin-861).user-logged-in.is-admin.adm-topo body:not(.has-view-mode-banner) .main { margin-left: 0 !important; width: 100% !important; max-width: none !important; }html:where(.nqmin-861).user-logged-in.is-admin.adm-topo body:not(.has-view-mode-banner) #pageContent { max-width: 2200px !important; }
+html:where(.nqmin-861).user-logged-in.is-admin.adm-topo.adm-topo-pagina body:not(.has-view-mode-banner) #menu { display: none !important; }html:where(.nqmin-861).user-logged-in.is-admin.adm-topo.adm-topo-pagina body:not(.has-view-mode-banner) .main { margin-left: 0 !important; width: 100% !important; max-width: none !important; }html:where(.nqmin-861).user-logged-in.is-admin.adm-topo.adm-topo-pagina body:not(.has-view-mode-banner) #pageContent { max-width: 2200px !important; }
 
 
 } /* fim da layer nx-shell */

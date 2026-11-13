@@ -20771,6 +20771,8 @@ const NEXUS_USER_PAGES = ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'm
 // Administrador enxerga TODAS as funções: as páginas do usuário + os módulos exclusivos do painel
 const NEXUS_ADMIN_MENU_PAGES = ['usuarios', 'funcoes', 'ordens', 'pagamentos', 'logs'];
 const NEXUS_ADMIN_PAGES = NEXUS_USER_PAGES.concat(NEXUS_ADMIN_MENU_PAGES);
+// Páginas do admin que desenham as abas do topo (administracao.js): só nelas o menu lateral some (classe adm-topo-pagina)
+const ADM_TOPNAV_PAGES = { usuarios: true, pagamentos: true, logs: true };
 function nexusRoleIsAdmin(role) { const r = String(role || '').trim().toLowerCase(); return r === 'administrador' || r === 'admin'; }
 function nexusIsAdminUser(u) { return !!(u && nexusRoleIsAdmin(u.role)); }
 // Plano vigente: Mensal R$ 18,00 somente Pix. 'anual'/'vitalicio'/'cortesia_admin' só existem em contas legadas ou concessões do admin.
@@ -21639,6 +21641,8 @@ function render(){
   // Cada perfil só renderiza as próprias páginas: usuário comum nunca cai em Ordens/Usuários/Pagamentos/Logs
   // e o administrador nunca cai nas telas financeiras do usuário.
   currentPage = nexusResolvePage(currentPage, isAdmin);
+  // O menu lateral do admin só some nas telas que têm abas no topo; nas demais (painel do usuário, Funções, Ordens) ele permanece
+  document.documentElement.classList.toggle('adm-topo-pagina', !!(isAdminView && ADM_TOPNAV_PAGES[currentPage]));
 
   let newHTML = '';
   let pageChanged = false;
