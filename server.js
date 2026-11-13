@@ -2488,8 +2488,8 @@ html.is-admin #mobileDrawerAdminBadge,
   display: none !important;
 }
 /* ==================== Controle Executivo de Abas por Papel (Perfil) ==================== */
-/* Administrador enxerga TODAS as funções: módulos do usuário + painel administrativo.
-   Apenas o atalho rápido de nova transação e o botão de conta do topo permanecem ocultos. */
+/* Administrador enxerga APENAS o painel administrativo (aba/seção de administrador);
+   as funções do usuário comum ficam ocultas para o perfil Administrador. */
 html.is-admin #menu .menu-btn-user,
 html.is-admin #mobileDrawerMenu .menu-btn-user,
 html.is-admin .menu-section-visao,
@@ -2497,7 +2497,7 @@ html.is-admin .menu-section-planejamento,
 html.is-admin .menu-section-ferramentas,
 html.is-admin .menu-section-minha-conta,
 html.is-admin #mobileBottomBar .mobile-btn-user {
-  display: flex !important;
+  display: none !important;
 }
 html.is-admin .header-minha-conta-btn,
 html.is-admin #sidebarNovaTransacaoBtn {
@@ -20768,9 +20768,9 @@ function pd(day){ return pdCustom(currentPeriod.year, currentPeriod.month, day);
 // Perfis de acesso: cada papel enxerga SOMENTE as suas páginas. Menu lateral, gaveta mobile, barra inferior,
 // hash da URL, página salva no navegador e render() usam esta mesma fonte (a primeira página é o destino padrão).
 const NEXUS_USER_PAGES = ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'config'];
-// Administrador enxerga TODAS as funções: as páginas do usuário + os módulos exclusivos do painel
+// Administrador enxerga apenas os módulos exclusivos do painel (o painel administrativo fica na aba/seção de administrador)
 const NEXUS_ADMIN_MENU_PAGES = ['usuarios', 'funcoes', 'ordens', 'pagamentos', 'logs'];
-const NEXUS_ADMIN_PAGES = NEXUS_USER_PAGES.concat(NEXUS_ADMIN_MENU_PAGES);
+const NEXUS_ADMIN_PAGES = NEXUS_ADMIN_MENU_PAGES.slice();
 // Páginas do admin que desenham as abas do topo (administracao.js): só nelas o menu lateral some (classe adm-topo-pagina)
 const ADM_TOPNAV_PAGES = { usuarios: true, pagamentos: true, logs: true };
 function nexusRoleIsAdmin(role) { const r = String(role || '').trim().toLowerCase(); return r === 'administrador' || r === 'admin'; }
@@ -21839,15 +21839,15 @@ function updateAdminMenuVisibility(force = false){
   const summaryCardAdmin = document.getElementById('adminSidebarSummaryCard');
   if (summaryCardAdmin) summaryCardAdmin.style.display = isAdmin ? 'block' : 'none';
 
-  // Seções e Botões do Usuário Comum: visíveis para todos os perfis (o admin também usa as funções financeiras)
+  // Seções e Botões do Usuário Comum: visíveis apenas para o usuário comum (admin vê só o painel)
   const userSections = document.querySelectorAll('.menu-section-visao, .menu-section-planejamento, .menu-section-ferramentas, .menu-section-minha-conta');
   userSections.forEach(function(el) {
-    el.style.display = 'flex';
+    el.style.display = isAdmin ? 'none' : 'flex';
   });
 
   NEXUS_USER_PAGES.forEach(function(pg) {
     document.querySelectorAll('#menu button[data-page="' + pg + '"], #mobileDrawerMenu button[data-page="' + pg + '"]').forEach(function(btn) {
-      btn.style.display = 'flex';
+      btn.style.display = isAdmin ? 'none' : 'flex';
     });
   });
 
@@ -21863,9 +21863,9 @@ function updateAdminMenuVisibility(force = false){
     });
   });
 
-  // Barra inferior mobile: o administrador vê as abas de usuário E as administrativas
+  // Barra inferior mobile: o administrador vê apenas as abas administrativas
   document.querySelectorAll('#mobileBottomBar .mobile-btn-user').forEach(function(b) {
-    b.style.display = 'flex';
+    b.style.display = isAdmin ? 'none' : 'flex';
   });
   document.querySelectorAll('#mobileBottomBar .mobile-btn-admin').forEach(function(b) {
     b.style.display = isAdmin ? 'flex' : 'none';
@@ -25411,6 +25411,9 @@ function pageUsuariosLegado(){
             \`}
             <button type="button" class="user-card-btn btn-conceder-tempo" data-granttime="\${u.email}" onclick="openUserAdminModal('\${u.email}')" title="Liberar tempo / controlar assinatura" style="background:linear-gradient(135deg, #F59E0B, #B45309); color:#ffffff; border:none;">
               <span>👑 Tempo</span>
+            </button>
+            <button type="button" class="user-card-btn" data-gratistime="\${u.email}" onclick="window.adminGrantTimeQuick('\${u.email}', 43200)" title="Liberar 30 dias de assinatura grátis (cortesia)" style="background:linear-gradient(135deg, #14B8A6, #0F766E); color:#ffffff; border:none;">
+              <span>🎁 Grátis</span>
             </button>
             <button type="button" class="user-card-btn btn-editar" data-edituser="\${u.email}" onclick="openUserAdminModal('\${u.email}')" title="Editar / Corrigir cadastro" style="background:linear-gradient(135deg, #10B981, #047857); color:#ffffff; border:none;">
               <span>✏️ Editar</span>

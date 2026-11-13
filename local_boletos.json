@@ -1,0 +1,20 @@
+[
+  {
+    "id": "BX-1794537028770-A757",
+    "reference": "NX37026650",
+    "client_email": "lucasrodrigobento@outlook.com",
+    "client_name": "Lucas Rodrigo Bento Souza",
+    "client_cpf": "75552744187",
+    "plan": "mensal",
+    "amount": 18,
+    "due_date": "2026-11-15",
+    "status": "pendente",
+    "view_count": 1,
+    "print_count": 1,
+    "created_at": "2026-11-12T23:30:28-03:00",
+    "last_printed_at": "2026-11-12T23:30:28-03:00",
+    "updated_at": "2026-11-12T23:30:28-03:00",
+    "first_viewed_at": "2026-11-12T23:30:29-03:00",
+    "last_viewed_at": "2026-11-12T23:30:29-03:00"
+  }
+]

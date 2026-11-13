@@ -38,5 +38,33 @@
   {
     "email": "admin@gmail.com",
     "deleted_at": "2026-11-02T15:51:57.871Z"
+  },
+  {
+    "email": "carla0@teste.nexus",
+    "deleted_at": "2026-11-13T02:25:35.015Z"
+  },
+  {
+    "email": "ana@teste.nexus",
+    "deleted_at": "2026-11-13T02:25:38.547Z"
+  },
+  {
+    "email": "bia@teste.nexus",
+    "deleted_at": "2026-11-13T02:25:40.035Z"
+  },
+  {
+    "email": "carla@teste.nexus",
+    "deleted_at": "2026-11-13T02:25:40.675Z"
+  },
+  {
+    "email": "duda@teste.nexus",
+    "deleted_at": "2026-11-13T02:25:41.205Z"
+  },
+  {
+    "email": "teste.cpf.1794441671@teste.local",
+    "deleted_at": "2026-11-13T02:25:42.050Z"
+  },
+  {
+    "email": "admin@teste.nexus",
+    "deleted_at": "2026-11-13T02:26:00.624Z"
   }
 ]
