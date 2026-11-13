@@ -805,9 +805,9 @@ html:where(.nqmin-861).user-logged-in.is-admin.adm-topo.adm-topo-pagina body:not
 @layer nx-menu-tabs {
 
   /* ---------- Item base (sidebar expandido + gaveta) ---------- */
-  html.user-logged-in #menu .menu-btn-user,
-  html.user-logged-in #mobileDrawerMenu .menu-btn-user,
-  html.user-logged-in #mobileDrawer .menu-btn-user {
+  html.user-logged-in:not(.is-admin) #menu .menu-btn-user,
+  html.user-logged-in:not(.is-admin) #mobileDrawerMenu .menu-btn-user,
+  html.user-logged-in:not(.is-admin) #mobileDrawer .menu-btn-user {
     position: relative !important;
     display: flex !important;
     align-items: center !important;
