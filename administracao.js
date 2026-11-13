@@ -337,6 +337,7 @@
     usuarios: svg('<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>'),
     cartao: svg('<rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><path d="M6 15h4"/>'),
     doc: svg('<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>'),
+    casa: svg('<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>'),
     mais: svg('<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>'),
     busca: svg('<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>'),
     x: svg('<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>'),
@@ -383,6 +384,7 @@
             IC[a.ic] + '<span class="adm-tab-t">' + esc(a.rotulo) + '</span>' + contador(a.id) + '</button>';
         }).join('') + '</div>' +
         '<div class="adm-tabs-dir">' +
+          '<button type="button" class="adm-btn" data-adm-ir="dashboard" title="Voltar ao painel: aqui o administrador tem as mesmas funções do usuário comum">' + IC.casa + '<span>Painel</span></button>' +
           '<button type="button" class="adm-btn adm-btn-pri" data-adm-acao="novo" title="Cadastrar um usuário ou administrador">' + IC.mais + '<span>Novo cadastro</span></button>' +
           '<div class="adm-eu" title="' + esc(eu.email || '') + '"><span class="adm-av adm-av-admin adm-av-sm">' + esc(iniciais(eu.nome || eu.email)) + '</span>' +
             '<span class="adm-eu-t"><b>' + esc(eu.nome || 'Administrador') + '</b><small>Administrador</small></span></div>' +
