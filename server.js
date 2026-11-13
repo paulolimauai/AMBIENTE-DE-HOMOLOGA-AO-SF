@@ -20765,10 +20765,10 @@ function pd(day){ return pdCustom(currentPeriod.year, currentPeriod.month, day);
 // hash da URL, página salva no navegador e render() usam esta mesma fonte (a primeira página é o destino padrão).
 const NEXUS_USER_PAGES = ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'config'];
 // Administrador enxerga apenas os módulos exclusivos do painel (o painel administrativo fica na aba/seção de administrador)
-// Pedido do usuário: o administrador fica na Central de Funções & Permissões e no painel de Pagamentos (Pix da
-// assinatura mensal). As demais telas do painel (Cadastros & Contas, Atendimento e Logs) deixam de ser páginas
-// válidas e seus botões são ocultados.
-const NEXUS_ADMIN_MENU_PAGES = ['funcoes', 'pagamentos'];
+// Pedido do usuário: o administrador fica SEMPRE em uma única tela ("funcoes" = Painel Administrativo completo,
+// com Cadastros, Permissões, Atendimento, Pagamentos Pix e Logs empilhados). As demais páginas do painel viram
+// inválidas e seus botões são ocultados.
+const NEXUS_ADMIN_MENU_PAGES = ['funcoes'];
 const NEXUS_ADMIN_PAGES = NEXUS_ADMIN_MENU_PAGES.slice();
 const NEXUS_ADMIN_ALL_BUTTON_PAGES = ['usuarios', 'funcoes', 'ordens', 'pagamentos', 'logs'];
 // Páginas do admin que desenham as abas do topo (administracao.js): só nelas o menu lateral some (classe adm-topo-pagina)
@@ -21728,7 +21728,23 @@ function render(){
     else if(currentPage==='anexos') newHTML = pageAnexos();
     else if(currentPage==='alertas') newHTML = pageAlertas();
     else if(currentPage==='config') newHTML = pageConfig();
-    else if(currentPage==='funcoes') newHTML = pageFuncoes();
+    else if(currentPage==='funcoes') {
+      newHTML = pageAdmin();
+      if (!window._lastAdminSyncTime || now - window._lastAdminSyncTime > 20000) {
+        window._lastAdminSyncTime = now;
+        Promise.all([syncUsersWithServer(), loadSystemLogs(), syncOrdensWithServer()]).then(() => {
+          const aEl = document.getElementById('pageContent');
+          if (aEl && currentPage === 'funcoes' && !isUserTypingInPageContent()) {
+            const freshHTML = pageAdmin();
+            if (_lastRenderedHtml !== freshHTML) {
+              _lastRenderedHtml = freshHTML;
+              aEl.innerHTML = freshHTML;
+              attachPageEvents();
+            }
+          }
+        }).catch(() => {});
+      }
+    }
     else newHTML = pageDashboard();
 
     pageChanged = el.getAttribute('data-current-rendered-page') !== currentPage;
@@ -24849,6 +24865,46 @@ function pageFuncoes(){
   </div>\`;
 }
 
+/* ==================== Painel Administrativo Único (todas as funções em uma tela) ==================== */
+function pageAdmin(){
+  const isAdmin = currentUser && currentUser.role === 'Administrador';
+  if(!isAdmin || isViewingOtherUser){
+    return \`<div class="placeholder"><div class="big">🔒</div><h3>Acesso restrito</h3><p>Esta área é exclusiva para administradores.</p></div>\`;
+  }
+  const users = Array.isArray(registeredUsers) ? registeredUsers : [];
+  const totalUsers = users.filter(u => u && u.role !== 'Administrador').length;
+  const pendingPay = users.filter(u => nexusPagamentoAguardando(u)).length;
+  const expiredPay = users.filter(u => u.subscription_status === 'expired').length;
+  const logsCount = Array.isArray(systemLogs) ? systemLogs.length : 0;
+  const ordensCount = Array.isArray(systemOrdens) ? systemOrdens.length : 0;
+
+  const sep = '<div style="height:1px;background:var(--card-border);margin:30px 0;"></div>';
+  let secoes = '';
+
+  // 1) Cadastros & Contas — lista completa de usuários (corpo do módulo administracao.js, sem as abas do topo)
+  if(window.NexusAdm){ secoes += NexusAdm.html(admContexto); }
+
+  // 2) Funções & Permissões
+  secoes += sep + pageFuncoes();
+
+  // 3) Central de Atendimento
+  secoes += sep + pageOrdens();
+
+  // 4) Pagamentos & Boletos — todas as seções empilhadas (sem abas)
+  secoes += sep + pagePagamentosCorpo('tudo');
+
+  // 5) Auditoria & Logs
+  secoes += sep + pageLogsCorpo();
+
+  return admTopoPagina('funcoes', 'Painel Administrativo',
+    'Todas as funções administrativas em uma única tela: cadastros, permissões, atendimento, pagamentos Pix e auditoria.',
+    '<button type="button" class="adm-btn" onclick="Promise.all([syncUsersWithServer(),loadSystemLogs(),syncOrdensWithServer()]).then(render)">Atualizar tudo</button>',
+    [{ n: totalUsers, rotulo: 'Cadastros', sub: 'Usuários e admins', cor: 'info' },
+     { n: pendingPay + expiredPay, rotulo: 'Pagamentos pendentes', sub: 'Aguardando ou expirados', cor: 'ruim' },
+     { n: ordensCount, rotulo: 'Atendimento', sub: 'Ordens de serviço', cor: 'aviso' },
+     { n: logsCount, rotulo: 'Eventos de auditoria', sub: 'Trilha de logs', cor: 'ok' }]) + secoes;
+}
+
 /* ==================== Admin: Usuários Cadastrados ==================== */
 function getUserActivitySummary(email){
   const data = loadFromStorage('nexus_data_' + email, null);
@@ -25570,7 +25626,7 @@ function filterLogsTable() {
 }
 
 function pagePagamentos(){ return admEnvolver('pagamentos', pagePagamentosCorpo()); }
-function pagePagamentosCorpo(){
+function pagePagamentosCorpo(modo){
   const isAdmin = currentUser && currentUser.role === 'Administrador';
   if (!isAdmin || isViewingOtherUser) {
     return \`<div class="placeholder"><div class="big">🔒</div><h3>Acesso restrito</h3><p>Esta área é exclusiva para administradores.</p></div>\`;
@@ -25633,8 +25689,9 @@ function pagePagamentosCorpo(){
 
   if (typeof updateAdminSidebarBadges === 'function') setTimeout(updateAdminSidebarBadges, 0);
 
-  let content = '';
-  if (activeTab === 'segunda_via_boleto') {
+  const montarSecao = function(activeTab){
+    let content = '';
+    if (activeTab === 'segunda_via_boleto') {
     content = \`<div class="table-panel" style="padding:18px;border-radius:16px;">
       <div class="panel-head"><h3>2ª via de cobrança Pix</h3><span class="tag">Pagamento manual</span></div>
       <p style="color:var(--text-dim);margin:0 0 14px;">Selecione a conta e o plano para imprimir uma instrução de pagamento com QR Code Pix e chave copia e cola.</p>
@@ -25740,13 +25797,16 @@ function pagePagamentosCorpo(){
       <table class="data-table" style="width:100%;"><thead><tr><th>Cliente</th><th>Plano</th><th>Meio</th><th>Status / protocolo</th><th>Expiração</th><th>Ações</th></tr></thead>
       <tbody>\${rows || \`<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text-dim);">\${activeTab === 'expirados' ? 'Nenhum acesso expirado.' : 'Nenhum pagamento pendente.'}</td></tr>\`}</tbody></table>
     </div>\`;
-  }
+    }
+    return content;
+  };
 
-  return \`\${admTopoPagina('cartao', 'Pagamentos & Boletos', 'Confirme pagamentos recebidos, acompanhe acessos vencidos e prepare a segunda via de cobrança.',
-    '<button type="button" class="adm-btn" onclick="Promise.all([syncUsersWithServer(),syncOrdensWithServer()]).then(render)">Atualizar dados</button>',
-    [{ n: pendingUsers.length, rotulo: 'Aguardando confirmação', sub: 'Pagamentos informados', cor: 'info' },
-     { n: expiredUsers.length, rotulo: 'Acessos expirados', sub: 'Precisam de pagamento', cor: 'ruim' },
-     { n: activeUsers.length, rotulo: 'Assinaturas ativas', sub: 'Clientes liberados', cor: 'ok' }])}
+  const tudo = modo === 'tudo';
+  const SEPARADOR_PAG = '<hr style="border:none;border-top:1px solid var(--card-border);margin:26px 0;">';
+  const content = tudo
+    ? ['pendentes','expirados','assinaturas','segunda_via_boleto','boletos','solicitacoes_boleto'].map(montarSecao).join(SEPARADOR_PAG)
+    : montarSecao(activeTab);
+  const toolbar = tudo ? '' : \`
   <div class="admin-toolbar-panel" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
     <button class="btn-ghost" onclick="window.setPagamentosActiveTab('pendentes')">Pagamentos pendentes</button>
     <button class="btn-ghost" onclick="window.setPagamentosActiveTab('expirados')">Acessos expirados</button>
@@ -25754,7 +25814,14 @@ function pagePagamentosCorpo(){
     <button class="btn-ghost" onclick="window.setPagamentosActiveTab('segunda_via_boleto')">2ª via / cobrança Pix</button>
     <button class="btn-ghost" onclick="window.setPagamentosActiveTab('boletos')">Boletos emitidos (\${(window.__adminBoletos || []).length})</button>
     <button class="btn-ghost" onclick="window.setPagamentosActiveTab('solicitacoes_boleto')">Solicitações de boleto (\${requestedOrders.length})</button>
-  </div>\${content}\`;
+  </div>\`;
+
+  return \`\${admTopoPagina('cartao', 'Pagamentos & Boletos', 'Confirme pagamentos recebidos, acompanhe acessos vencidos e prepare a segunda via de cobrança.',
+    '<button type="button" class="adm-btn" onclick="Promise.all([syncUsersWithServer(),syncOrdensWithServer()]).then(render)">Atualizar dados</button>',
+    [{ n: pendingUsers.length, rotulo: 'Aguardando confirmação', sub: 'Pagamentos informados', cor: 'info' },
+     { n: expiredUsers.length, rotulo: 'Acessos expirados', sub: 'Precisam de pagamento', cor: 'ruim' },
+     { n: activeUsers.length, rotulo: 'Assinaturas ativas', sub: 'Clientes liberados', cor: 'ok' }])}
+  \${toolbar}\${content}\`;
 }
 
 window.setPagamentosActiveTab = function(tab) {
