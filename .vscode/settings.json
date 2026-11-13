@@ -5,12 +5,13 @@
       "server": "localhost",
       "database": "AMBIENTE DE HOMOLOGAÇAO SF",
       "authentication": "Windows",
-      "encrypt": false,
+      "encrypt": "Optional",
       "trustServerCertificate": true,
       "applicationName": "Antigravity",
       "applicationIntent": "ReadWrite",
       "groupId": "ROOT",
-      "id": "f0326535-b3a2-4f8d-a03a-5c5fa3882e33"
+      "id": "f0326535-b3a2-4f8d-a03a-5c5fa3882e33",
+      "password": ""
     }
   ],
   "git.autofetch": true,
