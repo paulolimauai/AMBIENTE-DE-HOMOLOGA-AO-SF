@@ -2378,11 +2378,15 @@ const htmlContent = `<!DOCTYPE html>
     };
     window.__nexusAutoScale = function (i) {
       if (i.handheld) return 1;
-      // Canvas efetivo CONSTANTE (~1600px de largura útil): o zoom encolhe/estica a interface
-      // para que notebook, desktop e monitor grande renderizem EXATAMENTE o mesmo layout,
-      // apenas em escala física diferente. Sem arredondamento: effW = w / (w/1600) = 1600 exato.
-      var z = i.w / 1600;
-      if (z < 0.6) z = 0.6;
+      // Canvas efetivo CONSTANTE (~1600px de largura útil x ~900px de altura útil): o zoom
+      // encolhe/estica a interface para que notebook, desktop e monitor grande renderizem
+      // EXATAMENTE o mesmo layout, apenas em escala física diferente. A ALTURA também entra
+      // no cálculo: janelas baixas/ultrawide curtas reduzem o zoom para que nada fique cortado.
+      // Sem arredondamento: effW = w / (w/1600) = 1600 exato quando a largura é o limite.
+      var zw = i.w / 1600;
+      var zh = i.h / 900;
+      var z = Math.min(zw, zh);
+      if (z < 0.55) z = 0.55;
       if (z > 2) z = 2;
       return z;
     };
