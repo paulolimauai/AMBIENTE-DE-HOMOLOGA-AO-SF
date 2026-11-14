@@ -56,7 +56,9 @@ html.user-logged-in #menu.sidebar-menu { height: auto !important; bottom: 0 !imp
    (.main) usa a mesma variável no frontend-polish.css, então acompanha sozinho. */
 html.user-logged-in { --nx-sidebar-w: clamp(280px, 23vw, 344px) !important; }
 
-html:where(.nqmin-861).user-logged-in:not(.sidebar-collapsed) body:not(.sidebar-collapsed) #menu .menu-section-title {
+@media (min-width: 861px) {
+  /* Títulos de seção: um único padrão (tamanho, espaçamento, cor neutra e discreta) para todas as seções, inclusive a do admin */
+  html.user-logged-in:not(.sidebar-collapsed) body:not(.sidebar-collapsed) #menu .menu-section-title {
     font-size: 10.5px !important;
     font-weight: 700 !important;
     letter-spacing: .14em !important;
@@ -64,34 +66,46 @@ html:where(.nqmin-861).user-logged-in:not(.sidebar-collapsed) body:not(.sidebar-
     text-transform: uppercase !important;
     color: #BAC7DA !important;   /* cinza-azulado neutro; no pior pixel (brilho dourado do topo) dá >= 4,5:1 */
     opacity: 1 !important;
-  }html:where(.nqmin-861).user-logged-in:not(.sidebar-collapsed) body:not(.sidebar-collapsed) #menu button.menu-btn-user {
+  }
+
+  /* Itens: o ícone fica sempre na mesma coluna (mesmo X no item ativo e nos inativos) e o rótulo começa sempre na mesma linha.
+     Antes o rótulo era centralizado e o ícone o acompanhava, em zigue-zague. */
+  html.user-logged-in:not(.sidebar-collapsed) body:not(.sidebar-collapsed) #menu button.menu-btn-user {
     justify-content: flex-start !important;
     gap: 12px !important;
     padding-inline: 14px 14px !important;
     text-align: left !important;
-  }html:where(.nqmin-861).user-logged-in:not(.sidebar-collapsed) body:not(.sidebar-collapsed) #menu button.menu-btn-user .ic {
+  }
+  html.user-logged-in:not(.sidebar-collapsed) body:not(.sidebar-collapsed) #menu button.menu-btn-user .ic {
     flex: 0 0 30px !important;
     width: 30px !important;
     min-width: 30px !important;
     height: 30px !important;
     margin: 0 !important;
-  }html:where(.nqmin-861).user-logged-in:not(.sidebar-collapsed) body:not(.sidebar-collapsed) #menu button.menu-btn-user .label {
+  }
+  html.user-logged-in:not(.sidebar-collapsed) body:not(.sidebar-collapsed) #menu button.menu-btn-user .label {
     flex: 1 1 auto !important;
     min-width: 0 !important;
     text-align: left !important;
     white-space: nowrap !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
-  }html:where(.nqmin-861).user-logged-in:not(.sidebar-collapsed) body:not(.sidebar-collapsed) #menu .sidebar-account-copy {
+  }
+
+  /* Rodapé do perfil: nome e plano alinhados à esquerda, ao lado do avatar */
+  html.user-logged-in:not(.sidebar-collapsed) body:not(.sidebar-collapsed) #menu .sidebar-account-copy {
     align-items: flex-start !important;
     justify-content: center !important;
     gap: 3px !important;
     text-align: left !important;
-  }html:where(.nqmin-861).user-logged-in:not(.sidebar-collapsed) body:not(.sidebar-collapsed) #menu .sidebar-account-copy strong {
+  }
+  html.user-logged-in:not(.sidebar-collapsed) body:not(.sidebar-collapsed) #menu .sidebar-account-copy strong {
     max-width: 100% !important;
     text-align: left !important;
     line-height: 1.15 !important;
-  }html:where(.nqmin-861).user-logged-in:not(.sidebar-collapsed) body:not(.sidebar-collapsed) #menu #sidebarAccountPlan {
+  }
+  /* Plano: badge discreta (antes era só texto verde neon). A cor segue verde = "plano em dia", mas num tom suave sobre fundo translúcido. */
+  html.user-logged-in:not(.sidebar-collapsed) body:not(.sidebar-collapsed) #menu #sidebarAccountPlan {
     display: inline-flex !important;
     align-items: center !important;
     width: fit-content !important;
@@ -110,7 +124,7 @@ html:where(.nqmin-861).user-logged-in:not(.sidebar-collapsed) body:not(.sidebar-
     overflow: hidden !important;
     text-overflow: ellipsis !important;
   }
-
+}
 
 /* Avatar do rodapé (também no menu recolhido): fundo escuro e calmo com anel na cor da paleta e iniciais claras
    (antes: degradê laranja com texto branco, contraste baixo). Foto de perfil continua preenchendo o círculo. */
@@ -168,8 +182,9 @@ html.user-logged-in #mobileBottomBar .mobile-bottom-btn.active {
 }
 html.user-logged-in #mobileBottomBar .mobile-bottom-btn.active .ic { color: rgb(var(--nx-sh-acc)) !important; }
 /* O conteúdo termina acima da barra (com a área segura de iPhone) */
-html:where(.nqmax-860).user-logged-in main.main { padding-bottom: calc(var(--nx-bar-h) + env(safe-area-inset-bottom, 0px) + 22px) !important; }
-
+@media (max-width: 860px) {
+  html.user-logged-in main.main { padding-bottom: calc(var(--nx-bar-h) + env(safe-area-inset-bottom, 0px) + 22px) !important; }
+}
 
 /* =====================================================================================
    4. Gaveta do celular: mesma identidade do menu lateral; cobre cabeçalho e barra inferior, tem usuário,
@@ -371,10 +386,12 @@ html.user-logged-in #mobileDrawer .mobile-drawer-nav button .ic {
 html.user-logged-in #mobileDrawer .mobile-drawer-nav button .label { flex: 1 1 auto !important; min-width: 0 !important; text-align: center !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; color: inherit !important; }
 /* Celulares estreitos: a gaveta encolhe (88% da tela) e o recuo simétrico de 54px deixava "Planejamento Orçamentário" (201px) cortado com reticências.
    O recuo passa a ser só do lado do ícone (50px) e o rótulo se centraliza no espaço que sobra; em <= 339px o texto desce para 14px (cabe em 320px). */
-html:where(.nqmax-389).user-logged-in #mobileDrawer .mobile-drawer-nav button.menu-btn-user { padding: 0 12px 0 50px !important; }
-
-html:where(.nqmax-339).user-logged-in #mobileDrawer .mobile-drawer-nav button.menu-btn-user { font-size: 14px !important; }
-
+@media (max-width: 389px) {
+  html.user-logged-in #mobileDrawer .mobile-drawer-nav button.menu-btn-user { padding: 0 12px 0 50px !important; }
+}
+@media (max-width: 339px) {
+  html.user-logged-in #mobileDrawer .mobile-drawer-nav button.menu-btn-user { font-size: 14px !important; }
+}
 html.user-logged-in #mobileDrawer .mobile-drawer-nav button:active { background: var(--nx-sh-wash) !important; }
 html.user-logged-in #mobileDrawer .mobile-drawer-nav button.active {
   background: linear-gradient(180deg, rgba(var(--nx-sh-acc), .27), rgba(var(--nx-sh-acc), .13)) !important;
@@ -430,18 +447,28 @@ html.user-logged-in #mobileDrawer #mobileDrawerLogoutBtn .ic { width: auto !impo
      No celular (<= 720px) ele continua empilhado, como as regras da seção 6 esperam.
    - Rótulos com selo ("E-mail cadastrado" + "Login da conta") saíam colados; ganham um respiro.
    ===================================================================================== */
-html:where(.nqmin-721).user-logged-in #pageContent .subscription-overview { flex-direction: row !important; }
-
+@media (min-width: 721px) {
+  html.user-logged-in #pageContent .subscription-overview { flex-direction: row !important; }
+}
 html.user-logged-in #pageContent label[style*="justify-content:space-between"] > span + span { margin-left: 10px !important; }
 
 /* =====================================================================================
    6. Telas internas em celular e tablet em pé: nada fica cortado pela borda do cartão
    (achados pela varredura de todas as telas em 320-768px)
    ===================================================================================== */
-html:where(.nqmax-860).user-logged-in #pageContent .table-panel { overflow-x: auto !important; -webkit-overflow-scrolling: touch !important; }html:where(.nqmax-860).user-logged-in #pageContent .table-panel table { min-width: 460px; }
-
-html:where(.nqmax-720).user-logged-in #pageContent .subscription-overview > div:first-child { flex-wrap: wrap !important; min-width: 0 !important; width: 100% !important; }html:where(.nqmax-720).user-logged-in #pageContent .subscription-overview > div:first-child > div:last-child { flex: 1 1 0 !important; min-width: 0 !important; }html:where(.nqmax-720).user-logged-in #pageContent .subscription-overview > div:first-child > div:last-child > div:first-child { flex-wrap: wrap !important; }html:where(.nqmax-720).user-logged-in #pageContent .subscription-overview > div:last-child { width: 100% !important; margin-left: 0 !important; flex-wrap: wrap !important; }html:where(.nqmax-720).user-logged-in #pageContent .subscription-overview > div:last-child button { flex: 1 1 auto !important; }
-
+@media (max-width: 860px) {
+  /* Tabelas largas (ex.: Análises) rolam na horizontal dentro do painel em vez de serem cortadas */
+  html.user-logged-in #pageContent .table-panel { overflow-x: auto !important; -webkit-overflow-scrolling: touch !important; }
+  html.user-logged-in #pageContent .table-panel table { min-width: 460px; }
+}
+@media (max-width: 720px) {
+  /* Minha Conta > Plano & Assinatura: a regra antiga somava width:100% + margin-left:68px (estourava) e o selo não quebrava de linha */
+  html.user-logged-in #pageContent .subscription-overview > div:first-child { flex-wrap: wrap !important; min-width: 0 !important; width: 100% !important; }
+  html.user-logged-in #pageContent .subscription-overview > div:first-child > div:last-child { flex: 1 1 0 !important; min-width: 0 !important; }
+  html.user-logged-in #pageContent .subscription-overview > div:first-child > div:last-child > div:first-child { flex-wrap: wrap !important; }
+  html.user-logged-in #pageContent .subscription-overview > div:last-child { width: 100% !important; margin-left: 0 !important; flex-wrap: wrap !important; }
+  html.user-logged-in #pageContent .subscription-overview > div:last-child button { flex: 1 1 auto !important; }
+}
 /* Etiquetas dos cartões de resumo: no mínimo 10,5px para leitura */
 html.user-logged-in #pageContent .kpi-tag { font-size: 10.5px !important; }
 
@@ -697,10 +724,19 @@ html.nexus-farewell #authPage { display: none !important; }
 .sg-toast:hover,
 .sg-plaque:hover { box-shadow: 0 2px 4px rgba(0, 0, 0, .3), 0 26px 56px -14px rgba(0, 0, 0, .62), 0 60px 120px -28px rgba(0, 0, 0, .7), 0 0 110px -12px rgba(var(--sg), .6), inset 0 1px 0 rgba(255, 255, 255, .5), inset 0 -1px 0 rgba(255, 255, 255, .06) !important; }
 
-:where(html.nqmax-560) .sg-welcome-stage,
-:where(html.nqmax-560) .sg-stage { padding: 14px !important; }:where(html.nqmax-560) .sg-toast,
-:where(html.nqmax-560) .sg-plaque { top: auto !important; right: auto !important; left: auto !important; width: 100% !important; border-radius: 18px !important; }:where(html.nqmax-560) .sg-in { gap: 12px !important; padding: 18px 16px 20px !important; }:where(html.nqmax-560) .sg-hero-row { gap: 12px !important; }:where(html.nqmax-560) .sg-plate { width: 44px !important; height: 44px !important; border-radius: 14px !important; }:where(html.nqmax-560) .sg-plate svg { width: 22px !important; height: 22px !important; }:where(html.nqmax-560) .sg-title { font-size: 17.5px !important; }:where(html.nqmax-560) .sg-text { font-size: 13px !important; }:where(html.nqmax-560) .sg-chip { font-size: 11px !important; }
-
+@media (max-width: 560px) {
+  .sg-welcome-stage,
+  .sg-stage { padding: 14px !important; }
+  .sg-toast,
+  .sg-plaque { top: auto !important; right: auto !important; left: auto !important; width: 100% !important; border-radius: 18px !important; }
+  .sg-in { gap: 12px !important; padding: 18px 16px 20px !important; }
+  .sg-hero-row { gap: 12px !important; }
+  .sg-plate { width: 44px !important; height: 44px !important; border-radius: 14px !important; }
+  .sg-plate svg { width: 22px !important; height: 22px !important; }
+  .sg-title { font-size: 17.5px !important; }
+  .sg-text { font-size: 13px !important; }
+  .sg-chip { font-size: 11px !important; }
+}
 @media (prefers-reduced-motion: reduce) {
   .sg, .sg-stage { transition: opacity .2s ease !important; transform: none !important; }
   .sg.show::before, .sg.show .sg-plate::before, .sg.show .sg-check, .sg-dot::after, .sg-stage .orb { animation: none !important; }
@@ -722,10 +758,12 @@ html.nexus-farewell #authPage { display: none !important; }
 html.user-logged-in.is-admin { --nx-tb: 48px; --nx-tb-ic: 22px; --nx-tb-fs: 14px; }
 html.user-logged-in.is-admin[data-top-ic="normal"] { --nx-tb: 40px; --nx-tb-ic: 18px; --nx-tb-fs: 13px; }
 html.user-logged-in.is-admin[data-top-ic="extra"] { --nx-tb: 56px; --nx-tb-ic: 26px; --nx-tb-fs: 15px; }
-html:where(.nqmax-860).user-logged-in.is-admin[data-top-ic] { --nx-tb: 44px; --nx-tb-ic: 20px; --nx-tb-fs: 13px; }
-
-html:where(.nqmin-481.nqmax-860).user-logged-in.is-admin[data-top-ic="extra"] { --nx-tb: 48px; --nx-tb-ic: 22px; }
-
+@media (max-width: 860px) {
+  html.user-logged-in.is-admin[data-top-ic] { --nx-tb: 44px; --nx-tb-ic: 20px; --nx-tb-fs: 13px; }
+}
+@media (min-width: 481px) and (max-width: 860px) {
+  html.user-logged-in.is-admin[data-top-ic="extra"] { --nx-tb: 48px; --nx-tb-ic: 22px; }
+}
 
 html.user-logged-in.is-admin .topheader .aether-header-right { gap: calc(var(--nx-tb) * .2) !important; }
 html.user-logged-in.is-admin .topheader .icon-btn,
@@ -759,8 +797,10 @@ html.user-logged-in.is-admin .topheader #logoutBtn {
 }
 html.user-logged-in.is-admin .topheader #logoutBtn svg { width: var(--nx-tb-ic) !important; height: var(--nx-tb-ic) !important; }
 html.user-logged-in.is-admin .topheader #headerMirrorExitBtn { height: var(--nx-tb) !important; min-height: var(--nx-tb) !important; font-size: var(--nx-tb-fs) !important; padding: 0 16px !important; }
-html:where(.nqmax-860).user-logged-in.is-admin .topheader #logoutBtn { width: var(--nx-tb) !important; min-width: var(--nx-tb) !important; padding: 0 !important; }
-
+@media (max-width: 860px) {
+  /* No celular o "Sair" e o botão de escala mostram só o ícone: ficam quadrados como os outros */
+  html.user-logged-in.is-admin .topheader #logoutBtn { width: var(--nx-tb) !important; min-width: var(--nx-tb) !important; padding: 0 !important; }
+}
 
 /* Controle do tamanho (dentro da lista "Tamanho / Resolução"; só o administrador vê) */
 html.user-logged-in:not(.is-admin) .scale-dropdown .nx-topic-sec { display: none !important; }
@@ -790,211 +830,10 @@ html.user-logged-in .scale-dropdown .nx-topic-btn:focus-visible { outline: 2px s
    no topo da própria página (desenhadas pelo administracao.js). Só no computador/tablet largo (>= 861px): no celular continuam a barra
    inferior e a gaveta. Só liga quando o módulo carregou (html.adm-topo) e fora do modo espelho (o admin vendo a conta de um usuário precisa do menu dele).
    ===================================================================================== */
-html:where(.nqmin-861).user-logged-in.is-admin.adm-topo.adm-topo-pagina body:not(.has-view-mode-banner) #menu { display: none !important; }html:where(.nqmin-861).user-logged-in.is-admin.adm-topo.adm-topo-pagina body:not(.has-view-mode-banner) .main { margin-left: 0 !important; width: 100% !important; max-width: none !important; }html:where(.nqmin-861).user-logged-in.is-admin.adm-topo.adm-topo-pagina body:not(.has-view-mode-banner) #pageContent { max-width: 2200px !important; }
-
+@media (min-width: 861px) {
+  html.user-logged-in.is-admin.adm-topo body:not(.has-view-mode-banner) #menu { display: none !important; }
+  html.user-logged-in.is-admin.adm-topo body:not(.has-view-mode-banner) .main { margin-left: 0 !important; width: 100% !important; max-width: none !important; }
+  html.user-logged-in.is-admin.adm-topo body:not(.has-view-mode-banner) #pageContent { max-width: 2200px !important; }
+}
 
 } /* fim da layer nx-shell */
-
-
-/* =====================================================================================
-   10. Abas do menu — refinamento global (todas as telas do menu)
-   Vale para o menu lateral expandido, o menu recolhido (trilho), a gaveta do celular e a
-   barra inferior. Um único padrão: pílula de 46px, chip de ícone uniforme, hover com
-   deslize sutil e ativo com barra de acento + fundo em degradê da paleta.
-   ===================================================================================== */
-@layer nx-menu-tabs {
-
-  /* ---------- Item base (sidebar expandido + gaveta) ---------- */
-  html.user-logged-in:not(.is-admin) #menu .menu-btn-user,
-  html.user-logged-in:not(.is-admin) #mobileDrawerMenu .menu-btn-user,
-  html.user-logged-in:not(.is-admin) #mobileDrawer .menu-btn-user {
-    position: relative !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 12px !important;
-    min-height: 46px !important;
-    height: 46px !important;
-    margin-block: 2px !important;
-    padding: 0 12px !important;
-    border: 1px solid transparent !important;
-    border-radius: 12px !important;
-    background: transparent !important;
-    color: var(--nx-sh-ink-2, #BAC6D9) !important;
-    font-size: 13.5px !important;
-    font-weight: 600 !important;
-    letter-spacing: .01em !important;
-    text-align: left !important;
-    cursor: pointer !important;
-    transition: background-color .16s ease, border-color .16s ease, color .16s ease, transform .16s ease, box-shadow .16s ease !important;
-  }
-
-  /* Chip do ícone: coluna e tamanho únicos em todos os itens */
-  html.user-logged-in #menu .menu-btn-user .ic,
-  html.user-logged-in #mobileDrawerMenu .menu-btn-user .ic,
-  html.user-logged-in #mobileDrawer .menu-btn-user .ic {
-    flex: 0 0 34px !important;
-    width: 34px !important;
-    min-width: 34px !important;
-    height: 34px !important;
-    display: inline-grid !important;
-    place-items: center !important;
-    border-radius: 10px !important;
-    border: 1px solid var(--nx-sh-line, rgba(255,255,255,.09)) !important;
-    background: var(--nx-sh-wash, rgba(255,255,255,.065)) !important;
-    color: var(--nx-sh-muted, #96A4BA) !important;
-    transition: background-color .16s ease, border-color .16s ease, color .16s ease !important;
-  }
-  html.user-logged-in #menu .menu-btn-user .ic svg,
-  html.user-logged-in #mobileDrawerMenu .menu-btn-user .ic svg,
-  html.user-logged-in #mobileDrawer .menu-btn-user .ic svg {
-    width: 17px !important;
-    height: 17px !important;
-  }
-
-  html.user-logged-in #menu .menu-btn-user .label,
-  html.user-logged-in #mobileDrawerMenu .menu-btn-user .label,
-  html.user-logged-in #mobileDrawer .menu-btn-user .label {
-    flex: 1 1 auto !important;
-    min-width: 0 !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    white-space: nowrap !important;
-    text-align: left !important;
-  }
-
-  /* ---------- Hover (inativo) ---------- */
-  @media (hover: hover) {
-    html.user-logged-in #menu .menu-btn-user:not(.active):hover,
-    html.user-logged-in #mobileDrawerMenu .menu-btn-user:not(.active):hover,
-    html.user-logged-in #mobileDrawer .menu-btn-user:not(.active):hover {
-      background: var(--nx-sh-wash, rgba(255,255,255,.065)) !important;
-      border-color: rgba(var(--nx-sh-acc, 250,189,46), .28) !important;
-      color: var(--nx-sh-ink, #EEF3FA) !important;
-      transform: translateX(3px) !important;
-    }
-    html.user-logged-in #menu .menu-btn-user:not(.active):hover .ic,
-    html.user-logged-in #mobileDrawerMenu .menu-btn-user:not(.active):hover .ic,
-    html.user-logged-in #mobileDrawer .menu-btn-user:not(.active):hover .ic {
-      color: rgb(var(--nx-sh-acc, 250,189,46)) !important;
-      border-color: rgba(var(--nx-sh-acc, 250,189,46), .45) !important;
-    }
-  }
-
-  /* ---------- Item ativo ---------- */
-  html.user-logged-in #menu .menu-btn-user.active,
-  html.user-logged-in #mobileDrawerMenu .menu-btn-user.active,
-  html.user-logged-in #mobileDrawer .menu-btn-user.active {
-    background: linear-gradient(100deg, rgba(var(--nx-sh-acc, 250,189,46), .20), rgba(var(--nx-sh-acc, 250,189,46), .07)) !important;
-    border-color: rgba(var(--nx-sh-acc, 250,189,46), .38) !important;
-    color: #fff !important;
-    box-shadow: inset 3px 0 0 rgb(var(--nx-sh-acc, 250,189,46)), 0 6px 18px -10px rgba(var(--nx-sh-acc, 250,189,46), .5) !important;
-  }
-  html.user-logged-in #menu .menu-btn-user.active .ic,
-  html.user-logged-in #mobileDrawerMenu .menu-btn-user.active .ic,
-  html.user-logged-in #mobileDrawer .menu-btn-user.active .ic {
-    color: #1A1408 !important;
-    background: rgb(var(--nx-sh-acc, 250,189,46)) !important;
-    border-color: transparent !important;
-    box-shadow: 0 4px 12px -4px rgba(var(--nx-sh-acc, 250,189,46), .7) !important;
-  }
-
-  /* ---------- Foco de teclado ---------- */
-  html.user-logged-in #menu .menu-btn-user:focus-visible,
-  html.user-logged-in #mobileDrawerMenu .menu-btn-user:focus-visible,
-  html.user-logged-in #mobileDrawer .menu-btn-user:focus-visible {
-    outline: 2px solid rgb(var(--nx-sh-acc, 250,189,46)) !important;
-    outline-offset: 2px !important;
-  }
-
-  /* ---------- Menu recolhido (trilho de ícones): chip maior, tooltip mantido ---------- */
-  html:where(.nqmin-861).user-logged-in.sidebar-collapsed #menu .menu-btn-user,
-html:where(.nqmin-861).user-logged-in body.sidebar-collapsed #menu .menu-btn-user {
-      justify-content: center !important;
-      padding: 0 !important;
-      height: 48px !important;
-      min-height: 48px !important;
-    }html:where(.nqmin-861).user-logged-in.sidebar-collapsed #menu .menu-btn-user .ic,
-html:where(.nqmin-861).user-logged-in body.sidebar-collapsed #menu .menu-btn-user .ic {
-      flex-basis: 36px !important;
-      width: 36px !important;
-      min-width: 36px !important;
-      height: 36px !important;
-    }
-  
-
-  /* ---------- Barra inferior do celular: ativo com pílula de acento ---------- */
-  html.user-logged-in #mobileBottomBar button {
-    border-radius: 12px !important;
-    transition: background-color .16s ease, color .16s ease, transform .16s ease !important;
-  }
-  html.user-logged-in #mobileBottomBar button.active,
-  html.user-logged-in #mobileBottomBar button[aria-current] {
-    background: rgba(var(--nx-sh-acc, 250,189,46), .16) !important;
-    color: rgb(var(--nx-sh-acc, 250,189,46)) !important;
-  }
-
-  /* Respeito a quem pediu menos movimento */
-  @media (prefers-reduced-motion: reduce) {
-    html.user-logged-in #menu .menu-btn-user,
-    html.user-logged-in #mobileDrawerMenu .menu-btn-user,
-    html.user-logged-in #mobileDrawer .menu-btn-user,
-    html.user-logged-in #mobileBottomBar button { transition: none !important; }
-    html.user-logged-in #menu .menu-btn-user:hover { transform: none !important; }
-  }
-}
-
-/* Mesmo padrão para os itens do menu do administrador (abas internas do painel admin) */
-@layer nx-menu-tabs {
-  html.user-logged-in #menu .menu-btn-admin {
-    position: relative !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 12px !important;
-    min-height: 54px !important;
-    height: 54px !important;
-    margin-block: 2px !important;
-    padding: 0 12px !important;
-    border: 1px solid transparent !important;
-    border-radius: 12px !important;
-    background: transparent !important;
-    color: var(--nx-sh-ink-2, #BAC6D9) !important;
-    font-size: 13.5px !important;
-    font-weight: 600 !important;
-    cursor: pointer !important;
-    transition: background-color .16s ease, border-color .16s ease, color .16s ease, transform .16s ease, box-shadow .16s ease !important;
-  }
-  html.user-logged-in #menu .menu-btn-admin .ic {
-    flex: 0 0 34px !important;
-    width: 34px !important;
-    min-width: 34px !important;
-    height: 34px !important;
-    display: inline-grid !important;
-    place-items: center !important;
-    border-radius: 10px !important;
-    border: 1px solid var(--nx-sh-line, rgba(255,255,255,.09)) !important;
-    background: var(--nx-sh-wash, rgba(255,255,255,.065)) !important;
-    color: var(--nx-sh-muted, #96A4BA) !important;
-    transition: background-color .16s ease, border-color .16s ease, color .16s ease !important;
-  }
-  @media (hover: hover) {
-    html.user-logged-in #menu .menu-btn-admin:not(.active):hover {
-      background: var(--nx-sh-wash, rgba(255,255,255,.065)) !important;
-      border-color: rgba(var(--nx-sh-acc, 250,189,46), .28) !important;
-      color: var(--nx-sh-ink, #EEF3FA) !important;
-      transform: translateX(3px) !important;
-    }
-    html.user-logged-in #menu .menu-btn-admin:not(.active):hover .ic { color: rgb(var(--nx-sh-acc, 250,189,46)) !important; border-color: rgba(var(--nx-sh-acc, 250,189,46), .45) !important; }
-  }
-  html.user-logged-in #menu .menu-btn-admin.active {
-    background: linear-gradient(100deg, rgba(var(--nx-sh-acc, 250,189,46), .20), rgba(var(--nx-sh-acc, 250,189,46), .07)) !important;
-    border-color: rgba(var(--nx-sh-acc, 250,189,46), .38) !important;
-    color: #fff !important;
-    box-shadow: inset 3px 0 0 rgb(var(--nx-sh-acc, 250,189,46)) !important;
-  }
-  html.user-logged-in #menu .menu-btn-admin.active .ic {
-    color: #1A1408 !important;
-    background: rgb(var(--nx-sh-acc, 250,189,46)) !important;
-    border-color: transparent !important;
-  }
-  html.user-logged-in #menu .menu-btn-admin:focus-visible { outline: 2px solid rgb(var(--nx-sh-acc, 250,189,46)) !important; outline-offset: 2px !important; }
-}

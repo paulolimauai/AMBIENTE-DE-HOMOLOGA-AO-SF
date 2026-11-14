@@ -11,12 +11,10 @@
 // ---------- Catálogos ----------
 // Fila de chamados: Novo -> Atendimento atribuído (-> Pendente, quando espera retorno) -> Resolvido -> Fechado
 const STATUS = Object.freeze(['Novo', 'Pendente', 'Atendimento atribuído', 'Resolvido', 'Fechado']);
-// Prioridade: quatro níveis. "Normal" e "Urgente" são nomes antigos.
+// Severidade (antes "prioridade"): quatro níveis. "Normal" e "Urgente" são nomes antigos.
 const PRIORIDADES = Object.freeze(['Crítica', 'Alta', 'Média', 'Baixa']);
 const PRIORIDADES_ANTIGAS = Object.freeze({ 'normal': 'Média', 'urgente': 'Crítica' });
 const PRIORIDADE_PADRAO = 'Média';
-// Quem abre o chamado (solicitante) só escolhe Média ou Baixa; Crítica e Alta ficam para a triagem da equipe
-const PRIORIDADES_ABERTURA = Object.freeze(['Média', 'Baixa']);
 
 // Tipo do chamado: o solicitante escolhe entre pedir algo (requisição) ou relatar algo que parou (incidente)
 const TIPOS = Object.freeze(['Requisição', 'Incidente']);
@@ -64,10 +62,10 @@ const CANAIS_PUBLICOS = Object.freeze(['Tela de Login', 'Portal Web', 'App Mobil
 
 const LIMITES = Object.freeze({ nome: 120, email: 254, telefone: 40, titulo: 200, descricao: 5000, notas: 2000, tecnico: 150, canal: 60, categoria: 100, sla: 40, asset: 150, solution: 4000, fila: 60 });
 
-// Política de SLA por prioridade: Crítica 4 h, Alta 8 h, Média 3 dias úteis, Baixa 5 dias úteis (sáb. e dom. não contam)
-const SLA_POLITICA = Object.freeze({ 'Crítica': '4 Horas', 'Alta': '8 Horas', 'Média': '3 Dias Úteis', 'Baixa': '5 Dias Úteis' });
-// Prazos padrão de políticas anteriores: chamado que ainda guarda um deles passa a seguir a política nova
-const SLA_ANTIGO_PADRAO = Object.freeze({ 'Crítica': ['30 minutos', '30 minuto'], 'Alta': ['1 hora'], 'Média': ['24 horas', '24 hora'] });
+// Política de SLA por severidade: Crítica 4 h, Alta 8 h, Média 24 h (corridas), Baixa 5 dias úteis (sáb. e dom. não contam)
+const SLA_POLITICA = Object.freeze({ 'Crítica': '4 Horas', 'Alta': '8 Horas', 'Média': '24 Horas', 'Baixa': '5 Dias Úteis' });
+// Prazos padrão da política anterior (Crítica 30 min, Alta 1 h): chamado que ainda guarda um deles passa a seguir a política nova
+const SLA_ANTIGO_PADRAO = Object.freeze({ 'Crítica': ['30 minutos', '30 minuto'], 'Alta': ['1 hora'] });
 
 // Sem acento, minúsculo e sem espaços nas pontas: chave de comparação dos catálogos
 function chaveDe(valor) {
@@ -177,65 +175,42 @@ function dataOuOriginal(valor) {
 }
 
 // ---------- Protocolo ----------
-// Formato atual: sequência a partir de REQ-0001/INC-0001 (o prefixo diz o tipo: REQ = Requisição, INC = Incidente).
-// Os formatos antigos continuam válidos para consulta e atendimento: OS-0001 (sequencial antigo), OS-AAMMDD-XXXX
-// (ex.: OS-261106-K7QX) e OS-12345678 (só números). Na leitura, o sequencial antigo OS-NNNN já sai com o prefixo do tipo.
-const RE_PROTOCOLO_ALEATORIO = /^(OS|REQ|INC)-?(\d{6})-?([A-HJ-NP-Z2-9]{4})$/i;
-const RE_PROTOCOLO_SEQUENCIAL = /^(OS|REQ|INC)-?(\d{1,5})$/i;
-const RE_PROTOCOLO_LEGADO = /^(OS|REQ|INC)-?(\d{6,10})$/i;
+// Formato atual: sequência a partir de OS-0001 (OS-0001, OS-0002, ... OS-9999, OS-10000...). Cada chamado novo pega o número seguinte.
+// Os formatos antigos continuam válidos para consulta e atendimento: OS-AAMMDD-XXXX (ex.: OS-261106-K7QX) e OS-12345678 (só números).
+const RE_PROTOCOLO_ALEATORIO = /^OS-?(\d{6})-?([A-HJ-NP-Z2-9]{4})$/;
+const RE_PROTOCOLO_SEQUENCIAL = /^OS-?(\d{1,5})$/;
+const RE_PROTOCOLO_LEGADO = /^OS-?(\d{6,10})$/;
 const PROTOCOLO_SEQUENCIAL_MAXIMO = 99999;
 
-const prefixoDoTipo = (tipo) => (tipo === 'Incidente' ? 'INC' : 'REQ');
-const formatarProtocoloSequencial = (numero, tipo) => prefixoDoTipo(tipo) + '-' + String(numero).padStart(4, '0');
+const formatarProtocoloSequencial = (numero) => 'OS-' + String(numero).padStart(4, '0');
 
 function normalizarProtocolo(valor) {
   const texto = String(valor == null ? '' : valor).trim().replace(/^#/, '').replace(/\s+/g, '').toUpperCase();
   const aleatorio = RE_PROTOCOLO_ALEATORIO.exec(texto);
-  if (aleatorio) return aleatorio[1].toUpperCase() + '-' + aleatorio[2] + '-' + aleatorio[3];
+  if (aleatorio) return 'OS-' + aleatorio[1] + '-' + aleatorio[2];
   const sequencial = RE_PROTOCOLO_SEQUENCIAL.exec(texto);
-  if (sequencial) {
-    const num = Number(sequencial[2]);
-    return num >= 1 ? sequencial[1].toUpperCase() + '-' + String(num).padStart(4, '0') : null; // OS-1/REQ-1 = REQ-0001; OS-0000 não existe
-  }
+  if (sequencial) return Number(sequencial[1]) >= 1 ? formatarProtocoloSequencial(Number(sequencial[1])) : null; // OS-1 = OS-0001
   const legado = RE_PROTOCOLO_LEGADO.exec(texto);
-  if (legado) return legado[1].toUpperCase() + '-' + legado[2];
+  if (legado) return 'OS-' + legado[1];
   return null;
 }
 
-// Número de um protocolo sequencial (REQ-0007/OS-0007/INC-0007 -> 7); 0 para qualquer outro formato
+// Número de um protocolo sequencial (OS-0007 -> 7); 0 para qualquer outro formato
 function numeroDoProtocolo(protocolo) {
-  const m = /^(?:OS|REQ|INC)-(\d{4,5})$/.exec(normalizarProtocolo(protocolo) || '');
+  const m = /^OS-(\d{4,5})$/.exec(normalizarProtocolo(protocolo) || '');
   return m ? Number(m[1]) : 0;
-}
-
-// Dois protocolos sequenciais são o mesmo chamado qualquer que seja a inicial (OS-0007 = REQ-0007 = INC-0007)
-function mesmoProtocolo(a, b) {
-  const na = numeroDoProtocolo(a);
-  const nb = numeroDoProtocolo(b);
-  if (na && nb) return na === nb;
-  const pa = normalizarProtocolo(a) || String(a == null ? '' : a).trim().toUpperCase();
-  const pb = normalizarProtocolo(b) || String(b == null ? '' : b).trim().toUpperCase();
-  return Boolean(pa) && pa === pb;
-}
-
-// Variantes de escrita de um protocolo sequencial (para consultas que não sabem a inicial gravada)
-function variantesProtocoloSequencial(protocolo) {
-  const n = numeroDoProtocolo(protocolo);
-  if (!n) return null;
-  const digitos = String(n).padStart(4, '0');
-  return ['OS-' + digitos, 'REQ-' + digitos, 'INC-' + digitos];
 }
 
 /**
  * Próximo protocolo da sequência: o maior número já usado nos chamados (+ o `minimo`, que o servidor alimenta com o contador
- * gravado e com o maior número do banco) mais um. O prefixo sai do tipo do chamado (REQ-/INC-).
+ * gravado e com o maior número do banco) mais um. Sem nenhum chamado numerado, começa em OS-0001.
  * É síncrona de propósito: o servidor a chama junto com a gravação do chamado, e assim dois pedidos ao mesmo tempo não repetem número.
  */
-function proximoProtocolo(ordens, { minimo = 0, tipo } = {}) {
+function proximoProtocolo(ordens, { minimo = 0 } = {}) {
   let maior = Number.isFinite(Number(minimo)) ? Math.max(0, Math.floor(Number(minimo))) : 0;
   for (const o of Array.isArray(ordens) ? ordens : []) maior = Math.max(maior, numeroDoProtocolo(o && o.protocol));
   if (maior >= PROTOCOLO_SEQUENCIAL_MAXIMO) throw new Error('Limite de protocolos sequenciais atingido.');
-  return formatarProtocoloSequencial(maior + 1, tipo);
+  return formatarProtocoloSequencial(maior + 1);
 }
 
 function mesmaReferencia(ordem, referencia) {
@@ -243,7 +218,9 @@ function mesmaReferencia(ordem, referencia) {
   const ref = String(referencia == null ? '' : referencia).trim();
   if (!ref) return false;
   if (String(ordem.id) === ref) return true;
-  return mesmoProtocolo(ordem.protocol, ref);
+  const a = normalizarProtocolo(ordem.protocol) || String(ordem.protocol || '').trim().toUpperCase();
+  const b = normalizarProtocolo(ref) || ref.toUpperCase();
+  return Boolean(a) && a === b;
 }
 
 // ---------- Telefone e CPF ----------
@@ -324,10 +301,8 @@ function validarAbertura(payload, { admin = false, isEmail, filas } = {}) {
   let prioridade = PRIORIDADE_PADRAO;
   if (prioridadeBruta) {
     prioridade = prioridadeCanonica(prioridadeBruta);
-    if (!prioridade) erros.priority = 'Prioridade inválida. Use: ' + PRIORIDADES.join(', ') + '.';
+    if (!prioridade) erros.priority = 'Severidade inválida. Use: ' + PRIORIDADES.join(', ') + '.';
   }
-  // Abertura pelo solicitante: fora de Média/Baixa cai na padrão (a equipe eleva a prioridade na triagem)
-  if (!admin && !PRIORIDADES_ABERTURA.includes(prioridade)) prioridade = PRIORIDADE_PADRAO;
 
   // Requisição (pedir algo) ou incidente (algo que parou): sem escolha, vale o tipo sugerido pela categoria
   const tipoBruto = limparTexto(p.ticket_type !== undefined ? p.ticket_type : p.tipo, 30);
@@ -571,8 +546,8 @@ function eventoDeSistema(texto, { agoraIso, autor, interno = false }) {
 /**
  * Aplica as mudanças do administrador sobre um chamado existente.
  * Só altera o que veio no pedido (antes, enviar apenas as notas devolvia o chamado para o início da fila).
- * Cada mudança relevante (status, técnico, prioridade, tipo, fila) vira uma linha automática no histórico; categoria, ativo e
- * horas viram linhas internas. Se a prioridade mudar e o pedido não trouxer o SLA, o prazo é recalculado pela política.
+ * Cada mudança relevante (status, técnico, severidade, tipo, fila) vira uma linha automática no histórico; categoria, ativo e
+ * horas viram linhas internas. Se a severidade mudar e o pedido não trouxer o SLA, o prazo é recalculado pela política.
  * Coerência do status: ao atribuir um técnico a um chamado "Novo" ele passa a "Atendimento atribuído"; ao tirar o técnico de
  * um chamado "Atendimento atribuído" ele volta a "Novo" (a menos que o pedido já traga o status).
  * `filas` (opcional) é o catálogo de filas: com ele, só se aceita uma fila cadastrada.
@@ -607,9 +582,9 @@ function aplicarAtualizacao(ordemBruta, payload, { agoraIso, ator, filas } = {})
   let prioridadeMudou = false;
   if (veio(p.priority)) {
     const prioridade = prioridadeCanonica(p.priority);
-    if (!prioridade) return { ok: false, mensagem: 'Prioridade inválida. Use: ' + PRIORIDADES.join(', ') + '.' };
+    if (!prioridade) return { ok: false, mensagem: 'Severidade inválida. Use: ' + PRIORIDADES.join(', ') + '.' };
     if (prioridade !== ordem.priority) {
-      mudancas.push('prioridade: ' + (ordem.priority || '—') + ' → ' + prioridade);
+      mudancas.push('severidade: ' + (ordem.priority || '—') + ' → ' + prioridade);
       prioridadeMudou = true;
     }
     novo.priority = prioridade;
@@ -621,15 +596,6 @@ function aplicarAtualizacao(ordemBruta, payload, { agoraIso, ator, filas } = {})
     if (tipo !== ordem.ticket_type) {
       mudancas.push('tipo: ' + (ordem.ticket_type || '—') + ' → ' + tipo);
       publico('Tipo do chamado alterado de "' + (ordem.ticket_type || '—') + '" para "' + tipo + '".');
-      // O protocolo sequencial muda só a inicial (REQ-0007 ⇄ INC-0007), mantendo o número
-      const seq = /^(?:OS|REQ|INC)-(\d{4,5})$/.exec(String(ordem.protocol || ''));
-      if (seq) {
-        const protoNovo = prefixoDoTipo(tipo) + '-' + seq[1];
-        if (protoNovo !== ordem.protocol) {
-          mudancas.push('protocolo: ' + ordem.protocol + ' → ' + protoNovo);
-          novo.protocol = protoNovo;
-        }
-      }
     }
     novo.ticket_type = tipo;
   }
@@ -700,12 +666,12 @@ function aplicarAtualizacao(ordemBruta, payload, { agoraIso, ator, filas } = {})
     }
   }
 
-  // O prazo acompanha a prioridade, a menos que o pedido já traga um SLA próprio
+  // O prazo acompanha a severidade, a menos que o pedido já traga um SLA próprio
   if (prioridadeMudou && !veio(p.sla)) {
     novo.sla = calcularSlaPorPrioridade(novo.priority);
   }
   if (prioridadeMudou) {
-    publico('Prioridade alterada de "' + (ordem.priority || '—') + '" para "' + novo.priority + '". Prazo de atendimento (SLA): ' + (veio(p.sla) ? limparTexto(p.sla, LIMITES.sla) : novo.sla) + '.');
+    publico('Severidade alterada de "' + (ordem.priority || '—') + '" para "' + novo.priority + '". Prazo de atendimento (SLA): ' + (veio(p.sla) ? limparTexto(p.sla, LIMITES.sla) : novo.sla) + '.');
   }
 
   if (veio(p.sla)) {
@@ -911,7 +877,7 @@ function aplicarAcaoSolicitante(ordemBruta, payload, { agoraIso, agora = Date.no
 
 // ---------- Leitura ----------
 // Padroniza o que vem do SQL Server e do arquivo local: textos nunca nulos, datas sempre em ISO 8601 e os nomes de status,
-// prioridade e tipo sempre os atuais. Chamado gravado antes de existir o "tipo" (ticket_type vazio) é do modelo antigo, em que
+// severidade e tipo sempre os atuais. Chamado gravado antes de existir o "tipo" (ticket_type vazio) é do modelo antigo, em que
 // "Pendente" era o chamado recém-aberto: vira "Novo" (ou "Atendimento atribuído", se já tinha técnico).
 function normalizarOrdem(linha) {
   if (!linha || typeof linha !== 'object') return null;
@@ -945,24 +911,18 @@ function normalizarOrdem(linha) {
   else status = statusCanonico(statusBruto) || statusBruto;
 
   const serviceType = texto(linha.service_type).trim() || CATEGORIA_PADRAO;
-  const ticketTypeFinal = tipoCanonico(linha.ticket_type) || tipoSugerido(serviceType);
-  // Sequencial antigo (OS-NNNN) sai já com a inicial do tipo (REQ-/INC-): a migração acontece na leitura
-  const protocolBruto = texto(linha.protocol).trim();
-  const protocolNorm = normalizarProtocolo(protocolBruto) || protocolBruto;
-  const seqAntigo = /^(?:OS|REQ|INC)-(\d{4,5})$/.exec(protocolNorm);
-  const protocolFinal = seqAntigo ? prefixoDoTipo(ticketTypeFinal) + '-' + seqAntigo[1] : protocolBruto;
   let sla = texto(linha.sla).trim();
   if (!sla || (SLA_ANTIGO_PADRAO[priority] || []).includes(chaveDe(sla))) sla = calcularSlaPorPrioridade(priority);
 
   return {
     ...linha,
-    protocol: protocolFinal,
+    protocol: texto(linha.protocol).trim(),
     client_name: texto(linha.client_name),
     client_email: texto(linha.client_email).toLowerCase().trim(),
     client_phone: texto(linha.client_phone),
     client_cpf: texto(linha.client_cpf),
     service_type: serviceType,
-    ticket_type: ticketTypeFinal,
+    ticket_type: tipoCanonico(linha.ticket_type) || tipoSugerido(serviceType),
     fila: texto(linha.fila).trim() || null,
     priority,
     title: texto(linha.title),
@@ -987,11 +947,7 @@ function normalizarOrdem(linha) {
 // (arquivo local, por exemplo quando o banco estava fora do ar na abertura) não se perde. Mais recentes primeiro.
 function mesclarOrdens(preferidas, outras) {
   const porChave = new Map();
-  // Sequencial casa pelo número (a inicial pode divergir entre banco e arquivo durante a migração OS-→REQ-/INC-)
-  const chaveDaOrdem = (o) => {
-    const n = numeroDoProtocolo(o.protocol);
-    return n ? 'seq:' + n : (normalizarProtocolo(o.protocol) || String(o.protocol || '').trim().toUpperCase() || 'id:' + o.id);
-  };
+  const chaveDaOrdem = (o) => normalizarProtocolo(o.protocol) || String(o.protocol || '').trim().toUpperCase() || 'id:' + o.id;
   for (const lista of [outras, preferidas]) {
     for (const bruta of Array.isArray(lista) ? lista : []) {
       const ordem = normalizarOrdem(bruta);
@@ -1039,7 +995,7 @@ function ordemCorresponde(ordem, consulta) {
   if (!ordem || !consulta) return false;
   switch (consulta.tipo) {
     case 'protocolo':
-      return mesmoProtocolo(ordem.protocol, consulta.valor);
+      return (normalizarProtocolo(ordem.protocol) || String(ordem.protocol || '').toUpperCase()) === consulta.valor;
     case 'email':
       return String(ordem.client_email || '').toLowerCase().trim() === consulta.valor;
     case 'numero':
@@ -1094,7 +1050,7 @@ module.exports = {
   calcularSlaPorPrioridade, prioridadeCanonica, statusCanonico, tipoCanonico, categoriaCanonica, tipoSugerido,
   acharFila, filaDaCategoria, filasIniciais, validarFila,
   limparTexto, escaparHtml, paraIso,
-  proximoProtocolo, numeroDoProtocolo, normalizarProtocolo, mesmaReferencia, mesmoProtocolo, variantesProtocoloSequencial,
+  proximoProtocolo, numeroDoProtocolo, normalizarProtocolo, mesmaReferencia,
   formatarTelefone, mesmoNumero, validarCpf, soDigitos,
   validarAbertura, montarOrdem, encontrarDuplicada, aplicarAtualizacao,
   normalizarOrdem, mesclarOrdens,

@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Central de Abertura de Chamados — Service Desk</title>
+    <title>GLPI Service Desk — Central de Chamados e Suporte</title>
     <!-- Ícones, tipografia e gráficos (versões fixas) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=optional" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
     <script>
     /* Aparência e fundo antes do primeiro desenho (evita piscar entre claro e escuro). Mesmas chaves do login (nexus-modo, nexus-fundo);
@@ -51,18 +51,18 @@
             color-scheme: dark;
 
             /* Cor de destaque: a paleta escolhida (a mesma do login e do app, chave nexus:cores) define --h, --h2, --sat,
-               --acc-rgb, --dk-dark e --on-brand (script de tema); o resto deriva delas. Estes valores são o dourado padrão (mesmo do app). */
-            --h: 42; --h2: 50; --sat: 62%;
-            --brand: hsl(var(--h) var(--sat) 55%);
-            --brand-d: hsl(var(--h) calc(var(--sat) * .78) 36%);
-            --accent: hsl(var(--h) var(--sat) 72%);
-            --glow-a: hsl(var(--h) calc(var(--sat) * .8) 50%);
-            --glow-b: hsl(var(--h2) calc(var(--sat) * .7) 40%);
-            --base: hsl(var(--h) calc(var(--sat) * .5) 6%);
-            --on-brand: #04211c;
-            --acc-rgb: 222, 190, 115;
+               --acc-rgb, --dk-dark e --on-brand (script de tema); o resto deriva delas. Estes valores são o azul padrão. */
+            --h: 224; --h2: 260; --sat: 100%;
+            --brand: hsl(var(--h) var(--sat) 66%);
+            --brand-d: hsl(var(--h) calc(var(--sat) * .66) 51%);
+            --accent: hsl(var(--h) var(--sat) 78%);
+            --glow-a: hsl(var(--h) calc(var(--sat) * .77) 57%);
+            --glow-b: hsl(var(--h2) calc(var(--sat) * .6) 47%);
+            --base: hsl(var(--h) calc(var(--sat) * .68) 7%);
+            --on-brand: #fff;
+            --acc-rgb: 79, 124, 255;
             --acc-l: var(--accent);
-            --dk-dark: 31, 24, 16;
+            --dk-dark: 9, 13, 32;
             --dk: var(--dk-dark);     /* superfícies escuras translúcidas (no modo claro viram brancas) */
             --lt: 255, 255, 255;      /* realces, bordas e preenchimentos claros (no modo claro viram azul-marinho) */
             --ln: rgba(var(--lt), .055);
@@ -84,7 +84,7 @@
 
             /* Cores de significado (não seguem a paleta): status, prioridade, SLA, alerta */
             --amber-rgb: 251, 191, 36;
-            --blue-rgb: 16, 185, 129;
+            --blue-rgb: 96, 165, 250;
             --green-rgb: 52, 211, 153;
             --rose-rgb: 251, 113, 133;
             --orange-rgb: 251, 146, 60;
@@ -92,12 +92,12 @@
             --sky-rgb: 56, 189, 248;
             --slate-rgb: 148, 163, 184;
             /* Tons de texto de cada cor de significado (no modo claro ficam escuros) */
-            --t-amber: #fcd34d; --t-green: #6ee7b7; --t-rose: #fda4af; --t-blue: #6EE7B7;
+            --t-amber: #fcd34d; --t-green: #6ee7b7; --t-rose: #fda4af; --t-blue: #93c5fd;
             --t-sky: #7dd3fc; --t-slate: #cbd5e1; --t-purple: #d8b4fe; --t-orange: #fdba74;
 
-            --font-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
-            --font-display: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
-            --font-mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+            --font-body: "Plus Jakarta Sans", "Segoe UI", system-ui, sans-serif;
+            --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+            --font-mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
             --sans: var(--font-body);
             --serif: var(--font-display);
 
@@ -207,14 +207,14 @@
         .btn-lg { height: 3rem; padding: 0 1.4rem; font-size: 0.875rem; border-radius: .95rem; }
         .btn-block { width: 100%; }
         .btn-amber { color: #261800; background: linear-gradient(145deg, #fde68a, #f59e0b 55%, #d97706); box-shadow: 0 10px 24px -8px rgba(245, 158, 11, .65), inset 0 1px 0 rgba(255, 255, 255, .55), inset 0 -1px 0 rgba(0, 0, 0, .14); }
-        .btn-blue { color: var(--white); background: linear-gradient(145deg, #10B981, #059669 50%, #047857); box-shadow: 0 10px 24px -8px rgba(16, 185, 129, .7), inset 0 1px 0 rgba(255, 255, 255, .3), inset 0 -1px 0 rgba(0, 0, 0, .18); }
+        .btn-blue { color: var(--white); background: linear-gradient(145deg, #2f6ff2, #2563eb 50%, #1d4ed8); box-shadow: 0 10px 24px -8px rgba(37, 99, 235, .7), inset 0 1px 0 rgba(255, 255, 255, .3), inset 0 -1px 0 rgba(0, 0, 0, .18); }
         .btn-green { color: #032a1c; background: linear-gradient(145deg, #6ee7b7, #10b981 58%, #059669); box-shadow: 0 10px 24px -8px rgba(16, 185, 129, .6), inset 0 1px 0 rgba(255, 255, 255, .5), inset 0 -1px 0 rgba(0, 0, 0, .14); }
         .btn-ghost { color: var(--ink-2); background: rgba(var(--lt), .075); border-color: rgba(var(--lt), .15); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .12); }
         .btn-ghost:hover { background: rgba(var(--lt), .14); color: var(--white); }
         .btn-icon { width: 2.25rem; height: 2.25rem; padding: 0; border-radius: .75rem; color: var(--ink-2); background: transparent; border-color: transparent; }
         .btn-icon:hover { background: rgba(var(--lt), .1); color: var(--white); transform: none; }
         .btn-icon.danger:hover { color: var(--t-rose); background: rgba(var(--rose-rgb), .14); }
-        .row-act-user:hover { background: linear-gradient(145deg, #10B981, #047857); border-color: transparent; color: var(--white); }
+        .row-act-user:hover { background: linear-gradient(145deg, #2f6ff2, #1d4ed8); border-color: transparent; color: var(--white); }
         .row-act-tech:hover { background: linear-gradient(145deg, #fde68a, #f59e0b); border-color: transparent; color: #261800; }
 
         /* ---------- Campos ---------- */
@@ -289,10 +289,8 @@
             position: fixed; inset: 0; z-index: 50;
             display: flex; align-items: center; justify-content: center;
             padding: 1.5rem; overflow-y: auto;
-            scrollbar-gutter: stable;
         }
         @keyframes rise { from { opacity: 0; transform: translateY(1.4rem) scale(.99); } }
-        @keyframes lgFade { from { opacity: 0; } }
         .mark {
             width: 2.6rem; height: 2.6rem; flex: none; display: grid; place-items: center;
             border-radius: .85rem;
@@ -322,9 +320,9 @@
         .avatar {
             width: 2.2rem; height: 2.2rem; flex: none; display: grid; place-items: center;
             border-radius: .75rem; font-size: 0.8125rem; font-weight: 800; color: var(--white);
-            background: linear-gradient(145deg, #10B981, #047857);
-            border: 1px solid rgba(110, 231, 183, .6);
-            box-shadow: 0 6px 16px -6px rgba(16, 185, 129, .8), inset 0 1px 0 rgba(255, 255, 255, .35);
+            background: linear-gradient(145deg, #2f6ff2, #1d4ed8);
+            border: 1px solid rgba(147, 197, 253, .6);
+            box-shadow: 0 6px 16px -6px rgba(37, 99, 235, .8), inset 0 1px 0 rgba(255, 255, 255, .35);
         }
         .avatar.tech { color: #261800; background: linear-gradient(145deg, #fde68a, #f59e0b); border-color: rgba(253, 230, 138, .8); box-shadow: 0 6px 16px -6px rgba(245, 158, 11, .8), inset 0 1px 0 rgba(255, 255, 255, .5); }
         .user-meta { text-align: left; }
@@ -332,7 +330,7 @@
         .user-email { font-size: 0.78rem; color: var(--muted); line-height: 1.3; }
         .tb-sep { width: 1px; height: 1.6rem; background: var(--line); }
         .profile-switch { position: relative; }
-        .profile-switch > .btn { height: 2.5rem; }
+        .profile-switch > .btn { height: 2.25rem; }
         .menu-pop { position: absolute; right: 0; top: calc(100% + .5rem); width: 15rem; padding: .5rem; z-index: 60; border-radius: 1rem; background: rgba(var(--dk), .94); border: 1px solid var(--line); box-shadow: 0 24px 50px -12px rgba(0, 0, 0, .8), inset 0 1px 0 rgba(255, 255, 255, .15); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); }
         .menu-pop .mp-head { padding: .4rem .7rem; font-size: max(0.72rem, 11px); font-family: var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--faint); border-bottom: 1px solid var(--line-soft); margin-bottom: .3rem; }
         .menu-pop button { width: 100%; display: flex; align-items: center; gap: .6rem; padding: .55rem .7rem; border-radius: .7rem; text-align: left; font-size: 0.8125rem; color: var(--ink-2); }
@@ -366,12 +364,12 @@
         .count { padding: .1rem .55rem; border-radius: 99px; font-family: var(--font-mono); font-size: max(0.72rem, 11px); font-weight: 700; color: var(--ink-2); background: rgba(var(--lt), .1); border: 1px solid rgba(var(--lt), .12); }
         .count.amber { color: var(--t-amber); background: rgba(var(--amber-rgb), .16); border-color: rgba(var(--amber-rgb), .32); }
 
-        .main { flex: 1; min-width: 0; overflow-y: auto; padding: 1.75rem 2rem 2rem; scrollbar-gutter: stable; }
+        .main { flex: 1; min-width: 0; overflow-y: auto; padding: 1.75rem 2rem 2rem; }
         .page { max-width: 112rem; margin: 0 auto; container-type: inline-size; }
         .stack { display: grid; gap: 1.5rem; }
 
         /* ---------- Cabeçalho de página (título + ações, sempre alinhado à mesma grade) ---------- */
-        .page-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem 1.5rem; flex-wrap: wrap; padding: 0 .15rem; }
+        .page-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem 1.5rem; flex-wrap: wrap; padding: 0 .15rem; }
         .crumbs { display: flex; align-items: center; gap: .55rem; margin-bottom: .5rem; font-size: 0.78rem; font-weight: 700; letter-spacing: .05em; color: var(--ink-2); }
         .crumbs i { font-size: max(0.5rem, 11px); color: var(--faint); }
         .crumbs .here { color: var(--t-amber); }
@@ -498,16 +496,7 @@
         /* ---------- Gráficos ---------- */
         .charts { display: grid; gap: 1.5rem; grid-template-columns: 1fr; }
         @container (min-width: 56rem) { .charts { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-        @container (min-width: 78rem) { .charts { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
         .chart-box { position: relative; height: 17rem; }
-        .sla-strip { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; padding: .9rem 1.3rem; }
-        .sla-strip-l { display: grid; gap: .15rem; }
-        .sla-strip-l b { display: flex; align-items: center; gap: .5rem; font-size: .95rem; }
-        .sla-strip-l b i { color: var(--acc-l); }
-        .sla-strip-l small { color: var(--muted); font-size: .8rem; }
-        .sla-pills { display: flex; gap: .5rem; flex-wrap: wrap; }
-        .sla-pill { display: inline-flex; align-items: center; gap: .45rem; height: 1.9rem; padding: 0 .8rem; border-radius: 99px; font-size: .8rem; font-weight: 600; color: var(--ink-2); background: rgba(var(--dk), .5); border: 1px solid var(--line-soft); }
-        .sla-pill .dot { width: .5rem; height: .5rem; border-radius: 50%; }
 
         /* ---------- Fila ---------- */
         .toolbar { padding: 1rem; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .8rem; }
@@ -525,12 +514,9 @@
         .modal { width: 100%; min-width: 0; display: flex; flex-direction: column; max-height: calc(100dvh - 2rem); animation: rise .35s cubic-bezier(.2, .7, .2, 1) both; }
         .modal-form { max-width: 42rem; }
         .modal-ws { max-width: 74rem; height: min(56rem, calc(100dvh - 2rem)); }
-        /* Tela cheia do chamado: o painel cobre a viewport inteira */
-        .overlay.is-full { padding: 0; }
-        .overlay.is-full .modal-ws { width: 100%; max-width: none; height: 100dvh; max-height: none; border-radius: 0; }
         .modal-head { flex: none; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.1rem 1.5rem; background: rgba(var(--dk), .4); border-bottom: 1px solid var(--line); }
         .modal-head .mh-l { display: flex; align-items: center; gap: .85rem; min-width: 0; }
-        .mh-ico { width: 2.4rem; height: 2.4rem; flex: none; display: grid; place-items: center; border-radius: .8rem; font-size: 1.0125rem; color: var(--white); background: linear-gradient(145deg, #10B981, #047857); box-shadow: 0 8px 20px -8px rgba(16, 185, 129, .8), inset 0 1px 0 rgba(255, 255, 255, .35); }
+        .mh-ico { width: 2.4rem; height: 2.4rem; flex: none; display: grid; place-items: center; border-radius: .8rem; font-size: 1.0125rem; color: var(--white); background: linear-gradient(145deg, #2f6ff2, #1d4ed8); box-shadow: 0 8px 20px -8px rgba(37, 99, 235, .8), inset 0 1px 0 rgba(255, 255, 255, .35); }
         .mh-title { font-size: 1rem; font-weight: 800; letter-spacing: -.01em; line-height: 1.25; }
         .mh-sub { font-size: 0.78rem; color: var(--muted); }
         .modal-body { padding: 1.5rem; overflow-y: auto; display: grid; gap: 1rem; }
@@ -550,25 +536,13 @@
         .ws-id { padding: .3rem .7rem; border-radius: .6rem; font-family: var(--font-mono); font-size: 0.8125rem; font-weight: 700; color: var(--t-amber); background: rgba(var(--amber-rgb), .16); border: 1px solid rgba(var(--amber-rgb), .38); white-space: nowrap; }
         .ws-meta { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; font-size: 0.78rem; color: var(--muted); }
         .ws-meta b { color: var(--ink-2); font-weight: 600; }
-        .ws-body { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); overflow: hidden; position: relative; }
+        .ws-body { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); overflow: hidden; }
         .ws-left { min-height: 0; display: flex; flex-direction: column; border-right: 1px solid var(--line-soft); background: rgba(var(--dk), .22); }
-        .ws-desc-wrap { flex: 1 1 auto; min-height: 0; padding: 1rem 1.2rem; border-bottom: 1px solid var(--line-soft); }
+        .ws-desc-wrap { flex: none; padding: 1rem 1.2rem; border-bottom: 1px solid var(--line-soft); }
         .eyebrow { display: flex; align-items: center; gap: .45rem; margin-bottom: .55rem; font-size: max(0.72rem, 11px); font-weight: 800; letter-spacing: .11em; text-transform: uppercase; color: var(--muted); }
         .eyebrow i { color: var(--t-blue); }
         .ws-desc { max-height: 9rem; overflow-y: auto; padding: .85rem 1rem; border-radius: .85rem; font-size: 0.8125rem; line-height: 1.65; color: var(--ink-2); white-space: pre-wrap; background: rgba(var(--dk), .5); border: 1px solid var(--line-soft); }
-        /* Movimentação/histórico fora do fluxo principal: abre como painel lateral pelo botão "Histórico" do topo */
-        .ws-timeline { display: none; flex: 1; min-height: 8rem; overflow-y: auto; padding: 1rem 1.2rem; gap: .7rem; align-content: start; }
-        .overlay.hist-open .ws-timeline {
-            display: grid; position: absolute; top: 0; right: 0; bottom: 0; z-index: 8;
-            width: min(24rem, 88%);
-            background: rgba(var(--dk), .97);
-            -webkit-backdrop-filter: blur(22px) saturate(170%); backdrop-filter: blur(22px) saturate(170%);
-            border-left: 1px solid var(--line);
-            box-shadow: -30px 0 60px -30px rgba(0, 0, 0, .6);
-            animation: histin .25s ease both;
-        }
-        @keyframes histin { from { transform: translateX(2rem); opacity: 0; } }
-        .ws-hist-btn[aria-pressed="true"] { color: var(--acc-l); background: rgba(var(--acc-rgb), .14); border-color: rgba(var(--acc-rgb), .4); }
+        .ws-timeline { flex: 1; min-height: 8rem; overflow-y: auto; padding: 1rem 1.2rem; display: grid; gap: .7rem; align-content: start; }
         .tl { padding: .85rem 1rem; border-radius: 1rem; font-size: 0.8125rem; background: rgba(var(--dk), .5); border: 1px solid var(--line-soft); color: var(--ink-2); }
         .tl.tech { background: linear-gradient(145deg, rgba(var(--blue-rgb), .16), rgba(var(--blue-rgb), .05)); border-color: rgba(var(--blue-rgb), .38); color: var(--ink); }
         .tl.internal { background: linear-gradient(145deg, rgba(var(--amber-rgb), .17), rgba(var(--amber-rgb), .05)); border-color: rgba(var(--amber-rgb), .42); color: var(--ink); }
@@ -581,7 +555,7 @@
         .seg { display: inline-flex; gap: .3rem; padding: .2rem; border-radius: .8rem; background: rgba(var(--dk), .55); border: 1px solid var(--line-soft); }
         .seg-btn { height: 1.8rem; padding: 0 .8rem; border-radius: .6rem; font-size: 0.78rem; font-weight: 700; color: var(--muted); transition: background .18s, color .18s; display: inline-flex; align-items: center; gap: .4rem; }
         .seg-btn:hover { color: var(--white); background: rgba(var(--lt), .08); }
-        .seg-btn.is-public { color: var(--white); background: linear-gradient(145deg, #10B981, #047857); box-shadow: 0 6px 14px -6px rgba(16, 185, 129, .8), inset 0 1px 0 rgba(255, 255, 255, .3); }
+        .seg-btn.is-public { color: var(--white); background: linear-gradient(145deg, #2f6ff2, #1d4ed8); box-shadow: 0 6px 14px -6px rgba(37, 99, 235, .8), inset 0 1px 0 rgba(255, 255, 255, .3); }
         .seg-btn.is-internal { color: #261800; background: linear-gradient(145deg, #fde68a, #f59e0b); box-shadow: 0 6px 14px -6px rgba(245, 158, 11, .8), inset 0 1px 0 rgba(255, 255, 255, .5); }
         .ws-right { min-height: 0; overflow-y: auto; padding: 1.2rem 1.4rem; display: grid; gap: 1rem; align-content: start; background: rgba(var(--dk), .4); }
         .ws-right .eyebrow { padding-bottom: .7rem; border-bottom: 1px solid var(--line-soft); margin-bottom: 0; }
@@ -618,7 +592,7 @@
         .cat-tips b { display: flex; align-items: center; gap: .45rem; font-size: max(0.72rem, 11px); font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--t-blue); }
         .cat-tips ul { display: grid; gap: .2rem; }
         .cat-tips li { display: flex; gap: .5rem; line-height: 1.5; }
-        .cat-tips li::before { content: ""; flex: none; width: .3rem; height: .3rem; margin-top: .5rem; border-radius: 50%; background: #6EE7B7; }
+        .cat-tips li::before { content: ""; flex: none; width: .3rem; height: .3rem; margin-top: .5rem; border-radius: 50%; background: #93c5fd; }
         .modal-form { max-width: 44rem; }
         /* Cancelar/Enviar ficam sempre visíveis, mesmo com o formulário rolando em telas baixas */
         .modal-form .modal-foot { position: sticky; bottom: -1.5rem; z-index: 3; margin: .2rem -1.5rem -1.5rem; padding: .9rem 1.5rem; background: rgba(var(--dk), .94); border-top: 1px solid var(--line); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
@@ -651,7 +625,7 @@
         .fchip b { min-width: 1.35rem; padding: .05rem .4rem; border-radius: 99px; text-align: center; font-family: var(--font-mono); font-size: max(0.72rem, 11px); color: var(--white); background: rgba(var(--lt), .14); }
         .fchip.is-on { color: #261800; background: linear-gradient(145deg, #fde68a, #f59e0b); border-color: transparent; box-shadow: 0 8px 18px -8px rgba(245, 158, 11, .8), inset 0 1px 0 rgba(255, 255, 255, .5); }
         .fchip.is-on b { color: #261800; background: rgba(0, 0, 0, .14); }
-        .fchips.blue .fchip.is-on { color: var(--white); background: linear-gradient(145deg, #10B981, #047857); box-shadow: 0 8px 18px -8px rgba(16, 185, 129, .8), inset 0 1px 0 rgba(255, 255, 255, .3); }
+        .fchips.blue .fchip.is-on { color: var(--white); background: linear-gradient(145deg, #2f6ff2, #1d4ed8); box-shadow: 0 8px 18px -8px rgba(37, 99, 235, .8), inset 0 1px 0 rgba(255, 255, 255, .3); }
         .fchips.blue .fchip.is-on b { color: var(--white); background: rgba(0, 0, 0, .2); }
         .fchip.warn:not(.is-on) b { color: var(--t-amber); background: rgba(var(--amber-rgb), .2); }
         .fchip.late:not(.is-on) b { color: var(--t-rose); background: rgba(var(--rose-rgb), .2); }
@@ -683,7 +657,7 @@
         .step.is-done i { color: #032a1c; background: linear-gradient(145deg, #6ee7b7, #10b981); border-color: transparent; }
         .step.is-done::before, .step.is-now::before { background: linear-gradient(90deg, #10b981, #34d399); }
         .step.is-now { color: var(--white); }
-        .step.is-now i { color: var(--white); background: linear-gradient(145deg, #10B981, #047857); border-color: rgba(110, 231, 183, .7); box-shadow: 0 0 0 .3rem rgba(var(--blue-rgb), .2); }
+        .step.is-now i { color: var(--white); background: linear-gradient(145deg, #2f6ff2, #1d4ed8); border-color: rgba(147, 197, 253, .7); box-shadow: 0 0 0 .3rem rgba(var(--blue-rgb), .2); }
         .step.is-wait i { color: #261800; background: linear-gradient(145deg, #fde68a, #f59e0b); border-color: transparent; box-shadow: 0 0 0 .3rem rgba(var(--amber-rgb), .2); }
         .step.is-off i { color: var(--t-rose); background: rgba(var(--rose-rgb), .14); border-color: rgba(var(--rose-rgb), .5); }
         .sumlist { display: grid; gap: 0; }
@@ -716,7 +690,7 @@
         .tl { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: .75rem; padding: 0; background: none; border: 0; border-radius: 0; }
         .tl.tech, .tl.internal { background: none; border-color: transparent; color: inherit; }
         .tl-av { width: 2.1rem; height: 2.1rem; display: grid; place-items: center; border-radius: .75rem; font-size: 0.78rem; font-weight: 800; color: var(--ink); background: rgba(var(--lt), .1); border: 1px solid var(--line); }
-        .tl.tech .tl-av { color: var(--white); background: linear-gradient(145deg, #10B981, #047857); border-color: rgba(110, 231, 183, .6); }
+        .tl.tech .tl-av { color: var(--white); background: linear-gradient(145deg, #2f6ff2, #1d4ed8); border-color: rgba(147, 197, 253, .6); }
         .tl.internal .tl-av { color: #261800; background: linear-gradient(145deg, #fde68a, #f59e0b); border-color: transparent; }
         .tl-bubble { min-width: 0; padding: .75rem .95rem; border-radius: .2rem 1rem 1rem 1rem; background: rgba(var(--dk), .55); border: 1px solid var(--line-soft); color: var(--ink-2); }
         .tl.tech .tl-bubble { background: linear-gradient(145deg, rgba(var(--blue-rgb), .17), rgba(var(--blue-rgb), .05)); border-color: rgba(var(--blue-rgb), .4); color: var(--ink); }
@@ -858,7 +832,7 @@
 .bg>*{position:absolute;inset:0;opacity:0;transition:opacity .6s ease}
 .bg::after{content:"";position:absolute;inset:0;background:radial-gradient(120% 100% at 50% 40%,transparent 55%,rgba(0,0,0,.55))}
 .l-glow{background:radial-gradient(60% 50% at 50% 0%,color-mix(in srgb,var(--glow-a) 38%,transparent),transparent 70%)}
-.l-blobs i{position:absolute;border-radius:50%;filter:blur(7.5rem);animation:none}
+.l-blobs i{position:absolute;border-radius:50%;filter:blur(7.5rem);animation:drift 28s ease-in-out infinite alternate}
 .l-blobs .a{width:52vw;height:52vw;left:-14vw;top:-22vw;background:var(--glow-a);opacity:.5}
 .l-blobs .b{width:46vw;height:46vw;right:-12vw;bottom:-22vw;background:var(--glow-b);opacity:.55;animation-duration:34s}
 .l-blobs .c{width:30vw;height:30vw;left:35vw;top:30vh;background:var(--brand);opacity:.14;animation-duration:40s}
@@ -888,7 +862,6 @@ html[data-bg="imagem"] .l-img{opacity:1}
 .l-lin{background:linear-gradient(135deg,var(--glow-a),var(--glow-b) 55%,var(--base))}
 .l-lines{background-image:repeating-linear-gradient(115deg,var(--ln) 0 1px,transparent 1px 2.2rem);-webkit-mask-image:radial-gradient(75% 75% at 50% 45%,#000,transparent);mask-image:radial-gradient(75% 75% at 50% 45%,#000,transparent)}
 .l-img{background-size:cover;background-position:center;filter:brightness(.55) saturate(1.1)}
-.l-grain{opacity:.4;mix-blend-mode:overlay;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n' x='0' y='0'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>")}
 html[data-bg="corporativo"] .l-corp{opacity:1}
 html[data-bg="financas"] .l-glow,html[data-bg="financas"] .l-fin{opacity:1}
 html[data-bg="cidade"] .l-glow,html[data-bg="cidade"] .l-city{opacity:1}
@@ -906,7 +879,7 @@ html[data-bg="topografia"] .l-glow,html[data-bg="topografia"] .l-topo{opacity:1}
 .t{fill:none;stroke:var(--ln2);stroke-width:1;vector-effect:non-scaling-stroke}.t2{stroke:var(--accent);opacity:.35}
 html[data-bg="vidro"] .l-glass{opacity:1}
 .l-glass i,.l-glass b{position:absolute;display:block}
-.l-glass i{border-radius:50%;background:radial-gradient(circle at 30% 28%,var(--accent),var(--brand) 52%,var(--glow-b));animation:none}
+.l-glass i{border-radius:50%;background:radial-gradient(circle at 30% 28%,var(--accent),var(--brand) 52%,var(--glow-b));animation:drift 26s ease-in-out infinite alternate}
 .l-glass .o1{width:clamp(14rem,36vw,60rem);aspect-ratio:1;left:8vw;top:8vh}
 .l-glass .o2{width:clamp(12rem,30vw,52rem);aspect-ratio:1;right:5vw;bottom:6vh;background:radial-gradient(circle at 30% 28%,var(--glow-a),var(--glow-b));animation-duration:32s}
 .l-glass .o3{width:clamp(8rem,16vw,28rem);aspect-ratio:1;left:56vw;top:6vh;background:radial-gradient(circle at 30% 28%,var(--accent),var(--glow-a));animation-duration:22s}
@@ -923,11 +896,11 @@ html[data-bg="vidro"] .l-glass{opacity:1}
 /* ---------- personalizar ---------- */
 .cfg{position:fixed;top:1rem;right:1.25rem;top:max(1rem,env(safe-area-inset-top));right:max(1.25rem,env(safe-area-inset-right));z-index:5}
 .cfg-btn{display:inline-flex;align-items:center;gap:.5rem;height:2.75rem;padding:0 1rem;border-radius:99rem;cursor:pointer;
-  font:600 0.9125rem var(--sans);color:var(--text);background:rgba(8,20,18,.55);border:1px solid var(--card-line);
+  font:600 0.9125rem var(--sans);color:var(--text);background:rgba(10,14,34,.55);border:1px solid var(--card-line);
   backdrop-filter:blur(1rem);-webkit-backdrop-filter:blur(1rem);transition:background .2s,border-color .2s}
 .cfg-btn:hover,.cfg-btn[aria-expanded="true"]{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.25)}
 .cfg-pop{position:absolute;right:0;top:3.2rem;width:min(22rem,calc(100vw - 2rem));padding:1.2rem;border-radius:1rem;
-  background:rgba(8,20,18,.92);border:1px solid var(--card-line);box-shadow:0 1.5rem 3.5rem rgba(0,0,0,.55);
+  background:rgba(10,14,34,.92);border:1px solid var(--card-line);box-shadow:0 1.5rem 3.5rem rgba(0,0,0,.55);
   backdrop-filter:blur(1.5rem);-webkit-backdrop-filter:blur(1.5rem)}
 .grp+.grp{margin-top:1.1rem}
 .grp>span{display:block;font-size:0.7969rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:.6rem}
@@ -1001,62 +974,26 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         .toast.warning { --t: var(--amber-rgb); --tl: var(--t-amber); }
         .slab::after { background: linear-gradient(135deg, rgba(255, 255, 255, .7), rgba(255, 255, 255, .06) 28%, rgba(255, 255, 255, .04) 68%, rgba(var(--acc-rgb), .6)); }
 
-        /* ---------- Tela de acesso: painel de marca + cartão de vidro (estilo Central de Serviços) ---------- */
-        .lg-main { width: 100%; max-width: 72rem; min-height: calc(100vh - 3rem); margin: auto; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.6rem; padding: 2rem 1.5rem; animation: lgFade .35s ease both; }
-        .lg-split { width: 100%; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 2rem; align-items: stretch; }
-        .lg-brandpane { position: relative; overflow: hidden; border-radius: 1.75rem; padding: 2.6rem 2.4rem; display: flex; flex-direction: column; justify-content: space-between; gap: 2rem;
-            color: #e8f5f2;
-            background: linear-gradient(160deg, rgba(8, 54, 48, .72), rgba(15, 92, 85, .5) 55%, rgba(31, 157, 132, .34));
-            -webkit-backdrop-filter: blur(24px) saturate(160%); backdrop-filter: blur(24px) saturate(160%);
-            border: 1px solid rgba(255, 255, 255, .16); box-shadow: inset -1px 0 0 rgba(255,255,255,.08), 0 30px 60px -30px rgba(0,0,0,.5); }
-        .lg-brandpane::after { content: ""; position: absolute; right: -9rem; bottom: -9rem; width: 26rem; height: 26rem; border-radius: 50%; border: 1px solid rgba(255,255,255,.14); box-shadow: 0 0 0 4rem rgba(255,255,255,.03), 0 0 0 8rem rgba(255,255,255,.02); pointer-events: none; }
-        .lg-brandcopy h1 { font-family: var(--font-display); font-weight: 600; font-size: clamp(1.9rem, 2.6vw, 2.6rem); line-height: 1.15; letter-spacing: -.02em; margin: 0 0 .9rem; max-width: 15ch; color: #fff; }
-        .lg-brandcopy p { margin: 0; max-width: 44ch; font-size: 1.05rem; line-height: 1.6; opacity: .85; color: #dff2ee; }
-        .lg-status { position: relative; z-index: 1; border: 1px solid rgba(255,255,255,.18); border-radius: .9rem; background: rgba(255,255,255,.07); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); padding: 1rem 1.2rem; max-width: 26rem; }
-        .lg-status h3 { margin: 0 0 .5rem; font-size: .78rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; opacity: .8; color: #e8f5f2; }
-        .lg-status .st-row { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .5rem 0; font-size: .9rem; color: #e8f5f2; border-top: 1px solid rgba(255,255,255,.1); }
-        .lg-status .st-row:first-of-type { border-top: 0; }
-        .lg-status .dot { display: inline-block; width: .5rem; height: .5rem; border-radius: 50%; background: #58e0b0; margin-right: .5rem; }
-        .lg-logo { display: flex; align-items: center; gap: .9rem; margin-bottom: 1.8rem; font-weight: 700; font-size: 1.4rem; letter-spacing: -.01em; color: var(--white); }
-        .lg-brandpane .lg-logo { margin-bottom: 0; color: #fff; }
+        /* ---------- Tela de acesso: mesmo cartão de vidro do login do Nexus ---------- */
+        .lg-main { width: 100%; max-width: 30rem; margin: auto; display: flex; flex-direction: column; align-items: center; animation: rise .6s cubic-bezier(.2, .7, .2, 1) both; }
+        .lg-logo { display: flex; align-items: center; gap: .8rem; margin-bottom: 1.4rem; font-weight: 800; font-size: 1.35rem; letter-spacing: -.01em; color: var(--white); }
         .lg-logo small { font-weight: 500; font-size: 1.05rem; color: var(--muted); }
-        .lg-brandpane .lg-logo small { color: #cdeae4; }
-        .lg-logo .mark { width: 3rem; height: 3rem; border-radius: .9rem; font-size: 1.7rem; }
-        .lg-brandpane .lg-logo .mark { background: #fff; }
-        .lg-card { width: 100%; align-self: center; padding: 2.7rem 2.5rem 1.9rem; border-radius: 1.75rem; background: var(--glass-fill); overflow: hidden; }
-        .lg-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--brand), var(--accent) 55%, transparent); }
-        .lg-eyebrow { display: inline-flex; align-items: center; gap: .55rem; margin-bottom: .8rem; font-size: .72rem; font-weight: 800; letter-spacing: .24em; text-transform: uppercase; color: var(--acc-l); }
-        .lg-eyebrow::before, .lg-eyebrow::after { content: ""; width: 1.7rem; height: 1px; background: currentColor; opacity: .45; }
-        .lg-card h2 { font-family: var(--font-display); font-weight: 600; font-size: 2.15rem; line-height: 1.2; letter-spacing: -.015em; color: var(--white); }
-        .lg-card .sub { margin-top: .55rem; font-size: 1rem; line-height: 1.65; color: var(--ink-2); max-width: 31rem; }
-        .lg-card form { margin-top: 1.9rem; display: grid; gap: 1.15rem; }
+        .lg-logo .mark { width: 2.8rem; height: 2.8rem; border-radius: .85rem; font-size: 1.6rem; }
+        .lg-card { width: 100%; padding: 2.1rem 2rem 1.6rem; border-radius: 1.4rem; background: var(--glass-fill); }
+        .lg-card h2 { font-family: var(--font-display); font-weight: 600; font-size: 1.8rem; line-height: 1.2; letter-spacing: -.015em; color: var(--white); }
+        .lg-card .sub { margin-top: .4rem; font-size: 0.9375rem; line-height: 1.6; color: var(--ink-2); }
+        .lg-card form { margin-top: 1.4rem; display: grid; gap: 1rem; }
         .lg-card .input-icon { display: block; min-width: 0; }
-        .lg-card .input { height: 3.4rem; padding-top: 0; padding-bottom: 0; border-radius: .85rem; font-size: 1.05rem; }
-        .lg-card .input.has-eye { padding-right: 3.2rem; }
-        .pw-eye { position: absolute; right: .5rem; top: 50%; transform: translateY(-50%); width: 2.5rem; height: 2.5rem; display: grid; place-items: center; border: 0; border-radius: .65rem; background: transparent; color: var(--faint); font-size: .95rem; cursor: pointer; transition: color .18s, background .18s; }
-        .pw-eye:hover { color: var(--acc-l); background: rgba(var(--lt), .1); }
-        .lg-card .field label { font-size: .9rem; }
-        .lg-card .btn-lg { height: 3.4rem; border-radius: .85rem; font-size: 1.05rem; letter-spacing: .01em; }
+        .lg-card .input { height: 3.1rem; padding-top: 0; padding-bottom: 0; border-radius: .75rem; font-size: 1rem; }
+        .lg-card .field label { font-size: 0.8625rem; }
+        .lg-card .btn-lg { height: 3.1rem; border-radius: .75rem; font-size: 1.0125rem; }
         .login-error { color: var(--t-rose); }
-        .lg-back { margin-top: 1.2rem; display: flex; justify-content: center; }
-        .lg-back a { display: inline-flex; align-items: center; gap: .45rem; font-size: .85rem; font-weight: 700; color: var(--muted); text-decoration: none; transition: color .18s; }
-        .lg-back a:hover { color: var(--acc-l); }
-        .lg-feat { margin-top: 1.7rem; padding-top: 1.5rem; display: flex; flex-wrap: wrap; justify-content: center; gap: .55rem; border-top: 1px solid var(--line-soft); }
-        .lg-feat li { display: inline-flex; align-items: center; gap: .5rem; padding: .4rem .85rem; border-radius: 99px; font-size: .8125rem; font-weight: 600; color: var(--ink-2); background: rgba(var(--lt), .06); border: 1px solid var(--line-soft); }
-        .lg-feat li i { font-size: .8125rem; color: var(--acc-l); }
-        .lg-foot { margin-top: 1.7rem; display: grid; gap: .4rem; justify-items: center; font-size: .85rem; color: var(--muted); text-align: center; }
+        .lg-feat { margin-top: 1.4rem; padding-top: 1.2rem; display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem; border-top: 1px solid var(--line-soft); }
+        .lg-feat li { display: inline-flex; align-items: center; gap: .5rem; padding: .35rem .8rem; border-radius: 99px; font-size: 0.7969rem; font-weight: 600; color: var(--ink-2); background: rgba(var(--lt), .06); border: 1px solid var(--line-soft); }
+        .lg-feat li i { font-size: 0.7969rem; color: var(--acc-l); }
+        .lg-foot { margin-top: 1.4rem; display: grid; gap: .35rem; justify-items: center; font-size: 0.7969rem; color: var(--muted); text-align: center; }
         .lg-foot i { margin-right: .35rem; color: var(--t-green); }
-        .lg-foot .mono { font-size: .8rem; color: var(--faint); }
-        @media (max-width: 60rem) {
-            .lg-split { grid-template-columns: 1fr; }
-            .lg-brandpane { padding: 1.8rem 1.6rem; gap: 1.4rem; }
-            .lg-brandcopy p, .lg-status { display: none; }
-            .lg-brandpane { justify-content: flex-start; }
-        }
-        @media (max-width: 40rem) {
-            .lg-main { padding: 1rem .9rem; gap: 1rem; }
-            .lg-card { padding: 2rem 1.5rem 1.5rem; border-radius: 1.4rem; }
-        }
+        .lg-foot .mono { font-size: 0.744rem; color: var(--faint); }
 
         /* Texto que fica direto sobre o fundo (sem placa de vidro): halo na cor da superfície (escura no escuro, branca no claro)
            garante o contraste sobre qualquer um dos 15 fundos e das 10 paletas */
@@ -1076,7 +1013,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         /* ---------- Painel "Personalizar" (mesmo do login) dentro do GLPI ---------- */
         .cfg { z-index: 55; }
         body.in-app .cfg { top: .625rem; right: 1.5rem; }
-        .cfg-btn { height: 2.5rem; }
+        .cfg-btn { height: 2.75rem; }
         .cfg-pop { max-height: calc(100vh - 5rem); max-height: calc(100dvh - 5rem); overflow: auto; overscroll-behavior: contain; scrollbar-width: thin; }
         @media (min-width: 1024px) { body.in-app .topbar-r { padding-right: 9.4rem; } }
         @media (max-width: 1023px) {
@@ -1097,37 +1034,37 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         /* ---------- Modo claro: mesmas superfícies de vidro, tinta escura ---------- */
         :root[data-mode="light"] {
             color-scheme: light;
-            --lt: 17, 32, 31;
+            --lt: 15, 23, 60;
             --dk: 255, 255, 255;
-            --base: color-mix(in srgb, var(--brand) 6%, #f3f6f6);
+            --base: color-mix(in srgb, var(--brand) 7%, #f6f8fd);
             --accent: color-mix(in srgb, var(--brand-d) 82%, #000);
-            --ln: rgba(15, 60, 55, .07);
-            --ln2: rgba(15, 60, 55, .14);
-            --ink: #11201f; --ink-2: #425650; --muted: #5b6e6b; --faint: #6d7f7c; --white: #0b2b27;
-            --t-amber: #92400e; --t-green: #047857; --t-rose: #be123c; --t-blue: #047857;
+            --ln: rgba(20, 30, 80, .07);
+            --ln2: rgba(20, 30, 80, .14);
+            --ink: #1b2440; --ink-2: #333e63; --muted: #4a5675; --faint: #5b6786; --white: #0e1530;
+            --t-amber: #92400e; --t-green: #047857; --t-rose: #be123c; --t-blue: #1d4ed8;
             --t-sky: #0369a1; --t-slate: #475569; --t-purple: #7e22ce; --t-orange: #c2410c;
             --glass-shadow:
-                0 1px 2px rgba(15, 60, 55, .08),
-                0 20px 44px -22px rgba(12, 70, 62, .3),
+                0 1px 2px rgba(20, 30, 80, .08),
+                0 20px 44px -22px rgba(30, 45, 110, .3),
                 inset 0 1px 0 rgba(255, 255, 255, .9),
-                inset 0 -1px 0 rgba(15, 60, 55, .04);
+                inset 0 -1px 0 rgba(20, 30, 80, .04);
         }
-        :root[data-mode="light"] .input, :root[data-mode="light"] .select, :root[data-mode="light"] .textarea { box-shadow: inset 0 1px 2px rgba(15, 60, 55, .1); }
-        :root[data-mode="light"] .input:focus, :root[data-mode="light"] .select:focus, :root[data-mode="light"] .textarea:focus { background: #fff; box-shadow: 0 0 0 3px rgba(var(--acc-rgb), .22), inset 0 1px 2px rgba(15, 60, 55, .08); }
+        :root[data-mode="light"] .input, :root[data-mode="light"] .select, :root[data-mode="light"] .textarea { box-shadow: inset 0 1px 2px rgba(20, 30, 80, .1); }
+        :root[data-mode="light"] .input:focus, :root[data-mode="light"] .select:focus, :root[data-mode="light"] .textarea:focus { background: #fff; box-shadow: 0 0 0 3px rgba(var(--acc-rgb), .22), inset 0 1px 2px rgba(20, 30, 80, .08); }
         :root[data-mode="light"] .input[readonly] { box-shadow: none; }
         :root[data-mode="light"] .select { background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1.5l5 5 5-5' fill='none' stroke='%23566280' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/></svg>"); }
-        :root[data-mode="light"] .select option { background: #fff; color: #11201f; }
+        :root[data-mode="light"] .select option { background: #fff; color: #1b2440; }
         :root[data-mode="light"] .kpi-value { text-shadow: none; }
-        :root[data-mode="light"] .topbar { box-shadow: 0 10px 30px -18px rgba(12, 70, 62, .35), inset 0 1px 0 #fff; }
-        :root[data-mode="light"] .sidebar { box-shadow: 12px 0 40px -28px rgba(12, 70, 62, .35), inset -1px 0 0 rgba(255, 255, 255, .6); }
-        :root[data-mode="light"] .menu-pop { box-shadow: 0 24px 50px -16px rgba(12, 70, 62, .4), inset 0 1px 0 #fff; }
-        :root[data-mode="light"] .toast { box-shadow: 0 18px 40px -16px rgba(12, 70, 62, .4), inset 0 1px 0 #fff; }
-        :root[data-mode="light"] .slab { box-shadow: 0 2px 4px rgba(15, 60, 55, .08), 0 30px 70px -20px rgba(12, 70, 62, .35), inset 0 1px 0 #fff; }
-        :root[data-mode="light"] .svc:hover { box-shadow: 0 26px 50px -22px rgba(12, 70, 62, .35), 0 0 40px -14px rgba(var(--k), .4), inset 0 1px 0 #fff; }
-        :root[data-mode="light"] .overlay { background: radial-gradient(80% 70% at 50% 40%, rgba(15, 60, 55, .28), rgba(15, 55, 50, .5)); }
-        :root[data-mode="light"] .scrim { background: rgba(15, 60, 55, .35); }
+        :root[data-mode="light"] .topbar { box-shadow: 0 10px 30px -18px rgba(30, 45, 110, .35), inset 0 1px 0 #fff; }
+        :root[data-mode="light"] .sidebar { box-shadow: 12px 0 40px -28px rgba(30, 45, 110, .35), inset -1px 0 0 rgba(255, 255, 255, .6); }
+        :root[data-mode="light"] .menu-pop { box-shadow: 0 24px 50px -16px rgba(30, 45, 110, .4), inset 0 1px 0 #fff; }
+        :root[data-mode="light"] .toast { box-shadow: 0 18px 40px -16px rgba(30, 45, 110, .4), inset 0 1px 0 #fff; }
+        :root[data-mode="light"] .slab { box-shadow: 0 2px 4px rgba(20, 30, 80, .08), 0 30px 70px -20px rgba(30, 45, 110, .35), inset 0 1px 0 #fff; }
+        :root[data-mode="light"] .svc:hover { box-shadow: 0 26px 50px -22px rgba(30, 45, 110, .35), 0 0 40px -14px rgba(var(--k), .4), inset 0 1px 0 #fff; }
+        :root[data-mode="light"] .overlay { background: radial-gradient(80% 70% at 50% 40%, rgba(30, 40, 90, .28), rgba(20, 28, 70, .5)); }
+        :root[data-mode="light"] .scrim { background: rgba(30, 40, 90, .35); }
         :root[data-mode="light"] .nav-item:hover, :root[data-mode="light"] .btn-ghost:hover { color: var(--white); }
-        :root[data-mode="light"] ::-webkit-scrollbar-thumb { background: rgba(15, 60, 55, .28); background-clip: padding-box; }
+        :root[data-mode="light"] ::-webkit-scrollbar-thumb { background: rgba(20, 30, 80, .28); background-clip: padding-box; }
 
         /* =====================================================================
            Interface do GLPI: menu no topo, abertura guiada, gaveta de atendimento
@@ -1136,30 +1073,29 @@ html[data-bg="vidro"] .l-glass{opacity:1}
 
         /* ---------- Barra superior: marca | menu do perfil | ações ---------- */
         .topbar { gap: 1.2rem; }
-        .topbar::after { content: ""; position: absolute; left: 8%; right: 8%; bottom: -1px; height: 1px; background: linear-gradient(90deg, transparent, rgba(var(--acc-rgb), .55), transparent); opacity: .6; pointer-events: none; }
-        .tb-brand { flex: none; display: flex; align-items: center; gap: .75rem; min-width: 0; padding-right: 1.2rem; border-right: 1px solid var(--line-soft); }
+        .tb-brand { flex: none; display: flex; align-items: center; gap: .75rem; min-width: 0; }
         .tb-brand-t { display: grid; gap: .2rem; min-width: 0; }
         .tb-brand-t .badge { width: fit-content; font-size: max(0.685rem, 11px); padding: .03rem .5rem; }
-        .tb-nav { flex: 1 1 auto; min-width: 0; display: flex; align-items: flex-end; justify-content: center; padding-bottom: .45rem; }
-        .tb-nav .nav-group { display: flex; align-items: center; gap: .3rem; padding: .3rem; border-radius: 1.05rem; background: rgba(var(--lt), .06); border: 1px solid var(--line-soft); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .08); }
+        .tb-nav { flex: 1 1 auto; min-width: 0; display: flex; justify-content: center; }
+        .tb-nav .nav-group { display: flex; align-items: center; gap: .25rem; padding: .25rem; border-radius: 1rem; background: rgba(var(--lt), .06); border: 1px solid var(--line-soft); }
         .tb-nav .nav-item {
             --n: var(--acc-rgb);
-            position: relative; display: inline-flex; align-items: center; gap: .6rem; min-height: 2.35rem; padding: 0 1.1rem; border-radius: .8rem;
-            font-size: 0.9rem; font-weight: 700; white-space: nowrap; color: var(--ink-2); background: transparent; border: 1px solid transparent; box-shadow: none;
+            position: relative; display: inline-flex; align-items: center; gap: .55rem; min-height: 2.4rem; padding: 0 1rem; border-radius: .78rem;
+            font-size: 0.8625rem; font-weight: 700; white-space: nowrap; color: var(--ink-2); background: transparent; border: 1px solid transparent; box-shadow: none;
         }
         .tb-nav .nav-item::before { display: none; }
-        .tb-nav .nav-item i { width: auto; height: auto; flex: none; display: inline-block; background: none; border: 0; box-shadow: none; font-size: 1rem; color: var(--faint); }
+        .tb-nav .nav-item i { width: auto; height: auto; flex: none; display: inline-block; background: none; border: 0; box-shadow: none; font-size: 0.9125rem; color: var(--faint); }
         .tb-nav .nav-item:hover { background: rgba(var(--lt), .08); color: var(--white); }
         .tb-nav .nav-item:hover i { color: var(--acc-l); border: 0; }
         .tb-nav .nav-item.is-active { color: var(--on-brand); background: linear-gradient(180deg, var(--brand), var(--brand-d)); border-color: transparent; box-shadow: 0 8px 20px -10px rgba(var(--acc-rgb), .8), inset 0 1px 0 rgba(255, 255, 255, .28); }
         .tb-nav .nav-item.is-active i { color: inherit; background: none; border: 0; box-shadow: none; }
         .tb-nav .count { margin-left: .1rem; }
         .tb-nav .nav-item.is-active .count { color: var(--on-brand); background: rgba(0, 0, 0, .2); border-color: transparent; }
-        .topbar-r { flex: none; display: flex; align-items: center; gap: .6rem; min-width: 0; }
+        .topbar-r { flex: none; display: flex; align-items: center; gap: .7rem; min-width: 0; }
         .tb-new { height: 2.5rem; padding: 0 1.05rem; }
         .user-wrap { position: relative; }
-        .user-btn { display: flex; align-items: center; gap: .6rem; height: 2.5rem; padding: 0 .9rem 0 .3rem; border-radius: 1rem; border: 1px solid var(--line-soft); background: rgba(var(--lt), .05); color: var(--ink); transition: background .2s, border-color .2s, box-shadow .2s; }
-        .user-btn:hover, .user-btn[aria-expanded="true"] { background: rgba(var(--lt), .1); border-color: rgba(var(--lt), .28); box-shadow: 0 8px 20px -12px rgba(0, 0, 0, .6), inset 0 1px 0 rgba(255, 255, 255, .14); }
+        .user-btn { display: flex; align-items: center; gap: .6rem; padding: .2rem .55rem .2rem .25rem; border-radius: .95rem; border: 1px solid transparent; color: var(--ink); transition: background .2s, border-color .2s; }
+        .user-btn:hover, .user-btn[aria-expanded="true"] { background: rgba(var(--lt), .08); border-color: var(--line-soft); }
         .user-btn .user-meta { text-align: left; }
         @media (min-width: 1280px) { .user-btn .user-meta { display: grid; } }
         .user-chev { font-size: max(0.707rem, 11px); color: var(--faint); }
@@ -1172,7 +1108,6 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         @media (max-width: 1279px) { .user-chev { display: none; } }
         @media (max-width: 1139px) {
             .tb-title { display: none; }
-            .tb-brand { border-right: 0; padding-right: 0; }
             .tb-new span { display: none; }
             .tb-new { width: 2.5rem; padding: 0; }
             .tb-nav .nav-item:not(.is-active) .nv-t { display: none; }
@@ -1299,11 +1234,8 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             /* sem a animação de opacidade do overlay (ela o torna "raiz do desfoque" e a gaveta deixaria de desfocar o que está atrás) */
             #modal-tech-workspace.overlay { animation: none; justify-content: flex-end; align-items: stretch; padding: 0; pointer-events: none; background: linear-gradient(90deg, rgba(var(--dk), .08), rgba(var(--dk), .42)); -webkit-backdrop-filter: none; backdrop-filter: none; }
             #modal-tech-workspace .modal-ws { pointer-events: auto; max-width: min(66rem, 78vw); height: 100vh; height: 100dvh; max-height: none; border-radius: 1.75rem 0 0 1.75rem; animation: drawerin .35s cubic-bezier(.2, .7, .2, 1) both; }
-            /* Tela cheia na gaveta: volta a ser uma janela central de largura total */
-            #modal-tech-workspace.overlay.is-full { pointer-events: auto; justify-content: center; align-items: stretch; padding: 0; background: radial-gradient(80% 70% at 50% 40%, rgba(var(--dk), .5), rgba(var(--dk), .78)); -webkit-backdrop-filter: blur(14px) saturate(140%); backdrop-filter: blur(14px) saturate(140%); }
-            #modal-tech-workspace.overlay.is-full .modal-ws { max-width: none; width: 100%; border-radius: 0; animation: none; }
         }
-        :root[data-mode="light"] #modal-tech-workspace.overlay { background: linear-gradient(90deg, rgba(15, 60, 55, .04), rgba(15, 60, 55, .3)); }
+        :root[data-mode="light"] #modal-tech-workspace.overlay { background: linear-gradient(90deg, rgba(30, 40, 90, .04), rgba(30, 40, 90, .3)); }
         .kpi[onclick] { cursor: pointer; transition: transform .2s ease, border-color .2s ease; }
         .kpi[onclick]:hover { transform: translateY(-3px); border-color: rgba(var(--k), .6); }
         .kpi[onclick]:focus-visible { outline: 2px solid rgba(var(--k), .9); outline-offset: 2px; }
@@ -1415,10 +1347,10 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         .user-name { font-size: .8125rem; }
         .user-email { font-size: .75rem; }
 
-        /* Retomada de sessão (F5): sem tela de login piscando e sem splash animado - o fundo fica estático
-           até o app abrir de uma vez (data-boot="restore" só esconde o login; o .boot nunca é exibido) */
+        /* Retomada de sessão (F5): sem tela de login piscando; o aviso só aparece se a retomada demorar mais que ~0,2 s */
         html[data-boot="restore"] #view-login { display: none !important; }
-        .boot { position: fixed; inset: 0; z-index: 60; display: none !important; flex-direction: column; align-items: center; justify-content: center; gap: .4rem; pointer-events: none; }
+        .boot { position: fixed; inset: 0; z-index: 60; display: none; flex-direction: column; align-items: center; justify-content: center; gap: .4rem; pointer-events: none; }
+        html[data-boot="restore"] .boot { display: flex; opacity: 0; animation: bootIn .3s ease .2s forwards; }
         .boot .lg-logo { margin-bottom: .6rem; }
         .boot-ln { display: inline-flex; align-items: center; gap: .7rem; font-size: .9375rem; font-weight: 600; color: var(--ink-2); }
         .boot-ring { width: 1.15rem; height: 1.15rem; border-radius: 50%; border: .18rem solid rgba(var(--lt), .22); border-top-color: var(--brand); animation: spin .9s linear infinite; }
@@ -1434,18 +1366,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         .svc.blue { --k: var(--blue-rgb); --kl: var(--t-blue); }
         .svc.slate { --k: var(--slate-rgb); --kl: var(--t-slate); }
         .svc-tag { display: inline-flex; align-items: center; gap: .35rem; margin-top: .55rem; padding: .08rem .55rem; border-radius: 99px; font-size: max(.6875rem, 11px); font-weight: 800; letter-spacing: .07em; text-transform: uppercase; color: var(--kl); background: rgba(var(--k), .12); border: 1px solid rgba(var(--k), .34); }
-        /* Ações rápidas do catálogo: Requisição x Incidente em cartões de destaque abaixo do hero */
-        .quick-acts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .6rem; }
-        .qact { --k: var(--sky-rgb); --kl: var(--t-sky); flex-direction: row; align-items: center; gap: .7rem; width: 100%; padding: .6rem .9rem; }
-        .qact-inc { --k: var(--orange-rgb); --kl: var(--t-orange); }
-        .qact-ico { width: 2.2rem; height: 2.2rem; flex: none; display: grid; place-items: center; border-radius: .7rem; font-size: .95rem; color: var(--kl); background: linear-gradient(145deg, rgba(var(--k), .24), rgba(var(--k), .08)); border: 1px solid rgba(var(--k), .42); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .2); transition: transform .25s ease; }
-        .qact:hover .qact-ico { transform: scale(1.08) rotate(-3deg); }
-        .qact-txt { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
-        .qact-txt b { display: block; font-size: .88rem; font-weight: 800; letter-spacing: -.01em; line-height: 1.25; color: var(--white); white-space: nowrap; }
-        .qact-txt small { display: block; margin-top: .1rem; font-size: .7rem; line-height: 1.4; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .qact-go { flex: none; font-size: .75rem; color: var(--kl); transition: transform .25s ease; }
-        .qact:hover .qact-go { transform: translateX(4px); }
-        @media (max-width: 767px) { .quick-acts { grid-template-columns: 1fr; } }
+        .hero-acts { display: flex; flex-wrap: wrap; gap: .7rem; position: relative; }
 
         /* Tipo do chamado (requisição / incidente): selo na lista e cartões grandes na abertura */
         .tpill { display: inline-flex; align-items: center; gap: .3rem; padding: .02rem .5rem; border-radius: 99px; font-size: max(.6875rem, 11px); font-weight: 800; letter-spacing: .05em; text-transform: uppercase; vertical-align: middle; --c: var(--sky-rgb); --cl: var(--t-sky); color: var(--cl); background: rgba(var(--c), .13); border: 1px solid rgba(var(--c), .4); }
@@ -1497,7 +1418,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         .team-h small { font-size: .8125rem; font-weight: 500; color: var(--muted); }
         /* "Atendimento atribuído" é um nome longo: o selo de status quebra em duas linhas nos cartões e o rótulo do indicador também */
         .kpi-label { white-space: normal; overflow-wrap: anywhere; }
-        /* Cartões (quadro estreito): prioridade e status na mesma linha e o prazo (SLA) numa linha só dele, sem espremer ninguém */
+        /* Cartões (quadro estreito): severidade e status na mesma linha e o prazo (SLA) numa linha só dele, sem espremer ninguém */
         @container (max-width: 54rem) {
             .tbl.cards tbody tr { grid-template-columns: 5.6rem minmax(0, 1fr) auto; grid-template-areas: "id id act" "title title title" "urg status status" "sla sla sla"; }
             .tbl.cards tbody tr:has(td.c-chk) { grid-template-columns: 1.6rem 5.6rem minmax(0, 1fr) auto; grid-template-areas: "chk id id act" "chk title title title" "chk urg status status" "chk sla sla sla"; }
@@ -1523,12 +1444,12 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         .tb-brand-t { gap: .22rem; }
         .tb-brand .tb-title { display: flex; align-items: baseline; gap: .45rem; font-size: 1.35rem; line-height: 1; letter-spacing: -.02em; }
         .tb-brand .tb-title b { font-weight: 800; letter-spacing: 0; color: var(--white); }
-        .tb-brand .tb-title span { display: inline; font-size: 1em; font-weight: 600; letter-spacing: -.01em; color: var(--ink-2); }
+        .tb-brand .tb-title span { display: inline; font-size: 1.02rem; font-weight: 600; letter-spacing: -.01em; color: var(--ink-2); }
         .tb-brand-t .badge { font-size: max(.7rem, 11px); letter-spacing: .09em; padding: .08rem .6rem; }
         @media (min-width: 768px) and (max-width: 1139px) { .tb-brand .tb-title span { display: none; } }
         @media (max-width: 767px) {
             .tb-brand .tb-title { font-size: 1.2rem; }
-            .tb-brand .tb-title span { font-size: 1em; }
+            .tb-brand .tb-title span { font-size: .9rem; }
             .mark.brand { width: 2.5rem; height: 2.5rem; border-radius: .8rem; font-size: 1.5rem; }
         }
         @media (max-width: 479px) { .tb-brand .tb-title span { display: none; } }
@@ -1552,11 +1473,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         .hero-tag { margin-bottom: .45rem; padding: .18rem .65rem; font-size: .75rem; }
         .hero h2 { font-size: clamp(1.3rem, 2vw, 1.65rem); }
         .hero p { margin-top: .25rem; max-width: 32rem; font-size: .84rem; }
-        .quick-acts { gap: .55rem; }
-        .qact { gap: .65rem; padding: .55rem .85rem; }
-        .qact-ico { width: 2rem; height: 2rem; font-size: .9rem; border-radius: .65rem; }
-        .qact-txt b { font-size: .84rem; line-height: 1.25; }
-        .qact-txt small { font-size: .68rem; }
+        .hero-acts { gap: .5rem; }
         .usum { gap: .6rem; }
         .usum-t { padding: .55rem .8rem; gap: .65rem; border-radius: .95rem; }
         .usum-t > i { width: 2.1rem; height: 2.1rem; font-size: .85rem; border-radius: .7rem; }
@@ -1596,43 +1513,43 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         .svc:hover { transform: translateY(-2px); }
 
         /* Abertura de chamado (Abrir Requisição, Reportar Incidente...): janela, passos, cartões e campos mais compactos */
-        #modal-form.overlay { padding: .9rem; }
-        .modal-form { max-width: 72rem; }
-        .modal-form .modal-head { padding: .9rem 1.4rem; }
-        .modal-form .mh-ico { width: 2.3rem; height: 2.3rem; border-radius: .75rem; font-size: 1rem; }
-        .modal-form .mh-title { font-size: 1.1rem; }
-        .modal-form .mh-sub { font-size: .8rem; }
-        .modal-form .modal-body { padding: 1.2rem 1.4rem; gap: .9rem; }
-        .modal-form .modal-foot { bottom: -1.1rem; margin: .15rem -1.4rem -1.1rem; padding: .75rem 1.4rem; }
-        .fsplit { gap: 1.1rem 1.5rem; }
-        @media (min-width: 900px) { .fsplit { grid-template-columns: minmax(0, 1fr) 20rem; } }
-        .fs-main { gap: 1.05rem; }
-        .fs-side { gap: .9rem; }
-        .fs-step { gap: .7rem; }
-        .fs-h { gap: .55rem; font-size: .95rem; }
-        .fs-h .n { width: 1.45rem; height: 1.45rem; font-size: max(.75rem, 11px); }
-        .fs-who .input { height: var(--ctl); padding: 0 .9rem; font-size: .85rem; }
-        .modal-form .field label { margin-bottom: .35rem; font-size: .82rem; }
-        .modal-form .input { height: var(--ctl); padding: 0 .9rem; border-radius: .75rem; font-size: .875rem; }
-        .modal-form .textarea { min-height: 6rem; padding: .65rem .9rem; border-radius: .75rem; font-size: .875rem; line-height: 1.55; }
-        .modal-form .field-foot { min-height: 1rem; margin-top: .3rem; }
-        .modal-form .counter, .modal-form .field-err { font-size: max(.75rem, 11px); }
-        .modal-form .form-grid { gap: .9rem; }
+        #modal-form.overlay { padding: .75rem; }
+        .modal-form { max-width: 58rem; }
+        .modal-form .modal-head { padding: .7rem 1.1rem; }
+        .modal-form .mh-ico { width: 2rem; height: 2rem; border-radius: .65rem; font-size: .9rem; }
+        .modal-form .mh-title { font-size: 1rem; }
+        .modal-form .mh-sub { font-size: .75rem; }
+        .modal-form .modal-body { padding: 1rem 1.1rem; gap: .7rem; }
+        .modal-form .modal-foot { bottom: -1rem; margin: .1rem -1.1rem -1rem; padding: .65rem 1.1rem; }
+        .fsplit { gap: .9rem 1.1rem; }
+        @media (min-width: 900px) { .fsplit { grid-template-columns: minmax(0, 1fr) 17rem; } }
+        .fs-main { gap: .85rem; }
+        .fs-side { gap: .65rem; }
+        .fs-step { gap: .5rem; }
+        .fs-h { gap: .5rem; font-size: .875rem; }
+        .fs-h .n { width: 1.3rem; height: 1.3rem; font-size: max(.72rem, 11px); }
+        .fs-who .input { height: var(--ctl-sm); padding: 0 .75rem; font-size: .8125rem; }
+        .modal-form .field label { margin-bottom: .3rem; font-size: .78rem; }
+        .modal-form .input { height: var(--ctl-sm); padding: 0 .8rem; border-radius: .7rem; font-size: .84rem; }
+        .modal-form .textarea { min-height: 5rem; padding: .5rem .8rem; border-radius: .7rem; font-size: .84rem; line-height: 1.5; }
+        .modal-form .field-foot { min-height: 1rem; margin-top: .25rem; }
+        .modal-form .counter, .modal-form .field-err { font-size: max(.72rem, 11px); }
+        .modal-form .form-grid { gap: .7rem; }
         @media (max-width: 767px) { .modal-form .input { height: var(--ctl); } }
 
-        .picks { gap: .55rem; }
-        .pick { position: relative; gap: .7rem; padding: .6rem .8rem; border-radius: .85rem; }
-        .pick > i { width: 2.1rem; height: 2.1rem; border-radius: .7rem; font-size: .9rem; }
-        .pick b { font-size: .875rem; }
-        .pick small { margin-top: .12rem; font-size: max(.75rem, 11px); line-height: 1.4; }
-        .pick em { margin-top: .3rem; font-size: max(.75rem, 11px); }
+        .picks { gap: .4rem; }
+        .pick { position: relative; gap: .6rem; padding: .5rem .65rem; border-radius: .8rem; }
+        .pick > i { width: 1.85rem; height: 1.85rem; border-radius: .6rem; font-size: .82rem; }
+        .pick b { font-size: .8125rem; }
+        .pick small { margin-top: .1rem; font-size: max(.72rem, 11px); line-height: 1.35; }
+        .pick em { margin-top: .25rem; font-size: max(.72rem, 11px); }
         .picks.typ { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-        .picks.cat { grid-template-columns: repeat(auto-fill, minmax(11.5rem, 1fr)); }
+        .picks.cat { grid-template-columns: repeat(auto-fill, minmax(10.5rem, 1fr)); }
         /* o texto de apoio da categoria fica só para leitores de tela e no balão (title): o cartão fica de uma linha */
         .picks.cat .pick small { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; }
         .picks.cat .pick[data-cat="Outros"] { grid-column: 1 / -1; }
-        .picks.urg { grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr)); }
-        .picks.urg .pick { padding: .55rem .7rem; }
+        .picks.urg { grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr)); }
+        .picks.urg .pick { padding: .45rem .6rem; }
         @media (max-width: 767px) { .picks.typ { grid-template-columns: 1fr; } }
 
         .fs-card { padding: .7rem .85rem; border-radius: .85rem; }
@@ -1662,55 +1579,44 @@ html[data-bg="vidro"] .l-glass{opacity:1}
 
         /* Técnicos & Filas: filas em coluna estreita à esquerda e técnicos à direita (telas largas); cartões e janelas compactos */
         .teams-layout { display: grid; gap: 1.1rem; align-items: start; }
-        .teams-col { display: grid; gap: .8rem; align-content: start; min-width: 0; }
+        .teams-col { display: grid; gap: .55rem; align-content: start; min-width: 0; }
         @container (min-width: 70rem) {
-            .teams-layout { grid-template-columns: 25rem minmax(0, 1fr); }
+            .teams-layout { grid-template-columns: 23rem minmax(0, 1fr); }
             .teams-col .team-grid { grid-template-columns: minmax(0, 1fr); }
         }
         .team-h { font-size: .95rem; }
         .team-h small { font-size: .8rem; }
-        .team-grid { gap: .8rem; grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr)); }
-        .qcard { gap: .7rem; padding: 1rem 1.15rem; border-radius: 1.1rem; }
-        .qc-head h4 { font-size: .98rem; }
-        .qc-head p { margin-top: .2rem; font-size: .8rem; line-height: 1.45; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .qc-stats { gap: .5rem; }
-        .qc-stats div { padding: .45rem .55rem; border-radius: .7rem; }
-        .qc-stats b { font-size: 1.05rem; }
-        .qc-list { gap: .35rem; }
+        .team-grid { gap: .7rem; grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr)); }
+        .qcard { gap: .55rem; padding: .85rem 1rem; border-radius: 1.05rem; }
+        .qc-head h4 { font-size: .95rem; }
+        .qc-head p { margin-top: .15rem; font-size: .78rem; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .qc-stats { gap: .4rem; }
+        .qc-stats div { padding: .3rem .4rem; border-radius: .6rem; }
+        .qc-stats b { font-size: 1rem; }
+        .qc-list { gap: .3rem; }
         .qc-list .lbl2 { font-size: max(.6875rem, 11px); }
-        .chipx { padding: .08rem .6rem; }
-        .qc-acts { gap: .45rem; padding-top: .7rem; }
-        .teams-layout .panel { padding: 1rem 1.2rem; }
-        .teams-layout .panel-head h3 { font-size: .98rem; }
-        .teams-layout .panel-head p { font-size: .8rem; }
-        .teams-layout .tbl th { padding: .7rem .9rem; }
-        .teams-layout .tbl td { padding: .65rem .9rem; }
+        .chipx { padding: .06rem .55rem; }
+        .qc-acts { gap: .4rem; padding-top: .6rem; }
+        .teams-layout .panel { padding: .85rem 1rem; }
+        .teams-layout .panel-head h3 { font-size: .95rem; }
+        .teams-layout .panel-head p { font-size: .78rem; }
+        .teams-layout .tbl th { padding: .6rem .8rem; }
+        .teams-layout .tbl td { padding: .55rem .8rem; }
 
-        .modal-sm { max-width: 42rem; }
-        .modal-sm .modal-head { padding: .85rem 1.3rem; }
-        .modal-sm .mh-ico { width: 2.2rem; height: 2.2rem; border-radius: .7rem; font-size: .95rem; }
-        .modal-sm .mh-title { font-size: 1.05rem; }
-        .modal-sm .mh-sub { font-size: .78rem; }
-        .modal-sm .modal-body { padding: 1.1rem 1.3rem 1.2rem; gap: .85rem; }
-        .modal-sm .field label { margin-bottom: .35rem; font-size: .82rem; }
-        .modal-sm .input { height: var(--ctl); padding: 0 .9rem; border-radius: .75rem; font-size: .875rem; }
-        .modal-sm .form-grid { gap: .9rem; }
-        .modal-sm .modal-foot { padding-top: .75rem; }
-        .chk-grid { grid-template-columns: repeat(auto-fill, minmax(13.5rem, 1fr)); gap: .5rem; max-height: 11.5rem; }
-        .chk { gap: .55rem; padding: .5rem .75rem; }
-        /* Seções internas das janelas de fila e técnico: título com ícone separado por linha */
-        .msec { display: flex; align-items: center; gap: .55rem; font-size: .88rem; font-weight: 800; color: var(--white); }
-        .msec i { flex: none; width: 1.15rem; text-align: center; font-size: .85rem; color: var(--t-amber); }
-        .field + .msec, .form-grid + .msec { margin-top: .2rem; padding-top: .85rem; border-top: 1px solid var(--line-soft); }
-        /* Categorias e equipe da fila: duas colunas lado a lado com listas roláveis */
-        .mcols { align-items: start; }
-        .mcols .field { min-width: 0; }
-        .sub-l { display: block; margin-bottom: .4rem; font-size: .75rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-        #queue-cats, #queue-members { grid-template-columns: minmax(0, 1fr); gap: .35rem; max-height: 14rem; }
-        #queue-cats .chk, #queue-members .chk { gap: .45rem; padding: .35rem .6rem; font-size: .78rem; }
-        #queue-cats .chk input, #queue-members .chk input { width: .9rem; height: .9rem; }
+        .modal-sm { max-width: 36rem; }
+        .modal-sm .modal-head { padding: .7rem 1.1rem; }
+        .modal-sm .mh-ico { width: 2rem; height: 2rem; border-radius: .65rem; font-size: .9rem; }
+        .modal-sm .mh-title { font-size: 1rem; }
+        .modal-sm .mh-sub { font-size: .75rem; }
+        .modal-sm .modal-body { padding: 1rem 1.1rem 1.1rem; gap: .7rem; }
+        .modal-sm .field label { margin-bottom: .3rem; font-size: .78rem; }
+        .modal-sm .input { height: var(--ctl-sm); padding: 0 .8rem; border-radius: .7rem; font-size: .84rem; }
+        .modal-sm .form-grid { gap: .7rem; }
+        .modal-sm .modal-foot { padding-top: .7rem; }
+        .chk-grid { grid-template-columns: repeat(auto-fill, minmax(12.5rem, 1fr)); gap: .35rem; max-height: 10.5rem; }
+        .chk { gap: .5rem; padding: .38rem .6rem; }
         /* Janelas de fila e técnico: Cancelar/Salvar ficam fixos no rodapé, como na janela de abertura de chamado */
-        .modal-sm .modal-foot { position: sticky; bottom: -1.2rem; z-index: 3; margin: .2rem -1.3rem -1.2rem; padding: .75rem 1.3rem; background: rgba(var(--dk), .94); border-top: 1px solid var(--line); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+        .modal-sm .modal-foot { position: sticky; bottom: -1.1rem; z-index: 3; margin: .2rem -1.1rem -1.1rem; padding: .7rem 1.1rem; background: rgba(var(--dk), .94); border-top: 1px solid var(--line); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
         @media (max-width: 767px) {
             .modal-sm .input { height: var(--ctl); }
             /* Na barra inferior os nomes do menu podem quebrar em duas linhas */
@@ -1724,11 +1630,13 @@ html[data-bg="vidro"] .l-glass{opacity:1}
     <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
         <defs>
             <symbol id="glpi-mark" viewBox="0 0 24 24">
-                <path d="M4.2 13.6v-2.1a7.8 7.8 0 0 1 15.6 0v2.1" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>
-                <rect x="2.7" y="12.7" width="4.2" height="7" rx="2.1" fill="currentColor"/>
-                <rect x="17.1" y="12.7" width="4.2" height="7" rx="2.1" fill="currentColor"/>
-                <path d="M19.2 19.7v1.2a2.4 2.4 0 0 1-2.4 2.4h-1.9" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>
-                <circle cx="13" cy="22.5" r="1.35" fill="currentColor"/>
+                <g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4.5 14v-1.4a7.5 7.5 0 0 1 15 0V14"/>
+                    <rect x="3" y="13.2" width="4.4" height="6.6" rx="2.2"/>
+                    <rect x="16.6" y="13.2" width="4.4" height="6.6" rx="2.2"/>
+                    <path d="M18.7 19.8v.9a2.7 2.7 0 0 1-2.7 2.7h-2.4"/>
+                </g>
+                <circle cx="11.6" cy="21" r="2.1" fill="currentColor"/>
             </symbol>
         </defs>
     </svg>
@@ -1756,7 +1664,6 @@ html[data-bg="vidro"] .l-glass{opacity:1}
       <path class="w3" d="M0 720C360 660 640 780 960 720S1320 690 1440 710V800H0Z"/>
     </svg>
   </div>
-  <div class="l-grain"></div>
 </div>
 
 <div class="cfg">
@@ -1809,30 +1716,16 @@ html[data-bg="vidro"] .l-glass{opacity:1}
 
     <!-- Retomando a sessão (só aparece com data-boot="restore" no <html>): no lugar do login que piscava antes do app -->
     <div id="boot-splash" class="boot" role="status" aria-live="polite">
-        <div class="lg-logo"><div class="mark" aria-hidden="true"><svg class="mark-ico"><use href="#glpi-mark"/></svg></div><div>Central de Abertura <small>de Chamados</small></div></div>
+        <div class="lg-logo"><div class="mark" aria-hidden="true"><svg class="mark-ico"><use href="#glpi-mark"/></svg></div><div>GLPI <small>Chamados &amp; Suporte</small></div></div>
         <div class="boot-ln"><span class="boot-ring" aria-hidden="true"></span><span>Retomando a sua sessão…</span></div>
     </div>
 
     <!-- 1. TELA DE ACESSO: mesmo cartão de vidro do login do Nexus Financeiro (e-mail e senha do Sistema Financeiro) -->
     <div id="view-login" class="login-wrap">
         <main class="lg-main">
-            <div class="lg-split">
-                <aside class="lg-brandpane">
-                    <div class="lg-logo"><div class="mark" aria-hidden="true"><svg class="mark-ico"><use href="#glpi-mark"/></svg></div><div>Central de Abertura <small>de Chamados</small></div></div>
-                    <div class="lg-brandcopy">
-                        <h1>Suporte ágil, com prazos que você acompanha.</h1>
-                        <p>Abra requisições, reporte incidentes e veja cada atualização do atendimento em um só lugar.</p>
-                    </div>
-                    <div class="lg-status" aria-label="Status dos serviços">
-                        <h3>Status dos serviços</h3>
-                        <div class="st-row"><span><i class="dot"></i>Portal de atendimento</span><span>Operacional</span></div>
-                        <div class="st-row"><span><i class="dot"></i>Autenticação</span><span>Operacional</span></div>
-                        <div class="st-row"><span><i class="dot"></i>Chamados GLPI</span><span>Operacional</span></div>
-                    </div>
-                </aside>
+            <div class="lg-logo"><div class="mark" aria-hidden="true"><svg class="mark-ico"><use href="#glpi-mark"/></svg></div><div>GLPI <small>Chamados &amp; Suporte</small></div></div>
 
             <section class="glass lg-card" aria-label="Acesso ao GLPI">
-                <span class="lg-eyebrow">Service Desk Enterprise</span>
                 <h2>Central de Chamados e Suporte</h2>
                 <p class="sub">Abra, acompanhe e resolva chamados de suporte com protocolo único. Entre com o e-mail e a senha do Nexus Financeiro — seu perfil de acesso é carregado automaticamente.</p>
 
@@ -1849,10 +1742,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                         <label for="login-password">Senha</label>
                         <div class="input-icon">
                             <i class="fa-solid fa-lock"></i>
-                            <input type="password" id="login-password" class="input has-eye" placeholder="Digite sua senha" required autocomplete="current-password">
-                            <button type="button" class="pw-eye" onclick="togglePasswordVisibility()" aria-label="Mostrar ou ocultar senha" title="Mostrar senha">
-                                <i class="fa-regular fa-eye" id="pw-eye-icon"></i>
-                            </button>
+                            <input type="password" id="login-password" class="input" placeholder="Digite sua senha" required autocomplete="current-password">
                         </div>
                     </div>
                     <p id="login-error-msg" class="hidden login-error" role="alert"></p>
@@ -1863,15 +1753,10 @@ html[data-bg="vidro"] .l-glass{opacity:1}
 
                 <ul class="lg-feat">
                     <li><i class="fa-solid fa-ticket"></i> Chamados com protocolo e histórico completos</li>
-                    <li><i class="fa-solid fa-stopwatch"></i> Prazos de atendimento (SLA) por prioridade</li>
+                    <li><i class="fa-solid fa-stopwatch"></i> Prazos de atendimento (SLA) por severidade</li>
                     <li><i class="fa-solid fa-server"></i> Ativos de TI vinculados a cada chamado</li>
                 </ul>
-
-                <div class="lg-back">
-                    <a href="/login.html"><i class="fa-solid fa-arrow-left"></i> Voltar ao Sistema Financeiro</a>
-                </div>
             </section>
-            </div>
 
             <footer class="lg-foot">
                 <span><i class="fa-solid fa-shield-halved"></i> Conexão protegida e criptografada (SSL 256-bit)</span>
@@ -1886,7 +1771,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         <div class="tb-brand">
             <div class="mark sm brand" aria-hidden="true"><svg class="mark-ico"><use href="#glpi-mark"/></svg></div>
             <div class="tb-brand-t">
-                <div class="tb-title"><b>Central de Abertura</b><span>de Chamados</span></div>
+                <div class="tb-title"><b>GLPI</b><span>Chamados &amp; Suporte</span></div>
                 <span id="header-role-badge" class="badge b-blue caps">Solicitante</span>
             </div>
         </div>
@@ -1976,19 +1861,14 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                                 <h2 id="user-greeting">Como podemos ajudar?</h2>
                                 <p>Escolha o serviço, descreva o ocorrido com clareza e acompanhe cada atualização do atendimento em "Meus Chamados".</p>
                             </div>
-                        </div>
-
-                        <div class="quick-acts">
-                            <button type="button" onclick="openFormModal('', 'Requisição')" class="glass svc qact qact-req">
-                                <span class="qact-ico"><i class="fa-solid fa-hand-holding-hand"></i></span>
-                                <span class="qact-txt"><b>Abrir Requisição</b><small>Serviço, acesso ou alteração de dados</small></span>
-                                <i class="fa-solid fa-arrow-right qact-go"></i>
-                            </button>
-                            <button type="button" onclick="openFormModal('', 'Incidente')" class="glass svc qact qact-inc">
-                                <span class="qact-ico"><i class="fa-solid fa-triangle-exclamation"></i></span>
-                                <span class="qact-txt"><b>Reportar Incidente</b><small>Problema, falha ou erro no sistema</small></span>
-                                <i class="fa-solid fa-arrow-right qact-go"></i>
-                            </button>
+                            <div class="hero-acts">
+                                <button type="button" onclick="openFormModal('', 'Requisição')" class="btn btn-blue">
+                                    <i class="fa-solid fa-hand-holding-hand"></i> Abrir Requisição
+                                </button>
+                                <button type="button" onclick="openFormModal('', 'Incidente')" class="btn btn-ghost">
+                                    <i class="fa-solid fa-triangle-exclamation c-amber"></i> Reportar Incidente
+                                </button>
+                            </div>
                         </div>
 
                         <div id="user-summary" class="usum" aria-label="Resumo dos seus chamados"></div>
@@ -2074,7 +1954,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                             <ul class="ss-list">
                                 <li style="--s: var(--rose-rgb);">Crítica <b>4 horas</b></li>
                                 <li style="--s: var(--orange-rgb);">Alta <b>8 horas</b></li>
-                                <li style="--s: var(--sky-rgb);">Média <b>3 dias úteis</b></li>
+                                <li style="--s: var(--sky-rgb);">Média <b>24 horas</b></li>
                                 <li style="--s: var(--slate-rgb);">Baixa <b>5 dias úteis</b></li>
                             </ul>
                         </div>
@@ -2098,7 +1978,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                                             <th>Protocolo</th>
                                             <th>Solicitação / Categoria</th>
                                             <th class="c-date">Data Abertura</th>
-                                            <th>Prioridade</th>
+                                            <th>Severidade</th>
                                             <th>SLA / Prazo</th>
                                             <th>Status</th>
                                             <th class="ta-r">Ação</th>
@@ -2146,7 +2026,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                                             <th>Protocolo</th>
                                             <th>Solicitação / Categoria</th>
                                             <th class="c-date">Data Abertura</th>
-                                            <th>Prioridade</th>
+                                            <th>Severidade</th>
                                             <th>SLA / Prazo</th>
                                             <th>Status</th>
                                             <th class="ta-r">Ação</th>
@@ -2170,7 +2050,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                             <div>
                                 <div class="crumbs"><i class="fa-solid fa-house"></i> ITSM Operations <i class="fa-solid fa-chevron-right"></i> <span class="here">Dashboard Executivo</span></div>
                                 <h2>Dashboard Executivo</h2>
-                                <p>Visão consolidada da Central de Chamados: volume de atendimentos, prioridades e prazos de SLA em tempo real.</p>
+                                <p>Visão consolidada da Central de Chamados: volume de atendimentos, severidades e prazos de SLA em tempo real.</p>
                             </div>
                             <div class="ph-actions">
                                 <button type="button" onclick="navTech('queue')" class="btn btn-amber">
@@ -2226,30 +2106,9 @@ html[data-bg="vidro"] .l-glass{opacity:1}
 
                             <div class="glass panel">
                                 <div class="panel-head">
-                                    <h3><i class="fa-solid fa-chart-pie c-blue"></i> Distribuição por Prioridade</h3>
+                                    <h3><i class="fa-solid fa-chart-pie c-blue"></i> Distribuição por Severidade</h3>
                                 </div>
                                 <div class="chart-box"><canvas id="chartUrgency"></canvas></div>
-                            </div>
-
-                            <div class="glass panel">
-                                <div class="panel-head">
-                                    <h3><i class="fa-solid fa-list-check c-green"></i> Chamados por Status</h3>
-                                </div>
-                                <div class="chart-box"><canvas id="chartStatus"></canvas></div>
-                            </div>
-                        </div>
-
-                        <!-- Prazos de atendimento (SLA) por prioridade -->
-                        <div class="glass panel sla-strip">
-                            <div class="sla-strip-l">
-                                <b><i class="fa-solid fa-stopwatch"></i> Prazos de atendimento</b>
-                                <small>O prazo começa a contar quando o chamado é aberto.</small>
-                            </div>
-                            <div class="sla-pills">
-                                <span class="sla-pill"><i class="dot" style="background:var(--t-rose)"></i>Crítica · 4 horas</span>
-                                <span class="sla-pill"><i class="dot" style="background:var(--t-amber)"></i>Alta · 8 horas</span>
-                                <span class="sla-pill"><i class="dot" style="background:var(--t-blue)"></i>Média · 3 dias úteis</span>
-                                <span class="sla-pill"><i class="dot" style="background:var(--t-slate)"></i>Baixa · 5 dias úteis</span>
                             </div>
                         </div>
 
@@ -2271,7 +2130,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                                         <tr>
                                             <th>Protocolo</th>
                                             <th>Solicitação / Solicitante</th>
-                                            <th>Prioridade</th>
+                                            <th>Severidade</th>
                                             <th>SLA / Prazo</th>
                                             <th>Status</th>
                                             <th class="ta-r">Ação</th>
@@ -2308,11 +2167,11 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                                         <input type="text" id="tech-queue-search" oninput="renderTechQueue()" placeholder="Buscar chamado..." title="Busca por protocolo, solicitante, e-mail, título, técnico ou fila" class="input">
                                     </div>
 
-                                    <select id="tech-filter-urgency" onchange="renderTechQueue()" class="select select-sm" aria-label="Filtrar por prioridade">
-                                        <option value="ALL">Todas as prioridades</option>
+                                    <select id="tech-filter-urgency" onchange="renderTechQueue()" class="select select-sm" aria-label="Filtrar por severidade">
+                                        <option value="ALL">Todas as severidades</option>
                                         <option value="Crítica">Crítica · 4 horas</option>
                                         <option value="Alta">Alta · 8 horas</option>
-                                        <option value="Média">Média · 3 dias úteis</option>
+                                        <option value="Média">Média · 24 horas</option>
                                         <option value="Baixa">Baixa · 5 dias úteis</option>
                                     </select>
 
@@ -2365,7 +2224,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                                             </th>
                                             <th>Protocolo</th>
                                             <th>Solicitação / Solicitante</th>
-                                            <th>Prioridade</th>
+                                            <th>Severidade</th>
                                             <th>SLA / Prazo</th>
                                             <th class="col-tech">Técnico Atribuído</th>
                                             <th>Status</th>
@@ -2528,15 +2387,18 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                     </section>
 
                     <section class="fs-step">
-                        <h4 class="fs-h"><span class="n">3</span> Qual a prioridade?</h4>
-                        <div class="picks urg" role="radiogroup" aria-label="Prioridade do chamado">
+                        <h4 class="fs-h"><span class="n">3</span> Qual a severidade?</h4>
+                        <div class="picks urg" role="radiogroup" aria-label="Severidade do chamado">
                             <button type="button" class="pick u-baixa" role="radio" data-urg="Baixa" onclick="pickUrgency(this.dataset.urg)"><b>Baixa</b><small>Dúvida ou operação normal</small><em>5 dias úteis</em></button>
-                            <button type="button" class="pick u-media" role="radio" data-urg="Média" onclick="pickUrgency(this.dataset.urg)"><b>Média</b><small>Impacto parcial, dá para contornar</small><em>3 dias úteis</em></button>
+                            <button type="button" class="pick u-media" role="radio" data-urg="Média" onclick="pickUrgency(this.dataset.urg)"><b>Média</b><small>Impacto parcial, dá para contornar</small><em>24 horas</em></button>
+                            <button type="button" class="pick u-alta" role="radio" data-urg="Alta" onclick="pickUrgency(this.dataset.urg)"><b>Alta</b><small>Impacto relevante no seu trabalho</small><em>8 horas</em></button>
+                            <button type="button" class="pick u-critica" role="radio" data-urg="Crítica" onclick="pickUrgency(this.dataset.urg)"><b>Crítica</b><small>Parada total, sem alternativa</small><em>4 horas</em></button>
                         </div>
-                        <p class="fs-note">Chamados urgentes são priorizados pela equipe de TI após a triagem.</p>
                         <select id="form-urgency" onchange="calculateSLA()" class="sr-only" tabindex="-1" aria-hidden="true">
                             <option value="Baixa">Baixa · dúvida ou operação normal</option>
                             <option value="Média" selected>Média · impacto parcial, dá para contornar</option>
+                            <option value="Alta">Alta · impacto relevante no seu trabalho</option>
+                            <option value="Crítica">Crítica · parada total, sem alternativa</option>
                         </select>
                     </section>
 
@@ -2550,7 +2412,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
 
                         <div class="field">
                             <label for="form-desc">Descrição detalhada *</label>
-                            <textarea id="form-desc" rows="5" maxlength="5000" oninput="onFormInput()" class="textarea focus-blue" placeholder="Por favor informe mensagens de erro, telas afetadas e passos para reproduzir..."></textarea>
+                            <textarea id="form-desc" rows="4" maxlength="5000" oninput="onFormInput()" class="textarea focus-blue" placeholder="Por favor informe mensagens de erro, telas afetadas e passos para reproduzir..."></textarea>
                             <div class="field-foot"><p id="err-desc" class="field-err hidden"></p><span id="cnt-desc" class="counter">mínimo de 10 caracteres</span></div>
                         </div>
 
@@ -2568,7 +2430,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                         <ul class="fs-check" id="form-check">
                             <li data-k="typ"><i class="fa-solid fa-check"></i><span>Tipo</span><b></b></li>
                             <li data-k="cat"><i class="fa-solid fa-check"></i><span>Categoria</span><b></b></li>
-                            <li data-k="urg"><i class="fa-solid fa-check"></i><span>Prioridade</span><b></b></li>
+                            <li data-k="urg"><i class="fa-solid fa-check"></i><span>Severidade</span><b></b></li>
                             <li data-k="subj"><i class="fa-solid fa-check"></i><span>Assunto</span><b></b></li>
                             <li data-k="desc"><i class="fa-solid fa-check"></i><span>Descrição</span><b></b></li>
                         </ul>
@@ -2582,7 +2444,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                                 <small id="form-sla-due"></small>
                             </div>
                         </div>
-                        <b id="form-sla-preview">3 Dias Úteis</b>
+                        <b id="form-sla-preview">24 Horas</b>
                     </div>
 
                     <div id="form-tips" class="cat-tips"></div>
@@ -2612,7 +2474,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                     <div class="success-grid">
                         <div><small>Tipo</small><span id="success-type">—</span></div>
                         <div><small>Categoria</small><span id="success-cat">—</span></div>
-                        <div><small>Prioridade</small><span id="success-urg">—</span></div>
+                        <div><small>Severidade</small><span id="success-urg">—</span></div>
                         <div><small>Previsão de atendimento</small><span id="success-sla">—</span></div>
                     </div>
                     <div class="success-next">
@@ -2652,8 +2514,6 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                     </div>
                 </div>
                 <div class="mh-actions" style="display:flex; align-items:center; gap:.7rem;">
-                    <button type="button" class="btn btn-ghost btn-sm ws-hist-btn" aria-pressed="false" onclick="toggleTicketHistory(this)" title="Ver movimentação e histórico"><i class="fa-solid fa-clock-rotate-left"></i> Histórico</button>
-                    <button type="button" class="btn btn-icon ws-full-btn" title="Abrir em tela cheia" aria-label="Abrir chamado em tela cheia" onclick="toggleTicketFull(this)"><i class="fa-solid fa-expand"></i></button>
                     <button type="button" onclick="copyProtocol(document.getElementById('my-id').textContent, this)" class="btn btn-ghost btn-sm"><i class="fa-regular fa-copy"></i> Copiar protocolo</button>
                     <button type="button" onclick="closeModal('modal-my-ticket')" class="btn btn-icon" aria-label="Fechar">
                         <i class="fa-solid fa-xmark"></i>
@@ -2739,8 +2599,6 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                     <button type="button" id="btn-take-ticket" onclick="takeCurrentTicket()" class="btn btn-amber btn-sm">
                         <i class="fa-solid fa-user-plus"></i> Assumir Chamado
                     </button>
-                    <button type="button" class="btn btn-icon ws-full-btn" title="Abrir em tela cheia" aria-label="Abrir chamado em tela cheia" onclick="toggleTicketFull(this)"><i class="fa-solid fa-expand"></i></button>
-                    <button type="button" class="btn btn-ghost btn-sm ws-hist-btn" aria-pressed="false" onclick="toggleTicketHistory(this)" title="Ver movimentação e histórico"><i class="fa-solid fa-clock-rotate-left"></i> Histórico</button>
                     <button type="button" onclick="closeModal('modal-tech-workspace')" class="btn btn-icon" aria-label="Fechar">
                         <i class="fa-solid fa-xmark"></i>
                     </button>
@@ -2830,10 +2688,10 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                                 </select>
                             </div>
                             <div class="field">
-                                <label for="prop-urgency">Prioridade <small>(muda o SLA)</small></label>
+                                <label for="prop-urgency">Severidade <small>(muda o SLA)</small></label>
                                 <select id="prop-urgency" onchange="onPropChange('urgency')" class="select">
                                     <option value="Baixa">Baixa · 5 dias úteis</option>
-                                    <option value="Média">Média · 3 dias úteis</option>
+                                    <option value="Média">Média · 24 horas</option>
                                     <option value="Alta">Alta · 8 horas</option>
                                     <option value="Crítica">Crítica · 4 horas</option>
                                 </select>
@@ -2921,33 +2779,24 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             <form id="queue-form" class="modal-body" onsubmit="saveQueue(event)" novalidate>
                 <div id="queue-banner" class="notice rose hidden" role="alert"><i class="fa-solid fa-triangle-exclamation"></i><div id="queue-banner-text"></div></div>
                 <input type="hidden" id="queue-id">
-
-                <div class="msec"><i class="fa-solid fa-id-card"></i> Identificação da fila</div>
-                <div class="form-grid cols-2">
-                    <div class="field">
-                        <label for="queue-name">Nome da fila *</label>
-                        <input type="text" id="queue-name" maxlength="60" autocomplete="off" class="input focus-blue" placeholder="Ex.: Suporte Técnico N2">
-                    </div>
-                    <div class="field">
-                        <label for="queue-desc">Descrição <span class="opt">(opcional)</span></label>
-                        <input type="text" id="queue-desc" maxlength="200" autocomplete="off" class="input focus-blue" placeholder="Para que serve esta fila">
-                    </div>
+                <div class="field">
+                    <label for="queue-name">Nome da fila *</label>
+                    <input type="text" id="queue-name" maxlength="60" autocomplete="off" class="input focus-blue" placeholder="Ex.: Suporte Técnico N2">
                 </div>
-
-                <div class="msec"><i class="fa-solid fa-tags"></i> Categorias e equipe</div>
-                <div class="form-grid cols-2 mcols">
-                    <div class="field">
-                        <label class="sub-l">Categorias que entram</label>
-                        <div id="queue-cats" class="chk-grid"><!-- JS --></div>
-                        <p class="form-note" style="margin-top:.45rem;">O chamado aberto nessas categorias já cai nesta fila. Sem categoria marcada, a fila só recebe chamados encaminhados.</p>
-                    </div>
-                    <div class="field">
-                        <label class="sub-l">Técnicos que atendem</label>
-                        <div id="queue-members" class="chk-grid"><!-- JS --></div>
-                    </div>
+                <div class="field">
+                    <label for="queue-desc">Descrição <span class="opt">(opcional)</span></label>
+                    <input type="text" id="queue-desc" maxlength="200" autocomplete="off" class="input focus-blue" placeholder="Para que serve esta fila">
                 </div>
-
-                <label class="chk" for="queue-active"><input type="checkbox" id="queue-active" checked><span>Fila ativa — recebe chamados novos automaticamente</span></label>
+                <div class="field">
+                    <label>Categorias que entram nesta fila</label>
+                    <div id="queue-cats" class="chk-grid"><!-- JS --></div>
+                    <p class="form-note" style="margin-top:.4rem;">O chamado aberto nessas categorias já cai nesta fila. Sem categoria marcada, a fila só recebe chamados encaminhados por um técnico.</p>
+                </div>
+                <div class="field">
+                    <label>Técnicos que atendem a fila</label>
+                    <div id="queue-members" class="chk-grid"><!-- JS --></div>
+                </div>
+                <label class="chk" for="queue-active"><input type="checkbox" id="queue-active" checked><span>Fila ativa (recebe chamados novos)</span></label>
                 <div class="modal-foot">
                     <button type="button" id="btn-queue-delete" onclick="deleteQueue()" class="btn btn-danger hidden" style="margin-right:auto;"><i class="fa-solid fa-trash"></i> Excluir fila</button>
                     <button type="button" onclick="closeModal('modal-queue')" class="btn btn-ghost">Cancelar</button>
@@ -2973,8 +2822,6 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             <form id="tech-form" class="modal-body" onsubmit="saveTech(event)" novalidate>
                 <div id="tech-banner" class="notice rose hidden" role="alert"><i class="fa-solid fa-triangle-exclamation"></i><div id="tech-banner-text"></div></div>
                 <input type="hidden" id="tech-id">
-
-                <div class="msec"><i class="fa-solid fa-user-gear"></i> Dados do técnico</div>
                 <div class="form-grid cols-2">
                     <div class="field">
                         <label for="tech-name">Nome *</label>
@@ -2989,18 +2836,15 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                         <input type="tel" id="tech-phone" maxlength="25" autocomplete="off" class="input focus-blue" placeholder="(62) 99999-9999">
                     </div>
                     <div class="field">
-                        <label for="tech-specialty">Especialidade <span class="opt">(opcional)</span></label>
+                        <label for="tech-specialty">Especialidade</label>
                         <input type="text" id="tech-specialty" maxlength="100" autocomplete="off" class="input focus-blue" placeholder="Ex.: Suporte N2, Financeiro">
                     </div>
                 </div>
-
-                <div class="msec"><i class="fa-solid fa-layer-group"></i> Filas de atendimento</div>
                 <div class="field">
+                    <label>Filas que este técnico atende</label>
                     <div id="tech-queues" class="chk-grid"><!-- JS --></div>
-                    <p class="form-note" style="margin-top:.45rem;">Marque as filas que este técnico pode assumir. Administradores ativos do Nexus já atendem automaticamente.</p>
                 </div>
-
-                <label class="chk" for="tech-active"><input type="checkbox" id="tech-active" checked><span>Técnico ativo — pode receber chamados</span></label>
+                <label class="chk" for="tech-active"><input type="checkbox" id="tech-active" checked><span>Técnico ativo (pode receber chamados)</span></label>
                 <div class="modal-foot">
                     <button type="button" id="btn-tech-delete" onclick="deleteTech()" class="btn btn-danger hidden" style="margin-right:auto;"><i class="fa-solid fa-trash"></i> Excluir técnico</button>
                     <button type="button" onclick="closeModal('modal-tech')" class="btn btn-ghost">Cancelar</button>
@@ -3052,8 +2896,8 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             { id: 'carmesim', nome: 'Carmesim', h: [352, 20, 285, 320] },
             { id: 'neon', nome: 'Neon', h: [85, 150, 195, 50] }
         ];
-        var PADRAO = 'ouro';         /* mesmo padrão do app Nexus (DEFAULT_ID = 'ouro') */
-        var HUE_UI = { oceano: 212 }; /* mesmo tom do painel do app (a paleta usa 212 no fundo) */
+        var PADRAO = 'oceano';        /* azul padrão, igual ao do login */
+        var HUE_UI = { oceano: 224 }; /* tom do azul do desenho (a paleta do app usa 212 no fundo do painel) */
 
         function hsl2rgb(h, s, l) {
             s /= 100; l /= 100;
@@ -3076,7 +2920,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             return { h: h, s: Math.round(s * 100) };
         }
         function pintar(h0, h2, sat) {
-            var s = Math.max(50, Math.min(100, sat == null ? 62 : sat));
+            var s = Math.max(70, Math.min(100, sat == null ? 100 : sat));
             ST.setProperty('--h', String(h0)); ST.setProperty('--h2', String(h2)); ST.setProperty('--sat', s + '%');
             var br = hsl2rgb(h0, s, 66);
             ST.setProperty('--acc-rgb', br.join(', '));
@@ -3092,7 +2936,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         function guardarCores(v) { lsSet('nexus:cores', JSON.stringify(v)); }
         function escolher(id, semSalvar) {
             var p = PALETAS.filter(function (x) { return x.id === id; })[0] || PALETAS.filter(function (x) { return x.id === PADRAO; })[0];
-            pintar(HUE_UI[p.id] || p.h[0], p.h[2], 62); marcar(p.id);
+            pintar(HUE_UI[p.id] || p.h[0], p.h[2], 100); marcar(p.id);
             if (!semSalvar) guardarCores({ id: p.id });
         }
         function personalizada(hex, semSalvar) {
@@ -3178,7 +3022,6 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         let lastCreatedProtocol = null;
         let techReplyMode = 'public';
         let chartCategoryInstance = null;
-        let chartStatusInstance = null;
         let chartUrgencyInstance = null;
         let queueQuick = 'open';        // filtro rápido da fila: open | new | pending | assigned | resolved | closed | unassigned | mine | late | all
         let userTab = 'all';            // abas de "Meus Chamados": all | open | waiting | closed
@@ -3617,19 +3460,11 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             return true;
         }
 
-        // Troca um chamado pela versão que o servidor devolveu (e evita avisar a própria alteração).
-        // `protocoloAnterior`: quando a troca de tipo muda a inicial (REQ-⇄INC-), o chamado é achado pelo protocolo antigo.
-        function applyServerOrder(ordem, own, protocoloAnterior) {
+        // Troca um chamado pela versão que o servidor devolveu (e evita avisar a própria alteração)
+        function applyServerOrder(ordem, own) {
             const t = mapOrdem(ordem, own);
-            const anterior = protocoloAnterior || t.protocol;
-            const idx = ticketsList.findIndex((x) => x.protocol === t.protocol || (anterior && x.protocol === anterior));
+            const idx = ticketsList.findIndex((x) => x.protocol === t.protocol);
             if (idx === -1) ticketsList.unshift(t); else ticketsList[idx] = t;
-            if (anterior && anterior !== t.protocol) {
-                snapshot.delete(anterior);
-                selectedIds.delete(anterior);
-                if (activeProtocol === anterior) activeProtocol = t.protocol;
-                if (myProtocol === anterior) myProtocol = t.protocol;
-            }
             snapshot.set(t.protocol, { updatedAt: t.updatedAt, len: t.timeline.length, status: t.status });
             return t;
         }
@@ -3721,19 +3556,9 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 : (lastSyncAt ? 'Atualizado às ' + lastSyncAt.toLocaleTimeString('pt-BR') : 'Atualizando...');
         }
 
-        // Assinatura do conteúdo renderizado: se os chamados não mudaram, o redraw é pulado
-        // (evita que cada sincronização/visibilitychange redesenhe tabelas e gráficos = tremor visual)
-        let lastQueueSig = '';
-        function queueSignature() {
-            return ticketsList.map((t) => (t.protocol || '') + '#' + (t.updatedAt || '') + '#' + (t.status || '') + '#' + (t.technician || '')).join('|');
-        }
-
         // Redesenha o que está na tela depois de uma atualização, sem tirar o foco de quem está digitando
         function refreshViews() {
             if (!currentUser) return;
-            const sig = queueSignature();
-            if (sig === lastQueueSig) { renderSyncStamp(); return; }
-            lastQueueSig = sig;
             if (isTechMode()) {
                 renderTechQueue();
                 if (!$('tech-subview-dashboard').classList.contains('hidden')) initCharts();
@@ -3925,17 +3750,6 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             }
         }
 
-        function togglePasswordVisibility() {
-            const input = $('login-password');
-            const icon = $('pw-eye-icon');
-            if (!input) return;
-            const show = input.type === 'password';
-            input.type = show ? 'text' : 'password';
-            if (icon) {
-                icon.className = show ? 'fa-regular fa-eye-slash' : 'fa-regular fa-eye';
-            }
-        }
-
         async function handleManualLogin(e) {
             if (e && typeof e.preventDefault === 'function') e.preventDefault();
             const email = (($('login-email').value) || '').trim();
@@ -4092,20 +3906,16 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 initCharts();
             }
 
-            // Retoma a última tela usada no perfil: atualizar a página (F5) não volta sempre ao início
+            // Sempre abre a tela inicial do perfil: catálogo ou dashboard
             document.body.classList.add('in-app');
-            let lastNav = null;
-            try { lastNav = localStorage.getItem(currentUser.role === 'user' ? 'glpi_nav_user' : 'glpi_nav_tech'); } catch (e) {}
-            if (currentUser.role === 'user') navUser(lastNav === 'my-tickets' ? 'my-tickets' : 'catalog');
-            else navTech(lastNav === 'queue' || lastNav === 'teams' ? lastNav : 'dashboard');
-            lastQueueSig = queueSignature();
+            if (currentUser.role === 'user') navUser('catalog');
+            else navTech('dashboard');
             startSync();
         }
 
         // ============================== NAVEGAÇÃO ==============================
         // Cada item do menu abre UMA tela (catálogo ou lista; dashboard ou fila), sempre com o mesmo cabeçalho de página
         function navUser(tab) {
-            try { localStorage.setItem('glpi_nav_user', tab); } catch (e) {}
             toggleSidebar(false);
             const catalog = $('user-section-catalog');
             const tickets = $('user-section-tickets');
@@ -4125,7 +3935,6 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         }
 
         function navTech(tab) {
-            try { localStorage.setItem('glpi_nav_tech', tab); } catch (e) {}
             toggleSidebar(false);
             const dash = $('tech-subview-dashboard');
             const queue = $('tech-subview-queue');
@@ -4166,46 +3975,14 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             if (!el) return;
             modalReturnFocus[id] = document.activeElement;
             el.classList.remove('hidden');
-            // Chamados sempre abrem em tela cheia (o botão no topo permite voltar ao tamanho de janela)
-            if (id === 'modal-my-ticket' || id === 'modal-tech-workspace') setTicketFull(el, true);
             const target = focusSelector ? el.querySelector(focusSelector) : null;
             if (target) setTimeout(() => { try { target.focus(); } catch (e) {} }, 40);
-        }
-
-        // Liga/desliga a tela cheia do chamado e mantém o botão (expandir/comprimir) em sincronia
-        function setTicketFull(el, full) {
-            el.classList.toggle('is-full', full);
-            const fb = el.querySelector('.ws-full-btn');
-            if (!fb) return;
-            const ic = fb.querySelector('i');
-            if (ic) ic.className = 'fa-solid ' + (full ? 'fa-compress' : 'fa-expand');
-            const txt = full ? 'Sair da tela cheia' : 'Abrir em tela cheia';
-            fb.title = txt;
-            fb.setAttribute('aria-label', txt);
-        }
-
-        // Alterna o chamado entre janela e tela cheia (o mesmo botão serve para os dois modais de chamado)
-        function toggleTicketFull(btn) {
-            const ov = btn.closest('.overlay');
-            if (ov) setTicketFull(ov, !ov.classList.contains('is-full'));
-        }
-
-        // Abre/fecha o painel lateral de movimentação (histórico) do chamado
-        function toggleTicketHistory(btn) {
-            const ov = btn.closest('.overlay');
-            if (!ov) return;
-            const open = ov.classList.toggle('hist-open');
-            btn.setAttribute('aria-pressed', String(open));
         }
 
         function closeModal(id) {
             const el = $(id);
             if (!el) return;
             el.classList.add('hidden');
-            el.classList.remove('hist-open');
-            const hb = el.querySelector('.ws-hist-btn');
-            if (hb) hb.setAttribute('aria-pressed', 'false');
-            if (el.classList.contains('is-full')) setTicketFull(el, false);
             if (id === 'modal-tech-workspace') { activeProtocol = null; markActiveRow(); }
             if (id === 'modal-my-ticket') myProtocol = null;
             const back = modalReturnFocus[id];
@@ -4364,9 +4141,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         }
 
         function calculateSLA() {
-            // Abertura só permite Média ou Baixa: rascunho antigo com outra prioridade volta para a padrão
-            let urgency = $('form-urgency').value;
-            if (urgency !== 'Média' && urgency !== 'Baixa') { urgency = 'Média'; $('form-urgency').value = 'Média'; }
+            const urgency = $('form-urgency').value;
             const sla = slaForUrgency(urgency);
             $('form-sla-preview').innerText = sla;
 
@@ -4476,7 +4251,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             $('success-sub').textContent = data.duplicate
                 ? 'Identificamos um chamado igual enviado há pouco, então não criamos outro. Guarde o protocolo para acompanhar o andamento.'
                 : 'Guarde o protocolo: com ele você acompanha o andamento a qualquer momento em "Meus Chamados".';
-            $('success-protocol').textContent = '#' + lastCreatedProtocol;
+            $('success-protocol').textContent = lastCreatedProtocol;
             $('success-type').textContent = v.type;
             $('success-cat').textContent = v.category;
             $('success-urg').textContent = v.urgency;
@@ -4501,7 +4276,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 <td class="mono strong c-blue c-id">${escapeHtml(t.id)}</td>
                 <td class="t-cell">
                     <div class="t-title">${escapeHtml(t.subject)}${waiting ? '<span class="t-flag you"><i class="fa-solid fa-reply"></i> Responder</span>' : ''}</div>
-                    <div class="t-sub">${typePill(t.type)}${escapeHtml(t.category)}${hasTech(t) ? '<span class="sep">•</span><i class="fa-solid fa-user-gear" style="font-size:.85em;"></i> ' + escapeHtml(t.technician) : ''}${relTime(t.updatedAt || t.createdAt) ? '<span class="sep">•</span>Atualizado ' + relTime(t.updatedAt || t.createdAt) : ''}</div>
+                    <div class="t-sub">${typePill(t.type)}${escapeHtml(t.category)}${relTime(t.updatedAt || t.createdAt) ? '<span class="sep">•</span>Atualizado ' + relTime(t.updatedAt || t.createdAt) : ''}</div>
                 </td>
                 <td class="c-muted nw c-date">${escapeHtml(t.date)}</td>
                 <td class="c-urg">${getUrgencyBadge(t.urgency)}</td>
@@ -4523,7 +4298,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             const tbody = $('user-tickets-tbody');
             const recentBody = $('user-recent-tbody');
             if (!tbody) return;
-            const searchVal = ($('user-search-input').value || '').toLowerCase().trim().replace(/^#/, '');
+            const searchVal = ($('user-search-input').value || '').toLowerCase().trim();
 
             // Já vem só do solicitante (o servidor filtra pela conta), do mais novo para o mais antigo
             const mine = ticketsList.slice().sort((a, b) => String(b.createdAt || '').localeCompare(String(a.createdAt || '')));
@@ -4646,7 +4421,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         function renderMyTicket(reset) {
             const t = getTicket(myProtocol);
             if (!t) return;
-            $('my-id').textContent = '#' + t.protocol;
+            $('my-id').textContent = t.protocol;
             $('my-title').textContent = t.subject;
             $('my-status-badge').innerHTML = getStatusBadge(t.status, true);
             $('my-date').textContent = t.date;
@@ -4681,7 +4456,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             $('my-summary').innerHTML =
                 row('Status', getStatusBadge(t.status, true)) +
                 row('Tipo', typePill(t.type)) +
-                row('Prioridade', getUrgencyBadge(t.urgency)) +
+                row('Severidade', getUrgencyBadge(t.urgency)) +
                 row('Categoria', escapeHtml(t.category)) +
                 (t.queue ? row('Equipe responsável', escapeHtml(t.queue)) : '') +
                 row('Prazo (SLA)', escapeHtml(s.label) + (s.text ? '<br><span class="c-muted" style="font-weight:500;">' + escapeHtml(s.text) + '</span>' : '')) +
@@ -4845,7 +4620,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         function renderTechQueue() {
             const tbody = $('tech-queue-tbody');
             if (!tbody) return;
-            const searchVal = ($('tech-queue-search').value || '').toLowerCase().trim().replace(/^#/, '');
+            const searchVal = ($('tech-queue-search').value || '').toLowerCase().trim();
             const filterUrgency = $('tech-filter-urgency').value;
             const filterType = $('tech-filter-type').value;
             const filterQueue = $('tech-filter-queue').value;
@@ -5164,7 +4939,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 if (!quiet && activeProtocol === t.protocol) renderWorkspace(false);
                 return null;
             }
-            const updated = applyServerOrder(r.data.ordem, false, t.protocol);
+            const updated = applyServerOrder(r.data.ordem, false);
             notifyParentOrdersChanged();
             if (!quiet) setSaveState('saved', 'Salvo às ' + new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }));
             return updated;
@@ -5191,7 +4966,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             if (!t) return;
             const closed = isClosed(t);
 
-            $('workspace-id').innerText = '#' + t.protocol;
+            $('workspace-id').innerText = t.protocol;
             $('workspace-title').innerText = t.subject;
             $('workspace-status-badge').innerHTML = getStatusBadge(t.status, false) + ' ' + typePill(t.type);
             $('workspace-urgency-badge').innerHTML = getUrgencyBadge(t.urgency);
@@ -5675,21 +5450,16 @@ html[data-bg="vidro"] .l-glass{opacity:1}
 
             const categories = {};
             const urgencies = {};
-            const statuses = {};
 
             ticketsList.forEach(t => {
                 categories[t.category] = (categories[t.category] || 0) + 1;
                 urgencies[t.urgency] = (urgencies[t.urgency] || 0) + 1;
-                const st = t.status || 'Novo';
-                statuses[st] = (statuses[st] || 0) + 1;
             });
 
             if (chartCategoryInstance) chartCategoryInstance.destroy();
             if (chartUrgencyInstance) chartUrgencyInstance.destroy();
-            if (chartStatusInstance) chartStatusInstance.destroy();
             chartCategoryInstance = null;
             chartUrgencyInstance = null;
-            chartStatusInstance = null;
 
             const canvasCat = document.getElementById('chartCategory');
             const canvasUrg = document.getElementById('chartUrgency');
@@ -5699,7 +5469,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
             const cssVar = (n, d) => (getComputedStyle(document.documentElement).getPropertyValue(n) || '').trim() || d;
             const dkRgb = cssVar('--dk', '9, 13, 32');
-            const fontBase = { family: '"IBM Plex Sans", "Segoe UI", system-ui, sans-serif', size: Math.round(rem * 0.8) };
+            const fontBase = { family: '"Plus Jakarta Sans", "Segoe UI", system-ui, sans-serif', size: Math.round(rem * 0.8) };
             const tickColor = cssVar('--muted', '#b4bedb');
             const gridColor = cssVar('--line-soft', 'rgba(255, 255, 255, 0.08)');
             const tooltip = {
@@ -5733,7 +5503,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 afterDatasetsDraw(chart) {
                     const { ctx } = chart;
                     ctx.save();
-                    ctx.font = `700 ${Math.round(rem * 0.8)}px "IBM Plex Mono", ui-monospace, Consolas, monospace`;
+                    ctx.font = `700 ${Math.round(rem * 0.8)}px "JetBrains Mono", Consolas, monospace`;
                     ctx.fillStyle = cssVar('--white', '#ffffff');
                     ctx.textBaseline = 'middle';
                     chart.getDatasetMeta(0).data.forEach((bar, i) => {
@@ -5759,7 +5529,6 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                     }]
                 },
                 options: {
-                    animation: false,
                     indexAxis: 'y',
                     responsive: true,
                     maintainAspectRatio: false,
@@ -5789,10 +5558,10 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                     ctx.textAlign = 'center';
                     ctx.textBaseline = 'middle';
                     ctx.fillStyle = cssVar('--white', '#ffffff');
-                    ctx.font = `700 ${Math.round(rem * 1.9)}px "IBM Plex Mono", ui-monospace, Consolas, monospace`;
+                    ctx.font = `700 ${Math.round(rem * 1.9)}px "JetBrains Mono", Consolas, monospace`;
                     ctx.fillText(String(urgTotal), x, y - rem * 0.35);
                     ctx.fillStyle = cssVar('--muted', '#9ba6c4');
-                    ctx.font = `600 ${Math.round(rem * 0.7)}px "IBM Plex Sans", "Segoe UI", sans-serif`;
+                    ctx.font = `600 ${Math.round(rem * 0.7)}px "Plus Jakarta Sans", "Segoe UI", sans-serif`;
                     ctx.fillText('CHAMADOS', x, y + rem * 1.1);
                     ctx.restore();
                 }
@@ -5811,7 +5580,6 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                     }]
                 },
                 options: {
-                    animation: false,
                     responsive: true,
                     maintainAspectRatio: false,
                     cutout: '68%',
@@ -5822,54 +5590,6 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 },
                 plugins: [centerText]
             });
-
-            const canvasStatus = document.getElementById('chartStatus');
-            if (canvasStatus) {
-                const statusLabels = Object.keys(statuses);
-                const statusTotal = Object.values(statuses).reduce((a, b) => a + b, 0);
-                chartStatusInstance = new Chart(canvasStatus.getContext('2d'), {
-                    type: 'doughnut',
-                    data: {
-                        labels: statusLabels,
-                        datasets: [{
-                            data: Object.values(statuses),
-                            backgroundColor: statusLabels.map(l => STATUS_COLORS[l] || '#64748b'),
-                            borderColor: `rgb(${dkRgb})`,
-                            borderWidth: Math.max(2, Math.round(rem * 0.2)),
-                            hoverOffset: Math.round(rem * 0.4)
-                        }]
-                    },
-                    options: {
-                        animation: false,
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        cutout: '68%',
-                        plugins: {
-                            legend: { position: 'bottom', labels: { color: cssVar('--ink-2', '#dbe2f3'), font: fontBase, usePointStyle: true, pointStyle: 'circle', padding: Math.round(rem * 0.9) } },
-                            tooltip
-                        }
-                    },
-                    plugins: [{
-                        id: 'centerTextStatus',
-                        afterDraw(chart) {
-                            const { ctx, chartArea } = chart;
-                            if (!chartArea) return;
-                            const x = (chartArea.left + chartArea.right) / 2;
-                            const y = (chartArea.top + chartArea.bottom) / 2;
-                            ctx.save();
-                            ctx.textAlign = 'center';
-                            ctx.textBaseline = 'middle';
-                            ctx.fillStyle = cssVar('--white', '#ffffff');
-                            ctx.font = `700 ${Math.round(rem * 1.9)}px "IBM Plex Mono", ui-monospace, Consolas, monospace`;
-                            ctx.fillText(String(statusTotal), x, y - rem * 0.35);
-                            ctx.fillStyle = cssVar('--muted', '#9ba6c4');
-                            ctx.font = `600 ${Math.round(rem * 0.7)}px "IBM Plex Sans", "Segoe UI", sans-serif`;
-                            ctx.fillText('CHAMADOS', x, y + rem * 1.1);
-                            ctx.restore();
-                        }
-                    }]
-                });
-            }
         }
 
         function showToast(msg, type = 'info') {
@@ -5915,7 +5635,6 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         }
 
         const URGENCY_COLORS = { 'Crítica': '#f43f5e', 'Alta': '#fb923c', 'Média': '#38bdf8', 'Baixa': '#94a3b8' };
-        const STATUS_COLORS = { 'Novo': '#38bdf8', 'Pendente': '#fbbf24', 'Atendimento atribuído': '#a78bfa', 'Resolvido': '#34d399', 'Fechado': '#64748b' };
 
         function shortLabel(text, max) {
             const s = String(text || '');
@@ -5937,9 +5656,9 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         };
 
         // ---- Política de SLA: prazo de atendimento por urgência ----
-        // Crítica 4 horas e Alta 8 horas; Média 3 dias úteis; Baixa 5 dias úteis (sábado e domingo não contam).
+        // Crítica 4 horas e Alta 8 horas; Média 24 horas corridas; Baixa 5 dias úteis (sábado e domingo não contam).
         // É a mesma regra que o servidor grava no chamado (atendimento.js).
-        const SLA_POLICY = { 'Crítica': '4 Horas', 'Alta': '8 Horas', 'Média': '3 Dias Úteis', 'Baixa': '5 Dias Úteis' };
+        const SLA_POLICY = { 'Crítica': '4 Horas', 'Alta': '8 Horas', 'Média': '24 Horas', 'Baixa': '5 Dias Úteis' };
         const SLA_WEEKDAYS = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'];
 
         function slaForUrgency(urgency) {
@@ -5957,7 +5676,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             return d;
         }
 
-        // Converte o texto do SLA ("30 Minutos", "1 Hora", "3 Dias Úteis", "5 Dias Úteis") em data-limite a partir da abertura
+        // Converte o texto do SLA ("30 Minutos", "1 Hora", "24 Horas", "5 Dias Úteis") em data-limite a partir da abertura
         function slaDueDate(start, slaText) {
             if (!(start instanceof Date) || isNaN(start.getTime())) return null;
             const m = /(\d+)\s*(minuto|min|hora|h|dia)/i.exec(String(slaText || ''));

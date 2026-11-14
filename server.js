@@ -7,7 +7,6 @@ const path = require('path');
 const http = require('http');
 const url = require('url');
 const tls = require('tls');
-const net = require('net');
 const crypto = require('crypto');
 const zlib = require('zlib');
 const Atendimento = require('./atendimento'); // regras da Central de Atendimento (chamados / O.S.)
@@ -26,7 +25,6 @@ if (!DB_DISABLED) {
   }
 }
 const BackendUtils = require('./backend-utils'); // utilitários puros e testados (corpo UTF-8, escrita atômica, cache JSON, validações)
-const SupabaseSync = require('./supabase-sync'); // espelho dos dados financeiros no Supabase ("Meus Dados")
 
 const PORT = process.env.PORT || 3000;
 const SERVER_START_TIME = Date.now();
@@ -80,7 +78,7 @@ if (process.env.NEXUS_DATA_DIR) {
     'local_users.json', 'local_users.backup.json',
     'local_database_data.json', 'local_database_data.backup.json',
     'cpf_registry.json', 'cpf_registry.backup.json',
-    'deleted_accounts.json', 'local_ordens_servico.json', 'local_boletos.json', 'local_tecnicos.json', 'local_filas.json',
+    'deleted_accounts.json', 'local_ordens_servico.json', 'local_tecnicos.json', 'local_filas.json',
     'pending_logins.json', 'system_logs.json'
   ];
   for (const fileName of runtimeJsonFiles) {
@@ -182,8 +180,7 @@ async function purgeDeletedUserFromDatabase(email) {
     pool.query('DELETE FROM ordens_servico WHERE LOWER(client_email) = LOWER($1)', [cleanEmail]),
     pool.query('DELETE FROM cpf_registry WHERE LOWER(email) = LOWER($1)', [cleanEmail]),
     pool.query('DELETE FROM system_logs WHERE LOWER(user_email) = LOWER($1) OR LOWER(details) LIKE $2', [cleanEmail, `%${cleanEmail}%`]),
-    pool.query('DELETE FROM usuarios WHERE LOWER(email) = LOWER($1)', [cleanEmail]),
-    SupabaseSync.deleteFinancialData(cleanEmail)
+    pool.query('DELETE FROM usuarios WHERE LOWER(email) = LOWER($1)', [cleanEmail])
   ]);
 }
 
@@ -978,92 +975,16 @@ let pool = null;
 const DEFAULT_AUTHORIZED_USERS = [];
 const DEFAULT_ADMIN = null;
 
-// Credenciais SMTP compartilhadas versionadas (.nexus_smtp): o Render não recebe env vars novas sem painel,
-// então host/usuário/senha viajam no repositório privado — mesmo padrão do .nexus_supabase e .nexus_sync_token.
-const nexusSmtpFileCreds = (() => {
-  try {
-    const file = process.env.NEXUS_SMTP_FILE || path.join(__dirname, '.nexus_smtp');
-    const kv = {};
-    for (const line of fs.readFileSync(file, 'utf8').split(/\r?\n/)) {
-      const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.+?)\s*$/);
-      if (m) kv[m[1]] = m[2].replace(/^["']|["']$/g, '');
-    }
-    return kv;
-  } catch (e) { return {}; }
-})();
-
-// Último diagnóstico de falha SMTP (preenchido por done(false)) — vai na resposta 503 para facilitar suporte.
-let lastSmtpFailureInfo = null;
-
-// HTML do e-mail de recuperação de senha (compartilhado entre SMTP e API HTTP).
-function buildRecoveryEmailHtml(userName, userPassword) {
-  return '<div style="font-family: \'Inter\', -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, Helvetica, Arial, sans-serif; max-width: 500px; margin: 0 auto; padding: 20px; border: 1px solid #1f2530; border-radius: 10px; background-color: #0b0e12; color: #e9edf3;">'
-    + '  <h2 style="color: #e8b04b; text-align: center;">Nexus Financeiro Hub</h2>'
-    + `  <p>Olá, <strong>${userName}</strong>!</p>`
-    + '  <p>Você solicitou a recuperação de acesso ao sistema Nexus Financeiro.</p>'
-    + '  <p>Use a senha temporária abaixo para entrar. No primeiro login você será obrigado a criar uma nova senha:</p>'
-    + '  <div style="text-align: center; margin: 25px 0;">'
-    + `    <span style="font-size: 24px; font-weight: bold; color: #e8b04b; background: #141821; padding: 10px 20px; border-radius: 8px; border: 1px solid #1f2530;">${userPassword}</span>`
-    + '  </div>'
-    + '  <p style="font-size: 12px; color: #8a93a3;">Se você não solicitou este e-mail, recomendamos alterar sua senha após realizar o login.</p>'
-    + '</div>';
-}
-
-// Envio via API HTTPS da Brevo (api.brevo.com): o Render bloqueia egresso SMTP (portas 465/587),
-// então o e-mail transacional sai por HTTPS/443. Requer BREVO_API_KEY e um remetente verificado
-// (SMTP_USER é usado como endereço do remetente).
-function sendRecoveryEmailViaBrevo(toEmail, userName, userPassword) {
-  return new Promise((resolve) => {
-    const apiKey = String(process.env.BREVO_API_KEY || nexusSmtpFileCreds.BREVO_API_KEY || '').trim();
-    const senderEmail = String(process.env.SMTP_USER || nexusSmtpFileCreds.SMTP_USER || '').trim();
-    if (!apiKey || !senderEmail) return resolve(false);
-    const payload = JSON.stringify({
-      sender: { email: senderEmail, name: 'Nexus Financeiro' },
-      to: [{ email: toEmail }],
-      subject: 'Recuperacao de Senha - Nexus Financeiro',
-      htmlContent: buildRecoveryEmailHtml(userName, userPassword)
-    });
-    const req = https.request({
-      hostname: 'api.brevo.com',
-      path: '/v3/smtp/email',
-      method: 'POST',
-      timeout: 20000,
-      headers: {
-        'api-key': apiKey,
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Content-Length': Buffer.byteLength(payload)
-      }
-    }, (res) => {
-      res.resume();
-      res.on('end', () => {
-        if (res.statusCode >= 200 && res.statusCode < 300) { resolve(true); return; }
-        lastSmtpFailureInfo = { host: 'api.brevo.com', port: 443, step: 'api', smtpCode: res.statusCode, smtpLine: '' };
-        console.warn(`[SMTP] Brevo API recusou envio: HTTP ${res.statusCode}`);
-        resolve(false);
-      });
-    });
-    req.on('timeout', () => { try { req.destroy(); } catch (e) {} resolve(false); });
-    req.on('error', (err) => { console.error('Erro na API Brevo:', err && err.message); resolve(false); });
-    req.end(payload);
-  });
-}
-
-// Disparo real de e-mail: prefere a API HTTPS da Brevo quando BREVO_API_KEY está configurada
-// (Render bloqueia SMTP); senão usa socket SMTP nativo.
-// SMTP suporta TLS implícito (porta 465) e STARTTLS (porta 587).
+// Disparo real de e-mail via Socket SMTP Nativo (compatível com Gmail sem pacotes externos)
 function sendPasswordEmail(toEmail, userName, userPassword) {
-  if (String(process.env.BREVO_API_KEY || nexusSmtpFileCreds.BREVO_API_KEY || '').trim()) {
-    return sendRecoveryEmailViaBrevo(toEmail, userName, userPassword);
-  }
   return new Promise((resolve) => {
-    const host = String(process.env.SMTP_HOST || nexusSmtpFileCreds.SMTP_HOST || 'smtp.gmail.com').trim();
-    const port = parseInt(process.env.SMTP_PORT || nexusSmtpFileCreds.SMTP_PORT || '465', 10);
-    const user = process.env.SMTP_USER || nexusSmtpFileCreds.SMTP_USER || '';
-    const pass = process.env.SMTP_PASS || nexusSmtpFileCreds.SMTP_PASS || '';
+    const host = process.env.SMTP_HOST || 'smtp.gmail.com';
+    const port = parseInt(process.env.SMTP_PORT || '465');
+    const user = process.env.SMTP_USER;
+    const pass = process.env.SMTP_PASS;
 
     if (!user || !pass) {
-      console.log(`[AVISO] Credenciais SMTP ausentes. E-mail não enviado para ${toEmail}`);
+      console.log(`[AVISO] Credenciais SMTP ausentes no Render. E-mail não enviado para ${toEmail}`);
       return resolve(false);
     }
 
@@ -1071,110 +992,41 @@ function sendPasswordEmail(toEmail, userName, userPassword) {
     if (/[\r\n<>]/.test(String(toEmail || ''))) return resolve(false);
     userName = String(userName || '').replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
 
-    const implicitTls = port === 465;
-    let rawSocket = null;
-    let tlsSocket = null;
-    let activeSocket = null;
-    let finished = false;
-    let buf = '';
-    let smtpStep = 0;          // máquina de estados do diálogo SMTP (0..8)
-    let ehloText = '';         // acumulador das linhas 250 do EHLO (detectar STARTTLS)
-    let lastSmtpCode = 0;
-    let lastSmtpLine = '';
+    // Validação do certificado TLS do servidor SMTP mantida (credenciais trafegam neste canal)
+    const socket = tls.connect(port, host, { servername: host }, () => {
+      let step = 0;
 
-    const done = (ok) => {
-      if (finished) return;
-      finished = true;
-      if (!ok) {
-        lastSmtpFailureInfo = { host, port, step: smtpStep, smtpCode: lastSmtpCode, smtpLine: String(lastSmtpLine || '').slice(0, 120) };
-        console.warn(`[SMTP] Envio de e-mail falhou (host=${host}:${port} step=${smtpStep} smtp=${lastSmtpCode} ${lastSmtpLine.slice(0, 80)})`);
-      }
-      try { if (tlsSocket) tlsSocket.destroy(); else if (rawSocket) rawSocket.destroy(); } catch (e) {}
-      resolve(ok);
-    };
-    const send = (cmd) => {
-      try { activeSocket.write(cmd + '\r\n'); } catch (e) {}
-    };
-    const attachData = (sock) => {
-      sock.on('data', (d) => {
-        buf += d.toString();
-        let idx;
-        while ((idx = buf.indexOf('\r\n')) >= 0) {
-          const line = buf.slice(0, idx);
-          buf = buf.slice(idx + 2);
-          if (line.trim()) onSmtpLine(line);
-        }
-      });
-    };
+      const send = (cmd) => {
+        try { socket.write(cmd + '\r\n'); } catch (e) { }
+      };
 
-    function onSmtpLine(line) {
-      const code = parseInt(line.slice(0, 3), 10);
-      if (isNaN(code)) return;
-      lastSmtpCode = code;
-      lastSmtpLine = line;
-      const isFinal = line.charAt(3) === ' ';
-      if (!isFinal) {
-        // Linha de continuação (ex.: 250-STARTTLS dentro do EHLO): acumula para inspeção de capacidades
-        if (smtpStep === 1) ehloText += line + '\n';
-        return;
-      }
+      socket.on('data', (data) => {
+        try {
+          const response = data.toString();
 
-      switch (smtpStep) {
-        case 0: // espera saudação 220 do servidor
-          if (code === 220) { smtpStep = 1; ehloText = ''; send('EHLO ' + host); }
-          else done(false);
-          break;
-        case 1: // resposta final do EHLO (todas as linhas 250 já passaram por aqui/continuação)
-          if (code === 250) {
-            ehloText += line + '\n';
-            if (!implicitTls && !tlsSocket && /STARTTLS/i.test(ehloText)) {
-              smtpStep = 2;
-              send('STARTTLS');
-            } else {
-              smtpStep = 3;
-              send('AUTH LOGIN');
-            }
-          } else done(false);
-          break;
-        case 2: // 220 ao STARTTLS -> faz upgrade TLS e volta ao passo 0 (novo EHLO)
-          if (code === 220) {
-            try {
-              rawSocket.removeAllListeners('data');
-              tlsSocket = tls.connect({ socket: rawSocket, servername: host });
-              tlsSocket.setTimeout(25000, () => done(false));
-              tlsSocket.on('error', () => done(false));
-              tlsSocket.on('secureConnect', () => {
-                activeSocket = tlsSocket;
-                smtpStep = 0;
-                buf = '';
-                attachData(tlsSocket);
-              });
-            } catch (e) { done(false); }
-          } else done(false);
-          break;
-        case 3: // 334 -> envia usuário em base64
-          if (code === 334) { smtpStep = 4; send(Buffer.from(user).toString('base64')); }
-          else done(false);
-          break;
-        case 4: // 334 -> envia senha em base64
-          if (code === 334) { smtpStep = 5; send(Buffer.from(pass).toString('base64')); }
-          else done(false);
-          break;
-        case 5: // 235 autenticado -> MAIL FROM
-          if (code === 235) { smtpStep = 6; send(`MAIL FROM:<${user}>`); }
-          else done(false);
-          break;
-        case 6: // 250 -> RCPT TO
-          if (code === 250) { smtpStep = 7; send(`RCPT TO:<${toEmail}>`); }
-          else done(false);
-          break;
-        case 7: // 250 -> DATA
-          if (code === 250) { smtpStep = 8; send('DATA'); }
-          else done(false);
-          break;
-        case 8: // 354 -> corpo da mensagem
-          if (code === 354) {
-            smtpStep = 9;
+          if (step === 0 && response.startsWith('220')) {
+            step++;
+            send(`EHLO ${host}`);
+          } else if (step === 1 && response.startsWith('250')) {
+            step++;
+            send('AUTH LOGIN');
+          } else if (step === 2 && response.startsWith('334')) {
+            step++;
+            send(Buffer.from(user).toString('base64'));
+          } else if (step === 3 && response.startsWith('334')) {
+            step++;
+            send(Buffer.from(pass).toString('base64'));
+          } else if (step === 4 && response.startsWith('235')) {
+            step++;
+            send(`MAIL FROM:<${user}>`);
+          } else if (step === 5 && response.startsWith('250')) {
+            step++;
+            send(`RCPT TO:<${toEmail}>`);
+          } else if (step === 6 && response.startsWith('250')) {
+            step++;
+            send('DATA');
+          } else if (step === 7 && response.startsWith('354')) {
+            step++;
             const body = [
               `From: "Nexus Financeiro" <${user}>`,
               `To: <${toEmail}>`,
@@ -1182,43 +1034,39 @@ function sendPasswordEmail(toEmail, userName, userPassword) {
               'MIME-Version: 1.0',
               'Content-Type: text/html; charset=UTF-8',
               '',
-              buildRecoveryEmailHtml(userName, userPassword),
-              '.',
-              ''
+              '<div style="font-family: \'Inter\', -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, Helvetica, Arial, sans-serif; max-width: 500px; margin: 0 auto; padding: 20px; border: 1px solid #1f2530; border-radius: 10px; background-color: #0b0e12; color: #e9edf3;">',
+              '  <h2 style="color: #e8b04b; text-align: center;">Nexus Financeiro Hub</h2>',
+              `  <p>Olá, <strong>${userName}</strong>!</p>`,
+              '  <p>Você solicitou o envio da sua senha de acesso ao sistema Nexus Financeiro.</p>',
+              '  <p>Sua senha cadastrada é:</p>',
+              '  <div style="text-align: center; margin: 25px 0;">',
+              `    <span style="font-size: 24px; font-weight: bold; color: #e8b04b; background: #141821; padding: 10px 20px; border-radius: 8px; border: 1px solid #1f2530;">${userPassword}</span>`,
+              '  </div>',
+              '  <p style="font-size: 12px; color: #8a93a3;">Se você não solicitou este e-mail, recomendamos alterar sua senha após realizar o login.</p>',
+              '</div>',
+              '.'
             ].join('\r\n');
             send(body);
-          } else done(false);
-          break;
-        case 9: // 250 após DATA -> QUIT e sucesso
-          if (code === 250) { send('QUIT'); done(true); }
-          else done(false);
-          break;
-        default:
-          done(false);
-      }
-    }
+          } else if (step === 8 && response.startsWith('250')) {
+            step++;
+            send('QUIT');
+            resolve(true);
+          }
+        } catch (err) {
+          resolve(false);
+        }
+      });
+    });
 
-    try {
-      if (implicitTls) {
-        // Porta 465: TLS implícito — handshake já concluído no callback do tls.connect
-        tlsSocket = tls.connect(port, host, { servername: host }, () => {
-          activeSocket = tlsSocket;
-          attachData(tlsSocket);
-        });
-        tlsSocket.setTimeout(25000, () => done(false));
-        tlsSocket.on('error', (err) => { console.error('Erro na conexão SMTP TLS:', err && err.message); done(false); });
-        rawSocket = tlsSocket;
-      } else {
-        // Porta 587/25: texto puro até o STARTTLS (ou AUTH direto se o servidor não exigir TLS)
-        rawSocket = net.connect(port, host);
-        activeSocket = rawSocket;
-        rawSocket.setTimeout(25000, () => done(false));
-        rawSocket.on('error', (err) => { console.error('Erro na conexão SMTP:', err && err.message); done(false); });
-        attachData(rawSocket);
-      }
-    } catch (e) {
-      done(false);
-    }
+    socket.on('error', (err) => {
+      console.error('Erro na conexão SMTP:', err);
+      resolve(false);
+    });
+    // Sem resposta do servidor SMTP: encerra o socket e libera a promessa (antes ficava pendente para sempre)
+    socket.setTimeout(20000, () => {
+      try { socket.destroy(); } catch (e) {}
+      resolve(false);
+    });
   });
 }
 
@@ -1981,7 +1829,7 @@ async function setupDatabaseTablesAndSync() {
       const localOrdens = JSON.parse(fs.readFileSync(localOrdensFile, 'utf8')) || [];
       for (const bruta of localOrdens) {
         if (!bruta || !bruta.protocol) continue;
-        const ord = Atendimento.normalizarOrdem(bruta); // status, prioridade e tipo já nos nomes atuais
+        const ord = Atendimento.normalizarOrdem(bruta); // status, severidade e tipo já nos nomes atuais
         const existOrd = await pool.query('SELECT id FROM ordens_servico WHERE protocol = $1', [ord.protocol]);
         if (existOrd.rows.length === 0) {
           await pool.query(
@@ -2336,8 +2184,7 @@ const htmlContent = `<!DOCTYPE html>
     if (loggedIn) {
       document.documentElement.classList.add('user-logged-in');
       var uObj = cu ? JSON.parse(cu) : null;
-      var __admRole = function(r){ var x = String(r || '').trim().toLowerCase(); return x === 'administrador' || x === 'admin'; };
-      if (uObj && __admRole(uObj.role)) {
+      if (uObj && uObj.role === 'Administrador') {
         document.documentElement.classList.add('is-admin');
       }
       // Tamanho dos ícones da barra superior do administrador (normal | grande | extra): preferência do navegador, padrão "grande"
@@ -2347,15 +2194,14 @@ const htmlContent = `<!DOCTYPE html>
         document.documentElement.setAttribute('data-top-ic', topIc);
       } catch (eTopIc) {}
       var vu = localStorage.getItem('nexus_viewing_user');
-      if (vu && uObj && __admRole(uObj.role)) {
+      if (vu && uObj && uObj.role === 'Administrador') {
         document.documentElement.classList.add('has-view-mode-banner');
       }
     }
     var sc = localStorage.getItem('nexus_display_scale') || 'auto';
     // Aparelho e escala: UMA só implementação, reutilizada por detectDeviceType() / getAutoDisplayScale() / applyDisplayScale() mais abaixo.
-    // Escala automática CONTÍNUA e BIDIRECIONAL pela janela do navegador: telas menores que Full HD (notebook 14", janela ~1366x768 ou
-    // 1536x864 com escala do Windows) recebem zoom < 100% para que TUDO caiba no visor igual ao monitor maior; monitores 2K/ultrawide/4K/5K
-    // crescem até 200%. Celular/tablet usam o layout responsivo (sem zoom).
+    // Escala automática CONTÍNUA pela janela do navegador (antes eram degraus fixos pela tela): Full HD (janela ~1920x970) fica em 100% e a
+    // interface cresce junto com monitores maiores (2K, ultrawide, 4K, 5K), sem passar de 200%. Celular/tablet usam o layout responsivo (sem zoom).
     window.__nexusDeviceInfo = function () {
       var w = window.innerWidth || (document.documentElement ? document.documentElement.clientWidth : 0) || screen.width || 1366;
       var h = window.innerHeight || (document.documentElement ? document.documentElement.clientHeight : 0) || screen.height || 768;
@@ -2378,30 +2224,18 @@ const htmlContent = `<!DOCTYPE html>
     };
     window.__nexusAutoScale = function (i) {
       if (i.handheld) return 1;
-      // Canvas efetivo CONSTANTE (~1600px de largura útil): o zoom encolhe/estica a interface
-      // para que notebook, desktop e monitor grande renderizem EXATAMENTE o mesmo layout,
-      // apenas em escala física diferente. Sem arredondamento: effW = w / (w/1600) = 1600 exato.
-      var z = i.w / 1600;
-      if (z < 0.6) z = 0.6;
-      if (z > 2) z = 2;
-      return z;
+      if (i.sh <= 640 || i.sw <= 1180) return 0.95;
+      var zw = 1 + 0.5 * (i.w / 1920 - 1);
+      var zh = 1 + 0.5 * (i.h / 970 - 1);
+      var z = Math.min(zw, zh, 2);
+      if (z < 1.03) return 1;
+      return Math.round(z * 20) / 20;
     };
     window.__nexusScaleFor = function (scaleVal, i) {
       var num = (scaleVal === 'auto') ? window.__nexusAutoScale(i) : (parseFloat(scaleVal) / 100 || 1.0);
       // zoom efetivo: celular/tablet e janelas de até 1024px ficam no layout responsivo (sem zoom)
       var eff = (i.handheld || i.w <= 1024 || num === 1) ? 1 : num;
       return { num: num, eff: eff, label: Math.round(num * 100) + '%' };
-    };
-    // Media queries de largura viraram classes nqmin-*/nqmax-* no <html> (o zoom do body
-    // não afeta @media). O JS as alterna conforme a LARGURA EFETIVA = janela / zoom aplicado,
-    // garantindo o mesmo layout em qualquer visor. Celular/tablet/janela pequena: effW = w real.
-    window.__nexusNQMin = [481, 721, 761, 769, 861, 1025, 1181, 1700, 1921, 2560];
-    window.__nexusNQMax = [339, 360, 389, 420, 460, 480, 520, 560, 600, 640, 700, 720, 760, 768, 820, 860, 900, 960, 992, 1024, 1180, 1400, 1450, 2559];
-    window.__nexusSyncNQClasses = function (effW) {
-      var de = document.documentElement;
-      var mins = window.__nexusNQMin, maxs = window.__nexusNQMax;
-      for (var i = 0; i < mins.length; i++) de.classList.toggle('nqmin-' + mins[i], effW >= mins[i]);
-      for (var j = 0; j < maxs.length; j++) de.classList.toggle('nqmax-' + maxs[j], effW <= maxs[j]);
     };
     var info = window.__nexusDeviceInfo();
     var dev = info.dev;
@@ -2420,8 +2254,6 @@ const htmlContent = `<!DOCTYPE html>
     var effZoom = sf.eff;
     document.documentElement.style.setProperty('--app-zoom', effZoom);
     document.write('<style id="nexus-scale-override">' + zoomRule + ' :root { --app-zoom: ' + effZoom + '; }</style>');
-    // aplica as classes de largura efetiva já na carga inicial (antes do primeiro paint do app)
-    window.__nexusSyncNQClasses(isMobileOrTablet ? w : (sn > 0 ? w / sn : w));
   } catch(e){}
 })();
 </script>
@@ -2467,12 +2299,13 @@ html:not(.user-logged-in) #authPage {
 
 
 /* ==================== Controle de Itens do Menu Administrativo ==================== */
-/* Badges/divisores administrativos ficam ocultos; os botões seguem o perfil
-   (html.is-admin exibe todos; html:not(.is-admin) oculta — regras logo abaixo) */
+/* Por padrão (inclusive para usuários comuns), itens administrativos são totalmente ocultos */
 .menu-admin-divider,
 .menu-admin-badge,
-#mobileDrawerAdminDivider,
-#mobileDrawerAdminBadge {
+.menu-btn-admin,
+#menuFuncoesBtn, #menuUsuariosBtn, #menuLogsBtn, #menuOrdensBtn,
+#mobileDrawerAdminDivider, #mobileDrawerAdminBadge,
+#mobileDrawerFuncoesBtn, #mobileDrawerUsuariosBtn, #mobileDrawerLogsBtn, #mobileDrawerOrdensBtn {
   display: none !important;
 }
 
@@ -2487,26 +2320,19 @@ html.is-admin #mobileDrawerAdminBadge,
 #mobileDrawerAdminBadge {
   display: none !important;
 }
-/* ==================== Controle Executivo de Abas por Papel (Perfil) ==================== */
-/* Administrador enxerga APENAS o painel administrativo (aba/seção de administrador);
-   as funções do usuário comum ficam ocultas para o perfil Administrador. */
-html.is-admin #menu button.menu-btn-user,
-html.is-admin #mobileDrawerMenu button.menu-btn-user,
-html.is-admin #menu .menu-section-visao,
-html.is-admin #menu .menu-section-planejamento,
-html.is-admin #menu .menu-section-ferramentas,
-html.is-admin #menu .menu-section-minha-conta,
-html.is-admin #mobileDrawerMenu .menu-section-visao,
-html.is-admin #mobileDrawerMenu .menu-section-planejamento,
-html.is-admin #mobileDrawerMenu .menu-section-ferramentas,
-html.is-admin #mobileDrawerMenu .menu-section-minha-conta,
-html.is-admin #mobileDrawer .menu-section-visao,
-html.is-admin #mobileDrawer .menu-section-planejamento,
-html.is-admin #mobileDrawer .menu-section-ferramentas,
-html.is-admin #mobileDrawer .menu-section-minha-conta,
-html.is-admin #mobileBottomBar button.mobile-btn-user {
+html.is-admin #menuFuncoesBtn,
+html.is-admin #mobileDrawerFuncoesBtn {
   display: none !important;
 }
+/* ==================== Controle Executivo de Abas por Papel (Perfil) ==================== */
+/* Perfil de Administrador: Permanece APENAS a aba e módulos de Administração */
+html.is-admin #menu .menu-btn-user,
+html.is-admin #mobileDrawerMenu .menu-btn-user,
+html.is-admin .menu-section-visao,
+html.is-admin .menu-section-planejamento,
+html.is-admin .menu-section-ferramentas,
+html.is-admin .menu-section-minha-conta,
+html.is-admin #mobileBottomBar .mobile-btn-user,
 html.is-admin .header-minha-conta-btn,
 html.is-admin #sidebarNovaTransacaoBtn {
   display: none !important;
@@ -2569,10 +2395,11 @@ html:not(.is-admin) aside.menu.sidebar-menu .sidebar-action-wrap {
   gap: 14px;
   align-items: stretch;
 }
-:where(html.nqmax-992) .reception-grid {
+@media (max-width: 992px) {
+  .reception-grid {
     grid-template-columns: 1fr;
   }
-
+}
 .reception-card {
   background: var(--card);
   border: 1px solid var(--card-border);
@@ -2590,10 +2417,11 @@ html:not(.is-admin) aside.menu.sidebar-menu .sidebar-action-wrap {
   gap: 10px 12px;
   margin-top: 10px;
 }
-:where(html.nqmax-640) .reception-form-grid {
+@media (max-width: 640px) {
+  .reception-form-grid {
     grid-template-columns: 1fr;
   }
-
+}
 .reception-form-grid .full-col {
   grid-column: 1 / -1;
 }
@@ -4473,42 +4301,51 @@ body.light .auth-support-link {
 body.light #serverAuthNexusCard .auth-field label { color: #1F2937 !important; }
 body.light .auth-register-consent { color: #1F2937; }
 body.light .auth-register-security { background: #ECFDF5; border-color: #A7F3D0; color: #065F46; }
-:where(html.nqmax-640) #serverAuthNexusCard #registerForm { grid-template-columns: 1fr; gap: 12px; }
-
-:where(html.nqmax-640) .auth-grid-2col {
+@media (max-width: 640px) {
+  #serverAuthNexusCard #registerForm { grid-template-columns: 1fr; gap: 12px; }
+}
+@media (max-width: 640px) {
+  .auth-grid-2col {
     grid-template-columns: 1fr !important;
     gap: 8px !important;
   }
-
+}
 
 /* Rodapé Global do Desenvolvedor (Logo Oficial Paulo Lima) */
 
 /* Responsividade Mobile e Telas Médias */
-:where(html.nqmax-1024) .auth-exec-layout {
+@media (max-width: 1024px) {
+  .auth-exec-layout {
     grid-template-columns: 1fr !important;
     max-width: 440px !important;
     gap: 20px !important;
     padding: 0 10px !important;
-  }:where(html.nqmax-1024) .auth-showcase-panel {
+  }
+  .auth-showcase-panel {
     display: none !important;
-  }:where(html.nqmax-1024) .auth-card-nexus {
+  }
+  .auth-card-nexus {
     max-width: 100% !important;
   }
+}
 
-
-:where(html.nqmax-768) .auth-container {
+@media (max-width: 768px) {
+  .auth-container {
     padding: 16px 10px 32px !important;
     min-height: 100vh !important;
-  }:where(html.nqmax-768) .auth-top-bar {
+  }
+  .auth-top-bar {
     top: 14px !important;
     right: 14px !important;
-  }:where(html.nqmax-768) .auth-card-nexus {
+  }
+  .auth-card-nexus {
     padding: 22px 18px !important;
     border-radius: 20px !important;
-  }:where(html.nqmax-768) .auth-input-wrapper input {
+  }
+  .auth-input-wrapper input {
     font-size: 16px !important; /* Evita zoom automático no iOS Safari */
   }
-
+}
 
 
 
@@ -5260,8 +5097,12 @@ body.light .header-live-time {
   color: #10B981 !important;
   margin-top: 2px !important;
 }
-:where(html.nqmax-900) .brand { padding: 4px 10px 4px 6px !important; gap: 8px !important; }:where(html.nqmax-900) .brand .logo { width: 32px !important; height: 32px !important; min-width: 32px !important; min-height: 32px !important; }:where(html.nqmax-900) .brand .name .brand-title { font-size: 13.5px !important; }:where(html.nqmax-900) .brand .name .brand-sub { font-size: 8px !important; }
-
+@media (max-width: 900px) {
+  .brand { padding: 4px 10px 4px 6px !important; gap: 8px !important; }
+  .brand .logo { width: 32px !important; height: 32px !important; min-width: 32px !important; min-height: 32px !important; }
+  .brand .name .brand-title { font-size: 13.5px !important; }
+  .brand .name .brand-sub { font-size: 8px !important; }
+}
 
 .icon-btn,
 .scale-selector-wrap #scaleMenuBtn,
@@ -6315,11 +6156,12 @@ body.sidebar-collapsed .fintech-market-ticker-banner {
   display: none !important;
   left: 68px !important;
 }
-:where(html.nqmax-860) .fintech-market-ticker-banner {
+@media (max-width: 860px) {
+  .fintech-market-ticker-banner {
   display: none !important;
     display: none !important;
   }
-
+}
 .fintech-ticker-content {
   display: flex !important;
   align-items: center !important;
@@ -8353,12 +8195,33 @@ body.light .sub-paywall-overlay {
 .pw-success-actions .pw-btn { flex: 1 1 210px; width: auto; min-height: 48px; font-size: 14.5px; }
 
 /* ---------- Responsivo ---------- */
-:where(html.nqmax-900) .pw-grid { grid-template-columns: minmax(0, 1fr); }
-
-:where(html.nqmax-640) .sub-paywall-modal { border-radius: 20px; }:where(html.nqmax-640) .pw-head { gap: 14px; padding-bottom: 16px; margin-bottom: 16px; }:where(html.nqmax-640) .pw-brand { flex-basis: 100%; }:where(html.nqmax-640) .pw-actions { width: 100%; justify-content: flex-start; }:where(html.nqmax-640) .pw-account { flex: 1 1 100%; }:where(html.nqmax-640) .pw-pix { grid-template-columns: minmax(0, 1fr); }:where(html.nqmax-640) .pw-qr { width: min(100%, 236px); justify-self: center; }:where(html.nqmax-640) .pw-qr img { max-width: 200px; }:where(html.nqmax-640) .pw-key-value { font-size: 22px; }:where(html.nqmax-640) .pw-paybar { gap: 8px; padding: 12px; }:where(html.nqmax-640) .pw-paybar-amount { flex-direction: row; align-items: baseline; justify-content: space-between; width: 100%; padding: 0 4px; }:where(html.nqmax-640) .pw-paybar-amount strong { font-size: 25px; }:where(html.nqmax-640) .pw-paybar .pw-btn-primary { flex: 1 1 100%; max-width: none; margin-left: 0; min-height: 50px; font-size: 14.5px; }:where(html.nqmax-640) .pw-success-actions .pw-btn { flex-basis: 100%; }:where(html.nqmax-640) .pw-trust-strip { grid-template-columns: minmax(0, 1fr); }
-
-:where(html.nqmax-420) .pw-card { padding: 14px; }:where(html.nqmax-420) .pw-plan { padding: 12px 13px; }:where(html.nqmax-420) .pw-key-value { font-size: 20px; }:where(html.nqmax-420) .pw-total-val { font-size: 26px; }:where(html.nqmax-420) .pw-receipt { padding: 16px; }
-
+@media (max-width: 900px) {
+  .pw-grid { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 640px) {
+  .sub-paywall-modal { border-radius: 20px; }
+  .pw-head { gap: 14px; padding-bottom: 16px; margin-bottom: 16px; }
+  .pw-brand { flex-basis: 100%; }
+  .pw-actions { width: 100%; justify-content: flex-start; }
+  .pw-account { flex: 1 1 100%; }
+  .pw-pix { grid-template-columns: minmax(0, 1fr); }
+  .pw-qr { width: min(100%, 236px); justify-self: center; }
+  .pw-qr img { max-width: 200px; }
+  .pw-key-value { font-size: 22px; }
+  .pw-paybar { gap: 8px; padding: 12px; }
+  .pw-paybar-amount { flex-direction: row; align-items: baseline; justify-content: space-between; width: 100%; padding: 0 4px; }
+  .pw-paybar-amount strong { font-size: 25px; }
+  .pw-paybar .pw-btn-primary { flex: 1 1 100%; max-width: none; margin-left: 0; min-height: 50px; font-size: 14.5px; }
+  .pw-success-actions .pw-btn { flex-basis: 100%; }
+  .pw-trust-strip { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 420px) {
+  .pw-card { padding: 14px; }
+  .pw-plan { padding: 12px 13px; }
+  .pw-key-value { font-size: 20px; }
+  .pw-total-val { font-size: 26px; }
+  .pw-receipt { padding: 16px; }
+}
 @media (prefers-reduced-motion: reduce) {
   .sub-paywall-overlay, .sub-paywall-modal, .pw-track-bar, .pw-pulse::after { animation: none; }
 }
@@ -9036,10 +8899,11 @@ body.light #btnEyeIcon svg {
   flex-direction: column !important;
   gap: 16px !important;
 }
-:where(html.nqmax-992) .cfg-proportional-container {
+@media (max-width: 992px) {
+  .cfg-proportional-container {
     grid-template-columns: 1fr !important;
   }
-
+}
 
 /* Modo de Privacidade Bancária - Ocultação Fluida com Desfoque */
 body.hide-sensitive-balances .kpi .val,
@@ -9095,8 +8959,9 @@ body.light .panel-head h3 { color:#0f172a !important; }
 }
 .pass-toggle:hover{color:var(--text); background:var(--hover);}
 .pass-toggle svg{width:16px; height:16px;}
-:where(html.nqmax-820) .cfg-grid {grid-template-columns:1fr;}
-
+@media(max-width:820px){
+  .cfg-grid{grid-template-columns:1fr;}
+}
 
 .donut-wrap{display:flex; align-items:center; justify-content:center; gap:20px;}
 .donut-side{font-size:12px; color:var(--text-dim);}
@@ -9862,12 +9727,15 @@ body.light .dash-quick-btn.q-sync { background: #F0F9FF !important; border-color
   gap: 16px;
   margin-bottom: 24px;
 }
-:where(html.nqmax-1400) .kpis-grid-6 { grid-template-columns: repeat(3, 1fr); gap: 14px; }
-
-:where(html.nqmax-820) .kpis-grid-6 { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-
-:where(html.nqmax-480) .kpis-grid-6 { grid-template-columns: 1fr; gap: 12px; }
-
+@media (max-width: 1400px) {
+  .kpis-grid-6 { grid-template-columns: repeat(3, 1fr); gap: 14px; }
+}
+@media (max-width: 820px) {
+  .kpis-grid-6 { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+}
+@media (max-width: 480px) {
+  .kpis-grid-6 { grid-template-columns: 1fr; gap: 12px; }
+}
 
 /* Master Design dos Cards de KPI (.kpis-grid-6 .kpi) */
 .kpis-grid-6 .kpi {
@@ -10088,8 +9956,9 @@ body.light .kpi-mini-bar {
   margin-bottom: 24px;
   align-items: start;
 }
-:where(html.nqmax-1180) .dashboard-main-grid { grid-template-columns: 1fr; }
-
+@media (max-width: 1180px) {
+  .dashboard-main-grid { grid-template-columns: 1fr; }
+}
 
 .dash-card {
   position: relative;
@@ -10148,10 +10017,12 @@ body.light .kpi-mini-bar {
   padding-top: 14px;
   border-top: 1px solid rgba(255, 255, 255, 0.07);
 }
-:where(html.nqmax-960) .dash-chart-metrics { grid-template-columns: repeat(3, 1fr); }
-
-:where(html.nqmax-600) .dash-chart-metrics { grid-template-columns: repeat(2, 1fr); }
-
+@media (max-width: 960px) {
+  .dash-chart-metrics { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 600px) {
+  .dash-chart-metrics { grid-template-columns: repeat(2, 1fr); }
+}
 .dash-metric-item {
   background: rgba(255, 255, 255, 0.025);
   border: 1px solid rgba(255, 255, 255, 0.06);
@@ -10302,8 +10173,9 @@ body.light .kpi-mini-bar {
   width: 100%;
   margin-top: 14px;
 }
-:where(html.nqmax-420) .dash-pillars-list { grid-template-columns: 1fr; }
-
+@media (max-width: 420px) {
+  .dash-pillars-list { grid-template-columns: 1fr; }
+}
 .dash-pillar-item {
   background: rgba(255, 255, 255, 0.025);
   border: 1px solid rgba(255, 255, 255, 0.06);
@@ -10630,14 +10502,16 @@ body.light .dash-overview-card {
   gap: 10px !important;
   margin-bottom: 14px !important;
 }
-:where(html.nqmax-960) .admin-kpis-row {
+@media (max-width: 960px) {
+  .admin-kpis-row {
     grid-template-columns: repeat(2, 1fr) !important;
   }
-
-:where(html.nqmax-520) .admin-kpis-row {
+}
+@media (max-width: 520px) {
+  .admin-kpis-row {
     grid-template-columns: 1fr !important;
   }
-
+}
 .admin-kpis-row .kpi {
   padding: 12px 14px !important;
   border-radius: 12px !important;
@@ -10802,25 +10676,30 @@ body.light .admin-filter-btn.active {
   transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1) !important;
   box-sizing: border-box !important;
 }
-:where(html.nqmax-1180) .user-admin-grid-header {
+@media (max-width: 1180px) {
+  .user-admin-grid-header {
     display: none !important;
-  }:where(html.nqmax-1180) .user-card-4k {
+  }
+  .user-card-4k {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
     gap: 10px 14px !important;
-  }:where(html.nqmax-1180) .user-card-4k > .user-card-right {
+  }
+  .user-card-4k > .user-card-right {
     grid-column: 1 / -1 !important;
     justify-content: flex-start !important;
     padding-top: 6px !important;
     border-top: 1px solid rgba(148, 163, 184, 0.12) !important;
   }
-
-:where(html.nqmax-768) .user-card-4k {
+}
+@media (max-width: 768px) {
+  .user-card-4k {
     grid-template-columns: 1fr !important;
-  }:where(html.nqmax-768) .user-card-right {
+  }
+  .user-card-right {
     justify-content: flex-start !important;
     flex-wrap: wrap !important;
   }
-
+}
 .user-card-4k:hover {
   border-color: rgba(16, 185, 129, 0.45) !important;
   transform: translateY(-1px) !important;
@@ -12096,15 +11975,24 @@ body.light .login-success-box.warning-box p {
   outline-offset: 4px;
 }
 
-:where(html.nqmax-520) .login-success-box {
+@media (max-width: 520px) {
+  .login-success-box {
     border-radius: 22px !important;
     min-height: 0;
     padding: 32px 20px 24px !important;
-  }:where(html.nqmax-520) .login-success-box::after { border-radius: 21px; }:where(html.nqmax-520) #logoutSuccessOverlay .login-success-box {
+  }
+
+  .login-success-box::after { border-radius: 21px; }
+
+  #logoutSuccessOverlay .login-success-box {
     min-height: 0;
     padding: 32px 20px 24px !important;
-  }:where(html.nqmax-520) .login-success-box h3 { font-size: 20px !important; }:where(html.nqmax-520) .login-success-box p { font-size: 13px !important; }:where(html.nqmax-520) .logout-btn-action { min-height: 52px; }
+  }
 
+  .login-success-box h3 { font-size: 20px !important; }
+  .login-success-box p { font-size: 13px !important; }
+  .logout-btn-action { min-height: 52px; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   .login-success-overlay,
@@ -12118,21 +12006,49 @@ body.light .login-success-box.warning-box p {
 }
 
 /* ==================== Responsividade Master Fluida em Todos os Dispositivos (com Suporte 4K Ultra-HD) ==================== */
-:where(html.nqmin-2560) .brand .name { font-size: 20px !important; }:where(html.nqmin-2560) .brand .logo { width: 50px !important; height: 50px !important; font-size: 17px !important; }:where(html.nqmin-2560) .topheader-row { max-width: 100% !important; padding: 0 36px !important; height: 68px !important; }:where(html.nqmin-2560) .main { max-width: 2400px !important; padding: 20px 36px 56px !important; margin-top: 76px !important; margin-left: 250px !important; margin-right: auto !important; width: calc(100% - 250px) !important; }html:where(.nqmin-2560).sidebar-collapsed .main,
-:where(html.nqmin-2560) body.sidebar-collapsed .main { margin-left: 68px !important; width: calc(100% - 68px) !important; }:where(html.nqmin-2560) .kpis { grid-template-columns: repeat(5, 1fr) !important; gap: 20px !important; }:where(html.nqmin-2560) .kpis-grid-6 { grid-template-columns: repeat(6, 1fr) !important; gap: 20px !important; margin-bottom: 26px !important; }:where(html.nqmin-2560) .kpi .val { font-size: 28px !important; }:where(html.nqmin-2560) .kpi .sub { font-size: 13px !important; }:where(html.nqmin-2560) .dashboard-main-grid { gap: 26px !important; margin-bottom: 28px !important; }:where(html.nqmin-2560) .dash-card { padding: 26px 28px !important; border-radius: 24px !important; }:where(html.nqmin-2560) .dashboard-welcome-hero { padding: 32px 36px !important; border-radius: 24px !important; }:where(html.nqmin-2560) .hero-greeting { font-size: 26px !important; }:where(html.nqmin-2560) .dashboard-quick-actions-bar { padding: 14px 22px !important; border-radius: 18px !important; gap: 12px !important; }:where(html.nqmin-2560) .dash-quick-btn { padding: 10px 20px !important; font-size: 13.5px !important; border-radius: 13px !important; }:where(html.nqmin-2560) .table-panel { padding: 26px !important; border-radius: 22px !important; }:where(html.nqmin-2560) th { font-size: 11.5px !important; letter-spacing: .07em !important; }:where(html.nqmin-2560) td { font-size: 13.5px !important; padding: 15px 14px !important; }:where(html.nqmin-2560) .pill { font-size: 12px !important; padding: 4px 12px !important; }:where(html.nqmin-2560) .btn-action-edit,
-:where(html.nqmin-2560) .btn-action-del { width: 34px !important; height: 34px !important; }
+@media (min-width: 2560px) {
+  /* Otimizações Específicas para Monitores 4K / UHD / Ultra-Wide */
+  .brand .name { font-size: 20px !important; }
+  .brand .logo { width: 50px !important; height: 50px !important; font-size: 17px !important; }
+  .topheader-row { max-width: 100% !important; padding: 0 36px !important; height: 68px !important; }
+  .main { max-width: 2400px !important; padding: 20px 36px 56px !important; margin-top: 76px !important; margin-left: 250px !important; margin-right: auto !important; width: calc(100% - 250px) !important; }
+  html.sidebar-collapsed .main, body.sidebar-collapsed .main { margin-left: 68px !important; width: calc(100% - 68px) !important; }
+  .kpis { grid-template-columns: repeat(5, 1fr) !important; gap: 20px !important; }
+  .kpis-grid-6 { grid-template-columns: repeat(6, 1fr) !important; gap: 20px !important; margin-bottom: 26px !important; }
+  .kpi .val { font-size: 28px !important; }
+  .kpi .sub { font-size: 13px !important; }
+  .dashboard-main-grid { gap: 26px !important; margin-bottom: 28px !important; }
+  .dash-card { padding: 26px 28px !important; border-radius: 24px !important; }
+  .dashboard-welcome-hero { padding: 32px 36px !important; border-radius: 24px !important; }
+  .hero-greeting { font-size: 26px !important; }
+  .dashboard-quick-actions-bar { padding: 14px 22px !important; border-radius: 18px !important; gap: 12px !important; }
+  .dash-quick-btn { padding: 10px 20px !important; font-size: 13.5px !important; border-radius: 13px !important; }
+  .table-panel { padding: 26px !important; border-radius: 22px !important; }
+  th { font-size: 11.5px !important; letter-spacing: .07em !important; }
+  td { font-size: 13.5px !important; padding: 15px 14px !important; }
+  .pill { font-size: 12px !important; padding: 4px 12px !important; }
+  .btn-action-edit, .btn-action-del { width: 34px !important; height: 34px !important; }
+}
 
+@media (min-width: 1700px) and (max-width: 2559px) {
+  .brand .name { font-size: 18px; }
+  .topheader-row { max-width: 100% !important; padding: 0 28px !important; height: 68px !important; }
+  .main { max-width: 1920px !important; padding: 18px 30px 48px !important; margin-top: 76px !important; margin-left: 250px !important; margin-right: auto !important; width: calc(100% - 250px) !important; }
+  html.sidebar-collapsed .main, body.sidebar-collapsed .main { margin-left: 68px !important; width: calc(100% - 68px) !important; }
+  .kpis { grid-template-columns: repeat(5, 1fr) !important; }
+}
 
-:where(html.nqmin-1700.nqmax-2559) .brand .name { font-size: 18px; }:where(html.nqmin-1700.nqmax-2559) .topheader-row { max-width: 100% !important; padding: 0 28px !important; height: 68px !important; }:where(html.nqmin-1700.nqmax-2559) .main { max-width: 1920px !important; padding: 18px 30px 48px !important; margin-top: 76px !important; margin-left: 250px !important; margin-right: auto !important; width: calc(100% - 250px) !important; }html:where(.nqmin-1700.nqmax-2559).sidebar-collapsed .main,
-:where(html.nqmin-1700.nqmax-2559) body.sidebar-collapsed .main { margin-left: 68px !important; width: calc(100% - 68px) !important; }:where(html.nqmin-1700.nqmax-2559) .kpis { grid-template-columns: repeat(5, 1fr) !important; }
+@media (max-width: 1400px) and (min-width: 1025px) {
+  .kpis { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important; }
+}
 
-
-:where(html.nqmax-1400.nqmin-1025) .kpis { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important; }
-
-
-:where(html.nqmax-1024.nqmin-861) .kpis { grid-template-columns: repeat(3, 1fr) !important; }:where(html.nqmax-1024.nqmin-861) .grid3 { grid-template-columns: 1fr 1fr !important; }:where(html.nqmax-1024.nqmin-861) .grid-2-1 { grid-template-columns: 1fr !important; }:where(html.nqmax-1024.nqmin-861) .main { margin-left: 250px !important; margin-right: auto !important; width: calc(100% - 250px) !important; margin-top: 76px !important; padding: 16px 18px 36px !important; }html:where(.nqmax-1024.nqmin-861).sidebar-collapsed .main,
-:where(html.nqmax-1024.nqmin-861) body.sidebar-collapsed .main { margin-left: 68px !important; width: calc(100% - 68px) !important; }
-
+@media (max-width: 1024px) and (min-width: 861px) {
+  .kpis { grid-template-columns: repeat(3, 1fr) !important; }
+  .grid3 { grid-template-columns: 1fr 1fr !important; }
+  .grid-2-1 { grid-template-columns: 1fr !important; }
+  .main { margin-left: 250px !important; margin-right: auto !important; width: calc(100% - 250px) !important; margin-top: 76px !important; padding: 16px 18px 36px !important; }
+  html.sidebar-collapsed .main, body.sidebar-collapsed .main { margin-left: 68px !important; width: calc(100% - 68px) !important; }
+}
 
 /* Botão de Sair no Drawer Mobile */
 .mobile-drawer-logout-btn {
@@ -12280,23 +12196,34 @@ body.light .mobile-bottom-btn.active .ic svg {
   filter: drop-shadow(0 0 4px rgba(5, 150, 105, 0.4));
 }
 
-html:where(.nqmax-480).user-logged-in #headerUserBadge,
-html:where(.nqmax-480).user-logged-in #headerMinhaContaBtn { display: none !important; }
-
-:where(html.nqmax-860) .mobile-menu-btn { display: flex !important; }:where(html.nqmax-860) nav.menu,
-:where(html.nqmax-860) aside.menu,
-:where(html.nqmax-860) #menu.sidebar-menu { display: none !important; }:where(html.nqmax-860) .mobile-bottom-bar { display: flex !important; }:where(html.nqmax-860) .main { margin-left: 0 !important; margin-top: 72px !important; width: 100% !important; padding: 16px 14px 76px !important; }:where(html.nqmax-860) .aether-credit-pill { display: none !important; }:where(html.nqmax-860) .aether-settings-btn,
-:where(html.nqmax-860) .scale-selector-wrap {
+@media (max-width: 480px) {
+  /* Cabeçalho no celular: o selo do usuário e o botão "Minha Conta" ficavam sobre a marca (itens demais para a largura); a conta segue em "Mais" */
+  html.user-logged-in #headerUserBadge,
+  html.user-logged-in #headerMinhaContaBtn { display: none !important; }
+}
+@media (max-width: 860px) {
+  .mobile-menu-btn { display: flex !important; }
+  /* O menu hoje é <aside id="menu">: o seletor antigo (só nav.menu) não casava e a barra lateral ficava sobre o conteúdo no celular */
+  nav.menu, aside.menu, #menu.sidebar-menu { display: none !important; }
+  .mobile-bottom-bar { display: flex !important; }
+  .main { margin-left: 0 !important; margin-top: 72px !important; width: 100% !important; padding: 16px 14px 76px !important; }
+  .aether-credit-pill { display: none !important; }
+  .aether-settings-btn,
+  .scale-selector-wrap {
     display: none !important;
-  }:where(html.nqmax-860) .aether-user-sub {
+  }
+  .aether-user-sub {
     display: none !important;
-  }:where(html.nqmax-860) .topheader-row {
+  }
+  .topheader-row {
     padding: 0 12px !important;
     gap: 8px !important;
-  }:where(html.nqmax-860) .aether-header-right {
+  }
+  .aether-header-right {
     gap: 8px !important;
-  }:where(html.nqmax-860) #logoutBtn,
-:where(html.nqmax-860) .topheader-row #logoutBtn {
+  }
+  #logoutBtn,
+  .topheader-row #logoutBtn {
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -12314,12 +12241,14 @@ html:where(.nqmax-480).user-logged-in #headerMinhaContaBtn { display: none !impo
     opacity: 1 !important;
     box-shadow: 0 2px 8px rgba(239, 68, 68, 0.35) !important;
     z-index: 20 !important;
-  }:where(html.nqmax-860) #logoutBtn span,
-:where(html.nqmax-860) .topheader-row #logoutBtn span {
+  }
+  #logoutBtn span,
+  .topheader-row #logoutBtn span {
     display: inline !important;
     color: #FFFFFF !important;
-  }:where(html.nqmax-860) #logoutBtn svg,
-:where(html.nqmax-860) .topheader-row #logoutBtn svg {
+  }
+  #logoutBtn svg,
+  .topheader-row #logoutBtn svg {
     width: 15px !important;
     height: 15px !important;
     stroke-width: 2.4px !important;
@@ -12327,64 +12256,90 @@ html:where(.nqmax-480).user-logged-in #headerMinhaContaBtn { display: none !impo
     display: inline-block !important;
     flex-shrink: 0 !important;
   }
+}
 
-
-:where(html.nqmax-640) .aether-user-meta {
+@media (max-width: 640px) {
+  .aether-user-meta {
     display: none !important;
-  }:where(html.nqmax-640) .aether-brand-user {
+  }
+  .aether-brand-user {
     padding: 2px !important;
-  }:where(html.nqmax-640) .topheader-row {
+  }
+  .topheader-row {
     padding: 0 8px !important;
     gap: 6px !important;
-  }:where(html.nqmax-640) .aether-header-right {
+  }
+  .aether-header-right {
     gap: 6px !important;
   }
+}
 
-
-html:where(.nqmax-768),
-:where(html.nqmax-768) body {
+@media (max-width: 768px) {
+  html, body {
     zoom: normal !important;
     -webkit-overflow-scrolling: touch !important;
     scroll-behavior: smooth !important;
     touch-action: pan-y pinch-zoom !important;
-  }:where(html.nqmax-768) .app-blob,
-:where(html.nqmax-768) .auth-blob {
+  }
+  .app-blob, .auth-blob {
     display: none !important;
-  }:where(html.nqmax-768) .topheader,
-:where(html.nqmax-768) nav.menu,
-:where(html.nqmax-768) .panel,
-:where(html.nqmax-768) .kpi,
-:where(html.nqmax-768) .table-panel,
-:where(html.nqmax-768) .auth-box,
-:where(html.nqmax-768) .cards-summary-panel,
-:where(html.nqmax-768) .tx-footer-summary,
-:where(html.nqmax-768) .modal,
-:where(html.nqmax-768) .scale-dropdown,
-:where(html.nqmax-768) .notif-panel,
-:where(html.nqmax-768) .fintech-live-ticker-bar {
+  }
+  .topheader, nav.menu, .panel, .kpi, .table-panel, .auth-box, .cards-summary-panel, .tx-footer-summary, .modal, .scale-dropdown, .notif-panel, .fintech-live-ticker-bar {
     backdrop-filter: blur(8px) !important;
     -webkit-backdrop-filter: blur(8px) !important;
-  }:where(html.nqmax-768) .main,
-:where(html.nqmax-768) .table-panel,
-:where(html.nqmax-768) .table-responsive,
-:where(html.nqmax-768) table,
-:where(html.nqmax-768) .modal {
+  }
+  .main, .table-panel, .table-responsive, table, .modal {
     -webkit-overflow-scrolling: touch !important;
-  }:where(html.nqmax-768) tbody tr {
+  }
+  tbody tr {
     content-visibility: auto;
     contain-intrinsic-size: 0 48px;
-  }:where(html.nqmax-768) .kpis { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }:where(html.nqmax-768) .grid3,
-:where(html.nqmax-768) .grid2 { grid-template-columns: 1fr !important; }:where(html.nqmax-768) .topheader-row { padding: 0 16px; gap: 10px; }:where(html.nqmax-768) .brand .name { font-size: 14px; }:where(html.nqmax-768) .user .uname,
-:where(html.nqmax-768) .user .urole { max-width: 110px; }:where(html.nqmax-768) .donut-wrap { flex-direction: column; text-align: center; gap: 14px; }:where(html.nqmax-768) .donut-side.r { text-align: center; }:where(html.nqmax-768) .cat-cards { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }:where(html.nqmax-768) .main { margin-left: 0 !important; margin-top: 72px !important; width: 100% !important; padding: 16px 12px 60px !important; }
+  }
+  .kpis { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+  .grid3, .grid2 { grid-template-columns: 1fr !important; }
+  .topheader-row { padding: 0 16px; gap: 10px; }
+  .brand .name { font-size: 14px; }
+  .user .uname, .user .urole { max-width: 110px; }
+  .donut-wrap { flex-direction: column; text-align: center; gap: 14px; }
+  .donut-side.r { text-align: center; }
+  .cat-cards { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+  .main { margin-left: 0 !important; margin-top: 72px !important; width: 100% !important; padding: 16px 12px 60px !important; }
+}
 
+@media (max-width: 480px) {
+  .main { margin-top: 70px !important; padding: 12px 10px 60px !important; }
+  .kpis { grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; }
+  .kpi { padding: 14px 10px !important; }
+  .kpi .val { font-size: 16px !important; }
+  .page-head h1 { font-size: 17px !important; }
+  .brand .name span { display: none !important; }
+  .user .uname, .user .urole { display: none !important; }
+  .topheader-row .btn-ghost { padding: 8px 10px; font-size: 12px; }
 
-:where(html.nqmax-480) .main { margin-top: 70px !important; padding: 12px 10px 60px !important; }:where(html.nqmax-480) .kpis { grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; }:where(html.nqmax-480) .kpi { padding: 14px 10px !important; }:where(html.nqmax-480) .kpi .val { font-size: 16px !important; }:where(html.nqmax-480) .page-head h1 { font-size: 17px !important; }:where(html.nqmax-480) .brand .name span { display: none !important; }:where(html.nqmax-480) .user .uname,
-:where(html.nqmax-480) .user .urole { display: none !important; }:where(html.nqmax-480) .topheader-row .btn-ghost { padding: 8px 10px; font-size: 12px; }:where(html.nqmax-480) .overlay { align-items: flex-end; padding: 0; }:where(html.nqmax-480) .modal { max-width: 100% !important; width: 100% !important; border-radius: 24px 24px 0 0 !important; max-height: 88vh; padding: 20px 16px calc(24px + env(safe-area-inset-bottom)); }:where(html.nqmax-480) .field-row { flex-direction: column; gap: 0; }:where(html.nqmax-480) .field-row .field { margin-bottom: 14px; }:where(html.nqmax-480) .field { margin-bottom: 16px; }:where(html.nqmax-480) .field label { font-size: 12.5px; margin-bottom: 7px; }:where(html.nqmax-480) .field input,
-:where(html.nqmax-480) .field select { font-size: 16px; padding: 12px 13px; }:where(html.nqmax-480) .toggle-type button { padding: 12px; font-size: 13.5px; }:where(html.nqmax-480) .modal-actions { position: sticky; bottom: 0; background: var(--card); padding-top: 10px; margin-top: 14px; border-top: 1px solid var(--card-border); }:where(html.nqmax-480) .modal-actions button { padding: 13px; font-size: 14px; }:where(html.nqmax-480) .close-x { top: 14px; right: 14px; font-size: 20px; padding: 6px; }:where(html.nqmax-480) .table-panel { padding: 12px 10px; }:where(html.nqmax-480) table { min-width: 580px; }:where(html.nqmax-480) .filters { flex-direction: column; }:where(html.nqmax-480) .filters input,
-:where(html.nqmax-480) .filters select { width: 100%; font-size: 16px; padding: 10px 12px; }:where(html.nqmax-480) .cat-cards { grid-template-columns: 1fr 1fr; gap: 10px; }
+  /* Modais deslizantes no celular */
+  .overlay { align-items: flex-end; padding: 0; }
+  .modal { max-width: 100% !important; width: 100% !important; border-radius: 24px 24px 0 0 !important; max-height: 88vh; padding: 20px 16px calc(24px + env(safe-area-inset-bottom)); }
+  .field-row { flex-direction: column; gap: 0; }
+  .field-row .field { margin-bottom: 14px; }
+  .field { margin-bottom: 16px; }
+  .field label { font-size: 12.5px; margin-bottom: 7px; }
+  .field input, .field select { font-size: 16px; padding: 12px 13px; }
+  .toggle-type button { padding: 12px; font-size: 13.5px; }
+  .modal-actions { position: sticky; bottom: 0; background: var(--card); padding-top: 10px; margin-top: 14px; border-top: 1px solid var(--card-border); }
+  .modal-actions button { padding: 13px; font-size: 14px; }
+  .close-x { top: 14px; right: 14px; font-size: 20px; padding: 6px; }
 
-:where(html.nqmax-360) .kpis {grid-template-columns:1fr;}:where(html.nqmax-360) .cat-cards {grid-template-columns:1fr;}
-
+  /* Tabelas com rolagem limpa */
+  .table-panel { padding: 12px 10px; }
+  table { min-width: 580px; }
+  .filters { flex-direction: column; }
+  .filters input, .filters select { width: 100%; font-size: 16px; padding: 10px 12px; }
+  .cat-cards { grid-template-columns: 1fr 1fr; gap: 10px; }
+}
+@media(max-width:360px){
+  .kpis{grid-template-columns:1fr;}
+  .cat-cards{grid-template-columns:1fr;}
+}
 
 /* Estilos de Escala de Tela, Resolução e Dispositivo */
 .scale-selector-wrap {
@@ -12448,41 +12403,47 @@ html.light .scale-dropdown .scale-opt-btn:hover {
   color: #059669 !important;
 }
 
-:where(html.nqmax-640) .topheader-row {
+@media (max-width: 640px) {
+  .topheader-row {
     padding: 8px 10px !important;
     gap: 6px !important;
     min-height: 56px !important;
-  }:where(html.nqmax-640) .topheader-row .right {
+  }
+  .topheader-row .right {
     gap: 5px !important;
-  }:where(html.nqmax-640) .scale-selector-wrap #scaleMenuBtn {
+  }
+  .scale-selector-wrap #scaleMenuBtn {
     padding: 0 !important;
     width: 36px !important;
     height: 36px !important;
     justify-content: center !important;
-  }:where(html.nqmax-640) .scale-selector-wrap #scaleMenuBtn span#currentScaleLabel {
+  }
+  .scale-selector-wrap #scaleMenuBtn span#currentScaleLabel {
     display: none !important;
-  }:where(html.nqmax-640) .scale-dropdown {
+  }
+  .scale-dropdown {
     right: -45px !important;
     max-width: calc(100vw - 24px) !important;
     min-width: 210px !important;
-  }:where(html.nqmax-640) .icon-btn,
-:where(html.nqmax-640) #miniThemeBtn,
-:where(html.nqmax-640) #notifBtn {
+  }
+  .icon-btn, #miniThemeBtn, #notifBtn {
     width: 36px !important;
     height: 36px !important;
-  }:where(html.nqmax-640) .user {
+  }
+  .user {
     padding: 3px !important;
     border-radius: 12px !important;
     gap: 0 !important;
-  }:where(html.nqmax-640) .user .avatar {
+  }
+  .user .avatar {
     width: 30px !important;
     height: 30px !important;
     font-size: 11px !important;
-  }:where(html.nqmax-640) .user .uname,
-:where(html.nqmax-640) .user .urole {
+  }
+  .user .uname, .user .urole {
     display: none !important;
   }
-
+}
 
 /* Checklist de Critérios de Segurança da Senha */
 .pwd-req-pill {
@@ -14085,8 +14046,10 @@ body.light .monthly-real-card .metric-percentage { color: #0F172A; }
 #authPage .metric-card-budget::after { content: "Categorias flexíveis para organizar sua rotina."; }
 #authPage .metric-card-savings::after { content: "Acompanhe receitas, despesas e saldo mensal."; }
 #authPage .metric-card-goals::after { content: "Defina objetivos e acompanhe seu progresso."; }
-:where(html.nqmax-760) #monthlyRealMetrics { grid-template-columns: 1fr; gap: 9px; }:where(html.nqmax-760) .monthly-real-card { padding: 13px 14px; }
-
+@media (max-width: 760px) {
+  #monthlyRealMetrics { grid-template-columns: 1fr; gap: 9px; }
+  .monthly-real-card { padding: 13px 14px; }
+}
 #authPage .auth-card-nexus {
   width: 100%;
   max-width: 480px;
@@ -14209,10 +14172,15 @@ body.light #authPage .auth-trust-item {
   border-color: #DCE8DE;
   color: #1F2937 !important;
 }
-:where(html.nqmax-1024) #authPage .auth-exec-layout { grid-template-columns: minmax(0, 1fr); gap: 24px; }:where(html.nqmax-1024) #authPage .auth-showcase-panel { display: none !important; }:where(html.nqmax-1024) #authPage .auth-card-nexus { max-width: 460px; }
-
-:where(html.nqmax-640) #authPage .auth-card-nexus { padding: 22px 18px; }:where(html.nqmax-640) #authPage .auth-top-bar { top: 10px !important; right: 10px !important; }
-
+@media (max-width: 1024px) {
+  #authPage .auth-exec-layout { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  #authPage .auth-showcase-panel { display: none !important; }
+  #authPage .auth-card-nexus { max-width: 460px; }
+}
+@media (max-width: 640px) {
+  #authPage .auth-card-nexus { padding: 22px 18px; }
+  #authPage .auth-top-bar { top: 10px !important; right: 10px !important; }
+}
 
 
 
@@ -14569,11 +14537,27 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
           <span>Confirmação Cadastral para Recuperação</span>
         </div>
         <p style="font-size:12.5px; color:#CBD5E1; margin-bottom:16px; line-height:1.5;">
-          Para gerar uma nova senha provisória, confirme o CPF e a data de nascimento cadastrados na conta:
+          Para gerar uma nova senha provisória, escolha como deseja se identificar (e-mail ou CPF) e confirme sua data de nascimento:
         </p>
 
         <form id="forgotStep1" onsubmit="window.handleServerForgotSubmit(event); return false;">
-          <div class="auth-field" id="forgotCpfField">
+          <div class="forgot-mode-switch" role="group" aria-label="Identificar conta por">
+            <button type="button" class="forgot-mode-btn active" data-mode="email" onclick="window.setForgotMode('email')">E-mail</button>
+            <button type="button" class="forgot-mode-btn" data-mode="cpf" onclick="window.setForgotMode('cpf')">CPF</button>
+            <button type="button" class="forgot-mode-btn" data-mode="both" onclick="window.setForgotMode('both')">E-mail + CPF</button>
+          </div>
+
+          <div class="auth-field" id="forgotEmailField">
+            <label>E-mail Cadastrado</label>
+            <div class="auth-input-wrapper">
+              <span class="auth-input-icon">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+              </span>
+              <input type="email" id="forgotEmail" placeholder="seu.email@exemplo.com" autocomplete="email" spellcheck="false" autocorrect="off" autocapitalize="none">
+            </div>
+          </div>
+
+          <div class="auth-field" id="forgotCpfField" style="display:none;">
             <label>CPF do Titular</label>
             <div class="auth-input-wrapper">
               <span class="auth-input-icon">
@@ -14935,21 +14919,6 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         </span>
         <span class="admin-menu-count-pill" id="menuUsersCountBadge">0</span>
       </button>
-      <button data-page="funcoes" id="menuFuncoesBtn" class="menu-btn-admin" style="display:none;" title="Central de Funções & Permissões">
-        <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></span>
-        <span class="admin-menu-field-body">
-          <span class="label">Funções & Permissões</span>
-          <span class="sub-label">Papéis e Acessos</span>
-        </span>
-      </button>
-      <button data-page="ordens" id="menuOrdensBtn" class="menu-btn-admin" style="display:none;" title="Central de Atendimento & Ordens de Serviço">
-        <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span>
-        <span class="admin-menu-field-body">
-          <span class="label">Central de Atendimento</span>
-          <span class="sub-label">Ordens de Serviço & Chamados</span>
-        </span>
-        <span class="admin-menu-count-pill" id="osBadgeCount">0</span>
-      </button>
       <!-- "Central GLPI & O.S." saiu do Painel Administrativo (pedido de 10/11/2026): o atendimento de chamados é feito no GLPI (/glpi.html) por quem tem perfil Administrador -->
       <button data-page="pagamentos" id="menuPagamentosBtn" class="menu-btn-admin" style="display:none;" title="Pagamentos (Pix, Cartão, Boleto), Liberação & 2ª Via de Boleto">
         <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><path d="M6 15h4"/><path d="M14 15h4"/></svg></span>
@@ -15149,8 +15118,6 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
       <!-- Seção Administrativa Móvel (Exclusiva Administrador) -->
       <div class="mobile-drawer-section-title menu-section-admin" style="display:none;">Painel Administrativo</div>
       <button data-page="usuarios" id="mobileDrawerUsuariosBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span class="label">Cadastros & Contas</span></button>
-      <button data-page="funcoes" id="mobileDrawerFuncoesBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></span><span class="label">Funções & Permissões</span></button>
-      <button data-page="ordens" id="mobileDrawerOrdensBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span><span class="label">Central de Atendimento</span></button>
       <button data-page="pagamentos" id="mobileDrawerPagamentosBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></span><span class="label">Pagamentos & Boletos</span></button>
       <button data-page="logs" id="mobileDrawerLogsBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span><span class="label">Auditoria & Logs</span></button>
     </nav>
@@ -15463,6 +15430,22 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         <input id="userAdminName" placeholder="Ex: Paulo Lima" style="height:35px; border-radius:9px; font-size:12.5px; padding:0 10px;">
       </div>
 
+      <div class="field" style="margin-bottom:0;">
+        <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">CPF (Titular)</label>
+        <input id="userAdminCpf" placeholder="00000000000" maxlength="11" oninput="maskCpfInput(this)" style="height:35px; border-radius:9px; font-size:12.5px; padding:0 10px;">
+      </div>
+
+      <div class="field" style="margin-bottom:0;">
+        <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Telefone / WhatsApp</label>
+        <input id="userAdminPhone" placeholder="(00) 00000-0000" maxlength="15" oninput="maskPhoneInput(this)" style="height:35px; border-radius:9px; font-size:12.5px; padding:0 10px;">
+      </div>
+
+      <div class="field" style="margin-bottom:0;">
+        <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Data de nascimento</label>
+        <input id="userAdminBirth" type="date" max="2100-12-31" style="height:35px; border-radius:9px; font-size:12.5px; padding:0 10px; color-scheme:dark;">
+      </div>
+      <div style="margin-bottom:0; align-self:end; font-size:10.5px; line-height:1.35; color:var(--text-dim);">Com e-mail ou CPF, o nascimento confirma a identidade na recuperação de senha.</div>
+
       <div class="field" style="grid-column:1 / -1; margin-bottom:0;">
         <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:flex; justify-content:space-between; align-items:center;">
           <span>E-mail de Acesso *</span>
@@ -15495,21 +15478,30 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
     <div style="margin-bottom:12px; padding:11px 12px; border-radius:13px; background:linear-gradient(135deg, rgba(245,158,11,0.10) 0%, rgba(16,185,129,0.06) 100%); border:1px solid rgba(245,158,11,0.35);">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; gap:6px;">
         <span style="font-size:11px; font-weight:900; color:#FBBF24; display:flex; align-items:center; gap:5px;">
-          <span>👑</span> LIBERAR PAGAMENTO PIX & 2ª VIA DE COBRANÇA
+          <span>👑</span> LIBERAR PAGAMENTO NÃO RECONHECIDO & 2ª VIA BOLETO
         </span>
         <span id="userAdminCurrentSubBadge" style="font-size:10px; padding:2px 8px; border-radius:6px; background:rgba(255,255,255,0.08); font-weight:800; border:1px solid rgba(255,255,255,0.15);">Carregando...</span>
       </div>
 
-      <div style="display:flex; gap:6px; margin-bottom:8px; align-items:center;">
+      <div style="display:grid; grid-template-columns:1fr auto; gap:6px; margin-bottom:8px; align-items:center;">
+        <select id="userAdminPaymentMethod" style="height:30px; border-radius:8px; font-size:11px; font-weight:800; padding:0 8px; background:rgba(0,0,0,0.35); border:1px solid rgba(16,185,129,0.4); color:#6EE7B7;" title="Modalidade do pagamento não reconhecido a liberar">
+          <option value="pix">💠 Modalidade: Pix (SPI Instantâneo)</option>
+          <option value="credit_card">💳 Modalidade: Cartão de Crédito</option>
+          <option value="debit_card">🏧 Modalidade: Cartão de Débito</option>
+          <option value="boleto">📄 Modalidade: Boleto Bancário</option>
+        </select>
         <button type="button" onclick="window.abrirSegundaViaBoletoParaUsuario(editingUserEmail)" style="height:30px; padding:0 10px; border-radius:8px; background:rgba(56,189,248,0.18); border:1px solid rgba(56,189,248,0.45); color:#BAE6FD; font-size:10.5px; font-weight:800; cursor:pointer; white-space:nowrap;">
-          📄 Imprimir 2ª Via Pix (R$ 18)
+          📄 Imprimir 2ª Via Boleto
         </button>
       </div>
 
       <!-- Botões de Confirmação Oficial de Pagamento / Bloqueio -->
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:8px;">
-        <button type="button" onclick="window.adminConfirmUserPayment(editingUserEmail, 'mensal', 'pix')" style="height:30px; padding:0 6px; border-radius:8px; background:linear-gradient(135deg, #10B981, #059669); color:#FFFFFF; font-size:10.5px; font-weight:800; border:none; cursor:pointer;" title="Reconhecer pagamento Pix e liberar Plano Mensal (30 dias)">
-          🔓 Liberar Mensal Pix (R$ 18)
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; margin-bottom:8px;">
+        <button type="button" onclick="window.adminConfirmUserPayment(editingUserEmail, 'mensal', document.getElementById('userAdminPaymentMethod')?.value)" style="height:30px; padding:0 6px; border-radius:8px; background:linear-gradient(135deg, #10B981, #059669); color:#FFFFFF; font-size:10.5px; font-weight:800; border:none; cursor:pointer;" title="Reconhecer pagamento e liberar Plano Mensal (30 dias)">
+          🔓 Liberar Mensal (R$ 15)
+        </button>
+        <button type="button" onclick="window.adminConfirmUserPayment(editingUserEmail, 'anual', document.getElementById('userAdminPaymentMethod')?.value)" style="height:30px; padding:0 6px; border-radius:8px; background:linear-gradient(135deg, #F59E0B, #D97706); color:#000000; font-size:10.5px; font-weight:800; border:none; cursor:pointer;" title="Reconhecer pagamento e liberar Plano Anual (1 ano)">
+          🔓 Liberar Anual (R$ 150)
         </button>
         <button type="button" onclick="window.adminRevokeUserPayment(editingUserEmail)" style="height:30px; padding:0 6px; border-radius:8px; background:rgba(239,68,68,0.16); border:1px solid rgba(239,68,68,0.45); color:#FCA5A5; font-size:10.5px; font-weight:800; cursor:pointer;">
           🔒 Bloquear
@@ -16316,7 +16308,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         <div class="pw-titles">
           <span class="pw-eyebrow">Nexus Pay &bull; assinatura segura</span>
           <h2 id="subModalTitle">Escolha o plano ideal para o seu controle financeiro</h2>
-          <p id="subModalSubtitle">Comece com 1 dia grátis. Depois, assine o Plano Mensal por R$ 18,00 e pague via Pix.</p>
+          <p id="subModalSubtitle">Comece com 1 dia grátis. Depois, escolha o Plano Mensal ou o Plano Anual e pague via Pix.</p>
         </div>
       </div>
 
@@ -16384,10 +16376,19 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
             <div class="pw-plan active" id="subPlanCardMensal" role="radio" aria-checked="true" tabindex="0" onclick="window.selectSubPlan('mensal')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();window.selectSubPlan('mensal');}">
               <span class="pw-radio" aria-hidden="true"></span>
               <div class="pw-plan-body">
-                <div class="pw-plan-title">Plano Mensal <span class="pw-tag">Único plano</span></div>
-                <div class="pw-plan-desc">Acesso completo por 30 dias, renovação mês a mês, sem fidelidade</div>
+                <div class="pw-plan-title">Plano Mensal</div>
+                <div class="pw-plan-desc">Acesso completo por 30 dias, sem fidelidade</div>
               </div>
-              <div class="pw-plan-price"><strong>R$ 18,00</strong><span>por mês</span></div>
+              <div class="pw-plan-price"><strong>R$ 15,00</strong><span>por mês</span></div>
+            </div>
+
+            <div class="pw-plan" id="subPlanCardAnual" role="radio" aria-checked="false" tabindex="0" onclick="window.selectSubPlan('anual')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();window.selectSubPlan('anual');}">
+              <span class="pw-radio" aria-hidden="true"></span>
+              <div class="pw-plan-body">
+                <div class="pw-plan-title">Plano Anual <span class="pw-tag">Economize R$ 30,00</span></div>
+                <div class="pw-plan-desc">Acesso completo por 12 meses, com melhor custo-benefício</div>
+              </div>
+              <div class="pw-plan-price"><strong>R$ 150,00</strong><span>por ano</span></div>
             </div>
           </div>
 
@@ -16397,12 +16398,13 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
           </div>
 
           <div class="pw-summary">
-            <div class="pw-row"><span id="subSummaryPlanName">Plano Mensal (30 dias)</span><strong id="subSummaryPlanPrice">R$ 18,00</strong></div>
+            <div class="pw-row"><span id="subSummaryPlanName">Plano Mensal (30 dias)</span><strong id="subSummaryPlanPrice">R$ 15,00</strong></div>
+            <div class="pw-row pw-row-discount" id="subSummaryDiscountRow" style="display:none;"><span>Economia do Plano Anual</span><strong>- R$ 30,00</strong></div>
             <div class="pw-row pw-total">
               <span class="pw-total-label">Total a pagar</span>
-              <span class="pw-total-val" id="subSummaryTotalPrice">R$ 18,00</span>
+              <span class="pw-total-val" id="subSummaryTotalPrice">R$ 15,00</span>
             </div>
-            <small class="pw-total-note" id="subSummaryPaymentFrequency">Cobrança mês a mês, somente via Pix, sem fidelidade</small>
+            <small class="pw-total-note" id="subSummaryPaymentFrequency">Cobrança mês a mês, sem fidelidade</small>
           </div>
 
           <div class="pw-benefits-title">Todos os planos pagos incluem</div>
@@ -16501,7 +16503,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 
       <!-- Barra de pagamento fixa: o botao principal fica sempre visivel, mesmo em telas baixas -->
       <div class="pw-paybar">
-        <div class="pw-paybar-amount"><span>Total da assinatura</span><strong id="pixDisplayAmount">R$ 18,00</strong></div>
+        <div class="pw-paybar-amount"><span>Total da assinatura</span><strong id="pixDisplayAmount">R$ 15,00</strong></div>
         <button type="button" class="pw-btn pw-btn-primary" id="subBtnConfirmPix" onclick="window.processSubscriptionPayment('pix')">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
           <span id="pixActionBtnLabel">Já paguei via Pix &bull; enviar para confirmação</span>
@@ -16698,24 +16700,7 @@ function saveToStorage(key, val) {
   }
 }
 
-// O espelho nexus_users no localStorage pode ter sido gravado por uma sessão de administrador
-// neste mesmo navegador e conter o diretório completo (CPF, telefone, nascimento, perfil de todos).
-// Sessão de usuário comum só pode enxergar o próprio cadastro: sem isso, dados de administrador
-// ficavam disponíveis em memória sempre que a sincronização falhava ou ainda não tinha rodado.
-function nexusSessionUser() {
-  try {
-    return loadFromStorage('nexus_cached_user', null) || loadFromStorage('nexus_session', null) || null;
-  } catch (e) { return null; }
-}
-function nexusScopeUsersMirror(list) {
-  if (!Array.isArray(list)) return [];
-  const sessionUser = nexusSessionUser();
-  const sessionEmail = sessionUser && sessionUser.email ? String(sessionUser.email).toLowerCase().trim() : '';
-  if (!sessionEmail || (sessionUser && sessionUser.role === 'Administrador')) return list;
-  return list.filter(u => u && String(u.email || '').toLowerCase().trim() === sessionEmail);
-}
-
-let registeredUsers = nexusScopeUsersMirror(loadFromStorage('nexus_users', []));
+let registeredUsers = loadFromStorage('nexus_users', []);
 
 // Alternador de Privacidade de Saldos Pós-Login (Balanço Oculto / Visível)
 window.toggleSensitiveBalances = function() {
@@ -16822,7 +16807,7 @@ window.carregarUsuariosLogonServer = async function() {
   }
 
   try {
-    const res = await fetch(window.location.origin + '/api/users', { headers: nexusAuthHeaders() });
+    const res = await fetch(window.location.origin + '/api/users');
     if (res.ok) {
       const data = await res.json();
       if (Array.isArray(data)) {
@@ -16832,8 +16817,9 @@ window.carregarUsuariosLogonServer = async function() {
   } catch(e) {}
 
   if (!listaUsuariosCadastradosServer || listaUsuariosCadastradosServer.length === 0) {
-    // Nunca injeta conta de administrador nem o diretório completo: sem sessão válida a lista fica vazia
-    listaUsuariosCadastradosServer = nexusScopeUsersMirror(registeredUsers) || [];
+    listaUsuariosCadastradosServer = registeredUsers || [
+      { name: 'Paulo Lima', email: 'admin@nexusfinanceiro.com', role: 'Administrador', active: true }
+    ];
   }
 
   if (badgeCount) {
@@ -17018,22 +17004,12 @@ document.addEventListener('keyup', function(e) {
   }
 });
 
-// GET /api/users exige autenticação: sem o token da sessão a resposta é 401 e a tela ficava
-// refém do espelho velho em localStorage (nexus_users), que podia vir sem o perfil e escondia
-// a seção de Administração até para a conta admin. Com o Bearer da sessão o servidor devolve
-// os dados autoritativos (admin recebe todos os cadastros; usuário comum, só o próprio).
-function nexusAuthHeaders() {
-  const token = loadFromStorage('nexus_token', '');
-  return token ? { 'Authorization': 'Bearer ' + token } : {};
-}
-
 async function syncUsersWithServer() {
   const apiBase = getApiBaseUrl();
-  const authHeaders = nexusAuthHeaders();
   try {
-    let res = await fetch(apiBase + '/api/users', { headers: authHeaders });
+    let res = await fetch(apiBase + '/api/users');
     if (!res.ok && apiBase !== 'http://localhost:3000') {
-      try { res = await fetch('http://localhost:3000/api/users', { headers: authHeaders }); } catch(e){}
+      try { res = await fetch('http://localhost:3000/api/users'); } catch(e){}
     }
     if (res && res.ok) {
       const usersData = await res.json();
@@ -17052,7 +17028,7 @@ async function syncUsersWithServer() {
   } catch(e) {
     if (apiBase !== 'http://localhost:3000') {
       try {
-        const fallbackRes = await fetch('http://localhost:3000/api/users', { headers: authHeaders });
+        const fallbackRes = await fetch('http://localhost:3000/api/users');
         if (fallbackRes.ok) {
           const usersData = await fallbackRes.json();
           if (Array.isArray(usersData) && usersData.length > 0) {
@@ -17073,7 +17049,7 @@ async function syncUsersWithServer() {
   }
   const cached = loadFromStorage('nexus_users', null);
   if (Array.isArray(cached) && cached.length > 0) {
-    registeredUsers = nexusScopeUsersMirror(cached).map(u => {
+    registeredUsers = cached.map(u => {
       if (u && (!u.name || /^(admin|administrador)$/i.test(String(u.name).trim()))) {
         u.name = 'Paulo Lima';
       }
@@ -17165,19 +17141,27 @@ window.handleServerForgotSubmit = async function(e) {
   if (e && e.preventDefault) e.preventDefault();
   if (window.clearAuthFeedback) window.clearAuthFeedback('forgot');
 
+  const emailInput = document.getElementById('forgotEmail');
   const cpfInput = document.getElementById('forgotCpf');
   const birthInput = document.getElementById('forgotBirthDate');
   const btn = document.getElementById('btnSendPassword');
 
-  const cpf = cpfInput ? cpfInput.value.replace(/[^0-9]/g, '') : '';
+  const mode = window.forgotMode || 'email';
+  const email = (mode !== 'cpf' && emailInput) ? emailInput.value.trim() : '';
+  const cpf = (mode !== 'email' && cpfInput) ? cpfInput.value.replace(/[^0-9]/g, '') : '';
   const birth_date = birthInput ? birthInput.value.trim() : '';
 
-  if (cpf.length !== 11) {
+  if (mode !== 'cpf' && !email) {
+    window.showAuthFeedback('forgot', 'error', 'E-mail não informado', 'Por favor, informe o e-mail cadastrado da sua conta.');
+    if (emailInput) emailInput.focus();
+    return;
+  }
+  if (mode !== 'email' && cpf.length !== 11) {
     window.showAuthFeedback('forgot', 'error', 'CPF Inválido', 'Por favor, informe os 11 dígitos do CPF do titular.');
     if (cpfInput) cpfInput.focus();
     return;
   }
-  if (birth_date.length !== 10) {
+  if (mode !== 'both' && birth_date.length !== 10) {
     window.showAuthFeedback('forgot', 'error', 'Data de Nascimento Obrigatória', 'Informe a data de nascimento (DD/MM/AAAA) para confirmar que a conta é sua.');
     if (birthInput) birthInput.focus();
     return;
@@ -17192,7 +17176,7 @@ window.handleServerForgotSubmit = async function(e) {
     const res = await fetch(window.location.origin + '/api/send-password', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ cpf, birth_date })
+      body: JSON.stringify({ email, cpf, birth_date })
     });
     const data = await res.json();
 
@@ -17201,30 +17185,23 @@ window.handleServerForgotSubmit = async function(e) {
       return;
     }
 
-    // Senha provisória exibida na tela após confirmação de CPF + nascimento
-    if (data.temp_password) {
-      serverCurrentTempEmail = data.email || '';
-      serverCurrentTempPassword = data.temp_password;
-      const tempValEl = document.getElementById('tempPasswordValServer');
-      if (tempValEl) tempValEl.textContent = data.temp_password;
-      const tempOverlay = document.getElementById('tempPasswordOverlay');
-      if (tempOverlay) {
-        tempOverlay.style.display = 'flex';
-        tempOverlay.classList.add('show');
-        void tempOverlay.offsetHeight;
-        tempOverlay.classList.add('in');
-      }
-      const loginEmailInput = document.getElementById('loginEmail');
-      if (loginEmailInput && serverCurrentTempEmail) loginEmailInput.value = serverCurrentTempEmail;
-      window.showAuthFeedback('forgot', 'success', 'Senha Provisória Gerada', 'Seus dados foram confirmados. Anote a senha temporária exibida na tela.');
-      return;
-    }
+    serverCurrentTempEmail = data.email || email;
+    serverCurrentTempPassword = data.tempPassword || '';
 
-    // Fallback: senha enviada apenas por e-mail
-    window.showAuthFeedback('forgot', 'success', 'Senha Enviada', 'Uma senha temporária foi enviada para o e-mail cadastrado na conta. Verifique a caixa de entrada (e o spam) e use-a para entrar.');
-    const emailInput = document.getElementById('loginEmail');
-    if (emailInput && data.email) emailInput.value = data.email;
-    window.switchAuthTab('login');
+    // Apresentar Senha Temporária em Tela no Overlay 4K
+    const valEl = document.getElementById('tempPasswordValServer');
+    if (valEl) valEl.textContent = serverCurrentTempPassword;
+
+    const copyBtnTxt = document.getElementById('btnCopyTempTextServer');
+    if (copyBtnTxt) copyBtnTxt.textContent = 'Copiar';
+
+    const overlay = document.getElementById('tempPasswordOverlay');
+    if (overlay) {
+      overlay.style.display = 'flex';
+      overlay.classList.add('show');
+      void overlay.offsetHeight;
+      overlay.classList.add('in');
+    }
 
   } catch(err) {
     window.showAuthFeedback('forgot', 'error', 'Falha na Conexão', 'Erro ao processar solicitação no servidor. Verifique sua conexão.');
@@ -17658,7 +17635,7 @@ window.handleLoginSubmit = async function(e) {
     }
 
     // Interceptação de Troca Obrigatória no Primeiro Login com Senha Temporária
-    const mustChange = !nexusIsAdminUser(data.user) && (data.must_change_password === true || data.must_change_password === 1 || data.must_change_password === '1' ||
+    const mustChange = (data.must_change_password === true || data.must_change_password === 1 || data.must_change_password === '1' ||
                         (data.user && (data.user.must_change_password === true || data.user.must_change_password === 1 || data.user.must_change_password === '1')));
     if (mustChange) {
       if (submitBtn) {
@@ -18433,7 +18410,7 @@ window.unlockWithConfirmedReceipt = function(data) {
   const expiresEl = document.getElementById('subSuccessExpires');
   const dateTimeEl = document.getElementById('subSuccessDateTime');
 
-  if (planNameEl) planNameEl.textContent = plan === 'anual' ? 'Plano Anual (legado • 12 meses)' : (plan === 'vitalicio' ? 'Acesso administrativo' : 'Plano Mensal (R$ 18,00 • 30 dias)');
+  if (planNameEl) planNameEl.textContent = plan === 'anual' ? 'Plano Anual (R$ 150,00 • 12 meses)' : (plan === 'vitalicio' ? 'Acesso administrativo' : 'Plano Mensal (R$ 15,00 • 30 dias)');
   if (txIdEl) txIdEl.textContent = data.transaction_id || data.subscription_payment_id || ('NEXUS-SUB-' + Date.now());
   if (methodEl) {
     const methodLabels = {
@@ -18686,12 +18663,12 @@ window.openSubscriptionPaywall = function(isLocked = false) {
     document.body.classList.add('paywall-locked');
     document.documentElement.classList.add('paywall-locked');
     if (titleEl) titleEl.textContent = 'Escolha um plano para continuar usando';
-    if (subEl) subEl.textContent = 'Seu período gratuito terminou. Assine o Plano Mensal por R$ 18,00, pague via Pix e envie o comprovante para liberar o acesso.';
+    if (subEl) subEl.textContent = 'Seu período gratuito terminou. Escolha o Plano Mensal ou o Plano Anual, pague via Pix e envie o comprovante para liberar o acesso.';
   } else {
     document.body.classList.remove('paywall-locked');
     document.documentElement.classList.remove('paywall-locked');
     if (titleEl) titleEl.textContent = 'Escolha o plano ideal para o seu controle financeiro';
-    if (subEl) subEl.textContent = 'Comece com 1 dia grátis. Depois, assine o Plano Mensal por R$ 18,00 e pague via Pix.';
+    if (subEl) subEl.textContent = 'Comece com 1 dia grátis. Depois, escolha o Plano Mensal ou o Plano Anual e pague via Pix.';
   }
 
   if (closeBtn) {
@@ -18915,25 +18892,25 @@ if (!window.__paywallSyncPollInterval) {
 }
 
 window.selectSubPlan = function(plan) {
-  // Plano único vigente: Mensal R$ 18,00 (o Plano Anual foi retirado da oferta).
-  plan = 'mensal';
+  plan = plan === 'anual' ? 'anual' : 'mensal';
   window.__selectedSubPlan = plan;
-  const isAnnual = false;
+  const isAnnual = plan === 'anual';
   const cardMensal = document.getElementById('subPlanCardMensal');
   const cardAnual = document.getElementById('subPlanCardAnual');
   const setText = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value; };
 
-  if (cardMensal) { cardMensal.classList.add('active'); cardMensal.setAttribute('aria-checked', 'true'); }
-  if (cardAnual) { cardAnual.classList.remove('active'); cardAnual.setAttribute('aria-checked', 'false'); }
+  if (cardMensal) { cardMensal.classList.toggle('active', !isAnnual); cardMensal.setAttribute('aria-checked', String(!isAnnual)); }
+  if (cardAnual) { cardAnual.classList.toggle('active', isAnnual); cardAnual.setAttribute('aria-checked', String(isAnnual)); }
 
-  const totalLabel = 'R$ 18,00';
+  const totalLabel = isAnnual ? 'R$ 150,00' : 'R$ 15,00';
   setText('pixDisplayAmount', totalLabel);
-  setText('subSummaryPlanName', 'Plano Mensal (30 dias)');
-  setText('subSummaryPlanPrice', 'R$ 18,00');
+  setText('subSummaryPlanName', isAnnual ? 'Plano Anual (12 meses)' : 'Plano Mensal (30 dias)');
+  // Anual: 12 x R$ 15,00 = R$ 180,00, menos R$ 30,00 de desconto = R$ 150,00 (a conta fecha na tela).
+  setText('subSummaryPlanPrice', isAnnual ? 'R$ 180,00' : 'R$ 15,00');
   setText('subSummaryTotalPrice', totalLabel);
-  setText('subSummaryPaymentFrequency', 'Cobrança mês a mês, somente via Pix, sem fidelidade');
+  setText('subSummaryPaymentFrequency', isAnnual ? 'Cobrança única (equivale a R$ 12,50 por mês)' : 'Cobrança mês a mês, sem fidelidade');
   const discountRow = document.getElementById('subSummaryDiscountRow');
-  if (discountRow) discountRow.style.display = 'none';
+  if (discountRow) discountRow.style.display = isAnnual ? 'flex' : 'none';
 
   if (window.__selectedPaymentMethod === 'pix') {
     window.updatePixPayloadAndQr();
@@ -19140,7 +19117,7 @@ window.copyPixKeyDirect = function() {
 
 window.updatePixPayloadAndQr = function() {
   const plan = window.__selectedSubPlan || 'mensal';
-  const amount = 18.00;
+  const amount = (plan === 'anual') ? 150.00 : 15.00;
   const pixKey = '+5562992345372';
   const beneficiaryName = 'PAULO LIMA';
   const city = 'GOIANIA';
@@ -19189,7 +19166,7 @@ window.verifyPendingPaymentNow = async function() {
 
 window.sendPaymentProofWhatsApp = function() {
   const plan = window.__selectedSubPlan || 'mensal';
-  const amountStr = 'R$ 18,00 (Mensal)';
+  const amountStr = plan === 'anual' ? 'R$ 150,00 (Anual)' : 'R$ 15,00 (Mensal)';
   const email = currentUser ? currentUser.email : '';
   const name = currentUser ? currentUser.name : '';
   const pixTx = document.getElementById('subPixTxIdInput')?.value || window.__currentPixSessionTxId || '';
@@ -19242,7 +19219,7 @@ window.processSubscriptionPayment = async function(method, isAutoTriggered = fal
   window.updateAutoRecognitionRadar(
     'processing',
     '2/3 • Enviando para análise...',
-    'Enviando a confirmação de <strong>R$ 18,00</strong> e aguardando a validação do recebimento...',
+    'Enviando a confirmação de <strong>R$ ' + (plan === 'anual' ? '150,00' : '15,00') + '</strong> e aguardando a validação do recebimento...',
     88
   );
 
@@ -19256,7 +19233,7 @@ window.processSubscriptionPayment = async function(method, isAutoTriggered = fal
         email: currentUser.email,
         plan: plan,
         method: payMethod,
-        amount: 18.00,
+        amount: plan === 'anual' ? 150.00 : 15.00,
         receipt_code: window.__currentPixSessionTxId || receiptCode,
         force_pending: true
       })
@@ -20311,8 +20288,6 @@ function nexusNeutralizeData(node, depth) {
   depth = depth || 0;
   if (depth > 14) return node;
   if (typeof node === 'string') {
-    // data URL base64 pode ter MBs e nunca contém < > ": se o cabeçalho é válido, retorna direto
-    // sem rodar o replace (que varreria a string inteira a cada salvamento)
     if (node.indexOf('data:') === 0 && /^data:[A-Za-z0-9./+-]*(;[A-Za-z0-9=.-]+)*;base64,/.test(node.slice(0, 200))) return node;
     return node.replace(/[<>"]/g, function(ch) { return ch === '<' ? '‹' : ch === '>' ? '›' : '”'; });
   }
@@ -20466,32 +20441,6 @@ if (typeof document !== 'undefined') {
   });
 }
 
-/* Envio remoto coalescido: rajadas de salvamentos (cliques seguidos, digitação, várias transações)
-   viram um único POST /api/data. O localStorage já guarda a versão mais recente na hora;
-   o servidor recebe em até ~400 ms sem travar a tela. */
-let _remoteSaveTimer = null;
-let _remoteSaveBody = null;
-function nexusFlushRemoteSave() {
-  if (_remoteSaveTimer) { clearTimeout(_remoteSaveTimer); _remoteSaveTimer = null; }
-  const body = _remoteSaveBody;
-  _remoteSaveBody = null;
-  if (!body) return;
-  fetch(window.location.origin + '/api/data', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: body,
-    // keepalive só em payloads pequenos (limite de ~64 KB do navegador); o resto depende do timer normal
-    keepalive: body.length < 60000
-  }).catch(() => {});
-}
-function nexusQueueRemoteSave(email, dataJson) {
-  // O JSON já vem serializado (mesma string gravada no localStorage): zero stringify extra
-  _remoteSaveBody = '{"email":' + JSON.stringify(email) + ',"data":' + dataJson + '}';
-  if (_remoteSaveTimer) return;
-  _remoteSaveTimer = setTimeout(nexusFlushRemoteSave, 400);
-}
-window.addEventListener('pagehide', nexusFlushRemoteSave);
-
 async function saveUserData() {
   if (!currentUser) return;
   if (isViewingOtherUser) return;
@@ -20511,14 +20460,15 @@ async function saveUserData() {
     updated_at_ms: Date.now()
   };
   
-  // Serializa uma única vez: a mesma string alimenta o localStorage e o POST remoto
-  const serializedData = JSON.stringify(payloadData);
+  saveToStorage(userKey, payloadData);
+
   try {
-    localStorage.setItem(userKey, serializedData);
-  } catch(e) {
-    console.warn('Aviso: Armazenamento local (localStorage) excedeu a cota máxima. Os dados são mantidos e salvos no SQL Server.', e);
-  }
-  nexusQueueRemoteSave(cleanEmail, serializedData);
+    await fetch(window.location.origin + '/api/data', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: currentUser.email, data: payloadData })
+    });
+  } catch(e) {}
 }
 
 /* ==================== Admin: Visualizar dados de outro usuário ==================== */
@@ -20759,26 +20709,9 @@ function pd(day){ return pdCustom(currentPeriod.year, currentPeriod.month, day);
 
 // Perfis de acesso: cada papel enxerga SOMENTE as suas páginas. Menu lateral, gaveta mobile, barra inferior,
 // hash da URL, página salva no navegador e render() usam esta mesma fonte (a primeira página é o destino padrão).
+const NEXUS_ADMIN_PAGES = ['usuarios', 'pagamentos', 'logs'];
 const NEXUS_USER_PAGES = ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'config'];
-// Administrador enxerga apenas os módulos exclusivos do painel (o painel administrativo fica na aba/seção de administrador)
-const NEXUS_ADMIN_MENU_PAGES = ['usuarios', 'funcoes', 'ordens', 'pagamentos', 'logs'];
-const NEXUS_ADMIN_PAGES = NEXUS_ADMIN_MENU_PAGES.slice();
-// Páginas do admin que desenham as abas do topo (administracao.js): só nelas o menu lateral some (classe adm-topo-pagina)
-const ADM_TOPNAV_PAGES = { usuarios: true, pagamentos: true, logs: true };
-function nexusRoleIsAdmin(role) { const r = String(role || '').trim().toLowerCase(); return r === 'administrador' || r === 'admin'; }
-function nexusIsAdminUser(u) { return !!(u && nexusRoleIsAdmin(u.role)); }
-// Plano vigente: Mensal R$ 18,00 somente Pix. 'anual'/'vitalicio'/'cortesia_admin' só existem em contas legadas ou concessões do admin.
-function nexusPlanInfo(plan) {
-  const p = String(plan || '').toLowerCase();
-  if (p === 'anual' || p === 'annual') return { id: 'anual', nome: 'Anual (legado)', valor: 'R$ 150,00', dias: 365, vigente: false };
-  if (p === 'vitalicio') return { id: 'vitalicio', nome: 'Vitalício', valor: '—', dias: null, vigente: false };
-  if (p === 'cortesia_admin') return { id: 'cortesia_admin', nome: 'Cortesia Admin', valor: '—', dias: null, vigente: false };
-  return { id: 'mensal', nome: 'Mensal', valor: 'R$ 18,00', dias: 30, vigente: true };
-}
-function nexusPlanLabel(plan) {
-  const info = nexusPlanInfo(plan);
-  return info.id === 'mensal' ? 'Mensal · R$ 18,00' : info.nome + (info.valor !== '—' ? ' · ' + info.valor : '');
-}
+function nexusIsAdminUser(u) { return !!(u && u.role === 'Administrador'); }
 // Pagamento informado e ainda sem confirmação do financeiro. Com o teste esgotado o acesso fica "pending_payment"; mas quem informa o Pix
 // ainda dentro do teste grátis (o caso comum) continua "trial" no acesso e só ganha o protocolo NEXUS-SUB-: sem isto nunca aparecia para o admin.
 function nexusPagamentoAguardando(u) {
@@ -21452,8 +21385,7 @@ function timeAgo(ts){
 async function pushNotification(text, icon){
   notifications.unshift({id: nextNotifId++, text, icon: icon || '🔔', time: Date.now(), read:false});
   if(notifications.length > 40) notifications = notifications.slice(0,40);
-  // Não salva aqui: todos os chamadores gravam logo em seguida com saveUserData(),
-  // que já inclui notifications no payload. Salvar de novo duplicava a serialização inteira.
+  await saveUserData();
   renderNotifications();
 }
 function renderNotifications(){
@@ -21487,20 +21419,6 @@ window.clearAllTxFilters = function(allDates = false) {
   }
   refreshTxTable();
 };
-
-/* Atualização pós-salvamento em dois níveis:
-   - na tela de lançamentos, só a tabela e os cartões de resumo são reconstruídos (refreshTxTable);
-   - nas demais telas, o render completo roda dois frames depois, quando a tela já pintou o feedback
-     (modal fechado + toast), então o clique nunca fica esperando a página inteira ser remontada. */
-function refreshAfterDataChange() {
-  if (document.getElementById('txTableWrap')) { refreshTxTable(); return; }
-  if (window._renderDeferred) return;
-  window._renderDeferred = true;
-  requestAnimationFrame(() => requestAnimationFrame(() => {
-    window._renderDeferred = false;
-    render();
-  }));
-}
 
 function refreshTxTable(){
   const search = document.getElementById('txSearch');
@@ -21633,8 +21551,6 @@ function render(){
   // Cada perfil só renderiza as próprias páginas: usuário comum nunca cai em Ordens/Usuários/Pagamentos/Logs
   // e o administrador nunca cai nas telas financeiras do usuário.
   currentPage = nexusResolvePage(currentPage, isAdmin);
-  // O menu lateral do admin só some nas telas que têm abas no topo; nas demais (painel do usuário, Funções, Ordens) ele permanece
-  document.documentElement.classList.toggle('adm-topo-pagina', !!(isAdminView && ADM_TOPNAV_PAGES[currentPage]));
 
   let newHTML = '';
   let pageChanged = false;
@@ -21831,7 +21747,7 @@ function updateAdminMenuVisibility(force = false){
   const summaryCardAdmin = document.getElementById('adminSidebarSummaryCard');
   if (summaryCardAdmin) summaryCardAdmin.style.display = isAdmin ? 'block' : 'none';
 
-  // Seções e Botões do Usuário Comum: visíveis apenas para o usuário comum (admin vê só o painel)
+  // Seções e Botões do Usuário Comum: Visão, Planejamento, Ferramentas e Minha Conta
   const userSections = document.querySelectorAll('.menu-section-visao, .menu-section-planejamento, .menu-section-ferramentas, .menu-section-minha-conta');
   userSections.forEach(function(el) {
     el.style.display = isAdmin ? 'none' : 'flex';
@@ -21849,13 +21765,13 @@ function updateAdminMenuVisibility(force = false){
     el.style.display = isAdmin ? 'flex' : 'none';
   });
 
-  NEXUS_ADMIN_MENU_PAGES.forEach(function(pg) {
+  NEXUS_ADMIN_PAGES.forEach(function(pg) {
     document.querySelectorAll('button[data-page="' + pg + '"]').forEach(function(btn) {
       btn.style.display = isAdmin ? 'flex' : 'none';
     });
   });
 
-  // Barra inferior mobile: o administrador vê apenas as abas administrativas
+  // Barra inferior mobile: alternar abas de usuário e administrador
   document.querySelectorAll('#mobileBottomBar .mobile-btn-user').forEach(function(b) {
     b.style.display = isAdmin ? 'none' : 'flex';
   });
@@ -21950,7 +21866,7 @@ function updateHeaderUser(){
     sidebarPlanEl.textContent = nexusIsAdminUser(currentUser)
       ? 'Administrador'
       : plan === 'anual' || plan === 'annual'
-        ? 'Plano Anual (legado)'
+        ? 'Plano Anual'
         : plan === 'mensal'
           ? 'Plano Mensal'
           : plan === 'vitalicio'
@@ -22119,7 +22035,7 @@ async function markTransactionAsPaid(id) {
   logActivity(ehEntrada ? 'Recebimento' : 'Pagamento', 'Transação', ehEntrada ? \`Baixa realizada no recebimento de "\${t.desc}" (\${fmt(t.val)}).\` : \`Baixa realizada no pagamento de "\${t.desc}" (\${fmt(t.val)}).\`);
   await pushNotification(ehEntrada ? \`Recebimento confirmado: \${t.desc} — \${fmt(t.val)}\` : \`Pagamento realizado: \${t.desc} — \${fmt(t.val)}\`, '✅');
   await saveUserData();
-  refreshAfterDataChange();
+  render();
 }
 
 // Dashboard novo (dashboard-financeiro.js): o app entrega as movimentações e os resumos de conta/cartão que só ele sabe calcular
@@ -24375,13 +24291,13 @@ function pageConfig(){
         <div style="display:flex; align-items:center; gap:8px;">
           <h3 style="font-size:17px; font-weight:900; margin:0; color:var(--text);">Plano & Assinatura</h3>
           \${(currentUser && currentUser.subscription_status === 'active')
-            ? '<span class="role-badge" style="background:#10B981; color:#fff; font-weight:800;">✓ Assinatura Ativa (' + nexusPlanLabel(currentUser.subscription_plan) + ')</span>'
+            ? '<span class="role-badge" style="background:#10B981; color:#fff; font-weight:800;">✓ Assinatura Ativa (' + (currentUser.subscription_plan === 'anual' ? 'Anual R$ 150' : 'Mensal R$ 15') + ')</span>'
             : '<span class="role-badge" style="background:#F59E0B; color:#fff; font-weight:800;">⏱️ Período Gratuito (1 Dia)</span>'}
         </div>
         <p style="font-size:13px; color:var(--text-dim); margin:4px 0 0 0;">
           \${(currentUser && currentUser.subscription_status === 'active')
             ? 'Válido até ' + (currentUser.subscription_expires_at ? new Date(currentUser.subscription_expires_at).toLocaleDateString('pt-BR') : 'Ativo')
-            : 'Você tem 1 dia grátis para testar todos os recursos. Depois, assine o Plano Mensal por R$ 18,00 e pague via Pix.'}
+            : 'Você tem 1 dia grátis para testar todos os recursos. Depois, escolha o Plano Mensal por R$ 15,00 ou o Plano Anual por R$ 150,00 (equivalente a R$ 12,50 por mês).'}
         </p>
       </div>
     </div>
@@ -25299,12 +25215,12 @@ function pageUsuariosLegado(){
             return '<span class="role-badge" style="background:rgba(16,185,129,0.18); border:1px solid #10B981; color:#34D399;">♾️ Vitalício</span>';
           }
           if (u.subscription_status === 'active') {
-            const planLabel = nexusPlanInfo(u.subscription_plan).nome;
+            const planLabel = u.subscription_plan === 'anual' ? 'Anual' : (u.subscription_plan === 'cortesia_admin' ? 'Liberado' : 'Mensal');
             const expStr = u.subscription_expires_at ? (' • ' + formatDateBR(u.subscription_expires_at.split('T')[0])) : '';
             return '<span class="role-badge" style="background:rgba(16,185,129,0.16); border:1px solid #10B981; color:#34D399;" title="Assinatura ativa">✅ ' + planLabel + methodBadge + expStr + '</span>';
           }
           if (nexusPagamentoAguardando(u)) {
-            const pendingPlan = nexusPlanInfo(u.subscription_plan).nome;
+            const pendingPlan = u.subscription_plan === 'anual' ? 'Anual' : 'Mensal';
             return '<span class="role-badge" style="background:rgba(56,189,248,0.18); border:1px solid #38BDF8; color:#7DD3FC;" title="Pagamento não reconhecido / aguardando liberação">⏳ Pendente • ' + pendingPlan + methodBadge + '</span>';
           }
           if (u.subscription_status === 'expired') {
@@ -25377,7 +25293,7 @@ function pageUsuariosLegado(){
             \` : ''}
             \${!isSelf ? \`
               \${u.subscription_status !== 'active' ? \`
-                <button type="button" class="user-card-btn" onclick="window.adminConfirmUserPayment('\${u.email}', 'mensal', 'pix')" title="Reconhecer pagamento Pix e liberar o Plano Mensal" style="background:linear-gradient(135deg, #10B981, #059669); color:#ffffff; border:none;">
+                <button type="button" class="user-card-btn" onclick="window.adminConfirmUserPayment('\${u.email}', '\${u.subscription_plan === 'anual' ? 'anual' : 'mensal'}', '\${u.subscription_method || 'pix'}')" title="Liberar pagamento não reconhecido imediatamente" style="background:linear-gradient(135deg, #10B981, #059669); color:#ffffff; border:none;">
                   <span>🔓 Liberar Pgto</span>
                 </button>
               \` : \`
@@ -25403,9 +25319,6 @@ function pageUsuariosLegado(){
             \`}
             <button type="button" class="user-card-btn btn-conceder-tempo" data-granttime="\${u.email}" onclick="openUserAdminModal('\${u.email}')" title="Liberar tempo / controlar assinatura" style="background:linear-gradient(135deg, #F59E0B, #B45309); color:#ffffff; border:none;">
               <span>👑 Tempo</span>
-            </button>
-            <button type="button" class="user-card-btn" data-gratistime="\${u.email}" onclick="window.adminGrantTimeQuick('\${u.email}', 43200)" title="Liberar 30 dias de assinatura grátis (cortesia)" style="background:linear-gradient(135deg, #14B8A6, #0F766E); color:#ffffff; border:none;">
-              <span>🎁 Grátis</span>
             </button>
             <button type="button" class="user-card-btn btn-editar" data-edituser="\${u.email}" onclick="openUserAdminModal('\${u.email}')" title="Editar / Corrigir cadastro" style="background:linear-gradient(135deg, #10B981, #047857); color:#ffffff; border:none;">
               <span>✏️ Editar</span>
@@ -25573,28 +25486,26 @@ function pagePagamentosCorpo(){
   const expiredUsers = users.filter(u => u.subscription_status === 'expired');
   const activeUsers = users.filter(u => u.subscription_status === 'active');
   const requestedTab = window.__pagamentosActiveTab || 'pendentes';
-  const activeTab = ['pendentes', 'expirados', 'assinaturas', 'segunda_via_boleto', 'boletos', 'solicitacoes_boleto'].includes(requestedTab) ? requestedTab : 'pendentes';
+  const activeTab = ['pendentes', 'expirados', 'segunda_via_boleto', 'solicitacoes_boleto'].includes(requestedTab) ? requestedTab : 'pendentes';
   const preselected = window.__boletoPreselectedUser || {};
   const preselectedEmail = String(preselected.email || '').toLowerCase();
-  if (window.__adminBoletos === undefined) {
-    window.__adminBoletos = [];
-    setTimeout(() => { if (window.loadAdminBoletos) window.loadAdminBoletos(); }, 0);
-  }
 
   const userRow = (u, expired = false) => {
     const email = escapeOsHtml(u.email || '');
     const name = escapeOsHtml(u.name || u.email || 'Usuário');
+    const plan = u.subscription_plan === 'anual' ? 'anual' : 'mensal';
+    const method = ['pix', 'credit_card', 'debit_card', 'boleto'].includes(u.subscription_method) ? u.subscription_method : 'pix';
     const status = expired ? 'Acesso expirado' : 'Aguardando confirmação';
     const protocol = escapeOsHtml(u.subscription_payment_id || 'Sem protocolo');
     const expiry = u.subscription_expires_at ? formatDateBR(u.subscription_expires_at) : '—';
     return \`<tr>
       <td><strong>\${name}</strong><small style="display:block;color:var(--text-dim);">\${email}</small></td>
-      <td>\${nexusPlanLabel(u.subscription_plan)}</td>
-      <td>PIX</td>
+      <td>\${plan === 'anual' ? 'Anual · R$ 150,00' : 'Mensal · R$ 15,00'}</td>
+      <td>\${method.toUpperCase()}</td>
       <td><span class="role-badge" style="background:\${expired ? 'rgba(239,68,68,.15)' : 'rgba(245,158,11,.15)'};color:\${expired ? '#FCA5A5' : '#FBBF24'};">\${status}</span><small style="display:block;color:var(--text-dim);">\${protocol}</small></td>
       <td>\${expiry}</td>
       <td style="white-space:nowrap;">
-        \${expired ? \`<button type="button" class="btn-ghost" data-email="\${email}" onclick="window.openPaymentSecondCopy(this.dataset.email)">2ª via Pix</button>\` : \`<button type="button" class="btn-primary" data-email="\${email}" onclick="window.adminConfirmUserPayment(this.dataset.email,'mensal','pix')">Confirmar pagamento</button>\`}
+        \${expired ? \`<button type="button" class="btn-ghost" data-email="\${email}" onclick="window.openPaymentSecondCopy(this.dataset.email)">2ª via Pix</button>\` : \`<button type="button" class="btn-primary" data-email="\${email}" data-plan="\${plan}" data-method="\${method}" onclick="window.adminConfirmUserPayment(this.dataset.email,this.dataset.plan,this.dataset.method)">Confirmar pagamento</button>\`}
         <button type="button" class="btn-ghost" data-email="\${email}" onclick="window.adminRevokeUserPayment(this.dataset.email)" title="Bloquear e exigir pagamento">Bloquear</button>
       </td>
     </tr>\`;
@@ -25633,7 +25544,7 @@ function pagePagamentosCorpo(){
       </div>
       <div class="grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;">
         <label>Cliente<select id="paymentNoticeUser" class="admin-search-input" style="width:100%;margin-top:5px;"><option value="">Selecione um usuário</option>\${options}</select></label>
-        <label>Plano<select id="paymentNoticePlan" class="admin-search-input" style="width:100%;margin-top:5px;"><option value="mensal">Mensal · R$ 18,00 (único plano vigente)</option></select></label>
+        <label>Plano<select id="paymentNoticePlan" class="admin-search-input" style="width:100%;margin-top:5px;"><option value="mensal">Mensal · R$ 15,00</option><option value="anual">Anual · R$ 150,00</option></select></label>
         <label>Vencimento<input id="paymentNoticeDue" type="date" class="admin-search-input" value="\${dueValue}" style="width:100%;margin-top:5px;"></label>
         <label>Referência<input id="paymentNoticeReference" class="admin-search-input" maxlength="25" value="NX-\${Date.now().toString().slice(-8)}" style="width:100%;margin-top:5px;"></label>
       </div>
@@ -25642,79 +25553,6 @@ function pagePagamentosCorpo(){
         <button type="button" class="btn-ghost" onclick="window.sendAdminPaymentNoticeWhatsApp()">Enviar instruções por WhatsApp</button>
         <button type="button" class="btn-ghost" onclick="window.setPagamentosActiveTab('pendentes')">Voltar aos pagamentos</button>
       </div>
-    </div>\`;
-  } else if (activeTab === 'assinaturas') {
-    const nowMs = Date.now();
-    const subRows = users.map(u => {
-      const email = escapeOsHtml(u.email || '');
-      const name = escapeOsHtml(u.name || u.email || 'Usuário');
-      const info = nexusPlanInfo(u.subscription_plan);
-      const statusRaw = String(u.subscription_status || 'trial').toLowerCase();
-      const isActive = statusRaw === 'active' && u.subscription_expires_at && new Date(u.subscription_expires_at).getTime() > nowMs;
-      const daysLeft = isActive ? Math.ceil((new Date(u.subscription_expires_at).getTime() - nowMs) / 86400000) : null;
-      const statusLabel = isActive ? 'Ativa' : (statusRaw === 'expired' ? 'Expirada' : (nexusPagamentoAguardando(u) ? 'Pendente' : 'Teste'));
-      const statusColor = isActive ? '#34D399' : (statusRaw === 'expired' ? '#FCA5A5' : (nexusPagamentoAguardando(u) ? '#7DD3FC' : '#FBBF24'));
-      const method = escapeOsHtml(String(u.subscription_method || '—').toUpperCase());
-      const startDate = u.trial_started_at || u.created_at || '';
-      const expiry = u.subscription_expires_at ? formatDateBR(u.subscription_expires_at) : '—';
-      const protocol = escapeOsHtml(u.subscription_payment_id || '—');
-      return \`<tr>
-        <td><strong>\${name}</strong><small style="display:block;color:var(--text-dim);">\${email}</small></td>
-        <td>\${info.nome} <small style="color:var(--text-dim);">(\${info.valor})</small></td>
-        <td><span class="role-badge" style="background:rgba(255,255,255,0.06);color:\${statusColor};border:1px solid \${statusColor}55;">\${statusLabel}\${daysLeft !== null ? ' • ' + daysLeft + 'd' : ''}</span></td>
-        <td>\${method}</td>
-        <td>\${startDate ? formatDateBR(startDate) : '—'}</td>
-        <td>\${expiry}</td>
-        <td style="font-size:11px;color:var(--text-dim);">\${protocol}</td>
-        <td style="white-space:nowrap;text-align:right;">
-          <button type="button" class="btn-ghost" data-email="\${email}" onclick="window.openPaymentSecondCopy(this.dataset.email)">2ª via</button>
-          \${statusRaw !== 'active' ? \`<button type="button" class="btn-primary" data-email="\${email}" onclick="window.adminConfirmUserPayment(this.dataset.email,'mensal','pix')">Liberar</button>\` : \`<button type="button" class="btn-ghost" data-email="\${email}" onclick="window.adminRevokeUserPayment(this.dataset.email)">Bloquear</button>\`}
-        </td>
-      </tr>\`;
-    }).join('');
-    const activeMonthly = users.filter(u => nexusPlanInfo(u.subscription_plan).id === 'mensal' && u.subscription_status === 'active' && u.subscription_expires_at && new Date(u.subscription_expires_at).getTime() > nowMs).length;
-    content = \`<div class="table-panel" style="padding:14px;border-radius:16px;overflow:auto;">
-      <div class="panel-head"><h3>Assinaturas contratadas</h3><span class="tag">\${users.length} conta(s) • MRR estimado R$ \${(activeMonthly * 18).toFixed(2).replace('.', ',')}</span></div>
-      <table class="data-table" style="width:100%;"><thead><tr><th>Cliente</th><th>Plano</th><th>Status</th><th>Meio</th><th>Início</th><th>Vencimento</th><th>Protocolo</th><th style="text-align:right;">Ações</th></tr></thead>
-      <tbody>\${subRows || '<tr><td colspan="8" style="text-align:center;padding:24px;color:var(--text-dim);">Nenhuma conta de usuário.</td></tr>'}</tbody></table>
-    </div>\`;
-  } else if (activeTab === 'boletos') {
-    const boletos = window.__adminBoletos || [];
-    const statusMeta = {
-      emitido:  { label: 'Emitido', cor: '#7DD3FC', bg: 'rgba(56,189,248,0.15)' },
-      aberto:   { label: 'Aberto/Visualizado', cor: '#C4B5FD', bg: 'rgba(167,139,250,0.15)' },
-      vencido:  { label: 'Vencido', cor: '#FCA5A5', bg: 'rgba(239,68,68,0.15)' },
-      pago:     { label: 'Pago', cor: '#34D399', bg: 'rgba(16,185,129,0.15)' },
-      cancelado:{ label: 'Cancelado', cor: '#94A3B8', bg: 'rgba(148,163,184,0.15)' }
-    };
-    const boletoRows = boletos.map(b => {
-      const st = statusMeta[b.effective_status] || statusMeta.emitido;
-      const ref = escapeOsHtml(b.reference || '—');
-      const cli = escapeOsHtml(b.client_name || b.client_email || '—');
-      const mail = escapeOsHtml(b.client_email || '');
-      const valor = 'R$ ' + Number(b.amount || 18).toFixed(2).replace('.', ',');
-      const venc = b.due_date ? formatDateBR(b.due_date) : '—';
-      const emitido = b.created_at ? formatDateBR(b.created_at) : '—';
-      const views = Number(b.view_count) || 0;
-      const prints = Number(b.print_count) || 0;
-      const acoes = b.effective_status === 'pago' || b.effective_status === 'cancelado'
-        ? \`<button type="button" class="btn-ghost" data-ref="\${ref}" onclick="window.reemitirBoleto(this.dataset.ref)">Reemitir</button>\`
-        : \`<button type="button" class="btn-ghost" data-ref="\${ref}" onclick="window.reemitirBoleto(this.dataset.ref)">Editar/Reemitir</button>
-           <button type="button" class="btn-primary" data-ref="\${ref}" onclick="window.marcarBoletoPago(this.dataset.ref)">Marcar pago</button>
-           <button type="button" class="btn-ghost" data-ref="\${ref}" onclick="window.cancelarBoleto(this.dataset.ref)">Cancelar</button>\`;
-      return \`<tr>
-        <td><strong class="font-mono">\${ref}</strong><small style="display:block;color:var(--text-dim);">\${cli} • \${mail}</small></td>
-        <td>\${valor}</td>
-        <td>\${venc}</td>
-        <td>\${emitido}<small style="display:block;color:var(--text-dim);">\${prints}x emitido • \${views}x aberto</small></td>
-        <td><span class="role-badge" style="background:\${st.bg};color:\${st.cor};border:1px solid \${st.cor}55;">\${st.label}</span></td>
-        <td style="white-space:nowrap;">\${acoes}</td>
-      </tr>\`;
-    }).join('');
-    content = \`<div class="table-panel" style="padding:14px;border-radius:16px;overflow:auto;">
-      <div class="panel-head"><h3>Boletos / cobranças Pix emitidos</h3><span class="tag">\${boletos.length} registro(s)</span></div>
-      <table class="data-table" style="width:100%;"><thead><tr><th>Referência / Cliente</th><th>Valor</th><th>Vencimento</th><th>Emitido</th><th>Status</th><th style="text-align:right;">Ações</th></tr></thead>
-      <tbody>\${boletoRows || '<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text-dim);">Nenhuma cobrança emitida ainda. Use a aba "2ª via / cobrança Pix" para gerar a primeira.</td></tr>'}</tbody></table>
     </div>\`;
   } else if (activeTab === 'solicitacoes_boleto') {
     content = \`<div class="table-panel" style="padding:14px;border-radius:16px;overflow:auto;">
@@ -25740,72 +25578,16 @@ function pagePagamentosCorpo(){
   <div class="admin-toolbar-panel" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
     <button class="btn-ghost" onclick="window.setPagamentosActiveTab('pendentes')">Pagamentos pendentes</button>
     <button class="btn-ghost" onclick="window.setPagamentosActiveTab('expirados')">Acessos expirados</button>
-    <button class="btn-ghost" onclick="window.setPagamentosActiveTab('assinaturas')">Assinaturas (\${users.length})</button>
     <button class="btn-ghost" onclick="window.setPagamentosActiveTab('segunda_via_boleto')">2ª via / cobrança Pix</button>
-    <button class="btn-ghost" onclick="window.setPagamentosActiveTab('boletos')">Boletos emitidos (\${(window.__adminBoletos || []).length})</button>
     <button class="btn-ghost" onclick="window.setPagamentosActiveTab('solicitacoes_boleto')">Solicitações de boleto (\${requestedOrders.length})</button>
   </div>\${content}\`;
 }
 
 window.setPagamentosActiveTab = function(tab) {
   window.__pagamentosActiveTab = tab;
-  if (tab === 'boletos') window.loadAdminBoletos();
   _lastRenderedHtml = '';
   render();
 };
-
-window.loadAdminBoletos = async function() {
-  try {
-    const res = await fetch('/api/admin/boletos', { headers: nexusAuthHeaders() });
-    const d = await res.json();
-    if (d && d.success) {
-      window.__adminBoletos = d.boletos || [];
-      _lastRenderedHtml = '';
-      if (window.__pagamentosActiveTab === 'boletos') render();
-    }
-  } catch (e) { /* mantém a última lista carregada */ }
-};
-
-window.reemitirBoleto = function(reference) {
-  const b = (window.__adminBoletos || []).find(x => String(x.reference) === String(reference));
-  if (!b) { if (typeof showToast === 'function') showToast('Cobrança não encontrada.'); return; }
-  const user = (registeredUsers || []).find(u => u && u.email && String(u.email).toLowerCase() === String(b.client_email || '').toLowerCase());
-  window.__boletoPreselectedUser = {
-    email: b.client_email || (user ? user.email : ''),
-    name: b.client_name || (user ? user.name : ''),
-    cpf: b.client_cpf || (user ? user.cpf : ''),
-    phone: user ? user.phone : ''
-  };
-  window.__pagamentosActiveTab = 'segunda_via_boleto';
-  _lastRenderedHtml = '';
-  render();
-  setTimeout(() => {
-    const sel = document.getElementById('paymentNoticeUser');
-    if (sel) sel.value = b.client_email || '';
-    const dueEl = document.getElementById('paymentNoticeDue');
-    if (dueEl && b.due_date) dueEl.value = b.due_date;
-    const refEl = document.getElementById('paymentNoticeReference');
-    if (refEl) refEl.value = b.reference || '';
-    if (refEl) refEl.focus();
-  }, 60);
-};
-
-window.marcarBoletoStatus = async function(reference, status, okMsg) {
-  try {
-    const res = await fetch('/api/admin/boletos', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...nexusAuthHeaders() },
-      body: JSON.stringify({ action: 'status', reference: reference, status: status })
-    });
-    const d = await res.json();
-    if (d && d.success) {
-      if (typeof showToast === 'function') showToast(okMsg || 'Status atualizado.');
-      await window.loadAdminBoletos();
-    } else if (typeof showToast === 'function') showToast((d && d.error) || 'Não foi possível atualizar.');
-  } catch (e) { if (typeof showToast === 'function') showToast('Falha de rede ao atualizar a cobrança.'); }
-};
-window.marcarBoletoPago = function(reference) { window.marcarBoletoStatus(reference, 'pago', '✅ Cobrança marcada como paga.'); };
-window.cancelarBoleto = function(reference) { window.marcarBoletoStatus(reference, 'cancelado', 'Cobrança cancelada.'); };
 
 window.openPaymentSecondCopy = function(email) {
   const user = (registeredUsers || []).find(u => u && u.email && u.email.toLowerCase() === String(email || '').toLowerCase());
@@ -25815,98 +25597,30 @@ window.openPaymentSecondCopy = function(email) {
   navigate('pagamentos');
 };
 
-window.printAdminPaymentNotice = async function() {
+window.printAdminPaymentNotice = function() {
   const email = document.getElementById('paymentNoticeUser')?.value || '';
   const user = (registeredUsers || []).find(u => u && u.email && u.email.toLowerCase() === email.toLowerCase());
+  const plan = document.getElementById('paymentNoticePlan')?.value === 'anual' ? 'anual' : 'mensal';
   const due = document.getElementById('paymentNoticeDue')?.value || '';
   const reference = (document.getElementById('paymentNoticeReference')?.value || '').replace(/[^a-zA-Z0-9]/g, '').slice(0, 25);
   if (!user || !reference) { if (typeof showToast === 'function') showToast('Selecione o cliente e informe uma referência válida.'); return; }
-  const amount = 18; // Plano Mensal vigente
+  const amount = plan === 'anual' ? 150 : 15; // mesmos valores da assinatura (Mensal R$ 15,00 / Anual R$ 150,00); estava 10 e 100
   const txid = ('NX' + reference).slice(0, 25);
   const pixCode = window.generatePixEMVPayload('+5562992345372', 'PAULO LIMA', 'GOIANIA', amount, txid);
+  const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=' + encodeURIComponent(pixCode);
   const popup = window.open('', '_blank');
   if (!popup) { if (typeof showToast === 'function') showToast('Permita a abertura da janela para imprimir a cobrança.'); return; }
   popup.opener = null;
   const safe = escapeOsHtml;
-  const planLabel = 'Mensal · 30 dias';
-  const issueDate = formatDateBR(new Date().toISOString());
-  const amountFmt = 'R$ ' + amount.toFixed(2).replace('.', ',');
-  const dueFmt = due ? formatDateBR(due) : '—';
-  const clientName = safe(user.name || user.email);
-  const clientEmail = safe(user.email);
-  const clientCpf = user.cpf ? ' • CPF ' + safe(user.cpf) : '';
-  const refSafe = safe(reference);
-  // Registra/atualiza a cobrança no painel (2ª via ou nova emissão) antes de abrir o documento.
-  try {
-    await fetch('/api/admin/boletos', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...nexusAuthHeaders() },
-      body: JSON.stringify({
-        reference: reference,
-        client_email: user.email || '',
-        client_name: user.name || '',
-        client_cpf: user.cpf || '',
-        plan: 'mensal',
-        amount: amount,
-        due_date: due || ''
-      })
-    });
-    window.loadAdminBoletos();
-  } catch (e) { /* segue para a impressão mesmo se o registro falhar */ }
-  const html = '<!doctype html><html lang="pt-BR" class="h-full antialiased"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Cobrança Pix ' + refSafe + ' | NEXUS FINANCEIRO HUB</title>' +
-    '<script src="https://cdn.tailwindcss.com"><\\/script>' +
-    '<script>tailwind.config={theme:{extend:{colors:{nexus:{navy:"#060d1a",deep:"#0b172a",slate:"#13233d",blue:"#1d4ed8",cyan:"#0ea5e9",sky:"#38bdf8",green:"#00a859",emerald:"#10b981",orange:"#f59e0b"}},fontFamily:{sans:["Plus Jakarta Sans","Inter","sans-serif"],mono:["JetBrains Mono","monospace"]}}}};<\\/script>' +
-    '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">' +
-    '<script src="https://unpkg.com/lucide@latest"><\\/script>' +
-    '<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\\/script>' +
-    '<style>.fintech-bg{background:radial-gradient(ellipse at top,#0b1938 0%,#060d1f 65%,#040914 100%)}.security-microline{background-image:repeating-linear-gradient(-45deg,rgba(14,165,233,.08),rgba(14,165,233,.08) 2px,transparent 2px,transparent 8px)}@media print{@page{size:A4 portrait;margin:10mm}body{background:#fff!important;color:#0f172a!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}.no-print{display:none!important}.print-clean-card{box-shadow:none!important;border:1px solid #cbd5e1!important;margin:0!important;max-width:100%!important;border-radius:16px!important}.print-header-bar{background:linear-gradient(135deg,#0f295c 0%,#1e40af 100%)!important;color:#fff!important}main{padding:0!important}}</style></head>' +
-    '<body class="fintech-bg min-h-full font-sans text-slate-200 flex flex-col justify-between selection:bg-nexus-cyan selection:text-white relative overflow-x-hidden">' +
-    '<div class="fixed inset-0 pointer-events-none z-0 overflow-hidden no-print" aria-hidden="true"><div class="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[900px] h-[520px] rounded-full bg-gradient-to-r from-blue-600/20 via-sky-400/15 to-emerald-500/15 blur-[120px]"></div><div class="absolute bottom-[-15%] right-[-10%] w-[650px] h-[650px] rounded-full bg-blue-700/15 blur-[130px]"></div><div class="absolute top-[35%] left-[-12%] w-[520px] h-[520px] rounded-full bg-emerald-500/10 blur-[120px]"></div>' +
-    '<svg class="w-full h-full opacity-90" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="waveGrad1" x1="0" y1="0" x2="1440" y2="600" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#1d4ed8" stop-opacity="0.28"/><stop offset="50%" stop-color="#0ea5e9" stop-opacity="0.14"/><stop offset="100%" stop-color="#10b981" stop-opacity="0.06"/></linearGradient><linearGradient id="waveGrad2" x1="1440" y1="100" x2="0" y2="850" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#0ea5e9" stop-opacity="0.22"/><stop offset="55%" stop-color="#1e3a8a" stop-opacity="0.18"/><stop offset="100%" stop-color="#060d1f" stop-opacity="0"/></linearGradient><linearGradient id="guillocheStroke" x1="0" y1="0" x2="1440" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#38bdf8" stop-opacity="0.03"/><stop offset="35%" stop-color="#38bdf8" stop-opacity="0.14"/><stop offset="65%" stop-color="#10b981" stop-opacity="0.12"/><stop offset="100%" stop-color="#1d4ed8" stop-opacity="0.03"/></linearGradient><pattern id="fineGrid" width="48" height="48" patternUnits="userSpaceOnUse"><path d="M 48 0 L 0 0 0 48" fill="none" stroke="rgba(255,255,255,0.025)" stroke-width="1"/><circle cx="48" cy="48" r="1" fill="rgba(56,189,248,0.12)"/></pattern></defs>' +
-    '<rect width="1440" height="900" fill="url(#fineGrid)"/><path d="M-80 220 C 260 60, 560 360, 940 190 C 1180 80, 1340 140, 1520 60 L 1520 0 L -80 0 Z" fill="url(#waveGrad1)"/><path d="M-80 780 C 320 620, 680 860, 1080 670 C 1280 580, 1400 630, 1520 560 L 1520 900 L -80 900 Z" fill="url(#waveGrad2)"/>' +
-    '<g stroke="url(#guillocheStroke)" stroke-width="1.15"><path d="M-100 340 C 240 190, 520 470, 860 300 C 1140 160, 1320 260, 1540 180"/><path d="M-100 356 C 240 206, 520 486, 860 316 C 1140 176, 1320 276, 1540 196"/><path d="M-100 372 C 240 222, 520 502, 860 332 C 1140 192, 1320 292, 1540 212"/><path d="M-100 388 C 240 238, 520 518, 860 348 C 1140 208, 1320 308, 1540 228"/><path d="M-100 404 C 240 254, 520 534, 860 364 C 1140 224, 1320 324, 1540 244"/><path d="M-100 620 C 280 740, 620 490, 980 640 C 1220 740, 1380 660, 1540 610"/><path d="M-100 636 C 280 756, 620 506, 980 656 C 1220 756, 1380 676, 1540 626"/><path d="M-100 652 C 280 772, 620 522, 980 672 C 1220 772, 1380 692, 1540 642"/></g>' +
-    '<g stroke="rgba(56,189,248,0.14)" stroke-width="1"><line x1="160" y1="180" x2="310" y2="250"/><line x1="310" y1="250" x2="230" y2="390"/><line x1="1180" y1="210" x2="1310" y2="310"/><line x1="1310" y1="310" x2="1220" y2="440"/><line x1="1120" y1="690" x2="1280" y2="620"/></g>' +
-    '<g fill="#38bdf8" fill-opacity="0.35"><circle cx="160" cy="180" r="2.5"/><circle cx="310" cy="250" r="3"/><circle cx="230" cy="390" r="2"/><circle cx="1180" cy="210" r="2.5"/><circle cx="1310" cy="310" r="3"/><circle cx="1220" cy="440" r="2"/><circle cx="1120" cy="690" r="2.5"/><circle cx="1280" cy="620" r="3"/></g></svg></div>' +
-    '<header class="w-full bg-[#060d1f]/75 backdrop-blur-xl border-b border-white/10 sticky top-0 z-40 no-print"><div class="max-w-3xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">' +
-    '<div class="flex items-center gap-3.5"><svg class="w-10 h-10 shrink-0 drop-shadow-[0_4px_14px_rgba(14,165,233,0.4)]" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="nexusBoxGrad" x1="6" y1="6" x2="58" y2="58" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#3b82f6"/><stop offset="50%" stop-color="#0ea5e9"/><stop offset="100%" stop-color="#22d3ee"/></linearGradient><linearGradient id="nexusNGrad" x1="20" y1="22" x2="44" y2="46" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#059669"/><stop offset="100%" stop-color="#047857"/></linearGradient></defs><rect x="4" y="4" width="56" height="56" rx="15" fill="url(#nexusBoxGrad)"/><rect x="4.75" y="4.75" width="54.5" height="54.5" rx="14.25" stroke="white" stroke-opacity="0.28" stroke-width="1.5"/><path d="M21 44V24.5C21 22.8 23.1 22 24.2 23.3L39.8 41.7C40.9 43 43 42.2 43 40.5V28.5" stroke="url(#nexusNGrad)" stroke-width="5.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="43" cy="20.5" r="5.5" stroke="white" stroke-opacity="0.75" stroke-width="1.2"/><circle cx="43" cy="20.5" r="3.4" fill="#f59e0b"/></svg>' +
-    '<div class="flex flex-col"><span class="text-white font-extrabold text-lg sm:text-xl tracking-[0.15em] leading-none">NEXUS</span><span class="text-sky-300/85 font-semibold text-[10px] tracking-[0.23em] mt-1 uppercase">FINANCEIRO HUB</span></div></div>' +
-    '<div class="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.06] border border-white/10 text-xs text-slate-200 shadow-inner"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span><span class="hidden sm:inline font-medium">Ambiente Criptografado</span><span class="sm:hidden font-medium">Seguro</span></div></div></header>' +
-    '<main class="max-w-3xl w-full mx-auto px-4 sm:px-6 py-7 sm:py-10 flex-grow relative z-10">' +
-    '<div class="bg-white text-slate-800 rounded-3xl shadow-[0_30px_90px_-15px_rgba(0,0,0,0.85),0_0_0_1px_rgba(255,255,255,0.12)] overflow-hidden relative print-clean-card">' +
-    '<div class="absolute inset-0 flex items-center justify-center pointer-events-none select-none z-0 overflow-hidden" aria-hidden="true"><svg class="w-[360px] h-[360px] sm:w-[440px] sm:h-[440px] opacity-[0.035] -rotate-12" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="16" y="16" width="168" height="168" rx="44" stroke="#0f295c" stroke-width="8"/><path d="M64 138V74C64 68.5 70.8 66 74.4 70.2L125.6 129.8C129.2 134 136 131.5 136 126V88" stroke="#0f295c" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/><circle cx="136" cy="62" r="16" stroke="#0f295c" stroke-width="4"/><circle cx="136" cy="62" r="9" fill="#0f295c"/></svg></div>' +
-    '<div class="h-1.5 w-full bg-gradient-to-r from-[#0ea5e9] via-[#10b981] to-[#1d4ed8]"></div>' +
-    '<div class="bg-gradient-to-br from-[#0f295c] via-[#153575] to-[#1e40af] px-6 sm:px-8 py-6 sm:py-7 text-white relative overflow-hidden print-header-bar">' +
-    '<svg class="absolute inset-0 w-full h-full opacity-20 pointer-events-none" viewBox="0 0 800 220" preserveAspectRatio="none" fill="none"><path d="M480 -20 C 560 90, 680 40, 820 160 L 820 -20 Z" fill="url(#headerWave)"/><circle cx="710" cy="40" r="110" stroke="#38bdf8" stroke-width="1" stroke-dasharray="4 4"/><circle cx="710" cy="40" r="155" stroke="#ffffff" stroke-opacity="0.4" stroke-width="0.75"/><defs><linearGradient id="headerWave" x1="480" y1="0" x2="820" y2="160" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#38bdf8" stop-opacity="0.45"/><stop offset="100%" stop-color="#10b981" stop-opacity="0.1"/></linearGradient></defs></svg>' +
-    '<div class="flex flex-wrap items-center justify-between gap-3 pb-5 mb-5 border-b border-white/15 relative z-10"><div class="flex items-center gap-3"><svg class="w-9 h-9 shrink-0" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="4" width="56" height="56" rx="15" fill="url(#nexusBoxGrad)"/><rect x="4.75" y="4.75" width="54.5" height="54.5" rx="14.25" stroke="white" stroke-opacity="0.35" stroke-width="1.5"/><path d="M21 44V24.5C21 22.8 23.1 22 24.2 23.3L39.8 41.7C40.9 43 43 42.2 43 40.5V28.5" stroke="#047857" stroke-width="5.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="43" cy="20.5" r="5.5" stroke="white" stroke-opacity="0.8" stroke-width="1.2"/><circle cx="43" cy="20.5" r="3.4" fill="#f59e0b"/></svg>' +
-    '<div><div class="text-white font-extrabold text-base tracking-[0.14em] leading-none">NEXUS</div><div class="text-sky-200 font-semibold text-[9px] tracking-[0.22em] mt-1 uppercase">FINANCEIRO HUB</div></div></div>' +
-    '<div class="flex items-center gap-2"><span class="px-2.5 py-1 rounded-md bg-white/10 border border-white/20 text-[10px] font-bold tracking-[0.14em] uppercase text-sky-100">COBRANÇA OFICIAL</span></div></div>' +
-    '<div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 relative z-10"><div><div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-amber-400/15 text-amber-200 border border-amber-300/30 mb-2.5"><span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>Aguardando pagamento</div><h1 class="text-xl sm:text-2xl font-extrabold tracking-tight text-white">Instrução de pagamento via Pix</h1></div>' +
-    '<div class="sm:text-right bg-[#091836]/70 backdrop-blur-xs px-4 py-2.5 rounded-2xl border border-white/15 shrink-0"><span class="text-[10px] uppercase tracking-[0.16em] text-sky-200/80 block font-semibold">Referência</span><span class="font-mono text-sm sm:text-base font-bold text-white tracking-wider">' + refSafe + '</span><span class="text-[9px] text-sky-200/60 block mt-0.5">Emitida em ' + issueDate + '</span></div></div></div>' +
-    '<div class="p-6 sm:p-8 space-y-6 relative z-10">' +
-    '<div class="grid grid-cols-1 md:grid-cols-12 gap-4 bg-slate-50/85 backdrop-blur-2xs p-5 sm:p-6 rounded-2xl border border-slate-200/90">' +
-    '<div class="md:col-span-7 space-y-4 md:border-r md:border-slate-200/90 md:pr-6"><div><span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Cliente / Pagador</span><p class="text-sm sm:text-base font-extrabold text-slate-900 tracking-tight">' + clientName + '</p><p class="text-xs sm:text-sm text-slate-500 mt-0.5 flex items-center gap-1.5"><i data-lucide="mail" class="w-3.5 h-3.5 text-slate-400"></i>' + clientEmail + clientCpf + '</p></div>' +
-    '<div class="pt-3 border-t border-slate-200/80"><span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Plano Contratado</span><div class="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-slate-800 bg-white px-3 py-1.5 rounded-lg border border-slate-200 shadow-2xs"><i data-lucide="layers" class="w-3.5 h-3.5 text-nexus-cyan"></i>' + planLabel + '</div></div></div>' +
-    '<div class="md:col-span-5 flex flex-col justify-between space-y-4 pt-3 md:pt-0 border-t md:border-t-0 border-slate-200/80 md:pl-2"><div><span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Valor do Documento</span><div class="flex items-baseline gap-1"><span class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight tabular-nums">' + amountFmt + '</span></div></div>' +
-    '<div class="pt-3 border-t border-slate-200/80"><span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Vencimento</span><p class="text-sm sm:text-base font-bold text-slate-800 flex items-center gap-1.5 tabular-nums"><i data-lucide="calendar-clock" class="w-4 h-4 text-nexus-blue"></i>' + dueFmt + '</p></div></div></div>' +
-    '<div class="relative flex items-center justify-center py-1 select-none" aria-hidden="true"><span class="absolute -left-9 sm:-left-11 w-6 h-6 rounded-full bg-[#071026] border-r border-slate-200 no-print"></span><span class="absolute -right-9 sm:-right-11 w-6 h-6 rounded-full bg-[#071026] border-l border-slate-200 no-print"></span><div class="w-full border-t-2 border-dashed border-slate-200"></div><div class="px-3 bg-white text-slate-400 flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest shrink-0"><i data-lucide="scissors" class="w-3.5 h-3.5 text-slate-400"></i><span>Ficha de Compensação Pix</span></div><div class="w-full border-t-2 border-dashed border-slate-200"></div></div>' +
-    '<div class="bg-gradient-to-br from-slate-50/90 via-sky-50/40 to-emerald-50/40 rounded-2xl border border-slate-200/90 p-5 sm:p-7 relative overflow-hidden"><div class="absolute top-0 inset-x-0 h-1 security-microline"></div>' +
-    '<div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center"><div class="md:col-span-5 flex flex-col items-center justify-center"><div class="relative p-4 bg-white rounded-2xl shadow-sm border border-slate-200/80">' +
-    '<span class="absolute -top-1.5 -left-1.5 w-6 h-6 border-t-[3px] border-l-[3px] border-nexus-cyan rounded-tl-xl pointer-events-none"></span><span class="absolute -top-1.5 -right-1.5 w-6 h-6 border-t-[3px] border-r-[3px] border-nexus-green rounded-tr-xl pointer-events-none"></span><span class="absolute -bottom-1.5 -left-1.5 w-6 h-6 border-b-[3px] border-l-[3px] border-nexus-green rounded-bl-xl pointer-events-none"></span><span class="absolute -bottom-1.5 -right-1.5 w-6 h-6 border-b-[3px] border-r-[3px] border-nexus-cyan rounded-br-xl pointer-events-none"></span>' +
-    '<div id="qrcode" class="flex items-center justify-center"></div></div></div>' +
-    '<div class="md:col-span-7 space-y-4 text-center md:text-left"><div><div class="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 text-xs font-bold mb-2.5"><svg class="w-3.5 h-3.5 text-[#00a859]" viewBox="0 0 24 24" fill="currentColor"><path d="M15.45 16.52l-3.01-3.01a.62.62 0 00-.88 0l-3.01 3.01a2.1 2.1 0 01-1.49.62H6.4l3.8 3.8a2.55 2.55 0 003.6 0l3.8-3.8h-.66c-.56 0-1.1-.22-1.49-.62zm-6.9-9.04l3.01 3.01c.24.24.64.24.88 0l3.01-3.01c.39-.4.93-.62 1.49-.62h.66l-3.8-3.8a2.55 2.55 0 00-3.6 0l-3.8 3.8h.66c.56 0 1.1.22 1.49.62zM20.94 10.2l-2.3-2.3h-1.7c-.34 0-.67.14-.91.38l-3.01 3.01a1.48 1.48 0 01-2.04 0L7.97 8.28a1.28 1.28 0 00-.91-.38h-1.7l-2.3 2.3a2.55 2.55 0 000 3.6l2.3 2.3h1.7c.34 0 .67-.14.91-.38l3.01-3.01a1.48 1.48 0 012.04 0l3.01 3.01c.24.24.57.38.91.38h1.7l2.3-2.3a2.55 2.55 0 000-3.6z"/></svg><span>Pagamento Instantâneo Pix</span></div>' +
-    '<h2 class="text-lg sm:text-xl font-extrabold text-slate-900">Escaneie o QR Code Pix</h2><p class="text-xs sm:text-sm text-slate-500 mt-1 leading-relaxed">Abra o aplicativo do seu banco, acesse a área Pix e aponte a câmera para o código ao lado.</p></div>' +
-    '<div class="bg-white rounded-xl p-4 border border-slate-200/90 shadow-2xs space-y-2.5 text-left"><div class="flex items-center justify-between text-xs sm:text-sm"><span class="text-slate-500 font-medium">Favorecido:</span><span class="font-bold text-slate-900">Paulo Lima</span></div>' +
-    '<div class="border-t border-slate-100 pt-2.5 flex items-center justify-between text-xs sm:text-sm"><span class="text-slate-500 font-medium">Chave Pix (celular):</span><span class="font-mono font-semibold text-slate-800 bg-slate-100 px-2.5 py-0.5 rounded-md border border-slate-200/70">(62) 99234-5372</span></div></div></div></div></div>' +
-    '<div class="space-y-2.5"><div class="flex items-center justify-between"><label for="pixCodeInput" class="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5"><i data-lucide="key-round" class="w-3.5 h-3.5 text-nexus-cyan"></i>Pix Copia e Cola</label><span class="text-[11px] text-slate-400 font-medium">Código EMV padrão Banco Central</span></div>' +
-    '<div class="flex flex-col sm:flex-row gap-2.5"><div class="relative flex-grow"><input id="pixCodeInput" type="text" readonly value="' + pixCode + '" class="w-full bg-slate-50 border border-slate-300 text-slate-700 font-mono text-xs py-3.5 px-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-nexus-cyan/40 focus:border-nexus-cyan select-all truncate"></div>' +
-    '<button id="copyPixButton" onclick="handleCopyPix()" type="button" class="shrink-0 bg-gradient-to-r from-[#0f295c] to-[#1e40af] hover:from-[#153575] hover:to-[#1d4ed8] text-white font-bold text-xs sm:text-sm px-5 py-3.5 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2 active:scale-[0.98] cursor-pointer no-print"><i id="copyIcon" data-lucide="copy" class="w-4 h-4"></i><span id="copyBtnText">Copiar código Pix</span></button></div></div>' +
-    '<div class="rounded-2xl bg-amber-50/95 border border-amber-200 p-4 sm:p-5 flex items-start gap-3.5"><div class="w-8 h-8 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center shrink-0 mt-0.5"><i data-lucide="info" class="w-4 h-4"></i></div>' +
-    '<p class="text-xs sm:text-sm text-amber-900 leading-relaxed"><strong class="font-bold text-amber-950">Importante:</strong> este documento é uma instrução de pagamento via Pix, não é um boleto bancário registrado. O acesso é liberado após a confirmação do recebimento.</p></div></div>' +
-    '<div class="bg-slate-50 px-6 sm:px-8 py-4 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4 relative z-10"><div class="flex items-center gap-2 text-xs text-slate-500 font-medium"><i data-lucide="shield-check" class="w-4 h-4 text-nexus-green shrink-0"></i><span>Autenticação Digital · Banco Central do Brasil (SPI/Pix)</span></div>' +
-    '<button onclick="window.print()" type="button" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white hover:bg-slate-100 text-slate-800 font-bold text-xs border border-slate-300 shadow-2xs transition-all duration-150 cursor-pointer no-print"><i data-lucide="printer" class="w-4 h-4 text-slate-600"></i>Imprimir / Salvar em PDF</button></div></div>' +
-    '</div><footer class="mt-8 text-center space-y-1.5 no-print"><p class="text-xs font-semibold text-slate-300 tracking-wide">NEXUS FINANCEIRO HUB · Cobrança Digital Inteligente</p><p class="text-[11px] text-slate-400">Dúvidas sobre esta cobrança? Entre em contato com o suporte informando a referência <span class="font-mono text-sky-300">' + refSafe + '</span>.</p></footer></main>' +
-    '<div id="copyToast" class="fixed bottom-6 right-6 z-50 transform translate-y-16 opacity-0 transition-all duration-300 pointer-events-none no-print"><div class="bg-[#0b172a] text-white px-4 py-3 rounded-2xl shadow-2xl border border-emerald-500/40 flex items-center gap-3"><div class="w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0"><i data-lucide="check-circle-2" class="w-4 h-4"></i></div><div><p class="text-xs font-bold text-white">Código copiado!</p><p class="text-[11px] text-slate-300">Cole no app do seu banco na opção Pix Copia e Cola.</p></div></div></div>' +
-    '<script>lucide.createIcons();const PIX_PAYLOAD="' + pixCode + '";document.addEventListener("DOMContentLoaded",function(){var qr=document.getElementById("qrcode");qr.innerHTML="";new QRCode(qr,{text:PIX_PAYLOAD,width:176,height:176,colorDark:"#0b172a",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.M});});var toastTimeout;function handleCopyPix(){var input=document.getElementById("pixCodeInput");var btn=document.getElementById("copyPixButton");var btnText=document.getElementById("copyBtnText");input.select();input.setSelectionRange(0,99999);try{document.execCommand("copy");}catch(err){if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(PIX_PAYLOAD).catch(function(){});}}btn.classList.remove("from-[#0f295c]","to-[#1e40af]");btn.classList.add("from-emerald-600","to-emerald-500");btnText.textContent="Código copiado!";var toast=document.getElementById("copyToast");toast.classList.remove("translate-y-16","opacity-0");toast.classList.add("translate-y-0","opacity-100");clearTimeout(toastTimeout);toastTimeout=setTimeout(function(){btn.classList.remove("from-emerald-600","to-emerald-500");btn.classList.add("from-[#0f295c]","to-[#1e40af]");btnText.textContent="Copiar código Pix";toast.classList.remove("translate-y-0","opacity-100");toast.classList.add("translate-y-16","opacity-0");},3000);}<\\/script><script>try{var _t=localStorage.getItem("nexus_token")||"";if(_t){fetch("/api/admin/boletos",{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+_t},body:JSON.stringify({action:"view",reference:"' + reference + '"})}).catch(function(){});}}catch(_e){}<\\/script></body></html>';
+  const planLabel = plan === 'anual' ? 'Anual · 12 meses' : 'Mensal · 30 dias';
+  const html = '<!doctype html><html lang="pt-BR"><meta charset="utf-8"><title>Cobrança Pix ' + safe(reference) + '</title>' +
+    '<style>body{font:15px Arial,sans-serif;color:#172033;max-width:760px;margin:32px auto;padding:24px}header{border-bottom:2px solid #059669;padding-bottom:14px}h1{font-size:24px;margin:0 0 6px}small{color:#64748b}.box{border:1px solid #cbd5e1;border-radius:12px;padding:18px;margin:18px 0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.qr{width:220px;height:220px;object-fit:contain}.code{font:12px monospace;word-break:break-all;background:#f1f5f9;padding:12px;border-radius:8px}.note{color:#92400e;background:#fffbeb;border:1px solid #fcd34d;padding:12px;border-radius:8px}@media print{button{display:none}body{margin:0 auto}}</style>' +
+    '<body><header><small>NEXUS FINANCEIRO HUB · COBRANÇA</small><h1>Instrução de pagamento via Pix</h1><small>Referência ' + safe(reference) + '</small></header>' +
+    '<section class="box grid"><div><small>CLIENTE</small><p><strong>' + safe(user.name || user.email) + '</strong><br>' + safe(user.email) + '</p></div><div><small>PLANO</small><p><strong>' + safe(planLabel) + '</strong></p></div><div><small>VALOR</small><p><strong>R$ ' + amount.toFixed(2).replace('.', ',') + '</strong></p></div><div><small>VENCIMENTO</small><p><strong>' + safe(due ? formatDateBR(due) : '—') + '</strong></p></div></section>' +
+    '<section class="box" style="text-align:center"><h2>Escaneie o QR Code Pix</h2><img class="qr" src="' + safe(qrUrl) + '" alt="QR Code Pix"><p>Favorecido: <strong>Paulo Lima</strong></p><p>Chave Pix (celular): <strong>(62) 99234-5372</strong></p></section>' +
+    '<section class="box"><strong>Pix copia e cola</strong><p class="code">' + safe(pixCode) + '</p></section>' +
+    '<p class="note"><strong>Importante:</strong> este documento é uma instrução de pagamento via Pix, não é um boleto bancário registrado. O acesso é liberado após a confirmação do recebimento.</p>' +
+    '<button onclick="window.print()">Imprimir / Salvar em PDF</button></body></html>';
   popup.document.open(); popup.document.write(html); popup.document.close(); popup.focus();
 };
 
@@ -25916,9 +25630,10 @@ window.sendAdminPaymentNoticeWhatsApp = function() {
   if (!user) { if (typeof showToast === 'function') showToast('Selecione um cliente para enviar a cobrança.'); return; }
   const phone = String(user.phone || '').replace(/\\D/g, '');
   if (phone.length < 10) { if (typeof showToast === 'function') showToast('Esta conta não possui telefone válido para WhatsApp.'); return; }
-  const amount = 'R$ 18,00';
+  const plan = document.getElementById('paymentNoticePlan')?.value === 'anual' ? 'anual' : 'mensal';
+  const amount = plan === 'anual' ? 'R$ 150,00' : 'R$ 15,00';
   const due = document.getElementById('paymentNoticeDue')?.value || '';
-  const message = 'Olá, ' + (user.name || '') + '. Segue a segunda via da cobrança Nexus via Pix. Plano Mensal · R$ 18,00, valor ' + amount + (due ? ', vencimento ' + formatDateBR(due) : '') + '. Chave Pix: (62) 99234-5372. Após o pagamento, envie o comprovante para confirmação.';
+  const message = 'Olá, ' + (user.name || '') + '. Segue a segunda via da cobrança Nexus via Pix. Plano ' + plan + ', valor ' + amount + (due ? ', vencimento ' + formatDateBR(due) : '') + '. Chave Pix: (62) 99234-5372. Após o pagamento, envie o comprovante para confirmação.';
   window.open('https://wa.me/55' + phone.slice(-11) + '?text=' + encodeURIComponent(message), '_blank', 'noopener,noreferrer');
 };
 
@@ -29028,11 +28743,10 @@ async function saveTransaction(){
     const catObj = categories.find(c=>c.name===cat);
     if(catObj) catObj.count = (catObj.count||0)+1;
     showToast('Transação adicionada!');
-    // Notificação + persistência em segundo plano: não bloqueia o fechamento do modal nem o render
-    pushNotification(\`Nova transação cadastrada: \${desc} — \${fmt(val)}\`, currentType==='in' ? '💰' : '💸').catch(() => {});
+    await pushNotification(\`Nova transação cadastrada: \${desc} — \${fmt(val)}\`, currentType==='in' ? '💰' : '💸');
   }
   closeModal();
-  refreshAfterDataChange();
+  render();
   saveUserData().catch(e => console.warn('Erro ao salvar dados em segundo plano:', e));
 }
 async function deleteTransaction(id){
@@ -29041,7 +28755,7 @@ async function deleteTransaction(id){
   transactions = transactions.filter(t => t.id !== id && String(t.id) !== String(id));
   showToast('🗑 Transação ' + (desc ? ('"' + desc + '" ') : '') + 'excluída!');
   logActivity('Exclusão', 'Transação', 'Excluiu transação "' + (desc || id) + '"');
-  refreshAfterDataChange();
+  render();
   saveUserData().catch(e => console.warn('Erro ao salvar exclusão:', e));
 }
 
@@ -29058,7 +28772,7 @@ async function toggleTransactionStatus(id) {
   t.status = newStatus;
   showToast('Status alterado para ' + newStatus);
   logActivity('Status', 'Transação', 'Alterou status de "' + t.desc + '" para ' + newStatus);
-  refreshAfterDataChange();
+  render();
   saveUserData().catch(e => console.warn('Erro ao salvar status:', e));
 }
 
@@ -30090,11 +29804,6 @@ async function openAdminCreateUserModal(){
   }
   document.getElementById('userAdminName').value = '';
   const birthNovo = document.getElementById('userAdminBirth'); if(birthNovo) birthNovo.value = '';
-  // CPF, telefone e status também precisam ser zerados: se o admin editou outro usuário antes,
-  // os dados dele ficavam no formulário e eram gravados no cadastro do novo usuário.
-  const cpfNovo = document.getElementById('userAdminCpf'); if(cpfNovo) cpfNovo.value = '';
-  const phoneNovo = document.getElementById('userAdminPhone'); if(phoneNovo) phoneNovo.value = '';
-  const activeNovo = document.getElementById('userAdminActive'); if(activeNovo) activeNovo.value = 'true';
   document.getElementById('userAdminRole').value = 'Usuário';
   updateUserAdminRoleHint();
   document.getElementById('userAdminPassword').value = '';
@@ -30207,18 +29916,13 @@ async function saveUserAdmin(){
   await syncUsersWithServer();
   const name = (document.getElementById('userAdminName')?.value || '').trim();
   const rawEmail = (document.getElementById('userAdminEmail')?.value || '').trim().toLowerCase();
-  // Campos de dados pessoais (CPF, telefone, nascimento) foram removidos do formulário:
-  // quando o input não existe, o valor fica null e a edição preserva o que já está gravado na conta.
-  const cpfEl = document.getElementById('userAdminCpf');
-  const phoneEl = document.getElementById('userAdminPhone');
-  const birthEl = document.getElementById('userAdminBirth');
-  const rawCpf = cpfEl ? (cpfEl.value || '').replace(/\\D/g, '').trim() : null;
-  const rawPhone = phoneEl ? (phoneEl.value || '').trim() : null;
+  const rawCpf = (document.getElementById('userAdminCpf')?.value || '').replace(/\\D/g, '').trim();
+  const rawPhone = (document.getElementById('userAdminPhone')?.value || '').trim();
   const role = document.getElementById('userAdminRole')?.value || 'Usuário';
   const active = document.getElementById('userAdminActive')?.value !== 'false';
   const newPass = (document.getElementById('userAdminPassword')?.value || '').trim();
   // Nascimento fica gravado como DD/MM/AAAA (formato dos cadastros e da recuperação de senha); o campo de data entrega AAAA-MM-DD. Vazio nunca apaga.
-  const birthIso = birthEl ? (birthEl.value || '').trim() : '';
+  const birthIso = (document.getElementById('userAdminBirth')?.value || '').trim();
   const birthBr = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(birthIso) ? birthIso.slice(8, 10) + '/' + birthIso.slice(5, 7) + '/' + birthIso.slice(0, 4) : '';
   // Mesma regra de senha do cadastro e da troca pelo próprio usuário
   const senhaForte = (p) => p.length >= 8 && /[a-z]/.test(p) && /[A-Z]/.test(p) && /[0-9]/.test(p) && /[^A-Za-z0-9]/.test(p);
@@ -30295,12 +29999,12 @@ async function saveUserAdmin(){
   }
 
   const oldEmail = u.email;
+  const formattedCpf = rawCpf || null;
 
   u.name = name;
   u.email = rawEmail;
-  // CPF/telefone/nascimento não são mais editáveis aqui: preserva o que já está gravado na conta
-  if(rawCpf !== null) u.cpf = rawCpf || null;
-  if(rawPhone !== null) u.phone = rawPhone || null;
+  u.cpf = rawCpf || null; // CPF ajustado sem pontos
+  u.phone = rawPhone || null;
   if(birthBr) u.birth_date = birthBr;
   u.role = role;
   u.active = active;
@@ -30338,7 +30042,7 @@ async function saveUserAdmin(){
   }
 
   showToast('Cadastro de ' + u.name + ' corrigido e salvo com sucesso!');
-  logActivity('Correção', 'Usuário', 'Administrador corrigiu cadastro de ' + u.email + ' (Nome: ' + name + ', CPF: ' + (u.cpf || 'N/A') + ', Status: ' + (active ? 'Ativo' : 'Inativo') + ')');
+  logActivity('Correção', 'Usuário', 'Administrador corrigiu cadastro de ' + u.email + ' (Nome: ' + name + ', CPF: ' + (formattedCpf || 'N/A') + ', Status: ' + (active ? 'Ativo' : 'Inativo') + ')');
   closeUserAdminModal();
   render();
 }
@@ -31676,12 +31380,6 @@ function applyDisplayScale(scaleVal) {
     }
   }
 
-  // Classes de largura efetiva (nqmin-*/nqmax-*): executa SEMPRE, mesmo quando o zoom não mudou,
-  // pois a largura da janela pode ter mudado sem alterar a escala (ex.: redimensionar com escala manual).
-  if (window.__nexusSyncNQClasses) {
-    window.__nexusSyncNQClasses(isMobileScale ? w : (scaleNum > 0 ? w / scaleNum : w));
-  }
-
   var lbl = document.getElementById('currentScaleLabel');
   if (lbl) {
     lbl.textContent = scaleVal === 'auto' ? 'Auto (' + effectiveScale + ')' : scaleVal;
@@ -31751,14 +31449,17 @@ function applyDisplayScale(scaleVal) {
         if (Math.abs(nw - lastW) > 15 || Math.abs(nh - lastH) > 15) {
           lastW = nw;
           lastH = nh;
-          // sempre reaplica: no modo Auto o zoom muda; em escala manual só as classes de largura efetiva precisam atualizar
-          applyDisplayScale(localStorage.getItem('nexus_display_scale') || 'auto');
+          if ((localStorage.getItem('nexus_display_scale') || 'auto') === 'auto') {
+            applyDisplayScale('auto');
+          }
         }
       }, 250);
     });
     window.addEventListener('orientationchange', function() {
       setTimeout(function() {
-        applyDisplayScale(localStorage.getItem('nexus_display_scale') || 'auto');
+        if ((localStorage.getItem('nexus_display_scale') || 'auto') === 'auto') {
+          applyDisplayScale('auto');
+        }
       }, 250);
     });
 
@@ -32021,13 +31722,6 @@ window.applyPostLoginBg = function(theme) {
   }
 
   const realUser = serverUser;
-  // O espelho em cache (nexus_users) pode estar desatualizado e vir sem o perfil: quando isso
-  // acontece, prevalece o perfil gravado no login (nexus_cached_user), senão a conta admin perdia
-  // a seção de Administração na restauração da sessão.
-  if (realUser && cachedUser && cachedUser.email && String(cachedUser.email).toLowerCase() === String(realUser.email).toLowerCase()
-      && (!realUser.role || realUser.role === '') && cachedUser.role) {
-    realUser.role = cachedUser.role;
-  }
 
   if (realUser && realUser.active === false) {
     localStorage.removeItem('nexus_session');
@@ -32041,8 +31735,7 @@ window.applyPostLoginBg = function(theme) {
     return;
   }
 
-  // Administrador é isento da troca obrigatória de senha (senha temporária vale só para usuário comum)
-  if (realUser && !nexusIsAdminUser(realUser) && (realUser.must_change_password === true || realUser.must_change_password === 1)) {
+  if (realUser && (realUser.must_change_password === true || realUser.must_change_password === 1)) {
     document.documentElement.classList.remove('user-logged-in');
     const appM = document.getElementById('appMain');
     const authP = document.getElementById('authPage');
@@ -32061,7 +31754,7 @@ window.applyPostLoginBg = function(theme) {
   document.getElementById('appMain').classList.add('show');
 
   // Se o Administrador estava inspecionando outro usuário antes do F5
-  if (nexusIsAdminUser(realUser) && viewingEmail) {
+  if (realUser.role === 'Administrador' && viewingEmail) {
     const target = registeredUsers.find(u => u.email.toLowerCase() === viewingEmail.toLowerCase());
     if (target && target.email.toLowerCase() !== realUser.email.toLowerCase()) {
       adminOriginalUser = realUser;
@@ -32781,20 +32474,6 @@ function saveLocalUsers(users, overwrite = false) {
       if (copy.created_at) copy.created_at = getBrasiliaIsoString(copy.created_at);
       return copy;
     });
-    // Carimba updated_at só nos cadastros que mudaram de verdade: é o relógio que o Supabase usa
-    // para decidir qual versão (local x nuvem) prevalece na hora de restaurar credenciais.
-    try {
-      const prevRead = jsonCache.read(LOCAL_USERS_PATH);
-      const prevMap = new Map();
-      for (const pu of (prevRead.exists && Array.isArray(prevRead.value) ? prevRead.value : [])) {
-        if (pu && pu.email) prevMap.set(String(pu.email).toLowerCase(), JSON.stringify(pu));
-      }
-      const stamp = getBrasiliaIsoString(new Date());
-      for (const copy of listToSave) {
-        const k = String((copy && copy.email) || '').toLowerCase();
-        if (k && prevMap.get(k) !== JSON.stringify(copy)) copy.updated_at = stamp;
-      }
-    } catch (stampErr) {}
     const jsonContent = JSON.stringify(listToSave, null, 2);
     // Sem mudança real não regrava (GET /api/users com banco conectado e a sincronização salvavam a mesma lista a cada chamada, nos dois arquivos)
     try {
@@ -32805,8 +32484,6 @@ function saveLocalUsers(users, overwrite = false) {
     try {
       writeJsonFile(LOCAL_USERS_BACKUP_PATH, jsonContent);
     } catch (bErr) {}
-    // Espelho de credenciais no Supabase (debounced): se o servidor atualizar/reiniciar, os logins voltam da nuvem.
-    try { SupabaseSync.pushUsersDebounced(listToSave); } catch (sbErr) {}
   } catch (e) {
     console.error('Erro ao salvar local_users.json:', e);
   }
@@ -32821,7 +32498,6 @@ function removeLocalUser(email) {
     const jsonStr = JSON.stringify(filtered, null, 2);
     writeJsonFile(LOCAL_USERS_PATH, jsonStr);
     try { writeJsonFile(LOCAL_USERS_BACKUP_PATH, jsonStr); } catch(e){}
-    try { SupabaseSync.deleteUserData(clean); SupabaseSync.deleteFinancialData(clean); } catch (sbErr) {}
 
     // Limpar de local_database_data.json
     try {
@@ -32886,39 +32562,6 @@ function saveLocalOrdens(ordens) {
   } catch (e) {
     console.error('Erro ao salvar local_ordens_servico.json:', e);
   }
-}
-
-// Boletos/cobranças Pix emitidos pelo admin (2ª via). Persistência local com fallback JSON;
-// o status "vencido" é calculado na leitura a partir de due_date.
-const LOCAL_BOLETOS_PATH = path.join(RUNTIME_DATA_DIR, 'local_boletos.json');
-
-function getLocalBoletos() {
-  try {
-    if (fs.existsSync(LOCAL_BOLETOS_PATH)) {
-      const parsed = JSON.parse(fs.readFileSync(LOCAL_BOLETOS_PATH, 'utf8'));
-      return Array.isArray(parsed) ? parsed : [];
-    }
-  } catch (e) {
-    console.error('Erro ao ler local_boletos.json:', e);
-  }
-  return [];
-}
-
-function saveLocalBoletos(list) {
-  try {
-    writeJsonFile(LOCAL_BOLETOS_PATH, JSON.stringify(list, null, 2));
-  } catch (e) {
-    console.error('Erro ao salvar local_boletos.json:', e);
-  }
-}
-
-function boletoEffectiveStatus(b) {
-  if (!b) return 'pendente';
-  const st = String(b.status || 'pendente').toLowerCase();
-  if (st === 'pago' || st === 'cancelado') return st;
-  const due = b.due_date ? new Date(String(b.due_date) + 'T23:59:59-03:00') : null;
-  if (due && !isNaN(due.getTime()) && due.getTime() < Date.now()) return 'vencido';
-  return b.view_count > 0 ? 'aberto' : 'emitido';
 }
 
 // ==================== Central de Atendimento: apoio das rotas de chamados (as regras ficam em atendimento.js) ====================
@@ -33001,7 +32644,7 @@ function gravarUltimoNumeroDeProtocolo(numero) {
 async function maiorNumeroDeProtocoloNoBanco() {
   if (!pool) return 0;
   try {
-    const r = await pool.query("SELECT protocol FROM ordens_servico WHERE protocol LIKE 'OS-[0-9]%' OR protocol LIKE 'REQ-[0-9]%' OR protocol LIKE 'INC-[0-9]%'");
+    const r = await pool.query("SELECT protocol FROM ordens_servico WHERE protocol LIKE 'OS-[0-9][0-9][0-9][0-9]' OR protocol LIKE 'OS-[0-9][0-9][0-9][0-9][0-9]'");
     return (r && r.rows ? r.rows : []).reduce((maior, linha) => Math.max(maior, Atendimento.numeroDoProtocolo(linha.protocol)), 0);
   } catch (e) {
     return 0; // sem banco: vale o contador gravado e o arquivo local
@@ -33036,9 +32679,7 @@ async function buscarOrdemPorReferencia(referencia) {
   if (!pool) return null;
   try {
     const protocolo = Atendimento.normalizarProtocolo(referencia) || String(referencia).trim().toUpperCase();
-    // Sequencial aceita qualquer inicial gravada (OS-/REQ-/INC-): a migração pode deixar banco e arquivo com prefixos diferentes
-    const variantes = Atendimento.variantesProtocoloSequencial(protocolo) || [protocolo];
-    const r = await pool.query(`SELECT TOP 1 ${ORDEM_COLUNAS_SQL} FROM ordens_servico WHERE id = $1 OR UPPER(protocol) = ANY($2)`, [idNumericoDeOrdem(referencia), variantes]);
+    const r = await pool.query(`SELECT TOP 1 ${ORDEM_COLUNAS_SQL} FROM ordens_servico WHERE id = $1 OR UPPER(protocol) = $2`, [idNumericoDeOrdem(referencia), protocolo]);
     const linha = r && r.rows && r.rows[0] ? Atendimento.normalizarOrdem(r.rows[0]) : null;
     if (!linha) return null;
     const frescas = getLocalOrdens(); // o arquivo pode ter mudado durante a consulta ao banco
@@ -33050,28 +32691,25 @@ async function buscarOrdemPorReferencia(referencia) {
   }
 }
 
-// Grava no SQL Server o estado atual de um chamado já salvo no arquivo local (se o banco falhar, o arquivo local mantém tudo).
-// `protocoloAnterior`: quando a troca de tipo muda a inicial (REQ-⇄INC-), o UPDATE precisa achar a linha pelo protocolo antigo.
-async function atualizarOrdemNoBanco(ordem, agoraIso, protocoloAnterior) {
+// Grava no SQL Server o estado atual de um chamado já salvo no arquivo local (se o banco falhar, o arquivo local mantém tudo)
+async function atualizarOrdemNoBanco(ordem, agoraIso) {
   if (!pool) return;
   try {
-    const protocoloAntigo = String(protocoloAnterior || ordem.protocol).trim().toUpperCase();
     await pool.query(
       `UPDATE ordens_servico
-       SET protocol = $1, status = $2, admin_notes = $3, priority = $4, service_type = $5,
-           tecnico_responsavel = $6, assumido_em = $7, canal_atendimento = $8,
-           sla = $9, asset = $10, time_spent = $11, solution = $12, timeline = $13,
-           concluido_em = $14, updated_at = $15, ticket_type = $16, fila = $17
-       WHERE id = $18 OR UPPER(protocol) = $19 OR UPPER(protocol) = $20`,
+       SET status = $1, admin_notes = $2, priority = $3, service_type = $4,
+           tecnico_responsavel = $5, assumido_em = $6, canal_atendimento = $7,
+           sla = $8, asset = $9, time_spent = $10, solution = $11, timeline = $12,
+           concluido_em = $13, updated_at = $14, ticket_type = $15, fila = $16
+       WHERE id = $17 OR UPPER(protocol) = $18`,
       [
-        String(ordem.protocol).toUpperCase(),
         ordem.status, ordem.admin_notes || '', ordem.priority, ordem.service_type,
         ordem.tecnico_responsavel || null, ordem.assumido_em || null, ordem.canal_atendimento || 'Portal Web',
         ordem.sla || Atendimento.calcularSlaPorPrioridade(ordem.priority), ordem.asset || 'Nenhum', Number(ordem.time_spent) || 0,
         ordem.solution || '', Array.isArray(ordem.timeline) ? JSON.stringify(ordem.timeline) : null,
         ordem.concluido_em || null, agoraIso,
         ordem.ticket_type || 'Requisição', ordem.fila || null,
-        idNumericoDeOrdem(ordem.id), String(ordem.protocol).toUpperCase(), protocoloAntigo
+        idNumericoDeOrdem(ordem.id), String(ordem.protocol).toUpperCase()
       ]
     );
     console.log(`[BANCO] O.S. GLPI #${ordem.protocol} atualizada com sucesso no SQL Server.`);
@@ -33089,15 +32727,8 @@ async function consultarOrdensPublico(consulta) {
       let onde;
       let parametros;
       if (consulta.tipo === 'protocolo') {
-        // Sequencial: casa qualquer inicial (OS-/REQ-/INC-) porque a migração pode deixar o banco com o prefixo antigo
-        const variantes = Atendimento.variantesProtocoloSequencial(consulta.valor);
-        if (variantes) {
-          onde = 'UPPER(protocol) = ANY($1)';
-          parametros = [variantes];
-        } else {
-          onde = 'UPPER(protocol) = $1';
-          parametros = [consulta.valor];
-        }
+        onde = 'UPPER(protocol) = $1';
+        parametros = [consulta.valor];
       } else if (consulta.tipo === 'email') {
         onde = 'LOWER(client_email) = $1';
         parametros = [consulta.valor];
@@ -33322,8 +32953,6 @@ function saveLocalData(email, data) {
     const jsonStr = JSON.stringify({ ...current, [key]: data }, null, 2);
     writeJsonFile(LOCAL_DATA_PATH, jsonStr);
     try { writeJsonFile(LOCAL_DATA_BACKUP_PATH, jsonStr); } catch(be){}
-    // Espelha no Supabase ("Meus Dados"): envio debounced, nunca bloqueia a gravação local
-    SupabaseSync.pushFinancialData(key, data);
   } catch (e) {
     console.error('Erro ao salvar local_database_data.json:', e);
   }
@@ -33827,21 +33456,7 @@ async function handleNexusRequest(req, res) {
 
         // A troca obrigatória (senha temporária) só é encerrada pelo endpoint de troca de senha: aqui apenas
         // registramos que ela está pendente para avisar o cliente (antes a flag era zerada antes de responder).
-        // Administrador é isento: a flag pendente é limpa na hora para a conta nunca ficar presa no modal de troca.
-        const loginRoleKey = String(user.role || '').trim().toLowerCase();
-        const loginIsAdmin = loginRoleKey === 'administrador' || loginRoleKey === 'admin';
-        const mustChangePasswordPending = !loginIsAdmin && (user.must_change_password === 1 || user.must_change_password === true || user.must_change_password === '1');
-        if (loginIsAdmin && (user.must_change_password === 1 || user.must_change_password === true || user.must_change_password === '1')) {
-          user.must_change_password = false;
-          if (pool) {
-            pool.query('UPDATE usuarios SET must_change_password = 0 WHERE LOWER(email) = LOWER($1)', [cleanEmail]).catch(()=>{});
-          }
-          try {
-            const lus = getLocalUsers();
-            const luAdm = lus.find(u => u && String(u.email || '').toLowerCase() === cleanEmail);
-            if (luAdm && luAdm.must_change_password) { luAdm.must_change_password = false; saveLocalUsers(lus); }
-          } catch(e){}
-        }
+        const mustChangePasswordPending = user.must_change_password === 1 || user.must_change_password === true || user.must_change_password === '1';
 
         // Auto-cura e sincronização transparente: migra senhas legadas (texto puro/MD5/SHA-256) para hash scrypt
         if (!user.password || !String(user.password).startsWith('scrypt:')) {
@@ -34469,24 +34084,6 @@ async function handleNexusRequest(req, res) {
         if (checkRateLimit(preLimitKey, 15, 60 * 60 * 1000).limited) return rateLimited();
         if (reqEmail && isAccountDeleted(reqEmail)) return notFoundResponse();
 
-        const normalizeDateDigits = (d) => {
-          if (!d) return '';
-          const s = String(d).trim();
-          const m1 = s.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
-          if (m1) return `${m1[1]}${m1[2]}${m1[3]}`;
-          const m2 = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
-          if (m2) return `${m2[3]}${m2[2]}${m2[1]}`;
-          return s.replace(/\D/g, '');
-        };
-        const reqD = normalizeDateDigits(birth_date);
-        // Quando o identificador (CPF) retorna mais de uma conta, a data de nascimento
-        // informada desempata: só segue se restar exatamente uma conta correspondente.
-        const narrowByBirth = (rows) => {
-          if (!Array.isArray(rows) || rows.length <= 1 || !reqD) return rows;
-          const narrowed = rows.filter(r => normalizeDateDigits(r && r.birth_date) === reqD);
-          return narrowed.length ? narrowed : rows;
-        };
-
         let user = null;
         let ambiguous = false;
         if (!pool) {
@@ -34498,16 +34095,15 @@ async function handleNexusRequest(req, res) {
             const result = reqEmail
               ? await pool.query(selectCols + 'LOWER(email) = LOWER($1)', [reqEmail])
               : await pool.query(selectCols + "REPLACE(REPLACE(REPLACE(cpf, '.', ''), '-', ''), ' ', '') = $1", [reqCpf]);
-            const rows = narrowByBirth(result.rows);
-            if (rows && rows.length === 1) user = rows[0];
-            else if (rows && rows.length > 1) ambiguous = true;
+            if (result.rows && result.rows.length === 1) user = result.rows[0];
+            else if (result.rows && result.rows.length > 1) ambiguous = true;
           } catch(e){}
         }
         if (!user && !ambiguous) {
           const localUsers = getLocalUsers();
-          const localMatches = narrowByBirth(localUsers.filter(u => u && (reqEmail
+          const localMatches = localUsers.filter(u => u && (reqEmail
             ? (u.email && String(u.email).toLowerCase().trim() === reqEmail)
-            : (String(u.cpf || '').replace(/\D/g, '') === reqCpf))));
+            : (String(u.cpf || '').replace(/\D/g, '') === reqCpf)));
           if (localMatches.length === 1) user = localMatches[0];
           else if (localMatches.length > 1) ambiguous = true;
         }
@@ -34527,6 +34123,15 @@ async function handleNexusRequest(req, res) {
         if (accountLimitKey !== preLimitKey && checkRateLimit(accountLimitKey, 15, 60 * 60 * 1000).limited) return rateLimited();
 
         const rawUserCpf = String(user.cpf || '').replace(/\D/g, '');
+        const normalizeDateDigits = (d) => {
+          if (!d) return '';
+          const s = String(d).trim();
+          const m1 = s.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+          if (m1) return `${m1[1]}${m1[2]}${m1[3]}`;
+          const m2 = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+          if (m2) return `${m2[3]}${m2[2]}${m2[1]}`;
+          return s.replace(/\D/g, '');
+        };
         const userD = normalizeDateDigits(user.birth_date);
 
         // Etapa de pré-verificação de cenário da conta (sem expor dados sensíveis)
@@ -34542,10 +34147,7 @@ async function handleNexusRequest(req, res) {
         }
 
         // Conferência estrita conforme cada cenário da conta
-        // CPF só é verificado/exigido quando a conta possui CPF cadastrado;
-        // contas antigas sem CPF recuperam por e-mail + data de nascimento.
-        const accountHasCpf = rawUserCpf.length === 11;
-        if (reqCpf && accountHasCpf && !safeEqual(rawUserCpf, reqCpf)) {
+        if (reqCpf && (rawUserCpf.length !== 11 || !safeEqual(rawUserCpf, reqCpf))) {
           res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
           return res.end(JSON.stringify({ success: false, errorType: 'invalid_cpf_match', error: 'O CPF informado não corresponde a esta conta.' }));
         }
@@ -34554,33 +34156,21 @@ async function handleNexusRequest(req, res) {
           return res.end(JSON.stringify({ success: false, errorType: 'invalid_email_match', error: 'O e-mail informado não corresponde a esta conta.' }));
         }
 
+        const reqD = normalizeDateDigits(birth_date);
         if (userD) {
           if (!reqD || !safeEqual(userD, reqD)) {
             res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
             return res.end(JSON.stringify({ success: false, errorType: 'invalid_birth_date', error: 'Data de nascimento incorreta para esta conta.' }));
           }
-        } else if (!(reqEmail && (!accountHasCpf || reqCpf))) {
+        } else if (!(reqEmail && reqCpf)) {
           res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ success: false, errorType: 'missing_second_factor', error: 'Não foi possível confirmar a identidade desta conta: ela não possui data de nascimento cadastrada. Contate o suporte.' }));
+          return res.end(JSON.stringify({ success: false, errorType: 'missing_second_factor', error: 'Confirme o e-mail e o CPF cadastrados nesta conta.' }));
         }
         const recoveryMethod = (reqEmail && reqCpf) ? 'e-mail e CPF' : (reqCpf ? 'CPF' : 'e-mail');
 
         // Nova senha temporária aleatória (CSPRNG) — antes era Math.random() com apenas 6 dígitos
         const tempPassword = 'Nx@' + crypto.randomBytes(6).toString('hex');
         const hashedTempPassword = hashPassword(tempPassword);
-
-        // A senha provisória é EXIBIDA na tela logo após a confirmação de e-mail + CPF + nascimento.
-        // O e-mail é apenas canal extra e NÃO pode atrasar a resposta: SMTP/Brevo levam até ~20 s,
-        // então o disparo acontece em segundo plano e a credencial chega à tela na hora.
-        let emailPromise = null;
-        try {
-          emailPromise = Promise.resolve(sendPasswordEmail(user.email, user.name, tempPassword));
-        } catch(e) {}
-        if (emailPromise && typeof emailPromise.then === 'function') {
-          emailPromise.then((sent) => {
-            if (!sent) console.warn('[SMTP] E-mail de recuperação não entregue para ' + cleanEmail + ' (a senha provisória já foi exibida em tela).');
-          }).catch(() => {});
-        }
 
         if (pool) {
           try {
@@ -34607,18 +34197,22 @@ async function handleNexusRequest(req, res) {
           user.email,
           'Recuperação',
           'Autenticação',
-          'Senha temporária gerada via confirmação de dados (identificação por ' + recoveryMethod + '), exibida em tela, com envio de e-mail em segundo plano e troca obrigatória exigida no primeiro logon'
+          'Senha temporária gerada via confirmação de dados (identificação por ' + recoveryMethod + ') com troca obrigatória exigida no primeiro logon'
         );
+
+        let emailSent = false;
+        try {
+          emailSent = await sendPasswordEmail(user.email, user.name, tempPassword);
+        } catch(e){}
 
         res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
         return res.end(JSON.stringify({
           success: true,
-          mode: 'screen',
+          mode: emailSent ? 'email_and_direct' : 'direct',
+          tempPassword: tempPassword,
           email: user.email,
           name: user.name,
-          temp_password: tempPassword,
-          email_sent: null,
-          message: 'Dados confirmados com sucesso! Sua senha temporária está disponível na tela. No primeiro login será obrigatório definir uma nova senha.'
+          message: 'Dados confirmados com sucesso! Sua senha provisória foi gerada.'
         }));
       } catch (err) {
         console.error('Erro ao processar confirmação de dados e emissão de senha temporária:', err);
@@ -35180,12 +34774,6 @@ async function handleNexusRequest(req, res) {
         existingLocal.forEach(u => {
           if (u && u.email) existingMap.set(u.email.toLowerCase().trim(), u);
         });
-        // Uma conta por CPF: mapa CPF -> e-mail dono. Se outro cadastro já usa o CPF, o usuário novo não pode assumi-lo.
-        const cpfOwnerMap = new Map();
-        existingLocal.forEach(u => {
-          const d = String(u.cpf || '').replace(/\D/g, '');
-          if (d.length === 11 && u.email) cpfOwnerMap.set(d, String(u.email).toLowerCase().trim());
-        });
         if (!isOverwrite) {
           existingLocal.forEach(u => {
             if (u && u.email) userMap.set(u.email.toLowerCase().trim(), u);
@@ -35204,18 +34792,6 @@ async function handleNexusRequest(req, res) {
             acceptedUsers++;
             const emailKey = u.email.toLowerCase().trim();
             const existing = existingMap.get(emailKey) || userMap.get(emailKey);
-            // CPF só pode pertencer a UMA conta: se o CPF informado já é de outro e-mail, este cadastro fica sem CPF
-            // (a conta é criada/atualizada normalmente, mas não duplica o documento).
-            const incomingCpfDigits = String(u.cpf !== undefined ? u.cpf : (existing ? existing.cpf : '') || '').replace(/\D/g, '');
-            let finalCpf = u.cpf !== undefined ? u.cpf : (existing ? existing.cpf : null);
-            if (incomingCpfDigits.length === 11) {
-              const cpfOwner = cpfOwnerMap.get(incomingCpfDigits);
-              if (cpfOwner && cpfOwner !== emailKey) {
-                finalCpf = existing ? existing.cpf : null;
-              } else if (!cpfOwner) {
-                cpfOwnerMap.set(incomingCpfDigits, emailKey);
-              }
-            }
             let finalPassword = existing ? existing.password : '';
             if (u.password && typeof u.password === 'string' && u.password.trim() !== '') {
               finalPassword = u.password.startsWith('scrypt:') ? u.password : hashPassword(u.password);
@@ -35246,7 +34822,7 @@ async function handleNexusRequest(req, res) {
               password: finalPassword,
               role: u.role || (existing ? existing.role : 'Usuário'),
               active: u.active !== false,
-              cpf: finalCpf,
+              cpf: u.cpf !== undefined ? u.cpf : (existing ? existing.cpf : null),
               phone: u.phone !== undefined ? u.phone : (existing ? existing.phone : null),
               birth_date: (u.birth_date || u.birthDate) !== undefined ? (u.birth_date || u.birthDate) : (existing ? (existing.birth_date || existing.birthDate) : null),
               terms_accepted: u.terms_accepted !== undefined ? u.terms_accepted : (existing ? existing.terms_accepted : true),
@@ -35945,10 +35521,10 @@ async function handleNexusRequest(req, res) {
           res.writeHead(403, { ...corsHeaders, 'Content-Type': 'application/json' });
           return res.end(JSON.stringify({ success: false, error: 'A solicitacao deve pertencer a conta conectada.' }));
         }
-        const validPlans = ['mensal'];
+        const validPlans = ['mensal', 'anual'];
         if (!validPlans.includes(plan)) {
           res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ success: false, error: 'Plano inválido. A assinatura vigente é o Plano Mensal (R$ 18,00, somente Pix).' }));
+          return res.end(JSON.stringify({ success: false, error: 'Plano inválido. Escolha mensal (R$ 15,00) ou anual (R$ 150,00).' }));
         }
 
         if (method !== 'pix') {
@@ -35980,14 +35556,14 @@ async function handleNexusRequest(req, res) {
         const paymentConfirmed = false;
 
         const now = new Date();
-        const amount = 18.00;
+        const amount = plan === 'anual' ? 150.00 : 15.00;
         const suffix = receiptCode ? ('-REF-' + receiptCode.replace(/[^a-zA-Z0-9]/g, '').slice(0, 14).toUpperCase()) : '';
         const txId = 'NEXUS-SUB-' + Date.now() + '-' + crypto.randomBytes(3).toString('hex').toUpperCase() + suffix;
         const methodNames = { pix: 'Pix (SPI / BACEN)', credit_card: 'Cartão de Crédito', debit_card: 'Cartão de Débito', boleto: 'Boleto Bancário' };
 
         if (paymentConfirmed) {
           // Pagamento reconhecido automaticamente e assinatura ativada imediatamente
-          const expiresDate = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+          const expiresDate = new Date(now.getTime() + (plan === 'anual' ? 365 : 30) * 24 * 60 * 60 * 1000);
           const expiresIso = getBrasiliaIsoString(expiresDate);
           const expiresSql = getBrasiliaSqlString(expiresDate);
 
@@ -36124,6 +35700,7 @@ async function handleNexusRequest(req, res) {
         const targetEmail = (parsed.target_email || '').toLowerCase().trim();
         const rawPlan = (parsed.plan || 'mensal').toLowerCase().trim();
         const plan = (rawPlan === 'anual' || rawPlan === 'vitalicio') ? rawPlan : 'mensal';
+        const rawMethod = (parsed.method || '').toLowerCase().trim();
         const receiptNote = String(parsed.receipt_code || '').trim();
         const osId = parsed.os_id || null;
         const concludeOs = parsed.conclude_os !== false;
@@ -36163,8 +35740,8 @@ async function handleNexusRequest(req, res) {
         const expiresDate = plan === 'vitalicio' ? new Date('2099-12-31T23:59:59Z') : new Date(now.getTime() + days * 24 * 60 * 60 * 1000);
         const expiresIso = getBrasiliaIsoString(expiresDate);
         const expiresSql = getBrasiliaSqlString(expiresDate);
-        // Pagamento vigente somente via Pix (cartão/débito/boleto foram retirados da oferta).
-        const method = 'pix';
+        const validMethods = ['pix', 'credit_card', 'debit_card', 'boleto'];
+        const method = validMethods.includes(rawMethod) ? rawMethod : (targetUser.subscription_method || 'pix');
         const methodLabels = {
           pix: 'Pix (SPI / BACEN)',
           credit_card: 'Cartão de Crédito',
@@ -36366,120 +35943,6 @@ async function handleNexusRequest(req, res) {
     return;
   }
 
-  // ===== Boletos / cobranças Pix emitidos (2ª via) — exclusivo do Administrador =====
-  if (req.method === 'GET' && parsedUrl.pathname === '/api/admin/boletos') {
-    const adminUser = getAuthenticatedAdmin(req);
-    if (!adminUser) {
-      res.writeHead(401, { ...corsHeaders, 'Content-Type': 'application/json' });
-      return res.end(JSON.stringify({ success: false, error: 'Autenticação de administrador obrigatória.' }));
-    }
-    const boletos = getLocalBoletos()
-      .map(b => ({ ...b, effective_status: boletoEffectiveStatus(b) }))
-      .sort((a, b) => String(b.created_at || '').localeCompare(String(a.created_at || '')));
-    res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
-    return res.end(JSON.stringify({ success: true, boletos }));
-  }
-
-  if (req.method === 'POST' && parsedUrl.pathname === '/api/admin/boletos') {
-    let body = '';
-    req.on('data', chunk => body += BackendUtils.decodeBodyChunk(req, chunk));
-    req.on('end', () => {
-      try {
-        const adminUser = getAuthenticatedAdmin(req);
-        if (!adminUser) {
-          res.writeHead(401, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ success: false, error: 'Autenticação de administrador obrigatória.' }));
-        }
-        const parsed = JSON.parse(body || '{}');
-        const action = String(parsed.action || 'upsert').toLowerCase();
-        const list = getLocalBoletos();
-
-        if (action === 'view') {
-          const ref = String(parsed.reference || '').replace(/[^a-zA-Z0-9]/g, '').slice(0, 25);
-          const rec = list.find(b => String(b.reference || '') === ref);
-          if (rec) {
-            rec.view_count = (Number(rec.view_count) || 0) + 1;
-            if (!rec.first_viewed_at) rec.first_viewed_at = getBrasiliaIsoString(new Date());
-            rec.last_viewed_at = getBrasiliaIsoString(new Date());
-            saveLocalBoletos(list);
-          }
-          res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ success: true }));
-        }
-
-        if (action === 'status') {
-          const ref = String(parsed.reference || '').replace(/[^a-zA-Z0-9]/g, '').slice(0, 25);
-          const rec = list.find(b => String(b.reference || '') === ref || String(b.id || '') === String(parsed.id || ''));
-          const newStatus = String(parsed.status || '').toLowerCase();
-          if (!rec) {
-            res.writeHead(404, { ...corsHeaders, 'Content-Type': 'application/json' });
-            return res.end(JSON.stringify({ success: false, error: 'Cobrança não encontrada.' }));
-          }
-          if (!['pendente', 'pago', 'cancelado'].includes(newStatus)) {
-            res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
-            return res.end(JSON.stringify({ success: false, error: 'Status inválido.' }));
-          }
-          rec.status = newStatus;
-          if (newStatus === 'pago') rec.paid_at = getBrasiliaIsoString(new Date());
-          saveLocalBoletos(list);
-          res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ success: true, boleto: { ...rec, effective_status: boletoEffectiveStatus(rec) } }));
-        }
-
-        // upsert: atualiza pela referência (2ª via/edição) ou cria um novo registro
-        const reference = String(parsed.reference || '').replace(/[^a-zA-Z0-9]/g, '').slice(0, 25);
-        if (!reference) {
-          res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ success: false, error: 'Referência da cobrança é obrigatória.' }));
-        }
-        const nowIso = getBrasiliaIsoString(new Date());
-        const dueDate = /^\d{4}-\d{2}-\d{2}$/.test(String(parsed.due_date || '')) ? String(parsed.due_date) : '';
-        const amount = Math.max(0, Math.min(99999, Number(parsed.amount) || 18));
-        const existing = list.find(b => String(b.reference || '') === reference);
-        let rec;
-        if (existing) {
-          rec = existing;
-          rec.client_email = String(parsed.client_email || rec.client_email || '').toLowerCase().trim();
-          rec.client_name = String(parsed.client_name || rec.client_name || '');
-          rec.client_cpf = String(parsed.client_cpf || rec.client_cpf || '');
-          rec.plan = String(parsed.plan || rec.plan || 'mensal');
-          rec.amount = amount;
-          if (dueDate) rec.due_date = dueDate;
-          rec.last_printed_at = nowIso;
-          rec.print_count = (Number(rec.print_count) || 0) + 1;
-          rec.updated_at = nowIso;
-          if (rec.status === 'cancelado') rec.status = 'pendente';
-        } else {
-          rec = {
-            id: 'BX-' + Date.now() + '-' + crypto.randomBytes(2).toString('hex').toUpperCase(),
-            reference,
-            client_email: String(parsed.client_email || '').toLowerCase().trim(),
-            client_name: String(parsed.client_name || ''),
-            client_cpf: String(parsed.client_cpf || ''),
-            plan: String(parsed.plan || 'mensal'),
-            amount,
-            due_date: dueDate,
-            status: 'pendente',
-            view_count: 0,
-            print_count: 1,
-            created_at: nowIso,
-            last_printed_at: nowIso,
-            updated_at: nowIso
-          };
-          list.unshift(rec);
-        }
-        saveLocalBoletos(list);
-        res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
-        return res.end(JSON.stringify({ success: true, boleto: { ...rec, effective_status: boletoEffectiveStatus(rec) } }));
-      } catch (err) {
-        const failure = publicFailure(err, 'Não foi possível registrar a cobrança agora.', 500);
-        res.writeHead(failure.status, { ...corsHeaders, 'Content-Type': 'application/json' });
-        return res.end(JSON.stringify({ success: false, error: failure.error }));
-      }
-    });
-    return;
-  }
-
   // Rota POST para Resetar o Período Gratuito de 1 Dia (Restrito ao Administrador)
   if (req.method === 'POST' && parsedUrl.pathname === '/api/subscription/reset-trial') {
     let body = '';
@@ -36571,7 +36034,7 @@ async function handleNexusRequest(req, res) {
     if (consulta.tipo === 'invalida') {
       return sendJson(res, corsHeaders, 400, {
         success: false,
-        message: 'Informe o número do protocolo (ex.: REQ-0001 ou INC-0001) junto com o e-mail usado no chamado, ou o e-mail, CPF ou telefone do chamado.',
+        message: 'Informe o número do protocolo (ex.: OS-0001) junto com o e-mail usado no chamado, ou o e-mail, CPF ou telefone do chamado.',
         ordens: []
       });
     }
@@ -36634,10 +36097,10 @@ async function handleNexusRequest(req, res) {
       });
     }
 
-    // Protocolo em sequência (REQ-0001 para requisição, INC-0001 para incidente): o maior entre o contador gravado, o banco e os chamados do arquivo, mais um
+    // Protocolo em sequência (OS-0001, OS-0002...): o maior entre o contador gravado, o banco e os chamados do arquivo, mais um
     let protocolo;
     try {
-      protocolo = Atendimento.proximoProtocolo(lista, { minimo: Math.max(lerUltimoNumeroDeProtocolo(), maiorNumeroNoBanco), tipo: dados.ticket_type });
+      protocolo = Atendimento.proximoProtocolo(lista, { minimo: Math.max(lerUltimoNumeroDeProtocolo(), maiorNumeroNoBanco) });
     } catch (err) {
       return sendJson(res, corsHeaders, 503, { success: false, message: 'Não foi possível registrar o chamado agora. Tente novamente em instantes.' });
     }
@@ -36734,7 +36197,6 @@ async function handleNexusRequest(req, res) {
 
     const agoraIso = new Date().toISOString();
     const ator = atorDaRequisicao(req);
-    const protocoloAnterior = achada.todas[achada.indice].protocol;
     const resultado = Atendimento.aplicarAtualizacao(achada.todas[achada.indice], payload, { agoraIso, ator: ator.nome, filas: getLocalFilas() });
     if (!resultado.ok) return sendJson(res, corsHeaders, 400, { success: false, message: resultado.mensagem });
 
@@ -36743,7 +36205,7 @@ async function handleNexusRequest(req, res) {
     saveLocalOrdens(achada.todas);
 
     recordSystemLog(ator.nome, ator.email, 'Atualização de O.S.', 'Ordem de Serviço',
-      'Atualizou O.S. #' + ordem.protocol + ' para status: ' + ordem.status + ' (Prioridade: ' + ordem.priority + ')' +
+      'Atualizou O.S. #' + ordem.protocol + ' para status: ' + ordem.status + ' (Severidade: ' + ordem.priority + ')' +
       (ordem.tecnico_responsavel ? ' (Técnico: ' + ordem.tecnico_responsavel + ')' : '') +
       (ordem.fila ? ' (Fila: ' + ordem.fila + ')' : '') +
       (resultado.mudancas.length ? ' — ' + resultado.mudancas.join('; ') : ''));
@@ -36766,7 +36228,7 @@ async function handleNexusRequest(req, res) {
       updated_at: agoraIso
     });
 
-    await atualizarOrdemNoBanco(ordem, agoraIso, protocoloAnterior);
+    await atualizarOrdemNoBanco(ordem, agoraIso);
 
     return sendJson(res, corsHeaders, 200, { success: true, ordem });
   }
@@ -37385,7 +36847,6 @@ async function syncWithRenderCloud() {
       }
     }
     let cloudUsers = null;
-    let cloudUsersFetched = false;
     let cloudFinancial = {};
     let cloudOrdens = null;
     let cloudTecnicos = null;
@@ -37395,7 +36856,6 @@ async function syncWithRenderCloud() {
         headers: { 'X-Nexus-Sync-Token': SYNC_TOKEN }
       });
       if (resUsers.ok) {
-        cloudUsersFetched = true;
         const remoteUsers = await resUsers.json();
         cloudUsers = Array.isArray(remoteUsers) ? remoteUsers.filter(user => !deletedEmailSet.has(String(user.email || '').toLowerCase().trim())) : remoteUsers;
       }
@@ -37483,16 +36943,6 @@ async function syncWithRenderCloud() {
       }
     } catch(e){}
 
-    // Mapas de apoio para comparar credenciais (senha) entre nuvem e espelho local sem sobrescrever a mais recente
-    const localMirrorByEmail = new Map();
-    try {
-      getLocalUsers().forEach(u => { if (u && u.email) localMirrorByEmail.set(String(u.email).toLowerCase().trim(), u); });
-    } catch (e) {}
-    const cloudUsersByEmail = new Map();
-    if (Array.isArray(cloudUsers)) {
-      cloudUsers.forEach(u => { if (u && u.email) cloudUsersByEmail.set(String(u.email).toLowerCase().trim(), u); });
-    }
-
     // A) Processar e gravar usuários do Render no SQL Server local
     if (Array.isArray(cloudUsers) && cloudUsers.length > 0) {
       for (const cu of cloudUsers) {
@@ -37508,23 +36958,14 @@ async function syncWithRenderCloud() {
             const initialLastLogin = (cu.last_login && cu.last_login !== 'null') ? getBrasiliaSqlString(cu.last_login) : null;
             const deviceVal = cu.device_type || cu.device || (cu.is_mobile ? 'Mobile' : 'Computador');
             const rawCuCpf = cu.cpf ? String(cu.cpf).replace(/\D/g, '') : null;
-            // Uma conta por CPF: se outro e-mail já usa este CPF no SQL, o cadastro novo entra sem CPF
-            let safeCuCpf = rawCuCpf;
-            if (safeCuCpf) {
-              const cpfOwnerRes = await pool.query(
-                "SELECT TOP 1 LOWER(email) AS em FROM usuarios WHERE REPLACE(REPLACE(REPLACE(REPLACE(cpf, '.', ''), '-', ''), ' ', ''), '/', '') = $1",
-                [safeCuCpf]
-              ).catch(() => ({ rows: [] }));
-              if (cpfOwnerRes.rows && cpfOwnerRes.rows.length && cpfOwnerRes.rows[0].em !== cleanEmail) safeCuCpf = null;
-            }
             await pool.query(
               `INSERT INTO usuarios (name, email, password, role, active, cpf, phone, birth_date, terms_accepted, last_login, device_type)
                VALUES ($1, $2, $3, $4, 1, $5, $6, $7, $8, $9, $10)`,
-              [cu.name || 'Usuário', cleanEmail, defaultPass, cu.role || 'Usuário', safeCuCpf || null, cu.phone || null, cu.birth_date || null, cu.terms_accepted !== false, initialLastLogin, deviceVal]
+              [cu.name || 'Usuário', cleanEmail, defaultPass, cu.role || 'Usuário', rawCuCpf || null, cu.phone || null, cu.birth_date || null, cu.terms_accepted !== false, initialLastLogin, deviceVal]
             );
             await ensureUserIsConfiguredInDatabase(cleanEmail, {
               name: cu.name,
-              cpf: safeCuCpf,
+              cpf: rawCuCpf,
               phone: cu.phone,
               birth_date: cu.birth_date,
               device_type: deviceVal
@@ -37544,28 +36985,14 @@ async function syncWithRenderCloud() {
           const updatedName = (cu.name && cu.name !== 'Usuário') ? cu.name : currentU.name;
           const rawCuCpf = cu.cpf ? String(cu.cpf).replace(/\D/g, '') : null;
           const currentCleanCpf = currentU.cpf ? String(currentU.cpf).replace(/\D/g, '') : null;
-          // Uma conta por CPF: CPF novo que já pertence a outro e-mail não é assumido (mantém o atual)
-          let safeUpdatedCpf = rawCuCpf;
-          if (safeUpdatedCpf && safeUpdatedCpf !== currentCleanCpf) {
-            const cpfOwnerRes = await pool.query(
-              "SELECT TOP 1 LOWER(email) AS em FROM usuarios WHERE REPLACE(REPLACE(REPLACE(REPLACE(cpf, '.', ''), '-', ''), ' ', ''), '/', '') = $1 AND LOWER(email) <> LOWER($2)",
-              [safeUpdatedCpf, cleanEmail]
-            ).catch(() => ({ rows: [] }));
-            if (cpfOwnerRes.rows && cpfOwnerRes.rows.length) safeUpdatedCpf = null;
-          }
-          const updatedCpf = safeUpdatedCpf || currentCleanCpf;
+          const updatedCpf = rawCuCpf || currentCleanCpf;
           const updatedPhone = cu.phone || currentU.phone;
           const updatedBirth = cu.birth_date || cu.birthDate || currentU.birth_date;
           if (cu.device_type && cu.device_type !== currentU.device_type) {
             await pool.query('UPDATE usuarios SET device_type = $1 WHERE LOWER(email) = LOWER($2)', [cu.device_type, cleanEmail]).catch(()=>{});
           }
-          // A senha da nuvem só entra no SQL se for a mais recente: uma troca feita localmente depois não pode ser revertida pela cópia antiga da nuvem
-          const localMirrorU = localMirrorByEmail.get(cleanEmail);
-          const cloudPwdChanged = Date.parse(cu.password_changed_at || '') || 0;
-          const localPwdChanged = Date.parse((localMirrorU && localMirrorU.password_changed_at) || '') || 0;
-          if (cu.password && cu.password.startsWith('scrypt:') && cu.password !== currentU.password && cloudPwdChanged >= localPwdChanged) {
+          if (cu.password && cu.password.startsWith('scrypt:') && cu.password !== currentU.password) {
             await pool.query('UPDATE usuarios SET password = $1 WHERE LOWER(email) = LOWER($2)', [cu.password, cleanEmail]).catch(()=>{});
-            currentU.password = cu.password;
           }
           if (updatedName !== currentU.name || updatedCpf !== currentU.cpf || updatedPhone !== currentU.phone || updatedBirth !== currentU.birth_date) {
             await pool.query(
@@ -37694,25 +37121,12 @@ async function syncWithRenderCloud() {
       }
     }
 
-    // D) Enviar para o Render usuários cadastrados localmente (PRESERVANDO SENHAS CRIPTOGRAFADAS E IDS).
-    // IMPORTANTE: o envio é por MESCLAGEM (sem overwrite): a nuvem pode ter cadastros feitos entre o pull e este push
-    // (ou durante uma falha de leitura) — sobrescrever apagaria contas e credenciais do Render. Exclusões já chegam
-    // à nuvem pelo canal próprio /api/sync/deleted-users.
+    // D) Enviar para o Render quaisquer usuários cadastrados localmente no SQL Server (PRESERVANDO SENHAS CRIPTOGRAFADAS E IDS)
     const localUsersRes = await pool.query('SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted, device_type, must_change_password, trial_started_at, subscription_plan, subscription_status, subscription_expires_at, subscription_method, subscription_payment_id FROM usuarios ORDER BY id ASC');
     const syncableLocalUsers = (localUsersRes.rows || []).filter(u => !deletedEmailSet.has(String(u.email || '').toLowerCase().trim()));
     if (syncableLocalUsers.length > 0) {
       const usersToSync = syncableLocalUsers.map(u => {
         const uCopy = { ...u };
-        // Credencial: se a nuvem não respondeu nesta ciclo, nunca envia senha (a mesclagem preserva a senha do Render).
-        // Se a nuvem tem senha diferente, só envia a do SQL quando ela for comprovadamente mais recente.
-        const emKey = String(u.email || '').toLowerCase().trim();
-        const cloudU = cloudUsersByEmail.get(emKey);
-        if (!cloudUsersFetched || (cloudU && cloudU.password && uCopy.password && cloudU.password !== uCopy.password)) {
-          const cloudPwdChanged = cloudU ? (Date.parse(cloudU.password_changed_at || '') || 0) : 0;
-          const localMirrorU = localMirrorByEmail.get(emKey);
-          const localPwdChanged = localMirrorU ? (Date.parse(localMirrorU.password_changed_at || '') || 0) : 0;
-          if (!cloudUsersFetched || cloudPwdChanged >= localPwdChanged) delete uCopy.password;
-        }
         if (uCopy.last_login) {
           uCopy.last_login = getBrasiliaIsoString(uCopy.last_login);
         }
@@ -37725,7 +37139,7 @@ async function syncWithRenderCloud() {
         return uCopy;
       });
       saveLocalUsers(BackendUtils.mergeUsersMirror(getLocalUsers(), usersToSync), true);
-      await fetchCloud('/api/users', {
+      await fetchCloud('/api/users?overwrite=true', {
         method: 'POST',
         headers: { 'X-Nexus-Sync-Token': SYNC_TOKEN },
         body: JSON.stringify(usersToSync)
@@ -37770,114 +37184,6 @@ function startRenderCloudSyncWorker() {
   }, 1000);
 }
 
-// ==================== Sincronização Supabase ("Meus Dados") ====================
-// Roda em TODOS os ambientes (local e Render): gravação é write-through no saveLocalData;
-// aqui fazemos a migração inicial em lote e o pull periódico que adota a versão mais recente.
-// Prontidão do banco: o merge de credenciais do Supabase só pode rodar depois que o SQL Server
-// carregou e carimbou (updated_at) os usuários. Se rodar antes, o espelho remoto parece mais novo
-// que o arquivo local desatualizado e reverte senhas para uma versão antiga (credenciais "perdidas").
-let resolveNexusDbReady;
-const nexusDbReady = new Promise((resolve) => { resolveNexusDbReady = resolve; });
-let supabaseSyncStarted = false;
-function startSupabaseSyncWorker() {
-  if (supabaseSyncStarted || !SupabaseSync.isEnabled()) return;
-  supabaseSyncStarted = true;
-  setTimeout(async () => {
-    // Ciclo de sincronização: SEMPRE puxa da nuvem primeiro e mescla; só depois empurra o estado local.
-    // Isso garante que um deploy/restart nunca sobrescreva credenciais ou dados mais novos do Supabase
-    // com arquivos JSON locais velhos ou vazios.
-    const runSupabaseCycle = async () => {
-      try {
-        // Espera o SQL terminar de carregar/carimbar os usuários (timeout de segurança: 20s)
-        await Promise.race([nexusDbReady, new Promise(r => setTimeout(r, 20000))]);
-        // Restaura credenciais do Supabase: usuário ausente localmente entra; cadastro local mais velho
-        // que o remoto é substituído pelo remoto (updated_at decide quem venceu).
-        const remoteUsers = await SupabaseSync.pullAllUsers();
-        const localUsers = getLocalUsers();
-        let usersChanged = false;
-        for (const [em, row] of Object.entries(remoteUsers)) {
-          if (!row || !row.dados || !em) continue;
-          try { if (isAccountDeleted(em)) continue; } catch (e) {}
-          const ru = row.dados;
-          const remoteT = row.updated_at ? new Date(row.updated_at).getTime() : (ru.updated_at ? new Date(ru.updated_at).getTime() : 0);
-          const idx = localUsers.findIndex(u => u && String(u.email || '').toLowerCase() === em);
-          const lu = idx >= 0 ? localUsers[idx] : null;
-          const localT = lu && lu.updated_at ? new Date(lu.updated_at).getTime() : 0;
-          if (!lu) {
-            localUsers.push({ ...ru, email: ru.email || em });
-            usersChanged = true;
-            console.log(`[SUPABASE] Credencial restaurada do espelho para ${em}`);
-          } else if (remoteT > localT) {
-            localUsers[idx] = { ...lu, ...ru, email: lu.email || em };
-            usersChanged = true;
-            console.log(`[SUPABASE] Credencial atualizada a partir da nuvem para ${em}`);
-          }
-        }
-        if (usersChanged) {
-          // Administrador nunca carrega troca obrigatória de senha: um espelho antigo não pode recolocar a flag
-          for (const u of localUsers) {
-            if (u && u.must_change_password && ['administrador', 'admin'].includes(String(u.role || '').trim().toLowerCase())) {
-              u.must_change_password = false;
-            }
-          }
-          saveLocalUsers(localUsers);
-          // Empurra os adotados para o SQL Server para manter as três fontes alinhadas.
-          if (pool) {
-            for (const u of localUsers) {
-              if (!u || !u.email) continue;
-              try {
-                await pool.query(
-                  `IF EXISTS (SELECT 1 FROM usuarios WHERE LOWER(email) = LOWER($1))
-                   BEGIN UPDATE usuarios SET name=$2, password=$3, role=$4, active=$5, cpf=$6, phone=$7, birth_date=$8, terms_accepted=$9, device_type=$10, must_change_password=$11, trial_started_at=$12, subscription_plan=$13, subscription_status=$14, subscription_expires_at=$15, subscription_method=$16, subscription_payment_id=$17 WHERE LOWER(email)=LOWER($1); END
-                   ELSE BEGIN INSERT INTO usuarios (name,email,password,role,active,cpf,phone,birth_date,terms_accepted,device_type,must_change_password,trial_started_at,subscription_plan,subscription_status,subscription_expires_at,subscription_method,subscription_payment_id) VALUES ($2,$1,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17); END`,
-                  [u.email, u.name, u.password, u.role || 'Usuário', u.active !== false, u.cpf || null, u.phone || null, u.birth_date || null, u.terms_accepted !== false, u.device_type || 'Computador', (['administrador', 'admin'].includes(String(u.role || '').trim().toLowerCase()) ? false : !!u.must_change_password), u.trial_started_at ? getBrasiliaSqlString(new Date(u.trial_started_at)) : null, u.subscription_plan || null, u.subscription_status || 'trial', u.subscription_expires_at ? getBrasiliaSqlString(new Date(u.subscription_expires_at)) : null, u.subscription_method || null, u.subscription_payment_id || null]
-                ).catch(() => {});
-              } catch (e) {}
-            }
-          }
-        }
-      } catch (e) {}
-
-      try {
-        const remote = await SupabaseSync.pullAllFinancialData();
-        for (const [em, row] of Object.entries(remote)) {
-          if (!row || !row.dados) continue;
-          const local = getLocalData(em);
-          const localRaw = local && (local.updated_at || local.updated_at_ms);
-          const localT = localRaw ? new Date(localRaw).getTime() : 0;
-          const remoteT = row.updated_at ? new Date(row.updated_at).getTime() : (row.dados.updated_at ? new Date(row.dados.updated_at).getTime() : 0);
-          // Supabase mais novo que o local: adota o conteúdo (gravação local e SQL relacional)
-          if (remoteT > localT) {
-            saveLocalData(em, row.dados);
-            if (pool) {
-              await pool.query(
-                `IF EXISTS (SELECT 1 FROM dados_financeiros WHERE LOWER(email) = LOWER($1))
-                 BEGIN UPDATE dados_financeiros SET dados = $2, updated_at = GETDATE() WHERE LOWER(email) = LOWER($1); END
-                 ELSE BEGIN INSERT INTO dados_financeiros (email, dados, updated_at) VALUES ($1, $2, GETDATE()); END`,
-                [em, JSON.stringify(row.dados)]
-              ).catch(() => {});
-            }
-            console.log(`[SUPABASE] Dados atualizados a partir da nuvem para ${em}`);
-          }
-        }
-      } catch (e) {}
-    };
-
-    // Primeira sincronização imediata: pull/merge ANTES de qualquer push em massa.
-    await runSupabaseCycle();
-
-    // Depois do merge, empurra o estado consolidado (local + o que veio da nuvem) para o Supabase.
-    try {
-      const total = await SupabaseSync.pushAllFinancialData(getLocalAllFinancialData());
-      if (total > 0) console.log(`[SUPABASE] Migração inicial: ${total} conta(s) de dados financeiros enviadas.`);
-    } catch (e) {}
-    try { SupabaseSync.pushUsersDebounced(getLocalUsers()); } catch (e) {}
-
-    setInterval(runSupabaseCycle, 60000);
-    console.log('[SUPABASE] Sincronização ativa (credenciais + "Meus Dados"): pull/merge a cada 60s, escrita imediata a cada alteração.');
-  }, 3000);
-}
-
 server.on('error', (err) => {
   console.warn('[HTTP SERVIDOR] Erro no servidor HTTP tratado com segurança:', err.message);
 });
@@ -37892,12 +37198,10 @@ server.listen(PORT, '0.0.0.0', () => {
   if (!process.env.RENDER && process.env.IS_RENDER !== 'true') {
     startRenderCloudSyncWorker();
   }
-  startSupabaseSyncWorker();
 
   // Conexão e Auto-Reconexão Contínua com o Microsoft SQL Server (Sem Bloquear o Servidor)
   initDatabase()
     .then(() => {
-      if (typeof resolveNexusDbReady === 'function') resolveNexusDbReady();
       if (pool) {
         const dbNameStr = process.env.MSSQL_DATABASE || 'AMBIENTE DE HOMOLOGAÇAO SF';
         console.log(`[BANCO] Conexão ativa e sincronizada com Microsoft SQL Server (Interno) (banco: ${dbNameStr})`);
@@ -37909,7 +37213,6 @@ server.listen(PORT, '0.0.0.0', () => {
       }
     })
     .catch(err => {
-      if (typeof resolveNexusDbReady === 'function') resolveNexusDbReady();
       console.warn(`[BANCO AVISO] Inicialização do banco SQL tratada autonomamente: ${err.message}`);
     });
 });
