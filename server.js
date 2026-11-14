@@ -21871,7 +21871,9 @@ function updateHeaderUser(){
           ? 'Plano Mensal'
           : plan === 'vitalicio'
             ? 'Plano Vitalício'
-            : 'Plano Gratuito 1 dia';
+            : plan === 'cortesia_admin'
+              ? 'Acesso liberado'
+              : 'Plano Gratuito 1 dia';
   }
   if(roleEl) {
     if (isViewingOtherUser) {
