@@ -27,6 +27,7 @@ if (!DB_DISABLED) {
 const BackendUtils = require('./backend-utils'); // utilitários puros e testados (corpo UTF-8, escrita atômica, cache JSON, validações)
 const Pagamentos = require('./pagamentos'); // livro de pagamentos, prazo da assinatura, Pix, resumo financeiro e conciliação de extrato (regras puras e testadas)
 const { qrSvg } = require('./qr-svg'); // QR Code do Pix gerado aqui (antes vinha do site api.qrserver.com)
+const Credenciais = require('./credenciais'); // qual senha vale quando a conta existe na nuvem, no SQL Server do PC e no Supabase (vale a trocada por último)
 
 const PORT = process.env.PORT || 3000;
 const SERVER_START_TIME = Date.now();
@@ -38,7 +39,17 @@ try {
   SupabaseSync = require('./supabase-sync');
   SupabaseSync.init({ dataDir: RUNTIME_DATA_DIR });
 } catch (e) {
-  SupabaseSync = { noteWrite() {}, restoreMissingFiles: async () => ({ restored: [] }), flushAndStop: async () => ({}), status: () => ({ enabled: false, disabledReason: 'módulo indisponível' }) };
+  SupabaseSync = { noteWrite() {}, restoreMissingFiles: async () => ({ restored: [] }), flushAndStop: async () => ({}), flushNow: async () => ({}), fetchUserRecord: async () => null, status: () => ({ enabled: false, disabledReason: 'módulo indisponível' }) };
+}
+// Senha criada/trocada só é "pronta" quando o Supabase confirmou: espera o envio (no máximo maxMs) antes de responder ao usuário.
+// Sem Supabase, sem rede ou acima do tempo, segue: o dado fica em disco na fila de reenvio e o envio continua em segundo plano.
+async function confirmCredentialsInSupabase(maxMs) {
+  try {
+    let timer;
+    const limit = new Promise(resolve => { timer = setTimeout(resolve, maxMs || 3500); if (timer.unref) timer.unref(); });
+    await Promise.race([SupabaseSync.flushNow(), limit]);
+    clearTimeout(timer);
+  } catch (e) { /* o reenvio automático cuida */ }
 }
 // Versão dos assets estáticos por inicialização do servidor: muda a cada deploy/restart e invalida o cache do navegador
 const ASSETS_V = 'v' + SERVER_START_TIME.toString(36);
@@ -33038,6 +33049,34 @@ function saveLocalUsers(users, overwrite = false) {
   }
 }
 
+// Login que "puxa do banco": a senha guardada no Supabase vale quando o servidor local não tem a conta (disco zerado no redeploy do Render)
+// ou tem uma senha MAIS ANTIGA (relógio password_changed_at). Só é chamada quando a senha digitada não bateu com a do servidor e só adota
+// se a digitada confere com a do Supabase. Devolve o cadastro já corrigido (e gravado no arquivo e no SQL Server) ou null.
+async function healCredentialFromSupabase(cleanEmail, password, localUser) {
+  try {
+    const remote = await SupabaseSync.fetchUserRecord(cleanEmail, { timeoutMs: 3000 });
+    if (!remote) return null;
+    const mirror = getLocalUsers();
+    const idx = mirror.findIndex(u => u && String(u.email || '').toLowerCase().trim() === cleanEmail);
+    const mirrorEntry = idx >= 0 ? mirror[idx] : null;
+    // O relógio da troca de senha mora no espelho local (o SQL Server não tem essa coluna)
+    const localView = (localUser || mirrorEntry)
+      ? { password: (localUser && localUser.password) || (mirrorEntry && mirrorEntry.password), password_changed_at: (mirrorEntry && mirrorEntry.password_changed_at) || (localUser && localUser.password_changed_at) }
+      : null;
+    if (!Credenciais.shouldAdoptRemote(localView, remote)) return null;
+    if (!verifyPassword(password, remote.password)) return null;
+    const base = (localUser || mirrorEntry) ? { ...(localUser || {}), ...(mirrorEntry || {}) } : remote;
+    const healed = { ...base, email: cleanEmail, password: remote.password };
+    if (remote.password_changed_at) healed.password_changed_at = remote.password_changed_at;
+    if (remote.must_change_password !== undefined) healed.must_change_password = remote.must_change_password;
+    if (idx >= 0) mirror[idx] = healed; else mirror.push(healed);
+    saveLocalUsers(mirror);
+    if (pool) { try { await pool.query('UPDATE usuarios SET password = $1 WHERE LOWER(email) = LOWER($2)', [remote.password, cleanEmail]); } catch (sqlErr) { /* o SQL Server alcança na próxima sincronização */ } }
+    console.log('🔐 [CREDENCIAL] Senha de ' + cleanEmail + ' puxada do Supabase (o servidor ' + (localView ? 'tinha uma senha mais antiga' : 'não tinha a conta') + ').');
+    return healed;
+  } catch (e) { return null; }
+}
+
 function removeLocalUser(email) {
   try {
     const clean = (email || '').toLowerCase().trim();
@@ -33983,6 +34022,17 @@ async function handleNexusRequest(req, res) {
           user = localUsers.find(u => u && u.email && u.email.toLowerCase() === cleanEmail);
         }
 
+        // A senha digitada não confere com a do servidor (ou a conta nem está aqui: disco zerado no redeploy, espelho antigo): o Supabase guarda
+        // a senha criada e é consultado na hora. Só vale se a conta não foi excluída e se a do Supabase for a mais nova (ver credenciais.js).
+        let passwordVerified = false;
+        if (!isAccountDeleted(cleanEmail)) {
+          passwordVerified = user ? verifyPassword(password, user.password, user) : false;
+          if (!passwordVerified) {
+            const healedUser = await healCredentialFromSupabase(cleanEmail, password, user);
+            if (healedUser) { user = healedUser; passwordVerified = true; }
+          }
+        }
+
         // Validação estrita: Se o usuário não existe ou não possui mais cadastro ativo, retorna mensagem padronizada sem expor exclusão
         if (isAccountDeleted(cleanEmail) || !user) {
           console.log(`[LOGIN RECUSADO] Usuário não possui conta criada: ${cleanEmail}`);
@@ -33994,7 +34044,7 @@ async function handleNexusRequest(req, res) {
           }));
         }
 
-        if (!verifyPassword(password, user.password, user)) {
+        if (!passwordVerified) {
           recordRateLimitHit(loginFailKey);
           res.writeHead(401, { ...corsHeaders, 'Content-Type': 'application/json' });
           return res.end(JSON.stringify({
@@ -34527,6 +34577,7 @@ async function handleNexusRequest(req, res) {
         localUsers.push(newUserObj);
         saveLocalUsers(localUsers);
         clearDeletedEmailTombstone(cleanEmail);
+        await confirmCredentialsInSupabase(); // a conta e a senha criadas só são devolvidas ao usuário depois que o Supabase confirmou (ou o tempo acabou: o reenvio segue em disco)
         if (cleanCpf) {
           const numCpf = cleanCpf.replace(/\D/g, '');
           saveCpfRegistryEntry(numCpf, {
@@ -34742,6 +34793,7 @@ async function handleNexusRequest(req, res) {
           lu.password_changed_at = new Date().toISOString(); // derruba sessões antigas da conta
           saveLocalUsers(localUsers);
         }
+        await confirmCredentialsInSupabase(); // a senha provisória aparece na tela só depois de guardada no Supabase
 
         recordSystemLog(
           user.name,
@@ -34872,6 +34924,7 @@ async function handleNexusRequest(req, res) {
           lu.password_changed_at = new Date().toISOString(); // derruba sessões antigas da conta (o token novo abaixo vale)
           saveLocalUsers(localUsers);
         }
+        await confirmCredentialsInSupabase(); // a senha definitiva fica no Supabase antes de a tela dizer "cadastrada"
 
         recordSystemLog(
           user.name,
@@ -35259,6 +35312,7 @@ async function handleNexusRequest(req, res) {
           }
           saveLocalUsers(allLocal);
         }
+        if (newHash) await confirmCredentialsInSupabase(); // senha trocada em Minha Conta: confirmada no Supabase antes de responder
         if (avatarToStore !== undefined) setStoredAvatar(email, avatarToStore);
 
         const updatedUser = { ...selfUser, ...updates };
@@ -35478,8 +35532,21 @@ async function handleNexusRequest(req, res) {
             const emailKey = u.email.toLowerCase().trim();
             const existing = existingMap.get(emailKey) || userMap.get(emailKey);
             let finalPassword = existing ? existing.password : '';
+            let finalPasswordChangedAt = existing ? existing.password_changed_at : undefined;
             if (u.password && typeof u.password === 'string' && u.password.trim() !== '') {
-              finalPassword = u.password.startsWith('scrypt:') ? u.password : hashPassword(u.password);
+              if (requestIsInternalSync && u.password.startsWith('scrypt:') && existing) {
+                // Espelho do PC chegando na nuvem (a cada 10 s): o hash do SQL Server só substitui o que a nuvem tem se foi trocado DEPOIS
+                // (password_changed_at). Antes o último a enviar ganhava e a senha criada na nuvem entre a leitura e o envio do PC voltava ao hash antigo.
+                const pick = Credenciais.pickPassword(existing, u, { noClock: 'existing' });
+                if (pick.source === 'incoming') { finalPassword = pick.password; finalPasswordChangedAt = pick.password_changed_at; }
+                else if (pick.source === 'same') finalPasswordChangedAt = pick.password_changed_at;
+              } else if (u.password.startsWith('scrypt:')) {
+                finalPassword = u.password;
+                if (requestIsInternalSync && u.password_changed_at) finalPasswordChangedAt = u.password_changed_at;
+              } else {
+                finalPassword = hashPassword(u.password);
+                finalPasswordChangedAt = new Date().toISOString();
+              }
             }
             if (!finalPassword) {
               // Sem senha informada: senha aleatória (a conta só entra via recuperação). Antes era a senha fixa "123456".
@@ -35523,12 +35590,18 @@ async function handleNexusRequest(req, res) {
               last_login: finalLastLogin,
               // Marca de invalidação de sessões: só o servidor define (nunca vem do payload recebido)
               // Senha nova definida pelo administrador (texto puro recebido): as sessões anteriores dessa conta deixam de valer
-              password_changed_at: (u.password && typeof u.password === 'string' && u.password.trim() !== '' && !u.password.startsWith('scrypt:'))
-                ? new Date().toISOString()
-                : (existing ? existing.password_changed_at : undefined)
+              password_changed_at: finalPasswordChangedAt
             });
           }
         });
+        // O espelho do PC não apaga cadastros que só a nuvem tem (conta criada entre a leitura e o envio do PC): o PC a importa no próximo ciclo.
+        // Contas excluídas já ficam de fora (existingLocal) e a exclusão segue pelas lápides, então nada que foi apagado de propósito volta.
+        if (isOverwrite && requestIsInternalSync) {
+          existingLocal.forEach(u => {
+            const k = u && u.email ? u.email.toLowerCase().trim() : '';
+            if (k && !userMap.has(k)) userMap.set(k, u);
+          });
+        }
         // Se nenhum cadastro enviado era válido, avisa (antes respondia "sucesso" sem ter gravado nada)
         if (acceptedUsers === 0 && !hasInternalSyncAccess(req, parsedUrl)) {
           res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
@@ -35536,6 +35609,7 @@ async function handleNexusRequest(req, res) {
         }
         const finalUsers = Array.from(userMap.values());
         saveLocalUsers(finalUsers, isOverwrite);
+        if (!requestIsInternalSync) await confirmCredentialsInSupabase(); // cadastro/senha definidos pelo administrador (a sincronização interna não espera)
 
         recordSystemLog('Sistema', 'cadastro@nexusfinanceiro.com', 'Sincronização', 'Usuários', 'Sincronização de usuários salva com sucesso');
 
@@ -37853,7 +37927,24 @@ async function syncWithRenderCloud() {
             await pool.query('UPDATE usuarios SET device_type = $1 WHERE LOWER(email) = LOWER($2)', [cu.device_type, cleanEmail]).catch(()=>{});
           }
           if (cu.password && cu.password.startsWith('scrypt:') && cu.password !== currentU.password) {
-            await pool.query('UPDATE usuarios SET password = $1 WHERE LOWER(email) = LOWER($2)', [cu.password, cleanEmail]).catch(()=>{});
+            // Vale a senha trocada por último (password_changed_at, que mora no espelho local do PC): antes a da nuvem SEMPRE sobrescrevia a do
+            // SQL Server, e uma senha trocada neste PC voltava ao hash antigo da nuvem em até 10 s. Sem relógio nos dois lados a nuvem segue valendo.
+            const mirrorList = getLocalUsers();
+            const mirrorIdx = mirrorList.findIndex(m => m && String(m.email || '').toLowerCase().trim() === cleanEmail);
+            const pwPick = Credenciais.pickPassword(
+              { password: currentU.password, password_changed_at: mirrorIdx >= 0 ? mirrorList[mirrorIdx].password_changed_at : undefined },
+              cu,
+              { noClock: 'incoming' }
+            );
+            if (pwPick.source === 'incoming') {
+              let sqlOk = true;
+              await pool.query('UPDATE usuarios SET password = $1 WHERE LOWER(email) = LOWER($2)', [cu.password, cleanEmail]).catch(() => { sqlOk = false; });
+              if (sqlOk && mirrorIdx >= 0) {
+                mirrorList[mirrorIdx].password = cu.password;
+                if (cu.password_changed_at) mirrorList[mirrorIdx].password_changed_at = cu.password_changed_at;
+                saveLocalUsers(mirrorList);
+              }
+            }
           }
           if (updatedName !== currentU.name || updatedCpf !== currentU.cpf || updatedPhone !== currentU.phone || updatedBirth !== currentU.birth_date) {
             await pool.query(
@@ -37986,8 +38077,12 @@ async function syncWithRenderCloud() {
     const localUsersRes = await pool.query('SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted, device_type, must_change_password, trial_started_at, subscription_plan, subscription_status, subscription_expires_at, subscription_method, subscription_payment_id FROM usuarios ORDER BY id ASC');
     const syncableLocalUsers = (localUsersRes.rows || []).filter(u => !deletedEmailSet.has(String(u.email || '').toLowerCase().trim()));
     if (syncableLocalUsers.length > 0) {
+      // O SQL Server não tem a coluna password_changed_at: o relógio da troca de senha vem do espelho local, para a nuvem saber se este hash é mais novo que o dela
+      const passwordClockByEmail = new Map(getLocalUsers().filter(m => m && m.email && m.password_changed_at).map(m => [String(m.email).toLowerCase().trim(), m.password_changed_at]));
       const usersToSync = syncableLocalUsers.map(u => {
         const uCopy = { ...u };
+        const pwClock = passwordClockByEmail.get(String(u.email || '').toLowerCase().trim());
+        if (pwClock && !uCopy.password_changed_at) uCopy.password_changed_at = pwClock;
         if (uCopy.last_login) {
           uCopy.last_login = getBrasiliaIsoString(uCopy.last_login);
         }

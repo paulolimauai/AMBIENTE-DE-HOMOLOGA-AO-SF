@@ -515,3 +515,44 @@ test('flushAndStop envia o que está na fila antes de encerrar', async () => {
   assert.equal(st.inSync, true, JSON.stringify(st));
   assert.equal(fake.tables.usuarios.length, 2);
 });
+
+// ================================================================ credenciais: o login puxa a senha direto do Supabase
+test('fetchUserRecord: devolve a cópia fiel da conta (senha em hash + relógio da troca) para o login puxar do Supabase', async () => {
+  const dir = tmpDir(); seedAll(dir);
+  put(dir, 'local_users.json', [{ ...ANA, password: 'scrypt:aa:bb', password_changed_at: '2026-11-15T10:00:00.000Z' }, ADM]);
+  const fake = createFake(); const s = make(fake, dir);
+  await s.syncEverythingNow();
+  const rec = await s.fetchUserRecord('ANA@exemplo.com ');                     // e-mail em qualquer caixa, com espaço
+  assert.equal(rec.email, 'ana@exemplo.com');
+  assert.equal(rec.password, 'scrypt:aa:bb');
+  assert.equal(rec.password_changed_at, '2026-11-15T10:00:00.000Z');
+  assert.equal(rec.role, 'Usuário');
+  assert.equal(await s.fetchUserRecord('ninguem@exemplo.com'), null);
+  assert.equal(await s.fetchUserRecord(''), null);
+});
+
+test('fetchUserRecord: sem a cópia fiel usa a linha de "usuarios" (tem a senha, não tem o relógio)', async () => {
+  const dir = tmpDir(); const fake = createFake(); const s = make(fake, dir);
+  fake.tables.usuarios = [{ id: 9, name: 'Só Relacional', email: 'rel@exemplo.com', password: 'scrypt:ee:ff', role: 'Usuário', active: true, must_change_password: false }];
+  const rec = await s.fetchUserRecord('rel@exemplo.com');
+  assert.equal(rec.password, 'scrypt:ee:ff');
+  assert.equal(rec.password_changed_at, undefined);
+});
+
+test('fetchUserRecord: nunca lança e nunca trava o login (sem rede, desligado ou lento devolve null)', async () => {
+  const dir = tmpDir(); seedAll(dir); const fake = createFake(); const s = make(fake, dir);
+  await s.syncEverythingNow();
+  fake.online = false;
+  assert.equal(await s.fetchUserRecord('ana@exemplo.com'), null, 'sem rede');
+  fake.online = true;
+
+  const off = createSync(); off.init({ dataDir: tmpDir(), disabled: true, log: silent() });
+  assert.equal(await off.fetchUserRecord('ana@exemplo.com'), null, 'módulo desligado');
+
+  const lento = createFake(); const dir2 = tmpDir(); seedAll(dir2);
+  const slowClient = { from: (t) => ({ select() { return this; }, eq() { return this; }, range() { return this; }, then() { /* nunca responde */ } }) };
+  const s2 = createSync(); s2.init({ dataDir: dir2, client: slowClient, timers: false, log: silent(), projectRef: 'p', firstSyncDelayMs: 99999999 });
+  const t0 = Date.now();
+  assert.equal(await s2.fetchUserRecord('ana@exemplo.com', { timeoutMs: 600 }), null, 'Supabase que não responde');
+  assert.ok(Date.now() - t0 < 2500, 'voltou perto do limite de tempo, sem esperar o Supabase');
+});

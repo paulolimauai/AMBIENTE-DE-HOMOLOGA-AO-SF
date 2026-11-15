@@ -951,6 +951,38 @@ function createSync() {
   // markAllDirty + flush, para testes e para o desligamento
   async function syncEverythingNow() { markAllDirty(0); return flushNow(); }
 
+  // Cadastro de UMA conta como o Supabase guarda (senha em hash, relógio da troca de senha, perfil), lido na hora, para o login
+  // "puxar do banco" quando o servidor local não tem a conta ou tem uma senha mais antiga. Nunca lança: sem Supabase, sem rede ou
+  // acima do tempo devolve null e o login segue só com o que o servidor tem.
+  async function fetchUserRecord(email, opts) {
+    const key = lc(email);
+    if (!enabled || !sb || !key) return null;
+    const maxMs = Math.max(500, (opts && opts.timeoutMs) || 3000);
+    let timer;
+    const limit = new Promise(resolve => { timer = setTimeout(() => resolve({ timeout: true }), maxMs); if (timer.unref) timer.unref(); });
+    // Login não espera repetições: o postgrest-js tenta de novo (1 s, 2 s, 4 s) em 503/520 e erro de rede, e a pessoa ficaria olhando a tela
+    const noRetry = (q) => (q && typeof q.retry === 'function') ? q.retry(false) : q;
+    const work = (async () => {
+      const full = await call(() => noRetry(sb.from('dados_financeiros').select('email,dados').eq('email', key).range(0, 0)));
+      if (!full.error) {
+        const row = (full.data || [])[0];
+        if (row && row.dados && typeof row.dados === 'object' && !Array.isArray(row.dados) && lc(row.dados.email || key) === key) return { record: Object.assign({}, row.dados, { email: key }) };
+      } else { return { error: full.error }; }
+      // Sem a cópia fiel (ex.: conta só na visão relacional): usa a linha de "usuarios" (tem a senha, não tem o relógio da troca)
+      const rel = await call(() => noRetry(sb.from('usuarios').select('name,email,password,role,active,must_change_password,cpf,phone,birth_date').eq('email', key).range(0, 0)));
+      if (rel.error) return { error: rel.error };
+      const r = (rel.data || [])[0];
+      return r ? { record: Object.assign({}, r, { email: key }) } : { record: null };
+    })();
+    try {
+      const out = await Promise.race([work, limit]);
+      if (!out || out.timeout) { say('warn', 'cred-timeout', 'Supabase demorou mais de ' + maxMs + ' ms para devolver o cadastro de uma conta; o login seguiu só com os dados do servidor.'); return null; }
+      if (out.error) { say('warn', 'cred-read', 'Não foi possível ler o cadastro da conta no Supabase: ' + (out.error.message || out.error)); return null; }
+      return out.record || null;
+    } catch (e) { return null; }
+    finally { clearTimeout(timer); }
+  }
+
   async function flushAndStop(maxMs) {
     if (!enabled || stopped) return status();
     const limit = new Promise(resolve => { const t = setTimeout(resolve, maxMs || 4000); if (t.unref) t.unref(); });
@@ -961,7 +993,7 @@ function createSync() {
     return status();
   }
 
-  const api = { init, noteWrite, restoreMissingFiles, flushNow, syncEverythingNow, flushAndStop, status, isEnabled: () => enabled, verifyRemote, _state: () => state };
+  const api = { init, noteWrite, restoreMissingFiles, flushNow, syncEverythingNow, flushAndStop, status, isEnabled: () => enabled, verifyRemote, fetchUserRecord, _state: () => state };
   return api;
 }
 
