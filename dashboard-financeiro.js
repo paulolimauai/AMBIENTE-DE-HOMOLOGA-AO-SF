@@ -693,6 +693,8 @@
         ' · <span class="fd-hero-proj-rot">' + esc(fimRotulo) + '</span> ' + dinheiro(c.saldoProjetadoFim) +
         (Math.abs(projDiff) >= 0.01 ? ' <span class="fd-delta fd-money ' + (projDiff >= 0 ? 'fd-bom' : 'fd-ruim') + '">' + (projDiff >= 0 ? '▲ ' : '▼ ') + esc(fmtU(Math.abs(projDiff))) + '</span>' : '') + '</div>' +
       blocoAcumulado(m) +
+      (m.serieDiaria && m.serieDiaria.dias && m.serieDiaria.dias.length > 1
+        ? '<div class="fd-hero-cap">Saldo em contas no mês <span>linha cheia = realizado · tracejada = projeção</span></div>' : '') +
       '<div class="fd-hero-grafico">' + graficoSaldo(m) + '</div>' +
       '<div class="fd-mini">' + itens + '</div></section>';
   }
@@ -783,7 +785,8 @@
         rotulo: 'Dívida nos cartões', tom: 'fd-ic-out', icone: ICONES.cartao, ir: { pagina: 'cartoes' }, dica: 'Total acumulado devido em todos os cartões de crédito (todas as faturas, de todos os meses e cartões cadastrados)',
         valorHtml: valorTile(cartoes.divida != null ? cartoes.divida : cartoes.fatura),
         linhas: [
-          cartoes.itens.length ? 'Acumulado de todas as faturas · ' + cartoes.usoPct + '% do limite · ' + dinheiro(cartoes.disponivel) + ' livres' : 'Nenhum cartão cadastrado',
+          cartoes.itens.length ? 'Acumulado de todas as faturas · ' + cartoes.usoPct + '% do limite · ' + dinheiro(cartoes.disponivel) + ' livres'
+            : ((cartoes.divida != null ? cartoes.divida : cartoes.fatura) > 0 ? 'Há compras no cartão, mas nenhum cartão cadastrado · cadastre em Contas e Cartões' : 'Nenhum cartão cadastrado'),
           cartoes.itens.length ? '<div class="fd-meter" role="img" aria-label="Uso do limite ' + cartoes.usoPct + '%"><i class="' + (cartoes.usoPct >= 85 ? 'fd-m-ruim' : cartoes.usoPct >= 60 ? 'fd-m-medio' : 'fd-m-bom') + '" style="width:' + Math.min(100, cartoes.usoPct) + '%"></i></div>' : ''
         ]
       });

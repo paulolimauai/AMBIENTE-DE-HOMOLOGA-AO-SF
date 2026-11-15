@@ -498,6 +498,37 @@
         @container (min-width: 56rem) { .charts { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
         .chart-box { position: relative; height: 17rem; }
 
+        /* ---------- Dashboard Executivo: saúde do atendimento, severidade em aberto e carga da equipe ---------- */
+        .dx-saude { display: grid; gap: 1rem; grid-template-columns: 1fr; }
+        @container (min-width: 36rem) { .dx-saude { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+        .dx-grade { display: grid; gap: 1.5rem; grid-template-columns: 1fr; }
+        @container (min-width: 56rem) {
+            .dx-g-vol { grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr); }
+            .dx-g-cat { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+        .dx-s { --k: var(--blue-rgb); --kl: var(--t-blue); padding: 1rem 1.2rem; display: grid; gap: .3rem; align-content: start; }
+        .dx-s.ok { --k: var(--green-rgb); --kl: var(--t-green); }
+        .dx-s.warn { --k: var(--amber-rgb); --kl: var(--t-amber); }
+        .dx-s.bad { --k: var(--rose-rgb); --kl: var(--t-rose); }
+        .dx-s-rot { font-size: .75rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+        .dx-s-val { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.8rem; font-weight: 700; line-height: 1.15; color: var(--kl); }
+        .dx-s-sub { font-size: .8rem; color: var(--muted); }
+        .dx-grade > .panel { align-content: start; }
+        .dx-lista { display: grid; gap: .55rem; align-content: start; }
+        .dx-li { --k: var(--slate-rgb); appearance: none; width: 100%; text-align: left; font: inherit; color: inherit; cursor: pointer; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: .35rem .75rem; padding: .7rem .85rem; border-radius: .85rem; background: rgba(var(--lt), .04); border: 1px solid var(--line-soft); transition: border-color .2s ease, background .2s ease; }
+        .dx-li:hover { border-color: rgba(var(--k), .55); background: rgba(var(--k), .09); }
+        .dx-li:focus-visible { outline: 2px solid rgba(var(--k), .9); outline-offset: 2px; }
+        .dx-dot { width: .7rem; height: .7rem; border-radius: 50%; background: rgb(var(--k)); box-shadow: 0 0 0 .2rem rgba(var(--k), .18); }
+        .dx-av { width: 1.9rem; height: 1.9rem; border-radius: 50%; display: grid; place-items: center; font-size: .72rem; font-weight: 800; color: var(--white); background: rgba(var(--k), .22); border: 1px solid rgba(var(--k), .55); }
+        .dx-li-t { min-width: 0; display: grid; }
+        .dx-li-t b { font-size: .9rem; font-weight: 700; color: var(--white); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .dx-li-t small { font-size: .76rem; color: var(--muted); }
+        .dx-li-n { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.2rem; font-weight: 700; color: var(--white); }
+        .dx-li-bar { grid-column: 2 / -1; height: .4rem; border-radius: 99px; background: rgba(var(--lt), .1); overflow: hidden; }
+        .dx-li-bar > i { display: block; height: 100%; min-width: 3px; border-radius: inherit; background: rgb(var(--k)); }
+        .dx-late { display: inline-flex; align-items: center; margin-left: .45rem; padding: .02rem .5rem; border-radius: 99px; font-size: .7rem; font-weight: 800; color: var(--t-rose); background: rgba(var(--rose-rgb), .14); border: 1px solid rgba(var(--rose-rgb), .42); vertical-align: middle; }
+        .dx-vazio { padding: 1.4rem 1rem; text-align: center; color: var(--muted); font-size: .85rem; }
+
         /* ---------- Fila ---------- */
         .toolbar { padding: 1rem; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .8rem; }
         .toolbar-l { display: flex; flex-wrap: wrap; align-items: center; gap: .7rem; flex: 1; min-width: 0; }
@@ -2081,11 +2112,11 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                                 <div class="kpi-sub">Com um técnico</div>
                             </div>
 
-                            <div class="glass kpi rose" onclick="goQueue('open','Crítica')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
-                                <div class="kpi-label"><span class="pulse-dot"></span> Críticos</div>
+                            <div class="glass kpi rose" onclick="goQueue('late')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
+                                <div class="kpi-label"><span class="pulse-dot"></span> SLA vencido</div>
                                 <div class="kpi-ico"><i class="fa-solid fa-triangle-exclamation"></i></div>
-                                <div id="kpi-tech-critical" class="kpi-value">0</div>
-                                <div id="kpi-tech-critical-sub" class="kpi-sub">SLA prioritário</div>
+                                <div id="kpi-tech-late" class="kpi-value">0</div>
+                                <div id="kpi-tech-late-sub" class="kpi-sub">Nenhum chamado fora do prazo</div>
                             </div>
 
                             <div class="glass kpi green" onclick="goQueue('resolved')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
@@ -2096,19 +2127,50 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                             </div>
                         </div>
 
-                        <div class="charts">
+                        <!-- Saúde do atendimento: três números que dizem se a operação está no prazo (preenchido por renderDashExtras) -->
+                        <div id="dx-saude" class="dx-saude" aria-label="Saúde do atendimento"></div>
+
+                        <div class="dx-grade dx-g-vol">
                             <div class="glass panel">
                                 <div class="panel-head">
-                                    <h3><i class="fa-solid fa-chart-bar c-amber"></i> Chamados por Categoria</h3>
+                                    <div>
+                                        <h3><i class="fa-solid fa-chart-column c-blue"></i> Volume dos últimos 14 dias</h3>
+                                        <p>Chamados abertos e encerrados por dia</p>
+                                    </div>
+                                </div>
+                                <div class="chart-box"><canvas id="chartVolume"></canvas></div>
+                            </div>
+
+                            <div class="glass panel">
+                                <div class="panel-head">
+                                    <div>
+                                        <h3><i class="fa-solid fa-gauge-high c-amber"></i> Severidade em aberto</h3>
+                                        <p id="dx-sev-sub">Chamados abertos por nível de SLA</p>
+                                    </div>
+                                </div>
+                                <div id="dx-sev" class="dx-lista"></div>
+                            </div>
+                        </div>
+
+                        <div class="dx-grade dx-g-cat">
+                            <div class="glass panel">
+                                <div class="panel-head">
+                                    <div>
+                                        <h3><i class="fa-solid fa-chart-bar c-amber"></i> Chamados por Categoria</h3>
+                                        <p>Todos os chamados da base, do mais para o menos frequente</p>
+                                    </div>
                                 </div>
                                 <div class="chart-box"><canvas id="chartCategory"></canvas></div>
                             </div>
 
                             <div class="glass panel">
                                 <div class="panel-head">
-                                    <h3><i class="fa-solid fa-chart-pie c-blue"></i> Distribuição por Severidade</h3>
+                                    <div>
+                                        <h3><i class="fa-solid fa-people-group c-blue"></i> Carga da equipe</h3>
+                                        <p id="dx-equipe-sub">Chamados em aberto por técnico</p>
+                                    </div>
                                 </div>
-                                <div class="chart-box"><canvas id="chartUrgency"></canvas></div>
+                                <div id="dx-equipe" class="dx-lista"></div>
                             </div>
                         </div>
 
@@ -3022,7 +3084,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         let lastCreatedProtocol = null;
         let techReplyMode = 'public';
         let chartCategoryInstance = null;
-        let chartUrgencyInstance = null;
+        let chartVolumeInstance = null;
         let queueQuick = 'open';        // filtro rápido da fila: open | new | pending | assigned | resolved | closed | unassigned | mine | late | all
         let userTab = 'all';            // abas de "Meus Chamados": all | open | waiting | closed
         let technicians = [];           // nomes de quem pode receber chamados (técnicos cadastrados + administradores ativos)
@@ -4633,9 +4695,14 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             $('kpi-tech-total').innerText = ticketsList.length;
             $('kpi-tech-unassigned').innerText = unassignedCount;
             $('kpi-tech-progress').innerText = ticketsList.filter((t) => t.status === 'Atendimento atribuído').length;
-            $('kpi-tech-critical').innerText = open.filter((t) => t.urgency === 'Crítica').length;
-            const critSub = $('kpi-tech-critical-sub');
-            if (critSub) critSub.innerText = lateCount ? lateCount + ' com SLA vencido' : 'SLA de 4 horas';
+            $('kpi-tech-late').innerText = lateCount;
+            const lateSub = $('kpi-tech-late-sub');
+            if (lateSub) {
+                const crit = open.filter((t) => t.urgency === 'Crítica').length;
+                lateSub.innerText = lateCount
+                    ? (lateCount === 1 ? '1 chamado fora do prazo' : lateCount + ' chamados fora do prazo')
+                    : (crit ? crit + (crit === 1 ? ' crítico em aberto, no prazo' : ' críticos em aberto, no prazo') : 'Nenhum chamado fora do prazo');
+            }
             $('kpi-tech-resolved').innerText = ticketsList.filter((t) => t.status === 'Resolvido').length;
             const resSub = $('kpi-tech-resolved-sub');
             if (resSub) { const nf = ticketsList.filter((t) => t.status === 'Fechado').length; resSub.innerText = nf ? nf + ' já fechado(s)' : 'Solução entregue'; }
@@ -4818,7 +4885,15 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             $('tech-filter-urgency').value = urgency || 'ALL';
             $('tech-filter-type').value = 'ALL';
             $('tech-filter-queue').value = 'ALL';
+            $('tech-queue-search').value = '';
             setQueueQuick(key);
+        }
+
+        // Carga da equipe: abre a fila só com os chamados abertos daquele técnico
+        function dxVerTecnico(nome) {
+            goQueue('open');
+            $('tech-queue-search').value = nome;
+            renderTechQueue();
         }
 
         // Abertura guiada: os cartões de categoria e urgência controlam os mesmos campos de antes (que continuam na tela, ocultos)
@@ -5445,25 +5520,133 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         }
 
         // CHARTS & UTILS
+        // ---- Indicadores do Dashboard Executivo (calculados sobre a lista de chamados em memória) ----
+        // Nível, prazo de SLA e cor (a mesma de URGENCY_COLORS)
+        const DX_NIVEIS = [['Crítica', '4 horas', '244, 63, 94'], ['Alta', '8 horas', '251, 146, 60'], ['Média', '24 horas', '56, 189, 248'], ['Baixa', '5 dias úteis', '148, 163, 184']];
+
+        function dxDiaChave(d) {
+            return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+        }
+
+        function dxDuracao(ms) {
+            const min = Math.round(ms / 60000);
+            if (min < 60) return Math.max(1, min) + ' min';
+            const h = Math.floor(min / 60);
+            if (h < 24) return h + ' h' + (min % 60 ? ' ' + (min % 60) + ' min' : '');
+            const d = Math.floor(h / 24);
+            return d + ' d' + (h % 24 ? ' ' + (h % 24) + ' h' : '');
+        }
+
+        // 14 dias (hoje é o último), abertos e encerrados por dia; cumprimento do SLA; tempo médio de resolução; 7 dias contra os 7 anteriores
+        function dxMetricas() {
+            const hoje = new Date(); hoje.setHours(0, 0, 0, 0);
+            const dias = [];
+            for (let i = 13; i >= 0; i--) {
+                const d = new Date(hoje); d.setDate(d.getDate() - i);
+                dias.push({ chave: dxDiaChave(d), rot: String(d.getDate()).padStart(2, '0') + '/' + String(d.getMonth() + 1).padStart(2, '0'), abertos: 0, encerrados: 0 });
+            }
+            const porChave = new Map(dias.map((x) => [x.chave, x]));
+            const quando = (iso) => { const d = iso ? new Date(iso) : null; return d && !isNaN(d.getTime()) ? d : null; };
+            const limite7 = new Date(hoje); limite7.setDate(limite7.getDate() - 6);
+            const limite14 = new Date(hoje); limite14.setDate(limite14.getDate() - 13);
+            let semana = 0, semanaAnt = 0, noPrazo = 0, conhecidos = 0, somaMs = 0, nRes = 0;
+            ticketsList.forEach((t) => {
+                const criado = quando(t.createdAt);
+                if (criado) {
+                    const x = porChave.get(dxDiaChave(criado));
+                    if (x) x.abertos++;
+                    if (criado >= limite7) semana++; else if (criado >= limite14) semanaAnt++;
+                }
+                const s = slaInfo(t);
+                if (isClosed(t)) {
+                    const fim = quando(t.closedAt) || quando(t.updatedAt);
+                    if (!fim) return;
+                    const x = porChave.get(dxDiaChave(fim));
+                    if (x) x.encerrados++;
+                    if (criado && fim >= criado) { somaMs += fim - criado; nRes++; }
+                    // Só entra no cumprimento do SLA o que já tem desfecho: encerrado (no prazo ou fora) ou aberto e vencido
+                    if (s.due) { conhecidos++; if (fim <= s.due) noPrazo++; }
+                } else if (s.state === 'late') {
+                    conhecidos++;
+                }
+            });
+            return { dias, semana, semanaAnt, noPrazo, conhecidos, tempoMedioMs: nRes ? somaMs / nRes : null, nRes };
+        }
+
+        function renderDashExtras() {
+            const saude = $('dx-saude'), sev = $('dx-sev'), eq = $('dx-equipe');
+            if (!saude || !sev || !eq) return;
+            const dx = dxMetricas();
+            const open = ticketsList.filter(isOpenTicket);
+            const late = open.filter(isLate);
+
+            // Saúde do atendimento
+            const pct = dx.conhecidos ? Math.round(dx.noPrazo / dx.conhecidos * 100) : null;
+            const tom = pct == null ? '' : pct >= 90 ? 'ok' : pct >= 70 ? 'warn' : 'bad';
+            const delta = dx.semana - dx.semanaAnt;
+            const vs = (!dx.semana && !dx.semanaAnt) ? 'Nenhum chamado novo nas duas últimas semanas'
+                : delta === 0 ? 'Igual à semana anterior (' + dx.semanaAnt + ')'
+                : (delta > 0 ? '▲ ' + delta + ' a mais' : '▼ ' + Math.abs(delta) + ' a menos') + ' que na semana anterior (' + dx.semanaAnt + ')';
+            const cartao = (cls, rot, val, sub) => `<div class="glass dx-s ${cls}"><div class="dx-s-rot">${rot}</div><div class="dx-s-val">${val}</div><div class="dx-s-sub">${sub}</div></div>`;
+            saude.innerHTML =
+                cartao(tom, 'Cumprimento do SLA', pct == null ? '—' : pct + '%', pct == null ? 'Ainda sem chamados encerrados ou vencidos' : dx.noPrazo + ' de ' + dx.conhecidos + ' dentro do prazo') +
+                cartao('', 'Tempo médio de resolução', dx.tempoMedioMs == null ? '—' : dxDuracao(dx.tempoMedioMs), dx.nRes ? 'Da abertura ao encerramento, em ' + dx.nRes + (dx.nRes === 1 ? ' chamado' : ' chamados') : 'Ainda sem chamados encerrados') +
+                cartao('', 'Chamados em 7 dias', String(dx.semana), vs);
+
+            // Severidade em aberto (sempre os 4 níveis, na ordem da política de SLA)
+            $('dx-sev-sub').textContent = open.length ? open.length + ' em aberto · ' + late.length + ' fora do prazo' : 'Nenhum chamado em aberto';
+            const maxSev = Math.max(1, ...DX_NIVEIS.map(([n]) => open.filter((t) => t.urgency === n).length));
+            sev.innerHTML = DX_NIVEIS.map(([nome, prazo, rgb]) => {
+                const lista = open.filter((t) => t.urgency === nome);
+                const atrasados = lista.filter(isLate).length;
+                const chip = atrasados ? `<span class="dx-late">${atrasados} vencido${atrasados > 1 ? 's' : ''}</span>` : '';
+                return `<button type="button" class="dx-li" style="--k:${rgb}" onclick="goQueue('open','${nome}')" title="Ver os chamados ${nome} em aberto">` +
+                    `<span class="dx-dot"></span><span class="dx-li-t"><b>${nome}${chip}</b><small>SLA de ${prazo}</small></span><span class="dx-li-n">${lista.length}</span>` +
+                    `<span class="dx-li-bar">${lista.length ? `<i style="width:${Math.round(lista.length / maxSev * 100)}%"></i>` : ''}</span></button>`;
+            }).join('');
+
+            // Carga da equipe: técnicos cadastrados (mesmo os livres) e quem tem chamado aberto
+            const nomes = Array.isArray(technicians) ? technicians.slice() : [];
+            open.forEach((t) => { if (hasTech(t) && !nomes.includes(t.technician)) nomes.push(t.technician); });
+            const linhas = nomes.map((n) => {
+                const lista = open.filter((t) => t.technician === n);
+                return { nome: n, n: lista.length, atrasados: lista.filter(isLate).length };
+            }).sort((a, b) => (b.n - a.n) || (b.atrasados - a.atrasados) || a.nome.localeCompare(b.nome, 'pt-BR'));
+            const semTec = open.filter((t) => !hasTech(t));
+            const maxEq = Math.max(1, semTec.length, ...linhas.map((l) => l.n));
+            const iniciais = (n) => String(n).trim().split(/\s+/).slice(0, 2).map((p) => p.charAt(0)).join('').toUpperCase() || '?';
+            const barra = (n) => `<span class="dx-li-bar">${n ? `<i style="width:${Math.round(n / maxEq * 100)}%"></i>` : ''}</span>`;
+            const pl = (n, um, varios) => n + ' ' + (n === 1 ? um : varios);
+            $('dx-equipe-sub').textContent = semTec.length ? pl(semTec.length, 'chamado aguarda', 'chamados aguardam') + ' atribuição' : 'Chamados em aberto por técnico';
+            let html = semTec.length
+                ? `<button type="button" class="dx-li" style="--k:251, 191, 36" onclick="goQueue('unassigned')" title="Ver os chamados sem técnico"><span class="dx-av"><i class="fa-solid fa-inbox"></i></span><span class="dx-li-t"><b>Sem atribuição</b><small>Aguardando um técnico assumir</small></span><span class="dx-li-n">${semTec.length}</span>${barra(semTec.length)}</button>`
+                : '';
+            html += linhas.map((l) =>
+                `<button type="button" class="dx-li" style="--k:96, 165, 250" data-n="${escapeHtml(l.nome)}" onclick="dxVerTecnico(this.dataset.n)" title="Ver os chamados de ${escapeHtml(l.nome)}">` +
+                `<span class="dx-av">${escapeHtml(iniciais(l.nome))}</span><span class="dx-li-t"><b>${escapeHtml(l.nome)}${l.atrasados ? `<span class="dx-late">${l.atrasados} vencido${l.atrasados > 1 ? 's' : ''}</span>` : ''}</b>` +
+                `<small>${l.n ? pl(l.n, 'chamado em aberto', 'chamados em aberto') : 'Livre, sem chamados em aberto'}</small></span><span class="dx-li-n">${l.n}</span>${barra(l.n)}</button>`).join('');
+            eq.innerHTML = html || '<div class="dx-vazio">Nenhum técnico cadastrado e nenhum chamado em aberto.</div>';
+        }
+
         function initCharts() {
+            renderDashExtras();
             if (typeof Chart === 'undefined') return;
 
+            // Categorias do mais para o menos frequente
             const categories = {};
-            const urgencies = {};
-
             ticketsList.forEach(t => {
                 categories[t.category] = (categories[t.category] || 0) + 1;
-                urgencies[t.urgency] = (urgencies[t.urgency] || 0) + 1;
             });
+            const catOrdem = Object.keys(categories).sort((a, b) => (categories[b] - categories[a]) || a.localeCompare(b, 'pt-BR'));
 
             if (chartCategoryInstance) chartCategoryInstance.destroy();
-            if (chartUrgencyInstance) chartUrgencyInstance.destroy();
+            if (chartVolumeInstance) chartVolumeInstance.destroy();
             chartCategoryInstance = null;
-            chartUrgencyInstance = null;
+            chartVolumeInstance = null;
 
             const canvasCat = document.getElementById('chartCategory');
-            const canvasUrg = document.getElementById('chartUrgency');
-            if (!canvasCat || !canvasUrg) return;
+            const canvasVol = document.getElementById('chartVolume');
+            if (!canvasCat || !canvasVol) return;
 
             // Os textos do gráfico acompanham a escala da interface (rem), inclusive em 2K/4K
             const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
@@ -5487,14 +5670,14 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             };
 
             const ctxCat = canvasCat.getContext('2d');
-            const catLabels = Object.keys(categories);
-            const catRgb = l => (CATEGORY_STYLE[l] && CATEGORY_STYLE[l].rgb) || '251, 191, 36';
-            // Cada barra é um degradê da cor da categoria (a mesma do cartão do catálogo): do translúcido ao vivo
+            const catLabels = catOrdem;
+            // Ranking de uma categoria só: todas as barras na cor de destaque da paleta (o comprimento já diz quem é maior)
+            const accRgb = cssVar('--acc-rgb', '79, 124, 255');
             const gradW = canvasCat.clientWidth || 400;
-            const barFill = (l) => {
+            const barFill = () => {
                 const g = ctxCat.createLinearGradient(0, 0, gradW, 0);
-                g.addColorStop(0, `rgba(${catRgb(l)}, 0.22)`);
-                g.addColorStop(1, `rgba(${catRgb(l)}, 0.95)`);
+                g.addColorStop(0, `rgba(${accRgb}, 0.35)`);
+                g.addColorStop(1, `rgba(${accRgb}, 0.95)`);
                 return g;
             };
             // Número de chamados na ponta de cada barra
@@ -5519,9 +5702,9 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                     labels: catLabels.map(l => (CATEGORY_STYLE[l] && CATEGORY_STYLE[l].short) || shortLabel(l, 18)),
                     datasets: [{
                         label: 'Chamados',
-                        data: Object.values(categories),
+                        data: catLabels.map(l => categories[l]),
                         backgroundColor: catLabels.map(barFill),
-                        borderColor: catLabels.map(l => `rgba(${catRgb(l)}, 0.95)`),
+                        borderColor: `rgba(${accRgb}, 0.95)`,
                         borderWidth: 1,
                         borderRadius: Math.round(rem * 0.45),
                         borderSkipped: false,
@@ -5545,50 +5728,32 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 plugins: [barValues]
             });
 
-            const urgLabels = Object.keys(urgencies);
-            const urgTotal = Object.values(urgencies).reduce((a, b) => a + b, 0);
-            const centerText = {
-                id: 'centerText',
-                afterDraw(chart) {
-                    const { ctx, chartArea } = chart;
-                    if (!chartArea) return;
-                    const x = (chartArea.left + chartArea.right) / 2;
-                    const y = (chartArea.top + chartArea.bottom) / 2;
-                    ctx.save();
-                    ctx.textAlign = 'center';
-                    ctx.textBaseline = 'middle';
-                    ctx.fillStyle = cssVar('--white', '#ffffff');
-                    ctx.font = `700 ${Math.round(rem * 1.9)}px "JetBrains Mono", Consolas, monospace`;
-                    ctx.fillText(String(urgTotal), x, y - rem * 0.35);
-                    ctx.fillStyle = cssVar('--muted', '#9ba6c4');
-                    ctx.font = `600 ${Math.round(rem * 0.7)}px "Plus Jakarta Sans", "Segoe UI", sans-serif`;
-                    ctx.fillText('CHAMADOS', x, y + rem * 1.1);
-                    ctx.restore();
-                }
-            };
-
-            chartUrgencyInstance = new Chart(canvasUrg.getContext('2d'), {
-                type: 'doughnut',
+            // Volume dos últimos 14 dias: abertos (azul) e encerrados (verde), um par de barras por dia
+            const dx = dxMetricas();
+            const blueRgb = cssVar('--blue-rgb', '96, 165, 250');
+            const greenRgb = cssVar('--green-rgb', '52, 211, 153');
+            chartVolumeInstance = new Chart(canvasVol.getContext('2d'), {
+                type: 'bar',
                 data: {
-                    labels: urgLabels,
-                    datasets: [{
-                        data: Object.values(urgencies),
-                        backgroundColor: urgLabels.map(l => URGENCY_COLORS[l] || '#64748b'),
-                        borderColor: `rgb(${dkRgb})`,
-                        borderWidth: Math.max(2, Math.round(rem * 0.2)),
-                        hoverOffset: Math.round(rem * 0.4)
-                    }]
+                    labels: dx.dias.map(d => d.rot),
+                    datasets: [
+                        { label: 'Abertos', data: dx.dias.map(d => d.abertos), backgroundColor: `rgba(${blueRgb}, 0.85)`, borderRadius: Math.round(rem * 0.25), borderSkipped: false, maxBarThickness: Math.round(rem * 1.1) },
+                        { label: 'Encerrados', data: dx.dias.map(d => d.encerrados), backgroundColor: `rgba(${greenRgb}, 0.85)`, borderRadius: Math.round(rem * 0.25), borderSkipped: false, maxBarThickness: Math.round(rem * 1.1) }
+                    ]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    cutout: '68%',
+                    interaction: { mode: 'index', intersect: false },
                     plugins: {
-                        legend: { position: 'bottom', labels: { color: cssVar('--ink-2', '#dbe2f3'), font: fontBase, usePointStyle: true, pointStyle: 'circle', padding: Math.round(rem * 1.1) } },
+                        legend: { position: 'top', align: 'end', labels: { color: cssVar('--ink-2', '#dbe2f3'), font: fontBase, usePointStyle: true, pointStyle: 'rectRounded', boxWidth: Math.round(rem * 0.7), padding: Math.round(rem * 1.1) } },
                         tooltip
+                    },
+                    scales: {
+                        x: { ticks: { color: tickColor, font: fontBase, maxRotation: 0, autoSkip: true, maxTicksLimit: 14 }, grid: { display: false }, border: { display: false } },
+                        y: { beginAtZero: true, suggestedMax: 4, ticks: { color: tickColor, font: fontBase, precision: 0 }, grid: { color: gridColor }, border: { display: false } }
                     }
-                },
-                plugins: [centerText]
+                }
             });
         }
 

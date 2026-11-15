@@ -281,15 +281,17 @@ body.light .fd-root .fd-selo-medio, html.light .fd-root .fd-selo-medio { color: 
 .fd-acum-zero { stroke: var(--fd-zero); stroke-width: 1; stroke-dasharray: 3 3; vector-effect: non-scaling-stroke; }
 .fd-acum-ponto { fill: var(--fd-accent); }
 .fd-acum-eixo { display: flex; justify-content: space-between; font-size: 10px; font-weight: 600; color: var(--fd-faint); }
-.fd-acum-lado { flex: none; width: 190px; display: flex; flex-direction: column; gap: 5px; }
+.fd-acum-lado { flex: none; width: max-content; min-width: 190px; max-width: 56%; display: flex; flex-direction: column; gap: 5px; }
 .fd-acum-barra { display: flex; height: 9px; border-radius: 99px; overflow: hidden; background: var(--fd-track); }
 .fd-acum-barra i { display: block; height: 100%; }
 .fd-acum-in { background: var(--fd-in); }
 .fd-acum-out { background: var(--fd-out); }
-.fd-acum-legenda { display: flex; justify-content: space-between; gap: 8px; font-size: 11px; color: var(--fd-muted); }
+.fd-acum-legenda { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 12px; font-size: 11px; color: var(--fd-muted); }
 .fd-acum-legenda span { display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
 .fd-acum-legenda .fd-money { font-weight: 700; color: var(--fd-ink); }
 .fd-hero-grafico { margin: 6px 0 2px; }
+.fd-hero-cap { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 10px; margin-top: 8px; font-size: 12px; font-weight: 600; color: var(--fd-ink-2); }
+.fd-hero-cap span { font-size: 11px; font-weight: 500; color: var(--fd-muted); }
 .fd-spark-caixa { position: relative; }
 .fd-spark { width: 100%; height: 84px; display: block; overflow: visible; }
 .fd-spark path, .fd-spark line { vector-effect: non-scaling-stroke; }
@@ -481,7 +483,7 @@ body.light .fd-root .fd-link, html.light .fd-root .fd-link { color: #1D5FB8; }
   .fd-ag-item { grid-template-columns: 42px minmax(0, 1fr) auto; }
   .fd-ag-item .fd-btn-baixa { grid-column: 2 / -1; justify-self: start; }
   .fd-acum-corpo { flex-direction: column; align-items: stretch; gap: 8px; }
-  .fd-acum-lado { width: auto; }
+  .fd-acum-lado { width: auto; min-width: 0; max-width: none; }
   .fd-acum-svg { height: 48px; }
 }
 @container fd (max-width: 520px) {
