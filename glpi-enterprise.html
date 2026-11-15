@@ -1805,12 +1805,12 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             .tt { min-width: 0; }
             .tt thead { display: none; }
             .tt, .tt tbody { display: block; width: 100%; }
-            .tt tbody tr.tt-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "who acts" "role status" "filas filas" "load load"; align-items: center; gap: .6rem .8rem; padding: .9rem .1rem; border-bottom: 1px solid var(--line-soft); }
+            .tt tbody tr.tt-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "who who" "role status" "filas filas" "load acts"; align-items: center; gap: .6rem .8rem; padding: .9rem .1rem; border-bottom: 1px solid var(--line-soft); }
             .tt tbody tr.tt-row:last-child { border-bottom: 0; }
             .tt tbody tr.tt-row:hover { background: transparent; }
             .tt tbody tr.tt-row td { display: block; padding: 0; border: 0; min-width: 0; }
             .tt td.c-who { grid-area: who; width: auto; max-width: none; }
-            .tt td.c-acts { grid-area: acts; }
+            .tt td.c-acts { grid-area: acts; justify-self: end; }
             .tt td.c-role { grid-area: role; }
             .tt td.c-status { grid-area: status; justify-self: end; }
             .tt td.c-filas { grid-area: filas; }
@@ -1824,6 +1824,54 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             .tt-more { width: 2.5rem; }
             .tt-menu button { min-height: 2.75rem; }
         }
+
+        /* ==================== Técnicos e Filas: resumo, saúde das filas e janelas (15/11) ==================== */
+        /* Resumo no topo (mesmos cartões do dashboard, mais baixos) */
+        .tt-kpis { display: grid; gap: .8rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        @media (min-width: 1100px) { .tt-kpis { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+        @media (max-width: 379px) { .tt-kpis { grid-template-columns: minmax(0, 1fr); } }
+        .tt-kpis .kpi { padding: .8rem .95rem; }
+        .tt-kpis .kpi-value { margin-top: .3rem; font-size: 1.7rem; }
+        .tt-kpis .kpi-value small { margin-left: .15rem; font-size: .5em; font-weight: 600; color: var(--muted); text-shadow: none; }
+        .tt-kpis .kpi-ico { width: 2rem; height: 2rem; }
+        .tt-kpis .kpi .load { min-width: 0; margin-top: .45rem; }
+
+        /* Cartão da fila: faixa lateral pela saúde (verde ok, âmbar atenção, vermelho sem quem atenda, cinza inativa) */
+        .qcard { --qs: var(--green-rgb); position: relative; }
+        .qcard::before { content: ""; position: absolute; left: 0; top: .85rem; bottom: .85rem; width: 3px; border-radius: 0 3px 3px 0; background: rgb(var(--qs)); box-shadow: 0 0 .9rem rgba(var(--qs), .65); }
+        .qcard.q-warn { --qs: var(--amber-rgb); }
+        .qcard.q-bad { --qs: var(--rose-rgb); }
+        .qcard.q-off { --qs: var(--slate-rgb); opacity: .72; }
+        .qcard.q-bad { border-color: rgba(var(--rose-rgb), .4); }
+        .qc-alert { display: flex; align-items: flex-start; gap: .5rem; padding: .45rem .65rem; border-radius: .7rem; font-size: max(.78rem, 12px); line-height: 1.4; color: var(--t-rose); background: rgba(var(--rose-rgb), .12); border: 1px solid rgba(var(--rose-rgb), .35); }
+        .qc-alert.warn { color: var(--t-amber); background: rgba(var(--amber-rgb), .1); border-color: rgba(var(--amber-rgb), .32); }
+        .qc-alert i { flex: none; margin-top: .18rem; }
+        /* Os três números em uma linha só (antes eram 3 quadros altos) */
+        .qc-stats { display: flex; flex-wrap: wrap; gap: .4rem; }
+        .qc-stats div { display: inline-flex; align-items: baseline; gap: .35rem; padding: .25rem .65rem; text-align: left; border-radius: 99px; }
+        .qc-stats b { display: inline; font-size: .95rem; }
+        .qc-stats small { display: inline; }
+        .tt-kpis .kpi { align-content: start; }
+        .qc-stats .is-warn { border-color: rgba(var(--amber-rgb), .45); background: rgba(var(--amber-rgb), .1); }
+        .qc-stats .is-warn b { color: var(--t-amber); }
+        .qc-stats .is-bad { border-color: rgba(var(--rose-rgb), .45); background: rgba(var(--rose-rgb), .1); }
+        .qc-stats .is-bad b { color: var(--t-rose); }
+        .chipx.off { opacity: .55; text-decoration: line-through; }
+        .chipx.more { cursor: pointer; color: var(--white); background: rgba(var(--acc-rgb), .18); border-color: rgba(var(--acc-rgb), .5); }
+        .chipx.more:hover { background: rgba(var(--acc-rgb), .3); }
+        .chipx.more:focus-visible { outline: 2px solid rgba(var(--acc-rgb), .9); outline-offset: 2px; }
+        .qc-list:not(.is-open) .chipx.extra { display: none; }
+
+        /* Janelas de fila/técnico: o `.field label {display:block}` global vencia o `.chk {display:flex}` e o checkbox ficava sobre o texto */
+        .field label.chk { display: flex; align-items: center; gap: .55rem; margin-bottom: 0; font-size: max(.78rem, 12px); font-weight: 600; letter-spacing: 0; }
+        .chk-grid { overflow-x: hidden; max-height: min(15rem, 34vh); }
+        .chk-head { display: flex; align-items: baseline; justify-content: space-between; gap: .6rem; flex-wrap: wrap; margin-bottom: .35rem; }
+        .chk-head .lbl { margin-bottom: 0; }
+        .chk-count { margin-left: .25rem; font-size: max(.75rem, 12px); font-weight: 500; color: var(--muted); }
+        .chk-tools { display: inline-flex; gap: .2rem; }
+        .chk-tools button { padding: .15rem .5rem; border-radius: .5rem; font-size: max(.75rem, 12px); font-weight: 700; color: var(--acc-l); }
+        .chk-tools button:hover { background: rgba(var(--lt), .09); color: var(--white); }
+        .chk-tools button:focus-visible { outline: 2px solid rgba(var(--acc-rgb), .9); outline-offset: 1px; }
 
         /* ==================== Banner do catálogo: texto à esquerda e ações em cartões iguais à direita, centrados na mesma linha (15/11) ==================== */
         .hero { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 1rem 2.5rem; padding: 1.3rem 1.7rem; border-radius: 1.4rem; }
@@ -2567,6 +2615,8 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                             </div>
                         </div>
 
+                        <div id="teams-kpis" class="tt-kpis" role="group" aria-label="Resumo de técnicos e filas"><!-- JS --></div>
+
                         <div class="teams-layout">
                             <section class="teams-col" aria-label="Filas de atendimento">
                                 <div class="team-h"><i class="fa-solid fa-layer-group c-amber"></i> Filas de atendimento <small id="teams-queues-count"></small></div>
@@ -3127,13 +3177,19 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                     <label for="queue-desc">Descrição <span class="opt">(opcional)</span></label>
                     <input type="text" id="queue-desc" maxlength="200" autocomplete="off" class="input focus-blue" placeholder="Para que serve esta fila">
                 </div>
-                <div class="field">
-                    <label>Categorias que entram nesta fila</label>
+                <div class="field" role="group" aria-labelledby="queue-cats-lbl">
+                    <div class="chk-head">
+                        <span id="queue-cats-lbl" class="lbl">Categorias que entram nesta fila <small id="queue-cats-count" class="chk-count"></small></span>
+                        <span class="chk-tools"><button type="button" onclick="chkAll('queue-cats', true)">Marcar todas</button><button type="button" onclick="chkAll('queue-cats', false)">Limpar</button></span>
+                    </div>
                     <div id="queue-cats" class="chk-grid"><!-- JS --></div>
                     <p class="form-note" style="margin-top:.4rem;">O chamado aberto nessas categorias já cai nesta fila. Sem categoria marcada, a fila só recebe chamados encaminhados por um técnico.</p>
                 </div>
-                <div class="field">
-                    <label>Técnicos que atendem a fila</label>
+                <div class="field" role="group" aria-labelledby="queue-members-lbl">
+                    <div class="chk-head">
+                        <span id="queue-members-lbl" class="lbl">Técnicos que atendem a fila <small id="queue-members-count" class="chk-count"></small></span>
+                        <span class="chk-tools"><button type="button" onclick="chkAll('queue-members', true)">Marcar todos</button><button type="button" onclick="chkAll('queue-members', false)">Limpar</button></span>
+                    </div>
                     <div id="queue-members" class="chk-grid"><!-- JS --></div>
                 </div>
                 <label class="chk" for="queue-active"><input type="checkbox" id="queue-active" checked><span>Fila ativa (recebe chamados novos)</span></label>
@@ -6140,9 +6196,104 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         const ttNorm = (s) => String(s == null ? '' : s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 
         function renderTeams() {
+            renderTeamKpis();
             renderTeamQueues();
             renderTeamTechs();
         }
+
+        // Técnicos de uma fila (do diretório) e quantos deles estão ativos
+        const queueMembers = (q) => (q.tecnicos || []).map(techByEmail).filter(Boolean);
+
+        // Resumo no topo: filas ativas, técnicos disponíveis, chamados sem técnico e carga da equipe
+        function renderTeamKpis() {
+            const box = $('teams-kpis');
+            if (!box) return;
+            const load = techLoadMap();
+            const activeTechs = techDirectory.filter((d) => d.active);
+            let available = 0, full = 0, openOnTeam = 0;
+            activeTechs.forEach((d) => {
+                const ld = load.get(d.name) || { open: 0, working: 0 };
+                const st = techStateOf(d, ld);
+                if (st === 'available') available++;
+                if (st === 'full') full++;
+                openOnTeam += ld.open;
+            });
+            const activeQueues = queuesList.filter((q) => q.ativa !== false);
+            const queuesNoTech = activeQueues.filter((q) => !queueMembers(q).some((m) => m.active)).length;
+            const unassigned = ticketsList.filter((t) => isOpenTicket(t) && !hasTech(t)).length;
+            const capacity = activeTechs.length * TECH_CAPACITY;
+            const pct = capacity ? Math.min(100, Math.round((openOnTeam / capacity) * 100)) : 0;
+            const loadCls = !capacity ? 'off' : (pct >= 100 ? 'full' : (pct >= 60 ? 'warn' : ''));
+            const act = (fn) => `onclick="${fn}" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"`;
+            const plural = (n, one, many) => n + ' ' + (n === 1 ? one : many);
+
+            box.innerHTML = `
+                <div class="glass kpi ${queuesNoTech ? 'rose' : ''}">
+                    <div class="kpi-label">Filas ativas</div>
+                    <div class="kpi-ico"><i class="fa-solid fa-layer-group"></i></div>
+                    <div class="kpi-value">${activeQueues.length}</div>
+                    <div class="kpi-sub">${queuesNoTech ? plural(queuesNoTech, 'fila sem técnico ativo', 'filas sem técnico ativo') : (queuesList.length ? 'de ' + plural(queuesList.length, 'fila cadastrada', 'filas cadastradas') + ', todas com técnico' : 'Nenhuma fila cadastrada')}</div>
+                </div>
+                <div class="glass kpi ${activeTechs.length && !available ? 'amber' : 'green'}" ${act("setTeamsTechStatus('available')")} title="Mostrar só os técnicos disponíveis">
+                    <div class="kpi-label">Técnicos disponíveis</div>
+                    <div class="kpi-ico"><i class="fa-solid fa-user-check"></i></div>
+                    <div class="kpi-value">${available}</div>
+                    <div class="kpi-sub">de ${plural(activeTechs.length, 'ativo', 'ativos')}${full ? ' · ' + full + ' no limite' : ''}</div>
+                </div>
+                <div class="glass kpi ${unassigned ? 'amber' : 'slate'}" ${act("goQueue('unassigned')")} title="Abrir a fila só com os chamados sem técnico">
+                    <div class="kpi-label">Chamados sem técnico</div>
+                    <div class="kpi-ico"><i class="fa-solid fa-inbox"></i></div>
+                    <div class="kpi-value">${unassigned}</div>
+                    <div class="kpi-sub">${unassigned ? 'Abrir na fila para atribuir' : 'Todos os chamados abertos têm técnico'}</div>
+                </div>
+                <div class="glass kpi ${loadCls === 'full' ? 'rose' : (loadCls === 'warn' ? 'amber' : (loadCls === 'off' ? 'slate' : ''))}">
+                    <div class="kpi-label">Carga da equipe</div>
+                    <div class="kpi-ico"><i class="fa-solid fa-gauge-high"></i></div>
+                    <div class="kpi-value">${pct}<small>%</small></div>
+                    <div class="kpi-sub">${capacity ? openOnTeam + ' de ' + capacity + ' vagas em uso' : 'Sem técnico ativo'}<div class="load ${loadCls}" aria-hidden="true"><div class="load-bar"><i style="width:${pct}%"></i></div></div></div>
+                </div>`;
+        }
+
+        // Até `max` chips à vista; o resto fica atrás de um "+N" que abre/fecha (o estado é lembrado, a tela se redesenha sozinha a cada 20 s)
+        const qcOpen = new Set();
+        function qcChips(key, items, max, one, none) {
+            if (!items.length) return none;
+            const open = qcOpen.has(key);
+            const rest = items.length - max;
+            return items.map((it, i) => one(it, i >= max ? ' extra' : '')).join('')
+                + (rest > 0 ? `<button type="button" class="chipx more" data-k="${escapeHtml(key)}" data-n="${rest}" aria-expanded="${open}" title="${open ? 'Mostrar menos' : 'Mostrar os outros ' + rest}" onclick="toggleQcChips(this)">${open ? 'menos' : '+' + rest}</button>` : '');
+        }
+
+        function toggleQcChips(btn) {
+            const key = btn.dataset.k;
+            const on = !qcOpen.has(key);
+            if (on) qcOpen.add(key); else qcOpen.delete(key);
+            const list = btn.closest('.qc-list');
+            if (list) list.classList.toggle('is-open', on);
+            btn.setAttribute('aria-expanded', String(on));
+            btn.textContent = on ? 'menos' : '+' + btn.dataset.n;
+            btn.title = on ? 'Mostrar menos' : 'Mostrar os outros ' + btn.dataset.n;
+        }
+
+        // Janela da fila/técnico: contador "n de m" e marcar/limpar tudo
+        function updateChkCount(id) {
+            const box = $(id), out = $(id + '-count');
+            if (!box || !out) return;
+            const all = box.querySelectorAll('input[type="checkbox"]').length;
+            out.textContent = all ? '· ' + box.querySelectorAll('input:checked').length + ' de ' + all : '';
+        }
+
+        function chkAll(id, on) {
+            const box = $(id);
+            if (!box) return;
+            box.querySelectorAll('input[type="checkbox"]').forEach((i) => { i.checked = on; });
+            updateChkCount(id);
+        }
+
+        document.addEventListener('change', (e) => {
+            const box = e.target && e.target.closest ? e.target.closest('.chk-grid') : null;
+            if (box && box.id) updateChkCount(box.id);
+        });
 
         function renderTeamQueues() {
             const box = $('teams-queues');
@@ -6162,23 +6313,35 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 box.innerHTML = '<div class="glass qcard"><p class="form-note">Nenhuma fila encontrada para esta busca.</p></div>';
             } else {
                 box.innerHTML = visible.map((q) => {
-                    const members = (q.tecnicos || []).map(techByEmail).filter(Boolean);
+                    const members = queueMembers(q);
+                    const activeMembers = members.filter((m) => m.active);
                     const open = openCountForQueue(q.nome);
                     const noTech = ticketsList.filter((t) => isOpenTicket(t) && t.queue === q.nome && !hasTech(t)).length;
-                    const cats = (q.categorias || []).map((c) => `<span class="chipx">${escapeHtml(c)}</span>`).join('') || '<span class="chipx none">nenhuma: só recebe chamados encaminhados</span>';
-                    const people = members.map((m) => `<span class="chipx" title="${escapeHtml(m.email)}"><i class="fa-solid ${m.kind === 'admin' ? 'fa-user-shield' : 'fa-user'}"></i>${escapeHtml(m.name)}</span>`).join('') || '<span class="chipx none">nenhum técnico: cadastre ou escolha na fila</span>';
-                    return `<article class="glass qcard${q.ativa === false ? ' is-off' : ''}">
+                    const off = q.ativa === false;
+                    // Saúde da fila: sem técnico ativo (quem atende?) vira aviso; chamados esperando técnico só destacam o número e a faixa
+                    let state = off ? 'off' : 'ok', alert = '';
+                    if (!off && !activeMembers.length) {
+                        state = open ? 'bad' : 'warn';
+                        alert = members.length ? 'Todos os técnicos desta fila estão inativos.' : 'Esta fila ainda não tem técnico.';
+                        if (open) alert += ' ' + (open === 1 ? 'O chamado aberto fica' : 'Os ' + open + ' chamados abertos ficam') + ' sem quem atenda.';
+                    } else if (!off && noTech) {
+                        state = 'warn';
+                    }
+                    const cats = qcChips(q.id + ':c', q.categorias || [], 3, (c, x) => `<span class="chipx${x}">${escapeHtml(c)}</span>`, '<span class="chipx none">nenhuma: só recebe chamados encaminhados</span>');
+                    const people = qcChips(q.id + ':t', members, 4, (m, x) => `<span class="chipx${m.active ? '' : ' off'}${x}" title="${escapeHtml(m.email)}${m.active ? '' : ' (inativo)'}"><i class="fa-solid ${m.kind === 'admin' ? 'fa-user-shield' : 'fa-user'}"></i>${escapeHtml(m.name)}</span>`, '<span class="chipx none">nenhum técnico: cadastre ou escolha na fila</span>');
+                    return `<article class="glass qcard q-${state}">
                         <div class="qc-head">
                             <div><h4>${escapeHtml(q.nome)}</h4>${q.descricao ? `<p>${escapeHtml(q.descricao)}</p>` : ''}</div>
-                            ${q.ativa === false ? '<span class="badge b-slate">Inativa</span>' : '<span class="badge b-green"><span class="dot live"></span>Ativa</span>'}
+                            ${off ? '<span class="badge b-slate">Inativa</span>' : '<span class="badge b-green"><span class="dot live"></span>Ativa</span>'}
                         </div>
+                        ${alert ? `<div class="qc-alert ${state === 'bad' ? '' : 'warn'}" role="status"><i class="fa-solid ${state === 'bad' ? 'fa-circle-exclamation' : 'fa-triangle-exclamation'}" aria-hidden="true"></i><span>${escapeHtml(alert)}</span></div>` : ''}
                         <div class="qc-stats">
                             <div><b>${open}</b><small>${open === 1 ? 'aberto' : 'abertos'}</small></div>
-                            <div><b>${noTech}</b><small>sem técnico</small></div>
-                            <div><b>${members.length}</b><small>${members.length === 1 ? 'técnico' : 'técnicos'}</small></div>
+                            <div class="${noTech ? 'is-warn' : ''}"><b>${noTech}</b><small>sem técnico</small></div>
+                            <div class="${!off && !activeMembers.length ? 'is-bad' : ''}" title="${activeMembers.length} ativo(s) de ${members.length} técnico(s) na fila"><b>${activeMembers.length === members.length ? members.length : activeMembers.length + '/' + members.length}</b><small>${members.length === 1 ? 'técnico' : 'técnicos'}</small></div>
                         </div>
-                        <div class="qc-list"><span class="lbl2">Categorias que entram</span>${cats}</div>
-                        <div class="qc-list"><span class="lbl2">Técnicos da fila</span>${people}</div>
+                        <div class="qc-list${qcOpen.has(q.id + ':c') ? ' is-open' : ''}"><span class="lbl2">Categorias que entram</span>${cats}</div>
+                        <div class="qc-list${qcOpen.has(q.id + ':t') ? ' is-open' : ''}"><span class="lbl2">Técnicos da fila</span>${people}</div>
                         <div class="qc-acts">
                             <button type="button" data-n="${escapeHtml(q.nome)}" onclick="goQueueByName(this.dataset.n)" class="btn btn-ghost btn-sm"><i class="fa-solid fa-list-check c-amber"></i> Ver chamados</button>
                             <button type="button" data-id="${escapeHtml(q.id)}" onclick="openQueueModal(this.dataset.id)" class="btn btn-ghost btn-sm"><i class="fa-solid fa-pen"></i> Editar</button>
@@ -6444,6 +6607,8 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             $('queue-members').innerHTML = people.length
                 ? people.map((d) => `<label class="chk"><input type="checkbox" value="${escapeHtml(d.email)}"${q && (q.tecnicos || []).includes(d.email) ? ' checked' : ''}><span>${escapeHtml(d.name)}</span><small>${d.kind === 'admin' ? 'admin' : 'técnico'}</small></label>`).join('')
                 : '<p class="form-note">Nenhum técnico cadastrado ainda. Salve a fila e cadastre os técnicos depois.</p>';
+            updateChkCount('queue-cats');
+            updateChkCount('queue-members');
             openModal('modal-queue', '#queue-name');
         }
 
