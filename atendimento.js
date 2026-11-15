@@ -795,6 +795,8 @@ function visaoSolicitante(ordemBruta, { agora = Date.now() } = {}) {
     updated_at: paraIso(ordem.updated_at),
     assumido_em: paraIso(ordem.assumido_em),
     concluido_em: paraIso(ordem.concluido_em),
+    csat: ordem.csat || null,
+    pode_avaliar: encerrado && (!ordem.csat || !ordem.csat.rating),
     timeline: (Array.isArray(ordem.timeline) ? ordem.timeline : [])
       .filter((item) => item && !item.internal)
       .map((item) => ({
@@ -825,7 +827,7 @@ function aplicarAcaoSolicitante(ordemBruta, payload, { agoraIso, agora = Date.no
   const autor = limparTexto(ordem.client_name || '', 120) || 'Solicitante';
   const recusa = (mensagem, codigo) => ({ ok: false, mensagem, codigo });
 
-  if (!['responder', 'reabrir', 'cancelar'].includes(acao)) return recusa('Ação inválida. Use: responder, reabrir ou cancelar.', 400);
+  if (!['responder', 'reabrir', 'cancelar', 'avaliar'].includes(acao)) return recusa('Ação inválida. Use: responder, reabrir, cancelar ou avaliar.', 400);
 
   const novo = { ...ordem, timeline: Array.isArray(ordem.timeline) ? ordem.timeline.map((item) => ({ ...item })) : [] };
   const mensagem = { sender: 'Solicitante', author: autor, text: texto, date: agoraIso, internal: false };
@@ -860,6 +862,20 @@ function aplicarAcaoSolicitante(ordemBruta, payload, { agoraIso, agora = Date.no
     novo.concluido_em = null;
     novo.timeline.push(mensagem, evento('Chamado reaberto pelo solicitante.'));
     mudancas.push('reaberto: ' + (ordem.status || '—') + ' → ' + novo.status);
+  } else if (acao === 'avaliar') {
+    if (!statusEncerrado(ordem.status)) return recusa('Só é possível avaliar chamados que foram resolvidos ou fechados.', 409);
+    if (ordem.csat && ordem.csat.rating) return recusa('Este chamado já foi avaliado.', 409);
+    const nota = parseInt(p.rating || p.nota || 0, 10);
+    if (isNaN(nota) || nota < 1 || nota > 5) return recusa('A nota de satisfação deve ser entre 1 e 5 estrelas.', 400);
+    const comentario = texto || '';
+    novo.csat = {
+      rating: nota,
+      comment: comentario,
+      date: agoraIso
+    };
+    const estrelas = '★'.repeat(nota) + '☆'.repeat(5 - nota);
+    novo.timeline.push(evento(`Avaliação de satisfação (CSAT): ${estrelas} (${nota}/5 estrelas)${comentario ? ` — "${comentario}"` : ''}`));
+    mudancas.push(`avaliação CSAT registrada: ${nota}/5 estrelas`);
   } else {
     if (!podeCancelar(ordem)) {
       return recusa(ordem.status === 'Fechado' ? 'Este chamado já foi fechado.' : 'O chamado já está em atendimento e não pode ser cancelado. Envie uma mensagem à equipe.', 409);

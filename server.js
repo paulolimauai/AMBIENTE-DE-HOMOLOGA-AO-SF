@@ -20472,6 +20472,28 @@ function parseInputValue(valStr) {
   return isNaN(num) ? 0 : num;
 }
 
+// Como parseInputValue, mas preserva o sinal: saldo inicial de conta corrente pode ser negativo (cheque especial)
+function parseSignedValue(valStr) {
+  if (typeof valStr === 'number') return isNaN(valStr) ? 0 : valStr;
+  const s = String(valStr == null ? '' : valStr).trim();
+  const primeiro = s.charAt(0);
+  const n = parseInputValue(s);
+  return (primeiro === '-' || primeiro === '(') ? -n : n;
+}
+// O usuário digitou um valor com sinal de menos? (o tipo Receita/Despesa já dá o sentido; sinal no valor é erro de digitação)
+function valorTemSinalNegativo(raw) {
+  const s = String(raw == null ? '' : raw).trim();
+  return s.charAt(0) === '-' || s.charAt(0) === '(';
+}
+// Transferência entre contas / pagamento de fatura: dois lançamentos ligados (saída na origem + entrada no destino) marcados com
+// transfer:true. Movem saldo e fatura, mas NÃO são receita nem despesa (ficam fora de totais, relatórios e do dashboard).
+function isTransferTx(t) { return !!t && t.transfer === true; }
+function transferLegs(t) {
+  if (!isTransferTx(t)) return t ? [t] : [];
+  if (t.transferId == null) return [t];
+  return transactions.filter(function(x) { return x && x.transfer === true && String(x.transferId) === String(t.transferId); });
+}
+
 function autoMigrateTransactionsAndAccounts() {
   if (!accounts || accounts.length === 0) return;
   let changed = false;
@@ -20549,14 +20571,46 @@ function autoMigrateTransactionsAndAccounts() {
   }
 }
 
+// Frequência -> meses entre as ocorrências ("Semanal" é tratada à parte, de 7 em 7 dias). Antes a frequência escolhida na tela era ignorada.
+const RECURRING_STEP_MONTHS = { 'Mensal': 1, 'Bimestral': 2, 'Trimestral': 3, 'Semestral': 6, 'Anual': 12 };
+
+// Datas em que o recorrente deve cair. Fixo: do mês de início por "totalMonths" meses. Contínuo: do início até 12 meses à frente
+// de hoje (janela móvel; antes eram 36 meses de pendências futuras que inflavam os totais de "Todas as datas").
+function recurringOccurrences(r) {
+  const freq = r.freq || 'Mensal';
+  const isContinuous = !r.totalMonths || parseInt(r.totalMonths) <= 0;
+  const totalMonths = isContinuous ? 0 : parseInt(r.totalMonths);
+  const now = new Date();
+  const startM = parseInt(r.startMonth) || (currentPeriod && currentPeriod.month > 0 ? currentPeriod.month : (now.getMonth() + 1));
+  const startY = parseInt(r.startYear) || (currentPeriod && currentPeriod.year ? currentPeriod.year : now.getFullYear());
+  const day = Math.min(31, Math.max(1, parseInt(r.day) || 5));
+  const startIdx = startY * 12 + (startM - 1);
+  const endIdx = isContinuous ? Math.max(startIdx + 11, now.getFullYear() * 12 + now.getMonth() + 12) : startIdx + totalMonths - 1;
+  const list = [];
+  if (freq === 'Semanal') {
+    const p = pdCustom(startY, startM, day).split('-');
+    const cursor = new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2]));
+    const limit = new Date(Math.floor((endIdx + 1) / 12), (endIdx + 1) % 12, 1);
+    while (cursor < limit && list.length < 400) {
+      list.push({ date: cursor.getFullYear() + '-' + String(cursor.getMonth() + 1).padStart(2, '0') + '-' + String(cursor.getDate()).padStart(2, '0'), y: cursor.getFullYear(), m: cursor.getMonth() + 1 });
+      cursor.setDate(cursor.getDate() + 7);
+    }
+  } else {
+    const step = RECURRING_STEP_MONTHS[freq] || 1;
+    for (let idx = startIdx; idx <= endIdx && list.length < 400; idx += step) {
+      const y = Math.floor(idx / 12);
+      const m = (idx % 12) + 1;
+      list.push({ date: pdCustom(y, m, day), y: y, m: m });
+    }
+  }
+  list.forEach(function(o, i) { o.k = i + 1; });
+  return { list: list, isContinuous: isContinuous, weekly: freq === 'Semanal', total: list.length };
+}
+
 function syncRecurringTransactions(r) {
   if (!r || !r.id) return false;
   let changed = false;
-  const isContinuous = !r.totalMonths || parseInt(r.totalMonths) <= 0;
-  const totalM = isContinuous ? 36 : parseInt(r.totalMonths);
-  const startM = parseInt(r.startMonth) || (currentPeriod && currentPeriod.month > 0 ? currentPeriod.month : (new Date().getMonth() + 1));
-  const startY = parseInt(r.startYear) || (currentPeriod && currentPeriod.year ? currentPeriod.year : new Date().getFullYear());
-  const day = Math.min(31, Math.max(1, parseInt(r.day) || 5));
+  const occ = recurringOccurrences(r);
   const val = parseInputValue(r.val);
   const detectedMethod = r.paymentMethod || (typeof detectPaymentMethodFromName === 'function' ? detectPaymentMethodFromName(r.desc) : null) || ((r.cat && r.cat.toLowerCase().includes('cartão')) || (r.acc && r.acc.toLowerCase().includes('cartão')) ? 'Cartão de Crédito' : 'Boleto');
   const targetAcc = Array.isArray(accounts) ? accounts.find(a => a.name === r.acc) : null;
@@ -20564,24 +20618,24 @@ function syncRecurringTransactions(r) {
   const finalAccName = targetAcc ? targetAcc.name : (r.acc || (accounts[0] ? accounts[0].name : 'Principal'));
 
   if (!Array.isArray(r.appliedPeriods)) r.appliedPeriods = [];
+  const skip = Array.isArray(r.skipDates) ? r.skipDates : [];   // parcelas que o usuário excluiu de propósito: não voltam
+  const mantidas = {};
 
-  for (let k = 1; k <= totalM; k++) {
-    const monthZero = (startM - 1) + (k - 1);
-    const y = startY + Math.floor(monthZero / 12);
-    const m = (monthZero % 12) + 1;
-    const date = pdCustom(y, m, day);
-    const instStr = isContinuous ? null : (k + '/' + totalM);
-    const itemDesc = isContinuous ? r.desc : (r.desc + ' (' + k + '/' + totalM + ')');
-    const periodKey = y + '-' + String(m).padStart(2, '0');
+  occ.list.forEach(function(o) {
+    const instStr = occ.isContinuous ? null : (o.k + '/' + occ.total);
+    const itemDesc = occ.isContinuous ? r.desc : (r.desc + ' (' + o.k + '/' + occ.total + ')');
+    const periodKey = o.y + '-' + String(o.m).padStart(2, '0');
+    if (skip.indexOf(o.date) >= 0 || skip.indexOf(periodKey) >= 0) return;
 
     let existingTx = transactions.find(t => {
       if (t.recurringId === r.id) {
-        if (!isContinuous && t.installment === instStr) return true;
+        if (occ.weekly) return t.date === o.date;
+        if (!occ.isContinuous && t.installment === instStr) return true;
         const p = parseDateParts(t.date);
-        if (p && p.year === y && p.month === m) return true;
-      } else if (!t.recurringId && t.desc && (t.desc === itemDesc || t.desc === r.desc || t.desc.startsWith(r.desc + ' ('))) {
+        return !!(p && p.year === o.y && p.month === o.m);
+      } else if (!occ.weekly && !t.recurringId && t.desc && (t.desc === itemDesc || t.desc === r.desc || t.desc.startsWith(r.desc + ' ('))) {
         const p = parseDateParts(t.date);
-        if (p && p.year === y && p.month === m) {
+        if (p && p.year === o.y && p.month === o.m) {
           t.recurringId = r.id;
           return true;
         }
@@ -20590,11 +20644,11 @@ function syncRecurringTransactions(r) {
     });
 
     if (!existingTx) {
-      transactions.unshift({
+      const novo = {
         id: nextTxId++,
         desc: itemDesc,
         val: val,
-        date: date,
+        date: o.date,
         cat: r.cat,
         acc: finalAccName,
         accId: accId,
@@ -20602,15 +20656,19 @@ function syncRecurringTransactions(r) {
         type: r.type || 'out',
         installment: instStr,
         recurringId: r.id,
-        paymentMethod: detectedMethod
-      });
+        paymentMethod: detectedMethod,
+        autoGen: true
+      };
+      transactions.unshift(novo);
+      mantidas[novo.id] = true;
       changed = true;
     } else {
+      mantidas[existingTx.id] = true;
       if (existingTx.status === 'Pendente') {
-        if (existingTx.desc !== itemDesc || existingTx.val !== val || existingTx.cat !== r.cat || existingTx.acc !== finalAccName || existingTx.type !== r.type || existingTx.date !== date) {
+        if (existingTx.desc !== itemDesc || existingTx.val !== val || existingTx.cat !== r.cat || existingTx.acc !== finalAccName || existingTx.type !== r.type || existingTx.date !== o.date) {
           existingTx.desc = itemDesc;
           existingTx.val = val;
-          existingTx.date = date;
+          existingTx.date = o.date;
           existingTx.cat = r.cat;
           existingTx.acc = finalAccName;
           existingTx.accId = accId;
@@ -20626,25 +20684,24 @@ function syncRecurringTransactions(r) {
       r.appliedPeriods.push(periodKey);
       changed = true;
     }
-  }
+  });
 
-  // Se reduziu a quantidade de meses, remove as parcelas pendentes que ultrapassam o novo total
-  if (!isContinuous) {
-    const beforeLen = transactions.length;
-    transactions = transactions.filter(t => {
-      if (t.recurringId === r.id && t.status === 'Pendente') {
-        if (t.installment) {
-          const parts = t.installment.split('/');
-          const instNum = parseInt(parts[0]);
-          if (!isNaN(instNum) && instNum > totalM) return false;
-        }
-      }
-      return true;
-    });
-    if (transactions.length !== beforeLen) changed = true;
-  }
+  // Remove pendências que não correspondem mais a nenhuma ocorrência: parcelas além do novo prazo e as geradas automaticamente
+  // que saíram do calendário (ex.: frequência trocada de Mensal para Anual). Lançamentos pagos ou editados pelo usuário ficam.
+  const ultimaData = occ.list.length ? occ.list[occ.list.length - 1].date : '';
+  const totalAntes = transactions.length;
+  transactions = transactions.filter(function(t) {
+    if (t.recurringId !== r.id || t.status !== 'Pendente' || mantidas[t.id]) return true;
+    if (!occ.isContinuous && t.installment) {
+      const instNum = parseInt(String(t.installment).split('/')[0]);
+      if (!isNaN(instNum) && instNum > occ.total) return false;
+    }
+    if (t.autoGen === true && ultimaData && String(t.date) <= ultimaData) return false;
+    return true;
+  });
+  if (transactions.length !== totalAntes) changed = true;
 
-  r.appliedMonths = totalM;
+  r.appliedMonths = occ.total;
   r.paymentMethod = detectedMethod;
   return changed;
 }
@@ -21444,7 +21501,7 @@ function getCardStats(account) {
 
   const rawBalanceVal = parseInputValue(account.balance) || parseInputValue(account.limit) || parseInputValue(account.initialBalance) || 0;
   // Saldo inicial de contas bancárias puxa sempre 0 se não cadastrado manualmente; para cartões de crédito usa o limite informado (ou 0)
-  const initialBalance = isCreditCard ? rawBalanceVal : (parseInputValue(account.balance) || 0);
+  const initialBalance = isCreditCard ? rawBalanceVal : (parseSignedValue(account.balance) || 0);
 
   if (isCreditCard) {
     // Para Cartões de Crédito: initialBalance representa o Limite Total Aprovado
@@ -21547,7 +21604,7 @@ function computeTotals(list=transactions){
       faturasCartoesCredito += stats.spentTotal;
     } else {
       saldoContasBancarias += stats.currentBalance;
-      saldoInicialManualContas += (parseInputValue(a.balance) || 0);
+      saldoInicialManualContas += (parseSignedValue(a.balance) || 0);
     }
   });
 
@@ -22452,6 +22509,7 @@ async function markTransactionAsPaid(id) {
   if (!t) return;
   const ehEntrada = t.type === 'in';
   t.status = ehEntrada ? 'Recebido' : 'Pago';
+  transferLegs(t).forEach(function(perna) { if (perna !== t) perna.status = perna.type === 'in' ? 'Recebido' : 'Pago'; });
   showToast(ehEntrada ? \`✅ "\${t.desc}" marcado como RECEBIDO!\` : \`✅ Conta "\${t.desc}" marcada como PAGA!\`);
   logActivity(ehEntrada ? 'Recebimento' : 'Pagamento', 'Transação', ehEntrada ? \`Baixa realizada no recebimento de "\${t.desc}" (\${fmt(t.val)}).\` : \`Baixa realizada no pagamento de "\${t.desc}" (\${fmt(t.val)}).\`);
   await pushNotification(ehEntrada ? \`Recebimento confirmado: \${t.desc} — \${fmt(t.val)}\` : \`Pagamento realizado: \${t.desc} — \${fmt(t.val)}\`, '✅');
@@ -22468,7 +22526,7 @@ function nexusDashContexto() {
       id: a.id,
       nome: a.name,
       ehCartao: ehCartao,
-      saldoInicial: ehCartao ? 0 : (parseInputValue(a.balance) || 0),
+      saldoInicial: ehCartao ? 0 : (parseSignedValue(a.balance) || 0),
       limiteTotal: st.totalLimit,
       fatura: st.spentTotal,
       disponivel: st.availableLimit,
@@ -29067,6 +29125,8 @@ function updateAccBalanceLabel() {
 
 /* ==================== Modais e Ações de Dados ==================== */
 function openModal(id, initialType){
+  // Lançamento que é um dos lados de uma transferência: edita pela tela de transferência (os dois lados juntos)
+  if (id) { const txTransf = transactions.find(x => x.id === id); if (txTransf && isTransferTx(txTransf)) { openTransferModal(txTransf.id); return; } }
   if(categories.length===0){ showToast('Cadastre uma categoria antes de lançar uma transação'); return; }
   editingId = id || null;
   document.getElementById('overlay').classList.add('show');
@@ -29197,6 +29257,11 @@ async function saveTransaction(){
     if(descEl) descEl.focus();
     return;
   }
+  if(valorTemSinalNegativo(valorEl ? valorEl.value : '')) {
+    showToast('⚠️ Digite o valor sem o sinal de menos: o tipo (Receita ou Despesa) já define se entra ou sai.');
+    if(valorEl) valorEl.focus();
+    return;
+  }
   if(isNaN(val) || val <= 0) {
     showToast('⚠️ Por favor, informe um valor maior que zero (Ex: 100,50).');
     if(valorEl) valorEl.focus();
@@ -29249,6 +29314,7 @@ async function saveTransaction(){
       if(newCatObj) newCatObj.count = (newCatObj.count||0)+1;
     }
     Object.assign(t, {desc, val, date, cat, status, type:currentType, acc:finalAccName, accId});
+    delete t.autoGen; // editado pelo usuário: o recorrente não mexe mais nesta parcela
     showToast('Transação atualizada!');
 
     const changes = [];
@@ -29275,9 +29341,28 @@ async function saveTransaction(){
 }
 async function deleteTransaction(id){
   const target = transactions.find(t => t.id === id || String(t.id) === String(id));
-  const desc = target ? target.desc : '';
-  transactions = transactions.filter(t => t.id !== id && String(t.id) !== String(id));
-  showToast('🗑 Transação ' + (desc ? ('"' + desc + '" ') : '') + 'excluída!');
+  if (!target) return;
+  const desc = target.desc || '';
+  const pernas = transferLegs(target);
+  const resumoTx = '"' + (desc || id) + '" (' + fmt(target.val) + ')';
+  // Antes a lixeira apagava na hora, sem pedir nada (todas as outras exclusões do app pedem confirmação)
+  let aviso = 'Excluir o lançamento ' + resumoTx + '?';
+  if (isTransferTx(target) && pernas.length > 1) aviso = 'Excluir esta transferência? Os dois lados (saída e entrada) serão removidos.';
+  else if (target.recurringId) aviso = 'Excluir o lançamento ' + resumoTx + '? Ele faz parte de um lançamento recorrente: só esta parcela é removida; o recorrente continua nos outros meses.';
+  if (!confirm(aviso)) return;
+  const idsRemover = pernas.map(p => String(p.id));
+  if (target.recurringId) {
+    // Lembra a parcela excluída: sem isto o recorrente a recriava no próximo carregamento
+    const rec = recurringList.find(r => r.id === target.recurringId);
+    if (rec) {
+      if (!Array.isArray(rec.skipDates)) rec.skipDates = [];
+      const dataTx = String(target.date || '');
+      const chaveSkip = rec.freq === 'Semanal' ? dataTx : dataTx.slice(0, 7);
+      if (chaveSkip && rec.skipDates.indexOf(chaveSkip) < 0) rec.skipDates.push(chaveSkip);
+    }
+  }
+  transactions = transactions.filter(t => idsRemover.indexOf(String(t.id)) < 0);
+  showToast('🗑 ' + (pernas.length > 1 ? 'Transferência ' : 'Transação ') + (desc ? ('"' + desc + '" ') : '') + 'excluída!');
   logActivity('Exclusão', 'Transação', 'Excluiu transação "' + (desc || id) + '"');
   render();
   saveUserData().catch(e => console.warn('Erro ao salvar exclusão:', e));
@@ -29294,6 +29379,8 @@ async function toggleTransactionStatus(id) {
     newStatus = oldStatus === 'Pago' ? 'Pendente' : 'Pago';
   }
   t.status = newStatus;
+  // Transferência: os dois lados andam juntos (pendente = nenhum saiu/entrou; concluída = os dois)
+  transferLegs(t).forEach(function(perna) { if (perna !== t) perna.status = newStatus === 'Pendente' ? 'Pendente' : (perna.type === 'in' ? 'Recebido' : 'Pago'); });
   showToast('Status alterado para ' + newStatus);
   logActivity('Status', 'Transação', 'Alterou status de "' + t.desc + '" para ' + newStatus);
   render();
@@ -29374,7 +29461,8 @@ async function saveAccount(){
   const name = nameEl ? nameEl.value.trim() : '';
   const type = typeEl ? typeEl.value : 'Conta Corrente';
   const balanceRaw = balanceEl ? balanceEl.value : '';
-  const balance = parseInputValue(balanceRaw);
+  // Conta corrente pode começar negativa (cheque especial): preserva o sinal. Limite de cartão é sempre positivo.
+  const balance = type === 'Cartão de Crédito' ? parseInputValue(balanceRaw) : parseSignedValue(balanceRaw);
   const color = colorEl ? colorEl.value : '#e8b04b';
 
   if(!name){
@@ -29501,7 +29589,7 @@ async function saveCategory(){
   if(editingCatName){
     const c = categories.find(x=>x.name===editingCatName);
     const oldName = c.name;
-    if(oldName!==name && categories.some(x=>x.name===name)){ showToast('Já existe uma categoria com esse nome'); return; }
+    if(oldName!==name && categories.some(x=>x.name!==oldName && String(x.name).toLowerCase().trim()===name.toLowerCase())){ showToast('Já existe uma categoria com esse nome'); return; }
     c.name = name; c.color = color; c.type = type; c.icon = icon;
     if(oldName!==name){
       transactions.forEach(t=>{ if(t.cat===oldName) t.cat = name; });
@@ -29512,7 +29600,7 @@ async function saveCategory(){
     showToast('Categoria atualizada!');
     logActivity('Edição', 'Categoria', 'Editou categoria "' + name + '" (' + type + ')');
   } else {
-    if(categories.some(x=>x.name===name)){ showToast('Já existe uma categoria com esse nome'); return; }
+    if(categories.some(x=>String(x.name).toLowerCase().trim()===name.toLowerCase())){ showToast('Já existe uma categoria com esse nome'); return; }
     categories.push({name, color, type, icon, count:0});
     showToast('Categoria adicionada!');
     logActivity('Criação', 'Categoria', 'Cadastrou nova categoria "' + name + '" (' + type + ')');
@@ -29603,6 +29691,7 @@ function closeBudgetModal(){ document.getElementById('overlayBudget').classList.
 async function saveBudget(){
   const category = document.getElementById('orcCategoria').value;
   const limit = parseInputValue(document.getElementById('orcLimite').value);
+  if(valorTemSinalNegativo(document.getElementById('orcLimite').value)){ showToast('Informe o limite sem o sinal de menos'); return; }
   if(!category || isNaN(limit) || limit<=0){ showToast('Informe a categoria e um limite maior que zero'); return; }
   if(budgets.some(b=>b.category===category && b.id!==editingBudgetId)){ showToast('Essa categoria já tem orçamento. Edite o existente.'); return; }
   if(editingBudgetId){
@@ -29655,6 +29744,7 @@ async function saveGoal(){
   const current = parseInputValue(document.getElementById('goalCurrent').value) || 0;
   const deadline = document.getElementById('goalDeadline').value;
   if(!name || !deadline){ showToast('Preencha o nome e o prazo da meta'); return; }
+  if(valorTemSinalNegativo(document.getElementById('goalTarget').value) || valorTemSinalNegativo(document.getElementById('goalCurrent').value)){ showToast('Informe os valores da meta sem o sinal de menos'); return; }
   if(isNaN(target) || target<=0){ showToast('O objetivo da meta deve ser maior que zero'); return; }
   if(editingGoalId){
     Object.assign(goals.find(g=>g.id===editingGoalId), {name,target,current,deadline});
@@ -29684,9 +29774,11 @@ async function addContribution(id){
   const g = goals.find(x=>x.id===id);
   const v = prompt('Adicionar quanto à meta "' + g.name + '"? (R$)');
   if(v===null) return;
-  const val = parseFloat(v.replace(',','.'));
+  // parseFloat(v.replace(',','.')) lia "1.500,50" como 1,5: usa a mesma leitura de valor do resto do app
+  if(valorTemSinalNegativo(v)){ showToast('Digite o valor sem o sinal de menos.'); return; }
+  const val = parseInputValue(v);
   if(isNaN(val) || val<=0){ showToast('Valor inválido'); return; }
-  g.current += val;
+  g.current = (parseInputValue(g.current) || 0) + val;
   await saveUserData();
   showToast('Valor adicionado à meta!');
   logActivity('Edição', 'Meta', 'Adicionou contribuição de ' + fmt(val) + ' à meta "' + g.name + '" (Atual: ' + fmt(g.current) + ')');
@@ -29960,6 +30052,10 @@ async function saveRecurring(){
     startYear = parseInt(document.getElementById('recStartYear').value) || startYear;
   }
 
+  if(valorTemSinalNegativo(document.getElementById('recVal').value)){
+    showToast('⚠️ Digite o valor sem o sinal de menos: o tipo (Receita ou Despesa) já define o sentido.');
+    return;
+  }
   if(!desc || isNaN(val) || val < 0 || isNaN(day) || day < 1 || day > 31){
     showToast('Preencha os campos corretamente.');
     return;
@@ -30006,7 +30102,8 @@ function openLaunchRecurringModal(id){
   if(!r) return;
   launchingRecId = id;
 
-  const totalM = r.totalMonths ? parseInt(r.totalMonths) : 0;
+  const occInfo = recurringOccurrences(r);
+  const totalM = occInfo.isContinuous ? 0 : occInfo.total;   // nº de parcelas (com frequência Anual, 12 meses = 1 parcela)
   const appliedM = r.appliedMonths ? parseInt(r.appliedMonths) : 0;
   const remainingM = Math.max(0, totalM - appliedM);
   const nextInstallmentNum = appliedM + 1;
@@ -30115,156 +30212,59 @@ async function resetRecurringProgress(id){
   render();
 }
 
+// "Lançar" nunca duplica: o recorrente já gera todas as parcelas no extrato (como Pendente); aqui só se completa o que falta.
 async function executeLaunchRecurring(id, mode){
   const r = recurringList.find(x=>x.id===id);
   if(!r) return;
-
-  const totalM = r.totalMonths ? parseInt(r.totalMonths) : 0;
-  const targetAcc = accounts.find(a => a.name === r.acc);
-  const accId = targetAcc ? targetAcc.id : null;
-  const finalAccName = targetAcc ? targetAcc.name : r.acc;
-
-  if (!Array.isArray(r.appliedPeriods)) r.appliedPeriods = [];
-
-  const startM = r.startMonth || (currentPeriod.month === 0 ? (new Date().getMonth() + 1) : currentPeriod.month);
-  const startY = r.startYear || currentPeriod.year || (new Date().getFullYear());
-
-  if (mode === 'single') {
-    const k = (parseInt(r.appliedMonths) || 0) + 1;
-    const monthZero = (startM - 1) + (k - 1);
-    const y = startY + Math.floor(monthZero / 12);
-    const m = (monthZero % 12) + 1;
-    const date = pdCustom(y, m, r.day);
-    const desc = totalM > 0 ? (r.desc + ' (' + k + '/' + totalM + ')') : r.desc;
-
-    transactions.unshift({
-      id: nextTxId++,
-      desc,
-      val: r.val,
-      date,
-      cat: r.cat,
-      acc: finalAccName,
-      accId,
-      status: 'Pendente',
-      type: r.type,
-      installment: totalM > 0 ? (k + '/' + totalM) : null,
-      recurringId: r.id
+  const antes = transactions.length;
+  const temNoMes = function(y, m) {
+    return transactions.some(function(t) {
+      if (t.recurringId !== id) return false;
+      const p = parseDateParts(t.date);
+      return !!(p && p.year === y && p.month === m);
     });
+  };
 
-    r.appliedMonths = k;
-    r.appliedPeriods.push(y + '-' + String(m).padStart(2,'0'));
-    await saveUserData();
-    closeLaunchRecurringModal();
-    showToast(totalM > 0 ? ('Lançado mês ' + k + ' de ' + totalM + ' ("' + r.desc + '") como Pendente em ' + (MONTHS[m-1] || m) + '/' + y + '!') : ('Lançamento gerado como Pendente em ' + (MONTHS[m-1] || m) + '/' + y + '!'));
-    logActivity('Lançamento', 'Recorrente', 'Aplicou mês ' + k + '/' + (totalM || '∞') + ' do recorrente "' + r.desc + '" (' + fmt(r.val) + ')');
-    render();
-  }
-  else if (mode === 'all') {
-    const startK = (parseInt(r.appliedMonths) || 0) + 1;
-    const endK = totalM;
-    if (startK > endK) {
-      showToast('Todos os meses já foram lançados!');
-      return;
-    }
-
-    let addedCount = 0;
-    for (let k = startK; k <= endK; k++) {
-      const monthZero = (startM - 1) + (k - 1);
-      const y = startY + Math.floor(monthZero / 12);
-      const m = (monthZero % 12) + 1;
-      const date = pdCustom(y, m, r.day);
-      const desc = r.desc + ' (' + k + '/' + totalM + ')';
-
-      transactions.unshift({
-        id: nextTxId++,
-        desc,
-        val: r.val,
-        date,
-        cat: r.cat,
-        acc: finalAccName,
-        accId,
-        status: 'Pendente',
-        type: r.type,
-        installment: k + '/' + totalM,
-        recurringId: r.id
-      });
-      r.appliedPeriods.push(y + '-' + String(m).padStart(2,'0'));
-      addedCount++;
-    }
-
-    r.appliedMonths = endK;
-    await saveUserData();
-    closeLaunchRecurringModal();
-    showToast('Todos os ' + addedCount + ' meses restantes de "' + r.desc + '" foram gerados como Pendente com sucesso!');
-    logActivity('Lançamento', 'Recorrente', 'Gerou em lote ' + addedCount + ' meses do recorrente "' + r.desc + '" (total de ' + totalM + ' meses)');
-    render();
-  }
-  else if (mode === 'current_period') {
-    const k = (parseInt(r.appliedMonths) || 0) + 1;
+  if (mode === 'current_period') {
     const y = currentPeriod.year;
     const m = currentPeriod.month === 0 ? (new Date().getMonth() + 1) : currentPeriod.month;
-    const date = pdCustom(y, m, r.day);
-    const desc = totalM > 0 ? (r.desc + ' (' + k + '/' + totalM + ')') : r.desc;
-
-    transactions.unshift({
-      id: nextTxId++,
-      desc,
-      val: r.val,
-      date,
-      cat: r.cat,
-      acc: finalAccName,
-      accId,
-      status: 'Pendente',
-      type: r.type,
-      installment: totalM > 0 ? (k + '/' + totalM) : null,
-      recurringId: r.id
-    });
-
-    r.appliedMonths = k;
-    r.appliedPeriods.push(y + '-' + String(m).padStart(2,'0'));
-    await saveUserData();
-    closeLaunchRecurringModal();
-    showToast('Lançamento gerado como Pendente em ' + periodLabel() + '!');
+    if (temNoMes(y, m)) {
+      showToast('"' + r.desc + '" já está lançado em ' + periodLabel() + '. Nada foi duplicado.');
+      closeLaunchRecurringModal();
+      return;
+    }
+    // pedido explícito do usuário: se ele tinha excluído esta parcela, volta a valer
+    const chaveMes = y + '-' + String(m).padStart(2, '0');
+    if (Array.isArray(r.skipDates)) r.skipDates = r.skipDates.filter(function(k) { return k !== chaveMes; });
+    syncRecurringTransactions(r);
+    if (!temNoMes(y, m)) {
+      // fora do calendário do recorrente (ex.: trimestral e este não é mês de cobrança): lança avulso neste período
+      const alvo = accounts.find(a => a.name === r.acc);
+      transactions.unshift({
+        id: nextTxId++, desc: r.desc, val: r.val, date: pdCustom(y, m, r.day), cat: r.cat,
+        acc: alvo ? alvo.name : r.acc, accId: alvo ? alvo.id : null, status: 'Pendente', type: r.type, installment: null, recurringId: r.id
+      });
+    }
     logActivity('Lançamento', 'Recorrente', 'Lançou recorrente "' + r.desc + '" em ' + periodLabel());
-    render();
+  } else {
+    syncRecurringTransactions(r);
+    logActivity('Lançamento', 'Recorrente', 'Completou as parcelas do recorrente "' + r.desc + '"');
   }
+
+  const criados = Math.max(0, transactions.length - antes);
+  await saveUserData();
+  closeLaunchRecurringModal();
+  showToast(criados > 0
+    ? criados + ' lançamento(s) de "' + r.desc + '" gerado(s) como Pendente.'
+    : 'Todas as parcelas de "' + r.desc + '" já estão no extrato. Nada foi duplicado.');
+  render();
 }
 
 async function lancarRecorrente(id){
   const r = recurringList.find(x=>x.id===id);
   if (!r) return;
-
-  const totalM = r.totalMonths ? parseInt(r.totalMonths) : 0;
-  if (totalM > 0) {
-    openLaunchRecurringModal(id);
-  } else {
-    // Contínuo
-    const y = currentPeriod.year;
-    const m = currentPeriod.month === 0 ? (new Date().getMonth() + 1) : currentPeriod.month;
-    const date = pdCustom(y, m, r.day);
-    const targetAcc = accounts.find(a => a.name === r.acc);
-    const accId = targetAcc ? targetAcc.id : null;
-    const finalAccName = targetAcc ? targetAcc.name : r.acc;
-
-    transactions.unshift({
-      id: nextTxId++,
-      desc: r.desc,
-      val: r.val,
-      date,
-      cat: r.cat,
-      acc: finalAccName,
-      accId,
-      status: 'Pendente',
-      type: r.type,
-      recurringId: r.id
-    });
-
-    r.appliedMonths = (parseInt(r.appliedMonths) || 0) + 1;
-    await saveUserData();
-    showToast('Lançamento gerado em ' + periodLabel() + '!');
-    logActivity('Lançamento', 'Recorrente', 'Lançou recorrente contínuo "' + r.desc + '" em ' + periodLabel());
-    render();
-  }
+  if (!recurringOccurrences(r).isContinuous) openLaunchRecurringModal(id);
+  else await executeLaunchRecurring(id, 'current_period');
 }
 
 function openAlertModal(id){

@@ -688,3 +688,33 @@ test('visões do solicitante e pública trazem tipo e fila; a atualização acei
   assert.equal(A.visaoSolicitante(velho, { agora: Date.parse(AGORA) }).status, 'Resolvido');
   assert.equal(A.aplicarAcaoSolicitante(velho, { acao: 'reabrir', texto: 'Voltou a dar erro' }, { agoraIso: AGORA, agora: Date.parse(AGORA) }).ordem.status, 'Novo');
 });
+
+test('avaliação CSAT: só para chamados encerrados, com nota 1-5 e registro de feedback', () => {
+  const aberta = ordemAberta();
+  // Não pode avaliar chamado em aberto
+  const negada = A.aplicarAcaoSolicitante(aberta, { acao: 'avaliar', rating: 5, texto: 'Excelente' }, { agoraIso: AGORA });
+  assert.equal(negada.ok, false);
+  assert.equal(negada.codigo, 409);
+
+  // Chamado resolvido pode ser avaliado
+  const resolvida = A.aplicarAtualizacao(aberta, { status: 'Resolvido', solution: 'Senha enviada por SMS' }, { agoraIso: AGORA }).ordem;
+  assert.equal(A.visaoSolicitante(resolvida).pode_avaliar, true);
+
+  // Nota inválida é rejeitada
+  assert.equal(A.aplicarAcaoSolicitante(resolvida, { acao: 'avaliar', rating: 0 }, { agoraIso: AGORA }).codigo, 400);
+  assert.equal(A.aplicarAcaoSolicitante(resolvida, { acao: 'avaliar', rating: 6 }, { agoraIso: AGORA }).codigo, 400);
+
+  // Avaliação válida é salva com sucesso
+  const avaliada = A.aplicarAcaoSolicitante(resolvida, { acao: 'avaliar', rating: 5, texto: 'Atendimento muito ágil e atencioso!' }, { agoraIso: AGORA });
+  assert.ok(avaliada.ok);
+  assert.equal(avaliada.ordem.csat.rating, 5);
+  assert.equal(avaliada.ordem.csat.comment, 'Atendimento muito ágil e atencioso!');
+  assert.ok(avaliada.ordem.timeline.some((i) => i.event && /5\/5 estrelas/.test(i.text)));
+
+  // Uma vez avaliado, não pode reavaliar
+  const reavalia = A.aplicarAcaoSolicitante(avaliada.ordem, { acao: 'avaliar', rating: 4 }, { agoraIso: AGORA });
+  assert.equal(reavalia.ok, false);
+  assert.equal(reavalia.codigo, 409);
+  assert.equal(A.visaoSolicitante(avaliada.ordem).pode_avaliar, false);
+  assert.equal(A.visaoSolicitante(avaliada.ordem).csat.rating, 5);
+});

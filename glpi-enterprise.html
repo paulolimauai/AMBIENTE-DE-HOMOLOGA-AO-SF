@@ -503,7 +503,7 @@
 
         /* ---------- Dashboard Executivo: saúde do atendimento, severidade em aberto e carga da equipe ---------- */
         .dx-saude { display: grid; gap: 1rem; grid-template-columns: 1fr; }
-        @container (min-width: 36rem) { .dx-saude { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+        @container (min-width: 36rem) { .dx-saude { grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); } }
         .dx-grade { display: grid; gap: 1.5rem; grid-template-columns: 1fr; }
         @container (min-width: 56rem) {
             .dx-g-vol { grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr); }
@@ -1697,6 +1697,52 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         /* Carregamento: enquanto a primeira lista não chega, os blocos do dashboard mostram uma sombra e não números falsos */
         @keyframes dxShimmer { to { background-position: -200% 0; } }
         .dx-saude:empty, .dx-lista:empty { min-height: 4.2rem; border-radius: .9rem; background: linear-gradient(90deg, rgba(var(--lt), .04) 25%, rgba(var(--lt), .1) 50%, rgba(var(--lt), .04) 75%); background-size: 200% 100%; animation: dxShimmer 1.4s linear infinite; }
+        /* ==================== MELHORIAS GLPI ENTERPRISE: KANBAN, KB, CSAT & SLA ==================== */
+        /* Modo de exibição e alternância de visualização */
+        .view-mode-toggle { display: inline-flex; align-items: center; gap: 2px; background: rgba(var(--lt), .06); padding: 3px; border-radius: .65rem; border: 1px solid var(--line); }
+        .view-mode-toggle .btn { padding: 0 .65rem; height: max(1.75rem, 30px); font-size: .8rem; font-weight: 700; border-radius: .45rem; border: none; background: transparent; color: var(--soft); }
+        .view-mode-toggle .btn.is-active { background: var(--brand); color: var(--on-brand); box-shadow: 0 2px 8px rgba(var(--acc-rgb), .35); }
+
+        /* Quadro Kanban */
+        .kanban-board { display: grid; grid-template-columns: repeat(5, minmax(260px, 1fr)); gap: 1rem; overflow-x: auto; padding-bottom: 1rem; align-items: start; }
+        .kanban-col { background: rgba(var(--dk), .5); border: 1px solid var(--line); border-radius: .9rem; display: flex; flex-direction: column; max-height: calc(100vh - 18rem); min-height: 24rem; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+        .kanban-col-head { padding: .75rem .9rem; border-bottom: 1px solid var(--line-soft); display: flex; align-items: center; justify-content: space-between; gap: .5rem; font-size: .85rem; font-weight: 800; }
+        .kanban-col-head .col-title { display: flex; align-items: center; gap: .45rem; min-width: 0; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; }
+        .kanban-col-head .col-count { font-size: .75rem; padding: 2px 7px; border-radius: .5rem; font-weight: 800; background: rgba(var(--lt), .08); color: var(--text); }
+        .kanban-col-body { padding: .75rem; overflow-y: auto; display: flex; flex-direction: column; gap: .65rem; flex: 1; transition: background-color .15s, border-color .15s; }
+        .kanban-col-body.drag-over { background: rgba(var(--acc-rgb), .08); outline: 2px dashed var(--accent); outline-offset: -4px; border-radius: .6rem; }
+        .kanban-card { background: rgba(var(--dk), .75); border: 1px solid var(--line); border-radius: .7rem; padding: .75rem; cursor: grab; transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease; position: relative; user-select: none; }
+        .kanban-card:hover { transform: translateY(-2px); border-color: var(--accent); box-shadow: 0 4px 14px rgba(0,0,0,.25); }
+        .kanban-card:active { cursor: grabbing; opacity: .85; }
+        .kanban-card-top { display: flex; align-items: center; justify-content: space-between; gap: .4rem; margin-bottom: .45rem; }
+        .kanban-card-title { font-size: .85rem; font-weight: 700; color: var(--text); margin-bottom: .35rem; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .kanban-card-meta { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem; font-size: .72rem; color: var(--soft); margin-top: .45rem; }
+        .kanban-card-foot { display: flex; align-items: center; justify-content: space-between; gap: .4rem; margin-top: .6rem; padding-top: .5rem; border-top: 1px solid var(--line-soft); font-size: .75rem; }
+
+        /* Animação SLA em Risco */
+        @keyframes slaRiskGlow { 0%, 100% { box-shadow: 0 0 0 0 rgba(var(--orange-rgb), 0); } 50% { box-shadow: 0 0 10px 2px rgba(var(--orange-rgb), .45); } }
+        .sla-risk-pulse { animation: slaRiskGlow 2s infinite ease-in-out; border-color: rgba(var(--orange-rgb), .6) !important; color: #fdba74 !important; font-weight: 800; }
+
+        /* Base de Conhecimento (KB / FAQ) */
+        .kb-hero { padding: 1.5rem; text-align: center; max-width: 52rem; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: .75rem; }
+        .kb-search-wrap { width: 100%; max-width: 36rem; position: relative; }
+        .kb-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+        .kb-card { background: rgba(var(--dk), .5); border: 1px solid var(--line); border-radius: .85rem; padding: 1.1rem; display: flex; flex-direction: column; gap: .6rem; transition: transform .15s, border-color .15s; }
+        .kb-card:hover { transform: translateY(-2px); border-color: var(--accent); }
+        .kb-card-head { display: flex; align-items: center; gap: .6rem; font-size: .75rem; font-weight: 800; text-transform: uppercase; color: var(--muted); }
+        .kb-card h4 { font-size: 1rem; font-weight: 700; color: var(--white); margin: 0; line-height: 1.35; }
+        .kb-card p { font-size: .83rem; color: var(--soft); margin: 0; line-height: 1.45; }
+        .kb-card-body { font-size: .82rem; color: var(--text); line-height: 1.5; padding: .6rem; background: rgba(var(--lt), .03); border-radius: .5rem; border: 1px solid var(--line-soft); }
+        .kb-suggest-box { background: rgba(var(--acc-rgb), .08); border: 1px solid var(--accent); border-radius: .75rem; padding: .85rem; margin-top: .6rem; }
+        .kb-suggest-title { font-size: .82rem; font-weight: 800; color: var(--accent); display: flex; align-items: center; gap: .4rem; margin-bottom: .45rem; }
+
+        /* Avaliação de Satisfação CSAT */
+        .csat-card { background: linear-gradient(135deg, rgba(251,191,36,.12), rgba(245,158,11,.04)); border: 1px solid rgba(251,191,36,.35); border-radius: .85rem; padding: 1rem 1.1rem; display: flex; flex-direction: column; gap: .65rem; }
+        .csat-header { display: flex; align-items: center; justify-content: space-between; gap: .5rem; }
+        .csat-stars-interactive { display: flex; gap: .45rem; font-size: 1.6rem; cursor: pointer; user-select: none; }
+        .csat-star { color: rgba(var(--lt), .2); transition: color .15s ease, transform .15s ease; }
+        .csat-star.active, .csat-star:hover { color: #f59e0b; transform: scale(1.15); }
+        .csat-badge-badge { display: inline-flex; align-items: center; gap: .35rem; padding: 3px 9px; border-radius: 999px; background: rgba(251,191,36,.18); border: 1px solid rgba(251,191,36,.4); color: #fcd34d; font-size: .78rem; font-weight: 800; }
     </style>
 </head>
 <body>
@@ -1859,6 +1905,9 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 </a>
                 <a href="#" onclick="navUser('my-tickets'); return false;" id="user-nav-tickets" class="user-nav-item nav-item">
                     <i class="fa-solid fa-ticket"></i><span class="nv-t">Meus Chamados</span><span id="sidebar-user-ticket-count" class="count">0</span>
+                </a>
+                <a href="#" onclick="navUser('kb'); return false;" id="user-nav-kb" class="user-nav-item nav-item">
+                    <i class="fa-solid fa-book-bookmark"></i><span class="nv-t">Base de Ajuda</span>
                 </a>
             </div>
 
@@ -2113,6 +2162,41 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                         </div>
                     </section>
 
+                    <!-- Base de Conhecimento e Autoatendimento (FAQ) -->
+                    <section id="user-section-kb" class="stack hidden">
+                        <div class="page-head is-user">
+                            <div>
+                                <div class="crumbs"><i class="fa-solid fa-house"></i> Central do Cliente <i class="fa-solid fa-chevron-right"></i> <span class="here">Base de Conhecimento</span></div>
+                                <h2>Base de Ajuda &amp; Autoatendimento</h2>
+                                <p>Encontre respostas rápidas para as dúvidas e problemas mais frequentes antes de abrir um chamado.</p>
+                            </div>
+                            <div class="ph-actions">
+                                <button type="button" onclick="openFormModal()" class="btn btn-blue">
+                                    <i class="fa-solid fa-circle-plus"></i> Abrir Chamado
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="glass panel" style="padding:1.5rem;">
+                            <div class="kb-hero">
+                                <span class="hero-tag"><i class="fa-solid fa-lightbulb c-amber"></i> Resolução Imediata</span>
+                                <h3 style="font-size:1.4rem; font-weight:800; margin:0;">Como podemos orientar você hoje?</h3>
+                                <p style="color:var(--soft); font-size:.9rem; margin:0;">Pesquise por palavras-chave como "senha", "pix", "fatura", "bloqueio" ou "relatório".</p>
+                                <div class="kb-search-wrap">
+                                    <div class="input-icon" style="width:100%;">
+                                        <i class="fa-solid fa-magnifying-glass"></i>
+                                        <input type="search" id="kb-search-input" oninput="renderKnowledgeBase()" placeholder="Digite sua dúvida ou problema..." autocomplete="off" class="input focus-blue" style="height:3rem; font-size:1rem; padding-left:2.6rem;">
+                                    </div>
+                                </div>
+                                <div id="kb-category-chips" class="fchips blue" style="justify-content:center; margin-top:.5rem;"></div>
+                            </div>
+
+                            <div id="kb-articles-grid" class="kb-grid" style="margin-top:1.5rem;">
+                                <!-- Renderizado via JS -->
+                            </div>
+                        </div>
+                    </section>
+
                 </div>
 
 
@@ -2314,13 +2398,27 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                                         </div>
                                     </div>
                                 </div>
+                                <div class="view-mode-toggle" role="group" aria-label="Modo de visualização da fila">
+                                    <button type="button" id="btn-view-table" onclick="setQueueViewMode('table')" class="btn is-active" title="Visualização em Lista/Tabela">
+                                        <i class="fa-solid fa-table-list"></i> Tabela
+                                    </button>
+                                    <button type="button" id="btn-view-kanban" onclick="setQueueViewMode('kanban')" class="btn" title="Visualização em Quadro Kanban Ágil">
+                                        <i class="fa-solid fa-table-columns"></i> Kanban
+                                    </button>
+                                </div>
+
+                                <button type="button" onclick="exportQueueToCSV()" class="btn btn-ghost" title="Exportar chamados filtrados para CSV/Excel">
+                                    <i class="fa-solid fa-file-csv c-green"></i> Exportar CSV
+                                </button>
+
                                 <button type="button" onclick="assignBulkToMe()" class="btn btn-ghost">
                                     <i class="fa-solid fa-hand-holding-hand c-amber"></i> Assumir Selecionados
                                 </button>
                             </div>
                         </div>
 
-                        <div class="glass" style="overflow:hidden;">
+                        <!-- Visão em Tabela Clássica -->
+                        <div id="tech-queue-table-wrap" class="glass" style="overflow:hidden;">
                             <div class="table-wrap">
                                 <table class="tbl cards">
                                     <thead>
@@ -2340,6 +2438,11 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                                     <tbody id="tech-queue-tbody"><!-- JS --></tbody>
                                 </table>
                             </div>
+                        </div>
+
+                        <!-- Visão em Quadro Kanban Ágil -->
+                        <div id="tech-queue-kanban-wrap" class="kanban-board hidden">
+                            <!-- Colunas e cards renderizados via JS -->
                         </div>
 
                     </div>
@@ -2522,6 +2625,15 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                             <div class="field-foot"><p id="err-desc" class="field-err hidden"></p><span id="cnt-desc" class="counter">mínimo de 10 caracteres</span></div>
                         </div>
 
+                        <!-- Sugestão Inteligente de Autoatendimento da Base de Conhecimento -->
+                        <div id="form-kb-box" class="kb-suggest-box hidden">
+                            <div class="kb-suggest-title">
+                                <i class="fa-solid fa-lightbulb"></i>
+                                <span>Dica de Autoatendimento da Base de Conhecimento:</span>
+                            </div>
+                            <div id="form-kb-content"></div>
+                        </div>
+
                         <div class="field">
                             <label for="form-req-phone">Telefone para contato <span class="opt">(opcional)</span></label>
                             <input type="tel" id="form-req-phone" inputmode="tel" autocomplete="tel" maxlength="20" placeholder="(62) 99999-9999" oninput="maskPhoneInput(this)" class="input focus-blue">
@@ -2635,6 +2747,9 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                         <div class="eyebrow"><i class="fa-solid fa-circle-info"></i> O que você pediu</div>
                         <div id="my-desc" class="ws-desc"></div>
                     </div>
+
+                    <!-- Bloco de Avaliação de Satisfação CSAT -->
+                    <div id="my-csat-wrap" class="hidden" style="margin-bottom:1rem;"></div>
 
                     <div id="my-timeline" class="ws-timeline" aria-live="polite"><!-- JS --></div>
 
@@ -3155,6 +3270,9 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             SOLICITAR_PRINTS: "Prezado(a) {nome}, para dar continuidade à análise técnica, por favor envie um print contendo a tela inteira e o código de erro exibido.",
             RESET_EFETUADO: "Olá, {nome}! O procedimento de reset de senha foi concluído. Enviamos a credencial temporária para o seu contato de cadastro; no primeiro acesso o sistema pedirá uma nova senha.",
             ACOMPANHAMENTO: "Olá, {nome}! A correção do chamado {protocolo} foi aplicada e estamos acompanhando o ambiente. Se notar qualquer comportamento estranho, responda por aqui.",
+            COMPROVANTE_PIX: "Olá, {nome}! Para localizarmos a transação do chamado {protocolo}, por favor informe o comprovante bancário com o ID E2E ou código da operação.",
+            ACESSO_LIBERADO: "Olá, {nome}! Seu acesso ao sistema ({categoria}) foi normalizado com sucesso pela equipe de TI. Por favor, tente efetuar login e confirme se está tudo ok.",
+            CORRECAO_CADASTRO: "Olá, {nome}! Os dados cadastrais do seu chamado {protocolo} foram atualizados com sucesso no sistema.",
             RESOLVIDO: "Olá, {nome}! O incidente do chamado {protocolo} foi corrigido e testado com sucesso pela nossa equipe de TI. O chamado será marcado como RESOLVIDO; se o problema voltar, você pode reabri-lo."
         };
 
@@ -3219,6 +3337,101 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             '2ª Via de fatura': 'Requisição', 'Atendimento Técnico': 'Incidente', 'Falhas/Bugs/Correções': 'Incidente', 'Outros': 'Requisição'
         };
         const TICKET_CATEGORIES = Object.keys(CATEGORY_TYPE);
+
+        // Base de Conhecimento e FAQ Inteligente para Autoatendimento
+        const KNOWLEDGE_BASE_ARTICLES = [
+            {
+                id: 'kb-senha',
+                category: 'Acessos & Senhas',
+                serviceCategory: 'Reset de senha',
+                icon: 'fa-key',
+                color: 'blue',
+                title: 'Como redefinir ou recuperar sua senha de acesso',
+                summary: 'Passo a passo para recuperação imediata de senha pelo e-mail sem precisar esperar atendimento.',
+                steps: [
+                    'Na tela inicial de login, clique no link "Esqueci minha senha".',
+                    'Informe o e-mail cadastrado na sua conta e clique em "Enviar link de recuperação".',
+                    'Verifique sua caixa de entrada e também a pasta de Lixo Eletrônico / Spam.',
+                    'Clique no link recebido e cadastre uma nova senha com no mínimo 8 caracteres (letras maiúsculas, minúsculas e números).'
+                ],
+                keywords: 'senha password reset recuperar esqueci link acesso login'
+            },
+            {
+                id: 'kb-pix',
+                category: 'Financeiro & Pagamentos',
+                serviceCategory: 'Pagamento não reconhecido',
+                icon: 'fa-file-invoice-dollar',
+                color: 'amber',
+                title: 'Pagamento via PIX ou Boleto não liberou o acesso',
+                summary: 'Prazos de compensação bancária e procedimentos para validação do pagamento.',
+                steps: [
+                    'Pagamentos via PIX: a compensação e baixa costumam ocorrer em até 10 minutos. Tente atualizar a página com Ctrl + F5.',
+                    'Pagamentos via Boleto Bancário: o prazo de compensação da rede bancária é de 1 a 3 dias úteis.',
+                    'Se o prazo já expirou, certifique-se de que o pagamento não foi agendado para o dia do vencimento.',
+                    'Caso necessário, abra um chamado anexando ou informando o ID da transação e comprovante.'
+                ],
+                keywords: 'pagamento pix boleto compensacao banco liberacao fatura comprovante'
+            },
+            {
+                id: 'kb-bloqueio',
+                category: 'Acessos & Senhas',
+                serviceCategory: 'Desbloqueio de usuário',
+                icon: 'fa-user-lock',
+                color: 'sky',
+                title: 'Conta bloqueada por excesso de tentativas incorretas',
+                summary: 'Como funciona a proteção automática contra invasão e como restabelecer o acesso.',
+                steps: [
+                    'Por motivos de segurança, após 5 tentativas consecutivas com senha incorreta, o acesso é temporariamente bloqueado.',
+                    'Aguarde 15 minutos sem novas tentativas para o desbloqueio automático do IP.',
+                    'Se a urgência for alta ou suspeitar de bloqueio administrativo, solicite o desbloqueio imediato pelo suporte.'
+                ],
+                keywords: 'bloqueado bloqueio tentativas seguranca usuario travado suspensa'
+            },
+            {
+                id: 'kb-fatura',
+                category: 'Financeiro & Pagamentos',
+                serviceCategory: '2ª Via de fatura',
+                icon: 'fa-receipt',
+                color: 'orange',
+                title: 'Como emitir a 2ª via da sua fatura ou código de barras',
+                summary: 'Emissão rápida da fatura do mês atual ou anterior diretamente pelo portal.',
+                steps: [
+                    'Acesse o menu Financeiro > Assinatura / Faturas.',
+                    'Localize a fatura em aberto e clique no botão "Copiar Linha Digitável" ou "Gerar PIX".',
+                    'Se a fatura estiver vencida há mais de 30 dias, um novo documento com juros recalculados será gerado automaticamente.'
+                ],
+                keywords: 'fatura boleto 2 via segunda via codigo barras pix mensalidade'
+            },
+            {
+                id: 'kb-cadastro',
+                category: 'Suporte & Cadastros',
+                serviceCategory: 'Dados Cadastrais',
+                icon: 'fa-id-card',
+                color: 'purple',
+                title: 'Atualização de CPF, Nome, Telefone ou E-mail da Conta',
+                summary: 'Orientações para retificação ou transferência de titularidade de cadastro.',
+                steps: [
+                    'Para alterar telefone ou nome social, acesse seu Perfil de Usuário no canto superior direito.',
+                    'Para alteração de CPF ou titularidade jurídica (CNPJ), por conformidade fiscal (LGPD), é necessário abrir um chamado com documento comprobatório anexado.'
+                ],
+                keywords: 'cadastro cpf email telefone cnpj titularidade trocar alterar nome'
+            },
+            {
+                id: 'kb-degustacao',
+                category: 'Suporte & Cadastros',
+                serviceCategory: 'Liberação de degustação',
+                icon: 'fa-gift',
+                color: 'green',
+                title: 'Como funciona a degustação gratuita de 1 dia',
+                summary: 'Aproveite todos os recursos completos do Nexus sem cobrança prévia.',
+                steps: [
+                    'Todo novo cadastro ganha automaticamente 24 horas de acesso irrestrito a todos os relatórios, importação e conciliação.',
+                    'Não é necessário cadastrar cartão de crédito durante a degustação.',
+                    'Ao término das 24 horas, você poderá optar por assinar o plano Mensal por apenas R$ 18,00.'
+                ],
+                keywords: 'degustacao teste gratis trial free cortesia experimentacao plano'
+            }
+        ];
 
         // ============================== UTILIDADES ==============================
         // O servidor guarda título, descrição e nomes já "escapados" (&amp; &lt; &#39;...): aqui voltam ao texto normal e
@@ -3505,6 +3718,8 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 timeSpent: Number(o.time_spent) || 0,
                 solution: String(o.solution || ''),
                 timeline: timeline,
+                csat: o.csat || null,
+                canRate: own ? (Boolean(o.pode_avaliar) || (isClosed({ status }) && (!o.csat || !o.csat.rating))) : false,
                 canReply: own ? o.pode_responder !== false : true,
                 canReopen: own ? o.pode_reabrir === true : false,
                 canCancel: own ? o.pode_cancelar === true : false
@@ -4025,16 +4240,25 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             toggleSidebar(false);
             const catalog = $('user-section-catalog');
             const tickets = $('user-section-tickets');
+            const kb = $('user-section-kb');
             if (tab === 'catalog') {
                 setActiveNav('.user-nav-item', 'user-nav-catalog');
                 catalog.classList.remove('hidden');
                 tickets.classList.add('hidden');
+                if (kb) kb.classList.add('hidden');
                 renderCatalogFilter();
                 renderUserTickets();
+            } else if (tab === 'kb') {
+                setActiveNav('.user-nav-item', 'user-nav-kb');
+                if (kb) kb.classList.remove('hidden');
+                catalog.classList.add('hidden');
+                tickets.classList.add('hidden');
+                renderKnowledgeBase();
             } else {
                 setActiveNav('.user-nav-item', 'user-nav-tickets');
                 tickets.classList.remove('hidden');
                 catalog.classList.add('hidden');
+                if (kb) kb.classList.add('hidden');
                 renderUserTickets();
             }
             scrollMainTop();
@@ -4178,12 +4402,12 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         }
 
         // category / type opcionais: os cartões do catálogo e os botões "Abrir Requisição" / "Reportar Incidente" já chegam escolhidos
-        function openFormModal(category = '', type = '') {
+        function openFormModal(category = '', type = '', initialSubject = '') {
             resetFormView();
             $('form-req-name').value = currentUser ? currentUser.name : '';
             $('form-req-email').value = currentUser ? currentUser.email : '';
             const draft = loadDraft();
-            $('form-subject').value = draft && draft.subject ? draft.subject : '';
+            $('form-subject').value = initialSubject || (draft && draft.subject ? draft.subject : '');
             $('form-desc').value = draft && draft.desc ? draft.desc : '';
             $('form-req-phone').value = draft && draft.phone ? draft.phone : formatPhoneDigits(((currentUser && currentUser.phone) || '').replace(/\D/g, '').replace(/^55(?=\d{10,11}$)/, ''));
             if (draft && draft.urgency) $('form-urgency').value = draft.urgency;
@@ -4221,6 +4445,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             $('form-desc').placeholder = help.desc;
             $('form-tips').innerHTML = '<b><i class="fa-solid fa-lightbulb"></i> Para resolver mais rápido, informe</b><ul>' + help.tips.map((t) => '<li>' + escapeHtml(t) + '</li>').join('') + '</ul>';
             calculateSLA();
+            checkKbSuggestions();
             saveDraft();
         }
 
@@ -4237,6 +4462,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 cd.textContent = desc.length + '/5000';
                 cd.className = 'counter is-ok';
             }
+            checkKbSuggestions();
             if (silent !== true) {
                 showFieldError('err-subject', '');
                 showFieldError('err-desc', '');
@@ -4547,6 +4773,51 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             }
             $('my-notice').innerHTML = notice;
 
+            // Bloco de Avaliação de Satisfação CSAT
+            const csatWrap = $('my-csat-wrap');
+            if (csatWrap) {
+                if (t.status === 'Resolvido' || t.status === 'Fechado') {
+                    csatWrap.classList.remove('hidden');
+                    if (t.csat && t.csat.rating) {
+                        const stars = '★'.repeat(t.csat.rating) + '☆'.repeat(5 - t.csat.rating);
+                        csatWrap.className = 'csat-card';
+                        csatWrap.innerHTML = `
+                            <div class="csat-header">
+                                <span style="color:#f59e0b; font-weight:800; font-size:.9rem;"><i class="fa-solid fa-star"></i> Sua Avaliação: ${stars} (${t.csat.rating}/5)</span>
+                                <span class="csat-badge-badge">Avaliado</span>
+                            </div>
+                            ${t.csat.comment ? `<p style="margin:.2rem 0 0; color:var(--text); font-style:italic; font-size:.85rem;">"${escapeHtml(t.csat.comment)}"</p>` : ''}
+                        `;
+                    } else if (t.canRate) {
+                        csatWrap.className = 'csat-card';
+                        csatWrap.innerHTML = `
+                            <div class="csat-header">
+                                <span style="color:#f59e0b; font-weight:800; font-size:.9rem;"><i class="fa-solid fa-star"></i> Avalie o Atendimento</span>
+                                <small style="color:var(--muted);">Nota de 1 a 5 estrelas</small>
+                            </div>
+                            <p style="margin:0; font-size:.82rem; color:var(--soft);">Como você avalia a rapidez e clareza da resolução do seu chamado?</p>
+                            <div class="csat-stars-interactive" id="csat-star-selector" data-rating="5">
+                                <span class="csat-star active" data-val="1" onclick="setCsatStar(1)">★</span>
+                                <span class="csat-star active" data-val="2" onclick="setCsatStar(2)">★</span>
+                                <span class="csat-star active" data-val="3" onclick="setCsatStar(3)">★</span>
+                                <span class="csat-star active" data-val="4" onclick="setCsatStar(4)">★</span>
+                                <span class="csat-star active" data-val="5" onclick="setCsatStar(5)">★</span>
+                            </div>
+                            <div style="display:flex; flex-direction:column; gap:.4rem;">
+                                <input type="text" id="csat-comment-input" maxlength="250" placeholder="Comentário sobre o atendimento (opcional)..." class="input focus-blue" style="font-size:.82rem; height:2.2rem;">
+                                <button type="button" id="btn-submit-csat" onclick="submitMyRating()" class="btn btn-blue btn-sm" style="align-self:flex-start;">
+                                    <i class="fa-solid fa-check"></i> Enviar Avaliação
+                                </button>
+                            </div>
+                        `;
+                    } else {
+                        csatWrap.className = 'hidden';
+                    }
+                } else {
+                    csatWrap.className = 'hidden';
+                }
+            }
+
             setTimeline('my-timeline', t.timeline, false, !reset);
 
             $('my-reply').classList.toggle('hidden', !t.canReply);
@@ -4585,6 +4856,39 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         function onMyReplyInput() {
             $('my-reply-count').textContent = $('my-reply-text').value.length + '/2000';
             showFieldError('my-reply-err', '');
+        }
+
+        function setCsatStar(val) {
+            const starWrap = $('csat-star-selector');
+            if (!starWrap) return;
+            starWrap.dataset.rating = String(val);
+            starWrap.querySelectorAll('.csat-star').forEach((st) => {
+                const sVal = Number(st.dataset.val || 0);
+                st.classList.toggle('active', sVal <= val);
+            });
+        }
+
+        async function submitMyRating() {
+            const t = getTicket(myProtocol);
+            if (!t || myBusy) return;
+            const starWrap = $('csat-star-selector');
+            const rating = starWrap ? Number(starWrap.dataset.rating || 5) : 5;
+            const comment = ($('csat-comment-input') ? $('csat-comment-input').value : '').trim();
+            const btn = $('btn-submit-csat');
+            setBusy(btn, true, 'Enviando...');
+            myBusy = true;
+            const r = await api('POST', '/api/ordens/acao', { protocol: t.protocol, acao: 'avaliar', rating: rating, texto: comment });
+            myBusy = false;
+            setBusy(btn, false);
+            if (r.status === 401) { handleAuthExpired(); return; }
+            if (!r.ok) {
+                showToast((r.data && r.data.message) || 'Não foi possível registrar a avaliação.', 'warning');
+                return;
+            }
+            applyServerOrder(r.data.ordem, true);
+            renderMyTicket(false);
+            renderUserTickets();
+            showToast('Obrigado pela sua avaliação! ⭐', 'success');
         }
 
         async function sendMyReply() {
@@ -4726,6 +5030,20 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         function renderTechQueue() {
             const tbody = $('tech-queue-tbody');
             if (!tbody) return;
+
+            const tableWrap = $('tech-queue-table-wrap');
+            const kanbanWrap = $('tech-queue-kanban-wrap');
+            if (tableWrap && kanbanWrap) {
+                tableWrap.classList.toggle('hidden', queueViewMode !== 'table');
+                kanbanWrap.classList.toggle('hidden', queueViewMode !== 'kanban');
+            }
+            const btnTable = $('btn-view-table');
+            const btnKanban = $('btn-view-kanban');
+            if (btnTable && btnKanban) {
+                btnTable.classList.toggle('is-active', queueViewMode === 'table');
+                btnKanban.classList.toggle('is-active', queueViewMode === 'kanban');
+            }
+
             const searchVal = ($('tech-queue-search').value || '').toLowerCase().trim();
             const filterUrgency = $('tech-filter-urgency').value;
             const filterType = $('tech-filter-type').value;
@@ -4800,6 +5118,166 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 tr.innerHTML = row.html;
                 tbody.appendChild(tr);
             });
+
+            if (queueViewMode === 'kanban') {
+                renderTechKanban(filtered);
+            }
+        }
+
+        // ============================== MODO KANBAN & EXPORTAÇÃO CSV ==============================
+        let queueViewMode = ls('glpi_queue_view_mode', 'table');
+
+        function setQueueViewMode(mode) {
+            queueViewMode = mode === 'kanban' ? 'kanban' : 'table';
+            lsSet('glpi_queue_view_mode', queueViewMode);
+            const btnTable = $('btn-view-table');
+            const btnKanban = $('btn-view-kanban');
+            if (btnTable && btnKanban) {
+                btnTable.classList.toggle('is-active', queueViewMode === 'table');
+                btnKanban.classList.toggle('is-active', queueViewMode === 'kanban');
+            }
+            const tableWrap = $('tech-queue-table-wrap');
+            const kanbanWrap = $('tech-queue-kanban-wrap');
+            if (tableWrap && kanbanWrap) {
+                tableWrap.classList.toggle('hidden', queueViewMode !== 'table');
+                kanbanWrap.classList.toggle('hidden', queueViewMode !== 'kanban');
+            }
+            renderTechQueue();
+        }
+
+        function renderTechKanban(filtered) {
+            const container = $('tech-queue-kanban-wrap');
+            if (!container) return;
+
+            const columns = [
+                { id: 'Novo', title: 'Novo', icon: 'fa-inbox', color: '#60a5fa' },
+                { id: 'Atendimento atribuído', title: 'Em Atendimento', icon: 'fa-gears', color: '#fbbf24' },
+                { id: 'Pendente', title: 'Pendente', icon: 'fa-hourglass-half', color: '#c084fc' },
+                { id: 'Resolvido', title: 'Resolvido', icon: 'fa-circle-check', color: '#34d399' },
+                { id: 'Fechado', title: 'Fechado', icon: 'fa-lock', color: '#94a3b8' }
+            ];
+
+            const colHtml = columns.map(col => {
+                const ticketsInCol = filtered.filter(t => t.status === col.id);
+                const cardsHtml = ticketsInCol.length ? ticketsInCol.map(t => {
+                    const s = slaInfo(t);
+                    const isRisk = isOpenTicket(t) && s.isRisk;
+                    const riskClass = isRisk ? ' sla-risk-pulse' : '';
+                    return `
+                        <div class="kanban-card" draggable="true" ondragstart="onKanbanDragStart(event, '${t.protocol}')" onclick="openTechWorkspace('${t.protocol}')">
+                            <div class="kanban-card-top">
+                                <span class="badge b-blue mono" style="font-size:.7rem; font-weight:800;">${t.protocol}</span>
+                                <span class="badge ${t.urgency === 'Crítica' ? 'b-rose' : t.urgency === 'Alta' ? 'b-amber' : 'b-slate'}">${t.urgency}</span>
+                            </div>
+                            <div class="kanban-card-title">${escapeHtml(t.subject)}</div>
+                            <div class="kanban-card-meta">
+                                <span><i class="fa-solid fa-user"></i> ${escapeHtml(firstName(t.name))}</span>
+                                <span><i class="fa-solid fa-cube"></i> ${escapeHtml(t.category)}</span>
+                            </div>
+                            <div class="kanban-card-foot">
+                                <span class="badge ${s.state === 'late' ? 'b-rose' : s.state === 'warn' ? 'b-amber' : s.state === 'done' ? 'b-slate' : 'b-green'}${riskClass}">
+                                    <i class="fa-solid fa-stopwatch"></i> ${escapeHtml(s.label)}
+                                </span>
+                                <span class="mono" style="font-size:.7rem; color:var(--muted);">${hasTech(t) ? escapeHtml(firstName(t.technician)) : 'Sem técnico'}</span>
+                            </div>
+                        </div>
+                    `;
+                }).join('') : `<div style="text-align:center; padding:2rem 1rem; color:var(--muted); font-size:.8rem; font-style:italic;">Nenhum chamado</div>`;
+
+                return `
+                    <div class="kanban-col" data-status="${col.id}">
+                        <div class="kanban-col-head" style="border-top:3px solid ${col.color};">
+                            <div class="col-title" style="color:${col.color};">
+                                <i class="fa-solid ${col.icon}"></i> ${col.title}
+                            </div>
+                            <span class="col-count">${ticketsInCol.length}</span>
+                        </div>
+                        <div class="kanban-col-body" ondragover="onKanbanDragOver(event)" ondragleave="onKanbanDragLeave(event)" ondrop="onKanbanDrop(event, '${col.id}')">
+                            ${cardsHtml}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = colHtml;
+        }
+
+        let draggedTicketProtocol = null;
+        function onKanbanDragStart(e, protocol) {
+            draggedTicketProtocol = protocol;
+            if (e.dataTransfer) {
+                e.dataTransfer.setData('text/plain', protocol);
+                e.dataTransfer.effectAllowed = 'move';
+            }
+        }
+        function onKanbanDragOver(e) {
+            e.preventDefault();
+            const body = e.currentTarget;
+            if (body && !body.classList.contains('drag-over')) body.classList.add('drag-over');
+        }
+        function onKanbanDragLeave(e) {
+            const body = e.currentTarget;
+            if (body) body.classList.remove('drag-over');
+        }
+        async function onKanbanDrop(e, targetStatus) {
+            e.preventDefault();
+            const body = e.currentTarget;
+            if (body) body.classList.remove('drag-over');
+            const protocol = draggedTicketProtocol || (e.dataTransfer && e.dataTransfer.getData('text/plain'));
+            if (!protocol) return;
+            const t = getTicket(protocol);
+            if (!t || t.status === targetStatus) return;
+
+            showToast(`Movendo #${protocol} para "${targetStatus}"...`, 'info');
+            const patch = { status: targetStatus };
+            if (targetStatus === 'Atendimento atribuído' && !hasTech(t) && currentUser) {
+                patch.tecnico_responsavel = currentUser.name;
+            }
+            await saveTicketPatch(t, patch);
+            draggedTicketProtocol = null;
+            renderTechQueue();
+        }
+
+        function exportQueueToCSV() {
+            const list = queueOrder.map(p => getTicket(p)).filter(Boolean);
+            if (!list.length) { showToast('Não há chamados na fila atual para exportar.', 'warning'); return; }
+
+            const headers = ['Protocolo', 'Solicitante', 'Email', 'Telefone', 'Categoria', 'Tipo', 'Severidade', 'Status', 'Fila', 'Tecnico Responsavel', 'SLA', 'Data Abertura', 'Encerrado Em', 'Avaliacao CSAT', 'Assunto', 'Solucao'];
+            const rows = list.map(t => {
+                const escapeCsv = (v) => '"' + String(v || '').replace(/"/g, '""').replace(/\r?\n/g, ' ') + '"';
+                const csatVal = t.csat && t.csat.rating ? `${t.csat.rating}/5${t.csat.comment ? ' - ' + t.csat.comment : ''}` : '';
+                return [
+                    escapeCsv(t.protocol),
+                    escapeCsv(t.name),
+                    escapeCsv(t.email),
+                    escapeCsv(t.phone),
+                    escapeCsv(t.category),
+                    escapeCsv(t.type),
+                    escapeCsv(t.urgency),
+                    escapeCsv(t.status),
+                    escapeCsv(t.queue),
+                    escapeCsv(t.technician),
+                    escapeCsv(t.sla),
+                    escapeCsv(t.date),
+                    escapeCsv(t.closedAt ? formatDateBr(t.closedAt) : ''),
+                    escapeCsv(csatVal),
+                    escapeCsv(t.subject),
+                    escapeCsv(t.solution)
+                ].join(';');
+            });
+
+            const csvContent = '\uFEFF' + headers.join(';') + '\n' + rows.join('\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            const dateStr = new Date().toISOString().slice(0, 10);
+            a.href = url;
+            a.download = `chamados-glpi-${dateStr}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast(`Exportação concluída: ${list.length} chamados salvos em CSV.`, 'success');
         }
 
         // Clique na linha abre o atendimento; o checkbox só marca
@@ -4902,6 +5380,117 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 `<button type="button" class="fchip${catFilter === k ? ' is-on' : ''}" onclick="setCatFilter('${k}')" aria-pressed="${catFilter === k}">${label}<b>${count(k)}</b></button>`).join('');
             $('cat-count').textContent = shown === cards.length ? '· ' + shown + ' disponíveis' : '· ' + shown + ' de ' + cards.length;
             $('cat-empty').classList.toggle('hidden', shown > 0);
+        }
+
+        // ============================== BASE DE CONHECIMENTO & AUTOAJUDA ==============================
+        let kbSelectedCat = 'ALL';
+        function renderKnowledgeBase() {
+            const grid = $('kb-articles-grid');
+            const chips = $('kb-category-chips');
+            const searchInput = $('kb-search-input');
+            const searchVal = (searchInput ? searchInput.value : '').toLowerCase().trim();
+            if (!grid) return;
+
+            const cats = ['ALL', 'Acessos & Senhas', 'Financeiro & Pagamentos', 'Suporte & Cadastros'];
+            if (chips) {
+                chips.innerHTML = cats.map(c => `
+                    <button type="button" class="fchip ${kbSelectedCat === c ? 'is-on' : ''}" onclick="setKbCategory('${c}')">
+                        ${c === 'ALL' ? 'Todos os artigos' : c}
+                    </button>
+                `).join('');
+            }
+
+            const filtered = KNOWLEDGE_BASE_ARTICLES.filter(art => {
+                if (kbSelectedCat !== 'ALL' && art.category !== kbSelectedCat) return false;
+                if (!searchVal) return true;
+                const pool = (art.title + ' ' + art.summary + ' ' + art.keywords + ' ' + art.steps.join(' ')).toLowerCase();
+                return pool.includes(searchVal);
+            });
+
+            if (!filtered.length) {
+                grid.innerHTML = `
+                    <div style="grid-column:1/-1; text-align:center; padding:3rem 1rem; color:var(--muted);">
+                        <i class="fa-solid fa-file-circle-question" style="font-size:2.5rem; margin-bottom:.8rem; opacity:.6; display:block;"></i>
+                        <h4 style="font-size:1.1rem; color:var(--white); margin-bottom:.4rem;">Nenhum artigo encontrado para "${escapeHtml(searchVal)}"</h4>
+                        <p style="font-size:.85rem; margin-bottom:1rem;">Não encontrou a solução? Nossa equipe está à disposição para ajudar.</p>
+                        <button type="button" onclick="openFormModal('', '', '${escapeHtml(searchVal)}')" class="btn btn-blue btn-sm">
+                            <i class="fa-solid fa-circle-plus"></i> Abrir chamado com esta dúvida
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(art => `
+                <div class="kb-card">
+                    <div class="kb-card-head">
+                        <i class="fa-solid ${art.icon} c-${art.color}"></i> ${art.category}
+                    </div>
+                    <h4>${escapeHtml(art.title)}</h4>
+                    <p>${escapeHtml(art.summary)}</p>
+                    <div class="kb-card-body">
+                        <b style="display:block; margin-bottom:.35rem; color:var(--accent);">Passo a passo rápido:</b>
+                        <ol style="margin:0; padding-left:1.2rem; display:flex; flex-direction:column; gap:.3rem;">
+                            ${art.steps.map(s => `<li>${escapeHtml(s)}</li>`).join('')}
+                        </ol>
+                    </div>
+                    <div style="margin-top:auto; padding-top:.5rem; display:flex; align-items:center; justify-content:space-between; gap:.5rem;">
+                        <button type="button" onclick="showToast('Obrigado pelo seu feedback!', 'success')" class="btn btn-ghost btn-sm" style="font-size:.75rem;">
+                            <i class="fa-regular fa-thumbs-up"></i> Foi útil
+                        </button>
+                        <button type="button" onclick="openFormModal('${art.serviceCategory}', 'Requisição', '${escapeHtml(art.title)}')" class="btn btn-ghost btn-sm" style="font-size:.75rem; color:var(--accent);">
+                            Ainda preciso de ajuda <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function setKbCategory(cat) {
+            kbSelectedCat = cat;
+            renderKnowledgeBase();
+        }
+
+        function checkKbSuggestions() {
+            const box = $('form-kb-box');
+            const content = $('form-kb-content');
+            if (!box || !content) return;
+
+            const subject = ($('form-subject') ? $('form-subject').value : '').toLowerCase().trim();
+            const cat = ($('form-category') ? $('form-category').value : '');
+            if (subject.length < 3 && !cat) {
+                box.classList.add('hidden');
+                return;
+            }
+
+            const match = KNOWLEDGE_BASE_ARTICLES.find(a => {
+                if (cat && a.serviceCategory === cat) return true;
+                const keys = (a.keywords + ' ' + a.title).toLowerCase().split(' ');
+                return keys.some(k => k.length >= 4 && subject.includes(k));
+            });
+
+            if (match) {
+                box.classList.remove('hidden');
+                content.innerHTML = `
+                    <div style="font-size:.82rem; color:var(--text); line-height:1.45; margin-bottom:.5rem;">
+                        <b>${escapeHtml(match.title)}</b>: ${escapeHtml(match.summary)}
+                        <div style="margin-top:.4rem; padding:.4rem .6rem; background:rgba(var(--lt),.04); border-radius:.45rem; border:1px solid var(--line-soft);">
+                            <small style="color:var(--soft);"><strong>Dica:</strong> ${escapeHtml(match.steps[0])}</small>
+                        </div>
+                    </div>
+                    <button type="button" onclick="resolveWithKbArticle('${match.id}')" class="btn btn-ghost btn-sm" style="background:rgba(52,211,153,.15); border:1px solid rgba(52,211,153,.35); color:#6ee7b7; font-size:.75rem;">
+                        <i class="fa-solid fa-circle-check"></i> Essa dica resolveu meu problema! (Não abrir chamado)
+                    </button>
+                `;
+            } else {
+                box.classList.add('hidden');
+            }
+        }
+
+        function resolveWithKbArticle(id) {
+            closeModal('modal-form');
+            resetFormView();
+            showToast('Ficamos felizes em ajudar! Problema resolvido via Autoatendimento GLPI.', 'success');
         }
 
         // Resumo dos meus chamados (catálogo): cada cartão abre "Meus Chamados" já filtrado
@@ -5124,7 +5713,12 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             if (closed) {
                 const fechado = t.status === 'Fechado';
                 $('closed-label').textContent = fechado ? 'Chamado fechado' : 'Chamado resolvido';
-                $('closed-info').innerHTML = `<i class="fa-solid ${fechado ? 'fa-lock' : 'fa-circle-check'}"></i><div><b>${fechado ? 'Fechado' : 'Resolvido'}${t.closedAt ? ' em ' + escapeHtml(formatDateBr(t.closedAt)) : ''}.</b>${t.solution ? '<div class="notice-sol">' + escapeHtml(t.solution) + '</div>' : ''}</div>`;
+                let csatHtml = '';
+                if (t.csat && t.csat.rating) {
+                    const stars = '★'.repeat(t.csat.rating) + '☆'.repeat(5 - t.csat.rating);
+                    csatHtml = `<div class="csat-card" style="margin-top:.7rem; padding:.6rem .8rem; font-size:.82rem;"><div class="csat-header"><span style="color:#f59e0b; font-weight:800;"><i class="fa-solid fa-star"></i> Avaliação do Cliente: ${stars} (${t.csat.rating}/5)</span><span class="csat-badge-badge">${t.csat.rating >= 4 ? 'Excelente' : t.csat.rating === 3 ? 'Regular' : 'Atenção'}</span></div>${t.csat.comment ? `<p style="margin:.3rem 0 0; color:var(--text); font-style:italic;">"${escapeHtml(t.csat.comment)}"</p>` : ''}</div>`;
+                }
+                $('closed-info').innerHTML = `<i class="fa-solid ${fechado ? 'fa-lock' : 'fa-circle-check'}"></i><div><b>${fechado ? 'Fechado' : 'Resolvido'}${t.closedAt ? ' em ' + escapeHtml(formatDateBr(t.closedAt)) : ''}.</b>${t.solution ? '<div class="notice-sol">' + escapeHtml(t.solution) + '</div>' : ''}${csatHtml}</div>`;
                 // Resolvido ainda pode ser reaberto pelo solicitante; "Fechar chamado" encerra de vez
                 $('btn-close-ticket').classList.toggle('hidden', fechado);
             }
@@ -5162,11 +5756,15 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             const text = cannedTemplates[val]
                 .replace(/\{nome\}/g, t ? firstName(t.name) : 'cliente')
                 .replace(/\{protocolo\}/g, t ? t.protocol : '')
-                .replace(/\{tecnico\}/g, currentUser ? currentUser.name : 'Equipe TI');
+                .replace(/\{tecnico\}/g, currentUser ? currentUser.name : 'Equipe TI')
+                .replace(/\{categoria\}/g, t ? t.category : 'Serviço')
+                .replace(/\{sla\}/g, t ? t.sla : 'conforme política');
             const ta = $('workspace-reply-text');
             ta.value = ta.value.trim() ? ta.value.trim() + '\n\n' + text : text;
             onWsReplyInput();
             ta.focus();
+            const sel = $('ws-canned-select');
+            if (sel) sel.value = '';
         }
 
         function onWsReplyInput() {
@@ -5632,11 +6230,19 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             const vs = (!dx.semana && !dx.semanaAnt) ? 'Nenhum chamado novo nas duas últimas semanas'
                 : delta === 0 ? 'Igual à semana anterior (' + dx.semanaAnt + ')'
                 : (delta > 0 ? '▲ ' + delta + ' a mais' : '▼ ' + Math.abs(delta) + ' a menos') + ' que na semana anterior (' + dx.semanaAnt + ')';
+
+            // Satisfação do cliente (CSAT)
+            const avaliados = ticketsList.filter(t => t.csat && t.csat.rating);
+            const csatMedio = avaliados.length ? (avaliados.reduce((acc, t) => acc + t.csat.rating, 0) / avaliados.length) : null;
+            const csatRotulo = csatMedio == null ? 'Aguardando avaliações' : `${avaliados.length} ${avaliados.length === 1 ? 'avaliação' : 'avaliações'} (${Math.round(avaliados.filter(t => t.csat.rating >= 4).length / avaliados.length * 100)}% aprovação)`;
+            const csatTom = csatMedio == null ? '' : csatMedio >= 4.0 ? 'ok' : csatMedio >= 3.0 ? 'warn' : 'bad';
+
             const cartao = (cls, rot, val, sub) => `<div class="glass dx-s ${cls}"><div class="dx-s-rot">${rot}</div><div class="dx-s-val">${val}</div><div class="dx-s-sub">${sub}</div></div>`;
             saude.innerHTML =
                 cartao(tom, 'Cumprimento do SLA', pct == null ? '—' : pct + '%', pct == null ? 'Ainda sem chamados encerrados ou vencidos' : dx.noPrazo + ' de ' + dx.conhecidos + ' dentro do prazo') +
                 cartao('', 'Tempo médio de resolução', dx.tempoMedioMs == null ? '—' : dxDuracao(dx.tempoMedioMs), dx.nRes ? 'Da abertura ao encerramento, em ' + dx.nRes + (dx.nRes === 1 ? ' chamado' : ' chamados') : 'Ainda sem chamados encerrados') +
-                cartao('', 'Chamados em 7 dias', String(dx.semana), vs);
+                cartao('', 'Chamados em 7 dias', String(dx.semana), vs) +
+                cartao(csatTom, '⭐ Satisfação (CSAT)', csatMedio == null ? '—' : csatMedio.toFixed(1) + ' / 5.0', csatRotulo);
 
             // Severidade em aberto (sempre os 4 níveis, na ordem da política de SLA)
             $('dx-sev-sub').textContent = open.length ? open.length + ' em aberto · ' + late.length + ' fora do prazo' : 'Nenhum chamado em aberto';
@@ -5907,7 +6513,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         // Situação do prazo: ok (no prazo), warn (restam 25% ou menos), late (vencido), done (encerrado) ou none (sem data de abertura)
         function slaInfo(t) {
             const label = t.sla || slaForUrgency(t.urgency);
-            const info = { label: label, state: 'none', text: '', due: null };
+            const info = { label: label, state: 'none', text: '', due: null, isRisk: false };
             const start = t.createdAt ? new Date(t.createdAt) : null;
             const due = slaDueDate(start, label);
             if (!due) return info;
@@ -5915,15 +6521,24 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             if (t.status === 'Resolvido' || t.status === 'Fechado') { info.state = 'done'; info.text = t.status === 'Fechado' ? 'Fechado' : 'Resolvido'; return info; }
             const left = due.getTime() - Date.now();
             const total = due.getTime() - start.getTime();
-            if (left <= 0) { info.state = 'late'; info.text = 'Vencido em ' + fmtDue(due); }
-            else if (left <= total * 0.25) { info.state = 'warn'; info.text = 'Vence ' + fmtDue(due); }
-            else { info.state = 'ok'; info.text = 'até ' + fmtDue(due); }
+            if (left <= 0) {
+                info.state = 'late';
+                info.text = 'Vencido em ' + fmtDue(due);
+            } else if (left <= 2 * 3600 * 1000 || left <= total * 0.25) {
+                info.state = 'warn';
+                info.isRisk = true;
+                info.text = (left <= 2 * 3600 * 1000 ? '⚠️ < 2h · ' : '') + 'Vence ' + fmtDue(due);
+            } else {
+                info.state = 'ok';
+                info.text = 'até ' + fmtDue(due);
+            }
             return info;
         }
 
         function slaCell(t) {
             const s = slaInfo(t);
-            return `<div class="sla-cell sla-${s.state}"><b>${escapeHtml(s.label)}</b>${s.text ? `<span>${escapeHtml(s.text)}</span>` : ''}</div>`;
+            const riskClass = s.isRisk ? ' sla-risk-pulse' : '';
+            return `<div class="sla-cell sla-${s.state}${riskClass}"><b>${escapeHtml(s.label)}</b>${s.text ? `<span>${escapeHtml(s.text)}</span>` : ''}</div>`;
         }
 
         // Esc fecha a janela aberta (ou o menu lateral no celular e o menu de modo)
