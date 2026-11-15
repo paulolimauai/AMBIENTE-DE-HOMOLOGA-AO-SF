@@ -24076,7 +24076,7 @@ function pageRelatorios(){
       <span class="tag" style="font-weight:700;">\${list.filter(t=>t.type==='out').length} despesa(s) no período</span>
     </div>
     \${allCats.length ? \`
-    <table>
+    <table class="nx-cards nx-rel">
       <thead>
         <tr>
           <th>Categoria</th>
@@ -24223,7 +24223,7 @@ function pageRecorrentes(){
 
   <div class="table-panel">
     \${recurringList.length ? \`
-    <table>
+    <table class="nx-cards nx-rec">
       <thead>
         <tr>
           <th>Descrição / Contrato</th>
@@ -25996,7 +25996,7 @@ function renderLogsTable(list) {
       + '</tr>';
   }).join('');
 
-  return '<table id="logsTable"><thead><tr><th style="width:160px;">Data e Hora</th><th style="width:200px;">Usuário (Login)</th><th style="width:130px;">Ação</th><th style="width:150px;">Módulo / Entidade</th><th>Informações Alteradas / Detalhes</th></tr></thead><tbody>' + rowsHtml + '</tbody></table>';
+  return '<table id="logsTable" class="nx-cards nx-logs"><thead><tr><th style="width:160px;">Data e Hora</th><th style="width:200px;">Usuário (Login)</th><th style="width:130px;">Ação</th><th style="width:150px;">Módulo / Entidade</th><th>Informações Alteradas / Detalhes</th></tr></thead><tbody>' + rowsHtml + '</tbody></table>';
 }
 
 function filterLogsTable() {

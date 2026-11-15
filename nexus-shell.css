@@ -169,7 +169,7 @@ html.user-logged-in #mobileBottomBar .mobile-bottom-btn {
   background: transparent !important;
   box-shadow: none !important;
   color: var(--nx-sh-muted) !important;
-  font-size: 11px !important;
+  font-size: 12px !important;
   font-weight: 650 !important;
   line-height: 1.1 !important;
   letter-spacing: 0 !important;
@@ -834,6 +834,209 @@ html.user-logged-in .scale-dropdown .nx-topic-btn:focus-visible { outline: 2px s
   html.user-logged-in.is-admin.adm-topo body:not(.has-view-mode-banner) #menu { display: none !important; }
   html.user-logged-in.is-admin.adm-topo body:not(.has-view-mode-banner) .main { margin-left: 0 !important; width: 100% !important; max-width: none !important; }
   html.user-logged-in.is-admin.adm-topo body:not(.has-view-mode-banner) #pageContent { max-width: 2200px !important; }
+}
+
+/* =====================================================================================
+   10. Celular (<= 600px): leitura, alvos de toque, resumos compactos e tabelas em cartões (pedido de 15/11/2026)
+   Achados pela auditoria em 390x844 (usuário e administrador): texto de 7 a 11px, botões de 18 a 34px de altura, tabelas com 10 colunas
+   cortadas na lateral (Recorrentes, Análises, Auditoria), busca da Auditoria esmagada pelos filtros e muita rolagem antes da lista de cadastros.
+   Tudo em @media (max-width: 600px): tablet e computador não mudam. Tabelas marcadas com class="nx-cards" viram cartões (server.js);
+   o rótulo de cada campo vem de ::before (a ordem das colunas é a do markup de cada tela).
+   ===================================================================================== */
+/* O botão "Filtros" da lista de cadastros (administracao.js) só existe no celular; no resto fica escondido (e fora da ordem do Tab) */
+html.user-logged-in .adm-ferr .adm-ftog,
+html.user-logged-in .adm-ferr .adm-fbtn { display: none !important; }
+
+@media (max-width: 600px) {
+
+  /* 10.1 Marca do cabeçalho e da gaveta (7px e 9px eram ilegíveis) */
+  html.user-logged-in .topheader .brand-sub,
+  html.user-logged-in #mobileDrawer .brand-sub { font-size: 10px !important; letter-spacing: .08em !important; }
+
+  /* 10.2 Texto: nada abaixo de 12px. A lista abaixo foi gerada a partir das regras de dashboard-financeiro.css, transacoes.css e administracao.css
+     que usavam 10-11,5px; o restante (classes antigas e tamanhos fixos escritos no HTML) é pego por seletor de classe e de atributo. */
+  html.user-logged-in :is(
+    .fd-data,
+    .fd-sub,
+    .fd-aviso span:not(.fd-aviso-ic),
+    .fd-legenda,
+    .fd-selo,
+    .fd-sub-titulo,
+    .fd-dica,
+    .fd-acum-eixo,
+    .fd-acum-legenda,
+    .fd-hero-cap span,
+    .fd-spark-eixo,
+    .fd-mini-rot,
+    .fd-mini-item em,
+    .fd-tile-linha,
+    .fd-delta,
+    .fd-delta-rot,
+    .fd-aba,
+    .fd-abas-peq .fd-aba,
+    .fd-btn-tabela,
+    .fd-tabela,
+    .fd-tabela th,
+    .fd-metrica span,
+    .fd-metrica em,
+    .fd-rank-valor small,
+    .fd-rank-resto,
+    .fd-rodape-nota,
+    .fd-resumo-agenda em,
+    .fd-grupo h3,
+    .fd-grupo h3 em,
+    .fd-ag-data span,
+    .fd-ag-info span,
+    .fd-btn-baixa,
+    .fd-link,
+    .fd-pilar-topo,
+    .fd-cartao-topo,
+    .fd-pilar-topo strong,
+    .fd-cartao-topo strong,
+    .fd-cartao-nota,
+    .fd-ult-data,
+    .fd-ult-info span,
+    .fd-vazio span,
+    .txp-table thead th,
+    .txp-w,
+    .txp-chip,
+    .txp-foot-chip,
+    .adm-eu-t small,
+    .adm-card-meta dt,
+    .adm-uso span,
+    .adm-eventos small
+  ) { font-size: 12px !important; }
+  html.user-logged-in #pageContent :is(.kpi-tag, .kpi .sub, .kpi .row1 > span:first-child, .sub, small, .role-badge, .pill, dt, th, .tag, .type-pill, .acc-card-chip, .acc-subgrid-label, .btn-count-pill, .acc-metric-hero-label, .profile-photo-copy span, .pg-barra-v, label.profile-photo-button) { font-size: 12px !important; }
+  html.user-logged-in #pageContent :is([style*="font-size:9px"], [style*="font-size: 9px"], [style*="font-size:9.5px"], [style*="font-size: 9.5px"], [style*="font-size:10px"], [style*="font-size: 10px"], [style*="font-size:10.5px"], [style*="font-size: 10.5px"], [style*="font-size:11px"], [style*="font-size: 11px"], [style*="font-size:11.5px"], [style*="font-size: 11.5px"]) { font-size: 12px !important; }
+  /* 10.3 Alvos de toque: 40px (44px nos botões principais) */
+  html.user-logged-in #pageContent :is(.btn-action-edit, .btn-action-del) { width: 40px !important; height: 40px !important; min-width: 40px !important; }
+  html.user-logged-in #pageContent :is(.btn-ghost, .pass-toggle, label.profile-photo-button, .txp-status, .tx-toolbar button, .fd-btn, .fd-aba, .fd-btn-tabela, .fd-btn-baixa) { min-height: 40px !important; }
+  html.user-logged-in #pageContent :is(.pass-toggle, .fd-btn-icone) { min-width: 40px !important; }
+  html.user-logged-in #pageContent button.pill { min-height: 36px !important; min-width: 44px !important; }
+  /* A selo do plano em Minha Conta ("Assinatura Ativa (Mensal · R$ 18,00)") cortava com reticências em 320-360px: passa a quebrar de linha */
+  html.user-logged-in #pageContent .role-badge { white-space: normal !important; overflow: visible !important; text-overflow: clip !important; line-height: 1.35 !important; height: auto !important; }
+  /* Nomes de conta, cartão e meta são dados da pessoa: quebram em 2 linhas em vez de sumir atrás de reticências */
+  html.user-logged-in #pageContent :is(.acc-card, .goal-card, .budget-card) h3 { white-space: normal !important; overflow: visible !important; text-overflow: clip !important; overflow-wrap: anywhere !important; }
+  html.user-logged-in #pageContent #periodBtn.period,
+  html.user-logged-in #pageContent :is(.fd-btn-receita, .fd-btn-despesa) { min-height: 44px !important; }
+  html.user-logged-in #pageContent .fd-link { display: inline-flex !important; align-items: center !important; min-height: 40px !important; padding: 0 6px !important; }
+
+  /* 10.4 Resumos em 2 colunas (antes uma pilha de cartões de ~130px: 4 cartões = 550px de rolagem) */
+  html.user-logged-in #pageContent :is(.tx-kpis, .orc-summary, .cards-summary-panel .kpi-grid) { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 10px !important; }
+  html.user-logged-in #pageContent :is(.tx-kpis > .tx-kpi, .orc-summary > .kpi, .cards-summary-panel .kpi-grid > .kpi) { min-width: 0 !important; min-height: 0 !important; padding: 12px 12px 12px 14px !important; }
+  /* O título do cartão passava por cima do ícone (Recorrentes): o título quebra de linha e o ícone fica menor */
+  html.user-logged-in #pageContent .kpi .row1 { display: flex !important; align-items: flex-start !important; justify-content: space-between !important; gap: 8px !important; }
+  html.user-logged-in #pageContent .kpi .row1 > span:first-child { flex: 1 1 0 !important; min-width: 0 !important; overflow-wrap: break-word !important; letter-spacing: .04em !important; }
+  html.user-logged-in #pageContent .kpi .row1 > .ic { flex: 0 0 auto !important; width: 28px !important; height: 28px !important; }
+
+  /* 10.5 Tabelas em cartões (classe nx-cards no <table>) */
+  html.user-logged-in #pageContent .table-panel:has(> table.nx-cards) { overflow: visible !important; padding: 12px !important; }
+  html.user-logged-in #pageContent table.nx-cards { display: block !important; width: 100% !important; min-width: 0 !important; border: 0 !important; }
+  html.user-logged-in #pageContent table.nx-cards thead { display: none !important; }
+  html.user-logged-in #pageContent table.nx-cards tbody { display: grid !important; gap: 12px !important; }
+  html.user-logged-in #pageContent table.nx-cards tr {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+    gap: 10px 14px !important;
+    padding: 14px !important;
+    border: 1px solid var(--nx-sh-line) !important;
+    border-radius: 16px !important;
+    background: rgba(255, 255, 255, .035) !important;
+  }
+  html.user-logged-in #pageContent table.nx-cards td { display: block !important; min-width: 0 !important; padding: 0 !important; border: 0 !important; background: none !important; }
+  html.user-logged-in #pageContent table.nx-cards td > div { min-width: 0 !important; }
+  html.user-logged-in #pageContent table.nx-cards tfoot { display: block !important; }
+  html.user-logged-in #pageContent table.nx-cards tfoot tr { display: flex !important; justify-content: space-between !important; gap: 12px !important; padding: 12px 14px !important; }
+
+  /* Recorrentes: descrição, valor/tipo, categoria/conta, vencimento/duração, status/progresso e ações */
+  html.user-logged-in #pageContent table.nx-rec td:nth-child(1) { grid-column: 1 / -1 !important; }
+  html.user-logged-in #pageContent table.nx-rec td:nth-child(9) { grid-column: 1 !important; grid-row: 2 !important; font-size: 20px !important; font-weight: 800 !important; align-self: center !important; }
+  html.user-logged-in #pageContent table.nx-rec td:nth-child(8) { grid-column: 2 !important; grid-row: 2 !important; justify-self: end !important; align-self: center !important; }
+  html.user-logged-in #pageContent table.nx-rec td:nth-child(2) { grid-column: 1 !important; grid-row: 3 !important; }
+  html.user-logged-in #pageContent table.nx-rec td:nth-child(3) { grid-column: 2 !important; grid-row: 3 !important; }
+  html.user-logged-in #pageContent table.nx-rec td:nth-child(4) { grid-column: 1 !important; grid-row: 4 !important; }
+  html.user-logged-in #pageContent table.nx-rec td:nth-child(5) { grid-column: 2 !important; grid-row: 4 !important; }
+  html.user-logged-in #pageContent table.nx-rec td:nth-child(6) { grid-column: 1 !important; grid-row: 5 !important; }
+  html.user-logged-in #pageContent table.nx-rec td:nth-child(7) { grid-column: 2 !important; grid-row: 5 !important; }
+  html.user-logged-in #pageContent table.nx-rec td:nth-child(10) { grid-column: 1 / -1 !important; grid-row: 6 !important; padding-top: 10px !important; border-top: 1px solid var(--nx-sh-line) !important; }
+  html.user-logged-in #pageContent table.nx-rec td:nth-child(10) .row-actions { display: flex !important; width: 100% !important; justify-content: flex-end !important; gap: 10px !important; }
+  html.user-logged-in #pageContent table.nx-rec td:nth-child(n+2):nth-child(-n+7)::before {
+    display: block !important; margin: 0 0 4px !important; font-size: 12px !important; font-weight: 700 !important; letter-spacing: .06em !important; text-transform: uppercase !important; color: var(--nx-sh-muted) !important;
+  }
+  html.user-logged-in #pageContent table.nx-rec td:nth-child(2)::before { content: "Categoria" !important; }
+  html.user-logged-in #pageContent table.nx-rec td:nth-child(3)::before { content: "Conta / cartão" !important; }
+  html.user-logged-in #pageContent table.nx-rec td:nth-child(4)::before { content: "Vencimento" !important; }
+  html.user-logged-in #pageContent table.nx-rec td:nth-child(5)::before { content: "Duração" !important; }
+  html.user-logged-in #pageContent table.nx-rec td:nth-child(6)::before { content: "Status do mês" !important; }
+  html.user-logged-in #pageContent table.nx-rec td:nth-child(7)::before { content: "Progresso" !important; }
+  html.user-logged-in #pageContent table.nx-rec td:nth-child(7) > div { min-width: 0 !important; }
+  /* A conta/cartão era uma pílula redonda gigante com o nome quebrado em 4 linhas */
+  html.user-logged-in #pageContent table.nx-rec .pill.acc-pill,
+  html.user-logged-in #pageContent table.nx-rec .pill.cat-pill { display: inline-flex !important; align-items: center !important; gap: 6px !important; max-width: 100% !important; height: auto !important; min-height: 32px !important; padding: 4px 12px !important; border-radius: 12px !important; white-space: normal !important; text-align: left !important; line-height: 1.3 !important; }
+
+  /* Análises: categoria + valor na primeira linha e a barra de distribuição inteira embaixo */
+  html.user-logged-in #pageContent table.nx-rel tr { grid-template-columns: minmax(0, 1fr) auto !important; }
+  html.user-logged-in #pageContent table.nx-rel td:nth-child(1) { grid-column: 1 !important; grid-row: 1 !important; align-self: center !important; }
+  html.user-logged-in #pageContent table.nx-rel td:nth-child(2) { grid-column: 2 !important; grid-row: 1 !important; align-self: center !important; font-weight: 800 !important; }
+  html.user-logged-in #pageContent table.nx-rel td:nth-child(3) { grid-column: 1 / -1 !important; grid-row: 2 !important; }
+  html.user-logged-in #pageContent table.nx-rel td:nth-child(3) .bar-split { max-width: none !important; }
+
+  /* Auditoria: data e ação na primeira linha, usuário, módulo e detalhes embaixo */
+  html.user-logged-in #pageContent table.nx-logs tr { grid-template-columns: minmax(0, 1fr) auto !important; }
+  html.user-logged-in #pageContent table.nx-logs td:nth-child(1) { grid-column: 1 !important; grid-row: 1 !important; align-self: center !important; white-space: normal !important; }
+  html.user-logged-in #pageContent table.nx-logs td:nth-child(3) { grid-column: 2 !important; grid-row: 1 !important; justify-self: end !important; }
+  html.user-logged-in #pageContent table.nx-logs td:nth-child(2) { grid-column: 1 / -1 !important; grid-row: 2 !important; }
+  html.user-logged-in #pageContent table.nx-logs td:nth-child(4) { grid-column: 1 / -1 !important; grid-row: 3 !important; }
+  html.user-logged-in #pageContent table.nx-logs td:nth-child(5) { grid-column: 1 / -1 !important; grid-row: 4 !important; overflow-wrap: anywhere !important; }
+
+  /* 10.6 Administrador: Auditoria - a busca não pode ser esmagada pelos filtros (a regra do desktop não deixava o grupo de filtros quebrar linha) */
+  html.user-logged-in .adm-corpo .admin-toolbar-panel { flex-direction: column !important; align-items: stretch !important; }
+  html.user-logged-in .adm-corpo .admin-toolbar-panel > div,
+  html.user-logged-in .adm-corpo .admin-toolbar-panel > div:last-child:not(:first-child) { flex: 0 0 auto !important; width: 100% !important; min-width: 0 !important; }
+  html.user-logged-in .adm-corpo .admin-toolbar-panel > div:last-child:not(:first-child) { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 8px !important; }
+  html.user-logged-in .adm-corpo .admin-toolbar-panel :is(input, select) { height: 44px !important; min-width: 0 !important; width: 100% !important; font-size: 14px !important; }
+
+  /* 10.7 Administrador: Cadastros & Contas - resumo em uma faixa que rola, filtros recolhidos, cartões mais curtos */
+  html.user-logged-in .adm-corpo #admResumo .adm-kpis { display: flex !important; flex-wrap: nowrap !important; gap: 8px !important; overflow-x: auto !important; scroll-snap-type: x proximity !important; padding: 2px 2px 8px !important; margin: 0 -2px !important; -webkit-overflow-scrolling: touch !important; scrollbar-width: none !important; }
+  html.user-logged-in .adm-corpo #admResumo .adm-kpis::-webkit-scrollbar { display: none !important; }
+  html.user-logged-in .adm-corpo #admResumo .adm-kpi { flex: 0 0 auto !important; width: auto !important; min-width: 112px !important; height: auto !important; min-height: 0 !important; padding: 10px 14px !important; scroll-snap-align: start !important; }
+  html.user-logged-in .adm-corpo #admResumo .adm-kpi-t { white-space: nowrap !important; }
+
+  html.user-logged-in .adm-corpo .adm-ferr .adm-barra { display: flex !important; flex-wrap: wrap !important; align-items: stretch !important; gap: 8px !important; }
+  html.user-logged-in .adm-corpo .adm-ferr .adm-busca { flex: 1 1 0 !important; min-width: 0 !important; }
+  html.user-logged-in .adm-corpo .adm-ferr .adm-busca kbd { display: none !important; }
+  /* Busca e botão Filtros na mesma linha: o texto de ajuda ("Buscar nome, e-mail, CPF…") precisa caber inteiro */
+  html.user-logged-in .adm-corpo .adm-ferr .adm-busca { gap: 8px !important; padding: 0 10px !important; }
+  html.user-logged-in .adm-corpo .adm-ferr .adm-busca input { font-size: 14px !important; }
+  html.user-logged-in .adm-corpo .adm-ferr .adm-ftog { display: inline-block !important; position: absolute !important; opacity: 0 !important; width: 1px !important; height: 1px !important; pointer-events: none !important; }
+  html.user-logged-in .adm-corpo .adm-ferr .adm-fbtn {
+    flex: 0 0 auto !important; width: auto !important; max-width: none !important; margin: 0 !important; display: inline-flex !important; align-items: center !important; gap: 6px !important; min-height: 44px !important; padding: 0 12px !important;
+    border-radius: 12px !important; border: 1px solid var(--nx-sh-line) !important; background: var(--nx-sh-wash) !important; color: var(--nx-sh-ink) !important;
+    font-size: 14px !important; font-weight: 700 !important; cursor: pointer !important; user-select: none !important;
+  }
+  html.user-logged-in .adm-corpo .adm-ferr .adm-ftog:checked + .adm-fbtn { background: rgba(var(--nx-sh-acc), .18) !important; border-color: rgba(var(--nx-sh-acc), .6) !important; }
+  html.user-logged-in .adm-corpo .adm-ferr .adm-ftog:focus-visible + .adm-fbtn { outline: 2px solid rgb(var(--nx-sh-acc)) !important; outline-offset: 2px !important; }
+  html.user-logged-in .adm-corpo .adm-ferr .adm-barra > .adm-sel,
+  html.user-logged-in .adm-corpo .adm-ferr .adm-barra > .adm-vista { display: none !important; }
+  html.user-logged-in .adm-corpo .adm-ferr .adm-ftog:checked ~ .adm-sel { display: block !important; flex: 1 1 calc(50% - 4px) !important; min-width: 0 !important; }
+  html.user-logged-in .adm-corpo .adm-ferr .adm-ftog:checked ~ .adm-vista { display: none !important; }
+
+  html.user-logged-in .adm-corpo .adm-card-meta { display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 8px !important; }
+  html.user-logged-in .adm-corpo .adm-card-meta > div { grid-column: auto !important; width: auto !important; min-width: 0 !important; }
+  html.user-logged-in .adm-corpo .adm-card-meta dd { overflow-wrap: anywhere !important; }
+  html.user-logged-in .adm-corpo .adm-card-acoes { display: flex !important; justify-content: flex-end !important; gap: 8px !important; }
+  html.user-logged-in .adm-corpo .adm-ib { width: 44px !important; height: 44px !important; min-width: 44px !important; }
+  /* A caixa de seleção do cartão tinha 18px: ampliada (a área de toque cresce junto com a escala) */
+  html.user-logged-in .adm-corpo input.adm-chk { width: 22px !important; height: 22px !important; transform: scale(1.7) !important; margin: 0 12px 0 9px !important; }
+  html.user-logged-in .adm-corpo .adm-btn.adm-btn-sm { min-height: 44px !important; }
+}
+
+/* 10.8 Celulares muito estreitos (<= 359px, ex.: 320px): a marca do cabeçalho encostava no sino, o ícone dos cartões de resumo roubava espaço do título
+   e o valor de Recorrentes quebrava em duas linhas */
+@media (max-width: 359px) {
+  html.user-logged-in .topheader .brand-sub { display: none !important; }
+  html.user-logged-in #pageContent .kpi .row1 > .ic { display: none !important; }
+  html.user-logged-in #pageContent table.nx-rec td:nth-child(9) { font-size: 18px !important; white-space: nowrap !important; }
 }
 
 } /* fim da layer nx-shell */

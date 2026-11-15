@@ -444,6 +444,9 @@
   function htmlBarra() {
     return '<div class="adm-barra">' +
       '<label class="adm-busca">' + IC.busca + '<input type="search" id="admBusca" data-adm-busca autocomplete="off" spellcheck="false" placeholder="Buscar nome, e-mail, CPF…" value="' + esc(estado.busca) + '" aria-label="Buscar cadastros"><kbd title="Atalho: tecla /">/</kbd></label>' +
+      // Só aparece no celular (CSS): recolhe os filtros para a lista de cadastros subir na tela
+      '<input type="checkbox" id="admFtog" class="adm-ftog" aria-label="Mostrar ou esconder os filtros">' +
+      '<label for="admFtog" class="adm-fbtn"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="22 3 2 3 10 12.5 10 19 14 21 14 12.5 22 3"/></svg><span>Filtros</span></label>' +
       '<label class="adm-sel"><span>Perfil</span><select data-adm-filtro="perfil">' + opcoes([['todos', 'Todos'], ['admin', 'Administradores'], ['user', 'Usuários']], estado.perfil) + '</select></label>' +
       '<label class="adm-sel"><span>Conta</span><select data-adm-filtro="status">' + opcoes([['todos', 'Todas'], ['ativo', 'Ativas'], ['inativo', 'Bloqueadas']], estado.status) + '</select></label>' +
       '<label class="adm-sel"><span>Assinatura</span><select data-adm-filtro="plano">' + opcoes([['todos', 'Todas'], ['assinantes', 'Assinantes (ativa + vitalícia)'], ['admin', 'Ilimitado (administrador)'], ['vitalicio', 'Vitalício'], ['ativo', 'Assinatura ativa'], ['teste', 'Em teste'], ['pendente', 'Aguardando pagamento'], ['expirado', 'Expirado'], ['teste_fim', 'Teste encerrado'], ['sem_acesso', 'Sem acesso (expirado ou teste encerrado)']], estado.plano) + '</select></label>' +
