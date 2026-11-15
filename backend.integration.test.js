@@ -406,6 +406,43 @@ test('permissões delegadas: só o admin concede; quem recebe libera assinatura 
   assert.ok(!lerArquivo('local_permissions.json')['ana@teste.nexus'], 'lista vazia remove a entrada do arquivo');
 });
 
+test('oferta: 1 dia grátis no cadastro e depois plano único Mensal de R$ 18,00 (anual recusado, valor sempre do servidor)', async () => {
+  const admin = (await login('admin@teste.nexus', 'Admin@12345')).token;
+  const reg = await api('POST', '/api/register', { body: { name: 'Paula Oferta', email: 'paula@teste.nexus', password: 'Paula@12345', cpf: cpfValido(246813579), terms_accepted: true, truthful_declaration: true } });
+  assert.equal(reg.status, 200, reg.texto);
+  const token = (await login('paula@teste.nexus', 'Paula@12345')).token;
+
+  // 1 dia grátis: 24 h de teste, sem assinatura
+  const antes = (await api('GET', '/api/subscription/status?email=paula%40teste.nexus', { token })).json;
+  assert.equal(antes.status, 'trial');
+  assert.equal(antes.is_subscribed, false);
+  assert.ok(antes.remaining_seconds > 86000 && antes.remaining_seconds <= 86400, 'teste de 1 dia: ' + antes.remaining_seconds);
+
+  // plano anual saiu da oferta: recusado, e a mensagem diz o plano e o preço vigentes
+  const anual = await api('POST', '/api/subscription/pay', { token, body: { email: 'paula@teste.nexus', plan: 'anual', method: 'pix', amount: 150 } });
+  assert.equal(anual.status, 400, anual.texto);
+  assert.match(anual.json.error, /Mensal/);
+  assert.match(anual.json.error, /18,00/);
+
+  // o valor é do servidor: "amount" enviado pelo navegador é ignorado; sem plano vale o mensal
+  const adulterado = await api('POST', '/api/subscription/pay', { token, body: { email: 'paula@teste.nexus', plan: 'mensal', method: 'pix', amount: 1 } });
+  assert.equal(adulterado.status, 200, adulterado.texto);
+  assert.equal(adulterado.json.amount, 18);
+  assert.equal(adulterado.json.plan, 'mensal');
+  assert.equal((await api('POST', '/api/subscription/pay', { token, body: { email: 'paula@teste.nexus', method: 'pix' } })).json.amount, 18);
+
+  // pagar não libera sozinho: continua no teste, com o pedido aguardando; quem libera é a confirmação do admin (30 dias)
+  const pedido = (await api('GET', '/api/subscription/status?email=paula%40teste.nexus', { token })).json;
+  assert.equal(pedido.is_subscribed, false);
+  const conf = await api('POST', '/api/subscription/confirm-payment', { token: admin, body: { admin_email: 'admin@teste.nexus', target_email: 'paula@teste.nexus', plan: 'mensal', method: 'pix' } });
+  assert.equal(conf.status, 200, conf.texto);
+  const depois = (await api('GET', '/api/subscription/status?email=paula%40teste.nexus', { token })).json;
+  assert.equal(depois.is_subscribed, true);
+  assert.equal(depois.subscription_plan, 'mensal');
+  const dias = (new Date(depois.subscription_expires_at).getTime() - Date.now()) / 86400000;
+  assert.ok(dias > 29 && dias <= 30.01, 'validade de 30 dias: ' + dias);
+});
+
 test('SSE: limite de conexões por usuário e resposta 429 acima dele', async () => {
   const token = (await login('bia@teste.nexus', 'Bia@12345')).token;
   const abertas = [];
