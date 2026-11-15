@@ -44,3 +44,7 @@ analise_banco_dados/
 # Snapshots avulsos da página/JS gerados em execução (o HTML real vive embutido no server.js)
 /page.html
 /script5.js
+
+# Livro de pagamentos (dados financeiros dos clientes)
+local_pagamentos.json
+local_pagamentos.json.ilegivel-*

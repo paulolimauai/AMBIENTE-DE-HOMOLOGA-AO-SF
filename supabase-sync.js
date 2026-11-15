@@ -322,7 +322,8 @@ const SOURCES = {
   'local_os_sequencia.json':   docSource('os_seq', 'single'),
   'pending_logins.json':       docSource('pending', 'array'),
   'local_avatars.json':        docSource('avatars', 'map'),
-  'local_permissions.json':    docSource('permissions', 'map')   // e-mail -> lista de permissões
+  'local_permissions.json':    docSource('permissions', 'map'),  // e-mail -> lista de permissões
+  'local_pagamentos.json':     docSource('pagamentos', 'array')  // livro de pagamentos e cobranças (pagamentos.js): um documento por registro (id)
 };
 
 // ---------------------------------------------------------------- classificação de erros

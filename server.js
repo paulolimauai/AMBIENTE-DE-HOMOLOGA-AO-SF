@@ -25,6 +25,8 @@ if (!DB_DISABLED) {
   }
 }
 const BackendUtils = require('./backend-utils'); // utilitários puros e testados (corpo UTF-8, escrita atômica, cache JSON, validações)
+const Pagamentos = require('./pagamentos'); // livro de pagamentos, prazo da assinatura, Pix, resumo financeiro e conciliação de extrato (regras puras e testadas)
+const { qrSvg } = require('./qr-svg'); // QR Code do Pix gerado aqui (antes vinha do site api.qrserver.com)
 
 const PORT = process.env.PORT || 3000;
 const SERVER_START_TIME = Date.now();
@@ -211,6 +213,230 @@ const SUBSCRIPTION_MONTHLY_PRICE = 18;
 const SUBSCRIPTION_MONTHLY_LABEL = 'R$ ' + SUBSCRIPTION_MONTHLY_PRICE.toFixed(2).replace('.', ',');
 const SUBSCRIPTION_MONTHLY_INT = String(Math.trunc(SUBSCRIPTION_MONTHLY_PRICE));
 const SUBSCRIPTION_MONTHLY_CENTS = SUBSCRIPTION_MONTHLY_PRICE.toFixed(2).split('.')[1];
+
+// ==================== Livro de pagamentos (pagamentos.js) ====================
+// Cada cobrança/pagamento é um registro que nunca é sobrescrito: valor cobrado na época, quem confirmou, quando, e o período que cobre.
+// Antes só o último protocolo ficava na conta, então não havia histórico, receita nem recibo. Fica em arquivo próprio (replicado ao Supabase)
+// e NÃO é apagado quando a conta é excluída (é registro financeiro).
+const LOCAL_PAGAMENTOS_PATH = path.join(RUNTIME_DATA_DIR, 'local_pagamentos.json');
+function getLocalPagamentos() {
+  try {
+    const cached = jsonCache.read(LOCAL_PAGAMENTOS_PATH);
+    // O valor do cache é compartilhado: devolve uma cópia para quem for alterar e salvar
+    if (cached.exists && Array.isArray(cached.value)) return JSON.parse(JSON.stringify(cached.value));
+  } catch (e) {
+    console.error('[PAGAMENTOS] local_pagamentos.json ilegível; guardando uma cópia antes de recomeçar:', e.message);
+    try { fs.copyFileSync(LOCAL_PAGAMENTOS_PATH, LOCAL_PAGAMENTOS_PATH + '.ilegivel-' + Date.now()); } catch (copyErr) {}
+  }
+  return [];
+}
+function saveLocalPagamentos(lista) {
+  writeJsonFile(LOCAL_PAGAMENTOS_PATH, JSON.stringify(Array.isArray(lista) ? lista : [], null, 2));
+}
+
+const PAGAMENTO_METODOS = {
+  pix: 'Pix (SPI / BACEN)', credit_card: 'Cartão de Crédito', debit_card: 'Cartão de Débito', boleto: 'Boleto Bancário FEBRABAN',
+  transferencia: 'Transferência / TED', dinheiro: 'Dinheiro'
+};
+function pagamentoPorEmail(lista, email) {
+  const alvo = String(email || '').toLowerCase().trim();
+  return lista.filter(p => p && p.email === alvo);
+}
+function pagamentoMaisRecente(a, b) { return (Pagamentos.paraMs(b.emitida_em) || 0) - (Pagamentos.paraMs(a.emitida_em) || 0); }
+
+// Confirma o recebimento de um pagamento: fecha o registro no livro (valor, quem, quando, período) e estende a assinatura da conta.
+// Soma ao prazo que ainda resta (pagar antes de vencer não perde dias) e é idempotente: confirmar de novo o mesmo registro não estende outra vez.
+// A leitura e a gravação do livro e da conta acontecem sem nenhum `await` no meio (Node é de uma thread só), então dois cliques seguidos não duplicam.
+async function executarConfirmacao(o) {
+  const agora = Date.now();
+  const alvoEmail = String(o.targetEmail || '').toLowerCase().trim();
+  const localUsers = getLocalUsers();
+  let targetUser = localUsers.find(u => u && u.email && u.email.toLowerCase() === alvoEmail);
+  if (!targetUser && pool) {
+    try {
+      const dbCheck = await pool.query('SELECT * FROM usuarios WHERE LOWER(email) = LOWER($1)', [alvoEmail]);
+      if (dbCheck.rows && dbCheck.rows.length > 0) {
+        targetUser = dbCheck.rows[0];
+        localUsers.push(targetUser);
+      }
+    } catch (e) {}
+  }
+  if (!targetUser) return { status: 404, error: 'Usuário não encontrado para o e-mail informado.' };
+  const denial = delegateTargetDenial(o.actor, targetUser, alvoEmail);
+  if (denial) return { status: 403, error: denial };
+  const plano = o.plano === 'anual' || o.plano === 'vitalicio' ? o.plano : 'mensal';
+  if (String(targetUser.subscription_plan || '').toLowerCase() === 'vitalicio' && plano !== 'vitalicio') {
+    return { status: 409, error: 'Esta conta tem acesso vitalício: não há pagamento a confirmar.' };
+  }
+
+  // ---- bloco síncrono: ler o livro, decidir, gravar o livro e a conta ----
+  const lista = getLocalPagamentos();
+  const por = { nome: o.actor.name || 'Administrador', email: String(o.actor.email || '').toLowerCase() };
+  let reg = null;
+  if (o.paymentId) {
+    reg = lista.find(p => p && p.id === o.paymentId);
+    if (!reg || reg.email !== alvoEmail) return { status: 404, error: 'Cobrança não encontrada para esta conta.' };
+  } else {
+    const abertas = pagamentoPorEmail(lista, alvoEmail).filter(p => Pagamentos.emAberto(p)).sort(pagamentoMaisRecente);
+    reg = abertas.find(p => p.status === 'informada') || abertas[0] || null;
+    if (!reg) {
+      // Duplo clique em "Confirmar" sem cobrança aberta: o pagamento acabou de ser registrado, não registra outro
+      const recente = pagamentoPorEmail(lista, alvoEmail).find(p => p.status === 'paga' && agora - (Pagamentos.paraMs(p.paga_em) || 0) < 20000 && p.confirmado_por && p.confirmado_por.email === por.email);
+      if (recente) return { status: 200, jaConfirmado: true, registro: recente, expiresIso: recente.periodo_fim, plano: recente.plano, metodo: recente.metodo, txId: recente.txid_legado || recente.ref };
+    }
+  }
+  if (reg && reg.status === 'paga') return { status: 200, jaConfirmado: true, registro: reg, expiresIso: reg.periodo_fim, plano: reg.plano, metodo: reg.metodo, txId: reg.txid_legado || reg.ref };
+  if (reg && !Pagamentos.emAberto(reg)) return { status: 409, error: 'Esta cobrança está ' + reg.status + ' e não pode ser confirmada.' };
+  if (o.extratoId && lista.some(p => p && p.extrato_id === o.extratoId)) return { status: 409, error: 'Este lançamento do extrato já foi usado para confirmar outro pagamento.' };
+
+  const valor = Pagamentos.valorConfirmado(o.valor, reg ? reg.valor : (plano === 'mensal' ? SUBSCRIPTION_MONTHLY_PRICE : 0));
+  if (Number.isNaN(valor)) return { status: 400, error: 'Valor recebido inválido (use um valor maior que zero, até R$ ' + Pagamentos.VALOR_MAXIMO + ').' };
+
+  const metodo = PAGAMENTO_METODOS[o.metodo] ? o.metodo : (targetUser.subscription_method && PAGAMENTO_METODOS[targetUser.subscription_method] ? targetUser.subscription_method : 'pix');
+  const ativoAgora = targetUser.subscription_status === 'active' && String(targetUser.subscription_plan || '').toLowerCase() !== 'vitalicio';
+  const expiraAtualMs = ativoAgora ? Pagamentos.paraMs(getBrasiliaIsoString(targetUser.subscription_expires_at) || targetUser.subscription_expires_at) : NaN;
+  const periodo = Pagamentos.calcularPeriodo({ plano, expiraAtualMs, agora });
+  const nota = String(o.comprovante || '').trim();
+  const suffix = nota ? ('-' + nota.replace(/[^a-zA-Z0-9]/g, '').slice(0, 12).toUpperCase()) : '';
+  const txId = (targetUser.subscription_payment_id && String(targetUser.subscription_payment_id).startsWith('NEXUS-SUB-') && !nota)
+    ? targetUser.subscription_payment_id
+    : ('LIB-ADMIN-' + metodo.toUpperCase() + '-' + agora + suffix);
+
+  if (!reg) {
+    reg = Pagamentos.criarCobranca({ usuario: targetUser, valor: valor || 0, plano, origem: 'admin', por, agora, existentes: lista, permitirZero: true, comprovante: nota });
+    lista.push(reg);
+  }
+  reg.plano = plano;
+  if (!reg.txid_legado) reg.txid_legado = txId;
+  Pagamentos.marcarPaga(reg, { agora, por, valor, metodo, comprovante: nota, extratoId: o.extratoId, periodo, obs: o.obs, nota: PAGAMENTO_METODOS[metodo] });
+  saveLocalPagamentos(lista);
+
+  const expiresIso = getBrasiliaIsoString(new Date(periodo.fim));
+  const expiresSql = getBrasiliaSqlString(new Date(periodo.fim));
+  targetUser.subscription_status = 'active';
+  targetUser.subscription_plan = plano;
+  targetUser.subscription_expires_at = expiresIso;
+  targetUser.subscription_method = metodo;
+  targetUser.subscription_payment_id = txId;
+  saveLocalUsers(localUsers);
+  // ---- fim do bloco síncrono ----
+
+  if (pool) {
+    try {
+      await pool.query(
+        `UPDATE usuarios
+         SET subscription_status = 'active',
+             subscription_plan = $1,
+             subscription_expires_at = $2,
+             subscription_method = $3,
+             subscription_payment_id = $4
+         WHERE LOWER(email) = LOWER($5)`,
+        [plano, expiresSql, metodo, txId, alvoEmail]
+      );
+      console.log(`✅ [PAGAMENTO CONFIRMADO] ${plano.toUpperCase()} (${metodo}) ${Pagamentos.brl(reg.valor)} confirmado por ${por.email} para ${alvoEmail} até ${expiresSql}`);
+    } catch (sqlErr) {
+      console.warn('[AVISO BD] Falha ao confirmar pagamento no SQL Server:', sqlErr.message);
+    }
+  }
+
+  recordSystemLog(por.nome, por.email, 'Assinatura', 'Financeiro',
+    `Confirmou o recebimento de ${Pagamentos.brl(reg.valor)} via ${PAGAMENTO_METODOS[metodo] || metodo} (ref. ${reg.ref}) e ativou o plano ${plano.toUpperCase()} para ${targetUser.name || alvoEmail} (Tx: ${txId} | Expira: ${expiresSql})`);
+  broadcastEvent('subscription_activated', { email: alvoEmail, plan: plano, method: metodo, transaction_id: txId, expires_at: expiresIso, confirmed_by: por.email });
+  return { status: 200, jaConfirmado: false, registro: reg, expiresIso, plano, metodo, txId, targetUser };
+}
+
+// Desfaz um pagamento já confirmado (devolução): tira da conta os dias que ele deu. Só administrador.
+async function executarEstorno(actor, id, nota) {
+  const agora = Date.now();
+  const lista = getLocalPagamentos();
+  const reg = lista.find(p => p && p.id === id);
+  if (!reg) return { status: 404, error: 'Pagamento não encontrado.' };
+  if (reg.status !== 'paga') return { status: 409, error: 'Só um pagamento confirmado pode ser estornado.' };
+  const por = { nome: actor.name || 'Administrador', email: String(actor.email || '').toLowerCase() };
+  Pagamentos.estornar(reg, por, nota, agora);
+  const localUsers = getLocalUsers();
+  const u = localUsers.find(x => x && x.email && x.email.toLowerCase() === reg.email);
+  let efeito = 'registro';
+  let sqlSet = null;
+  if (u && u.subscription_status === 'active' && String(u.subscription_plan || '').toLowerCase() !== 'vitalicio' && reg.dias > 0 && reg.dias < 36500) {
+    const atual = Pagamentos.paraMs(getBrasiliaIsoString(u.subscription_expires_at) || u.subscription_expires_at);
+    const nova = (Number.isFinite(atual) ? atual : agora) - reg.dias * Pagamentos.DIA;
+    if (nova <= agora) {
+      const vencida = new Date(agora - 60 * 1000);
+      u.subscription_status = 'expired'; u.subscription_plan = null; u.subscription_expires_at = getBrasiliaIsoString(vencida);
+      sqlSet = { status: 'expired', plan: null, expires: getBrasiliaSqlString(vencida) };
+      efeito = 'acesso bloqueado';
+    } else {
+      u.subscription_expires_at = getBrasiliaIsoString(new Date(nova));
+      sqlSet = { status: 'active', plan: u.subscription_plan, expires: getBrasiliaSqlString(new Date(nova)) };
+      efeito = reg.dias + ' dias a menos';
+    }
+  }
+  saveLocalPagamentos(lista);
+  if (sqlSet) {
+    saveLocalUsers(localUsers);
+    if (pool) {
+      try {
+        await pool.query('UPDATE usuarios SET subscription_status = $1, subscription_plan = $2, subscription_expires_at = $3 WHERE LOWER(email) = LOWER($4)', [sqlSet.status, sqlSet.plan, sqlSet.expires, reg.email]);
+      } catch (sqlErr) { console.warn('[AVISO BD] Falha ao gravar o estorno no SQL Server:', sqlErr.message); }
+    }
+  }
+  recordSystemLog(por.nome, por.email, 'Assinatura', 'Financeiro', `Estornou o pagamento ${reg.ref} de ${Pagamentos.brl(reg.valor)} de ${reg.nome || reg.email} (${efeito})${nota ? ' · ' + nota : ''}`);
+  broadcastEvent('subscription_revoked', { email: reg.email, revoked_by: por.email });
+  return { status: 200, registro: reg, efeito };
+}
+
+// Cancela uma cobrança que ainda não foi paga (gerada por engano, duplicada). Se a conta estava "aguardando" por causa dela, libera a marca.
+async function executarCancelamento(actor, id, nota) {
+  const agora = Date.now();
+  const lista = getLocalPagamentos();
+  const reg = lista.find(p => p && p.id === id);
+  if (!reg) return { status: 404, error: 'Cobrança não encontrada.' };
+  const por = { nome: actor.name || 'Administrador', email: String(actor.email || '').toLowerCase() };
+  if (!Pagamentos.cancelar(reg, por, nota, agora)) return { status: 409, error: 'Só uma cobrança em aberto pode ser cancelada.' };
+  const localUsers = getLocalUsers();
+  const u = localUsers.find(x => x && x.email && x.email.toLowerCase() === reg.email);
+  let sqlSet = null;
+  const aindaAberta = lista.some(p => p && p.id !== reg.id && p.email === reg.email && Pagamentos.emAberto(p) && p.txid_legado && p.txid_legado === u?.subscription_payment_id);
+  if (u && reg.txid_legado && u.subscription_payment_id === reg.txid_legado && !aindaAberta && u.subscription_status !== 'active') {
+    if (u.subscription_status === 'pending_payment') u.subscription_status = 'expired';
+    u.subscription_payment_id = null;
+    sqlSet = { status: u.subscription_status };
+  }
+  saveLocalPagamentos(lista);
+  if (sqlSet) {
+    saveLocalUsers(localUsers);
+    if (pool) pool.query('UPDATE usuarios SET subscription_status = $1, subscription_payment_id = NULL WHERE LOWER(email) = LOWER($2)', [sqlSet.status, reg.email]).catch(() => {});
+  }
+  recordSystemLog(por.nome, por.email, 'Assinatura', 'Financeiro', `Cancelou a cobrança ${reg.ref} de ${Pagamentos.brl(reg.valor)} de ${reg.nome || reg.email}${nota ? ' · ' + nota : ''}`);
+  return { status: 200, registro: reg };
+}
+
+// A conta só virava "expired" quando o próprio usuário abria o app: quem sumia depois de vencer continuava "ativo" nos painéis e contagens.
+// Esta varredura (ao iniciar e de hora em hora) marca como expiradas as contas com assinatura vencida; não toca em vitalício, administrador nem teste.
+function expirarAssinaturasVencidas() {
+  try {
+    const agora = Date.now();
+    const users = getLocalUsers();
+    const emails = [];
+    for (const u of users) {
+      if (!u || !u.email || u.role === 'Administrador') continue;
+      if (u.subscription_status !== 'active' || String(u.subscription_plan || '').toLowerCase() === 'vitalicio') continue;
+      const exp = Pagamentos.paraMs(getBrasiliaIsoString(u.subscription_expires_at) || u.subscription_expires_at);
+      if (!Number.isFinite(exp) || exp <= 0 || exp > agora) continue;
+      u.subscription_status = 'expired';
+      emails.push(u.email.toLowerCase());
+    }
+    if (!emails.length) return 0;
+    saveLocalUsers(users);
+    if (pool) emails.forEach(email => pool.query("UPDATE usuarios SET subscription_status = 'expired' WHERE LOWER(email) = LOWER($1) AND subscription_status = 'active'", [email]).catch(() => {}));
+    console.log(`⏳ [ASSINATURAS] ${emails.length} assinatura(s) vencida(s) marcada(s) como expirada(s).`);
+    return emails.length;
+  } catch (e) {
+    console.warn('[ASSINATURAS] Varredura de vencimentos falhou:', e.message);
+    return 0;
+  }
+}
 
 function getPendingLogins() {
   try {
@@ -14357,6 +14583,8 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 <script src="/transacoes.js?v=${ASSETS_V}"></script>
 <link rel="stylesheet" href="/administracao.css?v=${ASSETS_V}" />
 <script src="/administracao.js?v=${ASSETS_V}"></script>
+<link rel="stylesheet" href="/pagamentos-admin.css?v=${ASSETS_V}" />
+<script src="/pagamentos-admin.js?v=${ASSETS_V}"></script>
 <script src="/importacao.js?v=${ASSETS_V}"></script>
 </head>
 <body>
@@ -19273,11 +19501,11 @@ window.updatePixPayloadAndQr = function() {
   const imgEl = document.getElementById('subPixQrImg');
   if (inputEl) inputEl.value = pixCode;
   if (imgEl) {
-     // 640 px: nítido também em telas 4K (a imagem é exibida a ~200 px, com zoom de até 1,5x); se o serviço de QR não responder, avisa e o copia e cola segue valendo
+     // QR em SVG gerado pelo próprio servidor (vetor: nítido em qualquer tela, inclusive 4K, e o Pix não sai do sistema); se falhar, avisa e o copia e cola segue valendo
      const qrFail = document.getElementById('subPixQrFail');
      if (qrFail) qrFail.hidden = true;
      imgEl.style.visibility = 'visible';
-     imgEl.src = 'https://api.qrserver.com/v1/create-qr-code/?size=640x640&margin=16&ecc=H&color=000000&bgcolor=FFFFFF&data=' + encodeURIComponent(pixCode);
+     imgEl.src = window.location.origin + '/api/pix/qr.svg?data=' + encodeURIComponent(pixCode);
   }
   window.fitPixCodeBox();
 };
@@ -19460,6 +19688,7 @@ window.adminConfirmUserPayment = async function(targetEmail, plan = 'mensal', me
     if (d && d.success) {
       if (typeof showToast === 'function') showToast('✅ ' + (d.message || 'Pagamento reconhecido e acesso liberado!'));
       await syncUsersWithServer();
+      if (window.NexusPag) NexusPag.carregar(true);
       if (typeof syncOrdensWithServer === 'function') await syncOrdensWithServer();
       if (typeof window.initTrialAndSubscription === 'function') window.initTrialAndSubscription();
       if (typeof render === 'function') render();
@@ -21878,7 +22107,9 @@ function updateAdminSidebarBadges(){
   const osPendingCount = Array.isArray(systemOrdens) ? systemOrdens.filter(function(o){ return (o.status || '').toLowerCase() === 'pendente'; }).length : 0;
   const osTotalCount = Array.isArray(systemOrdens) ? systemOrdens.length : 0;
   const techsCount = Array.isArray(systemTecnicos) ? systemTecnicos.filter(function(t){ return t.active !== false; }).length : 0;
-  const pendingPayCount = Array.isArray(registeredUsers) ? registeredUsers.filter(function(u){ return u && u.role !== 'Administrador' && (nexusPagamentoAguardando(u) || u.subscription_status === 'expired'); }).length : 0;
+  // Com o livro de pagamentos carregado, vale a contagem dele (inclui renovações de assinantes ativos); antes disso, a das contas
+  const pendingPayCount = (window.NexusPag && NexusPag.contagem() != null) ? NexusPag.contagem()
+    : (Array.isArray(registeredUsers) ? registeredUsers.filter(function(u){ return u && u.role !== 'Administrador' && (nexusPagamentoAguardando(u) || u.subscription_status === 'expired'); }).length : 0);
 
   const uBadge = document.getElementById('menuUsersCountBadge');
   if (uBadge) uBadge.textContent = usersCount;
@@ -25068,7 +25299,8 @@ function admContagens(){
   const lista = Array.isArray(registeredUsers) ? registeredUsers : [];
   return {
     usuarios: lista.length,
-    pagamentos: lista.filter(function(u){ return u && u.role !== 'Administrador' && (nexusPagamentoAguardando(u) || u.subscription_status === 'expired'); }).length,
+    pagamentos: (window.NexusPag && NexusPag.contagem() != null) ? NexusPag.contagem()
+      : lista.filter(function(u){ return u && u.role !== 'Administrador' && (nexusPagamentoAguardando(u) || u.subscription_status === 'expired'); }).length,
     logs: Array.isArray(systemLogs) ? systemLogs.length : 0
   };
 }
@@ -25238,6 +25470,8 @@ function admContexto(){
     admCarregarEventos().then(function(){ if(window.NexusAdm) NexusAdm.atualizarAbas(); });
   }
   if(!admPermPedido && admEhAdmin()){ admPermPedido = true; admCarregarPermissoes(); }
+  // O contador "pend." da aba Pagamentos vem do livro de pagamentos: carrega já na primeira vez que o painel aparece
+  if(!window.__pagPrecarregado && window.NexusPag && admEhAdmin()){ window.__pagPrecarregado = true; NexusPag.precarregar(pagContexto); }
   return {
     permissoes: { catalogo: admPermCatalogo, erro: admPermErro },
     agora: Date.now(),
@@ -25693,168 +25927,34 @@ function filterLogsTable() {
 }
 
 function pagePagamentos(){ return admEnvolver('pagamentos', pagePagamentosCorpo()); }
+// Contexto da tela Pagamentos & Boletos (pagamentos-admin.js): o módulo não conhece variáveis do app, tudo chega por aqui
+function pagContexto(){
+  const ordens = (Array.isArray(systemOrdens) ? systemOrdens : []).filter(function(o){
+    const texto = ((o.service_type || '') + ' ' + (o.title || '')).toLowerCase();
+    return (texto.includes('boleto') || texto.includes('2ª via') || texto.includes('2a via')) && (o.status || '').toLowerCase() !== 'concluído';
+  }).map(function(o){ return { id: o.id, protocol: o.protocol, nome: o.client_name, email: o.client_email, titulo: o.title || o.service_type, status: o.status }; });
+  return {
+    usuarios: Array.isArray(registeredUsers) ? registeredUsers : [],
+    eu: currentUser ? { email: currentUser.email, nome: currentUser.name } : null,
+    ordens: ordens,
+    toast: showToast,
+    sincronizar: function(){ return syncUsersWithServer(); },
+    atualizarAbas: function(){ if(window.NexusAdm) NexusAdm.atualizarAbas(); },
+    abrirOs: function(id){ openOrdemAdminModal(id); },
+    abrirCadastro: function(email){ openUserAdminModal(email); }
+  };
+}
 function pagePagamentosCorpo(){
   const isAdmin = currentUser && currentUser.role === 'Administrador';
   if (!isAdmin || isViewingOtherUser) {
-    return \`<div class="placeholder"><div class="big">🔒</div><h3>Acesso restrito</h3><p>Esta área é exclusiva para administradores.</p></div>\`;
+    return '<div class="placeholder"><div class="big">🔒</div><h3>Acesso restrito</h3><p>Esta área é exclusiva para administradores.</p></div>';
   }
-
-  const users = Array.from(new Map((registeredUsers || [])
-    .filter(u => u && u.email && u.role !== 'Administrador')
-    .map(u => [u.email.toLowerCase(), u])).values());
-  const pendingUsers = users.filter(u => nexusPagamentoAguardando(u));
-  const expiredUsers = users.filter(u => u.subscription_status === 'expired');
-  const activeUsers = users.filter(u => u.subscription_status === 'active');
-  const requestedTab = window.__pagamentosActiveTab || 'pendentes';
-  const activeTab = ['pendentes', 'expirados', 'segunda_via_boleto', 'solicitacoes_boleto'].includes(requestedTab) ? requestedTab : 'pendentes';
-  const preselected = window.__boletoPreselectedUser || {};
-  const preselectedEmail = String(preselected.email || '').toLowerCase();
-
-  const userRow = (u, expired = false) => {
-    const email = escapeOsHtml(u.email || '');
-    const name = escapeOsHtml(u.name || u.email || 'Usuário');
-    const plan = u.subscription_plan === 'anual' ? 'anual' : 'mensal';
-    const method = ['pix', 'credit_card', 'debit_card', 'boleto'].includes(u.subscription_method) ? u.subscription_method : 'pix';
-    const status = expired ? 'Acesso expirado' : 'Aguardando confirmação';
-    const protocol = escapeOsHtml(u.subscription_payment_id || 'Sem protocolo');
-    const expiry = u.subscription_expires_at ? formatDateBR(u.subscription_expires_at) : '—';
-    return \`<tr>
-      <td><strong>\${name}</strong><small style="display:block;color:var(--text-dim);">\${email}</small></td>
-      <td>\${nexusPlanLabel(plan)}</td>
-      <td>\${method.toUpperCase()}</td>
-      <td><span class="role-badge" style="background:\${expired ? 'rgba(239,68,68,.15)' : 'rgba(245,158,11,.15)'};color:\${expired ? '#FCA5A5' : '#FBBF24'};">\${status}</span><small style="display:block;color:var(--text-dim);">\${protocol}</small></td>
-      <td>\${expiry}</td>
-      <td style="white-space:nowrap;">
-        \${expired ? \`<button type="button" class="btn-ghost" data-email="\${email}" onclick="window.openPaymentSecondCopy(this.dataset.email)">2ª via Pix</button>\` : \`<button type="button" class="btn-primary" data-email="\${email}" data-plan="\${plan}" data-method="\${method}" onclick="window.adminConfirmUserPayment(this.dataset.email,this.dataset.plan,this.dataset.method)">Confirmar pagamento</button>\`}
-        <button type="button" class="btn-ghost" data-email="\${email}" onclick="window.adminRevokeUserPayment(this.dataset.email)" title="Bloquear e exigir pagamento">Bloquear</button>
-      </td>
-    </tr>\`;
-  };
-
-  const requestedOrders = (systemOrdens || []).filter(o => {
-    const text = ((o.service_type || '') + ' ' + (o.title || '')).toLowerCase();
-    return (text.includes('boleto') || text.includes('2ª via') || text.includes('2a via')) && (o.status || '').toLowerCase() !== 'concluído';
-  });
-  const orderRows = requestedOrders.map(o => \`<tr>
-    <td><strong>\${escapeOsHtml(o.protocol || o.id || '—')}</strong></td>
-    <td>\${escapeOsHtml(o.client_name || 'Cliente')}<small style="display:block;color:var(--text-dim);">\${escapeOsHtml(o.client_email || '')}</small></td>
-    <td>\${escapeOsHtml(o.title || o.service_type || 'Solicitação de boleto')}</td>
-    <td>\${escapeOsHtml(o.status || 'Pendente')}</td>
-    <td><button type="button" class="btn-primary" data-osid="\${escapeOsHtml(o.id)}" onclick="openOrdemAdminModal(this.dataset.osid)">Abrir solicitação</button></td>
-  </tr>\`).join('');
-
-  const options = users.map(u => {
-    const email = escapeOsHtml(u.email);
-    const label = escapeOsHtml((u.name || 'Usuário') + ' · ' + u.email);
-    return \`<option value="\${email}" \${email.toLowerCase() === escapeOsHtml(preselectedEmail).toLowerCase() ? 'selected' : ''}>\${label}</option>\`;
-  }).join('');
-  const defaultDue = new Date();
-  defaultDue.setDate(defaultDue.getDate() + 3);
-  const dueValue = [defaultDue.getFullYear(), String(defaultDue.getMonth() + 1).padStart(2, '0'), String(defaultDue.getDate()).padStart(2, '0')].join('-');
-
+  if (!window.NexusPag) {
+    return '<div class="placeholder"><div class="big">⚠️</div><h3>Não foi possível carregar os pagamentos</h3><p>Atualize a página (Ctrl+F5). Se continuar, verifique a conexão com o servidor.</p></div>';
+  }
   if (typeof updateAdminSidebarBadges === 'function') setTimeout(updateAdminSidebarBadges, 0);
-
-  let content = '';
-  if (activeTab === 'segunda_via_boleto') {
-    content = \`<div class="table-panel" style="padding:18px;border-radius:16px;">
-      <div class="panel-head"><h3>2ª via de cobrança Pix</h3><span class="tag">Pagamento manual</span></div>
-      <p style="color:var(--text-dim);margin:0 0 14px;">Selecione a conta e o plano para imprimir uma instrução de pagamento com QR Code Pix e chave copia e cola.</p>
-      <div style="padding:12px 14px;margin-bottom:14px;border:1px solid rgba(245,158,11,.35);border-radius:12px;background:rgba(245,158,11,.08);color:#FDE68A;font-size:12px;line-height:1.5;">
-        Este documento é uma cobrança Pix para envio ao cliente; não é um boleto bancário FEBRABAN registrado. A confirmação do recebimento continua manual.
-      </div>
-      <div class="grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;">
-        <label>Cliente<select id="paymentNoticeUser" class="admin-search-input" style="width:100%;margin-top:5px;"><option value="">Selecione um usuário</option>\${options}</select></label>
-        <label>Plano<select id="paymentNoticePlan" class="admin-search-input" style="width:100%;margin-top:5px;"><option value="mensal">Mensal · \${NEXUS_MONTHLY_LABEL}</option></select></label>
-        <label>Vencimento<input id="paymentNoticeDue" type="date" class="admin-search-input" value="\${dueValue}" style="width:100%;margin-top:5px;"></label>
-        <label>Referência<input id="paymentNoticeReference" class="admin-search-input" maxlength="25" value="NX-\${Date.now().toString().slice(-8)}" style="width:100%;margin-top:5px;"></label>
-      </div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;">
-        <button type="button" class="btn-primary" onclick="window.printAdminPaymentNotice()">Gerar 2ª via Pix para impressão</button>
-        <button type="button" class="btn-ghost" onclick="window.sendAdminPaymentNoticeWhatsApp()">Enviar instruções por WhatsApp</button>
-        <button type="button" class="btn-ghost" onclick="window.setPagamentosActiveTab('pendentes')">Voltar aos pagamentos</button>
-      </div>
-    </div>\`;
-  } else if (activeTab === 'solicitacoes_boleto') {
-    content = \`<div class="table-panel" style="padding:14px;border-radius:16px;overflow:auto;">
-      <div class="panel-head"><h3>Solicitações de 2ª via</h3><span class="tag">\${requestedOrders.length} pendente(s)</span></div>
-      <table class="data-table" style="width:100%;"><thead><tr><th>Protocolo</th><th>Cliente</th><th>Solicitação</th><th>Status</th><th>Ação</th></tr></thead>
-      <tbody>\${orderRows || '<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text-dim);">Nenhuma solicitação de boleto pendente.</td></tr>'}</tbody></table>
-    </div>\`;
-  } else {
-    const list = activeTab === 'expirados' ? expiredUsers : pendingUsers;
-    const rows = list.map(u => userRow(u, activeTab === 'expirados')).join('');
-    content = \`<div class="table-panel" style="padding:14px;border-radius:16px;overflow:auto;">
-      <div class="panel-head"><h3>\${activeTab === 'expirados' ? 'Acessos expirados' : 'Pagamentos aguardando confirmação'}</h3><span class="tag">\${list.length} conta(s)</span></div>
-      <table class="data-table" style="width:100%;"><thead><tr><th>Cliente</th><th>Plano</th><th>Meio</th><th>Status / protocolo</th><th>Expiração</th><th>Ações</th></tr></thead>
-      <tbody>\${rows || \`<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text-dim);">\${activeTab === 'expirados' ? 'Nenhum acesso expirado.' : 'Nenhum pagamento pendente.'}</td></tr>\`}</tbody></table>
-    </div>\`;
-  }
-
-  return \`\${admTopoPagina('cartao', 'Pagamentos & Boletos', 'Confirme pagamentos recebidos, acompanhe acessos vencidos e prepare a segunda via de cobrança.',
-    '<button type="button" class="adm-btn" onclick="Promise.all([syncUsersWithServer(),syncOrdensWithServer()]).then(render)">Atualizar dados</button>',
-    [{ n: pendingUsers.length, rotulo: 'Aguardando confirmação', sub: 'Pagamentos informados', cor: 'info' },
-     { n: expiredUsers.length, rotulo: 'Acessos expirados', sub: 'Precisam de pagamento', cor: 'ruim' },
-     { n: activeUsers.length, rotulo: 'Assinaturas ativas', sub: 'Clientes liberados', cor: 'ok' }])}
-  <div class="admin-toolbar-panel" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
-    <button class="btn-ghost" onclick="window.setPagamentosActiveTab('pendentes')">Pagamentos pendentes</button>
-    <button class="btn-ghost" onclick="window.setPagamentosActiveTab('expirados')">Acessos expirados</button>
-    <button class="btn-ghost" onclick="window.setPagamentosActiveTab('segunda_via_boleto')">2ª via / cobrança Pix</button>
-    <button class="btn-ghost" onclick="window.setPagamentosActiveTab('solicitacoes_boleto')">Solicitações de boleto (\${requestedOrders.length})</button>
-  </div>\${content}\`;
+  return NexusPag.html(pagContexto);
 }
-
-window.setPagamentosActiveTab = function(tab) {
-  window.__pagamentosActiveTab = tab;
-  _lastRenderedHtml = '';
-  render();
-};
-
-window.openPaymentSecondCopy = function(email) {
-  const user = (registeredUsers || []).find(u => u && u.email && u.email.toLowerCase() === String(email || '').toLowerCase());
-  if (!user) { if (typeof showToast === 'function') showToast('Não encontrei essa conta. Atualize os dados e tente novamente.'); return; }
-  window.__boletoPreselectedUser = { email: user.email, name: user.name || '', cpf: user.cpf || '', phone: user.phone || '' };
-  window.__pagamentosActiveTab = 'segunda_via_boleto';
-  navigate('pagamentos');
-};
-
-window.printAdminPaymentNotice = function() {
-  const email = document.getElementById('paymentNoticeUser')?.value || '';
-  const user = (registeredUsers || []).find(u => u && u.email && u.email.toLowerCase() === email.toLowerCase());
-  const due = document.getElementById('paymentNoticeDue')?.value || '';
-  const reference = (document.getElementById('paymentNoticeReference')?.value || '').replace(/[^a-zA-Z0-9]/g, '').slice(0, 25);
-  if (!user || !reference) { if (typeof showToast === 'function') showToast('Selecione o cliente e informe uma referência válida.'); return; }
-  const amount = NEXUS_MONTHLY_PRICE; // plano único: o mesmo valor da tela de assinatura (vem do servidor)
-  const txid = ('NX' + reference).slice(0, 25);
-  const pixCode = window.generatePixEMVPayload('+5562992345372', 'PAULO LIMA', 'GOIANIA', amount, txid);
-  const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=' + encodeURIComponent(pixCode);
-  const popup = window.open('', '_blank');
-  if (!popup) { if (typeof showToast === 'function') showToast('Permita a abertura da janela para imprimir a cobrança.'); return; }
-  popup.opener = null;
-  const safe = escapeOsHtml;
-  const planLabel = 'Mensal · 30 dias';
-  const html = '<!doctype html><html lang="pt-BR"><meta charset="utf-8"><title>Cobrança Pix ' + safe(reference) + '</title>' +
-    '<style>body{font:15px Arial,sans-serif;color:#172033;max-width:760px;margin:32px auto;padding:24px}header{border-bottom:2px solid #059669;padding-bottom:14px}h1{font-size:24px;margin:0 0 6px}small{color:#64748b}.box{border:1px solid #cbd5e1;border-radius:12px;padding:18px;margin:18px 0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.qr{width:220px;height:220px;object-fit:contain}.code{font:12px monospace;word-break:break-all;background:#f1f5f9;padding:12px;border-radius:8px}.note{color:#92400e;background:#fffbeb;border:1px solid #fcd34d;padding:12px;border-radius:8px}@media print{button{display:none}body{margin:0 auto}}</style>' +
-    '<body><header><small>NEXUS FINANCEIRO HUB · COBRANÇA</small><h1>Instrução de pagamento via Pix</h1><small>Referência ' + safe(reference) + '</small></header>' +
-    '<section class="box grid"><div><small>CLIENTE</small><p><strong>' + safe(user.name || user.email) + '</strong><br>' + safe(user.email) + '</p></div><div><small>PLANO</small><p><strong>' + safe(planLabel) + '</strong></p></div><div><small>VALOR</small><p><strong>R$ ' + amount.toFixed(2).replace('.', ',') + '</strong></p></div><div><small>VENCIMENTO</small><p><strong>' + safe(due ? formatDateBR(due) : '—') + '</strong></p></div></section>' +
-    '<section class="box" style="text-align:center"><h2>Escaneie o QR Code Pix</h2><img class="qr" src="' + safe(qrUrl) + '" alt="QR Code Pix"><p>Favorecido: <strong>Paulo Lima</strong></p><p>Chave Pix (celular): <strong>(62) 99234-5372</strong></p></section>' +
-    '<section class="box"><strong>Pix copia e cola</strong><p class="code">' + safe(pixCode) + '</p></section>' +
-    '<p class="note"><strong>Importante:</strong> este documento é uma instrução de pagamento via Pix, não é um boleto bancário registrado. O acesso é liberado após a confirmação do recebimento.</p>' +
-    '<button onclick="window.print()">Imprimir / Salvar em PDF</button></body></html>';
-  popup.document.open(); popup.document.write(html); popup.document.close(); popup.focus();
-};
-
-window.sendAdminPaymentNoticeWhatsApp = function() {
-  const email = document.getElementById('paymentNoticeUser')?.value || '';
-  const user = (registeredUsers || []).find(u => u && u.email && u.email.toLowerCase() === email.toLowerCase());
-  if (!user) { if (typeof showToast === 'function') showToast('Selecione um cliente para enviar a cobrança.'); return; }
-  const phone = String(user.phone || '').replace(/\\D/g, '');
-  if (phone.length < 10) { if (typeof showToast === 'function') showToast('Esta conta não possui telefone válido para WhatsApp.'); return; }
-  const plan = 'mensal';
-  const amount = NEXUS_MONTHLY_LABEL;
-  const due = document.getElementById('paymentNoticeDue')?.value || '';
-  const message = 'Olá, ' + (user.name || '') + '. Segue a segunda via da cobrança Nexus via Pix. Plano ' + plan + ', valor ' + amount + (due ? ', vencimento ' + formatDateBR(due) : '') + '. Chave Pix: (62) 99234-5372. Após o pagamento, envie o comprovante para confirmação.';
-  window.open('https://wa.me/55' + phone.slice(-11) + '?text=' + encodeURIComponent(message), '_blank', 'noopener,noreferrer');
-};
 
 function pageLogs(){ return admEnvolver('logs', pageLogsCorpo()); }
 function pageLogsCorpo(){
@@ -36199,10 +36299,32 @@ async function handleNexusRequest(req, res) {
             saveLocalUsers(localUsers);
           }
 
+          // Livro de pagamentos: o aviso entra na fila do administrador também quando a conta está ATIVA (renovação antes do vencimento).
+          // Se o administrador já emitiu uma cobrança para esta conta, é ela que passa a "informada"; senão nasce uma com a referência do Pix pago.
+          try {
+            const livro = getLocalPagamentos();
+            const abertas = pagamentoPorEmail(livro, email).filter(p => Pagamentos.emAberto(p)).sort(pagamentoMaisRecente);
+            let reg = abertas.find(p => p.status === 'informada') || abertas[0] || null;
+            const por = { nome: targetUser ? targetUser.name : email, email };
+            if (!reg) {
+              const refPix = Pagamentos.limparReferencia(receiptCode);
+              reg = Pagamentos.criarCobranca({
+                usuario: targetUser, valor: amount, plano: 'mensal', origem: 'usuario', por, agora: Date.now(), existentes: livro,
+                referencia: refPix && !livro.some(p => p && p.ref === refPix) ? refPix : ''
+              });
+              livro.push(reg);
+            }
+            Pagamentos.marcarInformada(reg, { agora: Date.now(), por, comprovante: receiptCode });
+            reg.txid_legado = txId;
+            saveLocalPagamentos(livro);
+          } catch (ledgerErr) {
+            console.warn('[PAGAMENTOS] Não foi possível registrar o aviso no livro:', ledgerErr.message);
+          }
+
           if (pool) {
             try {
               await pool.query(
-                `UPDATE usuarios 
+                `UPDATE usuarios
                  SET subscription_status = $1,
                      subscription_plan = $2,
                      subscription_method = $3,
@@ -36287,78 +36409,27 @@ async function handleNexusRequest(req, res) {
           return res.end(JSON.stringify({ success: false, error: 'Somente administradores, ou quem recebeu a permissão de liberar assinatura, podem liberar pagamentos não reconhecidos.' }));
         }
 
-        let targetUser = localUsers.find(u => u && u.email && u.email.toLowerCase() === targetEmail);
-        if (!targetUser && pool) {
-          try {
-            const dbCheck = await pool.query('SELECT * FROM usuarios WHERE LOWER(email) = LOWER($1)', [targetEmail]);
-            if (dbCheck.rows && dbCheck.rows.length > 0) {
-              targetUser = dbCheck.rows[0];
-              localUsers.push(targetUser);
-            }
-          } catch(e) {}
+        // O livro de pagamentos, o prazo (soma ao que ainda resta) e a conta são tratados em executarConfirmacao
+        const resultado = await executarConfirmacao({
+          actor: adminUser, targetEmail, plano: plan, metodo: rawMethod, valor: parsed.amount,
+          paymentId: String(parsed.payment_id || '').trim().slice(0, 40), comprovante: receiptNote, obs: String(parsed.obs || '').trim().slice(0, 200)
+        });
+        if (resultado.status !== 200) {
+          res.writeHead(resultado.status, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: resultado.error }));
         }
-
-        if (!targetUser) {
-          res.writeHead(404, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ success: false, error: 'Usuário não encontrado para o e-mail informado.' }));
-        }
-        const payDenial = delegateTargetDenial(adminUser, targetUser, targetEmail);
-        if (payDenial) {
-          res.writeHead(403, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ success: false, error: payDenial }));
-        }
-
-        const now = new Date();
-        const days = plan === 'vitalicio' ? 36500 : (plan === 'anual' ? 365 : 30);
-        const expiresDate = plan === 'vitalicio' ? new Date('2099-12-31T23:59:59Z') : new Date(now.getTime() + days * 24 * 60 * 60 * 1000);
-        const expiresIso = getBrasiliaIsoString(expiresDate);
-        const expiresSql = getBrasiliaSqlString(expiresDate);
-        const validMethods = ['pix', 'credit_card', 'debit_card', 'boleto'];
-        const method = validMethods.includes(rawMethod) ? rawMethod : (targetUser.subscription_method || 'pix');
-        const methodLabels = {
-          pix: 'Pix (SPI / BACEN)',
-          credit_card: 'Cartão de Crédito',
-          debit_card: 'Cartão de Débito',
-          boleto: 'Boleto Bancário FEBRABAN'
-        };
-        const suffix = receiptNote ? ('-' + receiptNote.replace(/[^a-zA-Z0-9]/g, '').slice(0, 12).toUpperCase()) : '';
-        const txId = (targetUser.subscription_payment_id && String(targetUser.subscription_payment_id).startsWith('NEXUS-SUB-') && !receiptNote)
-          ? targetUser.subscription_payment_id
-          : ('LIB-ADMIN-' + method.toUpperCase() + '-' + Date.now() + suffix);
-
-        targetUser.subscription_status = 'active';
-        targetUser.subscription_plan = plan;
-        targetUser.subscription_expires_at = expiresIso;
-        targetUser.subscription_method = method;
-        targetUser.subscription_payment_id = txId;
-        saveLocalUsers(localUsers);
-
-        if (pool) {
-          try {
-            await pool.query(
-              `UPDATE usuarios 
-               SET subscription_status = 'active',
-                   subscription_plan = $1,
-                   subscription_expires_at = $2,
-                   subscription_method = $3,
-                   subscription_payment_id = $4
-               WHERE LOWER(email) = LOWER($5)`,
-              [plan, expiresSql, method, txId, targetEmail]
-            );
-            console.log(`✅ [PAGAMENTO LIBERADO PELO ADMIN] Assinatura ${plan.toUpperCase()} (${method}) liberada por ${adminEmail} para ${targetEmail} até ${expiresSql}`);
-          } catch(sqlErr) {
-            console.warn('[AVISO BD] Falha ao confirmar pagamento no SQL Server:', sqlErr.message);
-          }
-        }
+        const { plano: planoFinal, metodo: method, txId, expiresIso } = resultado;
+        const methodLabels = PAGAMENTO_METODOS;
+        const targetUser = resultado.targetUser || { name: resultado.registro.nome };
 
         // Se houver O.S. vinculada ou pendente de pagamento para este usuário, atualiza automaticamente
         // (só o administrador mexe em chamados: quem tem apenas a permissão de liberar assinatura não encerra O.S.)
-        if (concludeOs && adminUser.role === 'Administrador') {
+        if (!resultado.jaConfirmado && concludeOs && adminUser.role === 'Administrador') {
           try {
             const localOrdens = getLocalOrdens();
             let updatedAnyOs = false;
             const nowIsoOs = new Date().toISOString();
-            const parecerMsg = `✅ Pagamento reconhecido e liberado pelo Administrador (${adminUser.name || adminEmail}) na modalidade ${methodLabels[method] || method} - Plano ${plan.toUpperCase()}. Protocolo de Conciliação: ${txId}.`;
+            const parecerMsg = `✅ Pagamento reconhecido e liberado pelo Administrador (${adminUser.name || adminEmail}) na modalidade ${methodLabels[method] || method} - Plano ${planoFinal.toUpperCase()}. Protocolo de Conciliação: ${txId}.`;
 
             localOrdens.forEach(o => {
               const matchById = osId && String(o.id) === String(osId);
@@ -36389,31 +36460,19 @@ async function handleNexusRequest(req, res) {
           } catch(osErr) {}
         }
 
-        recordSystemLog(
-          adminUser.name || 'Administrador',
-          adminEmail,
-          'Assinatura',
-          'Financeiro',
-          `Liberou pagamento não reconhecido via ${methodLabels[method] || method} e ativou plano ${plan.toUpperCase()} para ${targetUser.name || targetEmail} (Tx: ${txId} | Expira: ${expiresSql})`
-        );
-
-        broadcastEvent('subscription_activated', {
-          email: targetEmail,
-          plan: plan,
-          method: method,
-          transaction_id: txId,
-          expires_at: expiresIso,
-          confirmed_by: adminEmail
-        });
-
         res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
         return res.end(JSON.stringify({
           success: true,
-          message: `Pagamento via ${methodLabels[method] || method} reconhecido! Plano ${plan.toUpperCase()} liberado com sucesso para ${targetEmail}.`,
+          already_confirmed: !!resultado.jaConfirmado,
+          message: resultado.jaConfirmado
+            ? `Este pagamento já estava confirmado: nada foi estendido de novo.`
+            : `Pagamento via ${methodLabels[method] || method} reconhecido! Plano ${planoFinal.toUpperCase()} liberado com sucesso para ${targetEmail}.`,
           target_email: targetEmail,
-          plan: plan,
+          plan: planoFinal,
           method: method,
           transaction_id: txId,
+          payment_id: resultado.registro.id,
+          amount: resultado.registro.valor,
           expires_at: expiresIso
         }));
       } catch(err) {
@@ -36579,6 +36638,178 @@ async function handleNexusRequest(req, res) {
       }
     });
     return;
+  }
+
+
+  // ==================== PAGAMENTOS & COBRANÇAS (administrador) ====================
+  // Regras no pagamentos.js (livro, prazo, Pix, resumo, conciliação); aqui ficam só o HTTP e a gravação (livro + conta).
+  // O valor cobrado é SEMPRE SUBSCRIPTION_MONTHLY_PRICE: o navegador nunca decide o preço de uma cobrança.
+  function pixDaCobranca(reg) {
+    const payload = Pagamentos.pixPayload({ chave: PIX_CONFIG.key, nome: PIX_CONFIG.name, cidade: PIX_CONFIG.city, valor: reg.valor, txid: reg.ref });
+    return { payload, qr_url: '/api/pix/qr.svg?data=' + encodeURIComponent(payload), chave: PIX_CONFIG.phone_formatted, favorecido: PIX_CONFIG.name };
+  }
+  function exigirAdminDePagamentos(req, res) {
+    const admin = getAuthenticatedAdmin(req);
+    if (admin) return admin;
+    sendJson(res, corsHeaders, getAuthenticatedUser(req) ? 403 : 401, { success: false, error: 'Somente administradores acessam os pagamentos.' });
+    return null;
+  }
+  async function lerCorpoDePagamentos(req, res, limite) {
+    const leitura = await lerCorpoJson(req, limite || 16 * 1024);
+    if (!leitura.ok) { sendJson(res, corsHeaders, leitura.status, { success: false, error: leitura.mensagem }); return null; }
+    return leitura.dados;
+  }
+
+  // QR Code do Pix gerado aqui (sem enviar chave, valor e referência a um site de terceiros). Só aceita um BR Code de Pix com CRC válido.
+  if (req.method === 'GET' && parsedUrl.pathname === '/api/pix/qr.svg') {
+    const dados = String(parsedUrl.query.data || '');
+    const lido = dados.indexOf('000201') === 0 ? Pagamentos.pixLer(dados) : null;
+    let svg = '';
+    try { if (lido && lido.crcOk) svg = qrSvg(dados); } catch (e) { svg = ''; }
+    if (!svg) {
+      res.writeHead(400, { ...corsHeaders, 'Content-Type': 'text/plain; charset=utf-8' });
+      return res.end('Código Pix inválido.');
+    }
+    res.writeHead(200, { ...corsHeaders, 'Content-Type': 'image/svg+xml; charset=utf-8', 'Cache-Control': 'private, max-age=3600', 'X-Content-Type-Options': 'nosniff', 'Content-Security-Policy': "default-src 'none'; style-src 'unsafe-inline'" });
+    return res.end(svg);
+  }
+
+  // Livro + resumo financeiro
+  if (req.method === 'GET' && parsedUrl.pathname === '/api/admin/pagamentos') {
+    const admin = exigirAdminDePagamentos(req, res);
+    if (!admin) return;
+    const agora = Date.now();
+    let livro = getLocalPagamentos();
+    const usuarios = getLocalUsers();
+    const novos = Pagamentos.sincronizarLegado(usuarios, livro, agora, SUBSCRIPTION_MONTHLY_PRICE);
+    if (novos.length) { livro = livro.concat(novos); saveLocalPagamentos(livro); }
+    const ordenados = livro.slice().sort(pagamentoMaisRecente);
+    return sendJson(res, corsHeaders, 200, {
+      success: true,
+      agora: new Date(agora).toISOString(),
+      preco: SUBSCRIPTION_MONTHLY_PRICE,
+      preco_texto: SUBSCRIPTION_MONTHLY_LABEL,
+      pix: { chave: PIX_CONFIG.phone_formatted, favorecido: PIX_CONFIG.name },
+      total: ordenados.length,
+      pagamentos: ordenados.slice(0, 3000).map(p => Pagamentos.publico(p, agora)),
+      resumo: Pagamentos.resumo({ pagamentos: livro, usuarios, agora, preco: SUBSCRIPTION_MONTHLY_PRICE })
+    });
+  }
+
+  // Gera a cobrança Pix de uma conta (2ª via). Se já existe uma cobrança aberta de R$ 18 para a conta, é ELA que sai de novo (mesma referência),
+  // só com o vencimento ajustado: assim a 2ª via não cria uma segunda cobrança para o mesmo mês.
+  if (req.method === 'POST' && parsedUrl.pathname === '/api/admin/pagamentos/cobranca') {
+    const admin = exigirAdminDePagamentos(req, res);
+    if (!admin) return;
+    const p = await lerCorpoDePagamentos(req, res);
+    if (!p) return;
+    try {
+      const agora = Date.now();
+      const email = String(p.email || '').toLowerCase().trim();
+      const alvo = getLocalUsers().find(u => u && u.email && u.email.toLowerCase() === email);
+      if (!alvo) return sendJson(res, corsHeaders, 404, { success: false, error: 'Conta não encontrada.' });
+      if (alvo.role === 'Administrador') return sendJson(res, corsHeaders, 400, { success: false, error: 'Administrador tem acesso ilimitado: não há cobrança.' });
+      if (String(alvo.subscription_plan || '').toLowerCase() === 'vitalicio') return sendJson(res, corsHeaders, 409, { success: false, error: 'Esta conta tem acesso vitalício: não há o que cobrar.' });
+      let vencimento = Pagamentos.dataIsoValida(p.vencimento);
+      if (p.vencimento && !vencimento) return sendJson(res, corsHeaders, 400, { success: false, error: 'Data de vencimento inválida.' });
+      if (!vencimento) vencimento = Pagamentos.diaDe(agora + 3 * Pagamentos.DIA);
+      if (vencimento < Pagamentos.diaDe(agora)) return sendJson(res, corsHeaders, 400, { success: false, error: 'O vencimento não pode ser uma data que já passou.' });
+      const por = { nome: admin.name || 'Administrador', email: String(admin.email || '').toLowerCase() };
+      const livro = getLocalPagamentos();
+      const refPedida = Pagamentos.limparReferencia(p.referencia);
+      if (refPedida && livro.some(x => x && x.ref === refPedida)) return sendJson(res, corsHeaders, 409, { success: false, error: 'Já existe uma cobrança com esta referência.' });
+      let reg = refPedida ? null : pagamentoPorEmail(livro, email).filter(x => x.status === 'emitida' && Math.abs(x.valor - SUBSCRIPTION_MONTHLY_PRICE) < 0.005).sort(pagamentoMaisRecente)[0] || null;
+      const reutilizada = !!reg;
+      if (reg) {
+        if (reg.vencimento !== vencimento) { Pagamentos.evento(reg, 'vencimento', por, 'Vencimento ' + (reg.vencimento || 'sem data') + ' → ' + vencimento, agora); reg.vencimento = vencimento; }
+        Pagamentos.evento(reg, '2a_via', por, 'Cobrança emitida de novo (2ª via)', agora);
+      } else {
+        reg = Pagamentos.criarCobranca({ usuario: alvo, valor: SUBSCRIPTION_MONTHLY_PRICE, plano: 'mensal', vencimento, referencia: refPedida, origem: 'admin', por, obs: p.obs, agora, existentes: livro });
+        livro.push(reg);
+      }
+      saveLocalPagamentos(livro);
+      recordSystemLog(por.nome, por.email, 'Cobrança', 'Financeiro', `${reutilizada ? 'Emitiu a 2ª via da' : 'Gerou a'} cobrança Pix ${reg.ref} de ${Pagamentos.brl(reg.valor)} para ${alvo.name || email} (vencimento ${vencimento.split('-').reverse().join('/')})`);
+      return sendJson(res, corsHeaders, 200, { success: true, reutilizada, pagamento: Pagamentos.publico(reg, agora), pix: pixDaCobranca(reg) });
+    } catch (err) {
+      const failure = publicFailure(err, 'Não foi possível gerar a cobrança agora.', 500);
+      return sendJson(res, corsHeaders, failure.status, { success: false, error: failure.error });
+    }
+  }
+
+  // Ações sobre um registro do livro: confirmar o recebimento, cancelar uma cobrança aberta, estornar um pagamento, ou reabrir o Pix para reimpressão.
+  // Confirmar vale também para quem recebeu a permissão "liberar assinatura"; cancelar e estornar só o administrador.
+  if (req.method === 'POST' && parsedUrl.pathname === '/api/admin/pagamentos/acao') {
+    if (!getAuthenticatedUser(req)) return sendJson(res, corsHeaders, 401, { success: false, error: 'Entre na sua conta.' });
+    const p = await lerCorpoDePagamentos(req, res);
+    if (!p) return;
+    try {
+      const id = String(p.id || '').trim().slice(0, 40);
+      const acao = String(p.acao || '').trim();
+      const nota = String(p.obs || '').trim().slice(0, 200);
+      if (acao === 'confirmar') {
+        const quem = getAuthenticatedWithPermission(req, 'assinatura.liberar');
+        if (!quem) return sendJson(res, corsHeaders, 403, { success: false, error: 'Somente administradores, ou quem recebeu a permissão de liberar assinatura, confirmam pagamentos.' });
+        const reg = getLocalPagamentos().find(x => x && x.id === id);
+        if (!reg) return sendJson(res, corsHeaders, 404, { success: false, error: 'Cobrança não encontrada.' });
+        const r = await executarConfirmacao({ actor: quem, targetEmail: reg.email, plano: reg.plano, metodo: String(p.metodo || '').toLowerCase(), valor: p.valor, paymentId: id, comprovante: String(p.comprovante || '').trim(), extratoId: String(p.extrato_id || '').trim().slice(0, 80), obs: nota });
+        if (r.status !== 200) return sendJson(res, corsHeaders, r.status, { success: false, error: r.error });
+        return sendJson(res, corsHeaders, 200, {
+          success: true, already_confirmed: !!r.jaConfirmado, expires_at: r.expiresIso, pagamento: Pagamentos.publico(r.registro, Date.now()),
+          message: r.jaConfirmado ? 'Este pagamento já estava confirmado: nada foi estendido de novo.' : `Recebimento de ${Pagamentos.brl(r.registro.valor)} confirmado. Acesso de ${r.registro.nome || r.registro.email} liberado.`
+        });
+      }
+      const admin = exigirAdminDePagamentos(req, res);
+      if (!admin) return;
+      if (acao === 'pix') {
+        const reg = getLocalPagamentos().find(x => x && x.id === id);
+        if (!reg) return sendJson(res, corsHeaders, 404, { success: false, error: 'Cobrança não encontrada.' });
+        return sendJson(res, corsHeaders, 200, { success: true, pagamento: Pagamentos.publico(reg, Date.now()), pix: pixDaCobranca(reg) });
+      }
+      if (acao === 'cancelar' || acao === 'estornar') {
+        const r = acao === 'cancelar' ? await executarCancelamento(admin, id, nota) : await executarEstorno(admin, id, nota);
+        if (r.status !== 200) return sendJson(res, corsHeaders, r.status, { success: false, error: r.error });
+        return sendJson(res, corsHeaders, 200, {
+          success: true, pagamento: Pagamentos.publico(r.registro, Date.now()),
+          message: acao === 'cancelar' ? 'Cobrança cancelada.' : `Pagamento estornado (${r.efeito}).`
+        });
+      }
+      return sendJson(res, corsHeaders, 400, { success: false, error: 'Ação desconhecida.' });
+    } catch (err) {
+      const failure = publicFailure(err, 'Não foi possível concluir a ação agora.', 500);
+      return sendJson(res, corsHeaders, failure.status, { success: false, error: failure.error });
+    }
+  }
+
+  // Conciliação: lê o extrato (OFX ou CSV) e SUGERE quais cobranças abertas foram pagas. Não altera nada: quem confirma é o administrador, uma a uma.
+  if (req.method === 'POST' && parsedUrl.pathname === '/api/admin/pagamentos/conciliar') {
+    const admin = exigirAdminDePagamentos(req, res);
+    if (!admin) return;
+    const p = await lerCorpoDePagamentos(req, res, 3 * 1024 * 1024);
+    if (!p) return;
+    try {
+      const extrato = Pagamentos.lerExtrato(String(p.conteudo || ''));
+      if (!extrato.lancamentos.length) {
+        return sendJson(res, corsHeaders, 422, { success: false, error: 'Não encontrei lançamentos neste arquivo. Use o extrato do banco em OFX ou CSV, com colunas de data e valor.' });
+      }
+      const r = Pagamentos.conciliar(extrato.lancamentos, getLocalPagamentos(), Date.now());
+      return sendJson(res, corsHeaders, 200, { success: true, formato: extrato.formato, lancamentos: extrato.lancamentos.length, ...r });
+    } catch (err) {
+      const failure = publicFailure(err, 'Não foi possível ler o extrato.', 500);
+      return sendJson(res, corsHeaders, failure.status, { success: false, error: failure.error });
+    }
+  }
+
+  // Exportação em CSV (abre no Excel): os registros pedidos (ids) ou todos
+  if (req.method === 'POST' && parsedUrl.pathname === '/api/admin/pagamentos/csv') {
+    const admin = exigirAdminDePagamentos(req, res);
+    if (!admin) return;
+    const p = await lerCorpoDePagamentos(req, res, 256 * 1024);
+    if (!p) return;
+    const agora = Date.now();
+    const ids = Array.isArray(p.ids) ? new Set(p.ids.map(x => String(x))) : null;
+    const lista = getLocalPagamentos().filter(x => x && (!ids || ids.has(x.id))).sort(pagamentoMaisRecente);
+    res.writeHead(200, { ...corsHeaders, 'Content-Type': 'text/csv; charset=utf-8', 'Content-Disposition': `attachment; filename="pagamentos-${Pagamentos.diaDe(agora)}.csv"` });
+    return res.end(Pagamentos.csv(lista, agora));
   }
 
 
@@ -37225,7 +37456,7 @@ async function handleNexusRequest(req, res) {
     'deleted_accounts.json', 'local_users.json', 'local_users.backup.json',
     'local_database_data.json', 'local_database_data.backup.json',
     'cpf_registry.json', 'cpf_registry.backup.json', 'local_ordens_servico.json',
-    'local_tecnicos.json', 'pending_logins.json', 'system_logs.json'
+    'local_tecnicos.json', 'pending_logins.json', 'system_logs.json', 'local_pagamentos.json'
   ]);
   if (protectedLocalFiles.has(path.basename(pathname).toLowerCase())) {
     res.writeHead(404, { ...corsHeaders, 'Content-Type': 'application/json' });
@@ -37247,7 +37478,9 @@ async function handleNexusRequest(req, res) {
     '/transacoes.css': 'text/css',
     '/transacoes.js': 'application/javascript; charset=utf-8',
     '/administracao.css': 'text/css',
-    '/administracao.js': 'application/javascript; charset=utf-8'
+    '/administracao.js': 'application/javascript; charset=utf-8',
+    '/pagamentos-admin.css': 'text/css',
+    '/pagamentos-admin.js': 'application/javascript; charset=utf-8'
   };
   let staticFile = null;
   if (STATIC_EXACT_FILES[pathname]) {
@@ -37802,6 +38035,9 @@ SupabaseSync.restoreMissingFiles({ timeoutMs: 8000 }).catch(() => {}).then(() =>
     })
     .catch(err => {
       console.warn(`[BANCO AVISO] Inicialização do banco SQL tratada autonomamente: ${err.message}`);
-    });
+    })
+    // Assinaturas vencidas viram "expired" ao iniciar e de hora em hora (antes só quando o próprio usuário abria o app)
+    .then(() => expirarAssinaturasVencidas());
+  setInterval(expirarAssinaturasVencidas, 60 * 60 * 1000).unref();
 }));
 
