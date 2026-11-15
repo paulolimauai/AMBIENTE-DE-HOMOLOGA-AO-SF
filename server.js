@@ -204,6 +204,14 @@ const PIX_CONFIG = {
   type: 'Telefone Celular'
 };
 
+// Oferta de assinatura (FONTE ÚNICA do preço): 1 dia grátis no cadastro e, depois, um único plano: Mensal, somente Pix.
+// O Plano Anual saiu da oferta; "anual" só existe em contas antigas e em liberações manuais do administrador.
+// O cliente recebe estes valores já prontos (SUBSCRIPTION_MONTHLY_LABEL/INT/CENTS entram no HTML e em NEXUS_MONTHLY_PRICE).
+const SUBSCRIPTION_MONTHLY_PRICE = 18;
+const SUBSCRIPTION_MONTHLY_LABEL = 'R$ ' + SUBSCRIPTION_MONTHLY_PRICE.toFixed(2).replace('.', ',');
+const SUBSCRIPTION_MONTHLY_INT = String(Math.trunc(SUBSCRIPTION_MONTHLY_PRICE));
+const SUBSCRIPTION_MONTHLY_CENTS = SUBSCRIPTION_MONTHLY_PRICE.toFixed(2).split('.')[1];
+
 function getPendingLogins() {
   try {
     if (fs.existsSync(PENDING_LOGINS_PATH)) {
@@ -7797,11 +7805,15 @@ body.light .trial-dock-time {
   color: #047857 !important;
 }
 
-/* ==================== TELA DE PAGAMENTO • CHECKOUT PIX EM VIDRO ==================== */
-/* Bloco unico (antes havia 3 camadas brigando com !important). Todo o visual vem dos tokens --pw-* abaixo. */
+/* ==================== TELA DE PAGAMENTO • CHECKOUT PIX EM VIDRO (4K) ==================== */
+/* Todo o visual vem dos tokens --pw-*. O fundo escuro NAO usa backdrop-filter de proposito: um ancestral com backdrop-filter vira a "raiz" do
+   efeito e o vidro do painel passaria a enxergar so o proprio fundo. Sem ele, o painel desfoca de verdade o que esta atras (o app, ja
+   desfocado, mais os focos de cor da paleta). Tudo e vetorial/gradiente: nitido em 4K, sem imagem. */
 body.paywall-locked { overflow: hidden !important; }
+/* Com a tela de pagamento aberta (travada ou não) a página de trás não rola: some a barra de rolagem extra ao lado do vidro */
+html:has(.sub-paywall-overlay.show) { overflow: hidden !important; }
 body.paywall-locked #appMain {
-  filter: blur(4px) brightness(0.8) !important;
+  filter: blur(5px) brightness(0.78) saturate(1.1) !important;
   user-select: none !important;
   transition: filter 0.35s ease;
 }
@@ -7809,52 +7821,57 @@ body.paywall-locked #appMain {
 .sub-paywall-overlay {
   --pw-text: #F1F5F9;
   --pw-text-2: #CBD5E1;
-  --pw-muted: #94A3B8;
+  --pw-muted: #A3B1C6;
   --pw-faint: #64748B;
-  --pw-line: rgba(255, 255, 255, 0.10);
-  --pw-line-strong: rgba(255, 255, 255, 0.20);
-  --pw-glass: linear-gradient(150deg, rgba(30, 41, 59, 0.66) 0%, rgba(15, 23, 42, 0.54) 55%, rgba(7, 24, 36, 0.64) 100%);
-  --pw-card: rgba(255, 255, 255, 0.055);
-  --pw-card-hover: rgba(255, 255, 255, 0.09);
-  --pw-field: rgba(2, 6, 23, 0.40);
+  --pw-line: rgba(255, 255, 255, 0.11);
+  --pw-line-strong: rgba(255, 255, 255, 0.22);
+  --pw-glass: linear-gradient(150deg, rgba(34, 46, 66, 0.58) 0%, rgba(14, 22, 38, 0.46) 52%, rgba(8, 26, 36, 0.56) 100%);
+  --pw-card: linear-gradient(165deg, rgba(255, 255, 255, 0.085) 0%, rgba(255, 255, 255, 0.032) 100%);
+  --pw-card-solid: rgba(255, 255, 255, 0.06);
+  --pw-card-hover: rgba(255, 255, 255, 0.10);
+  --pw-field: rgba(3, 8, 22, 0.42);
   --pw-accent: #10B981;
   --pw-accent-2: #34D399;
   --pw-accent-soft: rgba(16, 185, 129, 0.16);
-  --pw-accent-line: rgba(52, 211, 153, 0.42);
+  --pw-accent-line: rgba(52, 211, 153, 0.44);
   --pw-sky: #38BDF8;
   --pw-sky-soft: rgba(56, 189, 248, 0.14);
-  --pw-sky-line: rgba(56, 189, 248, 0.42);
+  --pw-sky-line: rgba(56, 189, 248, 0.44);
   --pw-amber: #FBBF24;
   --pw-amber-soft: rgba(245, 158, 11, 0.14);
-  --pw-amber-line: rgba(245, 158, 11, 0.42);
+  --pw-amber-line: rgba(245, 158, 11, 0.44);
   --pw-danger: #FCA5A5;
   --pw-danger-soft: rgba(239, 68, 68, 0.14);
-  --pw-danger-line: rgba(248, 113, 113, 0.45);
-  --pw-shadow: 0 32px 90px -26px rgba(0, 0, 0, 0.8);
-  /* Fundo atras do vidro = as cores da paleta escolhida em "Cores do fundo" (--nx-o1..4 vem do <html>).
-     Os numeros depois da virgula sao so o padrao caso a paleta ainda nao tenha sido aplicada. */
-  --pw-bar: rgba(8, 16, 28, 0.84);
-  --pw-overlay: rgba(3, 6, 14, 0.40);
-  --pw-orb-a: rgba(var(--nx-o1, 16, 185, 129), 0.34);
-  --pw-orb-b: rgba(var(--nx-o2, 56, 189, 248), 0.30);
-  --pw-orb-c: rgba(var(--nx-o3, 56, 189, 248), 0.22);
-  --pw-orb-d: rgba(var(--nx-o4, 16, 185, 129), 0.20);
+  --pw-danger-line: rgba(248, 113, 113, 0.46);
+  --pw-shadow: 0 40px 110px -30px rgba(0, 0, 0, 0.85), 0 14px 40px -18px rgba(0, 0, 0, 0.6);
+  --pw-bar: rgba(10, 18, 32, 0.74);
+  --pw-overlay: rgba(3, 6, 14, 0.46);
+  --pw-price-ink: linear-gradient(180deg, #FFFFFF 0%, #A7F3D0 55%, #34D399 100%);
+  /* Fundo atras do vidro = as cores da paleta escolhida em "Cores do fundo" (--nx-o1..4 vem do <html>). */
+  --pw-orb-a: rgba(var(--nx-o1, 16, 185, 129), 0.40);
+  --pw-orb-b: rgba(var(--nx-o2, 56, 189, 248), 0.36);
+  --pw-orb-c: rgba(var(--nx-o3, 56, 189, 248), 0.26);
+  --pw-orb-d: rgba(var(--nx-o4, 16, 185, 129), 0.24);
+  /* Vidro canelado (listras verticais finas) e grao fino por cima de tudo: da profundidade sem pesar */
+  --pw-flutes: repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.032) 0, rgba(255, 255, 255, 0.032) 1px, transparent 1px, transparent 22px);
+  --pw-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .5 0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.07'/%3E%3C/svg%3E");
 }
 body.light .sub-paywall-overlay {
   --pw-text: #0F172A;
   --pw-text-2: #334155;
   --pw-muted: #475569;
   --pw-faint: #64748B;
-  --pw-line: rgba(15, 23, 42, 0.10);
-  --pw-line-strong: rgba(15, 23, 42, 0.18);
-  --pw-glass: linear-gradient(150deg, rgba(255, 255, 255, 0.80) 0%, rgba(248, 250, 252, 0.66) 58%, rgba(236, 253, 245, 0.72) 100%);
-  --pw-card: rgba(255, 255, 255, 0.66);
-  --pw-card-hover: rgba(255, 255, 255, 0.90);
+  --pw-line: rgba(15, 23, 42, 0.11);
+  --pw-line-strong: rgba(15, 23, 42, 0.20);
+  --pw-glass: linear-gradient(150deg, rgba(255, 255, 255, 0.78) 0%, rgba(248, 250, 252, 0.64) 58%, rgba(236, 253, 245, 0.70) 100%);
+  --pw-card: linear-gradient(165deg, rgba(255, 255, 255, 0.80) 0%, rgba(255, 255, 255, 0.55) 100%);
+  --pw-card-solid: rgba(255, 255, 255, 0.66);
+  --pw-card-hover: rgba(255, 255, 255, 0.92);
   --pw-field: rgba(255, 255, 255, 0.88);
   --pw-accent: #059669;
   --pw-accent-2: #047857;
   --pw-accent-soft: rgba(16, 185, 129, 0.13);
-  --pw-accent-line: rgba(5, 150, 105, 0.45);
+  --pw-accent-line: rgba(5, 150, 105, 0.46);
   --pw-sky: #0369A1;
   --pw-sky-soft: rgba(14, 165, 233, 0.12);
   --pw-sky-line: rgba(2, 132, 199, 0.42);
@@ -7864,16 +7881,18 @@ body.light .sub-paywall-overlay {
   --pw-danger: #B91C1C;
   --pw-danger-soft: rgba(239, 68, 68, 0.10);
   --pw-danger-line: rgba(220, 38, 38, 0.40);
-  --pw-shadow: 0 30px 80px -30px rgba(15, 23, 42, 0.35);
-  --pw-bar: rgba(255, 255, 255, 0.88);
-  --pw-overlay: rgba(226, 232, 240, 0.50);
-  --pw-orb-a: rgba(var(--nx-o1, 16, 185, 129), 0.26);
-  --pw-orb-b: rgba(var(--nx-o2, 56, 189, 248), 0.24);
-  --pw-orb-c: rgba(var(--nx-o3, 56, 189, 248), 0.18);
-  --pw-orb-d: rgba(var(--nx-o4, 16, 185, 129), 0.16);
+  --pw-shadow: 0 34px 90px -34px rgba(15, 23, 42, 0.4);
+  --pw-bar: rgba(255, 255, 255, 0.84);
+  --pw-overlay: rgba(226, 232, 240, 0.52);
+  --pw-price-ink: linear-gradient(180deg, #064E3B 0%, #047857 100%);
+  --pw-orb-a: rgba(var(--nx-o1, 16, 185, 129), 0.28);
+  --pw-orb-b: rgba(var(--nx-o2, 56, 189, 248), 0.26);
+  --pw-orb-c: rgba(var(--nx-o3, 56, 189, 248), 0.20);
+  --pw-orb-d: rgba(var(--nx-o4, 16, 185, 129), 0.18);
+  --pw-flutes: repeating-linear-gradient(90deg, rgba(15, 23, 42, 0.03) 0, rgba(15, 23, 42, 0.03) 1px, transparent 1px, transparent 22px);
 }
 
-/* Camada de fundo: o app aparece desfocado atras do vidro; os focos coloridos dao o reflexo. */
+/* Camada de fundo: focos de cor da paleta + vidro canelado + grao + escurecimento. Os gradientes ficam presos ao quadro (nao rolam). */
 .sub-paywall-overlay {
   position: fixed;
   inset: 0;
@@ -7881,7 +7900,7 @@ body.light .sub-paywall-overlay {
   display: none;
   justify-content: center;
   box-sizing: border-box;
-  padding: clamp(10px, 2.4vw, 28px);
+  padding: clamp(10px, 2.4vw, 34px);
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;
@@ -7889,14 +7908,14 @@ body.light .sub-paywall-overlay {
   /* O app usa espacamento negativo entre letras; em texto pequeno isso aperta e corta a leitura. */
   letter-spacing: 0;
   background:
-    radial-gradient(62% 58% at 4% 0%, var(--pw-orb-a), transparent 72%),
-    radial-gradient(56% 56% at 100% 100%, var(--pw-orb-b), transparent 72%),
-    radial-gradient(42% 42% at 72% 0%, var(--pw-orb-c), transparent 72%),
-    radial-gradient(40% 40% at 24% 100%, var(--pw-orb-d), transparent 72%),
+    var(--pw-grain),
+    var(--pw-flutes),
+    radial-gradient(56% 52% at 6% 4%, var(--pw-orb-a), transparent 70%),
+    radial-gradient(50% 54% at 98% 96%, var(--pw-orb-b), transparent 70%),
+    radial-gradient(40% 42% at 78% 2%, var(--pw-orb-c), transparent 72%),
+    radial-gradient(38% 42% at 18% 98%, var(--pw-orb-d), transparent 72%),
     var(--pw-overlay);
-  -webkit-backdrop-filter: blur(14px);
-  backdrop-filter: blur(14px);
-  animation: pwOverlayIn 0.26s ease both;
+  animation: pwOverlayIn 0.28s ease backwards;
 }
 .sub-paywall-overlay.show { display: flex; }
 @keyframes pwOverlayIn { from { opacity: 0; } to { opacity: 1; } }
@@ -7907,17 +7926,18 @@ body.light .sub-paywall-overlay {
   isolation: isolate;
   box-sizing: border-box;
   width: 100%;
-  max-width: 1080px;
+  max-width: 1180px;
   margin: auto;
-  padding: clamp(18px, 2.4vw, 26px);
-  border-radius: 26px;
+  padding: clamp(18px, 2.2vw, 30px);
+  border-radius: 30px;
   background: var(--pw-glass);
-  border: 1px solid var(--pw-line-strong);
-  box-shadow: var(--pw-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.24), inset 0 0 0 1px rgba(255, 255, 255, 0.04);
-  -webkit-backdrop-filter: blur(30px) saturate(170%);
-  backdrop-filter: blur(30px) saturate(170%);
-  animation: pwModalIn 0.34s cubic-bezier(0.16, 1, 0.3, 1) both;
+  border: 1px solid var(--pw-line);
+  box-shadow: var(--pw-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.30), inset 0 -1px 0 rgba(255, 255, 255, 0.05);
+  -webkit-backdrop-filter: blur(38px) saturate(190%) brightness(1.06);
+  backdrop-filter: blur(38px) saturate(190%) brightness(1.06);
+  animation: pwModalIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) backwards;
 }
+/* Brilho especular dentro do vidro */
 .sub-paywall-modal::before {
   content: '';
   position: absolute;
@@ -7926,10 +7946,25 @@ body.light .sub-paywall-overlay {
   border-radius: inherit;
   pointer-events: none;
   background:
-    radial-gradient(120% 60% at 0% 0%, rgba(255, 255, 255, 0.12), transparent 55%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent 28%);
+    radial-gradient(110% 55% at 0% 0%, rgba(255, 255, 255, 0.17), transparent 58%),
+    radial-gradient(70% 45% at 100% 100%, rgba(255, 255, 255, 0.06), transparent 62%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), transparent 30%);
 }
-@keyframes pwModalIn { from { opacity: 0; transform: translateY(14px) scale(0.985); } to { opacity: 1; transform: none; } }
+/* Aro de vidro: fio de 1px que brilha no canto de cima e some no meio (como a quina de uma placa de vidro) */
+.sub-paywall-modal::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  padding: 1px;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0.06) 36%, rgba(255, 255, 255, 0.03) 64%, rgba(255, 255, 255, 0.30));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+}
+@keyframes pwModalIn { from { opacity: 0; transform: translateY(16px) scale(0.985); } to { opacity: 1; transform: none; } }
 @keyframes paywallModalShake {
   0%, 100% { transform: translateX(0); }
   20%, 60% { transform: translateX(-8px); }
@@ -7944,49 +7979,49 @@ body.light .sub-paywall-overlay {
   align-items: flex-start;
   justify-content: space-between;
   gap: 14px 20px;
-  padding-bottom: 16px;
-  margin-bottom: 18px;
+  padding-bottom: 18px;
+  margin-bottom: 20px;
   border-bottom: 1px solid var(--pw-line);
 }
-.pw-brand { display: flex; align-items: flex-start; gap: 14px; flex: 1 1 420px; min-width: 0; }
+.pw-brand { display: flex; align-items: flex-start; gap: 16px; flex: 1 1 460px; min-width: 0; }
 .pw-logo {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex: 0 0 46px;
-  width: 46px;
-  height: 46px;
-  border-radius: 14px;
+  flex: 0 0 52px;
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
   color: var(--pw-accent-2);
-  background: var(--pw-accent-soft);
+  background: linear-gradient(145deg, var(--pw-accent-soft), rgba(255, 255, 255, 0.04));
   border: 1px solid var(--pw-accent-line);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 10px 26px -12px rgba(16, 185, 129, 0.7);
 }
 .pw-titles { min-width: 0; }
 .pw-eyebrow {
   display: block;
-  margin-bottom: 4px;
+  margin-bottom: 5px;
   font-size: 12px;
   font-weight: 700;
   line-height: 1.3;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--pw-accent-2);
 }
 .pw-titles h2 {
   margin: 0;
-  font-size: clamp(20px, 2.2vw, 25px);
+  font-size: clamp(22px, 2.3vw, 28px);
   font-weight: 800;
-  line-height: 1.22;
-  letter-spacing: -0.01em;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
   color: var(--pw-text);
   text-wrap: balance;
   overflow-wrap: anywhere;
 }
 .pw-titles p {
-  max-width: 78ch;
-  margin: 6px 0 0;
-  font-size: 14px;
+  max-width: 74ch;
+  margin: 7px 0 0;
+  font-size: 14.5px;
   line-height: 1.5;
   color: var(--pw-text-2);
 }
@@ -8008,9 +8043,9 @@ body.light .sub-paywall-overlay {
   min-width: 0;
   max-width: 100%;
   box-sizing: border-box;
-  padding: 8px 13px;
+  padding: 8px 14px;
   border-radius: 12px;
-  background: var(--pw-card);
+  background: var(--pw-card-solid);
   border: 1px solid var(--pw-line);
   font-size: 13px;
   font-weight: 600;
@@ -8031,7 +8066,7 @@ body.light .sub-paywall-overlay {
   padding: 8px 14px;
   border-radius: 11px;
   border: 1px solid var(--pw-line-strong);
-  background: var(--pw-card);
+  background: var(--pw-card-solid);
   color: var(--pw-text);
   font-family: inherit;
   font-size: 13px;
@@ -8040,33 +8075,33 @@ body.light .sub-paywall-overlay {
   text-align: center;
   white-space: normal;
   cursor: pointer;
-  transition: background-color 0.18s ease, border-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+  transition: background-color 0.18s ease, border-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
 }
 .pw-btn svg { flex: 0 0 auto; }
 .pw-btn:hover { background: var(--pw-card-hover); transform: translateY(-1px); }
 .pw-btn:active { transform: none; }
-.pw-btn:focus-visible, .pw-plan:focus-visible, .pw-code:focus-visible { outline: 2px solid var(--pw-sky); outline-offset: 2px; }
+.pw-btn:focus-visible, .pw-code:focus-visible { outline: 2px solid var(--pw-sky); outline-offset: 2px; }
 .pw-btn:disabled { opacity: 0.7; cursor: progress; transform: none; }
 .pw-btn-sm { min-height: 34px; padding: 5px 12px; font-size: 12.5px; border-radius: 10px; }
 .pw-btn-danger { color: var(--pw-danger); background: var(--pw-danger-soft); border-color: var(--pw-danger-line); }
 .pw-btn-amber { color: var(--pw-amber); background: var(--pw-amber-soft); border-color: var(--pw-amber-line); }
 .pw-btn-sky { color: var(--pw-sky); background: var(--pw-sky-soft); border-color: var(--pw-sky-line); }
-.pw-btn-solid { color: #FFFFFF; background: linear-gradient(135deg, #10B981, #059669); border-color: rgba(255, 255, 255, 0.25); }
+.pw-btn-solid { color: #FFFFFF; background: linear-gradient(135deg, #10B981, #059669); border-color: rgba(255, 255, 255, 0.26); }
 .pw-btn.is-done { color: var(--pw-accent-2); background: var(--pw-accent-soft); border-color: var(--pw-accent-line); }
 .pw-icon-btn { width: 38px; padding: 0; }
 .pw-btn-primary {
   width: 100%;
-  min-height: 54px;
-  padding: 13px 22px;
-  font-size: 15.5px;
+  min-height: 56px;
+  padding: 13px 24px;
+  font-size: 16px;
   font-weight: 800;
   color: #FFFFFF;
-  border: 1px solid rgba(255, 255, 255, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.30);
   background: linear-gradient(135deg, #10B981 0%, #059669 55%, #047857 100%);
-  box-shadow: 0 14px 30px -12px rgba(16, 185, 129, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.28);
+  box-shadow: 0 16px 34px -12px rgba(16, 185, 129, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.32);
   text-wrap: balance;
 }
-.pw-btn-primary:hover { background: linear-gradient(135deg, #10B981 0%, #059669 55%, #047857 100%); filter: brightness(1.07); }
+.pw-btn-primary:hover { background: linear-gradient(135deg, #10B981 0%, #059669 55%, #047857 100%); filter: brightness(1.08); }
 .pw-btn-wa { color: #FFFFFF; background: linear-gradient(135deg, #16A34A, #15803D); border-color: rgba(255, 255, 255, 0.22); }
 .pw-btn-wa:hover { background: linear-gradient(135deg, #16A34A, #15803D); filter: brightness(1.08); }
 
@@ -8076,19 +8111,20 @@ body.light .sub-paywall-overlay {
 .pw-admin-title { display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; line-height: 1.35; color: var(--pw-amber); }
 .pw-admin-actions { display: flex; flex-wrap: wrap; gap: 6px; }
 
-/* ---------- Grade e cartoes ---------- */
-.pw-grid { display: grid; grid-template-columns: minmax(300px, 0.92fr) minmax(0, 1.08fr); gap: 18px; align-items: stretch; }
-.pw-card-plan { display: flex; flex-direction: column; }
+/* ---------- Grade e cartoes (vidro dentro do vidro) ---------- */
+.pw-grid { display: grid; grid-template-columns: minmax(300px, 0.84fr) minmax(0, 1.16fr); gap: 20px; align-items: stretch; }
 .pw-card {
+  display: flex;
+  flex-direction: column;
   min-width: 0;
-  padding: clamp(16px, 2vw, 22px);
-  border-radius: 20px;
+  padding: clamp(18px, 2vw, 26px);
+  border-radius: 22px;
   background: var(--pw-card);
   border: 1px solid var(--pw-line);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.10), 0 18px 40px -26px rgba(0, 0, 0, 0.55);
 }
-.pw-card-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; padding-bottom: 12px; margin-bottom: 16px; border-bottom: 1px solid var(--pw-line); }
-.pw-card-head h3 { margin: 0; font-size: 15.5px; font-weight: 800; line-height: 1.3; color: var(--pw-text); }
+.pw-card-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; padding-bottom: 13px; margin-bottom: 16px; border-bottom: 1px solid var(--pw-line); }
+.pw-card-head h3 { margin: 0; font-size: 16px; font-weight: 800; line-height: 1.3; color: var(--pw-text); }
 .pw-card-head .pw-chip { margin-left: auto; }
 .pw-step {
   display: inline-flex;
@@ -8118,105 +8154,95 @@ body.light .sub-paywall-overlay {
   border: 1px solid var(--pw-accent-line);
 }
 .pw-chip-amber { color: var(--pw-amber); background: var(--pw-amber-soft); border-color: var(--pw-amber-line); }
+.pw-chip-sky { color: var(--pw-sky); background: var(--pw-sky-soft); border-color: var(--pw-sky-line); }
 
-/* ---------- Planos ---------- */
-.pw-plans { display: flex; flex-direction: column; gap: 10px; }
-.pw-plan {
+/* ---------- Oferta: 1 dia gratis e depois o plano mensal ---------- */
+.pw-offer-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.pw-offer-name { margin: 14px 0 0; font-size: 16px; font-weight: 800; line-height: 1.3; letter-spacing: 0.01em; color: var(--pw-text-2); }
+.pw-price { display: flex; align-items: baseline; gap: 6px; margin-top: 4px; font-variant-numeric: tabular-nums; }
+.pw-price-cur { font-size: 24px; font-weight: 700; color: var(--pw-muted); }
+.pw-price-int {
+  font-size: clamp(60px, 6.2vw, 80px);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.045em;
+  color: var(--pw-accent-2);
+  background: var(--pw-price-ink);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 8px 22px rgba(16, 185, 129, 0.35));
+}
+.pw-price-dec { font-size: 30px; font-weight: 800; line-height: 1; color: var(--pw-accent-2); }
+.pw-price-per { margin-left: 2px; font-size: 17px; font-weight: 600; color: var(--pw-muted); }
+.pw-price-sub { margin: 8px 0 0; font-size: 13.5px; line-height: 1.5; color: var(--pw-text-2); }
+
+.pw-journey { position: relative; display: flex; flex-direction: column; margin: 20px 0 6px; padding: 0; list-style: none; }
+.pw-j { position: relative; display: flex; align-items: flex-start; gap: 13px; padding-bottom: 15px; }
+.pw-j:last-child { padding-bottom: 0; }
+.pw-j::before { content: ''; position: absolute; left: 13px; top: 30px; bottom: 2px; width: 2px; border-radius: 2px; background: var(--pw-line-strong); }
+.pw-j:last-child::before { display: none; }
+.pw-j.is-done::before { background: linear-gradient(180deg, var(--pw-accent), var(--pw-line-strong)); }
+.pw-j-node {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  gap: 6px 12px;
-  padding: 13px 15px;
-  border-radius: 16px;
-  cursor: pointer;
-  background: var(--pw-card);
-  border: 1.5px solid var(--pw-line);
-  transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+  justify-content: center;
+  flex: 0 0 28px;
+  width: 28px;
+  height: 28px;
+  box-sizing: border-box;
+  border-radius: 50%;
+  font-size: 12.5px;
+  font-weight: 800;
+  color: var(--pw-muted);
+  background: var(--pw-card-solid);
+  border: 1.5px solid var(--pw-line-strong);
 }
-.pw-plan:hover { border-color: var(--pw-accent-line); background: var(--pw-card-hover); }
-.pw-plan-trial {
-  cursor: default;
-  background: linear-gradient(135deg, rgba(56, 189, 248, 0.10), rgba(255, 255, 255, 0.035));
-  border-style: dashed;
-  border-color: var(--pw-sky-line);
-}
-.pw-plan-trial:hover { border-color: var(--pw-sky-line); background: linear-gradient(135deg, rgba(56, 189, 248, 0.12), rgba(255, 255, 255, 0.045)); }
-.pw-plan-trial .pw-radio { border-color: var(--pw-sky); background: var(--pw-sky-soft); }
-.pw-plan-trial .pw-radio::after { content: '✓'; font-size: 12px; font-weight: 900; line-height: 1; color: var(--pw-sky); }
-.pw-plan-trial .pw-plan-price strong { color: var(--pw-sky); }
-.pw-plan.active {
-  background: linear-gradient(135deg, var(--pw-accent-soft), rgba(16, 185, 129, 0.04));
-  border-color: var(--pw-accent);
-  box-shadow: 0 12px 28px -16px rgba(16, 185, 129, 0.8);
-}
-.pw-radio { display: flex; align-items: center; justify-content: center; flex: 0 0 20px; width: 20px; height: 20px; box-sizing: border-box; border-radius: 50%; border: 2px solid var(--pw-faint); transition: all 0.2s ease; }
-.pw-plan.active .pw-radio { border-color: var(--pw-accent); background: var(--pw-accent); }
-.pw-plan.active .pw-radio::after { content: ''; width: 7px; height: 7px; border-radius: 50%; background: #FFFFFF; }
-.pw-plan-body { flex: 1 1 150px; min-width: 0; }
-.pw-plan-title { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; font-size: 15.5px; font-weight: 800; line-height: 1.3; color: var(--pw-text); }
-.pw-plan-desc { margin-top: 3px; font-size: 13px; line-height: 1.4; color: var(--pw-muted); }
-.pw-plan-price { flex: 0 0 auto; margin-left: auto; text-align: right; }
-.pw-plan-price strong { display: block; font-size: 22px; font-weight: 800; line-height: 1.2; letter-spacing: -0.01em; white-space: nowrap; font-variant-numeric: tabular-nums; color: var(--pw-accent-2); }
-.pw-plan-price span { display: block; font-size: 12.5px; line-height: 1.3; color: var(--pw-muted); }
-.pw-tag { display: inline-flex; padding: 2px 9px; border-radius: 999px; font-size: 12px; font-weight: 800; line-height: 1.35; color: #451A03; background: linear-gradient(135deg, #FCD34D, #F59E0B); }
-.pw-plan-status { display: inline-flex; align-items: center; gap: 5px; margin-left: 4px; padding: 3px 8px; border-radius: 999px; font-size: 11px; font-weight: 800; line-height: 1.25; color: var(--pw-sky); background: var(--pw-sky-soft); border: 1px solid var(--pw-sky-line); }
-.pw-plan-status::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
-.pw-plan-note { display: flex; align-items: flex-start; gap: 9px; margin-top: 12px; padding: 11px 13px; border-radius: 13px; color: var(--pw-text-2); background: var(--pw-field); border: 1px solid var(--pw-line); font-size: 12.5px; line-height: 1.45; }
-.pw-plan-note svg { flex: 0 0 auto; margin-top: 1px; color: var(--pw-sky); }
-.pw-plan-note strong { color: var(--pw-text); }
+.pw-j.is-done .pw-j-node { color: #FFFFFF; background: linear-gradient(135deg, #10B981, #059669); border-color: transparent; box-shadow: 0 6px 16px -6px rgba(16, 185, 129, 0.8); }
+.pw-j.is-now .pw-j-node { color: var(--pw-accent-2); background: var(--pw-accent-soft); border-color: var(--pw-accent); box-shadow: 0 0 0 4px var(--pw-accent-soft); }
+.pw-j.is-trial .pw-j-node { color: var(--pw-sky); background: var(--pw-sky-soft); border-color: var(--pw-sky); box-shadow: 0 0 0 4px var(--pw-sky-soft); }
+.pw-j-body { min-width: 0; padding-top: 3px; }
+.pw-j-body strong { display: block; font-size: 14.5px; font-weight: 800; line-height: 1.3; color: var(--pw-text); }
+.pw-j-body span { display: block; margin-top: 2px; font-size: 13px; line-height: 1.4; color: var(--pw-muted); }
 
-/* ---------- Resumo ---------- */
-.pw-summary { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; padding: 13px 16px; border-radius: 14px; background: var(--pw-field); border: 1px solid var(--pw-line); }
-.pw-row { display: flex; align-items: baseline; justify-content: space-between; gap: 6px 12px; font-size: 13.5px; line-height: 1.4; color: var(--pw-text-2); }
-.pw-row strong { font-weight: 700; text-align: right; color: var(--pw-text); }
-.pw-summary .pw-row strong { white-space: nowrap; font-variant-numeric: tabular-nums; }
-.pw-row-discount span, .pw-row-discount strong { color: var(--pw-accent-2); }
-.pw-total { align-items: center; margin-top: 2px; padding-top: 10px; border-top: 1px solid var(--pw-line); }
-.pw-total-label { display: block; font-size: 15px; font-weight: 800; color: var(--pw-text); }
-.pw-total-val { font-size: 28px; font-weight: 800; line-height: 1.25; letter-spacing: -0.02em; white-space: nowrap; font-variant-numeric: tabular-nums; color: var(--pw-accent-2); }
-.pw-total-note { display: block; margin-top: -4px; font-size: 12.5px; font-weight: 500; line-height: 1.4; color: var(--pw-muted); }
-
-/* ---------- Beneficios ---------- */
-.pw-benefits-title { margin: auto 0 10px; padding-top: 18px; font-size: 12px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--pw-muted); }
-.pw-benefits { display: flex; flex-direction: column; gap: 9px; margin: 0 0 16px; padding: 0; list-style: none; }
+.pw-benefits { display: grid; grid-template-columns: 1fr 1fr; gap: 9px 14px; margin: 18px 0 16px; padding: 16px 0 0; list-style: none; border-top: 1px solid var(--pw-line); }
 .pw-benefits li { display: flex; align-items: flex-start; gap: 9px; font-size: 13.5px; line-height: 1.4; color: var(--pw-text-2); }
 .pw-check { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 18px; width: 18px; height: 18px; margin-top: 1px; border-radius: 50%; color: var(--pw-accent-2); background: var(--pw-accent-soft); }
-.pw-guarantee { display: flex; align-items: flex-start; gap: 11px; margin-top: auto; padding: 12px 14px; border-radius: 14px; font-size: 13px; line-height: 1.45; color: var(--pw-text-2); background: var(--pw-accent-soft); border: 1px solid var(--pw-accent-line); }
+.pw-guarantee { display: flex; align-items: flex-start; gap: 11px; margin-top: auto; padding: 13px 15px; border-radius: 15px; font-size: 13px; line-height: 1.45; color: var(--pw-text-2); background: var(--pw-accent-soft); border: 1px solid var(--pw-accent-line); }
 .pw-guarantee svg { flex: 0 0 auto; margin-top: 1px; color: var(--pw-accent-2); }
 .pw-guarantee strong { display: block; font-size: 13.5px; color: var(--pw-accent-2); }
-.pw-trust-strip { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 0 0 18px; }
-.pw-trust-item { min-width: 0; padding: 10px 11px; border-radius: 13px; background: var(--pw-field); border: 1px solid var(--pw-line); }
-.pw-trust-item strong { display: block; font-size: 12.5px; line-height: 1.3; color: var(--pw-text); }
-.pw-trust-item span { display: block; margin-top: 3px; font-size: 11.5px; line-height: 1.35; color: var(--pw-muted); }
 
 /* ---------- Status do pagamento ---------- */
-.pw-status { margin-bottom: 16px; padding: 12px 15px; border-radius: 14px; background: linear-gradient(135deg, var(--pw-accent-soft), var(--pw-sky-soft)); border: 1px solid var(--pw-accent-line); transition: background 0.3s ease, border-color 0.3s ease; }
+.pw-status { margin-bottom: 16px; padding: 13px 16px; border-radius: 16px; background: linear-gradient(135deg, var(--pw-accent-soft), var(--pw-sky-soft)); border: 1px solid var(--pw-accent-line); transition: background 0.3s ease, border-color 0.3s ease; }
 .pw-status.radar-detecting { background: linear-gradient(135deg, var(--pw-sky-soft), var(--pw-accent-soft)); border-color: var(--pw-sky); }
-.pw-status-main { display: flex; align-items: flex-start; gap: 12px; }
-.pw-status-text { flex: 1 1 auto; min-width: 0; }
+.pw-status-main { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 8px 12px; }
+.pw-status-text { flex: 1 1 220px; min-width: 0; }
 .pw-status-text > strong { display: block; font-size: 15px; font-weight: 800; line-height: 1.3; color: var(--pw-text); }
 .pw-status-text > span { display: block; margin-top: 3px; font-size: 13px; line-height: 1.45; color: var(--pw-text-2); }
 .pw-pulse { position: relative; flex: 0 0 10px; width: 10px; height: 10px; margin-top: 5px; border-radius: 50%; background: #10B981; box-shadow: 0 0 10px #10B981; }
 .pw-pulse::after { content: ''; position: absolute; inset: -4px; border-radius: 50%; border: 2px solid currentColor; color: #10B981; animation: pwPulseRing 1.8s cubic-bezier(0.16, 1, 0.3, 1) infinite; }
 @keyframes pwPulseRing { 0% { transform: scale(0.8); opacity: 0.9; } 100% { transform: scale(2.1); opacity: 0; } }
-.pw-protocol { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; margin-top: 9px; font-size: 12.5px; color: var(--pw-muted); }
+.pw-protocol { display: flex; flex: 0 0 auto; align-items: center; gap: 7px; font-size: 12.5px; color: var(--pw-muted); }
 .pw-protocol strong { padding: 2px 9px; border-radius: 7px; font-family: ui-monospace, Consolas, 'Courier New', monospace; font-size: 12.5px; font-weight: 700; color: var(--pw-sky); background: var(--pw-sky-soft); border: 1px solid var(--pw-sky-line); overflow-wrap: anywhere; }
-.pw-track { height: 4px; margin-top: 10px; border-radius: 999px; background: var(--pw-line); overflow: hidden; }
+.pw-track { height: 4px; margin-top: 11px; border-radius: 999px; background: var(--pw-line); overflow: hidden; }
 .pw-track-bar { height: 100%; width: 35%; border-radius: inherit; background: linear-gradient(90deg, #10B981, #38BDF8, #34D399); animation: pwTrackSlide 1.7s ease-in-out infinite alternate; }
 .pw-track-bar.recognizing-active { animation: none; margin-left: 0; transition: width 0.45s cubic-bezier(0.16, 1, 0.3, 1); }
 @keyframes pwTrackSlide { from { margin-left: 0; } to { margin-left: 65%; } }
 
-/* ---------- Pix: QR e chave lado a lado (mesma altura), copia e cola embaixo em largura total ---------- */
-.pw-pix { display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 14px; align-items: stretch; }
-.pw-qr { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; box-sizing: border-box; padding: 12px; border-radius: 18px; background: rgba(255, 255, 255, 0.97); border: 1px solid rgba(255, 255, 255, 0.8); box-shadow: 0 16px 36px -16px rgba(0, 0, 0, 0.6); }
-.pw-qr-label { font-size: 12px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #047857; }
-.pw-qr img { display: block; width: 100%; max-width: 142px; height: auto; aspect-ratio: 1 / 1; border-radius: 10px; background: #FFFFFF; image-rendering: pixelated; }
+/* ---------- Pix: QR e chave lado a lado, copia e cola ao lado da chave ---------- */
+.pw-pix { display: grid; grid-template-columns: 218px minmax(0, 1fr); gap: 16px; align-items: stretch; }
+.pw-qr { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 9px; box-sizing: border-box; padding: 14px 14px 12px; border-radius: 20px; background: rgba(255, 255, 255, 0.97); border: 1px solid rgba(255, 255, 255, 0.85); box-shadow: 0 20px 44px -18px rgba(0, 0, 0, 0.65), inset 0 0 0 1px rgba(15, 23, 42, 0.04); }
+.pw-qr-label { font-size: 12px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: #047857; }
+.pw-qr-frame { position: relative; display: flex; align-items: center; justify-content: center; width: 100%; aspect-ratio: 1 / 1; }
+.pw-qr img { display: block; width: 100%; height: auto; aspect-ratio: 1 / 1; border-radius: 10px; background: #FFFFFF; image-rendering: pixelated; }
+.pw-qr-fail { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 10px; font-size: 13px; line-height: 1.4; text-align: center; color: #334155; }
+.pw-qr-fail[hidden] { display: none; }
 .pw-qr-note { font-size: 12.5px; line-height: 1.35; text-align: center; color: #334155; }
 .pw-pay-col { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
-.pw-key { box-sizing: border-box; padding: 12px 14px; border-radius: 16px; background: var(--pw-field); border: 1px solid var(--pw-line); }
-.pw-field-label { display: block; margin-bottom: 6px; font-size: 12px; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; color: var(--pw-muted); }
+.pw-key { box-sizing: border-box; padding: 13px 15px; border-radius: 16px; background: var(--pw-field); border: 1px solid var(--pw-line); }
+.pw-field-label { display: block; margin-bottom: 6px; font-size: 12px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--pw-muted); }
 .pw-key-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 10px; }
-.pw-key-value { font-size: 21px; font-weight: 800; line-height: 1.25; letter-spacing: 0.01em; white-space: nowrap; font-variant-numeric: tabular-nums; color: var(--pw-text); }
+.pw-key-value { font-size: 23px; font-weight: 800; line-height: 1.25; letter-spacing: 0.01em; white-space: nowrap; font-variant-numeric: tabular-nums; color: var(--pw-text); }
 .pw-key-meta { margin-top: 5px; font-size: 13px; line-height: 1.4; color: var(--pw-muted); }
 .pw-key-meta strong { color: var(--pw-text-2); }
 .pw-code-block { display: flex; flex: 1 1 auto; flex-direction: column; min-width: 0; }
@@ -8224,8 +8250,14 @@ body.light .sub-paywall-overlay {
 .pw-code-head .pw-field-label { margin: 0; }
 .pw-code { display: block; width: 100%; min-height: 64px; box-sizing: border-box; padding: 10px 12px; border-radius: 12px; resize: none; overflow-y: auto; background: var(--pw-field); border: 1px solid var(--pw-line-strong); color: var(--pw-text); font-family: ui-monospace, Consolas, 'Courier New', monospace; font-size: 12.5px; line-height: 1.5; white-space: pre-wrap; word-break: break-all; }
 
+/* ---------- Como pagar (3 passos) ---------- */
+.pw-how { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 16px 0 0; padding: 0; list-style: none; }
+.pw-how li { display: flex; align-items: flex-start; gap: 9px; padding: 11px 12px; border-radius: 14px; font-size: 12.5px; line-height: 1.4; color: var(--pw-text-2); background: var(--pw-field); border: 1px solid var(--pw-line); }
+.pw-how strong { color: var(--pw-text); }
+.pw-how-n { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 22px; width: 22px; height: 22px; border-radius: 50%; font-size: 12px; font-weight: 800; color: var(--pw-accent-2); background: var(--pw-accent-soft); border: 1px solid var(--pw-accent-line); }
+
 /* ---------- Aviso de pedido registrado ---------- */
-.pw-banner { margin: 0 0 16px; padding: 14px 16px; border-radius: 16px; background: var(--pw-amber-soft); border: 1px solid var(--pw-amber-line); }
+.pw-banner { margin: 16px 0 0; padding: 14px 16px; border-radius: 16px; background: var(--pw-amber-soft); border: 1px solid var(--pw-amber-line); }
 .pw-banner.is-error { background: var(--pw-danger-soft); border-color: var(--pw-danger-line); }
 .pw-banner-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 10px; margin-bottom: 6px; }
 .pw-banner-head strong { font-size: 15px; font-weight: 800; line-height: 1.35; color: var(--pw-text); }
@@ -8233,9 +8265,8 @@ body.light .sub-paywall-overlay {
 .pw-banner .pw-btn { width: 100%; }
 
 /* ---------- Rodape do cartao ---------- */
-.pw-card:not(.pw-card-plan) { display: flex; flex-direction: column; }
-#subFormPix { margin-bottom: 16px; }
-.pw-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px 16px; margin-top: auto; padding-top: 12px; border-top: 1px solid var(--pw-line); font-size: 12.5px; line-height: 1.4; color: var(--pw-muted); }
+.pw-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px 16px; margin-top: auto; padding-top: 14px; border-top: 1px solid var(--pw-line); font-size: 12.5px; line-height: 1.4; color: var(--pw-muted); }
+.pw-card-pay #subFormPix { margin-bottom: 16px; }
 .pw-foot span { display: inline-flex; align-items: center; gap: 7px; }
 .pw-foot strong { color: var(--pw-text-2); font-variant-numeric: tabular-nums; }
 
@@ -8249,19 +8280,19 @@ body.light .sub-paywall-overlay {
   align-items: center;
   justify-content: space-between;
   gap: 10px 24px;
-  margin-top: 18px;
-  padding: 11px 12px 11px 20px;
-  border-radius: 20px;
+  margin-top: 20px;
+  padding: 12px 12px 12px 24px;
+  border-radius: 22px;
   background: var(--pw-bar);
   border: 1px solid var(--pw-accent-line);
-  box-shadow: 0 -14px 28px -18px rgba(0, 0, 0, 0.55), 0 18px 40px -18px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.14);
-  -webkit-backdrop-filter: blur(22px) saturate(160%);
-  backdrop-filter: blur(22px) saturate(160%);
+  box-shadow: 0 -14px 28px -18px rgba(0, 0, 0, 0.55), 0 20px 44px -20px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  -webkit-backdrop-filter: blur(26px) saturate(170%);
+  backdrop-filter: blur(26px) saturate(170%);
 }
 .pw-paybar-amount { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
-.pw-paybar-amount span { font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; line-height: 1.3; color: var(--pw-muted); }
-.pw-paybar-amount strong { font-size: 28px; font-weight: 800; line-height: 1.2; letter-spacing: -0.02em; white-space: nowrap; font-variant-numeric: tabular-nums; color: var(--pw-accent-2); }
-.pw-paybar .pw-btn-primary { flex: 1 1 320px; width: auto; max-width: 540px; margin-left: auto; }
+.pw-paybar-amount span { font-size: 12px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; line-height: 1.3; color: var(--pw-muted); }
+.pw-paybar-amount strong { font-size: 30px; font-weight: 800; line-height: 1.15; letter-spacing: -0.02em; white-space: nowrap; font-variant-numeric: tabular-nums; color: var(--pw-accent-2); }
+.pw-paybar .pw-btn-primary { flex: 1 1 320px; width: auto; max-width: 560px; margin-left: auto; }
 
 /* ---------- Tela de sucesso / recibo ---------- */
 .pw-success { padding: 6px 0 2px; text-align: center; }
@@ -8272,6 +8303,8 @@ body.light .sub-paywall-overlay {
 .pw-receipt-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px; padding-bottom: 14px; margin-bottom: 10px; border-bottom: 1px dashed var(--pw-line-strong); }
 .pw-receipt-head strong { display: block; font-size: 15px; font-weight: 800; color: var(--pw-text); }
 .pw-receipt-head small { display: block; margin-top: 2px; font-size: 12.5px; color: var(--pw-muted); }
+.pw-row { display: flex; align-items: baseline; justify-content: space-between; gap: 6px 12px; font-size: 13.5px; line-height: 1.4; color: var(--pw-text-2); }
+.pw-row strong { font-weight: 700; text-align: right; color: var(--pw-text); }
 .pw-receipt .pw-row { flex-wrap: wrap; padding: 6px 0; }
 .pw-receipt .pw-row strong { overflow-wrap: anywhere; }
 .pw-receipt .pw-row-end { margin-top: 6px; padding-top: 12px; border-top: 1px dashed var(--pw-line-strong); }
@@ -8279,32 +8312,47 @@ body.light .sub-paywall-overlay {
 .pw-success-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; max-width: 560px; margin: 0 auto; }
 .pw-success-actions .pw-btn { flex: 1 1 210px; width: auto; min-height: 48px; font-size: 14.5px; }
 
+/* ---------- Telas grandes (2K/4K): o app aplica zoom pela largura da janela; o painel cresce junto para nao ficar pequeno no meio da tela ---------- */
+@media (min-width: 2400px) {
+  .sub-paywall-modal { max-width: 1380px; }
+  .pw-qr { padding: 16px 16px 14px; }
+}
+
+/* ---------- Telas baixas (notebook 1366x768): compacta a oferta para a pagina aparecer inteira com menos rolagem ---------- */
+@media (max-height: 820px) and (min-width: 901px) {
+  .pw-head { padding-bottom: 14px; margin-bottom: 14px; }
+  .pw-price-int { font-size: 56px; }
+  .pw-journey { margin-top: 14px; }
+  .pw-j { padding-bottom: 11px; }
+  .pw-benefits { margin: 12px 0; padding-top: 12px; }
+  .pw-paybar { margin-top: 14px; }
+}
+
 /* ---------- Responsivo ---------- */
 @media (max-width: 900px) {
   .pw-grid { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 640px) {
-  .sub-paywall-modal { border-radius: 20px; }
+  .sub-paywall-modal { border-radius: 22px; }
   .pw-head { gap: 14px; padding-bottom: 16px; margin-bottom: 16px; }
   .pw-brand { flex-basis: 100%; }
   .pw-actions { width: 100%; justify-content: flex-start; }
   .pw-account { flex: 1 1 100%; }
   .pw-pix { grid-template-columns: minmax(0, 1fr); }
-  .pw-qr { width: min(100%, 236px); justify-self: center; }
-  .pw-qr img { max-width: 200px; }
+  .pw-qr { width: min(100%, 250px); justify-self: center; }
   .pw-key-value { font-size: 22px; }
+  .pw-benefits { grid-template-columns: minmax(0, 1fr); }
+  .pw-how { grid-template-columns: minmax(0, 1fr); }
   .pw-paybar { gap: 8px; padding: 12px; }
   .pw-paybar-amount { flex-direction: row; align-items: baseline; justify-content: space-between; width: 100%; padding: 0 4px; }
-  .pw-paybar-amount strong { font-size: 25px; }
-  .pw-paybar .pw-btn-primary { flex: 1 1 100%; max-width: none; margin-left: 0; min-height: 50px; font-size: 14.5px; }
+  .pw-paybar-amount strong { font-size: 26px; }
+  .pw-paybar .pw-btn-primary { flex: 1 1 100%; max-width: none; margin-left: 0; min-height: 52px; font-size: 14.5px; }
   .pw-success-actions .pw-btn { flex-basis: 100%; }
-  .pw-trust-strip { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 420px) {
-  .pw-card { padding: 14px; }
-  .pw-plan { padding: 12px 13px; }
+  .pw-card { padding: 15px; }
   .pw-key-value { font-size: 20px; }
-  .pw-total-val { font-size: 26px; }
+  .pw-price-int { font-size: 56px; }
   .pw-receipt { padding: 16px; }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -15595,12 +15643,9 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
       </div>
 
       <!-- Botões de Confirmação Oficial de Pagamento / Bloqueio -->
-      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; margin-bottom:8px;">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:8px;">
         <button type="button" onclick="window.adminConfirmUserPayment(editingUserEmail, 'mensal', document.getElementById('userAdminPaymentMethod')?.value)" style="height:30px; padding:0 6px; border-radius:8px; background:linear-gradient(135deg, #10B981, #059669); color:#FFFFFF; font-size:10.5px; font-weight:800; border:none; cursor:pointer;" title="Reconhecer pagamento e liberar Plano Mensal (30 dias)">
-          🔓 Liberar Mensal (R$ 15)
-        </button>
-        <button type="button" onclick="window.adminConfirmUserPayment(editingUserEmail, 'anual', document.getElementById('userAdminPaymentMethod')?.value)" style="height:30px; padding:0 6px; border-radius:8px; background:linear-gradient(135deg, #F59E0B, #D97706); color:#000000; font-size:10.5px; font-weight:800; border:none; cursor:pointer;" title="Reconhecer pagamento e liberar Plano Anual (1 ano)">
-          🔓 Liberar Anual (R$ 150)
+          🔓 Liberar Mensal (${SUBSCRIPTION_MONTHLY_LABEL})
         </button>
         <button type="button" onclick="window.adminRevokeUserPayment(editingUserEmail)" style="height:30px; padding:0 6px; border-radius:8px; background:rgba(239,68,68,0.16); border:1px solid rgba(239,68,68,0.45); color:#FCA5A5; font-size:10.5px; font-weight:800; cursor:pointer;">
           🔒 Bloquear
@@ -16395,19 +16440,19 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
   </button>
 </div>
 
-<!-- TELA DE PAGAMENTO / ASSINATURA: checkout Pix em vidro (IDs usados pelo JS preservados) -->
+<!-- TELA DE PAGAMENTO / ASSINATURA: checkout Pix em vidro (IDs usados pelo JS preservados). Oferta: 1 dia grátis e depois Plano Mensal único (preço vem de SUBSCRIPTION_MONTHLY_PRICE no servidor). -->
 <div class="sub-paywall-overlay" id="nexusSubscriptionModal" role="dialog" aria-modal="true" aria-labelledby="subModalTitle">
   <div class="sub-paywall-modal">
 
     <header class="pw-head">
       <div class="pw-brand">
         <span class="pw-logo" aria-hidden="true">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
         </span>
         <div class="pw-titles">
           <span class="pw-eyebrow">Nexus Pay &bull; assinatura segura</span>
-          <h2 id="subModalTitle">Escolha o plano ideal para o seu controle financeiro</h2>
-          <p id="subModalSubtitle">Comece com 1 dia grátis. Depois, escolha o Plano Mensal ou o Plano Anual e pague via Pix.</p>
+          <h2 id="subModalTitle">Assine o Nexus por ${SUBSCRIPTION_MONTHLY_LABEL} por mês</h2>
+          <p id="subModalSubtitle">Comece com 1 dia grátis. Depois, assine o Plano Mensal por ${SUBSCRIPTION_MONTHLY_LABEL} e pague via Pix.</p>
         </div>
       </div>
 
@@ -16424,12 +16469,6 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         </button>
       </div>
     </header>
-
-    <div class="pw-trust-strip" aria-label="Informações da assinatura">
-      <div class="pw-trust-item"><strong>1 dia grátis</strong><span>Teste todos os recursos sem cobrança.</span></div>
-      <div class="pw-trust-item"><strong>Pagamento via Pix</strong><span>Chave, QR Code e copia e cola na mesma tela.</span></div>
-      <div class="pw-trust-item"><strong>Ativação segura</strong><span>Liberação após a confirmação do pagamento.</span></div>
-    </div>
 
     <!-- Controle do administrador (somente admin) -->
     <div id="subAdminFullControlBar" class="pw-admin" style="display:none;">
@@ -16454,77 +16493,54 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
     <div id="subCheckoutView">
       <div class="pw-grid">
 
-        <!-- 1. Plano e resumo -->
-        <section class="pw-card pw-card-plan" aria-labelledby="pwPlanTitle">
-          <div class="pw-card-head">
-            <span class="pw-step">1</span>
-            <h3 id="pwPlanTitle">Planos disponíveis</h3>
-            <span class="pw-chip">Comece grátis</span>
+        <!-- 1. A oferta: 1 dia grátis e depois um único plano mensal -->
+        <section class="pw-card pw-card-offer" aria-labelledby="pwPlanTitle">
+          <div class="pw-offer-chips">
+            <span class="pw-chip">Plano único</span>
+            <span class="pw-chip pw-chip-sky">1 dia grátis no cadastro</span>
           </div>
-
-          <div class="pw-plans" role="list" aria-label="Planos de assinatura">
-            <div class="pw-plan pw-plan-trial" role="listitem" aria-label="Plano Gratuito 1 dia">
-              <span class="pw-radio" aria-hidden="true"></span>
-              <div class="pw-plan-body">
-                <div class="pw-plan-title">Plano Gratuito 1 dia <span class="pw-plan-status">disponível no cadastro</span></div>
-                <div class="pw-plan-desc">Teste todos os recursos por 24 horas, sem cobrança</div>
-              </div>
-              <div class="pw-plan-price"><strong>Grátis</strong><span>por 1 dia</span></div>
-            </div>
-
-            <div class="pw-plan active" id="subPlanCardMensal" role="radio" aria-checked="true" tabindex="0" onclick="window.selectSubPlan('mensal')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();window.selectSubPlan('mensal');}">
-              <span class="pw-radio" aria-hidden="true"></span>
-              <div class="pw-plan-body">
-                <div class="pw-plan-title">Plano Mensal</div>
-                <div class="pw-plan-desc">Acesso completo por 30 dias, sem fidelidade</div>
-              </div>
-              <div class="pw-plan-price"><strong>R$ 15,00</strong><span>por mês</span></div>
-            </div>
-
-            <div class="pw-plan" id="subPlanCardAnual" role="radio" aria-checked="false" tabindex="0" onclick="window.selectSubPlan('anual')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();window.selectSubPlan('anual');}">
-              <span class="pw-radio" aria-hidden="true"></span>
-              <div class="pw-plan-body">
-                <div class="pw-plan-title">Plano Anual <span class="pw-tag">Economize R$ 30,00</span></div>
-                <div class="pw-plan-desc">Acesso completo por 12 meses, com melhor custo-benefício</div>
-              </div>
-              <div class="pw-plan-price"><strong>R$ 150,00</strong><span>por ano</span></div>
-            </div>
+          <h3 id="pwPlanTitle" class="pw-offer-name">Nexus Mensal</h3>
+          <div class="pw-price" aria-label="${SUBSCRIPTION_MONTHLY_LABEL} por mês">
+            <span class="pw-price-cur">R$</span>
+            <span class="pw-price-int">${SUBSCRIPTION_MONTHLY_INT}</span>
+            <span class="pw-price-dec">,${SUBSCRIPTION_MONTHLY_CENTS}</span>
+            <span class="pw-price-per">/mês</span>
           </div>
+          <p class="pw-price-sub" id="subSummaryPaymentFrequency">Cobrança mês a mês via Pix. Sem fidelidade: você só paga se quiser continuar.</p>
 
-          <div class="pw-plan-note">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><line x1="12" y1="10" x2="12" y2="16"/><line x1="12" y1="7" x2="12.01" y2="7"/></svg>
-            <span><strong>Como funciona:</strong> o período gratuito é liberado no cadastro. Para continuar usando o sistema, selecione um plano pago e confirme o pagamento via Pix.</span>
-          </div>
+          <ol class="pw-journey" aria-label="Como funciona a assinatura">
+            <li class="pw-j is-done" id="pwJourneyTrial">
+              <span class="pw-j-node" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+              <div class="pw-j-body"><strong>1 dia grátis</strong><span id="pwJourneyTrialNote">Teste completo, sem cobrança.</span></div>
+            </li>
+            <li class="pw-j is-now">
+              <span class="pw-j-node" aria-hidden="true">2</span>
+              <div class="pw-j-body"><strong>Assinatura mensal &bull; ${SUBSCRIPTION_MONTHLY_LABEL}</strong><span>Pague via Pix e continue com todos os recursos.</span></div>
+            </li>
+            <li class="pw-j">
+              <span class="pw-j-node" aria-hidden="true">3</span>
+              <div class="pw-j-body"><strong>Renovação a cada 30 dias</strong><span>Sem fidelidade: renove só quando quiser.</span></div>
+            </li>
+          </ol>
 
-          <div class="pw-summary">
-            <div class="pw-row"><span id="subSummaryPlanName">Plano Mensal (30 dias)</span><strong id="subSummaryPlanPrice">R$ 15,00</strong></div>
-            <div class="pw-row pw-row-discount" id="subSummaryDiscountRow" style="display:none;"><span>Economia do Plano Anual</span><strong>- R$ 30,00</strong></div>
-            <div class="pw-row pw-total">
-              <span class="pw-total-label">Total a pagar</span>
-              <span class="pw-total-val" id="subSummaryTotalPrice">R$ 15,00</span>
-            </div>
-            <small class="pw-total-note" id="subSummaryPaymentFrequency">Cobrança mês a mês, sem fidelidade</small>
-          </div>
-
-          <div class="pw-benefits-title">Todos os planos pagos incluem</div>
           <ul class="pw-benefits">
-            <li><span class="pw-check" aria-hidden="true"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Gestão financeira completa: contas, caixas e fluxo</span></li>
-            <li><span class="pw-check" aria-hidden="true"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Conciliação, orçamentos e metas</span></li>
-            <li><span class="pw-check" aria-hidden="true"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Ordens de serviço e equipe técnica</span></li>
-            <li><span class="pw-check" aria-hidden="true"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Relatórios em PDF e Excel</span></li>
+            <li><span class="pw-check" aria-hidden="true"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Contas, caixas e fluxo de caixa</span></li>
+            <li><span class="pw-check" aria-hidden="true"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Orçamentos e metas</span></li>
+            <li><span class="pw-check" aria-hidden="true"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Importação de extratos OFX e CSV</span></li>
+            <li><span class="pw-check" aria-hidden="true"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Relatórios e insights</span></li>
           </ul>
 
           <div class="pw-guarantee">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            <div><strong>Acesso seguro</strong>Seu acesso é liberado somente após a confirmação do pagamento.</div>
+            <div><strong>Acesso seguro</strong>Liberado somente após a confirmação do pagamento.</div>
           </div>
         </section>
 
         <!-- 2. Pagamento via Pix -->
-        <section class="pw-card" aria-labelledby="pwPayTitle">
+        <section class="pw-card pw-card-pay" aria-labelledby="pwPayTitle">
           <div class="pw-card-head">
             <span class="pw-step">2</span>
-            <h3 id="pwPayTitle">Finalize com Pix</h3>
+            <h3 id="pwPayTitle">Pague com Pix</h3>
             <span class="pw-chip pw-chip-amber">Liberação após confirmação</span>
           </div>
 
@@ -16535,8 +16551,8 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
                 <strong id="subRadarStatusTitle">Aguardando pagamento</strong>
                 <span id="subRadarStatusDesc">Faça o pagamento, informe a confirmação e envie o comprovante pelo WhatsApp.</span>
               </div>
+              <div class="pw-protocol"><span>Pedido</span><strong id="subLiveSessionTxBadge">PIX-REQUEST</strong></div>
             </div>
-            <div class="pw-protocol"><span>Identificador do pedido</span><strong id="subLiveSessionTxBadge">PIX-REQUEST</strong></div>
             <div class="pw-track"><div class="pw-track-bar" id="subRadarProgressBar"></div></div>
           </div>
 
@@ -16544,13 +16560,16 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
             <div class="pw-pix">
               <div class="pw-qr">
                 <span class="pw-qr-label">QR Code Pix</span>
-                <img id="subPixQrImg" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="QR Code Pix para pagamento" width="172" height="172" />
+                <div class="pw-qr-frame">
+                  <img id="subPixQrImg" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="QR Code Pix para pagamento" width="200" height="200" onerror="this.style.visibility='hidden';var f=document.getElementById('subPixQrFail');if(f)f.hidden=false;" />
+                  <span class="pw-qr-fail" id="subPixQrFail" hidden>QR Code indisponível agora. Use o Pix copia e cola.</span>
+                </div>
                 <span class="pw-qr-note">Aponte a câmera do app do seu banco</span>
               </div>
 
               <div class="pw-pay-col">
                 <div class="pw-key">
-                  <span class="pw-field-label">Chave Pix</span>
+                  <span class="pw-field-label">Chave Pix (celular)</span>
                   <div class="pw-key-row">
                     <div class="pw-key-value">(62) 99234-5372</div>
                     <button type="button" id="btnCopyPixKeyDirect" class="pw-btn pw-btn-sky pw-btn-sm" onclick="window.copyPixKeyDirect()">
@@ -16566,13 +16585,19 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
                     <label class="pw-field-label" for="subPixCodeInput">Pix copia e cola</label>
                     <button type="button" id="btnCopyPix" class="pw-btn pw-btn-solid pw-btn-sm" onclick="window.copyPixCodeToClipboard()">
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                      <span>Copiar Pix copia e cola</span>
+                      <span>Copiar código</span>
                     </button>
                   </div>
                   <textarea id="subPixCodeInput" class="pw-code" readonly rows="3" spellcheck="false"></textarea>
                 </div>
               </div>
             </div>
+
+            <ol class="pw-how" aria-label="Como pagar">
+              <li><span class="pw-how-n">1</span><span>Abra o app do seu banco e escolha <strong>Pix</strong>.</span></li>
+              <li><span class="pw-how-n">2</span><span>Pague <strong>${SUBSCRIPTION_MONTHLY_LABEL}</strong> com o QR Code ou o copia e cola.</span></li>
+              <li><span class="pw-how-n">3</span><span>Toque em <strong>Já paguei</strong> e envie o comprovante.</span></li>
+            </ol>
 
             <input type="hidden" id="subPixTxIdInput" value="" />
           </div>
@@ -16602,7 +16627,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 
       <!-- Barra de pagamento fixa: o botao principal fica sempre visivel, mesmo em telas baixas -->
       <div class="pw-paybar">
-        <div class="pw-paybar-amount"><span>Total da assinatura</span><strong id="pixDisplayAmount">R$ 15,00</strong></div>
+        <div class="pw-paybar-amount"><span>Total da assinatura</span><strong id="pixDisplayAmount">${SUBSCRIPTION_MONTHLY_LABEL}</strong></div>
         <button type="button" class="pw-btn pw-btn-primary" id="subBtnConfirmPix" onclick="window.processSubscriptionPayment('pix')">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
           <span id="pixActionBtnLabel">Já paguei via Pix &bull; enviar para confirmação</span>
@@ -18424,6 +18449,22 @@ window.__isPaywallLocked = false;
 window.__paywallSyncPollInterval = null;
 
 // Áudio Sintetizado de Alerta (Web Audio API)
+// Oferta vigente: 1 dia grátis e depois o Plano Mensal único, somente Pix. O preço vem do servidor (SUBSCRIPTION_MONTHLY_PRICE): um lugar só.
+// "anual" só existe em contas antigas e em liberações manuais do administrador (nunca é oferecido nem aceito no pagamento).
+const NEXUS_MONTHLY_PRICE = ${SUBSCRIPTION_MONTHLY_PRICE};
+const NEXUS_MONTHLY_LABEL = '${SUBSCRIPTION_MONTHLY_LABEL}';
+function nexusPlanInfo(plan) {
+  const p = String(plan || '').toLowerCase();
+  if (p === 'anual' || p === 'annual') return { id: 'anual', nome: 'Anual (legado)', valor: 'R$ 150,00', dias: 365, vigente: false };
+  if (p === 'vitalicio') return { id: 'vitalicio', nome: 'Vitalício', valor: '', dias: 0, vigente: false };
+  if (p === 'cortesia_admin') return { id: 'cortesia_admin', nome: 'Acesso liberado', valor: '', dias: 0, vigente: false };
+  return { id: 'mensal', nome: 'Mensal', valor: NEXUS_MONTHLY_LABEL, dias: 30, vigente: true };
+}
+function nexusPlanLabel(plan) {
+  const info = nexusPlanInfo(plan);
+  return info.id === 'mensal' ? 'Mensal · ' + NEXUS_MONTHLY_LABEL : info.nome + (info.valor ? ' · ' + info.valor : '');
+}
+
 window.playPaywallAlertSound = function() {
   try {
     const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -18510,7 +18551,7 @@ window.unlockWithConfirmedReceipt = function(data) {
   const expiresEl = document.getElementById('subSuccessExpires');
   const dateTimeEl = document.getElementById('subSuccessDateTime');
 
-  if (planNameEl) planNameEl.textContent = plan === 'anual' ? 'Plano Anual (R$ 150,00 • 12 meses)' : (plan === 'vitalicio' ? 'Acesso administrativo' : 'Plano Mensal (R$ 15,00 • 30 dias)');
+  if (planNameEl) planNameEl.textContent = plan === 'anual' ? 'Plano Anual (legado • 12 meses)' : (plan === 'vitalicio' ? 'Acesso administrativo' : 'Plano Mensal (' + NEXUS_MONTHLY_LABEL + ' • 30 dias)');
   if (txIdEl) txIdEl.textContent = data.transaction_id || data.subscription_payment_id || ('NEXUS-SUB-' + Date.now());
   if (methodEl) {
     const methodLabels = {
@@ -18762,14 +18803,29 @@ window.openSubscriptionPaywall = function(isLocked = false) {
   if (effectiveLocked) {
     document.body.classList.add('paywall-locked');
     document.documentElement.classList.add('paywall-locked');
-    if (titleEl) titleEl.textContent = 'Escolha um plano para continuar usando';
-    if (subEl) subEl.textContent = 'Seu período gratuito terminou. Escolha o Plano Mensal ou o Plano Anual, pague via Pix e envie o comprovante para liberar o acesso.';
+    if (titleEl) titleEl.textContent = 'Seu teste grátis terminou';
+    if (subEl) subEl.textContent = 'Continue com acesso completo por ' + NEXUS_MONTHLY_LABEL + ' por mês. Pague via Pix e o acesso é liberado assim que o pagamento for confirmado.';
   } else {
     document.body.classList.remove('paywall-locked');
     document.documentElement.classList.remove('paywall-locked');
-    if (titleEl) titleEl.textContent = 'Escolha o plano ideal para o seu controle financeiro';
-    if (subEl) subEl.textContent = 'Comece com 1 dia grátis. Depois, escolha o Plano Mensal ou o Plano Anual e pague via Pix.';
+    if (titleEl) titleEl.textContent = 'Assine o Nexus por ' + NEXUS_MONTHLY_LABEL + ' por mês';
+    if (subEl) subEl.textContent = 'Você tem 1 dia grátis para testar tudo. Quando quiser continuar, pague via Pix: sem fidelidade.';
   }
+
+  // Linha do tempo da oferta: o teste de 1 dia aparece como concluído (bloqueado) ou em andamento (ainda dentro do prazo)
+  const trialStep = document.getElementById('pwJourneyTrial');
+  const trialNote = document.getElementById('pwJourneyTrialNote');
+  if (trialStep) {
+    trialStep.classList.toggle('is-done', effectiveLocked);
+    trialStep.classList.toggle('is-trial', !effectiveLocked);
+    const node = trialStep.querySelector('.pw-j-node');
+    if (node) node.innerHTML = effectiveLocked
+      ? '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>'
+      : '1';
+  }
+  if (trialNote) trialNote.textContent = effectiveLocked
+    ? 'Concluído: o seu teste de 1 dia terminou.'
+    : 'Em andamento: use todos os recursos sem cobrança.';
 
   if (closeBtn) {
     closeBtn.style.display = effectiveLocked ? 'none' : 'flex';
@@ -18991,26 +19047,11 @@ if (!window.__paywallSyncPollInterval) {
   }, 4000);
 }
 
-window.selectSubPlan = function(plan) {
-  plan = plan === 'anual' ? 'anual' : 'mensal';
-  window.__selectedSubPlan = plan;
-  const isAnnual = plan === 'anual';
-  const cardMensal = document.getElementById('subPlanCardMensal');
-  const cardAnual = document.getElementById('subPlanCardAnual');
-  const setText = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value; };
-
-  if (cardMensal) { cardMensal.classList.toggle('active', !isAnnual); cardMensal.setAttribute('aria-checked', String(!isAnnual)); }
-  if (cardAnual) { cardAnual.classList.toggle('active', isAnnual); cardAnual.setAttribute('aria-checked', String(isAnnual)); }
-
-  const totalLabel = isAnnual ? 'R$ 150,00' : 'R$ 15,00';
-  setText('pixDisplayAmount', totalLabel);
-  setText('subSummaryPlanName', isAnnual ? 'Plano Anual (12 meses)' : 'Plano Mensal (30 dias)');
-  // Anual: 12 x R$ 15,00 = R$ 180,00, menos R$ 30,00 de desconto = R$ 150,00 (a conta fecha na tela).
-  setText('subSummaryPlanPrice', isAnnual ? 'R$ 180,00' : 'R$ 15,00');
-  setText('subSummaryTotalPrice', totalLabel);
-  setText('subSummaryPaymentFrequency', isAnnual ? 'Cobrança única (equivale a R$ 12,50 por mês)' : 'Cobrança mês a mês, sem fidelidade');
-  const discountRow = document.getElementById('subSummaryDiscountRow');
-  if (discountRow) discountRow.style.display = isAnnual ? 'flex' : 'none';
+// Plano único vigente: Mensal (o Plano Anual saiu da oferta). Mantida com este nome porque quem abre a tela de pagamento ainda a chama.
+window.selectSubPlan = function() {
+  window.__selectedSubPlan = 'mensal';
+  const el = document.getElementById('pixDisplayAmount');
+  if (el) el.textContent = NEXUS_MONTHLY_LABEL;
 
   if (window.__selectedPaymentMethod === 'pix') {
     window.updatePixPayloadAndQr();
@@ -19216,8 +19257,7 @@ window.copyPixKeyDirect = function() {
 };
 
 window.updatePixPayloadAndQr = function() {
-  const plan = window.__selectedSubPlan || 'mensal';
-  const amount = (plan === 'anual') ? 150.00 : 15.00;
+  const amount = NEXUS_MONTHLY_PRICE;
   const pixKey = '+5562992345372';
   const beneficiaryName = 'PAULO LIMA';
   const city = 'GOIANIA';
@@ -19233,7 +19273,11 @@ window.updatePixPayloadAndQr = function() {
   const imgEl = document.getElementById('subPixQrImg');
   if (inputEl) inputEl.value = pixCode;
   if (imgEl) {
-     imgEl.src = 'https://api.qrserver.com/v1/create-qr-code/?size=320x320&margin=16&ecc=H&color=000000&bgcolor=FFFFFF&data=' + encodeURIComponent(pixCode);
+     // 640 px: nítido também em telas 4K (a imagem é exibida a ~200 px, com zoom de até 1,5x); se o serviço de QR não responder, avisa e o copia e cola segue valendo
+     const qrFail = document.getElementById('subPixQrFail');
+     if (qrFail) qrFail.hidden = true;
+     imgEl.style.visibility = 'visible';
+     imgEl.src = 'https://api.qrserver.com/v1/create-qr-code/?size=640x640&margin=16&ecc=H&color=000000&bgcolor=FFFFFF&data=' + encodeURIComponent(pixCode);
   }
   window.fitPixCodeBox();
 };
@@ -19265,8 +19309,7 @@ window.verifyPendingPaymentNow = async function() {
 };
 
 window.sendPaymentProofWhatsApp = function() {
-  const plan = window.__selectedSubPlan || 'mensal';
-  const amountStr = plan === 'anual' ? 'R$ 150,00 (Anual)' : 'R$ 15,00 (Mensal)';
+  const amountStr = NEXUS_MONTHLY_LABEL + ' (Mensal)';
   const email = currentUser ? currentUser.email : '';
   const name = currentUser ? currentUser.name : '';
   const pixTx = document.getElementById('subPixTxIdInput')?.value || window.__currentPixSessionTxId || '';
@@ -19281,7 +19324,7 @@ window.processSubscriptionPayment = async function(method, isAutoTriggered = fal
   }
   if (window.__isProcessingSubPayment) return;
 
-  const plan = window.__selectedSubPlan || 'mensal';
+  const plan = 'mensal';
   const payMethod = method || window.__selectedPaymentMethod || 'pix';
 
   if (payMethod !== 'pix') {
@@ -19319,7 +19362,7 @@ window.processSubscriptionPayment = async function(method, isAutoTriggered = fal
   window.updateAutoRecognitionRadar(
     'processing',
     '2/3 • Enviando para análise...',
-    'Enviando a confirmação de <strong>R$ ' + (plan === 'anual' ? '150,00' : '15,00') + '</strong> e aguardando a validação do recebimento...',
+    'Enviando a confirmação de <strong>' + NEXUS_MONTHLY_LABEL + '</strong> e aguardando a validação do recebimento...',
     88
   );
 
@@ -19333,7 +19376,7 @@ window.processSubscriptionPayment = async function(method, isAutoTriggered = fal
         email: currentUser.email,
         plan: plan,
         method: payMethod,
-        amount: plan === 'anual' ? 150.00 : 15.00,
+        amount: NEXUS_MONTHLY_PRICE,
         receipt_code: window.__currentPixSessionTxId || receiptCode,
         force_pending: true
       })
@@ -20237,7 +20280,11 @@ function autoMigrateTransactionsAndAccounts() {
         const normName = normalizeAccName(a.name);
         return (normName.length >= 3 && descText.includes(normName)) || (aName.length >= 3 && descText.includes(aName));
       });
-      if (cardMatch && (String(t.accId) !== String(cardMatch.id) || (t.acc === 'Cartão de Crédito' || !t.acc))) {
+      // Só completa lançamento SEM conta (ou com o rótulo genérico "Cartão de Crédito"). A conta que o usuário escolheu nunca é trocada:
+      // "Pagamento fatura Visa" pago pela conta Nubank continua na Nubank (antes virava compra no cartão e aumentava a dívida).
+      const accTxtMig = String(t.acc || '').toLowerCase().trim();
+      const semContaDefinida = !accTxtMig || accTxtMig === 'cartão de crédito' || accTxtMig === 'cartao de credito' || accTxtMig === 'cartão' || accTxtMig === 'cartao';
+      if (cardMatch && semContaDefinida && (String(t.accId) !== String(cardMatch.id) || t.acc !== cardMatch.name)) {
         t.accId = cardMatch.id;
         t.acc = cardMatch.name;
         changed = true;
@@ -21043,12 +21090,17 @@ function isTxForAccount(t, account) {
   const catLower = String(t.cat || t.category || '').toLowerCase().trim();
 
   // 1. Prioridade Máxima: Se accId for especificado e coincidir com o ID da conta
-  if (t.accId != null && account.id != null && String(t.accId) === String(account.id)) {
-    return true;
+  if (t.accId != null && account.id != null) {
+    if (String(t.accId) === String(account.id)) return true;
+    // Ligado a OUTRA conta que existe: pertence só a ela (antes, "Inter" também levava as compras do "Cartão Inter"
+    // e qualquer lançamento cuja descrição citasse o nome de uma conta era contado nas duas)
+    if (accounts.some(a => String(a.id) === String(t.accId))) return false;
   }
 
   // 2. Correspondência exata do nome da conta ou do cartão
   if (accNameLower && (tAccLower === accNameLower || tCardLower === accNameLower)) return true;
+  // 2b. O nome gravado no lançamento é exatamente o de OUTRA conta: pertence a ela (nome parecido não é a mesma conta)
+  if (tAccLower && accounts.some(a => a.id !== account.id && String(a.name || '').toLowerCase().trim() === tAccLower)) return false;
 
   // 3. Substring direta entre nomes (ex: "Digio" em "Cartão Digio" ou "Digio Crédito")
   if (accNameLower && tAccLower && (tAccLower.includes(accNameLower) || accNameLower.includes(tAccLower))) return true;
@@ -21065,12 +21117,15 @@ function isTxForAccount(t, account) {
     if (normTCard && (normTCard.includes(normAccName) || normAccName.includes(normTCard))) return true;
   }
 
-  // 5. Se a descrição ou categoria contiver o nome da conta (ex: "Digio" em descrição ou categoria)
-  if (normAccName.length >= 3 && (descLower.includes(normAccName) || catLower.includes(normAccName))) {
-    return true;
-  }
-  if (accNameLower.length >= 3 && (descLower.includes(accNameLower) || catLower.includes(accNameLower))) {
-    return true;
+  // 5. Só para lançamentos SEM conta informada: se a descrição ou categoria contiver o nome da conta (ex: "Digio").
+  // Com conta definida (inclusive "Dinheiro" ou "Boleto / Outros") a escolha do usuário vale; texto da descrição não muda a conta.
+  if (!tAccLower && !tCardLower) {
+    if (normAccName.length >= 3 && (descLower.includes(normAccName) || catLower.includes(normAccName))) {
+      return true;
+    }
+    if (accNameLower.length >= 3 && (descLower.includes(accNameLower) || catLower.includes(accNameLower))) {
+      return true;
+    }
   }
 
   // 6. Transações com "Cartão de Crédito" genérico
@@ -21999,7 +22054,7 @@ function updateHeaderUser(){
     sidebarPlanEl.textContent = nexusIsAdminUser(currentUser)
       ? 'Administrador'
       : plan === 'anual' || plan === 'annual'
-        ? 'Plano Anual'
+        ? 'Plano Anual (legado)'
         : plan === 'mensal'
           ? 'Plano Mensal'
           : plan === 'vitalicio'
@@ -24426,13 +24481,13 @@ function pageConfig(){
         <div style="display:flex; align-items:center; gap:8px;">
           <h3 style="font-size:17px; font-weight:900; margin:0; color:var(--text);">Plano & Assinatura</h3>
           \${(currentUser && currentUser.subscription_status === 'active')
-            ? '<span class="role-badge" style="background:#10B981; color:#fff; font-weight:800;">✓ Assinatura Ativa (' + (currentUser.subscription_plan === 'anual' ? 'Anual R$ 150' : 'Mensal R$ 15') + ')</span>'
+            ? '<span class="role-badge" style="background:#10B981; color:#fff; font-weight:800;">✓ Assinatura Ativa (' + nexusPlanLabel(currentUser.subscription_plan) + ')</span>'
             : '<span class="role-badge" style="background:#F59E0B; color:#fff; font-weight:800;">⏱️ Período Gratuito (1 Dia)</span>'}
         </div>
         <p style="font-size:13px; color:var(--text-dim); margin:4px 0 0 0;">
           \${(currentUser && currentUser.subscription_status === 'active')
             ? 'Válido até ' + (currentUser.subscription_expires_at ? new Date(currentUser.subscription_expires_at).toLocaleDateString('pt-BR') : 'Ativo')
-            : 'Você tem 1 dia grátis para testar todos os recursos. Depois, escolha o Plano Mensal por R$ 15,00 ou o Plano Anual por R$ 150,00 (equivalente a R$ 12,50 por mês).'}
+            : 'Você tem 1 dia grátis para testar todos os recursos. Depois, assine o Plano Mensal por ' + NEXUS_MONTHLY_LABEL + ' e pague via Pix.'}
         </p>
       </div>
     </div>
@@ -25665,7 +25720,7 @@ function pagePagamentosCorpo(){
     const expiry = u.subscription_expires_at ? formatDateBR(u.subscription_expires_at) : '—';
     return \`<tr>
       <td><strong>\${name}</strong><small style="display:block;color:var(--text-dim);">\${email}</small></td>
-      <td>\${plan === 'anual' ? 'Anual · R$ 150,00' : 'Mensal · R$ 15,00'}</td>
+      <td>\${nexusPlanLabel(plan)}</td>
       <td>\${method.toUpperCase()}</td>
       <td><span class="role-badge" style="background:\${expired ? 'rgba(239,68,68,.15)' : 'rgba(245,158,11,.15)'};color:\${expired ? '#FCA5A5' : '#FBBF24'};">\${status}</span><small style="display:block;color:var(--text-dim);">\${protocol}</small></td>
       <td>\${expiry}</td>
@@ -25709,7 +25764,7 @@ function pagePagamentosCorpo(){
       </div>
       <div class="grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;">
         <label>Cliente<select id="paymentNoticeUser" class="admin-search-input" style="width:100%;margin-top:5px;"><option value="">Selecione um usuário</option>\${options}</select></label>
-        <label>Plano<select id="paymentNoticePlan" class="admin-search-input" style="width:100%;margin-top:5px;"><option value="mensal">Mensal · R$ 15,00</option><option value="anual">Anual · R$ 150,00</option></select></label>
+        <label>Plano<select id="paymentNoticePlan" class="admin-search-input" style="width:100%;margin-top:5px;"><option value="mensal">Mensal · \${NEXUS_MONTHLY_LABEL}</option></select></label>
         <label>Vencimento<input id="paymentNoticeDue" type="date" class="admin-search-input" value="\${dueValue}" style="width:100%;margin-top:5px;"></label>
         <label>Referência<input id="paymentNoticeReference" class="admin-search-input" maxlength="25" value="NX-\${Date.now().toString().slice(-8)}" style="width:100%;margin-top:5px;"></label>
       </div>
@@ -25765,11 +25820,10 @@ window.openPaymentSecondCopy = function(email) {
 window.printAdminPaymentNotice = function() {
   const email = document.getElementById('paymentNoticeUser')?.value || '';
   const user = (registeredUsers || []).find(u => u && u.email && u.email.toLowerCase() === email.toLowerCase());
-  const plan = document.getElementById('paymentNoticePlan')?.value === 'anual' ? 'anual' : 'mensal';
   const due = document.getElementById('paymentNoticeDue')?.value || '';
   const reference = (document.getElementById('paymentNoticeReference')?.value || '').replace(/[^a-zA-Z0-9]/g, '').slice(0, 25);
   if (!user || !reference) { if (typeof showToast === 'function') showToast('Selecione o cliente e informe uma referência válida.'); return; }
-  const amount = plan === 'anual' ? 150 : 15; // mesmos valores da assinatura (Mensal R$ 15,00 / Anual R$ 150,00); estava 10 e 100
+  const amount = NEXUS_MONTHLY_PRICE; // plano único: o mesmo valor da tela de assinatura (vem do servidor)
   const txid = ('NX' + reference).slice(0, 25);
   const pixCode = window.generatePixEMVPayload('+5562992345372', 'PAULO LIMA', 'GOIANIA', amount, txid);
   const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=' + encodeURIComponent(pixCode);
@@ -25777,7 +25831,7 @@ window.printAdminPaymentNotice = function() {
   if (!popup) { if (typeof showToast === 'function') showToast('Permita a abertura da janela para imprimir a cobrança.'); return; }
   popup.opener = null;
   const safe = escapeOsHtml;
-  const planLabel = plan === 'anual' ? 'Anual · 12 meses' : 'Mensal · 30 dias';
+  const planLabel = 'Mensal · 30 dias';
   const html = '<!doctype html><html lang="pt-BR"><meta charset="utf-8"><title>Cobrança Pix ' + safe(reference) + '</title>' +
     '<style>body{font:15px Arial,sans-serif;color:#172033;max-width:760px;margin:32px auto;padding:24px}header{border-bottom:2px solid #059669;padding-bottom:14px}h1{font-size:24px;margin:0 0 6px}small{color:#64748b}.box{border:1px solid #cbd5e1;border-radius:12px;padding:18px;margin:18px 0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.qr{width:220px;height:220px;object-fit:contain}.code{font:12px monospace;word-break:break-all;background:#f1f5f9;padding:12px;border-radius:8px}.note{color:#92400e;background:#fffbeb;border:1px solid #fcd34d;padding:12px;border-radius:8px}@media print{button{display:none}body{margin:0 auto}}</style>' +
     '<body><header><small>NEXUS FINANCEIRO HUB · COBRANÇA</small><h1>Instrução de pagamento via Pix</h1><small>Referência ' + safe(reference) + '</small></header>' +
@@ -25795,8 +25849,8 @@ window.sendAdminPaymentNoticeWhatsApp = function() {
   if (!user) { if (typeof showToast === 'function') showToast('Selecione um cliente para enviar a cobrança.'); return; }
   const phone = String(user.phone || '').replace(/\\D/g, '');
   if (phone.length < 10) { if (typeof showToast === 'function') showToast('Esta conta não possui telefone válido para WhatsApp.'); return; }
-  const plan = document.getElementById('paymentNoticePlan')?.value === 'anual' ? 'anual' : 'mensal';
-  const amount = plan === 'anual' ? 'R$ 150,00' : 'R$ 15,00';
+  const plan = 'mensal';
+  const amount = NEXUS_MONTHLY_LABEL;
   const due = document.getElementById('paymentNoticeDue')?.value || '';
   const message = 'Olá, ' + (user.name || '') + '. Segue a segunda via da cobrança Nexus via Pix. Plano ' + plan + ', valor ' + amount + (due ? ', vencimento ' + formatDateBR(due) : '') + '. Chave Pix: (62) 99234-5372. Após o pagamento, envie o comprovante para confirmação.';
   window.open('https://wa.me/55' + phone.slice(-11) + '?text=' + encodeURIComponent(message), '_blank', 'noopener,noreferrer');
@@ -36033,10 +36087,11 @@ async function handleNexusRequest(req, res) {
           res.writeHead(403, { ...corsHeaders, 'Content-Type': 'application/json' });
           return res.end(JSON.stringify({ success: false, error: 'A solicitacao deve pertencer a conta conectada.' }));
         }
-        const validPlans = ['mensal', 'anual'];
+        // Plano único: Mensal. Um cliente antigo (página em cache) que ainda mande "anual" recebe recusa em vez de registrar o valor errado.
+        const validPlans = ['mensal'];
         if (!validPlans.includes(plan)) {
           res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ success: false, error: 'Plano inválido. Escolha mensal (R$ 15,00) ou anual (R$ 150,00).' }));
+          return res.end(JSON.stringify({ success: false, error: 'Plano inválido. O plano vigente é o Mensal (' + SUBSCRIPTION_MONTHLY_LABEL + ' via Pix). Atualize a página e tente de novo.' }));
         }
 
         if (method !== 'pix') {
@@ -36068,14 +36123,15 @@ async function handleNexusRequest(req, res) {
         const paymentConfirmed = false;
 
         const now = new Date();
-        const amount = plan === 'anual' ? 150.00 : 15.00;
+        // O valor é SEMPRE o do servidor: o "amount" enviado pelo navegador é ignorado
+        const amount = SUBSCRIPTION_MONTHLY_PRICE;
         const suffix = receiptCode ? ('-REF-' + receiptCode.replace(/[^a-zA-Z0-9]/g, '').slice(0, 14).toUpperCase()) : '';
         const txId = 'NEXUS-SUB-' + Date.now() + '-' + crypto.randomBytes(3).toString('hex').toUpperCase() + suffix;
         const methodNames = { pix: 'Pix (SPI / BACEN)', credit_card: 'Cartão de Crédito', debit_card: 'Cartão de Débito', boleto: 'Boleto Bancário' };
 
         if (paymentConfirmed) {
           // Pagamento reconhecido automaticamente e assinatura ativada imediatamente
-          const expiresDate = new Date(now.getTime() + (plan === 'anual' ? 365 : 30) * 24 * 60 * 60 * 1000);
+          const expiresDate = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
           const expiresIso = getBrasiliaIsoString(expiresDate);
           const expiresSql = getBrasiliaSqlString(expiresDate);
 
