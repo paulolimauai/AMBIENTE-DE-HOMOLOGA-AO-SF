@@ -29,6 +29,15 @@ const BackendUtils = require('./backend-utils'); // utilitários puros e testado
 const PORT = process.env.PORT || 3000;
 const SERVER_START_TIME = Date.now();
 const RUNTIME_DATA_DIR = process.env.NEXUS_DATA_DIR || __dirname;
+// Gravação direta e durável de todos os dados no Supabase (supabase-sync.js): cada gravação de arquivo de estado é enviada em ~0,4 s,
+// e o que o Supabase ainda não confirmou é guardado em disco e reenviado até entrar. Sem o módulo/pacote (cópia de teste) vira no-op.
+let SupabaseSync;
+try {
+  SupabaseSync = require('./supabase-sync');
+  SupabaseSync.init({ dataDir: RUNTIME_DATA_DIR });
+} catch (e) {
+  SupabaseSync = { noteWrite() {}, restoreMissingFiles: async () => ({ restored: [] }), flushAndStop: async () => ({}), status: () => ({ enabled: false, disabledReason: 'módulo indisponível' }) };
+}
 // Versão dos assets estáticos por inicialização do servidor: muda a cada deploy/restart e invalida o cache do navegador
 const ASSETS_V = 'v' + SERVER_START_TIME.toString(36);
 
@@ -130,6 +139,7 @@ function writeJsonFile(file, text) {
   } finally {
     jsonCache.invalidate(file);
   }
+  try { SupabaseSync.noteWrite(file); } catch (e) {}   // arquivo gravado: agenda o envio ao Supabase (nunca bloqueia nem derruba a gravação)
 }
 
 function getDeletedAccounts() {
@@ -35216,6 +35226,14 @@ async function handleNexusRequest(req, res) {
     return sendJson(res, corsHeaders, 200, { success: true, email: ativoEmail, active: alvoAtivo.active });
   }
 
+  // Estado da gravação no Supabase (só administrador): projeto de destino, pendências, último erro. Nunca expõe chaves nem dados.
+  if (req.method === 'GET' && parsedUrl.pathname === '/api/admin/supabase-status') {
+    if (!getAuthenticatedAdmin(req)) {
+      return sendJson(res, corsHeaders, 401, { success: false, error: 'Autenticação de administrador obrigatória.' });
+    }
+    return sendJson(res, corsHeaders, 200, { success: true, supabase: SupabaseSync.status() });
+  }
+
   // Uso real de cada conta para a tela Cadastros & Contas do administrador: só contagens (nunca valores, descrições nem saldos)
   if (req.method === 'GET' && parsedUrl.pathname === '/api/admin/usage') {
     if (!getAuthenticatedAdmin(req)) {
@@ -37300,7 +37318,8 @@ function gracefulShutdown(signal) {
   } catch(e){}
 
   try { flushFileLogsNow(); } catch(e){}
-  process.exit(0);
+  // Antes de sair, envia ao Supabase o que ainda estiver na fila (no máximo 4 s): num desligamento normal nada fica para trás
+  SupabaseSync.flushAndStop(4000).catch(() => {}).then(() => process.exit(0));
 }
 
 process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
@@ -37699,7 +37718,9 @@ server.on('error', (err) => {
   console.warn('[HTTP SERVIDOR] Erro no servidor HTTP tratado com segurança:', err.message);
 });
 
-server.listen(PORT, '0.0.0.0', () => {
+// Disco novo/vazio (ex.: redeploy no Render): recompõe os arquivos a partir do Supabase ANTES de aceitar conexões.
+// Só age quando falta dado local e o disco nunca foi sincronizado (no máximo 8 s); com dados locais não faz nada.
+SupabaseSync.restoreMissingFiles({ timeoutMs: 8000 }).catch(() => {}).then(() => server.listen(PORT, '0.0.0.0', () => {
   console.log(`==================================================`);
   console.log(`🚀 Servidor Nexus Financeiro Hub rodando em 0.0.0.0:${PORT}`);
   console.log(`📋 Logs do banco disponíveis em tempo real: system_logs.json`);
@@ -37726,5 +37747,5 @@ server.listen(PORT, '0.0.0.0', () => {
     .catch(err => {
       console.warn(`[BANCO AVISO] Inicialização do banco SQL tratada autonomamente: ${err.message}`);
     });
-});
+}));
 

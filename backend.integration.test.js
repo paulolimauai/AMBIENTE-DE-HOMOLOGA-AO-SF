@@ -107,6 +107,19 @@ test('login: senha certa entra, errada é recusada, senha gigante não trava', a
   assert.ok(enorme.status === 400 || enorme.status === 401, 'status ' + enorme.status);
 });
 
+test('estado da gravação no Supabase: só o administrador vê, e nunca expõe chaves', async () => {
+  const ana = (await login('ana@teste.nexus', 'Ana@12345')).token;
+  const admin = (await login('admin@teste.nexus', 'Admin@12345')).token;
+  assert.equal((await api('GET', '/api/admin/supabase-status')).status, 401, 'sem login');
+  assert.ok([401, 403].includes((await api('GET', '/api/admin/supabase-status', { token: ana })).status), 'usuário comum');
+  const r = await api('GET', '/api/admin/supabase-status', { token: admin });
+  assert.equal(r.status, 200, r.texto);
+  const corpo = JSON.parse(r.texto);
+  assert.equal(corpo.success, true);
+  assert.equal(corpo.supabase.enabled, false, 'o servidor de teste (NEXUS_DISABLE_DB=1) não pode gravar no Supabase real');
+  assert.ok(!/eyJ|sb_secret|service_role_key|password/i.test(r.texto), 'a resposta não pode conter chaves nem senhas');
+});
+
 test('rotas sensíveis exigem autenticação e isolam usuários', async () => {
   const ana = (await login('ana@teste.nexus', 'Ana@12345')).token;
   const admin = (await login('admin@teste.nexus', 'Admin@12345')).token;

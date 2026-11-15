@@ -30,9 +30,11 @@ cpf_registry.json
 cpf_registry.backup.json
 local_ordens_servico.json
 local_tecnicos.json
-local_permissions.json
 local_filas.json
+local_permissions.json
 pending_logins.json
+# Controle da gravação no Supabase (o que já foi confirmado, por registro) — estado local de execução
+supabase_sync_state.json
 
 dist/
 
