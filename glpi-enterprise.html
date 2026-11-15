@@ -3910,6 +3910,8 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             const entry = params.get('entry');
             const mode = params.get('mode');
             const embedded = params.get('embedded') === '1';
+            // F5 / voltar: a pessoa continua no menu em que estava. Entrada nova (link, botão, login) abre a tela inicial do perfil.
+            const atualizouPagina = paginaFoiAtualizada();
 
             try { localStorage.removeItem('enterprise_service_desk_tickets'); } catch (e) {}
 
@@ -3924,7 +3926,8 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 if (glpiUser && glpiUser.isAdmin) {
                     currentUser = glpiUser;
                     localStorage.setItem('glpi_10_session', JSON.stringify(currentUser));
-                    await enterApp(params.get('tab') === 'queue' ? 'queue' : null);
+                    // ?tab=queue vale só na entrada; ao atualizar, vale o menu em que a pessoa estava (o endereço não muda ao navegar)
+                    await enterApp(!atualizouPagina && params.get('tab') === 'queue' ? 'queue' : null, atualizouPagina);
                     return;
                 }
                 showLoginView();
@@ -3934,11 +3937,6 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             // Aberto pelo botão "Abrir Chamado GLPI" na tela de login (?entry=login): tela de login limpa.
             // Só vale para quem CHEGOU pelo botão: ao atualizar a página (F5) ou voltar, quem já tem sessão continua logado
             // (antes o ?entry=login ficava preso no endereço e cada F5 pedia o login de novo).
-            let atualizouPagina = false;
-            try {
-                const nav = performance.getEntriesByType('navigation')[0];
-                atualizouPagina = Boolean(nav) && (nav.type === 'reload' || nav.type === 'back_forward');
-            } catch (e) {}
             if (entry === 'login' && !atualizouPagina) {
                 showLoginView();
                 return;
@@ -3954,7 +3952,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 if (nexusUser && nexusUser.email) {
                     currentUser = buildGlpiUserFromNexus(nexusUser);
                     localStorage.setItem('glpi_10_session', JSON.stringify(currentUser));
-                    await enterApp(null);
+                    await enterApp(null, atualizouPagina);
                     return;
                 }
                 try {
@@ -3962,7 +3960,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                     const parsed = savedSession ? JSON.parse(savedSession) : null;
                     if (parsed && parsed.email) {
                         currentUser = buildGlpiUserFromNexus(parsed);
-                        await enterApp(null);
+                        await enterApp(null, atualizouPagina);
                         return;
                     }
                 } catch (e) {}
@@ -3992,7 +3990,28 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         }
 
         // Carrega os dados do perfil e abre o sistema; se a sessão do Financeiro expirou, volta ao login com aviso
-        async function enterApp(tab) {
+        // ---- Menu ativo: lembrado por aba do navegador (sessionStorage) para o F5 não mandar de volta à tela inicial ----
+        const ABAS_GLPI = { user: ['catalog', 'my-tickets', 'kb'], tech: ['dashboard', 'queue', 'teams'] };
+
+        function paginaFoiAtualizada() {
+            try {
+                const nav = performance.getEntriesByType('navigation')[0];
+                return Boolean(nav) && (nav.type === 'reload' || nav.type === 'back_forward');
+            } catch (e) { return false; }
+        }
+
+        function lembrarAba(perfil, tab) {
+            try { sessionStorage.setItem('glpi_aba_' + perfil, tab); } catch (e) {}
+        }
+
+        // Aba salva deste perfil; se não houver (ou for inválida), a tela inicial dele
+        function abaLembrada(perfil) {
+            let salva = null;
+            try { salva = sessionStorage.getItem('glpi_aba_' + perfil); } catch (e) {}
+            return ABAS_GLPI[perfil].includes(salva) ? salva : ABAS_GLPI[perfil][0];
+        }
+
+        async function enterApp(tab, restaurarAba) {
             limparEntradaDoEndereco();
             const result = await loadTicketsConfirmandoSessao({ silent: false });
             if (result === 'auth') {
@@ -4000,7 +4019,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 return;
             }
             if (currentUser.isAdmin) await loadTechnicians();
-            showAppView();
+            showAppView(restaurarAba === true);
             if (tab && isTechMode()) navTech(tab);
         }
 
@@ -4091,6 +4110,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         function logout(expired) {
             stopSync();
             localStorage.removeItem('glpi_10_session');
+            try { sessionStorage.removeItem('glpi_aba_user'); sessionStorage.removeItem('glpi_aba_tech'); } catch (e) {}
             // Só o "Sair" feito pela pessoa trava a entrada automática desta aba; sessão expirada não trava (o F5 tenta de novo)
             try { if (expired !== true && new URLSearchParams(window.location.search).get('embedded') !== '1') sessionStorage.setItem('glpi_manual_logout', '1'); } catch (e) {}
             currentUser = null;
@@ -4175,7 +4195,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             sel.value = selected && selected !== '' ? selected : 'Não Atribuído';
         }
 
-        function showAppView() {
+        function showAppView(restaurarAba) {
             if (!currentUser) {
                 showLoginView();
                 return;
@@ -4233,16 +4253,19 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 initCharts();
             }
 
-            // Sempre abre a tela inicial do perfil: catálogo ou dashboard
+            // Entrada nova (login, troca de modo, link) abre a tela inicial do perfil: catálogo ou dashboard.
+            // Ao atualizar a página (F5) volta ao menu em que a pessoa estava.
             document.body.classList.add('in-app');
-            if (currentUser.role === 'user') navUser('catalog');
-            else navTech('dashboard');
+            if (currentUser.role === 'user') navUser(restaurarAba ? abaLembrada('user') : 'catalog');
+            else navTech(restaurarAba ? abaLembrada('tech') : 'dashboard');
             startSync();
         }
 
         // ============================== NAVEGAÇÃO ==============================
         // Cada item do menu abre UMA tela (catálogo ou lista; dashboard ou fila), sempre com o mesmo cabeçalho de página
         function navUser(tab) {
+            if (tab !== 'catalog' && tab !== 'kb') tab = 'my-tickets';
+            lembrarAba('user', tab);
             toggleSidebar(false);
             const catalog = $('user-section-catalog');
             const tickets = $('user-section-tickets');
@@ -4271,6 +4294,8 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         }
 
         function navTech(tab) {
+            if (tab !== 'dashboard' && tab !== 'teams') tab = 'queue';
+            lembrarAba('tech', tab);
             toggleSidebar(false);
             const dash = $('tech-subview-dashboard');
             const queue = $('tech-subview-queue');
