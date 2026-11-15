@@ -1743,6 +1743,87 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         .csat-star { color: rgba(var(--lt), .2); transition: color .15s ease, transform .15s ease; }
         .csat-star.active, .csat-star:hover { color: #f59e0b; transform: scale(1.15); }
         .csat-badge-badge { display: inline-flex; align-items: center; gap: .35rem; padding: 3px 9px; border-radius: 999px; background: rgba(251,191,36,.18); border: 1px solid rgba(251,191,36,.4); color: #fcd34d; font-size: .78rem; font-weight: 800; }
+
+        /* ==================== Técnicos e Filas: contato com ícone, selo por área, carga, status, busca e menu de ações (15/11) ==================== */
+        .tt-panel { container: tt / inline-size; }
+        .tt-count { margin-left: .3rem; font-size: .8125rem; font-weight: 500; color: var(--muted); }
+        .tt-toolbar { display: grid; gap: .65rem; margin: .15rem 0 .8rem; }
+        .tt-toolbar .input-icon, .tt-qsearch .input-icon { min-width: 0; max-width: 30rem; }
+        .tt-toolbar .input, .tt-qsearch .input { height: var(--ctl-sm); font-size: .8125rem; }
+        .tt-toolbar .fchip { height: var(--ctl-sm); padding: 0 .85rem; }
+        .tt-person { display: flex; align-items: center; gap: .7rem; min-width: 0; }
+        .tt-person > div { min-width: 0; }
+        .tt-person .avatar { width: 2.4rem; height: 2.4rem; border-radius: 50%; font-size: max(.78rem, 12px); }
+        .tt-name { font-weight: 700; color: var(--white); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .tt-contact { display: flex; flex-wrap: wrap; gap: .1rem .9rem; margin-top: .15rem; font-size: max(.78rem, 12px); color: var(--muted); }
+        .tt-c { display: inline-flex; align-items: center; gap: .35rem; min-width: 0; max-width: 100%; color: inherit; text-decoration: none; }
+        .tt-c:hover { color: var(--white); text-decoration: underline; }
+        .tt-c i { flex: none; font-size: max(.707rem, 12px); color: var(--faint); }
+        .tt-c span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .tt-rl { max-width: 11rem; overflow: hidden; text-overflow: ellipsis; }
+        .tt-row.is-off .tt-person, .tt-row.is-off .c-filas { opacity: .6; }
+        .tt-via { font-size: max(.78rem, 12px); cursor: help; white-space: nowrap; }
+        /* Carga de trabalho: número, barra e cor (verde até 60% do limite, âmbar até o limite, vermelho no limite) */
+        .load { --lc: var(--green-rgb); min-width: 7.5rem; }
+        .load.warn { --lc: var(--amber-rgb); }
+        .load.full { --lc: var(--rose-rgb); }
+        .load.off { --lc: var(--slate-rgb); opacity: .7; }
+        .load-top { display: flex; align-items: baseline; gap: .3rem; font-size: max(.78rem, 12px); color: var(--muted); }
+        .load-top b { font-family: var(--font-mono); font-size: .95rem; color: var(--white); }
+        .load-bar { height: .4rem; margin-top: .3rem; border-radius: 99px; background: rgba(var(--lt), .14); overflow: hidden; }
+        .load-bar i { display: block; height: 100%; border-radius: inherit; background: rgb(var(--lc)); transition: width .3s ease; }
+        /* Ações: Editar à vista e o resto no menu de três pontos */
+        .tt-acts { display: inline-flex; align-items: center; justify-content: flex-end; gap: .35rem; }
+        .tt-more { border: 1px solid var(--line); }
+        .tt-more[aria-expanded="true"] { background: rgba(var(--lt), .12); color: var(--white); }
+        .tt-menu { position: fixed; z-index: 80; min-width: 15rem; max-width: calc(100vw - 1rem); padding: .4rem; border-radius: 1rem; background: rgba(var(--dk), .985); border: 1px solid var(--line); box-shadow: 0 24px 50px -12px rgba(0, 0, 0, .8), inset 0 1px 0 rgba(255, 255, 255, .15); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+        .tt-menu[hidden] { display: none; }
+        .tt-menu .mp-head { padding: .4rem .7rem; margin-bottom: .3rem; font-size: max(.72rem, 12px); font-family: var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--faint); border-bottom: 1px solid var(--line-soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .tt-menu button { width: 100%; display: flex; align-items: center; gap: .65rem; min-height: 2.5rem; padding: .5rem .7rem; border-radius: .7rem; text-align: left; font-size: .8125rem; color: var(--ink-2); }
+        .tt-menu button i { flex: none; width: 1.1rem; text-align: center; color: var(--faint); }
+        .tt-menu button:hover, .tt-menu button:focus-visible { background: rgba(var(--lt), .09); color: var(--white); }
+        .tt-menu button[aria-disabled="true"] { opacity: .6; cursor: default; }
+        .tt-menu button[aria-disabled="true"]:hover { background: transparent; color: var(--ink-2); }
+        /* Painel médio (laptop de 1366 px): a tabela cabe sem rolar de lado: Editar só com o ícone, folgas menores e cabeçalho em duas linhas */
+        @container tt (min-width: 58rem) and (max-width: 70rem) {
+            .tt { table-layout: fixed; }
+            .teams-layout .tbl.tt th, .teams-layout .tbl.tt td { padding-left: .5rem; padding-right: .5rem; }
+            .teams-layout .tbl.tt th { white-space: normal; }
+            .tt th:nth-child(2) { width: 11rem; }
+            .tt th:nth-child(3) { width: 10rem; }
+            .tt th:nth-child(4) { width: 8rem; }
+            .tt th:nth-child(5) { width: 10rem; }
+            .tt th:nth-child(6) { width: 6rem; }
+            .tt td.c-who { min-width: 0; }
+            .tt .tt-rl { max-width: 7rem; }
+            .tt .load { min-width: 0; }
+            .tt .act-lbl { display: none; }
+            .tt .tt-acts .btn-ghost.btn-sm:not(.tt-more) { width: var(--ctl-sm); padding: 0; }
+        }
+        /* Painel estreito (celular, tablet ou coluna ao lado das filas): cada técnico vira um cartão */
+        @container tt (max-width: 58rem) {
+            .tt { min-width: 0; }
+            .tt thead { display: none; }
+            .tt, .tt tbody { display: block; width: 100%; }
+            .tt tbody tr.tt-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "who acts" "role status" "filas filas" "load load"; align-items: center; gap: .6rem .8rem; padding: .9rem .1rem; border-bottom: 1px solid var(--line-soft); }
+            .tt tbody tr.tt-row:last-child { border-bottom: 0; }
+            .tt tbody tr.tt-row:hover { background: transparent; }
+            .tt tbody tr.tt-row td { display: block; padding: 0; border: 0; min-width: 0; }
+            .tt td.c-who { grid-area: who; width: auto; max-width: none; }
+            .tt td.c-acts { grid-area: acts; }
+            .tt td.c-role { grid-area: role; }
+            .tt td.c-status { grid-area: status; justify-self: end; }
+            .tt td.c-filas { grid-area: filas; }
+            .tt td.c-load { grid-area: load; }
+            .tt .load { max-width: 22rem; }
+            .tt tbody tr.t-empty, .tt tbody tr.t-empty td { display: block; }
+        }
+        @media (max-width: 600px) {
+            .tt-toolbar .fchip, .tt-toolbar .input, .tt-qsearch .input { min-height: 2.5rem; }
+            .tt-acts .btn, .tt-more { min-height: 2.5rem; }
+            .tt-more { width: 2.5rem; }
+            .tt-menu button { min-height: 2.75rem; }
+        }
     </style>
 </head>
 <body>
@@ -1920,7 +2001,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                     <i class="fa-solid fa-list-check"></i><span class="nv-t">Fila de Chamados</span><span id="sidebar-tech-queue-count" class="count amber">0</span>
                 </a>
                 <a href="#" onclick="navTech('teams'); return false;" id="tech-nav-teams" class="tech-nav-item nav-item tech">
-                    <i class="fa-solid fa-people-group"></i><span class="nv-t">Técnicos &amp; Filas</span>
+                    <i class="fa-solid fa-people-group"></i><span class="nv-t">Técnicos e Filas</span>
                 </a>
             </div>
         </nav>
@@ -2451,8 +2532,8 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                     <div id="tech-subview-teams" class="stack hidden">
                         <div class="page-head">
                             <div>
-                                <div class="crumbs"><i class="fa-solid fa-house"></i> ITSM Operations <i class="fa-solid fa-chevron-right"></i> <span class="here">Técnicos &amp; Filas</span></div>
-                                <h2>Técnicos &amp; Filas</h2>
+                                <div class="crumbs"><i class="fa-solid fa-house"></i> ITSM Operations <i class="fa-solid fa-chevron-right"></i> <span class="here">Técnicos e Filas</span></div>
+                                <h2>Técnicos e Filas</h2>
                                 <p>Cada fila reúne os técnicos que atendem certos tipos de chamado. O chamado entra na fila da sua categoria.</p>
                             </div>
                             <div class="ph-actions">
@@ -2464,26 +2545,39 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                         <div class="teams-layout">
                             <section class="teams-col" aria-label="Filas de atendimento">
                                 <div class="team-h"><i class="fa-solid fa-layer-group c-amber"></i> Filas de atendimento <small id="teams-queues-count"></small></div>
+                                <div id="teams-queue-tools" class="tt-qsearch hidden">
+                                    <div class="input-icon">
+                                        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                                        <input type="search" id="teams-queue-search" oninput="renderTeamQueues()" placeholder="Buscar fila..." aria-label="Buscar filas por nome, descrição, categoria ou técnico" autocomplete="off" class="input">
+                                    </div>
+                                </div>
                                 <div id="teams-queues" class="team-grid"><!-- JS --></div>
                             </section>
 
-                            <div class="glass panel">
+                            <div class="glass panel tt-panel">
                                 <div class="panel-head">
                                     <div>
-                                        <h3><i class="fa-solid fa-user-gear c-amber"></i> Técnicos</h3>
+                                        <h3><i class="fa-solid fa-user-gear c-amber"></i> Técnicos <small id="teams-techs-count" class="tt-count"></small></h3>
                                         <p>Quem atende os chamados. Administradores ativos do Nexus atendem automaticamente e podem ser colocados em uma fila.</p>
                                     </div>
                                 </div>
+                                <div class="tt-toolbar">
+                                    <div class="input-icon">
+                                        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                                        <input type="search" id="teams-tech-search" oninput="renderTeamTechs()" placeholder="Buscar por nome, e-mail, especialidade ou fila..." aria-label="Buscar técnicos por nome, e-mail, especialidade ou fila" autocomplete="off" class="input">
+                                    </div>
+                                    <div id="teams-tech-chips" class="fchips" role="group" aria-label="Filtrar técnicos por status"></div>
+                                </div>
                                 <div class="table-wrap">
-                                    <table class="tbl" style="min-width:38rem;">
+                                    <table class="tbl tt">
                                         <thead>
                                             <tr>
                                                 <th>Técnico</th>
                                                 <th>Especialidade</th>
                                                 <th>Filas</th>
-                                                <th>Abertos</th>
-                                                <th>Situação</th>
-                                                <th class="ta-r">Ação</th>
+                                                <th>Chamados abertos</th>
+                                                <th>Status</th>
+                                                <th class="ta-r">Ações</th>
                                             </tr>
                                         </thead>
                                         <tbody id="teams-techs-tbody"><!-- JS --></tbody>
@@ -6010,16 +6104,32 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         const openCountForQueue = (name) => ticketsList.filter((t) => isOpenTicket(t) && t.queue === name).length;
         const openCountForTech = (name) => ticketsList.filter((t) => isOpenTicket(t) && t.technician === name).length;
 
+        // Texto sem acento e em minúsculas, para as buscas das telas de Técnicos e Filas
+        const ttNorm = (s) => String(s == null ? '' : s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+
         function renderTeams() {
+            renderTeamQueues();
+            renderTeamTechs();
+        }
+
+        function renderTeamQueues() {
             const box = $('teams-queues');
-            const body = $('teams-techs-tbody');
-            if (!box || !body) return;
-            $('teams-queues-count').textContent = queuesList.length ? '· ' + queuesList.length + (queuesList.length === 1 ? ' fila' : ' filas') : '';
+            if (!box) return;
+            // A busca só aparece quando há filas suficientes para precisar dela
+            const showSearch = queuesList.length >= 4;
+            const tools = $('teams-queue-tools');
+            if (tools) tools.classList.toggle('hidden', !showSearch);
+            const searchEl = $('teams-queue-search');
+            const term = showSearch && searchEl ? ttNorm(searchEl.value).trim() : '';
+            const visible = !term ? queuesList : queuesList.filter((q) => ttNorm([q.nome, q.descricao, (q.categorias || []).join(' '), (q.tecnicos || []).map((e) => { const m = techByEmail(e); return m ? m.name : e; }).join(' ')].join(' ')).includes(term));
+            $('teams-queues-count').textContent = !queuesList.length ? '' : (term ? '· ' + visible.length + ' de ' + queuesList.length : '· ' + queuesList.length + (queuesList.length === 1 ? ' fila' : ' filas'));
 
             if (!queuesList.length) {
                 box.innerHTML = '<div class="glass qcard"><p class="form-note">Nenhuma fila cadastrada. Use "Nova fila" para criar a primeira.</p></div>';
+            } else if (!visible.length) {
+                box.innerHTML = '<div class="glass qcard"><p class="form-note">Nenhuma fila encontrada para esta busca.</p></div>';
             } else {
-                box.innerHTML = queuesList.map((q) => {
+                box.innerHTML = visible.map((q) => {
                     const members = (q.tecnicos || []).map(techByEmail).filter(Boolean);
                     const open = openCountForQueue(q.nome);
                     const noTech = ticketsList.filter((t) => isOpenTicket(t) && t.queue === q.nome && !hasTech(t)).length;
@@ -6031,9 +6141,9 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                             ${q.ativa === false ? '<span class="badge b-slate">Inativa</span>' : '<span class="badge b-green"><span class="dot live"></span>Ativa</span>'}
                         </div>
                         <div class="qc-stats">
-                            <div><b>${open}</b><small>abertos</small></div>
+                            <div><b>${open}</b><small>${open === 1 ? 'aberto' : 'abertos'}</small></div>
                             <div><b>${noTech}</b><small>sem técnico</small></div>
-                            <div><b>${members.length}</b><small>técnicos</small></div>
+                            <div><b>${members.length}</b><small>${members.length === 1 ? 'técnico' : 'técnicos'}</small></div>
                         </div>
                         <div class="qc-list"><span class="lbl2">Categorias que entram</span>${cats}</div>
                         <div class="qc-list"><span class="lbl2">Técnicos da fila</span>${people}</div>
@@ -6045,21 +6155,230 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 }).join('');
             }
 
-            if (!techDirectory.length) {
-                body.innerHTML = emptyRow(6, 'Nenhum técnico cadastrado. Use "Cadastrar técnico" para incluir o primeiro.');
-                return;
+        }
+
+        // ---- Técnicos: carga de trabalho, status, selo por área, busca, filtro e menu de ações ----
+        const TECH_CAPACITY = 8; // chamados abertos ao mesmo tempo por técnico: referência da barra de carga e do status "No limite"
+        let teamsTechStatus = 'all';
+        let ttMenuBtn = null; // botão de três pontos com o menu aberto
+
+        const TECH_STATUS_FILTERS = [['all', 'Todos'], ['available', 'Disponíveis'], ['busy', 'Em atendimento'], ['full', 'No limite'], ['off', 'Inativos']];
+        const TECH_STATE_UI = {
+            available: { label: 'Disponível', badge: 'b-green', dot: 'dot live', tip: 'Ativo e sem chamado em atendimento agora' },
+            busy: { label: 'Em atendimento', badge: 'b-sky', dot: 'dot', tip: 'Atendendo chamados e ainda pode receber mais' },
+            full: { label: 'No limite', badge: 'b-rose', dot: 'dot', tip: 'Chegou ao limite de chamados abertos: evite atribuir mais' },
+            off: { label: 'Inativo', badge: 'b-slate', dot: '', tip: 'Não recebe chamados' }
+        };
+        // Selo por área (cor sutil): vem do texto da especialidade; o que não casa fica neutro
+        const TECH_ROLE_RULES = [
+            [/financ|cobranc|pagament|fatur|contab/, 'b-green', 'fa-coins'],
+            [/desenvolv|program|sistema|software|\bdev\b|\bbug/, 'b-purple', 'fa-code'],
+            [/infra|rede|servidor|seguranc|\bti\b/, 'b-orange', 'fa-server'],
+            [/suporte|atendimento|help ?desk|\bn[123]\b|tecnic/, 'b-sky', 'fa-headset']
+        ];
+
+        function techRole(d) {
+            if (d.kind === 'admin') return { label: 'Administrador', cls: 'b-amber', icon: 'fa-user-shield' };
+            const label = String(d.specialty || '').trim() || 'Suporte Geral';
+            const hit = TECH_ROLE_RULES.find((r) => r[0].test(ttNorm(label)));
+            return { label, cls: hit ? hit[1] : 'b-slate', icon: hit ? hit[2] : 'fa-user-tag' };
+        }
+
+        function techInitials(name) {
+            const p = String(name || '').trim().split(/\s+/).filter(Boolean);
+            if (!p.length) return '?';
+            return (p[0][0] + (p.length > 1 ? p[p.length - 1][0] : '')).toUpperCase();
+        }
+
+        // Chamados abertos por nome de técnico, e quantos deles estão em "Atendimento atribuído"
+        function techLoadMap() {
+            const m = new Map();
+            ticketsList.forEach((t) => {
+                if (!isOpenTicket(t) || !hasTech(t)) return;
+                const e = m.get(t.technician) || { open: 0, working: 0 };
+                e.open++;
+                if (t.status === 'Atendimento atribuído') e.working++;
+                m.set(t.technician, e);
+            });
+            return m;
+        }
+
+        function techStateOf(d, ld) {
+            if (!d.active) return 'off';
+            if (ld && ld.open >= TECH_CAPACITY) return 'full';
+            return ld && ld.working > 0 ? 'busy' : 'available';
+        }
+
+        function setTeamsTechStatus(key) {
+            teamsTechStatus = key;
+            renderTeamTechs();
+        }
+
+        function renderTeamTechs() {
+            const body = $('teams-techs-tbody');
+            if (!body) return;
+            // Com o menu de ações aberto não se trocam as linhas debaixo dele (a atualização automática chama este desenho a cada 20 s)
+            if (ttMenuBtn && document.body.contains(ttMenuBtn)) return;
+            const load = techLoadMap();
+            const rows = techDirectory.map((d) => { const ld = load.get(d.name) || { open: 0, working: 0 }; return { d, ld, st: techStateOf(d, ld) }; });
+            const counts = { all: rows.length, available: 0, busy: 0, full: 0, off: 0 };
+            rows.forEach((r) => { counts[r.st]++; });
+            const chips = $('teams-tech-chips');
+            if (chips) {
+                chips.innerHTML = TECH_STATUS_FILTERS.map(([key, label]) => `<button type="button" class="fchip${teamsTechStatus === key ? ' is-on' : ''}${key === 'full' && counts.full ? ' late' : ''}" onclick="setTeamsTechStatus('${key}')" aria-pressed="${teamsTechStatus === key}">${label}<b>${counts[key]}</b></button>`).join('');
             }
-            const queueNames = (d) => queuesList.filter((q) => (d.filas || []).includes(q.id)).map((q) => `<span class="chipx">${escapeHtml(q.nome)}</span>`).join('') || '<span class="chipx none">nenhuma fila</span>';
-            body.innerHTML = techDirectory.map((d) => `<tr>
-                <td class="t-cell"><div class="t-title">${escapeHtml(d.name)}</div><div class="t-sub">${escapeHtml(d.email)}${d.phone ? '<span class="sep">•</span>' + escapeHtml(d.phone) : ''}</div></td>
-                <td class="nw">${d.kind === 'admin' ? '<span class="badge b-amber">Administrador</span>' : escapeHtml(d.specialty || 'Suporte Geral')}</td>
-                <td><div class="qc-list">${queueNames(d)}</div></td>
-                <td class="mono">${openCountForTech(d.name)}</td>
-                <td>${d.active ? '<span class="badge b-green"><span class="dot"></span>Ativo</span>' : '<span class="badge b-slate">Inativo</span>'}</td>
-                <td class="ta-r">${d.kind === 'tecnico'
-                    ? `<button type="button" data-id="${escapeHtml(d.id)}" onclick="openTechModal(this.dataset.id)" class="btn btn-ghost btn-sm"><i class="fa-solid fa-pen"></i> Editar</button>`
-                    : '<span class="c-muted" title="Administradores são gerenciados em Cadastros &amp; Contas; as filas dele são escolhidas em Editar fila.">via Nexus</span>'}</td>
-            </tr>`).join('');
+            const term = ttNorm(($('teams-tech-search') || {}).value).trim();
+            const queueNamesOf = (d) => queuesList.filter((q) => (d.filas || []).includes(q.id)).map((q) => q.nome);
+            const shown = rows.filter((r) => {
+                if (teamsTechStatus !== 'all' && r.st !== teamsTechStatus) return false;
+                return !term || ttNorm([r.d.name, r.d.email, r.d.phone, techRole(r.d).label, queueNamesOf(r.d).join(' ')].join(' ')).includes(term);
+            });
+            $('teams-techs-count').textContent = !rows.length ? '' : (shown.length === rows.length ? '· ' + rows.length + (rows.length === 1 ? ' técnico' : ' técnicos') : '· ' + shown.length + ' de ' + rows.length);
+
+            if (!rows.length) { body.innerHTML = emptyRow(6, 'Nenhum técnico cadastrado. Use "Cadastrar técnico" para incluir o primeiro.'); return; }
+            if (!shown.length) { body.innerHTML = emptyRow(6, 'Nenhum técnico encontrado. Ajuste a busca ou o filtro de status.'); return; }
+
+            const queueChips = (d) => queueNamesOf(d).map((n) => `<span class="chipx">${escapeHtml(n)}</span>`).join('') || '<span class="chipx none">nenhuma fila</span>';
+            body.innerHTML = shown.map(({ d, ld, st }) => {
+                const role = techRole(d);
+                const ui = TECH_STATE_UI[st];
+                const pct = Math.min(100, Math.round((ld.open / TECH_CAPACITY) * 100));
+                const lc = st === 'off' ? 'off' : (ld.open >= TECH_CAPACITY ? 'full' : (ld.open / TECH_CAPACITY >= 0.6 ? 'warn' : 'ok'));
+                const mail = escapeHtml(d.email);
+                const tel = String(d.phone || '').replace(/[^\d+]/g, '');
+                const loadTxt = ld.open + ' de ' + TECH_CAPACITY + ' chamados abertos';
+                return `<tr class="tt-row${st === 'off' ? ' is-off' : ''}">
+                <td class="t-cell c-who"><div class="tt-person"><span class="avatar${d.kind === 'admin' ? ' tech' : ''}" aria-hidden="true">${escapeHtml(techInitials(d.name))}</span><div>
+                    <div class="tt-name" title="${escapeHtml(d.name)}">${escapeHtml(d.name)}</div>
+                    <div class="tt-contact"><a class="tt-c" href="mailto:${mail}" title="Enviar e-mail para ${mail}"><i class="fa-regular fa-envelope" aria-hidden="true"></i><span>${mail}</span></a>${tel ? `<a class="tt-c" href="tel:${escapeHtml(tel)}" title="Ligar para ${escapeHtml(d.phone)}"><i class="fa-solid fa-phone" aria-hidden="true"></i><span>${escapeHtml(d.phone)}</span></a>` : ''}</div>
+                </div></div></td>
+                <td class="nw c-role"><span class="badge ${role.cls}" title="${escapeHtml(role.label)}"><i class="fa-solid ${role.icon}" aria-hidden="true"></i><span class="tt-rl">${escapeHtml(role.label)}</span></span></td>
+                <td class="c-filas"><div class="qc-list">${queueChips(d)}</div></td>
+                <td class="c-load"><div class="load ${lc}" role="meter" aria-label="${loadTxt}" aria-valuemin="0" aria-valuemax="${TECH_CAPACITY}" aria-valuenow="${Math.min(ld.open, TECH_CAPACITY)}" title="${loadTxt}${ld.working ? ' (' + ld.working + ' em atendimento)' : ''}"><div class="load-top"><b>${ld.open}</b><span>de ${TECH_CAPACITY}</span></div><div class="load-bar"><i style="width:${pct}%"></i></div></div></td>
+                <td class="nw c-status"><span class="badge ${ui.badge}" title="${ui.tip}">${ui.dot ? `<span class="${ui.dot}"></span>` : ''}${ui.label}</span></td>
+                <td class="ta-r c-acts"><div class="tt-acts">${d.kind === 'tecnico'
+                    ? `<button type="button" data-id="${escapeHtml(d.id)}" onclick="openTechModal(this.dataset.id)" class="btn btn-ghost btn-sm" aria-label="Editar ${escapeHtml(d.name)}" title="Editar ${escapeHtml(d.name)}"><i class="fa-solid fa-pen"></i><span class="act-lbl"> Editar</span></button>`
+                    : '<span class="c-muted tt-via" title="Via Nexus: administradores são gerenciados em Cadastros e Contas; as filas dele são escolhidas em Editar fila."><i class="fa-solid fa-shield-halved" aria-hidden="true"></i><span class="act-lbl"> via Nexus</span></span>'}
+                    <button type="button" class="btn btn-ghost btn-icon btn-sm tt-more" data-email="${mail}" aria-haspopup="menu" aria-expanded="false" aria-label="Mais ações de ${escapeHtml(d.name)}" onclick="openTechMenu(this)"><i class="fa-solid fa-ellipsis-vertical" aria-hidden="true"></i></button></div></td>
+            </tr>`;
+            }).join('');
+        }
+
+        // Menu de três pontos: aberto fora da tabela (a rolagem horizontal dela cortaria o menu)
+        function closeTechMenu(returnFocus) {
+            const menu = $('tt-menu');
+            const btn = ttMenuBtn;
+            ttMenuBtn = null;
+            if (menu) menu.hidden = true;
+            if (btn) {
+                btn.setAttribute('aria-expanded', 'false');
+                if (returnFocus && document.body.contains(btn)) btn.focus();
+            }
+        }
+
+        function openTechMenu(btn) {
+            const reopen = ttMenuBtn === btn;
+            closeTechMenu(false);
+            if (reopen) return;
+            const d = techDirectory.find((x) => x.email === btn.dataset.email);
+            if (!d) return;
+            let menu = $('tt-menu');
+            if (!menu) {
+                menu = document.createElement('div');
+                menu.id = 'tt-menu';
+                menu.className = 'tt-menu';
+                menu.setAttribute('role', 'menu');
+                menu.hidden = true;
+                menu.addEventListener('click', (e) => {
+                    const b = e.target.closest('button[data-k]');
+                    if (!b || b.getAttribute('aria-disabled') === 'true') return;
+                    const key = b.dataset.k;
+                    const email = menu.dataset.email;
+                    closeTechMenu(key === 'copy');
+                    runTechMenuAction(key, email);
+                });
+                document.body.appendChild(menu);
+            }
+            const items = [['calls', 'fa-solid fa-list-check', 'Ver chamados deste técnico']];
+            if (d.kind === 'tecnico') {
+                items.push(['edit', 'fa-solid fa-pen', 'Editar cadastro']);
+                items.push(['toggle', d.active ? 'fa-solid fa-user-slash' : 'fa-solid fa-user-check', d.active ? 'Desativar técnico' : 'Ativar técnico']);
+            }
+            items.push(['copy', 'fa-regular fa-copy', 'Copiar e-mail']);
+            if (d.kind !== 'tecnico') items.push(['info', 'fa-solid fa-circle-info', 'Cadastro em Cadastros e Contas', true]);
+            menu.dataset.email = d.email;
+            menu.innerHTML = `<div class="mp-head">${escapeHtml(d.name)}</div>` + items.map(([key, icon, label, off]) => `<button type="button" role="menuitem" data-k="${key}"${off ? ' aria-disabled="true"' : ''}><i class="${icon}" aria-hidden="true"></i><span>${escapeHtml(label)}</span></button>`).join('');
+            menu.style.visibility = 'hidden';
+            menu.hidden = false;
+            const r = btn.getBoundingClientRect();
+            const w = menu.offsetWidth, h = menu.offsetHeight;
+            const left = Math.max(8, Math.min(r.right - w, window.innerWidth - w - 8));
+            let top = r.bottom + 6;
+            if (top + h > window.innerHeight - 8) top = Math.max(8, r.top - h - 6);
+            menu.style.left = left + 'px';
+            menu.style.top = top + 'px';
+            menu.style.visibility = '';
+            ttMenuBtn = btn;
+            btn.setAttribute('aria-expanded', 'true');
+            const first = menu.querySelector('button:not([aria-disabled="true"])');
+            if (first) first.focus();
+        }
+
+        function runTechMenuAction(key, email) {
+            const d = techDirectory.find((x) => x.email === email);
+            if (!d) return;
+            if (key === 'calls') goQueueByTech(d.name);
+            else if (key === 'edit' && d.kind === 'tecnico') openTechModal(d.id);
+            else if (key === 'toggle' && d.kind === 'tecnico') toggleTechActive(d);
+            else if (key === 'copy') copyTechEmail(d.email);
+        }
+
+        // Fecha o menu: clique fora, Esc, Tab, rolagem ou redimensionamento; setas e Home/End percorrem as opções
+        document.addEventListener('mousedown', (e) => {
+            if (!ttMenuBtn) return;
+            const menu = $('tt-menu');
+            if ((menu && menu.contains(e.target)) || ttMenuBtn.contains(e.target)) return;
+            closeTechMenu(false);
+        }, true);
+        document.addEventListener('keydown', (e) => {
+            if (!ttMenuBtn) return;
+            if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); closeTechMenu(true); return; }
+            if (e.key === 'Tab') { closeTechMenu(false); return; }
+            const opts = Array.from($('tt-menu').querySelectorAll('button:not([aria-disabled="true"])'));
+            if (!opts.length || !['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(e.key)) return;
+            e.preventDefault();
+            const i = opts.indexOf(document.activeElement);
+            const next = e.key === 'Home' ? 0 : e.key === 'End' ? opts.length - 1 : (e.key === 'ArrowDown' ? (i + 1) % opts.length : (i <= 0 ? opts.length - 1 : i - 1));
+            opts[next].focus();
+        }, true);
+        window.addEventListener('resize', () => closeTechMenu(false));
+        window.addEventListener('scroll', () => closeTechMenu(false), true);
+
+        // Chamados abertos de um técnico: abre a fila já filtrada pelo nome dele (a busca da fila inclui o técnico)
+        function goQueueByTech(name) {
+            navTech('queue');
+            ['tech-filter-urgency', 'tech-filter-type', 'tech-filter-queue'].forEach((id) => { const el = $(id); if (el) el.value = 'ALL'; });
+            $('tech-queue-search').value = name;
+            setQueueQuick('open');
+            showToast('Chamados abertos de ' + name + '. Limpe a busca para ver a fila inteira.', 'info');
+        }
+
+        function copyTechEmail(email) {
+            const done = () => showToast('E-mail copiado: ' + email, 'success');
+            if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(email).then(done, () => { fallbackCopy(email); done(); });
+            else { fallbackCopy(email); done(); }
+        }
+
+        // Ativar/desativar sem abrir a janela de edição: reenvia o cadastro inteiro com o campo "ativo" trocado
+        async function toggleTechActive(d) {
+            const novo = !d.active;
+            const r = await api('POST', '/api/tecnicos', { id: d.id, name: d.name, email: d.email, phone: d.phone, specialty: d.specialty, active: novo, filas: d.filas || [] });
+            if (r.status === 401) { handleAuthExpired(); return; }
+            if (!r.ok) { showToast(r.network ? 'Sem conexão com o servidor. Nada foi alterado.' : ((r.data && r.data.message) || 'Não foi possível alterar o técnico.'), 'warning'); return; }
+            const abertos = openCountForTech(d.name);
+            showToast(novo ? d.name + ' ativado: volta a receber chamados.' : d.name + ' desativado.' + (abertos ? (abertos === 1 ? ' O chamado aberto dele continua atribuído.' : ' Os ' + abertos + ' chamados abertos dele continuam atribuídos.') : ''), 'success');
+            await loadTechnicians();
+            renderTeams();
         }
 
         function goQueueByName(name) {
