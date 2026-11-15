@@ -30,6 +30,7 @@ cpf_registry.json
 cpf_registry.backup.json
 local_ordens_servico.json
 local_tecnicos.json
+local_permissions.json
 local_filas.json
 pending_logins.json
 

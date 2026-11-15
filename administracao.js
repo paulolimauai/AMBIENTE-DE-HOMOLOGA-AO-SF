@@ -170,6 +170,8 @@
       metodo: String(u.subscription_method || ''),
       protocolo: String(u.subscription_payment_id || ''),
       plano: String(u.subscription_plan || ''),
+      // Permissões delegadas (ids) que o administrador marcou para esta conta; o servidor é quem as confere
+      permissoes: Array.isArray(u.permissions) ? u.permissions.map(String) : [],
       ass: ass,
       uso: uso || null
     };
@@ -595,6 +597,19 @@
   function botaoAcao(a, email, ic, rotulo, dica, classe) {
     return '<button type="button" class="adm-ac ' + (classe || '') + '" data-adm-a="' + a + '" data-email="' + esc(email) + '"' + (dica ? ' title="' + esc(dica) + '"' : '') + '>' + IC[ic] + '<span>' + esc(rotulo) + '</span></button>';
   }
+  // Permissões delegadas: caixas marcáveis (o catálogo vem do servidor). A conta marcada passa a ver "Liberações" no menu.
+  function permissoesHTML(r, ctx) {
+    var P = ctx.permissoes || {};
+    var cat = Array.isArray(P.catalogo) ? P.catalogo : [];
+    if (r.admin) return '<p class="adm-nota">Administrador já tem todas as permissões.</p>';
+    if (!cat.length) return '<p class="adm-nd">' + (P.erro ? esc(P.erro) : 'Carregando as permissões…') + '</p>';
+    return '<div class="adm-perms">' + cat.map(function (p) {
+      var marcada = r.permissoes.indexOf(p.id) >= 0;
+      return '<label class="adm-perm"><input type="checkbox" data-adm-a="perm" data-perm="' + esc(p.id) + '" data-email="' + esc(r.email) + '"' + (marcada ? ' checked' : '') + '>' +
+        '<span><b>' + esc(p.label) + '</b><small>' + esc(p.desc) + '</small></span></label>';
+    }).join('') + '</div>' +
+      '<p class="adm-nota">Vale para esta conta sem torná-la administradora. Ela passa a ver a tela “Liberações” no menu; cada ação é conferida de novo pelo servidor e fica registrada na auditoria.</p>';
+  }
   function detalheHTML(r, m, ctx) {
     var eu = r.email === m.eu;
     var idx = m.ordenados.findIndex(function (x) { return x.email === r.email; });
@@ -654,6 +669,7 @@
           ? '<div class="adm-uso"><div><b>' + u.mov + '</b><span>movimentações</span></div><div><b>' + u.contas + '</b><span>contas e cartões</span></div><div><b>' + u.orc + '</b><span>orçamentos</span></div><div><b>' + u.metas + '</b><span>metas</span></div></div>' +
             '<p class="adm-nota">' + (u.ultimaMov ? 'Última movimentação em ' + esc(dataBR(u.ultimaMov)) + '.' : 'Ainda não há movimentações.') + '</p>'
           : '<p class="adm-nd">Carregando o uso desta conta…</p>') + '</section>' +
+        (eu ? '' : '<section><h4>Permissões</h4>' + permissoesHTML(r, ctx) + '</section>') +
         '<section><h4>Ações</h4>' + acoes + '</section>' +
         '<section><h4>Eventos recentes</h4>' + ev + '</section>' +
       '</div></div>';
@@ -876,6 +892,17 @@
         break;
       }
       case 'pagar': if (A.liberarPagamento) await A.liberarPagamento(r); break;
+      case 'perm': {
+        // Salva TODAS as caixas marcadas desta conta de uma vez; se o servidor recusar, as caixas voltam ao que está gravado
+        var caixas = Array.prototype.slice.call(root.document.querySelectorAll('#admGaveta input[data-perm]'));
+        var marcadas = caixas.filter(function (c) { return c.checked && String(c.getAttribute('data-email')).toLowerCase() === email; }).map(function (c) { return c.getAttribute('data-perm'); });
+        caixas.forEach(function (c) { c.disabled = true; });
+        try { if (A.salvarPermissoes) await A.salvarPermissoes(email, marcadas); } finally {
+          var atual = registro(email).r;
+          caixas.forEach(function (c) { c.disabled = false; if (atual) c.checked = atual.permissoes.indexOf(c.getAttribute('data-perm')) >= 0; });
+        }
+        break;
+      }
       case 'revogar':
         if (!await dialogo({ titulo: 'Exigir novo pagamento de ' + nome + '?', texto: 'O acesso é bloqueado até um novo pagamento ser confirmado.', ok: 'Exigir pagamento', perigo: true })) return;
         if (A.bloquearPagamento) await A.bloquearPagamento(email);
@@ -945,7 +972,8 @@
       var a = alvo.closest('[data-adm-a]');
       if (a && (a.closest('#admGaveta') || a.closest('#admLista'))) {
         if (a.tagName === 'A') return;
-        ev.preventDefault();
+        // Caixa de permissão: o clique precisa marcar/desmarcar (preventDefault desfaria a marca)
+        if (!(a.tagName === 'INPUT' && a.type === 'checkbox')) ev.preventDefault();
         if (a.disabled) return;
         executar(a.getAttribute('data-adm-a'), String(a.getAttribute('data-email') || '').toLowerCase());
         return;

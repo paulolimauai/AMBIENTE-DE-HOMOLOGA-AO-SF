@@ -595,6 +595,8 @@ function sanitizeUser(user) {
   if (!safeUser.name || /^(admin|administrador)$/i.test(String(safeUser.name).trim())) {
     safeUser.name = 'Paulo Lima';
   }
+  // Permissões delegadas vêm SEMPRE do arquivo próprio (nunca de um campo do cadastro, que o cliente poderia forjar ao salvar a lista)
+  safeUser.permissions = getUserPermissions(user);
   return safeUser;
 }
 
@@ -629,6 +631,64 @@ function sanitizeUserWithAvatar(user) {
   const avatar = getStoredAvatar(safe.email);
   if (avatar) safe.avatar = avatar; else delete safe.avatar;
   return safe;
+}
+
+// Permissões delegadas: o administrador marca, conta a conta, o que um usuário comum também pode fazer (ex.: liberar assinatura manual).
+// Cada permissão é só um id; quem a confere é o SERVIDOR em cada rota (o cliente apenas esconde ou mostra botões). Ficam em arquivo próprio,
+// como a foto, porque a tabela usuarios não tem essa coluna. Administrador tem todas, sem precisar de registro.
+// Para criar uma permissão nova: uma linha aqui, a checagem na rota (userHasPermission) e o cartão/botão na tela.
+const LOCAL_PERMISSIONS_PATH = path.join(RUNTIME_DATA_DIR, 'local_permissions.json');
+const NEXUS_PERMISSIONS = [
+  { id: 'assinatura.liberar', label: 'Liberar assinatura manual', desc: 'Conceder tempo ou acesso vitalício, confirmar ou bloquear pagamento e dar novo teste grátis a contas de usuário.' },
+  { id: 'contas.bloquear', label: 'Ativar e bloquear contas', desc: 'Bloquear o login de uma conta de usuário ou ativá-la de novo.' },
+  { id: 'logs.ver', label: 'Ver auditoria e logs', desc: 'Consultar a trilha de eventos do sistema (somente leitura).' }
+];
+const NEXUS_PERMISSION_IDS = NEXUS_PERMISSIONS.map(p => p.id);
+function readPermissionStore() {
+  try {
+    const cached = jsonCache.read(LOCAL_PERMISSIONS_PATH);
+    return cached.exists && cached.value && typeof cached.value === 'object' && !Array.isArray(cached.value) ? cached.value : {};
+  } catch (e) {
+    return {};
+  }
+}
+function normalizePermissionList(list) {
+  const wanted = new Set((Array.isArray(list) ? list : []).map(v => String(v || '').trim()));
+  return NEXUS_PERMISSION_IDS.filter(id => wanted.has(id));
+}
+function getStoredPermissions(email) {
+  return normalizePermissionList(readPermissionStore()[String(email || '').toLowerCase().trim()]);
+}
+function setStoredPermissions(email, list) {
+  const key = String(email || '').toLowerCase().trim();
+  if (!key) return [];
+  const store = { ...readPermissionStore() };
+  const clean = normalizePermissionList(list);
+  if (clean.length) store[key] = clean; else delete store[key];
+  writeJsonFile(LOCAL_PERMISSIONS_PATH, JSON.stringify(store, null, 2));
+  return clean;
+}
+function getUserPermissions(user) {
+  if (!user) return [];
+  return user.role === 'Administrador' ? NEXUS_PERMISSION_IDS.slice() : getStoredPermissions(user.email);
+}
+function userHasPermission(user, permissionId) {
+  return Boolean(user) && (user.role === 'Administrador' || getStoredPermissions(user.email).includes(permissionId));
+}
+// Quem está logado e pode usar a permissão (administrador ou usuário com ela marcada); null se não pode
+function getAuthenticatedWithPermission(req, permissionId) {
+  const user = getAuthenticatedUser(req);
+  return user && userHasPermission(user, permissionId) ? user : null;
+}
+// Quem tem só a permissão delegada (não é administrador) age apenas em contas de usuário comum e nunca na própria conta
+// (senão liberaria o próprio acesso). Devolve a mensagem de recusa, ou '' se pode.
+function delegateTargetDenial(actor, targetUser, targetEmail) {
+  if (!actor || actor.role === 'Administrador') return '';
+  const alvo = String(targetEmail || (targetUser && targetUser.email) || '').toLowerCase().trim();
+  if (alvo && alvo === String(actor.email || '').toLowerCase().trim()) return 'Você não pode alterar a sua própria conta.';
+  if (!targetUser) return 'Usuário não encontrado.';
+  if (targetUser.role === 'Administrador') return 'Contas de administrador só podem ser alteradas por um administrador.';
+  return '';
 }
 
 function googleOAuthConfig(req) {
@@ -2372,6 +2432,21 @@ html:not(.is-admin) .menu-section-ferramentas,
 html:not(.is-admin) .menu-section-minha-conta,
 html:not(.is-admin) #mobileBottomBar .mobile-btn-user,
 html:not(.is-admin) #sidebarNovaTransacaoBtn {
+  display: flex !important;
+}
+
+/* Liberações (permissões delegadas): o item reaproveita o visual do menu do usuário (classe menu-btn-user), mas só aparece quando o JS liga
+   html.is-delegate (conta de usuário com alguma permissão). Esta regra vem DEPOIS da anterior, com a mesma força, para vencê-la. */
+html:not(.is-delegate) #menu .menu-btn-delegate,
+html:not(.is-delegate) #mobileDrawerMenu .menu-btn-delegate,
+html:not(.is-delegate) .menu-section-liberacoes,
+html.is-admin .menu-btn-delegate,
+html.is-admin .menu-section-liberacoes {
+  display: none !important;
+}
+html.is-delegate:not(.is-admin) #menu .menu-btn-delegate,
+html.is-delegate:not(.is-admin) #mobileDrawerMenu .menu-btn-delegate,
+html.is-delegate:not(.is-admin) .menu-section-liberacoes {
   display: flex !important;
 }
 
@@ -14905,7 +14980,17 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
         <span class="label">Minha Conta</span>
       </button>
-      
+
+      <!-- Liberações: só aparece para conta de usuário a quem o administrador deu permissão (assinatura manual, bloquear contas, ver logs) -->
+      <div class="menu-section-header menu-section-liberacoes" style="display:none;">
+        <span class="menu-section-title">Liberações</span>
+        <span class="menu-section-line"></span>
+      </div>
+      <button data-page="liberacoes" id="menuLiberacoesBtn" class="menu-btn-user menu-btn-delegate" style="display:none;" title="Ações que o administrador liberou para a sua conta">
+        <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg></span>
+        <span class="label">Liberações</span>
+      </button>
+
       <!-- Seção Administrativa Executiva (Exclusiva para Administrador) -->
       <div class="menu-section-header menu-section-admin" style="display:none;">
         <span class="menu-section-title">Painel Administrativo</span>
@@ -15114,7 +15199,11 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
       <!-- Seção: Minha Conta -->
       <div class="mobile-drawer-section-title menu-section-minha-conta">Preferências</div>
       <button data-page="config" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><span class="label">Minha Conta</span></button>
-      
+
+      <!-- Liberações (só para conta de usuário com permissão delegada pelo administrador) -->
+      <div class="mobile-drawer-section-title menu-section-liberacoes" style="display:none;">Liberações</div>
+      <button data-page="liberacoes" id="mobileDrawerLiberacoesBtn" class="menu-btn-user menu-btn-delegate" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg></span><span class="label">Liberações</span></button>
+
       <!-- Seção Administrativa Móvel (Exclusiva Administrador) -->
       <div class="mobile-drawer-section-title menu-section-admin" style="display:none;">Painel Administrativo</div>
       <button data-page="usuarios" id="mobileDrawerUsuariosBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span class="label">Cadastros & Contas</span></button>
@@ -17022,6 +17111,7 @@ async function syncUsersWithServer() {
         });
         saveToStorage('nexus_users', registeredUsers);
         if (window.carregarUsuariosLogonServer) window.carregarUsuariosLogonServer();
+        try { nexusRefreshOwnPermissions(); } catch(permErr) {}
         return;
       }
     }
@@ -19289,8 +19379,8 @@ window.processSubscriptionPayment = async function(method, isAutoTriggered = fal
 };
 
 window.adminConfirmUserPayment = async function(targetEmail, plan = 'mensal', method = '', receiptCode = '', osId = null) {
-  if (!currentUser || currentUser.role !== 'Administrador') {
-    if (typeof showToast === 'function') showToast('Apenas administradores podem confirmar e liberar pagamentos');
+  if (!nexusTemPermissao(currentUser, 'assinatura.liberar')) {
+    if (typeof showToast === 'function') showToast('Apenas administradores, ou quem recebeu a permissão de liberar assinatura, podem confirmar e liberar pagamentos');
     return;
   }
   const email = (targetEmail || (currentUser ? currentUser.email : '')).trim();
@@ -19366,8 +19456,8 @@ window.abrirSegundaViaBoletoParaUsuario = function(email, name, cpf, phone) {
 };
 
 window.adminRevokeUserPayment = async function(targetEmail) {
-  if (!currentUser || currentUser.role !== 'Administrador') {
-    if (typeof showToast === 'function') showToast('Apenas administradores podem bloquear acesso');
+  if (!nexusTemPermissao(currentUser, 'assinatura.liberar')) {
+    if (typeof showToast === 'function') showToast('Apenas administradores, ou quem recebeu a permissão de liberar assinatura, podem bloquear acesso');
     return;
   }
   const email = targetEmail || '';
@@ -19441,8 +19531,8 @@ setInterval(() => {
 
 // Funções Executivas de Concessão de Tempo Gratuito pelo Administrador
 window.adminGrantTimeQuick = async function(targetEmail, durationMinutes) {
-  if (!currentUser || currentUser.role !== 'Administrador') {
-    if (typeof showToast === 'function') showToast('Apenas administradores podem conceder tempo');
+  if (!nexusTemPermissao(currentUser, 'assinatura.liberar')) {
+    if (typeof showToast === 'function') showToast('Apenas administradores, ou quem recebeu a permissão de liberar assinatura, podem conceder tempo');
     return;
   }
   const email = targetEmail || (currentUser ? currentUser.email : '');
@@ -19477,8 +19567,8 @@ window.adminGrantTimeQuick = async function(targetEmail, durationMinutes) {
 };
 
 window.adminGrantTimeLifetime = async function(targetEmail) {
-  if (!currentUser || currentUser.role !== 'Administrador') {
-    if (typeof showToast === 'function') showToast('Apenas administradores podem conceder tempo');
+  if (!nexusTemPermissao(currentUser, 'assinatura.liberar')) {
+    if (typeof showToast === 'function') showToast('Apenas administradores, ou quem recebeu a permissão de liberar assinatura, podem conceder tempo');
     return;
   }
   const email = targetEmail || (currentUser ? currentUser.email : '');
@@ -20712,6 +20802,26 @@ function pd(day){ return pdCustom(currentPeriod.year, currentPeriod.month, day);
 const NEXUS_ADMIN_PAGES = ['usuarios', 'pagamentos', 'logs'];
 const NEXUS_USER_PAGES = ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'config'];
 function nexusIsAdminUser(u) { return !!(u && u.role === 'Administrador'); }
+// Permissões delegadas: o administrador marca, conta a conta, ações extras para um usuário comum (lista "permissions" vinda do servidor).
+// Aqui só se decide o que MOSTRAR; quem realmente autoriza cada ação é o servidor.
+const NEXUS_DELEGATE_PAGES = ['liberacoes'];
+function nexusTemPermissao(u, id) { return !!u && (u.role === 'Administrador' || (Array.isArray(u.permissions) && u.permissions.indexOf(id) >= 0)); }
+function nexusTemLiberacoes(u) {
+  return !!u && u.role !== 'Administrador' && (nexusTemPermissao(u, 'assinatura.liberar') || nexusTemPermissao(u, 'contas.bloquear') || nexusTemPermissao(u, 'logs.ver'));
+}
+function nexusPagesFor(u) { return nexusIsAdminUser(u) ? NEXUS_ADMIN_PAGES : (nexusTemLiberacoes(u) ? NEXUS_USER_PAGES.concat(NEXUS_DELEGATE_PAGES) : NEXUS_USER_PAGES); }
+// Quem está logado muda a lista de permissões no servidor (o administrador marcou ou tirou algo): atualiza menu e tela sem novo login
+function nexusRefreshOwnPermissions() {
+  if (!currentUser || isViewingOtherUser || nexusIsAdminUser(currentUser)) return;
+  const eu = String(currentUser.email || '').toLowerCase().trim();
+  const meu = (Array.isArray(registeredUsers) ? registeredUsers : []).find(function(u){ return u && String(u.email || '').toLowerCase().trim() === eu; });
+  if (!meu || !Array.isArray(meu.permissions)) return;
+  if (JSON.stringify(currentUser.permissions || []) === JSON.stringify(meu.permissions)) return;
+  currentUser.permissions = meu.permissions.slice();
+  try { saveToStorage('nexus_cached_user', currentUser); } catch(e) {}
+  try { updateAdminMenuVisibility(true); } catch(e) {}
+  try { render(); } catch(e) {}
+}
 // Pagamento informado e ainda sem confirmação do financeiro. Com o teste esgotado o acesso fica "pending_payment"; mas quem informa o Pix
 // ainda dentro do teste grátis (o caso comum) continua "trial" no acesso e só ganha o protocolo NEXUS-SUB-: sem isto nunca aparecia para o admin.
 function nexusPagamentoAguardando(u) {
@@ -20719,7 +20829,7 @@ function nexusPagamentoAguardando(u) {
     (u.subscription_status === 'trial' && String(u.subscription_payment_id || '').indexOf('NEXUS-SUB-') === 0));
 }
 function nexusResolvePage(page, isAdmin) {
-  const allowed = isAdmin ? NEXUS_ADMIN_PAGES : NEXUS_USER_PAGES;
+  const allowed = isAdmin ? NEXUS_ADMIN_PAGES : nexusPagesFor(currentUser);
   return allowed.includes(page) ? page : allowed[0];
 }
 
@@ -20730,8 +20840,7 @@ let currentPage = (function getInitialPage() {
   try {
     const cu = localStorage.getItem('nexus_cached_user');
     const u = cu ? JSON.parse(cu) : null;
-    const isAdmin = nexusIsAdminUser(u);
-    const allowed = isAdmin ? NEXUS_ADMIN_PAGES : NEXUS_USER_PAGES;
+    const allowed = nexusPagesFor(u);
     const hashPage = window.location.hash ? window.location.hash.replace('#', '') : null;
     const savedPage = localStorage.getItem('nexus_current_page');
 
@@ -21625,6 +21734,10 @@ function render(){
         }).catch(() => {});
       }
     }
+    else if(currentPage==='liberacoes') {
+      newHTML = pageLiberacoes();
+      libGarantirDados(false);
+    }
     else if(currentPage==='dashboard') newHTML = pageDashboard();
     else if(currentPage==='transacoes') newHTML = pageTransacoes();
     else if(currentPage==='cartoes') newHTML = pageContas();
@@ -21728,7 +21841,7 @@ function updateAdminSidebarBadges(){
 function updateAdminMenuVisibility(force = false){
   const isAdmin = nexusIsAdminUser(currentUser);
   updateAdminSidebarBadges();
-  const currentKey = String(isAdmin);
+  const currentKey = String(isAdmin) + '|' + (nexusTemLiberacoes(currentUser) ? '1' : '0');
   if (!force && _lastAdminVisibilityKey === currentKey) return;
   _lastAdminVisibilityKey = currentKey;
 
@@ -21769,6 +21882,16 @@ function updateAdminMenuVisibility(force = false){
     document.querySelectorAll('button[data-page="' + pg + '"]').forEach(function(btn) {
       btn.style.display = isAdmin ? 'flex' : 'none';
     });
+  });
+
+  // Liberações: só para conta de usuário com permissão delegada (assinatura manual, bloquear contas ou ver logs)
+  const isDelegate = !isAdmin && nexusTemLiberacoes(currentUser);
+  document.documentElement.classList.toggle('is-delegate', isDelegate);
+  document.querySelectorAll('.menu-section-liberacoes').forEach(function(el) {
+    el.style.display = isDelegate ? 'flex' : 'none';
+  });
+  document.querySelectorAll('button[data-page="liberacoes"]').forEach(function(btn) {
+    btn.style.display = isDelegate ? 'flex' : 'none';
   });
 
   // Barra inferior mobile: alternar abas de usuário e administrador
@@ -25017,12 +25140,41 @@ async function admExcluirVarios(emails){
   return true;
 }
 
+// Permissões delegadas: o catálogo vem do servidor (fonte única) e a gravação sempre passa por ele, que recusa o que não pode
+let admPermCatalogo = null, admPermErro = '', admPermPedido = false;
+async function admCarregarPermissoes(){
+  try {
+    const res = await fetch(window.location.origin + '/api/admin/permissions');
+    const d = await res.json().catch(function(){ return {}; });
+    if(res.ok && d && Array.isArray(d.catalog)){ admPermCatalogo = d.catalog; admPermErro = ''; }
+    else admPermErro = 'Não foi possível carregar as permissões.';
+  } catch(e){ admPermErro = 'Não foi possível carregar as permissões.'; }
+  if(window.NexusAdm) NexusAdm.atualizarTudo();
+}
+async function admSalvarPermissoes(email, lista){
+  if(!admEhAdmin()) return false;
+  const alvo = admMinusculo(email);
+  const u = registeredUsers.find(function(x){ return x && admMinusculo(x.email) === alvo; });
+  if(!u) return false;
+  try {
+    const res = await fetch(window.location.origin + '/api/admin/permissions', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: alvo, permissions: lista }) });
+    const d = await res.json().catch(function(){ return {}; });
+    if(!res.ok || !d || !d.success){ showToast((d && d.error) || 'O servidor não aceitou as permissões.'); return false; }
+    u.permissions = Array.isArray(d.permissions) ? d.permissions : [];
+    saveToStorage('nexus_users', registeredUsers);
+    showToast(u.permissions.length ? 'Permissões salvas para ' + u.name + '.' : 'Permissões removidas de ' + u.name + '.');
+    return true;
+  } catch(e){ showToast('Falha na comunicação com o servidor'); return false; }
+}
+
 function admContexto(){
   if(!window.__admLogsPedido){
     window.__admLogsPedido = true;
     admCarregarEventos().then(function(){ if(window.NexusAdm) NexusAdm.atualizarAbas(); });
   }
+  if(!admPermPedido && admEhAdmin()){ admPermPedido = true; admCarregarPermissoes(); }
   return {
+    permissoes: { catalogo: admPermCatalogo, erro: admPermErro },
     agora: Date.now(),
     usuarios: Array.isArray(registeredUsers) ? registeredUsers : [],
     eu: currentUser ? { email: currentUser.email, nome: currentUser.name } : null,
@@ -25046,7 +25198,8 @@ function admContexto(){
       mudarPerfil: admMudarPerfil,
       redefinirSenha: admRedefinirSenha,
       definirAtivos: admDefinirAtivos,
-      excluirVarios: admExcluirVarios
+      excluirVarios: admExcluirVarios,
+      salvarPermissoes: admSalvarPermissoes
     }
   };
 }
@@ -25698,6 +25851,211 @@ function pageLogsCorpo(){
     </div>
   </div>
   \`;
+}
+
+/* ==================== Liberações: ações que o administrador delegou a uma conta de usuário ====================
+   A tela mostra só o que a conta recebeu (assinatura manual, ativar/bloquear contas, ver logs). Quem autoriza de verdade é o servidor
+   em cada rota; aqui se escolhe o que exibir. Sem crases nem barras invertidas: este código mora dentro de um template literal. */
+const LIB = { contas: null, can: { assinatura: false, contas: false }, carregadoEm: 0, carregando: false, erro: '', seq: 0 };
+const LIB_ROTULOS = { 'assinatura.liberar': 'Liberar assinatura manual', 'contas.bloquear': 'Ativar e bloquear contas', 'logs.ver': 'Ver auditoria e logs' };
+
+function libDataBR(iso){
+  if (!iso) return '';
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return '';
+  return d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+}
+// Situação de acesso (o servidor já calculou pela regra única: teste de 1 dia, assinatura, vitalício, expirado)
+function libSituacao(c){
+  const a = (c && c.access) || {};
+  if (a.is_subscribed && a.plan === 'vitalicio') return { chave: 'vitalicio', cls: 'ok', texto: 'Vitalício' };
+  if (a.is_subscribed) return { chave: 'ativo', cls: 'ok', texto: (a.plan === 'cortesia_admin' ? 'Liberada até ' : 'Assinatura ativa até ') + libDataBR(a.expires_at) };
+  if (c && (c.payment_pending || a.status === 'pending_payment')) return { chave: 'pendente', cls: 'info', texto: 'Aguardando pagamento' };
+  if (a.status === 'trial') {
+    const h = Math.max(1, Math.round((a.remaining_seconds || 0) / 3600));
+    return { chave: 'teste', cls: 'warn', texto: 'Em teste (resta cerca de ' + h + ' h)' };
+  }
+  return { chave: 'expirado', cls: 'bad', texto: 'Sem acesso (expirado)' };
+}
+function libFiltrados(){
+  const lista = Array.isArray(LIB.contas) ? LIB.contas : [];
+  const buscaEl = document.getElementById('libBusca');
+  const filtroEl = document.getElementById('libFiltro');
+  const q = (buscaEl ? buscaEl.value : '').toLowerCase().trim();
+  const f = filtroEl ? filtroEl.value : '';
+  const peso = { pendente: 0, expirado: 1, teste: 2, ativo: 3, vitalicio: 4 };
+  return lista.filter(function(c){
+    const s = libSituacao(c);
+    if (q && ((c.name || '') + ' ' + c.email).toLowerCase().indexOf(q) < 0) return false;
+    if (f === 'bloqueadas') return !c.active;
+    if (f) return s.chave === f;
+    return true;
+  }).sort(function(a, b){
+    const d = peso[libSituacao(a).chave] - peso[libSituacao(b).chave];
+    return d !== 0 ? d : String(a.name || a.email).localeCompare(String(b.name || b.email), 'pt-BR');
+  });
+}
+function libLinhaHTML(c){
+  const s = libSituacao(c);
+  const em = txEsc(c.email);
+  const nome = txEsc(c.name || c.email);
+  let acoes = '';
+  if (LIB.can.assinatura) {
+    acoes += '<div class="lib-grupo"><select class="lib-sel" aria-label="Tempo a liberar para ' + nome + '">' +
+      '<option value="60">1 hora</option><option value="1440" selected>24 horas</option><option value="10080">7 dias</option>' +
+      '<option value="43200">30 dias</option><option value="525600">1 ano</option><option value="vitalicio">Vitalício</option></select>' +
+      '<button type="button" class="lib-btn lib-ok" data-lib="liberar" data-email="' + em + '">Liberar tempo</button></div>';
+    if (s.chave !== 'ativo' && s.chave !== 'vitalicio') acoes += '<button type="button" class="lib-btn lib-ok" data-lib="pagar" data-email="' + em + '">Confirmar pagamento</button>';
+    if (s.chave === 'expirado' || s.chave === 'pendente') acoes += '<button type="button" class="lib-btn" data-lib="novo-teste" data-email="' + em + '">Novo teste grátis</button>';
+    if (s.chave === 'ativo' || s.chave === 'vitalicio' || s.chave === 'teste') acoes += '<button type="button" class="lib-btn lib-ruim" data-lib="exigir-pagamento" data-email="' + em + '">Exigir pagamento</button>';
+  }
+  if (LIB.can.contas) {
+    acoes += c.active
+      ? '<button type="button" class="lib-btn lib-ruim" data-lib="bloquear-conta" data-email="' + em + '">Bloquear conta</button>'
+      : '<button type="button" class="lib-btn lib-ok" data-lib="ativar-conta" data-email="' + em + '">Ativar conta</button>';
+  }
+  return '<article class="lib-linha' + (c.active ? '' : ' lib-off') + '" data-lib-conta="' + em + '">' +
+    '<div class="lib-quem"><strong>' + nome + '</strong><small>' + em + '</small>' +
+      '<div class="lib-pills"><span class="lib-pill lib-' + s.cls + '">' + txEsc(s.texto) + '</span>' +
+      (c.active ? '' : '<span class="lib-pill lib-bad">Conta bloqueada</span>') + '</div>' +
+      '<small>' + (c.last_login ? 'Último acesso: ' + txEsc(libDataBR(c.last_login)) : 'Ainda não entrou') + '</small></div>' +
+    '<div class="lib-acoes">' + acoes + '</div></article>';
+}
+function libListaHTML(){
+  if (!Array.isArray(LIB.contas)) return '<div class="lib-vazio">' + (LIB.erro ? txEsc(LIB.erro) : 'Carregando contas...') + '</div>';
+  const lista = libFiltrados();
+  if (!lista.length) return '<div class="lib-vazio">Nenhuma conta encontrada com esse filtro.</div>';
+  return lista.map(libLinhaHTML).join('');
+}
+function libAtualizarLista(){
+  const el = document.getElementById('libLista');
+  if (el) el.innerHTML = libListaHTML();
+  const n = document.getElementById('libTotal');
+  if (n) n.textContent = libFiltrados().length + ' conta(s)';
+}
+function libLogsHTML(lista){ return renderLogsTable(lista); }
+function libAtualizarLogs(){
+  const wrap = document.getElementById('libLogs');
+  if (wrap) wrap.innerHTML = libLogsHTML(libLogsFiltrados());
+}
+function libLogsFiltrados(){
+  const buscaEl = document.getElementById('libLogBusca');
+  const q = (buscaEl ? buscaEl.value : '').toLowerCase().trim();
+  return (Array.isArray(systemLogs) ? systemLogs : []).filter(function(l){
+    return !q || ((l.user_name || '') + ' ' + (l.user_email || '') + ' ' + (l.action || '') + ' ' + (l.entity || '') + ' ' + (l.details || '')).toLowerCase().indexOf(q) >= 0;
+  });
+}
+
+async function libBuscarContas(){
+  const meu = ++LIB.seq;
+  const res = await fetch(window.location.origin + '/api/delegate/accounts');
+  const d = await res.json().catch(function(){ return {}; });
+  if (meu !== LIB.seq) return;
+  if (!res.ok || !d || !d.success) { LIB.erro = (d && d.error) || 'Não foi possível carregar as contas.'; return; }
+  LIB.contas = Array.isArray(d.accounts) ? d.accounts : [];
+  if (d.can) LIB.can = { assinatura: !!d.can.assinatura, contas: !!d.can.contas };
+}
+async function libGarantirDados(forcar){
+  if (!nexusTemLiberacoes(currentUser)) return;
+  if (!forcar && (LIB.carregando || (LIB.carregadoEm && Date.now() - LIB.carregadoEm < 20000))) return;
+  LIB.carregando = true;
+  LIB.erro = '';
+  try {
+    const tarefas = [];
+    if (nexusTemPermissao(currentUser, 'assinatura.liberar') || nexusTemPermissao(currentUser, 'contas.bloquear')) tarefas.push(libBuscarContas());
+    if (nexusTemPermissao(currentUser, 'logs.ver')) tarefas.push(loadSystemLogs());
+    await Promise.all(tarefas);
+    LIB.carregadoEm = Date.now();
+  } catch(e) { LIB.erro = 'Não foi possível carregar agora.'; }
+  LIB.carregando = false;
+  if (currentPage === 'liberacoes') { libAtualizarLista(); libAtualizarLogs(); }
+}
+
+async function libDefinirAtivo(email, ativo){
+  try {
+    const res = await fetch(window.location.origin + '/api/delegate/account-active', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email, active: ativo }) });
+    const d = await res.json().catch(function(){ return {}; });
+    showToast(res.ok && d && d.success ? (ativo ? 'Conta ativada: o login volta a funcionar.' : 'Conta bloqueada: o login foi impedido.') : ((d && d.error) || 'Não foi possível alterar a conta.'));
+  } catch(e) { showToast('Falha na comunicação com o servidor'); }
+}
+async function libExecutar(acao, email, valor){
+  if (acao === 'liberar') {
+    if (valor === 'vitalicio') await window.adminGrantTimeLifetime(email);
+    else await window.adminGrantTimeQuick(email, parseInt(valor, 10) || 60);
+  }
+  else if (acao === 'pagar') await window.adminConfirmUserPayment(email, 'mensal', 'pix');
+  else if (acao === 'exigir-pagamento') await window.adminRevokeUserPayment(email);
+  else if (acao === 'novo-teste') await window.resetTrialForTesting(email);
+  else if (acao === 'bloquear-conta') await libDefinirAtivo(email, false);
+  else if (acao === 'ativar-conta') await libDefinirAtivo(email, true);
+  await libGarantirDados(true);
+}
+function libAcao(btn){
+  const acao = btn.getAttribute('data-lib');
+  const email = btn.getAttribute('data-email') || '';
+  if (!acao || !email || btn.disabled) return;
+  const conta = (Array.isArray(LIB.contas) ? LIB.contas : []).find(function(c){ return c.email === email; });
+  const nome = (conta && conta.name) || email;
+  const sel = btn.parentNode ? btn.parentNode.querySelector('.lib-sel') : null;
+  const valor = sel ? sel.value : '';
+  const rodar = function(){
+    btn.disabled = true;
+    libExecutar(acao, email, valor).catch(function(){ showToast('Não foi possível concluir a ação.'); }).then(function(){ btn.disabled = false; });
+  };
+  // Ações difíceis de desfazer pedem confirmação
+  if (acao === 'liberar' && valor === 'vitalicio') return showCustomAlert('Liberar acesso vitalício?', nome + ' passa a ter acesso sem prazo, sem cobrança.', 'error', rodar);
+  if (acao === 'exigir-pagamento') return showCustomAlert('Exigir pagamento?', nome + ' perde o acesso agora e só volta depois de um pagamento confirmado.', 'error', rodar);
+  if (acao === 'bloquear-conta') return showCustomAlert('Bloquear esta conta?', nome + ' não conseguirá mais entrar no sistema até a conta ser ativada de novo.', 'error', rodar);
+  rodar();
+}
+document.addEventListener('click', function(ev){
+  const b = ev.target && ev.target.closest ? ev.target.closest('[data-lib]') : null;
+  if (b && document.getElementById('libLista') && document.getElementById('libLista').contains(b)) libAcao(b);
+});
+
+function pageLiberacoes(){
+  if (!nexusTemLiberacoes(currentUser) || isViewingOtherUser) {
+    return '<div class="placeholder"><div class="big">🔒</div><h3>Acesso restrito</h3><p>Esta área aparece só para contas a quem o administrador liberou alguma permissão.</p></div>';
+  }
+  const pAss = nexusTemPermissao(currentUser, 'assinatura.liberar');
+  const pCon = nexusTemPermissao(currentUser, 'contas.bloquear');
+  const pLog = nexusTemPermissao(currentUser, 'logs.ver');
+  LIB.can = { assinatura: pAss, contas: pCon };
+  const chips = (currentUser.permissions || []).map(function(id){ return '<span class="lib-chip">' + txEsc(LIB_ROTULOS[id] || id) + '</span>'; }).join('');
+  let html = '<style>' +
+    '.lib-wrap{display:grid;gap:16px}.lib-chips{display:flex;flex-wrap:wrap;gap:8px}' +
+    '.lib-chip{padding:5px 12px;border-radius:999px;font-size:12px;font-weight:700;background:rgba(52,211,153,.12);color:#6ee7b7;border:1px solid rgba(52,211,153,.32)}' +
+    '.lib-barra{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}.lib-barra input,.lib-barra select{height:38px;border-radius:10px;padding:0 12px;font-size:13px}' +
+    /* O app força width:100% !important em todo campo dentro de #pageContent: estas regras têm mais especificidade para a busca e o filtro ficarem lado a lado */
+    '#pageContent .lib-barra input.lib-campo{flex:1 1 240px !important;width:auto !important;min-width:0 !important}' +
+    '#pageContent .lib-barra select.lib-campo{flex:0 0 auto !important;width:auto !important;min-width:230px !important}' +
+    '#pageContent .lib-grupo select.lib-sel{flex:0 0 auto !important;width:auto !important;min-width:112px !important}' +
+    '.lib-lista{display:grid;gap:10px}.lib-linha{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:12px;padding:12px 14px;border-radius:14px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04)}' +
+    '.lib-off{border-color:rgba(248,113,113,.4)}.lib-quem strong{display:block;font-size:14px;color:#fff;overflow-wrap:anywhere}.lib-quem small{display:block;color:#94a3b8;font-size:12px;margin-top:3px;overflow-wrap:anywhere}' +
+    '.lib-pills{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}.lib-pill{padding:3px 10px;border-radius:999px;font-size:11.5px;font-weight:800;border:1px solid transparent}' +
+    '.lib-pill.lib-ok{background:rgba(52,211,153,.14);color:#6ee7b7;border-color:rgba(52,211,153,.35)}.lib-pill.lib-info{background:rgba(56,189,248,.14);color:#7dd3fc;border-color:rgba(56,189,248,.35)}' +
+    '.lib-pill.lib-warn{background:rgba(251,191,36,.14);color:#fcd34d;border-color:rgba(251,191,36,.35)}.lib-pill.lib-bad{background:rgba(248,113,113,.14);color:#fca5a5;border-color:rgba(248,113,113,.38)}' +
+    '.lib-acoes{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:flex-end}.lib-grupo{display:flex;gap:6px;align-items:center}.lib-sel{height:36px;border-radius:10px;padding:0 8px;font-size:12.5px}' +
+    '.lib-btn{min-height:36px;padding:0 12px;border-radius:10px;font-size:12.5px;font-weight:700;cursor:pointer;color:#fff;white-space:nowrap;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.07)}' +
+    '.lib-btn:hover{background:rgba(255,255,255,.14)}.lib-btn:disabled{opacity:.5;cursor:wait}.lib-btn.lib-ok{border-color:rgba(52,211,153,.5);background:rgba(5,150,105,.28)}.lib-btn.lib-ruim{border-color:rgba(248,113,113,.5);background:rgba(220,38,38,.22)}' +
+    '.lib-vazio{padding:22px;text-align:center;color:#94a3b8;font-size:13.5px}' +
+    '@media(max-width:760px){.lib-linha{grid-template-columns:minmax(0,1fr)}.lib-acoes{justify-content:flex-start}#pageContent .lib-barra select.lib-campo{flex:1 1 100% !important}}' +
+    '</style>';
+  html += '<div class="page-head"><div><h1>Liberações</h1><p>Ações que o administrador liberou para a sua conta. Cada uma é conferida de novo pelo servidor e fica registrada na auditoria.</p></div>' +
+    '<div class="admin-head-actions"><button type="button" class="btn-ghost" onclick="libGarantirDados(true)">Atualizar</button></div></div>';
+  html += '<div class="lib-wrap"><div class="lib-chips" aria-label="Suas permissões">' + chips + '</div>';
+  if (pAss || pCon) {
+    html += '<section class="panel"><div class="panel-head"><h3>' + (pAss ? 'Assinaturas e acesso das contas' : 'Contas de usuário') + '</h3><span class="tag" id="libTotal" style="cursor:default">' + (Array.isArray(LIB.contas) ? LIB.contas.length : 0) + ' conta(s)</span></div>' +
+      '<div class="lib-barra"><input id="libBusca" class="lib-campo" type="search" placeholder="Buscar por nome ou e-mail..." oninput="libAtualizarLista()" aria-label="Buscar conta">' +
+      '<select id="libFiltro" class="lib-campo" onchange="libAtualizarLista()" aria-label="Filtrar por situação"><option value="">Todas as situações</option><option value="pendente">Aguardando pagamento</option><option value="expirado">Sem acesso</option><option value="teste">Em teste</option><option value="ativo">Com assinatura ativa</option><option value="vitalicio">Vitalício</option><option value="bloqueadas">Contas bloqueadas</option></select></div>' +
+      '<div class="lib-lista" id="libLista">' + libListaHTML() + '</div></section>';
+  }
+  if (pLog) {
+    html += '<section class="panel"><div class="panel-head"><h3>Auditoria e logs (somente leitura)</h3></div>' +
+      '<div class="lib-barra"><input id="libLogBusca" type="search" placeholder="Buscar por usuário, ação ou detalhe..." oninput="libAtualizarLogs()" aria-label="Buscar nos logs"></div>' +
+      '<div class="table-panel" style="padding:10px 12px;border-radius:14px;"><div id="libLogs">' + libLogsHTML(Array.isArray(systemLogs) ? systemLogs : []) + '</div></div></section>';
+  }
+  return html + '</div>';
 }
 
 /* ==================== Módulo de Ordens de Serviço (O.S.) & Suporte ==================== */
@@ -32497,6 +32855,8 @@ function removeLocalUser(email) {
     const current = getLocalUsers();
     const filtered = current.filter(u => (u.email || '').toLowerCase().trim() !== clean);
     try { setStoredAvatar(clean, ''); } catch (avatarErr) {}
+    // Conta excluída perde as permissões delegadas: quem recriar o mesmo e-mail não herda poderes
+    try { if (getStoredPermissions(clean).length) setStoredPermissions(clean, []); } catch (permErr) {}
     const jsonStr = JSON.stringify(filtered, null, 2);
     writeJsonFile(LOCAL_USERS_PATH, jsonStr);
     try { writeJsonFile(LOCAL_USERS_BACKUP_PATH, jsonStr); } catch(e){}
@@ -34730,6 +35090,132 @@ async function handleNexusRequest(req, res) {
     return;
   }
 
+  // ==================== PERMISSÕES DELEGADAS (o administrador libera ações específicas a contas de usuário) ====================
+  // Catálogo + quem tem o quê. Só administrador. (Cada conta também recebe a própria lista em "permissions" no login e em /api/users.)
+  if (req.method === 'GET' && parsedUrl.pathname === '/api/admin/permissions') {
+    if (!getAuthenticatedAdmin(req)) {
+      return sendJson(res, corsHeaders, 401, { success: false, error: 'Autenticação de administrador obrigatória.' });
+    }
+    const granted = {};
+    const store = readPermissionStore();
+    Object.keys(store).forEach(email => { const list = normalizePermissionList(store[email]); if (list.length) granted[email] = list; });
+    return sendJson(res, corsHeaders, 200, { success: true, catalog: NEXUS_PERMISSIONS, granted });
+  }
+
+  // Define TODAS as permissões de uma conta de usuário (lista vazia remove). Administrador já tem tudo; a própria conta não se auto-concede.
+  if (req.method === 'POST' && parsedUrl.pathname === '/api/admin/permissions') {
+    const permAdmin = getAuthenticatedAdmin(req);
+    if (!permAdmin) {
+      return sendJson(res, corsHeaders, 401, { success: false, error: 'Autenticação de administrador obrigatória.' });
+    }
+    const leituraPerm = await lerCorpoJson(req);
+    if (!leituraPerm.ok) return sendJson(res, corsHeaders, leituraPerm.status, { success: false, error: leituraPerm.mensagem });
+    const permEmail = String(leituraPerm.dados.email || '').toLowerCase().trim();
+    const permLista = leituraPerm.dados.permissions;
+    if (!permEmail || !Array.isArray(permLista)) {
+      return sendJson(res, corsHeaders, 400, { success: false, error: 'Informe o e-mail da conta e a lista de permissões.' });
+    }
+    const permInvalida = permLista.find(id => !NEXUS_PERMISSION_IDS.includes(String(id)));
+    if (permInvalida !== undefined) {
+      return sendJson(res, corsHeaders, 400, { success: false, error: 'Permissão desconhecida: ' + String(permInvalida).slice(0, 60) });
+    }
+    if (permEmail === String(permAdmin.email || '').toLowerCase().trim()) {
+      return sendJson(res, corsHeaders, 403, { success: false, error: 'Você não pode alterar as permissões da própria conta.' });
+    }
+    const permAlvo = getLocalUsers().find(u => u && String(u.email || '').toLowerCase().trim() === permEmail);
+    if (!permAlvo || isAccountDeleted(permEmail)) {
+      return sendJson(res, corsHeaders, 404, { success: false, error: 'Conta não encontrada.' });
+    }
+    if (permAlvo.role === 'Administrador') {
+      return sendJson(res, corsHeaders, 400, { success: false, error: 'Administrador já tem todas as permissões.' });
+    }
+    const antes = getStoredPermissions(permEmail);
+    const depois = setStoredPermissions(permEmail, permLista);
+    const rotulo = (ids) => ids.length ? ids.map(id => (NEXUS_PERMISSIONS.find(p => p.id === id) || {}).label || id).join(', ') : 'nenhuma';
+    recordSystemLog(permAdmin.name || 'Administrador', permAdmin.email, 'Alteração de Permissões', 'Usuário / Permissões',
+      `Permissões de ${permAlvo.name || permEmail} (${permEmail}): antes ${rotulo(antes)}; agora ${rotulo(depois)}`);
+    broadcastEvent('users_updated', { permissions: true, email: permEmail });
+    return sendJson(res, corsHeaders, 200, { success: true, email: permEmail, permissions: depois });
+  }
+
+  // Contas de usuário comum para quem recebeu "liberar assinatura" ou "bloquear contas" (administrador também): só o necessário
+  // para decidir (nome, e-mail, situação e vencimento) — sem CPF, telefone nem nascimento — e nunca administradores nem a própria conta.
+  if (req.method === 'GET' && parsedUrl.pathname === '/api/delegate/accounts') {
+    const quem = getAuthenticatedUser(req);
+    if (!quem) return sendJson(res, corsHeaders, 401, { success: false, error: 'Autenticação obrigatória.' });
+    const podeAssinatura = userHasPermission(quem, 'assinatura.liberar');
+    const podeContas = userHasPermission(quem, 'contas.bloquear');
+    if (!podeAssinatura && !podeContas) {
+      return sendJson(res, corsHeaders, 403, { success: false, error: 'Você não tem permissão para ver as contas.' });
+    }
+    const eu = String(quem.email || '').toLowerCase().trim();
+    let linhas = null;
+    if (pool) {
+      try {
+        const r = await pool.query('SELECT name, email, role, active, created_at, last_login, trial_started_at, subscription_plan, subscription_status, subscription_expires_at, subscription_method, subscription_payment_id FROM usuarios ORDER BY id ASC');
+        linhas = r.rows || [];
+      } catch (e) { linhas = null; }
+    }
+    if (!linhas) linhas = getLocalUsers();
+    const contas = linhas
+      .filter(u => u && u.email && u.role !== 'Administrador' && String(u.email).toLowerCase().trim() !== eu && !isAccountDeleted(u.email))
+      .map(u => {
+        // Situação de acesso pela MESMA regra do servidor (teste de 1 dia, assinatura, vitalício, expirado): o cliente só exibe
+        const info = getUserSubscriptionInfo({ ...u }) || {};
+        return {
+          name: u.name || '',
+          email: String(u.email).toLowerCase().trim(),
+          active: u.active !== false && u.active !== 0,
+          created_at: u.created_at ? getBrasiliaIsoString(u.created_at) : null,
+          last_login: u.last_login ? getBrasiliaIsoString(u.last_login) : null,
+          access: {
+            status: info.status || 'expired',
+            is_subscribed: Boolean(info.is_subscribed),
+            plan: info.subscription_plan || null,
+            expires_at: info.subscription_expires_at ? getBrasiliaIsoString(info.subscription_expires_at) : null,
+            remaining_seconds: info.remaining_seconds || 0
+          },
+          payment_pending: u.subscription_status === 'pending_payment' ||
+            (u.subscription_status === 'trial' && String(u.subscription_payment_id || '').indexOf('NEXUS-SUB-') === 0)
+        };
+      });
+    return sendJson(res, corsHeaders, 200, { success: true, can: { assinatura: podeAssinatura, contas: podeContas }, accounts: contas });
+  }
+
+  // Ativar/bloquear o login de uma conta de usuário (permissão "contas.bloquear"; administrador também). Nunca a própria conta nem administradores.
+  if (req.method === 'POST' && parsedUrl.pathname === '/api/delegate/account-active') {
+    const quemBloqueia = getAuthenticatedWithPermission(req, 'contas.bloquear');
+    if (!quemBloqueia) return sendJson(res, corsHeaders, 403, { success: false, error: 'Você não tem permissão para ativar ou bloquear contas.' });
+    const leituraAtivo = await lerCorpoJson(req);
+    if (!leituraAtivo.ok) return sendJson(res, corsHeaders, leituraAtivo.status, { success: false, error: leituraAtivo.mensagem });
+    const ativoEmail = String(leituraAtivo.dados.email || '').toLowerCase().trim();
+    if (!ativoEmail || typeof leituraAtivo.dados.active !== 'boolean') {
+      return sendJson(res, corsHeaders, 400, { success: false, error: 'Informe o e-mail da conta e se ela deve ficar ativa (true) ou bloqueada (false).' });
+    }
+    const listaAtivo = getLocalUsers();
+    const alvoAtivo = listaAtivo.find(u => u && String(u.email || '').toLowerCase().trim() === ativoEmail);
+    if (!alvoAtivo || isAccountDeleted(ativoEmail)) return sendJson(res, corsHeaders, 404, { success: false, error: 'Conta não encontrada.' });
+    const negado = delegateTargetDenial(quemBloqueia, alvoAtivo, ativoEmail);
+    if (negado) return sendJson(res, corsHeaders, 403, { success: false, error: negado });
+    if (quemBloqueia.role === 'Administrador' && alvoAtivo.role === 'Administrador' && leituraAtivo.dados.active === false &&
+        listaAtivo.filter(u => u && u.role === 'Administrador' && u.active !== false && u.active !== 0).length <= 1) {
+      return sendJson(res, corsHeaders, 403, { success: false, error: 'É necessário manter ao menos um administrador ativo.' });
+    }
+    alvoAtivo.active = leituraAtivo.dados.active;
+    saveLocalUsers(listaAtivo);
+    if (pool) {
+      try {
+        await pool.query('UPDATE usuarios SET active = $1 WHERE LOWER(email) = LOWER($2)', [alvoAtivo.active ? 1 : 0, ativoEmail]);
+      } catch (e) {
+        console.warn('[AVISO BD] Falha ao gravar ativação/bloqueio no SQL Server:', e.message);
+      }
+    }
+    recordSystemLog(quemBloqueia.name || 'Usuário', quemBloqueia.email, alvoAtivo.active ? 'Ativação de conta' : 'Bloqueio de conta', 'Usuário',
+      `${alvoAtivo.active ? 'Ativou' : 'Bloqueou'} a conta de ${alvoAtivo.name || ativoEmail} (${ativoEmail})`);
+    broadcastEvent('users_updated', { active: true, email: ativoEmail });
+    return sendJson(res, corsHeaders, 200, { success: true, email: ativoEmail, active: alvoAtivo.active });
+  }
+
   // Uso real de cada conta para a tela Cadastros & Contas do administrador: só contagens (nunca valores, descrições nem saldos)
   if (req.method === 'GET' && parsedUrl.pathname === '/api/admin/usage') {
     if (!getAuthenticatedAdmin(req)) {
@@ -34976,8 +35462,9 @@ async function handleNexusRequest(req, res) {
 
   // Rota GET de Logs de Auditoria
   if (req.method === 'GET' && parsedUrl.pathname === '/api/logs') {
-    // Trilha de auditoria contém e-mails e ações de todos os usuários: somente administradores (ou sincronização interna)
-    if (!getAuthenticatedAdmin(req) && !hasInternalSyncAccess(req)) {
+    // Trilha de auditoria contém e-mails e ações de todos os usuários: somente administradores, quem recebeu a permissão "logs.ver"
+    // (leitura apenas) ou a sincronização interna
+    if (!getAuthenticatedWithPermission(req, 'logs.ver') && !hasInternalSyncAccess(req)) {
       return sendJson(res, corsHeaders, 401, { success: false, error: 'Autenticação de administrador obrigatória.' });
     }
     if (pool) {
@@ -35380,12 +35867,12 @@ async function handleNexusRequest(req, res) {
         }
 
         const localUsers = getLocalUsers();
-        const adminUser = getAuthenticatedAdmin(req);
+        const adminUser = getAuthenticatedWithPermission(req, 'assinatura.liberar');
         const isAuthorized = adminUser && String(adminUser.email || '').toLowerCase() === adminEmail;
 
         if (!isAuthorized) {
           res.writeHead(403, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ success: false, error: 'Apenas administradores podem conceder tempo gratuito' }));
+          return res.end(JSON.stringify({ success: false, error: 'Apenas administradores, ou quem recebeu a permissão de liberar assinatura, podem conceder tempo gratuito' }));
         }
         // Duração dentro de um limite razoável (10 anos): valores absurdos geravam data inválida (subscription_expires_at nulo) com a conta marcada como "ativa"
         if (!isLifetime) {
@@ -35409,6 +35896,11 @@ async function handleNexusRequest(req, res) {
         if (!targetUser) {
           res.writeHead(404, { ...corsHeaders, 'Content-Type': 'application/json' });
           return res.end(JSON.stringify({ success: false, error: 'Usuário destinatário não encontrado' }));
+        }
+        const grantDenial = delegateTargetDenial(adminUser, targetUser, targetEmail);
+        if (grantDenial) {
+          res.writeHead(403, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: grantDenial }));
         }
 
         const now = new Date();
@@ -35713,12 +36205,12 @@ async function handleNexusRequest(req, res) {
         }
 
         const localUsers = getLocalUsers();
-        const adminUser = getAuthenticatedAdmin(req);
+        const adminUser = getAuthenticatedWithPermission(req, 'assinatura.liberar');
         const isAuthorized = adminUser && String(adminUser.email || '').toLowerCase() === adminEmail;
 
         if (!isAuthorized) {
           res.writeHead(403, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ success: false, error: 'Somente administradores podem liberar pagamentos não reconhecidos.' }));
+          return res.end(JSON.stringify({ success: false, error: 'Somente administradores, ou quem recebeu a permissão de liberar assinatura, podem liberar pagamentos não reconhecidos.' }));
         }
 
         let targetUser = localUsers.find(u => u && u.email && u.email.toLowerCase() === targetEmail);
@@ -35735,6 +36227,11 @@ async function handleNexusRequest(req, res) {
         if (!targetUser) {
           res.writeHead(404, { ...corsHeaders, 'Content-Type': 'application/json' });
           return res.end(JSON.stringify({ success: false, error: 'Usuário não encontrado para o e-mail informado.' }));
+        }
+        const payDenial = delegateTargetDenial(adminUser, targetUser, targetEmail);
+        if (payDenial) {
+          res.writeHead(403, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: payDenial }));
         }
 
         const now = new Date();
@@ -35781,7 +36278,8 @@ async function handleNexusRequest(req, res) {
         }
 
         // Se houver O.S. vinculada ou pendente de pagamento para este usuário, atualiza automaticamente
-        if (concludeOs) {
+        // (só o administrador mexe em chamados: quem tem apenas a permissão de liberar assinatura não encerra O.S.)
+        if (concludeOs && adminUser.role === 'Administrador') {
           try {
             const localOrdens = getLocalOrdens();
             let updatedAnyOs = false;
@@ -35869,12 +36367,12 @@ async function handleNexusRequest(req, res) {
         }
 
         const localUsers = getLocalUsers();
-        const adminUser = getAuthenticatedAdmin(req);
+        const adminUser = getAuthenticatedWithPermission(req, 'assinatura.liberar');
         const isAuthorized = adminUser && String(adminUser.email || '').toLowerCase() === adminEmail;
 
         if (!isAuthorized) {
           res.writeHead(403, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ success: false, error: 'Somente administradores podem bloquear/revogar assinaturas.' }));
+          return res.end(JSON.stringify({ success: false, error: 'Somente administradores, ou quem recebeu a permissão de liberar assinatura, podem bloquear/revogar assinaturas.' }));
         }
 
         let targetUser = localUsers.find(u => u && u.email && u.email.toLowerCase() === targetEmail);
@@ -35891,6 +36389,11 @@ async function handleNexusRequest(req, res) {
         if (!targetUser) {
           res.writeHead(404, { ...corsHeaders, 'Content-Type': 'application/json' });
           return res.end(JSON.stringify({ success: false, error: 'Usuário não encontrado.' }));
+        }
+        const revokeDenial = delegateTargetDenial(adminUser, targetUser, targetEmail);
+        if (revokeDenial) {
+          res.writeHead(403, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: revokeDenial }));
         }
 
         const expiredDate = new Date(Date.now() - 60 * 1000);
@@ -35960,17 +36463,22 @@ async function handleNexusRequest(req, res) {
         }
 
         const localUsers = getLocalUsers();
-        const adminUser = getAuthenticatedAdmin(req);
+        const adminUser = getAuthenticatedWithPermission(req, 'assinatura.liberar');
         const isAuthorized = adminUser && String(adminUser.email || '').toLowerCase() === adminEmail;
         if (!isAuthorized) {
           res.writeHead(403, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ success: false, error: 'Somente o Administrador pode conceder novo período de teste.' }));
+          return res.end(JSON.stringify({ success: false, error: 'Somente o Administrador, ou quem recebeu a permissão de liberar assinatura, pode conceder novo período de teste.' }));
         }
 
         const nowIso = getBrasiliaIsoString(new Date());
         const nowSql = getBrasiliaSqlString(new Date());
 
         const u = localUsers.find(x => x && x.email && x.email.toLowerCase() === email);
+        const trialDenial = delegateTargetDenial(adminUser, u, email);
+        if (trialDenial) {
+          res.writeHead(403, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: trialDenial }));
+        }
         if (u) {
           u.trial_started_at = nowIso;
           u.subscription_status = 'trial';
@@ -35987,6 +36495,7 @@ async function handleNexusRequest(req, res) {
           ).catch(()=>{});
         }
 
+        recordSystemLog(adminUser.name || 'Administrador', adminEmail, 'Assinatura', 'Administração', `Concedeu novo período de teste grátis para ${(u && u.name) || email}`);
         res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ success: true, message: 'Período gratuito de 1 dia concedido pelo Administrador!' }));
       } catch(e) {

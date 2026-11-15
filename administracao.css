@@ -339,6 +339,17 @@
 .adm-eventos b { font-size: 12.5px !important; color: #fff !important; }
 .adm-eventos span { font-size: 12.5px !important; color: var(--adm-ink2) !important; overflow-wrap: anywhere !important; }
 .adm-eventos small { grid-column: 1 / -1 !important; font-size: 11.5px !important; color: var(--adm-mut) !important; }
+
+/* ---------- permissões delegadas (caixas na gaveta do cadastro) ---------- */
+.adm-perms { display: flex !important; flex-direction: column !important; gap: 8px !important; margin: 0 0 10px !important; }
+.adm-perm { display: flex !important; align-items: flex-start !important; gap: 12px !important; padding: 11px 12px !important; border-radius: 12px !important; border: 1px solid var(--adm-line) !important; background: var(--adm-wash) !important; cursor: pointer !important; }
+.adm-perm:hover { background: var(--adm-wash2) !important; border-color: rgba(255, 255, 255, .26) !important; }
+.adm-perm input { flex: 0 0 auto !important; width: 20px !important; height: 20px !important; margin: 1px 0 0 !important; accent-color: #10B981 !important; cursor: pointer !important; }
+.adm-perm input:disabled { cursor: wait !important; opacity: .6 !important; }
+.adm-perm input:focus-visible { outline: 2px solid #6EE7B7 !important; outline-offset: 2px !important; }
+.adm-perm b { display: block !important; font-size: 13.5px !important; font-weight: 700 !important; color: var(--adm-ink) !important; line-height: 1.25 !important; }
+.adm-perm small { display: block !important; margin-top: 2px !important; font-size: 12.5px !important; color: var(--adm-ink2) !important; line-height: 1.4 !important; }
+.adm-perm:has(input:checked) { border-color: rgba(52, 211, 153, .5) !important; background: rgba(16, 185, 129, .1) !important; }
 html.adm-gaveta-aberta { overflow: hidden !important; }
 
 /* ---------- janelas de confirmação ---------- */

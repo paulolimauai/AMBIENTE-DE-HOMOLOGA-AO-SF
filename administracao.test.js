@@ -244,3 +244,29 @@ test('detalheHTML: ações do administrador sobre outra conta e bloqueio das aç
   assert.ok(dBia.includes('data-adm-a="rebaixar"') && !dBia.includes('data-adm-a="promover"') && !dBia.includes('data-adm-a="pagar"'), 'administrador não paga assinatura');
   assert.ok(!dBia.includes('data-adm-a="boleto"') && !dBia.includes('data-adm-a="tempo"') && dBia.includes('acesso ilimitado'), 'nem 2ª via de boleto nem liberar tempo para administrador');
 });
+
+test('permissões delegadas: a gaveta mostra uma caixa por permissão só para outra conta de usuário', () => {
+  const cat = [{ id: 'assinatura.liberar', label: 'Liberar assinatura manual', desc: 'Conceder tempo.' }, { id: 'logs.ver', label: 'Ver auditoria e logs', desc: 'Somente leitura.' }];
+  const base = [usuario({ email: 'ana@x.com', name: 'Ana', role: 'Administrador' }), usuario({ permissions: ['assinatura.liberar'] }), usuario({ email: 'bia@x.com', name: 'Bia', role: 'Administrador' })];
+  const ctx = { agora: AGORA, usuarios: base, eu: { email: 'ana@x.com' }, permissoes: { catalogo: cat }, eventos: () => [] };
+  const m = A.calcular(ctx);
+  const doUsuario = m.todos.find((r) => r.email === 'maria.teste@example.com');
+  assert.deepEqual(doUsuario.permissoes, ['assinatura.liberar']);
+  assert.deepEqual(norm(usuario()).permissoes, [], 'sem o campo, nenhuma permissão');
+  const d = A.detalheHTML(doUsuario, m, ctx);
+  assert.ok(d.includes('<h4>Permissões</h4>') && d.includes('Liberar assinatura manual') && d.includes('Ver auditoria e logs'));
+  assert.ok(/data-perm="assinatura\.liberar"[^>]*checked/.test(d), 'a permissão que a conta tem vem marcada');
+  assert.ok(!/data-perm="logs\.ver"[^>]*checked/.test(d), 'a que ela não tem vem desmarcada');
+  assert.equal((d.match(/data-adm-a="perm"/g) || []).length, 2, 'uma caixa por permissão do catálogo');
+  // outro administrador: sem caixas (já tem tudo); a própria conta: sem a seção
+  const dAdmin = A.detalheHTML(m.todos.find((r) => r.email === 'bia@x.com'), m, ctx);
+  assert.ok(dAdmin.includes('já tem todas as permissões') && !dAdmin.includes('data-adm-a="perm"'));
+  assert.ok(!A.detalheHTML(m.todos.find((r) => r.email === 'ana@x.com'), m, ctx).includes('<h4>Permissões</h4>'));
+  // catálogo ainda não chegou do servidor (ou falhou): avisa em vez de mostrar caixas vazias
+  const semCat = A.detalheHTML(doUsuario, m, Object.assign({}, ctx, { permissoes: { catalogo: null } }));
+  assert.ok(semCat.includes('Carregando as permissões') && !semCat.includes('data-adm-a="perm"'));
+  assert.ok(A.detalheHTML(doUsuario, m, Object.assign({}, ctx, { permissoes: { catalogo: null, erro: 'Não foi possível carregar as permissões.' } })).includes('Não foi possível carregar as permissões.'));
+  // HTML no nome/descrição do catálogo não vira marcação
+  const sujo = A.detalheHTML(doUsuario, m, Object.assign({}, ctx, { permissoes: { catalogo: [{ id: 'x"><img src=x onerror=alert(1)>', label: '<b>negrito</b>', desc: '<i>d</i>' }] } }));
+  assert.ok(!sujo.includes('<img src=x') && !sujo.includes('<b>negrito</b>'));
+});

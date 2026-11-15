@@ -320,6 +320,79 @@ test('concessão de tempo pelo admin: duração absurda é recusada', async () =
   assert.equal(ok.status, 200, ok.texto);
 });
 
+test('permissões delegadas: só o admin concede; quem recebe libera assinatura e bloqueia contas de usuário, nunca administradores nem a própria conta', async () => {
+  const admin = (await login('admin@teste.nexus', 'Admin@12345')).token;
+  const ana = (await login('ana@teste.nexus', 'Ana@12345')).token;
+  const liberar = (token, de, para, extra) => api('POST', '/api/subscription/admin-grant-time', { token, body: Object.assign({ admin_email: de, target_email: para, duration_minutes: 60 }, extra || {}) });
+  const ativo = (token, email, active) => api('POST', '/api/delegate/account-active', { token, body: { email, active } });
+  const permissoes = (token, email, lista) => api('POST', '/api/admin/permissions', { token, body: { email, permissions: lista } });
+
+  // sem permissão nenhuma: usuário comum não faz nada disso
+  assert.equal((await liberar(ana, 'ana@teste.nexus', 'bia@teste.nexus')).status, 403);
+  assert.equal((await api('GET', '/api/delegate/accounts', { token: ana })).status, 403);
+  assert.equal((await ativo(ana, 'bia@teste.nexus', false)).status, 403);
+  assert.equal((await api('GET', '/api/logs', { token: ana })).status, 401);
+
+  // só o administrador concede, só ids do catálogo, nunca para administrador nem para si mesmo
+  assert.equal((await permissoes(ana, 'ana@teste.nexus', ['assinatura.liberar'])).status, 401, 'usuário comum não se concede permissão');
+  assert.equal((await api('GET', '/api/admin/permissions', { token: ana })).status, 401);
+  assert.equal((await permissoes(admin, 'ana@teste.nexus', ['coisa.inventada'])).status, 400);
+  assert.equal((await permissoes(admin, 'ana@teste.nexus', 'assinatura.liberar')).status, 400);
+  assert.equal((await permissoes(admin, 'admin@teste.nexus', ['logs.ver'])).status, 403);
+  assert.equal((await permissoes(admin, 'nao@existe.nexus', ['logs.ver'])).status, 404);
+  const cat = await api('GET', '/api/admin/permissions', { token: admin });
+  assert.deepEqual(cat.json.catalog.map((p) => p.id), ['assinatura.liberar', 'contas.bloquear', 'logs.ver']);
+
+  // concedida: vale na hora, com o MESMO token, e vem no cadastro da própria conta
+  assert.equal((await permissoes(admin, 'ana@teste.nexus', ['assinatura.liberar', 'contas.bloquear'])).status, 200);
+  assert.deepEqual(lerArquivo('local_permissions.json')['ana@teste.nexus'], ['assinatura.liberar', 'contas.bloquear']);
+  const meuCadastro = (await api('GET', '/api/users', { token: ana })).json;
+  assert.deepEqual(meuCadastro.map((u) => u.email), ['ana@teste.nexus']);
+  assert.deepEqual(meuCadastro[0].permissions, ['assinatura.liberar', 'contas.bloquear']);
+  const ok = await liberar(ana, 'ana@teste.nexus', 'bia@teste.nexus');
+  assert.equal(ok.status, 200, ok.texto);
+  assert.equal(ok.json.plan, 'cortesia_admin');
+
+  // a lista que ela vê não traz administrador nem ela mesma, e não expõe dados pessoais
+  const contas = (await api('GET', '/api/delegate/accounts', { token: ana })).json.accounts;
+  const emails = contas.map((c) => c.email);
+  assert.ok(emails.includes('bia@teste.nexus'), 'vê as contas de usuário');
+  assert.ok(!emails.includes('admin@teste.nexus') && !emails.includes('ana@teste.nexus'), 'sem administrador e sem a própria conta');
+  const daBia = contas.find((c) => c.email === 'bia@teste.nexus');
+  assert.equal(daBia.access.is_subscribed, true);
+  assert.ok(!/cpf|phone|birth|password/i.test(Object.keys(daBia).join()), 'sem dados pessoais');
+
+  // nunca em administrador nem na própria conta (5 ações) e não passa por admin trocando admin_email
+  for (const alvo of ['admin@teste.nexus', 'ana@teste.nexus']) {
+    assert.equal((await liberar(ana, 'ana@teste.nexus', alvo, { is_lifetime: true })).status, 403, 'liberar ' + alvo);
+    assert.equal((await api('POST', '/api/subscription/confirm-payment', { token: ana, body: { admin_email: 'ana@teste.nexus', target_email: alvo, plan: 'vitalicio' } })).status, 403, 'confirmar ' + alvo);
+    assert.equal((await api('POST', '/api/subscription/revoke-payment', { token: ana, body: { admin_email: 'ana@teste.nexus', target_email: alvo } })).status, 403, 'revogar ' + alvo);
+    assert.equal((await api('POST', '/api/subscription/reset-trial', { token: ana, body: { admin_email: 'ana@teste.nexus', email: alvo } })).status, 403, 'novo teste ' + alvo);
+    assert.equal((await ativo(ana, alvo, false)).status, 403, 'bloquear ' + alvo);
+  }
+  assert.equal((await liberar(ana, 'admin@teste.nexus', 'bia@teste.nexus')).status, 403, 'o admin_email do corpo não vale: quem manda é o token');
+
+  // bloquear e ativar de verdade: a conta bloqueada não entra e a sessão aberta cai
+  const biaToken = (await login('bia@teste.nexus', 'Bia@12345')).token;
+  assert.equal((await ativo(ana, 'bia@teste.nexus', 'sim')).status, 400);
+  assert.equal((await ativo(ana, 'bia@teste.nexus', false)).status, 200);
+  assert.notEqual((await api('POST', '/api/login', { body: { email: 'bia@teste.nexus', password: 'Bia@12345' } })).status, 200);
+  assert.equal((await api('GET', '/api/users', { token: biaToken })).status, 401);
+  assert.equal((await ativo(ana, 'bia@teste.nexus', true)).status, 200);
+  assert.equal((await api('POST', '/api/login', { body: { email: 'bia@teste.nexus', password: 'Bia@12345' } })).status, 200);
+
+  // permissões parciais: só "ver logs" lê a auditoria e não faz mais nada; retirar tudo corta na hora
+  assert.equal((await permissoes(admin, 'ana@teste.nexus', ['logs.ver'])).status, 200);
+  assert.equal((await api('GET', '/api/logs', { token: ana })).status, 200);
+  assert.equal((await liberar(ana, 'ana@teste.nexus', 'bia@teste.nexus')).status, 403);
+  assert.equal((await api('GET', '/api/delegate/accounts', { token: ana })).status, 403);
+  const trilha = JSON.stringify((await api('GET', '/api/logs', { token: admin })).json);
+  assert.ok(trilha.includes('Alteração de Permissões') && trilha.includes('Bloqueou a conta de Bia Teste'), 'concessão e bloqueio ficam na auditoria');
+  assert.equal((await permissoes(admin, 'ana@teste.nexus', [])).status, 200);
+  assert.equal((await api('GET', '/api/logs', { token: ana })).status, 401);
+  assert.ok(!lerArquivo('local_permissions.json')['ana@teste.nexus'], 'lista vazia remove a entrada do arquivo');
+});
+
 test('SSE: limite de conexões por usuário e resposta 429 acima dele', async () => {
   const token = (await login('bia@teste.nexus', 'Bia@12345')).token;
   const abertas = [];
