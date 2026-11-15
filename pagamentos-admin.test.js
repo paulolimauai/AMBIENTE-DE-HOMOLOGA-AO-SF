@@ -184,3 +184,20 @@ test('navHTML marca a seção ativa e mostra o contador de aguardando', () => {
   assert.match(h, /data-pg-aba="resumo" aria-selected="false"/);
   assert.match(h, /adm-tab-warn">4</);
 });
+
+
+test('cobrança mensal automática: o resumo explica a regra do dia 5 e a lista marca a cobrança gerada sozinha', () => {
+  const auto = P.publico(P.criarCobranca({ usuario: { email: 'a@x.com', name: 'Ana Souza' }, valor: 18, vencimento: '2026-11-08', origem: 'automatica', competencia: '2026-11', agora: AGORA }), AGORA);
+  const d = Object.assign(dados([auto]), { cobranca_mensal: { dia: 5, prazo_dias: 3, proxima: '2026-12-05' } });
+  const resumo = N.resumoHTML(d);
+  assert.match(resumo, /Todo dia 5 o sistema gera sozinho a cobrança Pix de R\$ 18,00/);
+  assert.match(resumo, /vence 3 dias depois/);
+  assert.match(resumo, /Próxima geração: <b>05\/12\/2026<\/b>/);
+  const lista = N.cobrancasHTML({ filtro: { busca: '', situacao: 'todas', mes: 'todos' }, pagina: 1, porPagina: 25, sel: {}, nova: {}, conc: {} }, d);
+  assert.match(lista, /gerada sozinha · nov\/2026/);
+  assert.match(lista, /data-pg-a="gerar-mensal"/);
+  assert.match(lista, /todo dia 5/);
+  // servidor antigo, sem a configuração: nada quebra e o botão continua com o dia padrão
+  assert.ok(!/Todo dia/.test(N.resumoHTML(dados([auto]))));
+  assert.match(N.cobrancasHTML({ filtro: { busca: '', situacao: 'todas', mes: 'todos' }, pagina: 1, porPagina: 25, sel: {}, nova: {}, conc: {} }, dados([auto])), /data-pg-a="gerar-mensal"/);
+});

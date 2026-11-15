@@ -194,7 +194,8 @@
     return kpis +
       '<div class="pg-grade">' +
         '<section class="pg-painel pg-painel-larga"><h3>Receita dos últimos 6 meses</h3>' + barrasHTML(r.serie) +
-          '<p class="pg-nota">Conta só pagamentos confirmados (recebimento conferido por um administrador). A receita recorrente é uma estimativa: assinantes pagantes ativos × ' + esc(moeda(r.preco)) + '; cortesias e vitalícios não entram.</p></section>' +
+          '<p class="pg-nota">Conta só pagamentos confirmados (recebimento conferido por um administrador). A receita recorrente é uma estimativa: assinantes pagantes ativos × ' + esc(moeda(r.preco)) + '; cortesias e vitalícios não entram.</p>' +
+          cobrancaMensalNota(dados) + '</section>' +
         '<section class="pg-painel"><h3>Esperando confirmação</h3>' + listaPend + '</section>' +
         '<section class="pg-painel"><h3>Vencem em breve</h3>' + listaVenc + '</section>' +
       '</div>';
@@ -225,9 +226,16 @@
       '<td class="adm-c-sel"><input type="checkbox" class="adm-chk" data-pg-sel="' + esc(p.id) + '"' + (sel ? ' checked' : '') + (aberta(p) ? '' : ' disabled') + ' aria-label="Selecionar ' + esc(p.nome || p.email) + '"></td>' +
       '<td data-l="Cliente"><b class="adm-nome" title="' + esc(p.nome) + '">' + esc(p.nome || p.email) + '</b><small>' + esc(p.email) + ' · ref. ' + esc(p.ref) + '</small></td>' +
       '<td data-l="Valor"><b class="pg-valor">' + esc(moeda(p.valor)) + '</b><small>' + esc(METODOS[p.metodo] || p.metodo || '') + '</small></td>' +
-      '<td data-l="Situação">' + pill(p.situacao) + (p.origem === 'legado' ? '<small>aviso anterior ao livro</small>' : (p.origem === 'usuario' ? '<small>avisado pelo cliente</small>' : '')) + '</td>' +
+      '<td data-l="Situação">' + pill(p.situacao) + (p.origem === 'legado' ? '<small>aviso anterior ao livro</small>' : (p.origem === 'usuario' ? '<small>avisado pelo cliente</small>' : (p.origem === 'automatica' ? '<small>gerada sozinha' + (p.competencia ? ' · ' + esc(rotuloMes(p.competencia)) : '') + '</small>' : ''))) + '</td>' +
       '<td data-l="Datas">' + datas + por + '</td>' +
       '<td class="pg-acoes" data-l="Ações">' + acoesDaLinha(p) + '</td></tr>';
+  }
+  function diaDaCobranca(dados) { return (dados && dados.cobranca_mensal && dados.cobranca_mensal.dia) || 5; }
+  function cobrancaMensalNota(dados) {
+    var c = dados && dados.cobranca_mensal;
+    if (!c) return '';
+    return '<p class="pg-nota">Todo dia ' + esc(c.dia) + ' o sistema gera sozinho a cobrança Pix de ' + esc(moeda(dados.preco)) + ' de cada assinatura paga e ativa (vence ' + plural(c.prazo_dias, 'dia', 'dias') + ' depois). ' +
+      'Não recebem: teste, expirados, vitalícios, cortesias e plano anual; nem quem já pagou neste ciclo ou já tem cobrança em aberto. Próxima geração: <b>' + esc(diaBR(c.proxima)) + '</b>.</p>';
   }
   function cobrancasToolbar(estado, dados) {
     var meses = mesesDisponiveis(dados.pagamentos);
@@ -238,6 +246,7 @@
       '<label class="adm-busca">' + IC.busca + '<input type="search" id="pgBusca" data-pg-busca autocomplete="off" spellcheck="false" placeholder="Buscar nome, e-mail ou referência…" value="' + esc(f.busca) + '" aria-label="Buscar pagamentos"></label>' +
       '<label class="adm-sel"><span>Situação</span><select data-pg-filtro="situacao">' + op(opSit, f.situacao) + '</select></label>' +
       '<label class="adm-sel"><span>Mês</span><select data-pg-filtro="mes">' + op([['todos', 'Todos os meses']].concat(meses.map(function (m) { return [m, rotuloMes(m)]; })), f.mes) + '</select></label>' +
+      '<button type="button" class="adm-btn" data-pg-a="gerar-mensal" title="O sistema já faz isto sozinho todo dia ' + esc(diaDaCobranca(dados)) + '. Use para gerar agora a cobrança do mês de quem ainda não tem.">Gerar cobranças do mês</button>' +
       '<button type="button" class="adm-btn" data-pg-a="csv" title="Baixar a lista filtrada em CSV (abre no Excel)">' + IC.baixar + '<span>Exportar CSV</span></button>' +
       '</div></section>';
   }
@@ -754,6 +763,20 @@
       return carregar(true);
     });
   }
+  function acaoGerarMensal() {
+    var c = (estado.dados && estado.dados.cobranca_mensal) || { dia: 5 };
+    return dialogo({
+      titulo: 'Gerar as cobranças do mês agora?', ok: 'Gerar cobranças',
+      html: '<p>O sistema já gera sozinho a cobrança Pix de cada assinatura ativa todo dia ' + esc(c.dia) + '. Isto faz o mesmo agora, para o mês corrente.</p>' +
+        '<p class="pg-nota">Quem já tem a cobrança do mês, já pagou neste ciclo ou já tem uma cobrança em aberto não recebe outra. O acesso das contas não muda: só vira pago quando você confirma o recebimento.</p>'
+    }).then(function (v) {
+      if (!v) return null;
+      return api('POST', '/api/admin/pagamentos/gerar-mensal', {}).then(function (j) {
+        toast(j && j.success ? '✅ ' + j.message : '⚠️ ' + ((j && j.error) || 'Não foi possível gerar as cobranças.'));
+        if (j && j.success && j.geradas) return depoisDeMudar();
+      });
+    });
+  }
   function baixarCsv() {
     var filtrados = estado.dados ? filtrar(estado.dados.pagamentos, estado.filtro) : [];
     if (!filtrados.length) { toast('Não há registros para exportar com este filtro.'); return Promise.resolve(); }
@@ -840,6 +863,7 @@
       case 'cadastro': { var c = ctx(); if (c.abrirCadastro) c.abrirCadastro(email); return; }
       case 'abrir-os': { var c2 = ctx(); if (c2.abrirOs) c2.abrirOs(id); return; }
       case 'nova-gerar': return acaoNovaGerar();
+      case 'gerar-mensal': return acaoGerarMensal();
       case 'csv': return baixarCsv();
       case 'copiar': { var alvo = root.document.getElementById(el.getAttribute('data-alvo')); return copiar(alvo ? alvo.value : '', 'Copiado.'); }
       case 'copiar-pix': return copiar(el.getAttribute('data-payload') || '', 'Código Pix copiado.');

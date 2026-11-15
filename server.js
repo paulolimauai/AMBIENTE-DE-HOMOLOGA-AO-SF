@@ -438,6 +438,38 @@ function expirarAssinaturasVencidas() {
   }
 }
 
+// Cobrança mensal automática: todo dia COBRANCA_MENSAL_DIA o sistema gera a cobrança Pix (SUBSCRIPTION_MONTHLY_PRICE) de cada assinatura ativa.
+// As regras (quem recebe, não repetir no mês, substituir a antiga) estão em Pagamentos.gerarCobrancasMensais; aqui só se lê e se grava.
+// Cobrança gerada vence COBRANCA_MENSAL_PRAZO_DIAS depois; o acesso da conta continua dependendo do pagamento confirmado, não do vencimento.
+const COBRANCA_MENSAL_DIA = Pagamentos.COBRANCA_DIA_PADRAO;
+const COBRANCA_MENSAL_PRAZO_DIAS = 3;
+function gerarCobrancasDoMes(opcoes) {
+  const forcar = !!(opcoes && opcoes.forcar);
+  try {
+    const agora = Date.now();
+    const livro = getLocalPagamentos();
+    const r = Pagamentos.gerarCobrancasMensais({ usuarios: getLocalUsers(), pagamentos: livro, agora, preco: SUBSCRIPTION_MONTHLY_PRICE, dia: COBRANCA_MENSAL_DIA, prazoDias: COBRANCA_MENSAL_PRAZO_DIAS, forcar });
+    if (r.novas.length || r.substituidas.length) {
+      saveLocalPagamentos(livro.concat(r.novas));
+      const total = r.novas.reduce((s, p) => s + p.valor, 0);
+      const texto = `Gerou ${r.novas.length} cobrança(s) Pix de ${Pagamentos.rotuloMes(r.competencia)} (${Pagamentos.brl(total)} no total)` +
+        (r.substituidas.length ? `; ${r.substituidas.length} cobrança(s) automática(s) antiga(s) em aberto foram substituídas` : '') + (forcar ? ' a pedido do administrador' : ' (todo dia ' + COBRANCA_MENSAL_DIA + ')');
+      recordSystemLog('Sistema', 'sistema@nexus.com', 'Cobrança', 'Financeiro', texto);
+      console.log(`🧾 [COBRANÇAS] ${texto}.`);
+    }
+    return r;
+  } catch (e) {
+    console.warn('[COBRANÇAS] Geração da cobrança mensal falhou:', e.message);
+    return { competencia: '', novas: [], substituidas: [], elegiveis: 0, puladas: { ja_gerada: 0, em_aberto: 0, pagou_no_ciclo: 0 }, motivo: 'erro', erro: e.message };
+  }
+}
+
+function rotinaDeAssinaturas() {
+  expirarAssinaturasVencidas();
+  // NEXUS_COBRANCA_AUTO=0 desliga só a geração agendada (os testes automáticos usam, para o resultado não depender do dia em que rodam); o botão do administrador continua valendo
+  if (process.env.NEXUS_COBRANCA_AUTO !== '0') gerarCobrancasDoMes();
+}
+
 function getPendingLogins() {
   try {
     if (fs.existsSync(PENDING_LOGINS_PATH)) {
@@ -32259,15 +32291,8 @@ window.applyPostLoginBg = function(theme) {
     return;
   }
 
-  if (realUser && (realUser.must_change_password === true || realUser.must_change_password === 1)) {
-    document.documentElement.classList.remove('user-logged-in');
-    const appM = document.getElementById('appMain');
-    const authP = document.getElementById('authPage');
-    if (appM) { appM.classList.remove('show'); appM.style.display = 'none'; }
-    if (authP) { authP.classList.add('show'); authP.style.display = 'flex'; }
-    window.showMandatoryPasswordModal(realUser);
-    return;
-  }
+  // A troca obrigatória de senha (senha temporária) é exigida só no LOGIN (login-nexus-v5.html: a sessão nem é gravada
+  // antes de a nova senha ser definida). Ao atualizar a página (F5) com a sessão já aberta NÃO se pede a troca de novo.
 
   // Mantém os dados da conta autenticada real
   saveToStorage('nexus_session', { email: realUser.email });
@@ -35210,7 +35235,7 @@ async function handleNexusRequest(req, res) {
             if (updates.phone !== undefined) addSet('phone', updates.phone);
             if (updates.birth_date !== undefined) addSet('birth_date', updates.birth_date);
             if (updates.cpf !== undefined) addSet('cpf', updates.cpf);
-            if (newHash) addSet('password', newHash);
+            if (newHash) { addSet('password', newHash); sets.push('must_change_password = 0'); } // senha nova pessoal encerra a troca obrigatória também no SQL (antes só o espelho local era zerado)
             if (sets.length) {
               params.push(email);
               await pool.query(`UPDATE usuarios SET ${sets.join(', ')} WHERE LOWER(email) = LOWER($${params.length})`, params);
@@ -36690,6 +36715,7 @@ async function handleNexusRequest(req, res) {
       preco: SUBSCRIPTION_MONTHLY_PRICE,
       preco_texto: SUBSCRIPTION_MONTHLY_LABEL,
       pix: { chave: PIX_CONFIG.phone_formatted, favorecido: PIX_CONFIG.name },
+      cobranca_mensal: { dia: COBRANCA_MENSAL_DIA, prazo_dias: COBRANCA_MENSAL_PRAZO_DIAS, proxima: Pagamentos.proximaGeracao(agora, COBRANCA_MENSAL_DIA) },
       total: ordenados.length,
       pagamentos: ordenados.slice(0, 3000).map(p => Pagamentos.publico(p, agora)),
       resumo: Pagamentos.resumo({ pagamentos: livro, usuarios, agora, preco: SUBSCRIPTION_MONTHLY_PRICE })
@@ -36797,6 +36823,22 @@ async function handleNexusRequest(req, res) {
       const failure = publicFailure(err, 'Não foi possível ler o extrato.', 500);
       return sendJson(res, corsHeaders, failure.status, { success: false, error: failure.error });
     }
+  }
+
+  // Gera agora a cobrança do mês de cada assinatura ativa (o que o sistema faz sozinho todo dia 5). Serve para o mês em que a rotina começou
+  // ou para completar um mês em que o servidor ficou desligado. Quem já tem a cobrança do mês não recebe outra.
+  if (req.method === 'POST' && parsedUrl.pathname === '/api/admin/pagamentos/gerar-mensal') {
+    const admin = exigirAdminDePagamentos(req, res);
+    if (!admin) return;
+    const r = gerarCobrancasDoMes({ forcar: true });
+    if (r.erro) return sendJson(res, corsHeaders, 500, { success: false, error: 'Não foi possível gerar as cobranças agora.' });
+    const mes = Pagamentos.rotuloMes(r.competencia);
+    return sendJson(res, corsHeaders, 200, {
+      success: true, competencia: r.competencia, geradas: r.novas.length, substituidas: r.substituidas.length, elegiveis: r.elegiveis, puladas: r.puladas,
+      message: r.novas.length
+        ? `${r.novas.length} cobrança(s) de ${mes} gerada(s) (${Pagamentos.brl(r.novas.reduce((s, p) => s + p.valor, 0))}).`
+        : `Nenhuma cobrança nova: as ${r.elegiveis} assinatura(s) ativa(s) já têm a de ${mes}, já pagaram neste ciclo ou têm uma cobrança em aberto.`
+    });
   }
 
   // Exportação em CSV (abre no Excel): os registros pedidos (ids) ou todos
@@ -38036,8 +38078,9 @@ SupabaseSync.restoreMissingFiles({ timeoutMs: 8000 }).catch(() => {}).then(() =>
     .catch(err => {
       console.warn(`[BANCO AVISO] Inicialização do banco SQL tratada autonomamente: ${err.message}`);
     })
-    // Assinaturas vencidas viram "expired" ao iniciar e de hora em hora (antes só quando o próprio usuário abria o app)
-    .then(() => expirarAssinaturasVencidas());
-  setInterval(expirarAssinaturasVencidas, 60 * 60 * 1000).unref();
+    // Rotina de assinaturas, ao iniciar e de hora em hora: vencidas viram "expired" (antes só quando o próprio usuário abria o app)
+    // e, a partir do dia 5 de cada mês, cada assinatura ativa ganha a cobrança do mês. Se o servidor ficou desligado no dia 5, completa depois.
+    .then(() => rotinaDeAssinaturas());
+  setInterval(rotinaDeAssinaturas, 60 * 60 * 1000).unref();
 }));
 

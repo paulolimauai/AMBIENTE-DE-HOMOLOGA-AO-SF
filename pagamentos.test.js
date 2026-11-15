@@ -311,3 +311,126 @@ test('conciliar: lançamento já usado em outra confirmação não aparece de no
   assert.equal(r.ja_conciliados, 1);
   assert.ok(r.sugestoes.every((s) => s.lancamento.hash !== lancamentos[0].hash));
 });
+
+
+/* ---------------------------------------------------------------- cobrança mensal automática (todo dia 5) */
+const DIA5 = Date.parse('2026-12-05T15:00:00Z'); // 05/12/2026, 12:00 em Brasília
+const ativa = (extra) => usuario(Object.assign({ subscription_status: 'active', subscription_plan: 'mensal', subscription_method: 'pix', subscription_expires_at: '2026-12-20T12:00:00.000Z' }, extra || {}));
+const gerar = (usuarios, pagamentos, extra) => P.gerarCobrancasMensais(Object.assign({ usuarios, pagamentos: pagamentos || [], agora: DIA5, preco: PRECO }, extra || {}));
+
+test('cobrança mensal: no dia 5 cada assinatura paga e ativa recebe uma cobrança Pix de R$ 18 com vencimento 3 dias depois', () => {
+  const r = gerar([ativa({ email: 'ana@x.com' }), ativa({ email: 'bia@x.com', name: 'Bia Lima' })]);
+  assert.equal(r.competencia, '2026-12');
+  assert.equal(r.novas.length, 2);
+  assert.equal(r.elegiveis, 2);
+  const c = r.novas[0];
+  assert.equal(c.valor, 18);
+  assert.equal(c.plano, 'mensal');
+  assert.equal(c.status, 'emitida');
+  assert.equal(c.origem, 'automatica');
+  assert.equal(c.competencia, '2026-12');
+  assert.equal(c.vencimento, '2026-12-08');
+  assert.equal(c.historico[0].por, 'sistema');
+  assert.match(c.ref, /^NXA202612[0-9A-F]{8}$/);
+  assert.match(c.id, /^PG-AUTO-202612-[0-9A-F]{8}$/);
+  assert.notEqual(r.novas[0].ref, r.novas[1].ref);
+  // O Pix da cobrança é válido e leva a referência como identificador
+  const pix = P.pixLer(P.pixPayload({ chave: '+5562999990000', nome: 'Nexus', cidade: 'Goiania', valor: c.valor, txid: c.ref }));
+  assert.ok(pix.crcOk);
+});
+
+test('cobrança mensal: a mesma conta e o mesmo mês dão sempre o mesmo identificador (dois servidores não geram cobranças diferentes)', () => {
+  const a = gerar([ativa()]).novas[0];
+  const b = gerar([ativa()], [], { agora: DIA5 + 3 * 3600000 }).novas[0];
+  assert.equal(a.id, b.id);
+  assert.equal(a.ref, b.ref);
+  const outroMes = gerar([ativa({ subscription_expires_at: '2027-02-10T12:00:00.000Z' })], [], { agora: Date.parse('2027-01-05T15:00:00Z') }).novas[0];
+  assert.notEqual(a.id, outroMes.id);
+});
+
+test('cobrança mensal: não recebem teste, expirado, vitalício, administrador, cortesia nem plano anual', () => {
+  const r = gerar([
+    usuario({ email: 'teste@x.com', subscription_status: 'trial', trial_started_at: new Date(DIA5 - 3600000).toISOString() }),
+    usuario({ email: 'exp@x.com', subscription_status: 'active', subscription_plan: 'mensal', subscription_expires_at: '2026-12-01T12:00:00.000Z' }),
+    usuario({ email: 'vit@x.com', subscription_status: 'active', subscription_plan: 'vitalicio' }),
+    usuario({ email: 'adm@x.com', role: 'Administrador' }),
+    ativa({ email: 'cort@x.com', subscription_method: 'admin_cortesia' }),
+    ativa({ email: 'cort2@x.com', subscription_plan: 'cortesia_admin' }),
+    ativa({ email: 'ano@x.com', subscription_plan: 'anual', subscription_expires_at: '2027-09-01T12:00:00.000Z' }),
+    ativa({ email: 'ok@x.com' })
+  ]);
+  assert.deepEqual(r.novas.map((c) => c.email), ['ok@x.com']);
+  assert.equal(r.elegiveis, 1);
+});
+
+test('cobrança mensal: rodar de novo não repete, e uma cobrança cancelada à mão não volta no mesmo mês', () => {
+  const us = [ativa()];
+  const livro = [];
+  const um = gerar(us, livro);
+  livro.push(...um.novas);
+  const dois = gerar(us, livro);
+  assert.equal(dois.novas.length, 0);
+  assert.equal(dois.puladas.ja_gerada, 1);
+  P.cancelar(livro[0], eu, 'gerada por engano', DIA5);
+  assert.equal(gerar(us, livro).novas.length, 0, 'cancelada não é gerada outra vez');
+});
+
+test('cobrança mensal: antes do dia 5 não gera; o botão do administrador (forcar) gera o mês corrente em qualquer dia', () => {
+  const dia4 = Date.parse('2026-12-04T15:00:00Z');
+  const antes = gerar([ativa()], [], { agora: dia4 });
+  assert.equal(antes.novas.length, 0);
+  assert.equal(antes.motivo, 'antes_do_dia');
+  const forcada = gerar([ativa()], [], { agora: dia4, forcar: true });
+  assert.equal(forcada.novas.length, 1);
+  assert.equal(forcada.competencia, '2026-12');
+});
+
+test('cobrança mensal: servidor desligado no dia 5 completa nos dias seguintes, mas a primeira vez não gera cobrança retroativa', () => {
+  const dia9 = Date.parse('2026-12-09T15:00:00Z');
+  const primeira = gerar([ativa()], [], { agora: dia9 });
+  assert.equal(primeira.novas.length, 0);
+  assert.equal(primeira.motivo, 'sem_retroativo');
+  const jaRodouAntes = P.criarCobranca({ usuario: ativa({ email: 'outra@x.com' }), valor: 18, origem: 'automatica', competencia: '2026-11', agora: Date.parse('2026-11-05T15:00:00Z') });
+  const completa = gerar([ativa()], [jaRodouAntes], { agora: dia9 });
+  assert.equal(completa.novas.length, 1);
+  assert.equal(completa.novas[0].vencimento, '2026-12-12', 'vence 3 dias depois de gerada');
+});
+
+test('cobrança mensal: quem já pagou do dia 5 em diante está em dia; quem pagou antes do dia 5 recebe a do mês', () => {
+  const paga = (email, dia) => { const c = P.criarCobranca({ usuario: ativa({ email }), valor: 18, agora: Date.parse(dia) }); return P.marcarPaga(c, { agora: Date.parse(dia), por: eu }); };
+  const livro = [paga('em-dia@x.com', '2026-12-05T10:00:00Z'), paga('antes@x.com', '2026-12-02T15:00:00Z')];
+  const r = gerar([ativa({ email: 'em-dia@x.com' }), ativa({ email: 'antes@x.com' })], livro);
+  assert.deepEqual(r.novas.map((c) => c.email), ['antes@x.com']);
+  assert.equal(r.puladas.pagou_no_ciclo, 1);
+  // pagamento estornado não conta como pago
+  P.estornar(livro[0], eu, 'devolvido', DIA5);
+  assert.equal(gerar([ativa({ email: 'em-dia@x.com' })], livro).novas.length, 1);
+});
+
+test('cobrança mensal: aviso de pagamento e cobrança emitida pelo administrador ficam como estão (não empilha outra)', () => {
+  const informada = P.marcarInformada(P.criarCobranca({ usuario: ativa({ email: 'inf@x.com' }), valor: 18, agora: DIA5 - DIA }), { agora: DIA5 - 3600000 });
+  const manual = P.criarCobranca({ usuario: ativa({ email: 'man@x.com' }), valor: 18, origem: 'admin', vencimento: '2026-12-10', agora: DIA5 - DIA });
+  const r = gerar([ativa({ email: 'inf@x.com' }), ativa({ email: 'man@x.com' })], [informada, manual]);
+  assert.equal(r.novas.length, 0);
+  assert.equal(r.puladas.em_aberto, 2);
+});
+
+test('cobrança mensal: a automática de mês anterior ainda não paga é substituída pela do mês (fica cancelada, com histórico)', () => {
+  const velha = P.criarCobranca({ usuario: ativa(), valor: 18, origem: 'automatica', competencia: '2026-11', agora: Date.parse('2026-11-05T15:00:00Z') });
+  const r = gerar([ativa()], [velha]);
+  assert.equal(r.novas.length, 1);
+  assert.equal(r.substituidas.length, 1);
+  assert.equal(velha.status, 'cancelada');
+  assert.match(velha.historico[velha.historico.length - 1].nota, /dez\/26/);
+  assert.equal(r.novas[0].competencia, '2026-12');
+  assert.equal(P.emAberto(velha), false);
+});
+
+test('cobrança mensal: proximaGeracao diz o próximo dia 5 (hoje conta se ainda for o dia)', () => {
+  assert.equal(P.proximaGeracao(Date.parse('2026-11-15T15:00:00Z'), 5), '2026-12-05');
+  assert.equal(P.proximaGeracao(Date.parse('2026-11-05T15:00:00Z'), 5), '2026-11-05');
+  assert.equal(P.proximaGeracao(Date.parse('2026-11-04T15:00:00Z'), 5), '2026-11-05');
+  assert.equal(P.proximaGeracao(Date.parse('2026-12-20T15:00:00Z'), 5), '2027-01-05');
+  // 02:00 de 06/12 em UTC ainda é dia 05 à noite em Brasília
+  assert.equal(P.proximaGeracao(Date.parse('2026-12-06T02:00:00Z'), 5), '2026-12-05');
+});

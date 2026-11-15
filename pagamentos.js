@@ -94,6 +94,7 @@ function criarCobranca(o) {
     valor,
     status: STATUS.EMITIDA,
     origem: texto(o.origem || 'admin', 20),
+    competencia: /^\d{4}-\d{2}$/.test(String(o.competencia || '')) ? String(o.competencia) : null, // mês da cobrança automática (AAAA-MM)
     emitida_em: new Date(agora).toISOString(),
     vencimento: dataIsoValida(o.vencimento) || null,
     informada_em: null, paga_em: null,
@@ -218,6 +219,81 @@ function classificarUsuario(u, agora) {
   const ini = paraMs(u.trial_started_at);
   if (!isNaN(ini) && agora - ini >= DIA) return { chave: 'teste_fim', expira: null };
   return { chave: 'teste', expira: null };
+}
+
+/* ============================================================ cobrança mensal automática (todo dia 5) ============================================================ */
+const COBRANCA_DIA_PADRAO = 5;
+
+function numeroDoDia(ms) { return parseInt(diaDe(ms).slice(8, 10), 10); }
+// Meia-noite (Brasília) do dia `dia` do mês `chave` (AAAA-MM), em ms
+function inicioDoDia(chave, dia) {
+  const m = /^(\d{4})-(\d{2})$/.exec(chave);
+  return Date.UTC(+m[1], +m[2] - 1, dia, 3, 0, 0);
+}
+// Próximo dia `dia` a partir de hoje (hoje conta, se ainda for o dia), no formato AAAA-MM-DD
+function proximaGeracao(agora, dia) {
+  dia = dia || COBRANCA_DIA_PADRAO;
+  const mes = mesDe(agora);
+  const alvo = numeroDoDia(agora) <= dia ? mes : somarMeses(mes, 1);
+  return alvo + '-' + String(dia).padStart(2, '0');
+}
+// Quem recebe a cobrança do mês: assinatura PAGA e ativa. Fora: teste, expirado, vitalício, administrador, cortesia e plano anual (já pagou o ano).
+function recebeCobrancaMensal(u, agora) {
+  if (!u || !u.email) return false;
+  const c = classificarUsuario(u, agora);
+  return c.chave === 'ativo' && !c.cortesia && c.plano !== 'anual';
+}
+// Identificador e referência Pix fixos por conta e mês: se dois servidores gerarem a mesma cobrança, os dois registros saem iguais (e o Pix também)
+function chaveAutomatica(email, competencia) {
+  const h = crypto.createHash('sha1').update(String(email).toLowerCase()).digest('hex').slice(0, 8).toUpperCase();
+  const mes = competencia.replace('-', '');
+  return { id: 'PG-AUTO-' + mes + '-' + h, ref: 'NXA' + mes + h };
+}
+
+/* Gera a cobrança do mês de cada assinatura ativa (a rotina do servidor chama isto de hora em hora; só age a partir do dia 5).
+   Regras:
+   - uma cobrança por conta e por mês (campo `competencia`): rodar de novo não repete, e uma cobrança cancelada à mão não volta;
+   - quem já avisou que pagou (informada) ou tem uma cobrança emitida pelo administrador fica como está;
+   - a cobrança automática emitida em mês anterior e ainda não paga é substituída pela do mês (vira "cancelada", o histórico fica);
+   - quem pagou do dia 5 em diante neste mês já está em dia e não recebe outra.
+   Se o servidor ficou desligado no dia 5, completa nos dias seguintes, menos na primeira vez em que a rotina existe (sem cobrança retroativa);
+   `forcar` ignora o dia (botão do administrador). Não grava nada: devolve as cobranças novas e as substituídas (estas já alteradas dentro de `pagamentos`). */
+function gerarCobrancasMensais(o) {
+  const agora = o.agora || Date.now();
+  const dia = o.dia || COBRANCA_DIA_PADRAO;
+  const prazoDias = Number.isFinite(o.prazoDias) ? o.prazoDias : 3;
+  const comp = mesDe(agora);
+  const pagamentos = o.pagamentos || [];
+  const r = { competencia: comp, dia, novas: [], substituidas: [], elegiveis: 0, puladas: { ja_gerada: 0, em_aberto: 0, pagou_no_ciclo: 0 }, motivo: '' };
+  if (!o.forcar) {
+    const hoje = numeroDoDia(agora);
+    if (hoje < dia) { r.motivo = 'antes_do_dia'; return r; }
+    if (hoje > dia && !pagamentos.some((p) => p && p.origem === 'automatica')) { r.motivo = 'sem_retroativo'; return r; }
+  }
+  const inicioCiclo = inicioDoDia(comp, dia);
+  const vencimento = diaDe(agora + prazoDias * DIA);
+  const porEmail = new Map();
+  for (const p of pagamentos) { if (p && p.email) { if (!porEmail.has(p.email)) porEmail.set(p.email, []); porEmail.get(p.email).push(p); } }
+  const existentes = pagamentos.slice();
+  for (const u of o.usuarios || []) {
+    if (!recebeCobrancaMensal(u, agora)) continue;
+    r.elegiveis++;
+    const email = String(u.email).toLowerCase();
+    const dela = porEmail.get(email) || [];
+    if (dela.some((p) => p.competencia === comp)) { r.puladas.ja_gerada++; continue; }
+    if (dela.some((p) => p.status === STATUS.PAGA && paraMs(p.paga_em) >= inicioCiclo)) { r.puladas.pagou_no_ciclo++; continue; }
+    const abertas = dela.filter(emAberto);
+    const velhas = abertas.filter((p) => p.origem === 'automatica' && p.status === STATUS.EMITIDA && p.competencia && p.competencia < comp);
+    if (abertas.length > velhas.length) { r.puladas.em_aberto++; continue; }
+    const k = chaveAutomatica(email, comp);
+    if (existentes.some((p) => p && (p.id === k.id || p.ref === k.ref))) { r.puladas.ja_gerada++; continue; }
+    for (const v of velhas) { cancelar(v, null, 'Substituída pela cobrança de ' + rotuloMes(comp), agora); r.substituidas.push(v); }
+    const reg = criarCobranca({ usuario: u, valor: o.preco, plano: 'mensal', vencimento, referencia: k.ref, origem: 'automatica', competencia: comp, agora, existentes, obs: 'Cobrança automática de ' + rotuloMes(comp) + ' (todo dia ' + dia + ')' });
+    reg.id = k.id;
+    existentes.push(reg);
+    r.novas.push(reg);
+  }
+  return r;
 }
 
 /* ============================================================ resumo financeiro ============================================================ */
@@ -497,6 +573,7 @@ module.exports = {
   novoId, novaReferencia, limparReferencia,
   criarCobranca, situacao, emAberto, marcarInformada, calcularPeriodo, valorConfirmado, marcarPaga, cancelar, estornar, evento,
   sincronizarLegado, publico, classificarUsuario, resumo, csv,
+  COBRANCA_DIA_PADRAO, gerarCobrancasMensais, proximaGeracao, recebeCobrancaMensal,
   crc16, pixPayload, pixLer,
   numeroBR, lerExtrato, conciliar
 };
