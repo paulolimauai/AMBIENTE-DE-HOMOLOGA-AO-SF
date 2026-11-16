@@ -386,8 +386,7 @@ h1 em{font-style:normal;background:linear-gradient(100deg,var(--accent),var(--br
 .mini p{margin-top:.3rem;font-size:.9rem;color:var(--soft)}
 
 /* ---------- perfis ---------- */
-.perfis{display:grid;gap:1.2rem}
-@media (min-width:900px){.perfis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.perfis{display:grid;gap:1.2rem;max-width:46rem;margin-inline:auto}
 .perfil{padding:clamp(1.3rem,2.6vw,2rem)}
 .perfil header{display:flex;align-items:center;gap:.9rem;margin-bottom:1.1rem}
 .perfil h3{font:600 1.5rem/1.2 var(--serif);letter-spacing:-.015em}
