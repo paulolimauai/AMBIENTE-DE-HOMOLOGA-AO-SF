@@ -2466,7 +2466,8 @@ function buildHtmlContent() { return `<!DOCTYPE html>
     // Paleta de cores do fundo: mesmas paletas da tela de login (/login.html) e mesma chave de armazenamento (nexus:cores)
     window.__nxPalette = (function() {
       var KEY = 'nexus:cores';
-      var DEFAULT_ID = 'ouro';
+      // Padrão = o do site inicial, do login e do GLPI (oceano). Antes era o dourado, e quem entrava direto no painel via outra cor.
+      var DEFAULT_ID = 'oceano';
       var PALETAS = [
         { id: 'multicolor', nome: 'Multicolor', h: [265, 335, 190, 45] },
         { id: 'aurora', nome: 'Aurora', h: [250, 320, 190, 280] },
@@ -2480,6 +2481,9 @@ function buildHtmlContent() { return `<!DOCTYPE html>
         { id: 'neon', nome: 'Neon', h: [85, 150, 195, 50] }
       ];
       var state = { id: DEFAULT_ID };
+      // Matizes usados para PINTAR o painel (os da lista acima só aparecem na bolinha do seletor). O oceano usa o mesmo azul-royal (224)
+      // com brilho violeta (255) do site inicial, do login e do GLPI; com os matizes da lista ele saía azul-piscina com brilho verde-água.
+      var PAINT = { oceano: [224, 255, 224, 255] };
       function hslToRgb(h, s, l) {
         s /= 100; l /= 100;
         var k = function(n) { return (n + h / 30) % 12; };
@@ -2511,7 +2515,7 @@ function buildHtmlContent() { return `<!DOCTYPE html>
       function choose(id, skipSave) {
         var p = PALETAS.filter(function(x) { return x.id === id; })[0] || PALETAS.filter(function(x) { return x.id === DEFAULT_ID; })[0] || PALETAS[0];
         state = { id: p.id };
-        paint(p.h, p.id, 95);
+        paint(PAINT[p.id] || p.h, p.id, 95);
         if (!skipSave) save();
       }
       function chooseCustom(hex, skipSave) {

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR" data-mode="dark" data-bg="padrao">
+<html lang="pt-BR" data-mode="dark" data-bg="padrao" data-pers="off">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -17,7 +17,11 @@
 <meta name="twitter:description" content="Todo o seu dinheiro em um só lugar, com clareza. Teste 1 dia grátis.">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%236f94ff'/%3E%3Cstop offset='1' stop-color='%232f55d4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Ctext x='32' y='45' font-family='Georgia,serif' font-size='38' font-weight='700' text-anchor='middle' fill='%23ffffff'%3EN%3C/text%3E%3C/svg%3E">
 <script>
-/* Tema antes do primeiro desenho. Mesmas paletas e mesmas chaves do login e do app (nexus:cores, nexus-modo):
+/* PERSONALIZAR ESCONDIDO: o <html> tem data-pers="off". Tudo o que é controle de cor/fundo/aparência do site leva o atributo data-pers
+   (botão do topo, grupos da gaveta do celular, seção "O painel com a sua cara" e o link dela no rodapé) e some pelo CSS.
+   Para mostrar de novo, troque para data-pers="on": nada mais precisa mudar. Escondido, o site usa o fundo padrão e só segue a cor
+   salva em nexus:cores (a mesma do financeiro e do GLPI), que na primeira visita é gravada como o padrão (oceano).
+   Tema antes do primeiro desenho. Mesmas paletas e mesmas chaves do login e do app (nexus:cores, nexus-modo):
    a cor e a aparência escolhidas aqui valem também depois do login. O fundo (padrão ou vidro) é só do site e fica
    em nexus-site-fundo, chave própria: o login regrava nexus-fundo a cada visita e mudaria o site sem o visitante pedir. */
 (function(){
@@ -102,9 +106,9 @@
   var salvo=null;try{salvo=JSON.parse(g('nexus:cores'))}catch(e){}
   if(salvo&&salvo.id==='custom'&&/^#[0-9a-f]{6}$/i.test(salvo.hex||''))personalizada(salvo.hex,false);
   else if(salvo&&P.some(function(p){return p.id===salvo.id}))escolher(salvo.id,false);
-  else escolher(PADRAO,false);
+  else escolher(PADRAO,true); /* 1ª visita: grava o padrão em nexus:cores, para o financeiro e o GLPI usarem exatamente a mesma cor do site */
   setModo(g('nexus-modo')||'auto',false);
-  setFundo(g('nexus-site-fundo')||'padrao',false);
+  setFundo(r.getAttribute('data-pers')==='on'?(g('nexus-site-fundo')||'padrao'):'padrao',false); /* escondido: ignora um fundo salvo antes (não haveria como desfazer) */
 })();
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -133,7 +137,7 @@
       <a href="#duvidas">Dúvidas</a>
     </nav>
     <div class="top-act">
-      <div class="cfg">
+      <div class="cfg" data-pers>
         <button class="cfg-btn" id="cfg-btn" type="button" aria-expanded="false" aria-controls="cfg-pop" aria-label="Personalizar cores, fundo e aparência">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.8-.8 1.8-1.7 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2 0-.9.7-1.6 1.6-1.6H16a5 5 0 0 0 5-5c0-4-4-7.3-9-7.3Z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10" cy="7" r="1"/><circle cx="15" cy="7.5" r="1"/></svg>
           <span class="lb">Personalizar</span>
@@ -166,9 +170,9 @@
     <a class="btn pri lg" data-cta="criar" href="/login.html#criar"><span class="t">Criar conta grátis</span></a>
     <a class="btn gho lg" data-cta="entrar" href="/login.html"><span class="t">Entrar</span></a>
   </div>
-  <div class="grp"><span>Aparência</span><div class="chips" data-modos role="group" aria-label="Aparência"></div></div>
-  <div class="grp" style="margin-top:.8rem"><span>Fundo</span><div class="chips c2" data-fundos role="group" aria-label="Fundo do site"></div></div>
-  <div class="grp" style="margin-top:.8rem"><span>Cor de destaque</span><div class="sws" data-cores role="group" aria-label="Paleta de cores"></div></div>
+  <div class="grp" data-pers><span>Aparência</span><div class="chips" data-modos role="group" aria-label="Aparência"></div></div>
+  <div class="grp" data-pers style="margin-top:.8rem"><span>Fundo</span><div class="chips c2" data-fundos role="group" aria-label="Fundo do site"></div></div>
+  <div class="grp" data-pers style="margin-top:.8rem"><span>Cor de destaque</span><div class="sws" data-cores role="group" aria-label="Paleta de cores"></div></div>
 </div>
 
 <main id="conteudo">
@@ -346,7 +350,7 @@
   </section>
 
   <!-- ===== Personalizar ===== -->
-  <section class="sec" id="personalizar" aria-labelledby="h-pers">
+  <section class="sec" id="personalizar" data-pers aria-labelledby="h-pers">
     <div class="wrap">
       <div class="pers glass rv">
         <div>
@@ -458,8 +462,8 @@
         <a class="logo" href="#inicio" aria-label="Nexus Financeiro, voltar ao início"><span class="mark" aria-hidden="true">N</span><span>Nexus <small>Financeiro</small></span></a>
         <p>Seu dinheiro e o seu suporte no mesmo lugar.</p>
       </div>
-      <div><h3>O sistema</h3><ul><li><a href="#recursos">Recursos</a></li><li><a href="#como-funciona">Como funciona</a></li><li><a href="#perfis">Perfis de acesso</a></li><li><a href="#personalizar">Personalizar</a></li><li><a href="#planos">Planos</a></li><li><a href="#duvidas">Dúvidas frequentes</a></li></ul></div>
-      <div><h3>Suporte e conta</h3><ul><li><a href="#atendimento">Central de Serviços</a></li><li><a href="/glpi.html?entry=login">Abrir um chamado</a></li><li><a href="#seguranca">Segurança</a></li><li><a href="#pagamento">Como pagar</a></li><li><a href="/login.html">Entrar</a></li><li><a href="/login.html#criar">Criar conta</a></li></ul></div>
+      <div><h3>O sistema</h3><ul><li><a href="#recursos">Recursos</a></li><li><a href="#como-funciona">Como funciona</a></li><li><a href="#perfis">Perfis de acesso</a></li><li data-pers><a href="#personalizar">Personalizar</a></li><li><a href="#planos">Planos</a></li><li><a href="#duvidas">Dúvidas frequentes</a></li></ul></div>
+      <div><h3>Suporte e conta</h3><ul><li><a href="#atendimento">Central de Serviços</a></li><li><a href="/glpi.html?entry=login">Abrir um chamado</a></li><li><a href="#seguranca">Segurança</a></li><li><a href="/login.html">Entrar</a></li><li><a href="/login.html#criar">Criar conta</a></li></ul></div>
     </div>
     <p class="copy" id="ano">© Nexus Financeiro. Todos os direitos reservados.</p>
   </div>
