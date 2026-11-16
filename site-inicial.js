@@ -111,7 +111,7 @@
     {
       id: 'recorrentes', ic: 'rec', nome: 'Despesas Fixas',
       resumo: 'Aluguel, assinaturas e parcelamentos organizados mês a mês, sem esquecer nenhum vencimento.',
-      itens: ['Contratos e mensalidades com vencimento, conta e duração (12 ou 24 meses, ou contínuo)', 'Cronograma mês a mês de cada parcela', 'Lance a parcela do mês em um clique', 'Conclusão automática quando todas as parcelas são lançadas'],
+      itens: ['Contratos e mensalidades com vencimento, conta e duração (12 ou 24 meses, outro prazo ou contínuo)', 'Cronograma mês a mês de cada parcela', 'Lance a parcela do mês em um clique', 'Conclusão automática quando todas as parcelas são lançadas'],
       vz: function () {
         var p = '';
         for (var i = 1; i <= 12; i++) p += '<i class="' + (i < 8 ? 'f' : i === 8 ? 'a' : '') + '">' + i + '</i>';
@@ -231,6 +231,7 @@
       burger.setAttribute('aria-label', v ? 'Fechar menu' : 'Abrir menu');
       burger.innerHTML = ic(v ? 'x' : 'menu');
       D.body.classList.toggle('menu-aberto', v);
+      if (v) { var primeiro = $('a', gaveta); if (primeiro) primeiro.focus(); }
     }
     burger.innerHTML = ic('menu');
     burger.addEventListener('click', function () { menu(gaveta.hidden); });
@@ -243,7 +244,11 @@
       var io = new IntersectionObserver(function (es) {
         es.forEach(function (e) {
           if (!e.isIntersecting) return;
-          links.forEach(function (a, i) { a.classList.toggle('on', alvos[i] === e.target); });
+          links.forEach(function (a, i) {
+            var on = alvos[i] === e.target;
+            a.classList.toggle('on', on);
+            if (on) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current');
+          });
         });
       }, { rootMargin: '-45% 0px -50% 0px' });
       alvos.forEach(function (s) { if (s) io.observe(s); });

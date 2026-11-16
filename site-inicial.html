@@ -10,6 +10,11 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="Nexus Financeiro">
 <meta property="og:description" content="Todo o seu dinheiro em um só lugar, com clareza. Teste 1 dia grátis.">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="Nexus Financeiro">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Nexus Financeiro">
+<meta name="twitter:description" content="Todo o seu dinheiro em um só lugar, com clareza. Teste 1 dia grátis.">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%236f94ff'/%3E%3Cstop offset='1' stop-color='%232f55d4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Ctext x='32' y='45' font-family='Georgia,serif' font-size='38' font-weight='700' text-anchor='middle' fill='%23ffffff'%3EN%3C/text%3E%3C/svg%3E">
 <script>
 /* Tema antes do primeiro desenho. Mesmas paletas e mesmas chaves do login e do app (nexus:cores, nexus-modo):
@@ -36,10 +41,23 @@
   function lum(c){var v=c.map(function(x){x/=255;return x<=.03928?x/12.92:Math.pow((x+.055)/1.055,2.4)});return .2126*v[0]+.7152*v[1]+.0722*v[2]}
   function hexHs(v){var n=parseInt(v.slice(1),16),R=(n>>16&255)/255,G=(n>>8&255)/255,B=(n&255)/255,mx=Math.max(R,G,B),mn=Math.min(R,G,B),d=mx-mn,h=0;if(d){if(mx===R)h=((G-B)/d)%6;else if(mx===G)h=(B-R)/d+2;else h=(R-G)/d+4;h=Math.round(h*60+360)%360}var l=(mx+mn)/2,sa=d?d/(1-Math.abs(2*l-1)):0;return{h:h,s:Math.round(sa*100)}}
   function tc(){setTimeout(function(){var m=document.querySelector('meta[name="theme-color"]');if(!m||!document.body)return;var c=getComputedStyle(document.body).backgroundColor;if(/^rgb/.test(c))m.content=c},650)}
+  /* Cor do botão: o texto precisa de 4,6:1 sobre TODO o gradiente do botão. Tenta o texto branco no tom mais claro em que ele passa; se a cor for
+     clara demais para isso (amarelo, verde, ciano), usa texto escuro. Vale para botão, selo, número de passo e ícone (--btn-a, --btn-b, --on-brand). */
+  function botao(h,sa){
+    var esc=lum(hsl2rgb(h,55,9)),L,b;
+    function bt(L){return 1.05/(lum(hsl2rgb(h,sa,L))+.05)>=4.6}
+    function ed(L){return (lum(hsl2rgb(h,sa,L))+.05)/(esc+.05)>=4.6}
+    for(L=62;L>=48;L--){if(bt(L))return{a:L,b:Math.max(L-8,40),t:'#fff'}}
+    for(L=66;L>=60;L--){if(ed(L)){b=L;while(b>L-8&&ed(b-1))b--;return{a:L,b:b,t:'hsl('+h+' 55% 9%)'}}}
+    return{a:48,b:42,t:'#fff'};
+  }
   function pintar(h0,h2,sat){
     var sa=Math.max(70,Math.min(100,sat==null?100:sat)),st=r.style;
     st.setProperty('--h',String(h0));st.setProperty('--h2',String(h2));st.setProperty('--sat',sa+'%');
-    st.setProperty('--on-brand',1.05/(lum(hsl2rgb(h0,sa,66))+.05)<3?'hsl('+h0+' 55% 9%)':'#fff');
+    /* esferas do fundo: quanto mais clara a cor (verde, amarelo, ciano), menos opacidade, para o texto solto por cima manter o contraste */
+    st.setProperty('--orb',String(Math.max(.5,Math.min(1,.26/lum(hsl2rgb(h0,sa*.77,57))))));
+    var bt=botao(h0,sa);
+    st.setProperty('--btn-a','hsl('+h0+' '+sa+'% '+bt.a+'%)');st.setProperty('--btn-b','hsl('+h0+' '+sa+'% '+bt.b+'%)');st.setProperty('--on-brand',bt.t);
     tc();
   }
   function avisar(){if(T.onChange)T.onChange()}
@@ -100,8 +118,8 @@
           <span class="lb">Personalizar</span>
         </button>
         <div class="cfg-pop" id="cfg-pop" hidden>
-          <div class="grp"><h4>Aparência</h4><div class="chips" data-modos role="group" aria-label="Aparência"></div></div>
-          <div class="grp"><h4>Cor de destaque</h4><div class="sws" data-cores role="group" aria-label="Paleta de cores"></div></div>
+          <div class="grp"><span>Aparência</span><div class="chips" data-modos role="group" aria-label="Aparência"></div></div>
+          <div class="grp"><span>Cor de destaque</span><div class="sws" data-cores role="group" aria-label="Paleta de cores"></div></div>
           <button class="chip" id="cfg-reset" type="button" style="width:100%;margin-top:1.1rem">Restaurar padrão</button>
         </div>
       </div>
@@ -126,8 +144,8 @@
     <a class="btn pri lg" data-cta="criar" href="/login.html#criar"><span class="t">Criar conta grátis</span></a>
     <a class="btn gho lg" data-cta="entrar" href="/login.html"><span class="t">Entrar</span></a>
   </div>
-  <div class="grp"><h4>Aparência</h4><div class="chips" data-modos role="group" aria-label="Aparência"></div></div>
-  <div class="grp" style="margin-top:.8rem"><h4>Cor de destaque</h4><div class="sws" data-cores role="group" aria-label="Paleta de cores"></div></div>
+  <div class="grp"><span>Aparência</span><div class="chips" data-modos role="group" aria-label="Aparência"></div></div>
+  <div class="grp" style="margin-top:.8rem"><span>Cor de destaque</span><div class="sws" data-cores role="group" aria-label="Paleta de cores"></div></div>
 </div>
 
 <main id="conteudo">
@@ -266,13 +284,14 @@
           <h3 style="margin-top:1.4rem">2. Acompanhe as etapas</h3>
           <div class="linha" id="linha" role="group" aria-label="Etapas do chamado"></div>
           <div class="etdesc" id="etdesc" aria-live="polite"></div>
+          <noscript><p class="nojs"><b>Categorias:</b> Reset de senha, Pagamento não reconhecido, Desbloqueio de usuário, Conta/Login, Dados Cadastrais, Liberação de degustação, 2ª Via de fatura, Atendimento Técnico, Falhas/Bugs/Correções e Outros.<br><b>Etapas do chamado:</b> Novo, Atendimento atribuído, Pendente (se precisar), Resolvido e Fechado.</p></noscript>
         </div>
       </div>
 
       <div class="mini">
-        <div class="card rv"><span class="ico soft"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span><h4>Para quem abre</h4><p>Catálogo de serviços, formulário guiado em três passos e resumo dos seus chamados.</p></div>
-        <div class="card rv" style="--d:.07s"><span class="ico soft"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/><path d="M20 20c0 1.1-1.8 2-4 2h-2"/></svg></span><h4>Para quem atende</h4><p>Fila com filtros por status, tipo e fila, e atendimento em gaveta com atalhos de teclado.</p></div>
-        <div class="card rv" style="--d:.14s"><span class="ico soft"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg></span><h4>Para a gestão</h4><p>Painel com prazos, volume de chamados e carga da equipe, além de filas e técnicos cadastráveis.</p></div>
+        <div class="card rv"><span class="ico soft"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span><h3>Para quem abre</h3><p>Catálogo de serviços, formulário guiado em três passos e resumo dos seus chamados.</p></div>
+        <div class="card rv" style="--d:.07s"><span class="ico soft"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/><path d="M20 20c0 1.1-1.8 2-4 2h-2"/></svg></span><h3>Para quem atende</h3><p>Fila com filtros por status, tipo e fila, e atendimento em gaveta com atalhos de teclado.</p></div>
+        <div class="card rv" style="--d:.14s"><span class="ico soft"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg></span><h3>Para a gestão</h3><p>Painel com prazos, volume de chamados e carga da equipe, além de filas e técnicos cadastráveis.</p></div>
       </div>
     </div>
   </section>
@@ -317,8 +336,8 @@
           <span class="kicker">Do seu jeito</span>
           <h2 id="h-pers">O painel com a sua cara</h2>
           <p class="lead">Escolha uma das 10 paletas, ou a sua própria cor, e o modo claro, escuro ou automático. Experimente aqui: a escolha vale também para o login e para o painel, e fica salva neste navegador.</p>
-          <div class="grp"><h4>Aparência</h4><div class="chips" data-modos role="group" aria-label="Aparência"></div></div>
-          <div class="grp"><h4>Cor de destaque</h4><div class="sws" data-cores role="group" aria-label="Paleta de cores"></div></div>
+          <div class="grp"><span>Aparência</span><div class="chips" data-modos role="group" aria-label="Aparência"></div></div>
+          <div class="grp"><span>Cor de destaque</span><div class="sws" data-cores role="group" aria-label="Paleta de cores"></div></div>
         </div>
         <div class="pers-info">
           <div class="card"><span class="ico soft"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18h2"/></svg></span><div><b>Celular, tablet e computador</b><span>O layout se adapta a cada tela, inclusive monitores 4K.</span></div></div>
@@ -428,8 +447,8 @@
         <a class="logo" href="#inicio" aria-label="Nexus Financeiro, voltar ao início"><span class="mark" aria-hidden="true">N</span><span>Nexus <small>Financeiro</small></span></a>
         <p>Gestão financeira com Central de Serviços integrada: lançamentos, cartões, orçamentos, metas, relatórios e atendimento no mesmo lugar.</p>
       </div>
-      <div><h4>O sistema</h4><ul><li><a href="#recursos">Recursos</a></li><li><a href="#como-funciona">Como funciona</a></li><li><a href="#planos">Planos</a></li><li><a href="#duvidas">Dúvidas frequentes</a></li></ul></div>
-      <div><h4>Acesso</h4><ul><li><a href="/login.html">Entrar</a></li><li><a href="/login.html#criar">Criar conta</a></li><li><a href="/glpi.html?entry=login">Central de Serviços</a></li><li><a href="#seguranca">Segurança</a></li></ul></div>
+      <div><h3>O sistema</h3><ul><li><a href="#recursos">Recursos</a></li><li><a href="#como-funciona">Como funciona</a></li><li><a href="#planos">Planos</a></li><li><a href="#duvidas">Dúvidas frequentes</a></li></ul></div>
+      <div><h3>Acesso</h3><ul><li><a href="/login.html">Entrar</a></li><li><a href="/login.html#criar">Criar conta</a></li><li><a href="/glpi.html?entry=login">Central de Serviços</a></li><li><a href="#seguranca">Segurança</a></li></ul></div>
     </div>
     <p class="copy" id="ano">© Nexus Financeiro Hub. Todos os direitos reservados.</p>
   </div>
