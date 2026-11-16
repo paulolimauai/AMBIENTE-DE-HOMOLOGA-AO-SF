@@ -168,7 +168,6 @@
       a.classList.remove('gho'); a.classList.add('pri');
     });
     $$('[data-cta="criar"]').forEach(function (a) { a.hidden = true; });
-    $$('.final').forEach(function (s) { s.hidden = true; }); /* a chamada final só tem "Criar conta": para quem já entrou ela ficaria vazia */
   }
 
   /* ---------- cores e aparência (o script de tema do <head> guarda o estado; aqui ficam só os controles) ---------- */

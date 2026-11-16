@@ -185,14 +185,13 @@ body.menu-aberto{overflow:hidden}
 
 /* ---------- blocos ---------- */
 section{position:relative;z-index:1}
-.sec{padding:clamp(3.25rem,6vw,5.25rem) 0}
-.sec-head{max-width:46rem;margin-bottom:clamp(2rem,4vw,3.25rem)}
-.sec-head.c{margin-inline:auto;text-align:center}
+.sec{padding:clamp(2.25rem,4.2vw,3.5rem) 0}
+/* títulos das seções alinhados à esquerda, na mesma borda do hero, da Central de Serviços e dos cartões logo abaixo */
+.sec-head{max-width:46rem;margin-bottom:clamp(1.4rem,2.6vw,2rem)}
 .kicker{display:inline-block;margin-bottom:.8rem;font-size:.8rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
 h1,h2,h3,h4{color:var(--white);text-wrap:balance}
 h2{font:600 clamp(1.9rem,3.6vw,2.9rem)/1.14 var(--serif);letter-spacing:-.012em;word-spacing:.06em}
 .lead{margin-top:1rem;font-size:clamp(1.02rem,1.25vw,1.18rem);color:var(--soft);max-width:42rem}
-.sec-head.c .lead{margin-inline:auto}
 .glass{background:var(--glass);border:1px solid var(--glass-line);box-shadow:var(--shadow);-webkit-backdrop-filter:blur(1.6rem) saturate(160%);backdrop-filter:blur(1.6rem) saturate(160%)}
 .card{background:var(--card);border:1px solid var(--card-line);border-radius:var(--r);box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 .9rem 2.2rem rgba(0,0,0,.16)}
 :root[data-mode="light"] .card{box-shadow:inset 0 1px 0 rgba(255,255,255,.8),0 .9rem 2.2rem rgba(30,45,110,.08)}
@@ -218,7 +217,7 @@ h2{font:600 clamp(1.9rem,3.6vw,2.9rem)/1.14 var(--serif);letter-spacing:-.012em;
 .hero-grid>*,.rec>*,.atd>*,.pers>*,.plano-w>*,.painel-in>*{min-width:0}
 
 /* ---------- início ---------- */
-.hero{padding:calc(4.25rem + clamp(2rem,6vw,4.5rem)) 0 clamp(2.5rem,5vw,4rem)}
+.hero{padding:calc(4.25rem + clamp(1.75rem,4.5vw,3.25rem)) 0 clamp(2rem,4vw,3rem)}
 .hero-grid{display:grid;gap:clamp(2rem,5vw,3.5rem);align-items:center}
 @media (min-width:1024px){.hero-grid{grid-template-columns:minmax(0,1fr) minmax(0,1.05fr)}}
 h1{font:600 clamp(2.35rem,5.1vw,4.1rem)/1.08 var(--serif);letter-spacing:-.014em;word-spacing:.07em}
@@ -270,13 +269,13 @@ h1 em{font-style:normal;background:linear-gradient(100deg,var(--accent),var(--br
 .js .mock:not(.go) .meter i{transform:scaleX(0)}
 .mrow{display:flex;justify-content:space-between;align-items:center;gap:.5rem;font-size:.8rem;color:var(--soft)}
 .mrow b{color:var(--white)}
-.mock-note{margin-top:.8rem;font-size:.78rem;color:var(--soft);text-align:center}
+.mock-note{margin-top:.8rem;font-size:.78rem;color:var(--soft)}
 
 /* faixa de números */
-.faixa{padding:0 0 clamp(2.5rem,5vw,4rem)}
+.faixa{padding:0 0 clamp(1rem,2vw,1.5rem)}
 .nums{display:grid;grid-template-columns:minmax(0,1fr);gap:1px;border-radius:var(--r);overflow:hidden;background:var(--card-line);border:1px solid var(--card-line)}
 @media (min-width:480px){.nums{grid-template-columns:repeat(3,minmax(0,1fr))}}
-.num{padding:1.4rem 1.2rem;background:var(--card);text-align:center}
+.num{padding:1.4rem 1.5rem;background:var(--card)}
 .num b{display:block;font:600 clamp(1.9rem,3.4vw,2.7rem)/1.1 var(--serif);color:var(--white);font-variant-numeric:tabular-nums}
 .num span{display:block;margin-top:.3rem;font-size:.88rem;color:var(--soft)}
 
@@ -386,12 +385,14 @@ h1 em{font-style:normal;background:linear-gradient(100deg,var(--accent),var(--br
 .mini p{margin-top:.3rem;font-size:.9rem;color:var(--soft)}
 
 /* ---------- perfis ---------- */
-.perfis{display:grid;gap:1.2rem;max-width:46rem;margin-inline:auto}
+.perfis{display:grid;gap:1.2rem}
 .perfil{padding:clamp(1.3rem,2.6vw,2rem)}
 .perfil header{display:flex;align-items:center;gap:.9rem;margin-bottom:1.1rem}
 .perfil h3{font:600 1.5rem/1.2 var(--serif);letter-spacing:-.015em}
 .perfil header p{font-size:.9rem;color:var(--muted)}
 .perfil .tick{margin-top:.2rem}
+/* um cartão só, na largura toda: os itens correm em colunas em vez de deixar as laterais vazias */
+@media (min-width:900px){.perfil .tick{grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem 2rem}}
 
 /* ---------- personalizar ---------- */
 .pers{display:grid;gap:1.6rem;align-items:center;padding:clamp(1.3rem,3vw,2.4rem);border-radius:1.5rem}
@@ -438,7 +439,8 @@ h1 em{font-style:normal;background:linear-gradient(100deg,var(--accent),var(--br
 .fluxo span{font-size:.9rem;color:var(--soft)}
 
 /* ---------- dúvidas ---------- */
-.faq{display:grid;gap:.7rem;max-width:54rem;margin-inline:auto}
+/* perguntas na largura toda, na mesma borda dos outros blocos (sem coluna estreita solta no meio nem buraco ao lado da pergunta aberta) */
+.faq{display:grid;gap:.7rem}
 .faq details{border-radius:1rem;background:var(--card);border:1px solid var(--card-line);transition:border-color .2s,background .2s}
 .faq details[open]{border-color:color-mix(in srgb,var(--brand) 45%,transparent)}
 .faq summary{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.05rem 1.2rem;min-height:3.4rem;cursor:pointer;font-weight:700;color:var(--white);list-style:none}
@@ -447,13 +449,7 @@ h1 em{font-style:normal;background:linear-gradient(100deg,var(--accent),var(--br
 .faq details[open] summary::after{transform:rotate(-135deg)}
 .faq details p{padding:0 1.2rem 1.15rem;color:var(--soft)}
 
-/* ---------- chamada final e rodapé ---------- */
-.final{padding:clamp(3rem,7vw,5.5rem) 0}
-.final-in{padding:clamp(2rem,5vw,3.8rem) clamp(1.3rem,4vw,3rem);border-radius:1.8rem;text-align:center;position:relative;overflow:hidden}
-.final-in::before{content:"";position:absolute;inset:-40% -10% auto;height:120%;background:radial-gradient(50% 50% at 50% 0%,color-mix(in srgb,var(--brand) 28%,transparent),transparent 70%);pointer-events:none}
-.final-in>*{position:relative}
-.final-in .lead{margin-inline:auto}
-.final-in .cta{justify-content:center}
+/* ---------- rodapé ---------- */
 .rodape{position:relative;z-index:1;padding:2.4rem 0 calc(2rem + env(safe-area-inset-bottom,0px));border-top:1px solid var(--card-line)}
 .rod-in{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.6rem}
 .rod-brand{grid-column:1/-1}
