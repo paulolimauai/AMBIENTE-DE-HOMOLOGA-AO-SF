@@ -58,8 +58,9 @@
       resumo: 'O centro de controle do seu dinheiro: saldo, entradas e saídas do período em uma tela só, com atalhos para o que pede ação.',
       itens: ['Saldo consolidado, receitas e despesas do período', 'Gráficos por categoria e comparativo entre entradas e saídas', 'Nota de saúde financeira e média diária de gastos dos últimos 30 dias', 'Período por mês, por ano ou o histórico completo'],
       vz: function () {
-        return '<div class="vz" aria-hidden="true"><div class="kpis"><div class="kpi"><small>Saldo</small><b><span class="rs">R$</span>12.480</b></div><div class="kpi in"><small>Receitas</small><b><span class="rs">R$</span>8.900</b></div><div class="kpi out"><small>Despesas</small><b><span class="rs">R$</span>5.327</b></div></div>' +
-          '<div class="box"><small>Entradas e saídas por mês</small>' + bars([[62, 48], [70, 56], [58, 62], [80, 52], [66, 50], [90, 58], [76, 46]]) + '</div></div>';
+        /* o painel do topo da página já mostra saldo e gráfico: aqui entra a nota de saúde, que o texto ao lado descreve (valores coerentes com as outras abas) */
+        return '<div class="vz" aria-hidden="true"><small>Saúde financeira · nota do período</small><div class="saude"><div class="nota">90<small>/100</small></div><div class="sd"><span class="pill ok">Excelente</span><small>Média diária de gastos · R$ 177,58</small></div></div>' +
+          barra('Poupança', 40, 'var(--ok)', '40%') + barra('Comprometimento', 60, 'var(--ok)', '60%') + barra('Uso do cartão', 33, 'var(--ok)', '33%') + barra('Pontualidade', 75, 'var(--warn)', '75%') + '</div>';
       }
     },
     {
@@ -167,6 +168,7 @@
       a.classList.remove('gho'); a.classList.add('pri');
     });
     $$('[data-cta="criar"]').forEach(function (a) { a.hidden = true; });
+    $$('.final').forEach(function (s) { s.hidden = true; }); /* a chamada final só tem "Criar conta": para quem já entrou ela ficaria vazia */
   }
 
   /* ---------- cores e aparência (o script de tema do <head> guarda o estado; aqui ficam só os controles) ---------- */
@@ -305,13 +307,17 @@
       return '<button class="tab" role="tab" type="button" id="tab-' + r.id + '" aria-controls="painel" aria-selected="false" tabindex="-1" data-i="' + i + '">' + ic(r.ic) + '<span>' + esc(r.nome) + '</span></button>';
     }).join('');
     var botoes = $$('.tab', tabs);
+    function desenhar(i, animar) {
+      var r = RECURSOS[i];
+      painel.innerHTML = '<div class="painel-in' + (animar ? ' troca' : '') + '"><div><span class="ico">' + ic(r.ic) + '</span><h3>' + esc(r.nome) + '</h3><p>' + esc(r.resumo) + '</p>' +
+        '<ul class="tick">' + r.itens.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul></div>' + r.vz() + '</div>';
+    }
     function mostrar(i, foco, animar) {
       atual = i;
       var r = RECURSOS[i];
       botoes.forEach(function (b, k) { b.setAttribute('aria-selected', String(k === i)); b.tabIndex = k === i ? 0 : -1; });
       painel.setAttribute('aria-labelledby', 'tab-' + r.id);
-      painel.innerHTML = '<div class="painel-in' + (animar ? ' troca' : '') + '"><div><span class="ico">' + ic(r.ic) + '</span><h3>' + esc(r.nome) + '</h3><p>' + esc(r.resumo) + '</p>' +
-        '<ul class="tick">' + r.itens.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul></div>' + r.vz() + '</div>';
+      desenhar(i, animar);
       if (foco) botoes[i].focus();
       var ativo = botoes[i];
       if (tabs.scrollWidth > tabs.clientWidth && ativo.scrollIntoView) {
@@ -332,6 +338,17 @@
       });
     });
     mostrar(0, false, false);
+    function igualar() {
+      painel.style.minHeight = '';
+      var maior = 0;
+      for (var k = 0; k < RECURSOS.length; k++) { desenhar(k, false); maior = Math.max(maior, painel.offsetHeight); }
+      desenhar(atual, false);
+      painel.style.minHeight = maior + 'px';
+    }
+    igualar();
+    if (D.fonts && D.fonts.ready) D.fonts.ready.then(igualar);
+    var espera = null;
+    window.addEventListener('resize', function () { clearTimeout(espera); espera = setTimeout(igualar, 150); });
   }
 
   /* ---------- Central de Serviços: categoria, tipo e etapas do chamado ---------- */
@@ -369,7 +386,7 @@
 
   /* ---------- início ---------- */
   function iniciar() {
-    var ano = $('#ano'); if (ano) ano.textContent = '© ' + new Date().getFullYear() + ' Nexus Financeiro Hub. Todos os direitos reservados.';
+    var ano = $('#ano'); if (ano) ano.textContent = '© ' + new Date().getFullYear() + ' Nexus Financeiro. Todos os direitos reservados.';
     ajustarBotoes();
     iniciarPersonalizar();
     iniciarTopo();
