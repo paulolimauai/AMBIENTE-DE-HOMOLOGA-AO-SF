@@ -1,0 +1,13 @@
+name: Keep Render Alive
+
+on:
+  schedule:
+    - cron: '*/14 * * * *'
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Render URL
+        run: curl -fsS -o /dev/null --max-time 60 https://ambiente-de-homologa-ao-sf.onrender.com/api/health
