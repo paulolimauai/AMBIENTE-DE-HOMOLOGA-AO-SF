@@ -221,9 +221,7 @@ h2{font:600 clamp(1.9rem,3.6vw,2.9rem)/1.14 var(--serif);letter-spacing:-.012em;
 .hero{padding:calc(4.25rem + clamp(2rem,6vw,4.5rem)) 0 clamp(2.5rem,5vw,4rem)}
 .hero-grid{display:grid;gap:clamp(2rem,5vw,3.5rem);align-items:center}
 @media (min-width:1024px){.hero-grid{grid-template-columns:minmax(0,1fr) minmax(0,1.05fr)}}
-.eyebrow{display:inline-flex;align-items:center;gap:.55rem;padding:.4rem .9rem .4rem .5rem;border-radius:99rem;font-size:.82rem;font-weight:700;color:var(--soft);background:var(--tint);border:1px solid var(--card-line)}
-.eyebrow b{padding:.12rem .55rem;border-radius:99rem;font-size:.75rem;color:var(--on-brand);background:linear-gradient(180deg,var(--btn-a),var(--btn-b))}
-h1{margin-top:1.2rem;font:600 clamp(2.35rem,5.1vw,4.1rem)/1.08 var(--serif);letter-spacing:-.014em;word-spacing:.07em}
+h1{font:600 clamp(2.35rem,5.1vw,4.1rem)/1.08 var(--serif);letter-spacing:-.014em;word-spacing:.07em}
 h1 em{font-style:normal;background:linear-gradient(100deg,var(--accent),var(--brand) 55%,color-mix(in srgb,var(--glow-b) 40%,var(--accent)));-webkit-background-clip:text;background-clip:text;color:transparent}
 .hero .lead{max-width:36rem}
 .cta{display:flex;flex-wrap:wrap;gap:.8rem;margin-top:1.8rem}
