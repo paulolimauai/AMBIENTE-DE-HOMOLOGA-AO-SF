@@ -2604,6 +2604,25 @@ const htmlContent = `<!DOCTYPE html>
   } catch(e){}
 })();
 </script>
+<script>
+// O CSS segura as animacoes com html:not(.app-ready) e html.is-rendering #pageContent. Quando a trava sai, as entradas curtas
+// (fade/slide) do que JA esta na tela comecam do zero (opacity 0): a tela some e volta. Aqui elas sao terminadas no mesmo
+// quadro em que a trava sai (antes de pintar), entao o conteudo fica onde estava. Loops, barras de tempo e avisos ficam de fora.
+window.__nexusAssentarAnimacoes = function (raiz) {
+  try {
+    if (!document.getAnimations || typeof CSSAnimation === 'undefined') return;
+    document.getAnimations().forEach(function (a) {
+      if (!(a instanceof CSSAnimation)) return;
+      var alvo = a.effect && a.effect.target;
+      if (!alvo || (raiz && !raiz.contains(alvo))) return;
+      if (alvo.closest && alvo.closest('.sg, #toast, .toast')) return;
+      var t = a.effect.getComputedTiming();
+      if (!isFinite(t.endTime) || t.endTime > 1000) return;
+      if (a.pending || (a.currentTime || 0) < 30) a.finish();
+    });
+  } catch (e) {}
+};
+</script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
 <style>
 html:not(.app-ready) *,
@@ -22151,13 +22170,18 @@ function render(){
 
     if (pageChanged || htmlChanged) {
       document.documentElement.classList.add('is-rendering');
+      const mesmaPagina = !pageChanged;
       try {
         el.innerHTML = newHTML;
         _lastRenderedHtml = newHTML;
         el.setAttribute('data-current-rendered-page', currentPage);
         attachPageEvents();
       } finally {
-        requestAnimationFrame(() => document.documentElement.classList.remove('is-rendering'));
+        requestAnimationFrame(() => {
+          document.documentElement.classList.remove('is-rendering');
+          // Mesma tela com dados novos (ex.: chegada do /api/data apos o F5): sem refazer o fade de entrada, senao ela some e volta
+          if (mesmaPagina && window.__nexusAssentarAnimacoes) window.__nexusAssentarAnimacoes(el);
+        });
       }
     }
   } catch(err) {
@@ -32229,6 +32253,7 @@ window.applyPostLoginBg = function(theme) {
     requestAnimationFrame(function() {
       requestAnimationFrame(function() {
         document.documentElement.classList.add('app-ready');
+        if (window.__nexusAssentarAnimacoes) window.__nexusAssentarAnimacoes();
       });
     });
   }
