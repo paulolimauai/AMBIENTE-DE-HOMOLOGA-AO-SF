@@ -3444,6 +3444,84 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         const $ = (id) => document.getElementById(id);
         const isTechMode = () => Boolean(currentUser && currentUser.isAdmin && currentUser.role === 'tech');
 
+        // ============================== CONFIGURAÇÕES POR MODO ==============================
+        // Cada modo (Tratar chamados / Abrir chamados) guarda a sua tela e os seus filtros, e o modo escolhido também fica gravado.
+        // Ao trocar de modo (ou voltar ao GLPI depois) tudo volta como estava. Fica no navegador, por e-mail (localStorage);
+        // o texto das buscas vale só nesta aba (sessionStorage), para não esconder chamados dias depois sem a pessoa lembrar.
+        let cfgPronta = false;   // só grava depois que a tela foi montada: antes disso os campos ainda estão vazios e apagariam o que estava salvo
+
+        function cfgChave(email) { return 'glpi_cfg_v1_' + String(email || '').trim().toLowerCase(); }
+        function cfgLer(email) {
+            try {
+                const o = JSON.parse(localStorage.getItem(cfgChave(email)) || 'null');
+                return o && typeof o === 'object' ? o : {};
+            } catch (e) { return {}; }
+        }
+        function cfgGravar(email, parte) {
+            if (!email) return;
+            try {
+                const atual = cfgLer(email);
+                const novo = Object.assign({}, atual);
+                Object.keys(parte).forEach((k) => {
+                    novo[k] = (parte[k] && typeof parte[k] === 'object') ? Object.assign({}, atual[k], parte[k]) : parte[k];
+                });
+                const txt = JSON.stringify(novo);
+                if (txt !== JSON.stringify(atual)) localStorage.setItem(cfgChave(email), txt);
+            } catch (e) {}
+        }
+        function cfgBusca(perfil, valor) {
+            try {
+                if (valor === undefined) return sessionStorage.getItem('glpi_busca_' + perfil) || '';
+                sessionStorage.setItem('glpi_busca_' + perfil, valor);
+            } catch (e) {}
+            return '';
+        }
+
+        // Lê a tela do modo que está aberto e grava
+        function cfgCapturarTech() {
+            if (!cfgPronta || !isTechMode()) return;   // só o modo aberto grava: os campos do outro modo ainda estão nos valores padrão
+            const v = (id, padrao) => { const el = $(id); return el && el.value ? el.value : padrao; };
+            cfgGravar(currentUser.email, { tech: {
+                quick: queueQuick,
+                urg: v('tech-filter-urgency', 'ALL'),
+                tipo: v('tech-filter-type', 'ALL'),
+                fila: v('tech-filter-queue', 'ALL'),
+                ord: v('tech-sort', '')
+            } });
+            cfgBusca('tech', ($('tech-queue-search') || {}).value || '');
+        }
+        function cfgCapturarUser() {
+            if (!cfgPronta || !currentUser || currentUser.role !== 'user') return;
+            cfgGravar(currentUser.email, { user: { aba: userTab, cat: catFilter } });
+            cfgBusca('user', ($('user-search-input') || {}).value || '');
+        }
+
+        // Devolve à tela o que foi gravado (valor que não existe mais, como uma fila apagada, volta ao padrão)
+        function cfgAplicarTech() {
+            const c = (currentUser && cfgLer(currentUser.email).tech) || {};
+            const sel = (id, val) => {
+                const el = $(id);
+                if (!el) return;
+                const padrao = id === 'tech-sort' ? (el.options[0] ? el.options[0].value : '') : 'ALL';
+                el.value = val || padrao;
+                if (el.value !== (val || padrao)) el.value = padrao;
+            };
+            sel('tech-filter-urgency', c.urg);
+            sel('tech-filter-type', c.tipo);
+            sel('tech-filter-queue', c.fila);
+            sel('tech-sort', c.ord);
+            const busca = $('tech-queue-search');
+            if (busca) busca.value = cfgBusca('tech');
+            queueQuick = QUICK_FILTERS.some((f) => f[0] === c.quick) ? c.quick : 'open';
+        }
+        function cfgAplicarUser() {
+            const c = (currentUser && cfgLer(currentUser.email).user) || {};
+            userTab = ['all', 'open', 'waiting', 'closed'].includes(c.aba) ? c.aba : 'all';
+            catFilter = ['ALL', 'Requisição', 'Incidente'].includes(c.cat) ? c.cat : 'ALL';
+            const busca = $('user-search-input');
+            if (busca) busca.value = cfgBusca('user');
+        }
+
         // Respostas rápidas ({nome}, {protocolo} e {tecnico} são preenchidos sozinhos)
         const cannedTemplates = {
             EM_ANALISE: "Olá, {nome}! Recebemos o seu chamado {protocolo} e ele já está em análise pela equipe de TI. Voltaremos com uma atualização em breve.",
@@ -3814,7 +3892,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
 
         // Converte os dados cadastrados no Sistema Financeiro para o perfil correspondente no GLPI:
         // - Usuário comum -> role: 'user' (abre e acompanha os seus chamados)
-        // - Administrador -> role: 'tech' (trata, atribui e resolve chamados)
+        // - Administrador -> role: 'tech' (trata, atribui e resolve chamados), ou 'user' se foi o último modo que ele escolheu
         function buildGlpiUserFromNexus(userObj) {
             if (!userObj || !userObj.email) return null;
             const isAdmin = Boolean(
@@ -3829,7 +3907,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 phone: userObj.phone || userObj.telefone || '',
                 cpf: userObj.cpf || '',
                 profileRole: isAdmin ? 'Administrador' : (userObj.role || 'Usuário'),
-                role: isAdmin ? 'tech' : 'user',
+                role: isAdmin ? (cfgLer(userObj.email).modo === 'user' ? 'user' : 'tech') : 'user',
                 isAdmin: isAdmin
             };
         }
@@ -4106,6 +4184,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             if (mode === 'tech') {
                 const glpiUser = buildGlpiUserFromNexus(getNexusSessionUser());
                 if (glpiUser && glpiUser.isAdmin) {
+                    glpiUser.role = 'tech';   // ?mode=tech pede o modo de atendimento, seja qual for o último modo gravado
                     currentUser = glpiUser;
                     localStorage.setItem('glpi_10_session', JSON.stringify(currentUser));
                     // ?tab=queue vale só na entrada; ao atualizar, vale o menu em que a pessoa estava (o endereço não muda ao navegar)
@@ -4184,12 +4263,15 @@ html[data-bg="vidro"] .l-glass{opacity:1}
 
         function lembrarAba(perfil, tab) {
             try { sessionStorage.setItem('glpi_aba_' + perfil, tab); } catch (e) {}
+            if (currentUser) cfgGravar(currentUser.email, { [perfil]: { tab } });
         }
 
-        // Aba salva deste perfil; se não houver (ou for inválida), a tela inicial dele
+        // Aba salva deste perfil (nesta aba do navegador e, se não houver, a última gravada para a conta);
+        // se não houver (ou for inválida), a tela inicial dele
         function abaLembrada(perfil) {
             let salva = null;
             try { salva = sessionStorage.getItem('glpi_aba_' + perfil); } catch (e) {}
+            if (!ABAS_GLPI[perfil].includes(salva) && currentUser) salva = (cfgLer(currentUser.email)[perfil] || {}).tab;
             return ABAS_GLPI[perfil].includes(salva) ? salva : ABAS_GLPI[perfil][0];
         }
 
@@ -4202,7 +4284,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             }
             if (currentUser.isAdmin) await loadTechnicians();
             showAppView(restaurarAba === true);
-            if (tab && isTechMode()) navTech(tab);
+            if (tab && isTechMode()) navTech(tab, restaurarAba === true);
         }
 
         function closeGlpiOrReturn() {
@@ -4265,11 +4347,11 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 const result = await loadTickets({ silent: false });
                 if (result === 'auth') { setLoginError('Não foi possível validar a sua sessão. Entre novamente.'); return; }
                 if (currentUser.isAdmin) await loadTechnicians();
-                showToast(currentUser.isAdmin
+                showToast(isTechMode()
                     ? `Bem-vindo(a), ${currentUser.name} (Administrador - Tratar Chamados)`
                     : `Bem-vindo(a), ${currentUser.name} (Abrir e Consultar Chamados)`, 'success');
                 showAppView();
-                if (currentUser.isAdmin) navTech('queue');
+                if (isTechMode()) navTech('queue', true);
             } catch (err) {
                 setLoginError('Erro de comunicação com o servidor de autenticação.');
                 showToast('Falha ao conectar ao servidor.', 'warning');
@@ -4291,8 +4373,9 @@ html[data-bg="vidro"] .l-glass{opacity:1}
 
         function logout(expired) {
             stopSync();
+            cfgPronta = false;
             localStorage.removeItem('glpi_10_session');
-            try { sessionStorage.removeItem('glpi_aba_user'); sessionStorage.removeItem('glpi_aba_tech'); } catch (e) {}
+            try { sessionStorage.removeItem('glpi_aba_user'); sessionStorage.removeItem('glpi_aba_tech'); sessionStorage.removeItem('glpi_busca_user'); sessionStorage.removeItem('glpi_busca_tech'); } catch (e) {}
             // Só o "Sair" feito pela pessoa trava a entrada automática desta aba; sessão expirada não trava (o F5 tenta de novo)
             try { if (expired !== true && new URLSearchParams(window.location.search).get('embedded') !== '1') sessionStorage.setItem('glpi_manual_logout', '1'); } catch (e) {}
             currentUser = null;
@@ -4323,15 +4406,22 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 showToast('Acesso restrito ao Perfil Administrador.', 'warning');
                 return;
             }
+            if (currentUser.role === role) { toggleProfileMenu(true); return; }
+            // Grava como o modo que está saindo estava (tela, filtros e busca) e qual é o novo modo.
+            // Enquanto a troca acontece nada é gravado: os campos ainda mostram o modo antigo.
+            if (currentUser.role === 'tech') cfgCapturarTech(); else cfgCapturarUser();
+            cfgPronta = false;
             currentUser.role = role;
             localStorage.setItem('glpi_10_session', JSON.stringify(currentUser));
+            cfgGravar(currentUser.email, { modo: role });
             toggleProfileMenu(true);
             snapshot = new Map();
             selectedIds = new Set();
             const result = await loadTickets({ silent: false });
             if (result === 'auth') { handleAuthExpired(); return; }
             showToast(`Modo alterado para ${role === 'tech' ? 'TRATAR CHAMADOS (ADMIN)' : 'ABRIR CHAMADOS (USUÁRIO)'}`, 'warning');
-            showAppView();
+            // true: volta ao menu e aos filtros em que a pessoa estava neste modo (em vez da tela inicial)
+            showAppView(true);
         }
 
         function toggleProfileMenu(forceClose = false) {
@@ -4389,6 +4479,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 localStorage.setItem('glpi_10_session', JSON.stringify(currentUser));
             }
 
+            cfgPronta = false;   // até os filtros gravados voltarem para a tela (fim desta função)
             document.documentElement.removeAttribute('data-boot');
             $('view-login').classList.add('hidden');
             $('app-header').classList.remove('hidden');
@@ -4424,23 +4515,26 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 $('nav-group-tech').classList.add('hidden');
                 $('view-section-user').classList.remove('hidden');
                 $('view-section-tech').classList.add('hidden');
+                cfgAplicarUser();
                 renderUserTickets();
             } else {
                 $('nav-group-tech').classList.remove('hidden');
                 $('nav-group-user').classList.add('hidden');
                 $('view-section-tech').classList.remove('hidden');
                 $('view-section-user').classList.add('hidden');
-                queueQuick = 'open';
+                cfgAplicarTech();
                 renderTechQueue();
                 initCharts();
             }
 
-            // Entrada nova (login, troca de modo, link) abre a tela inicial do perfil: catálogo ou dashboard.
-            // Ao atualizar a página (F5) volta ao menu em que a pessoa estava.
+            // Entrada nova (login, link) abre a tela inicial do perfil: catálogo ou dashboard.
+            // Ao atualizar a página (F5) ou trocar de modo volta ao menu e aos filtros em que a pessoa estava.
             document.body.classList.add('in-app');
             if (currentUser.role === 'user') navUser(restaurarAba ? abaLembrada('user') : 'catalog');
-            else navTech(restaurarAba ? abaLembrada('tech') : 'dashboard');
+            else navTech(restaurarAba ? abaLembrada('tech') : 'dashboard', Boolean(restaurarAba));
             startSync();
+            cfgPronta = true;
+            if (currentUser.role === 'user') cfgCapturarUser(); else cfgCapturarTech();
         }
 
         // ============================== NAVEGAÇÃO ==============================
@@ -4475,7 +4569,8 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             scrollMainTop();
         }
 
-        function navTech(tab) {
+        // manter: ao voltar a um menu já configurado (F5, troca de modo) a fila mantém o filtro rápido gravado em vez de voltar a "Abertos"
+        function navTech(tab, manter) {
             if (tab !== 'dashboard' && tab !== 'teams') tab = 'queue';
             lembrarAba('tech', tab);
             toggleSidebar(false);
@@ -4501,7 +4596,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 queue.classList.remove('hidden');
                 dash.classList.add('hidden');
                 teams.classList.add('hidden');
-                queueQuick = 'open';
+                if (manter !== true) queueQuick = 'open';
                 $('tech-queue-title').innerText = 'Fila de Chamados';
                 $('tech-queue-crumb').innerText = 'Fila de Chamados';
                 $('tech-queue-sub').innerText = 'Novo, Pendente, Atendimento atribuído, Resolvido e Fechado: filtre, assuma e atenda direto da lista. A fila atualiza sozinha a cada 20 segundos.';
@@ -4844,6 +4939,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             const recentBody = $('user-recent-tbody');
             if (!tbody) return;
             const searchVal = ($('user-search-input').value || '').toLowerCase().trim();
+            cfgCapturarUser();
 
             // Já vem só do solicitante (o servidor filtra pela conta), do mais novo para o mais antigo
             const mine = ticketsList.slice().sort((a, b) => String(b.createdAt || '').localeCompare(String(a.createdAt || '')));
@@ -5262,6 +5358,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             const filterType = $('tech-filter-type').value;
             const filterQueue = $('tech-filter-queue').value;
             const sortBy = $('tech-sort').value;
+            cfgCapturarTech();
 
             // KPIs e contadores (sobre todos os chamados, sem filtro)
             const open = ticketsList.filter(isOpenTicket);
@@ -5573,7 +5670,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
 
         // Catálogo: filtro por tipo (requisição / incidente) e busca pelo nome ou pela descrição do serviço
         let catFilter = 'ALL';
-        function setCatFilter(f) { catFilter = f; renderCatalogFilter(); }
+        function setCatFilter(f) { catFilter = f; cfgCapturarUser(); renderCatalogFilter(); }
 
         function renderCatalogFilter() {
             const search = $('cat-search');
