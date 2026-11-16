@@ -1548,7 +1548,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
 
         /* Abertura de chamado (Abrir Requisição, Reportar Incidente...): janela, passos, cartões e campos mais compactos */
         #modal-form.overlay { padding: .75rem; }
-        .modal-form { max-width: 74rem; }
+        .modal-form { max-width: 46rem; }
         .modal-form .modal-head { padding: .7rem 1.1rem; }
         .modal-form .mh-ico { width: 2.5rem; height: 2.5rem; border-radius: .75rem; font-size: 1.05rem; }
         .modal-form .mh-title { font-size: 1rem; }
@@ -1556,7 +1556,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         .modal-form .modal-body { padding: 1rem 1.1rem; gap: .7rem; }
         .modal-form .modal-foot { bottom: -1rem; margin: .1rem -1.1rem -1rem; padding: .65rem 1.1rem; }
         .fsplit { gap: .9rem 1.1rem; }
-        @media (min-width: 900px) { .fsplit { grid-template-columns: minmax(0, 1fr) 17rem; } }
+        @media (min-width: 900px) { .fsplit { grid-template-columns: minmax(0, 1fr); } }
         .fs-main { gap: .85rem; }
         .fs-side { gap: .65rem; }
         .fs-step { gap: .5rem; }
@@ -2809,19 +2809,6 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                             <div class="field-foot"><p id="err-phone" class="field-err hidden"></p></div>
                         </div>
                     </section>
-                </div>
-
-                <aside class="fs-side" aria-label="Resumo do pedido">
-                    <div class="fs-card">
-                        <div class="fs-card-t"><i class="fa-solid fa-list-check"></i> Seu pedido</div>
-                        <ul class="fs-check" id="form-check">
-                            <li data-k="typ"><i class="fa-solid fa-check"></i><span>Tipo</span><b></b></li>
-                            <li data-k="cat"><i class="fa-solid fa-check"></i><span>Categoria</span><b></b></li>
-                            <li data-k="urg"><i class="fa-solid fa-check"></i><span>Severidade</span><b></b></li>
-                            <li data-k="subj"><i class="fa-solid fa-check"></i><span>Assunto</span><b></b></li>
-                            <li data-k="desc"><i class="fa-solid fa-check"></i><span>Descrição</span><b></b></li>
-                        </ul>
-                    </div>
 
                     <div class="sla-box">
                         <div class="sla-l">
@@ -2835,7 +2822,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                     </div>
 
                     <div id="form-tips" class="cat-tips"></div>
-                </aside>
+                </div>
 
                 <div class="modal-foot">
                     <span class="hint"><kbd>Ctrl</kbd>+<kbd>Enter</kbd> envia</span>
