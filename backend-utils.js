@@ -68,6 +68,22 @@ const lower = (v) => String(v == null ? '' : v).toLowerCase().trim();
 // Campos que só existem no espelho local (não há coluna no SQL Server)
 const LOCAL_ONLY_USER_FIELDS = ['password_changed_at'];
 
+// Carimbos de data do cadastro. O SQL Server (DATETIME2) devolve a hora LOCAL marcada como UTC; todo carimbo precisa passar pela conversão
+// para horário de Brasília antes de sair daqui, senão quem recebe (a nuvem e, por ela, o Supabase) recua 3 h.
+const USER_DATE_FIELDS = ['created_at', 'last_login', 'subscription_expires_at', 'trial_started_at'];
+
+/**
+ * Usuário (linha do SQL Server) como vai para a nuvem no passo D do ciclo PC → nuvem: todos os carimbos em horário de Brasília e o
+ * relógio da troca de senha do espelho local (o SQL não tem essa coluna). O created_at ficava de fora: seguia como Date cru e a nuvem
+ * guardava o cadastro exatamente 3 h mais cedo (verificado nas 4 contas reais).
+ */
+function userForCloud(row, toBrasiliaIso, passwordClock) {
+  const copy = { ...row };
+  if (passwordClock && !copy.password_changed_at) copy.password_changed_at = passwordClock;
+  USER_DATE_FIELDS.forEach((f) => { if (copy[f]) copy[f] = toBrasiliaIso(copy[f]); });
+  return copy;
+}
+
 /**
  * Mescla linhas vindas do SQL Server no espelho local de usuários sem perder o que só o espelho tem:
  * a senha (quando a consulta não trouxe a coluna) e os campos locais (ex.: password_changed_at, que invalida sessões antigas).
@@ -161,7 +177,7 @@ function createLatestWinsRunner(worker) {
 }
 
 module.exports = {
-  decodeBodyChunk, atomicWriteFileSync, createJsonFileCache, deriveSyncToken, mergeUsersMirror,
+  decodeBodyChunk, atomicWriteFileSync, createJsonFileCache, deriveSyncToken, mergeUsersMirror, userForCloud, USER_DATE_FIELDS,
   sanitizeDeviceType, normalizePhoneInput, normalizeBirthDateInput, PASSWORD_MAX_LENGTH,
   isUniqueViolation, createLatestWinsRunner, LOCAL_ONLY_USER_FIELDS
 };

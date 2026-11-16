@@ -35593,7 +35593,12 @@ async function handleNexusRequest(req, res) {
     if (!getAuthenticatedAdmin(req)) {
       return sendJson(res, corsHeaders, 401, { success: false, error: 'Autenticação de administrador obrigatória.' });
     }
-    return sendJson(res, corsHeaders, 200, { success: true, supabase: SupabaseSync.status() });
+    const supabaseBody = { success: true, supabase: SupabaseSync.status() };
+    // ?audit=1: confere o CONTEÚDO (linha a linha) do que os arquivos dizem que deveria estar no Supabase × o que está lá (só leitura, sem dados pessoais)
+    if (parsedUrl.query && String(parsedUrl.query.audit) === '1') {
+      try { supabaseBody.audit = await SupabaseSync.audit(); } catch (auditErr) { supabaseBody.audit = { error: String((auditErr && auditErr.message) || auditErr).slice(0, 200) }; }
+    }
+    return sendJson(res, corsHeaders, 200, supabaseBody);
   }
 
   // Uso real de cada conta para a tela Cadastros & Contas do administrador: só contagens (nunca valores, descrições nem saldos)
@@ -38363,21 +38368,8 @@ async function syncWithRenderCloud() {
     if (syncableLocalUsers.length > 0) {
       // O SQL Server não tem a coluna password_changed_at: o relógio da troca de senha vem do espelho local, para a nuvem saber se este hash é mais novo que o dela
       const passwordClockByEmail = new Map(getLocalUsers().filter(m => m && m.email && m.password_changed_at).map(m => [String(m.email).toLowerCase().trim(), m.password_changed_at]));
-      const usersToSync = syncableLocalUsers.map(u => {
-        const uCopy = { ...u };
-        const pwClock = passwordClockByEmail.get(String(u.email || '').toLowerCase().trim());
-        if (pwClock && !uCopy.password_changed_at) uCopy.password_changed_at = pwClock;
-        if (uCopy.last_login) {
-          uCopy.last_login = getBrasiliaIsoString(uCopy.last_login);
-        }
-        if (uCopy.subscription_expires_at) {
-          uCopy.subscription_expires_at = getBrasiliaIsoString(uCopy.subscription_expires_at);
-        }
-        if (uCopy.trial_started_at) {
-          uCopy.trial_started_at = getBrasiliaIsoString(uCopy.trial_started_at);
-        }
-        return uCopy;
-      });
+      // Todo carimbo de data sai em horário de Brasília (o created_at ficava cru e a nuvem/Supabase o guardavam 3 h mais cedo)
+      const usersToSync = syncableLocalUsers.map(u => BackendUtils.userForCloud(u, getBrasiliaIsoString, passwordClockByEmail.get(String(u.email || '').toLowerCase().trim())));
       saveLocalUsers(BackendUtils.mergeUsersMirror(getLocalUsers(), usersToSync), true);
       await fetchCloud('/api/users?overwrite=true', {
         method: 'POST',

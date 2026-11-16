@@ -556,3 +556,103 @@ test('fetchUserRecord: nunca lança e nunca trava o login (sem rede, desligado o
   assert.equal(await s2.fetchUserRecord('ana@exemplo.com', { timeoutMs: 600 }), null, 'Supabase que não responde');
   assert.ok(Date.now() - t0 < 2500, 'voltou perto do limite de tempo, sem esperar o Supabase');
 });
+
+// ================================================================ defesas contra escritor desatualizado e conferência de conteúdo
+test('boletos legados também vão para o Supabase e voltam na restauração (local_boletos.json tinha ficado de fora)', async () => {
+  const dir = tmpDir(); seedAll(dir);
+  put(dir, 'local_boletos.json', [{ id: 'b1', reference: 'R1', client_email: 'ana@exemplo.com', amount: 18, status: 'pendente', created_at: '2026-11-12T10:00:00Z' }]);
+  const fake = createFake(); const s = make(fake, dir);
+  const st = await s.syncEverythingNow();
+  assert.equal(st.inSync, true, JSON.stringify(st));
+  assert.ok(fake.tables.nexus_dados_financeiros.some(r => r.email === DOC_PREFIX + 'boletos/b1'), 'boleto gravado');
+  const dirB = tmpDir(); const s2 = make(fake, dirB);
+  await s2.restoreMissingFiles();
+  assert.equal(read(dirB, 'local_boletos.json')[0].reference, 'R1');
+});
+
+test('GUARDA DE SENHA: senha MAIS NOVA que já está no Supabase não é sobrescrita por um servidor desatualizado; a local mais nova vence', async () => {
+  const dir = tmpDir(); seedAll(dir);
+  put(dir, 'local_users.json', [Object.assign({}, ANA, { password: 'scrypt:old:old', password_changed_at: '2026-11-10T10:00:00.000Z' }), ADM]);
+  const fake = createFake();
+  const nova = Object.assign({}, ANA, { email: 'ana@exemplo.com', password: 'scrypt:new:new', password_changed_at: '2026-11-15T10:00:00.000Z', must_change_password: true });
+  fake.tables.dados_financeiros = [{ id: 1, email: 'ana@exemplo.com', dados: nova, updated_at: 'x' }];
+  fake.tables.usuarios = [{ id: 1, email: 'ana@exemplo.com', name: 'Ana', password: 'scrypt:new:new', role: 'Usuário' }];
+  const s = make(fake, dir);
+  const st = await s.syncEverythingNow();
+  assert.equal(st.inSync, true, JSON.stringify(st));
+  assert.equal(fake.tables.usuarios.find(u => u.email === 'ana@exemplo.com').password, 'scrypt:new:new', 'a senha mais nova continua em usuarios');
+  const d = fake.tables.dados_financeiros.find(r => r.email === 'ana@exemplo.com').dados;
+  assert.equal(d.password, 'scrypt:new:new'); assert.equal(d.password_changed_at, '2026-11-15T10:00:00.000Z'); assert.equal(d.must_change_password, true);
+  assert.equal(d.name, 'Ana', 'o resto do cadastro continua sendo atualizado');
+  assert.equal(st.guards.credentials, 1);
+  assert.match(s._log.lines.join('\n'), /senha MAIS NOVA para an\*\*\*@exemplo\.com/, 'avisa sem expor o e-mail inteiro');
+  assert.equal(fake.tables.usuarios.find(u => u.email === 'admin@exemplo.com').password, 'scrypt:cc:dd', 'outras contas seguem normais');
+
+  // agora o servidor local troca a senha DEPOIS: a local (mais nova) vence
+  put(dir, 'local_users.json', [Object.assign({}, ANA, { password: 'scrypt:mais:nova', password_changed_at: '2026-11-16T10:00:00.000Z' }), ADM]);
+  await s.syncEverythingNow();
+  assert.equal(fake.tables.usuarios.find(u => u.email === 'ana@exemplo.com').password, 'scrypt:mais:nova');
+  assert.equal(fake.tables.dados_financeiros.find(r => r.email === 'ana@exemplo.com').dados.password_changed_at, '2026-11-16T10:00:00.000Z');
+});
+
+test('GUARDA DE SENHA: sem relógio no Supabase, ou hash que não é scrypt, vale o comportamento de sempre (a local grava)', async () => {
+  const dir = tmpDir(); seedAll(dir);
+  const fake = createFake();
+  fake.tables.dados_financeiros = [{ id: 1, email: 'ana@exemplo.com', dados: Object.assign({}, ANA, { password: 'scrypt:remoto:x' }), updated_at: 'x' },
+    { id: 2, email: 'admin@exemplo.com', dados: Object.assign({}, ADM, { password: '123456', password_changed_at: '2026-12-01T00:00:00.000Z' }), updated_at: 'x' }];
+  const s = make(fake, dir); const st = await s.syncEverythingNow();
+  assert.equal(fake.tables.usuarios.find(u => u.email === 'ana@exemplo.com').password, 'scrypt:aa:bb', 'sem relógio remoto: a local grava');
+  assert.equal(fake.tables.usuarios.find(u => u.email === 'admin@exemplo.com').password, 'scrypt:cc:dd', 'texto puro/não-scrypt remoto nunca é adotado');
+  assert.equal(st.guards.credentials, 0);
+});
+
+test('GUARDA DE SENHA: sem conexão para ler o Supabase, nada é enviado e nada se perde (tenta de novo quando voltar)', async () => {
+  const dir = tmpDir(); seedAll(dir); const fake = createFake(); const s = make(fake, dir);
+  fake.online = false;
+  const st = await s.syncEverythingNow();
+  assert.equal(st.inSync, false); assert.ok(st.pending > 0);
+  fake.online = true;
+  const st2 = await s.syncEverythingNow();
+  assert.equal(st2.inSync, true, JSON.stringify(st2));
+  assert.equal(fake.tables.usuarios.length, 2);
+});
+
+test('CONTADOR DE PROTOCOLO: o Supabase mantém sempre o MAIOR valor (servidor atrasado não o faz recuar)', async () => {
+  const dir = tmpDir(); seedAll(dir);                                   // local: ultimo = 5
+  const fake = createFake();
+  fake.tables.nexus_dados_financeiros = [{ email: DOC_PREFIX + 'os_seq/_', dados: { ultimo: 8, atualizado_em: '2026-11-15T16:58:33.407Z' }, updated_at: 'x' }];
+  const s = make(fake, dir); const st = await s.syncEverythingNow();
+  const lido = () => fake.tables.nexus_dados_financeiros.find(r => r.email === DOC_PREFIX + 'os_seq/_').dados;
+  assert.equal(lido().ultimo, 8, 'o 8 que já estava lá não foi trocado pelo 5 local');
+  assert.equal(st.guards.sequence, 1);
+  put(dir, 'local_os_sequencia.json', { ultimo: 9, atualizado_em: '2026-11-16T10:00:00Z' });
+  await s.syncEverythingNow();
+  assert.equal(lido().ultimo, 9, 'um valor local maior sempre avança');
+});
+
+test('audit: confere o CONTEÚDO linha a linha; acusa linha ausente e linha trocada por outro servidor; nunca expõe e-mail nem senha', async () => {
+  const dir = tmpDir(); seedAll(dir); const fake = createFake(); const s = make(fake, dir);
+  await s.syncEverythingNow();
+  let a = await s.audit();
+  assert.equal(a.consistent, true, JSON.stringify(a));
+  assert.ok(a.planned > 15); assert.equal(a.ok, a.planned); assert.equal(a.moving, 0);
+  assert.equal(s.status().lastAudit.consistent, true);
+
+  fake.tables.ordens_servico[0].title = 'Outro título';                      // outro servidor trocou o conteúdo
+  fake.tables.usuarios.splice(fake.tables.usuarios.findIndex(u => u.email === 'ana@exemplo.com'), 1);   // e alguém apagou uma conta
+  fake.tables.nexus_dados_financeiros.splice(fake.tables.nexus_dados_financeiros.findIndex(r => r.email === DOC_PREFIX + 'tecnicos/tec@exemplo.com'), 1);
+  a = await s.audit();
+  assert.equal(a.consistent, false);
+  assert.equal(a.missing, 2); assert.equal(a.different, 1);
+  assert.ok(a.samples.some(x => x.table === 'ordens_servico' && x.problem === 'conteúdo diferente' && x.fields.includes('title')));
+  const txt = JSON.stringify(a);
+  assert.ok(!/ana@exemplo\.com|tec@exemplo\.com/.test(txt), 'e-mail em claro: ' + txt);
+  assert.ok(!txt.includes('scrypt:'), 'hash de senha vazou');
+});
+
+test('audit: com o Supabase desligado devolve enabled:false e não toca em nada', async () => {
+  const dir = tmpDir(); const fake = createFake(); const s = createSync(); const log = silent();
+  s.init({ dataDir: dir, client: fake.client, timers: false, log, projectRef: 'p', disabled: true });
+  assert.deepEqual(await s.audit(), { enabled: false, reason: 'desligado por variável de ambiente' });
+  assert.equal(fake.calls.length, 0);
+});

@@ -45,6 +45,7 @@ const POLL_MS = 5000;
 const RECHECK_MS = 10 * 60 * 1000;      // reavalia pendências recusadas / tabelas ausentes
 const VERIFY_MS = 30 * 60 * 1000;       // confere se o remoto ainda tem o que foi confirmado
 const REJECT_RETRY_MS = 30 * 60 * 1000;
+const AUDIT_MS = 6 * 60 * 60 * 1000;      // conferência de conteúdo (audit)
 const DEGRADED_MS = 10 * 60 * 1000;
 
 // ---------------------------------------------------------------- utilidades
@@ -324,6 +325,7 @@ const SOURCES = {
   'local_avatars.json':        docSource('avatars', 'map'),
   'local_permissions.json':    docSource('permissions', 'map'),  // e-mail -> lista de permissões
   'local_pagamentos.json':     docSource('pagamentos', 'array'), // livro de pagamentos e cobranças (pagamentos.js): um documento por registro (id)
+  'local_boletos.json':        docSource('boletos', 'array'),    // boletos legados (tinham ficado de fora do envio: 1 registro só no disco)
   'local_financeiro_config.json': docSource('fin_config', 'single') // preço, chave Pix e cobrança mensal definidos pelo administrador (+ histórico de alterações)
 };
 
@@ -412,6 +414,10 @@ function createSync() {
   let stopped = false;
   let restoredFiles = [];
   let verifying = false;
+  let credentialGuards = 0;           // quantas vezes uma senha MAIS NOVA que já estava no Supabase foi preservada
+  let sequenceGuards = 0;             // idem para o contador de protocolo (vale sempre o maior)
+  let lastAudit = null;               // resultado da última conferência de conteúdo
+  let lastAuditAt = 0;
 
   const statePath = () => path.join(dataDir, STATE_FILE);
 
@@ -647,6 +653,64 @@ function createSync() {
     } catch (e) { if (e.kind === 'notable') { markDegraded(table, e.message); return; } throw e; }
   }
 
+  // ---------------------------------------------------------------- guardas contra escritor DESATUALIZADO
+  // Dois servidores (o PC e a nuvem) gravam nas mesmas linhas do Supabase e o último a gravar ganha. O ack só diz "o envio foi aceito",
+  // não que ninguém trocou a linha depois. Antes de enviar, estas guardas olham o que já está lá e não deixam uma versão ANTIGA
+  // apagar uma MAIS NOVA: a senha mais nova (relógio password_changed_at) e o contador de protocolo (sempre o maior).
+  const maskEmail = (e) => { const s = String(e || ''); const i = s.indexOf('@'); return i > 1 ? s.slice(0, 2) + '***' + s.slice(i) : '***'; };
+  const isScrypt = (p) => typeof p === 'string' && p.startsWith('scrypt:');
+
+  async function guardCredentials(todo, json) {
+    const units = todo.filter(u => u.table === 'usuarios' || u.table === 'dados_financeiros');
+    if (!units.length) return;
+    const emails = Array.from(new Set(units.map(u => String(u.key))));
+    const remote = new Map();
+    for (const part of chunkArr(emails, 50)) {
+      const res = await call(() => sb.from('dados_financeiros').select('email,dados').in('email', part));
+      if (res.error) {
+        const kind = classify(res.error);
+        if (kind === 'transient' || kind === 'auth') throw toError(kind, res.error, 'dados_financeiros');   // sem conexão: tenta de novo depois (nada se perde)
+        return;                                                                                                 // sem como ler (esquema diferente): segue como antes
+      }
+      for (const r of (res.data || [])) remote.set(lc(r.email), r.dados);
+    }
+    const local = new Map((Array.isArray(json) ? json : []).filter(x => x && lc(x.email)).map(x => [lc(x.email), x]));
+    for (const email of emails) {
+      const r = remote.get(email); const mine = local.get(email);
+      if (!r || typeof r !== 'object' || !mine) continue;
+      const rClock = Date.parse(r.password_changed_at);
+      if (!Number.isFinite(rClock)) continue;                                  // o Supabase não tem relógio da senha: nada a preservar
+      const lClock = Date.parse(mine.password_changed_at);
+      if (Number.isFinite(lClock) && lClock >= rClock) continue;               // a versão local é igual ou mais nova: vale a local
+      if (!isScrypt(r.password) || r.password === mine.password) continue;    // só adota hash válido e diferente
+      for (const u of units.filter(x => String(x.key) === email)) {
+        if (u.table === 'dados_financeiros') u.row = Object.assign({}, u.row, { dados: Object.assign({}, u.row.dados, { password: r.password, password_changed_at: r.password_changed_at, must_change_password: Boolean(r.must_change_password) }) });
+        else u.row = Object.assign({}, u.row, { password: r.password, must_change_password: Boolean(r.must_change_password) });
+      }
+      credentialGuards++;
+      say('warn', 'credguard:' + sha(email), 'O Supabase já tinha uma senha MAIS NOVA para ' + maskEmail(email) + ' do que a deste servidor: a mais nova foi preservada (a versão antiga não a sobrescreveu).');
+    }
+  }
+
+  async function guardSequence(todo) {
+    const u = todo.find(x => x.table === 'nexus_dados_financeiros' && x.key === docKey('os_seq', '_'));
+    if (!u) return;
+    const res = await call(() => sb.from('nexus_dados_financeiros').select('email,dados').eq('email', u.key));
+    if (res.error) {
+      const kind = classify(res.error);
+      if (kind === 'transient' || kind === 'auth') throw toError(kind, res.error, 'nexus_dados_financeiros');
+      return;
+    }
+    const remote = ((res.data || [])[0] || {}).dados;
+    const rUlt = Number(remote && remote.ultimo); const mine = Number(u.row.dados && u.row.dados.ultimo);
+    if (Number.isFinite(rUlt) && rUlt > (Number.isFinite(mine) ? mine : 0)) {
+      u.row = Object.assign({}, u.row, { dados: Object.assign({}, u.row.dados, { ultimo: rUlt, atualizado_em: remote.atualizado_em || u.row.dados.atualizado_em }) });
+      sequenceGuards++;
+      say('warn', 'seqguard', 'O contador de protocolo do Supabase (' + rUlt + ') é maior que o deste servidor (' + (Number.isFinite(mine) ? mine : '?') + '): o maior foi mantido.');
+    }
+  }
+  const GUARDS = { 'local_users.json': guardCredentials, 'local_os_sequencia.json': guardSequence };
+
   // 4. Exclusões: nunca em massa
   async function applyRemovals(file, removed, totalBefore) {
     if (!removed.length) { heldByFile.set(file, 0); return; }
@@ -712,6 +776,7 @@ function createSync() {
     const logicalTotal = new Set(ackedHere.filter(id => TABLES[splitId(id).table].kind !== 'append').map(id => splitId(id).key)).size;
 
     try {
+      if (GUARDS[file] && todo.length) await GUARDS[file](todo, read.json);
       const by = (kind) => { const m = new Map(); for (const u of todo) if (TABLES[u.table].kind === kind) { if (!m.has(u.table)) m.set(u.table, []); m.get(u.table).push(u); } return m; };
       for (const [table, list] of by('upsert')) await pushUpserts(table, list);
       for (const [, list] of by('replace')) for (const u of list) await pushReplace(u);
@@ -784,6 +849,14 @@ function createSync() {
     const now = Date.now();
     if (now - lastFullPass >= RECHECK_MS && (pendingTotal() > 0 || failures > 0)) markAllDirty();
     if (now - lastVerify >= VERIFY_MS) verifyRemote().catch(() => {});
+    if (now - lastAuditAt >= AUDIT_MS && !running && !verifying) {          // conferência de conteúdo a cada 6 h (a 1ª, ~2 min após o início)
+      lastAuditAt = now;
+      audit().then(a => {
+        if (!a || !a.enabled) return;
+        const msg = 'Conferência de conteúdo: ' + a.planned + ' registro(s) planejados, ' + a.ok + ' idênticos, ' + a.missing + ' ausentes, ' + a.different + ' diferentes' + (a.moving ? ' (' + a.moving + ' em movimento)' : '') + '.';
+        if (a.consistent) log.log('[SUPABASE] ' + msg); else { log.warn('[SUPABASE] ' + msg + ' Detalhes: GET /api/admin/supabase-status?audit=1'); if (a.missing) markAllDirty(0); }
+      }).catch(() => {});
+    }
     if (now - lastHeartbeat >= 300000) {
       lastHeartbeat = now;
       const st = status();
@@ -884,6 +957,72 @@ function createSync() {
     return { restored };
   }
 
+  // ---------------------------------------------------------------- conferência de CONTEÚDO (somente leitura)
+  // Compara, linha a linha, o que os arquivos locais dizem que deveria estar no Supabase com o que está lá agora. O ack não prova isso:
+  // outro servidor pode ter trocado a linha depois. Só conta como diferença o que ficou igual durante a conferência (arquivos que mudam o
+  // tempo todo, como a fila de logins, não geram falso alarme). Nunca devolve e-mail, CPF nem senha: só contagens e nomes de campo.
+  const canon = (v) => Array.isArray(v) ? v.map(canon) : (v && typeof v === 'object') ? Object.fromEntries(Object.keys(v).filter(k => v[k] !== null && v[k] !== undefined).map(k => [k, canon(v[k])])) : v;
+  function sameValue(a, b) {
+    const nul = (x) => x === undefined || x === null || x === '';
+    if (nul(a) && nul(b)) return true;
+    if (nul(a) || nul(b)) return false;
+    if (typeof a === 'object' || typeof b === 'object') return stable(canon(a)) === stable(canon(b));
+    if (typeof a === 'string' && typeof b === 'string' && /^\d{4}-\d\d-\d\d[T ]/.test(a) && /^\d{4}-\d\d-\d\d[T ]/.test(b)) return Date.parse(a) === Date.parse(b);
+    if (typeof a === 'boolean' || typeof b === 'boolean') return String(a) === String(b);
+    const na = Number(a); const nb = Number(b);
+    if (String(a).trim() !== '' && String(b).trim() !== '' && Number.isFinite(na) && Number.isFinite(nb)) return na === nb;
+    return String(a) === String(b);
+  }
+  function planEverything() {
+    const out = new Map();
+    for (const [file, src] of Object.entries(SOURCES)) {
+      const read = readSource(file);
+      if (read.json === undefined) continue;
+      const units = src.plan(read.json) || [];
+      for (const u of units) { u.id = file + '|' + u.table + '|' + u.key; out.set(u.id, Object.assign(u, { file })); }
+    }
+    return out;
+  }
+  async function audit() {
+    if (!enabled || !sb) return { enabled: false, reason: disabledReason };
+    try { await flushNow(); } catch (e) { /* conferir mesmo assim */ }
+    const first = planEverything();
+    const tables = new Set(); for (const u of first.values()) if (TABLES[u.table].kind !== 'append') tables.add(u.table);
+    const remoteRows = {}; const replaceCount = {};
+    for (const t of tables) {
+      const meta = TABLES[t];
+      if (meta.kind === 'upsert') remoteRows[t] = new Map((await selectAll(t, '*', null, meta.keyCol)).map(r => [String(r[meta.keyCol]), r]));
+      else { const m = new Map(); (await selectAll(t, meta.ownerCol, null, [meta.ownerCol, 'id'])).forEach(r => { const k = lc(r[meta.ownerCol]); m.set(k, (m.get(k) || 0) + 1); }); replaceCount[t] = m; }
+    }
+    const second = planEverything();
+    const byTable = {}; const samples = [];
+    const bump = (t, k) => { (byTable[t] = byTable[t] || { planned: 0, ok: 0, missing: 0, different: 0, moving: 0 })[k]++; };
+    const label = (u) => String(u.key).replace(/[^\x20-\x7e]/g, '?').replace(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+/g, maskEmail).slice(0, 60);   // e-mail nunca sai em claro
+    for (const u of first.values()) {
+      if (TABLES[u.table].kind === 'append') continue;
+      bump(u.table, 'planned');
+      const again = second.get(u.id);
+      if (!again || again.hash !== u.hash) { bump(u.table, 'moving'); continue; }
+      if (TABLES[u.table].kind === 'upsert') {
+        const r = remoteRows[u.table].get(String(u.key));
+        if (!r) { bump(u.table, 'missing'); if (samples.length < 20) samples.push({ table: u.table, file: u.file, key: label(u), problem: 'ausente no Supabase' }); continue; }
+        const fields = Object.keys(u.row).filter(c => !sameValue(u.row[c], r[c]));
+        if (fields.length) { bump(u.table, 'different'); if (samples.length < 20) samples.push({ table: u.table, file: u.file, key: label(u), problem: 'conteúdo diferente', fields }); }
+        else bump(u.table, 'ok');
+      } else {
+        const have = replaceCount[u.table].get(lc(u.key)) || 0;
+        if (have === u.rows.length) bump(u.table, 'ok');
+        else { bump(u.table, have === 0 ? 'missing' : 'different'); if (samples.length < 20) samples.push({ table: u.table, file: u.file, key: label(u), problem: 'linhas: local ' + u.rows.length + ' × Supabase ' + have }); }
+      }
+    }
+    const sum = (k) => Object.values(byTable).reduce((s, v) => s + v[k], 0);
+    lastAuditAt = Date.now();
+    lastAudit = { enabled: true, checkedAt: new Date().toISOString(), project: projectRef, files: new Set(Array.from(first.values()).map(u => u.file)).size,
+      planned: sum('planned'), ok: sum('ok'), missing: sum('missing'), different: sum('different'), moving: sum('moving'),
+      consistent: sum('missing') === 0 && sum('different') === 0, byTable, samples };
+    return lastAudit;
+  }
+
   // ---------------------------------------------------------------- API pública
   function pendingTotal() { let n = 0; for (const v of pendingByFile.values()) n += v; return n; }
 
@@ -898,7 +1037,9 @@ function createSync() {
       lastSuccessAt, lastError, rejected, heldDeletes: held,
       degradedTables: Object.fromEntries(Object.entries(degraded).filter(([, d]) => d.until > Date.now()).map(([t, d]) => [t, d.message])),
       omittedColumns: Object.fromEntries(Object.entries(skipCols).map(([t, s]) => [t, Array.from(s)])),
-      confirmedRecords: state ? Object.keys(state.acked).length : 0, restoredFiles
+      confirmedRecords: state ? Object.keys(state.acked).length : 0, restoredFiles,
+      guards: { credentials: credentialGuards, sequence: sequenceGuards },
+      lastAudit: lastAudit ? { checkedAt: lastAudit.checkedAt, planned: lastAudit.planned, ok: lastAudit.ok, missing: lastAudit.missing, different: lastAudit.different, moving: lastAudit.moving, consistent: lastAudit.consistent } : null
     };
   }
 
@@ -928,6 +1069,7 @@ function createSync() {
     log.log('[SUPABASE] Gravação direta ativa → projeto ' + projectRef + ' (chave ' + role + '). Confirmados: ' + Object.keys(state.acked).length + ' registro(s).');
     markAllDirty(opts.firstSyncDelayMs === undefined ? 1500 : opts.firstSyncDelayMs);   // reconciliação inicial: o que não está confirmado é enviado
     lastHeartbeat = Date.now();   // (lastVerify fica em 0: o 1º conferimento do que o Supabase ainda tem roda logo após o primeiro envio)
+    lastAuditAt = Date.now() - AUDIT_MS + 120000;   // 1ª conferência de conteúdo ~2 min depois do início
     if (timersOn) { poller = setInterval(pollTick, POLL_MS); if (poller.unref) poller.unref(); }
     return api;
   }
@@ -994,7 +1136,7 @@ function createSync() {
     return status();
   }
 
-  const api = { init, noteWrite, restoreMissingFiles, flushNow, syncEverythingNow, flushAndStop, status, isEnabled: () => enabled, verifyRemote, fetchUserRecord, _state: () => state };
+  const api = { init, noteWrite, restoreMissingFiles, flushNow, syncEverythingNow, flushAndStop, status, isEnabled: () => enabled, verifyRemote, fetchUserRecord, audit, _state: () => state };
   return api;
 }
 

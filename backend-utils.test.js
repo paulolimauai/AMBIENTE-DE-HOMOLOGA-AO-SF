@@ -176,3 +176,17 @@ test('createLatestWinsRunner: erro do worker não trava a fila', async () => {
   await run('x', 2);
   assert.equal(n, 2);
 });
+
+test('userForCloud: TODOS os carimbos de data passam pela conversão de Brasília (created_at ficava de fora e a nuvem/Supabase guardavam 3 h a menos)', () => {
+  const conv = (v) => 'BR:' + v;
+  const doSql = { email: 'a@a.com', password: 'scrypt:x:y', name: 'A', birth_date: '1990-01-01', created_at: 'C', last_login: 'L', trial_started_at: 'T', subscription_expires_at: 'S' };
+  const r = U.userForCloud(doSql, conv, '2026-11-15T10:00:00.000Z');
+  assert.deepEqual([r.created_at, r.last_login, r.trial_started_at, r.subscription_expires_at], ['BR:C', 'BR:L', 'BR:T', 'BR:S']);
+  assert.deepEqual(U.USER_DATE_FIELDS.slice().sort(), ['created_at', 'last_login', 'subscription_expires_at', 'trial_started_at']);
+  assert.equal(r.birth_date, '1990-01-01', 'data de nascimento (sem hora) não é convertida');
+  assert.equal(r.password_changed_at, '2026-11-15T10:00:00.000Z', 'relógio da senha vem do espelho');
+  assert.equal(doSql.created_at, 'C', 'não altera a linha original');
+  const vazio = U.userForCloud({ email: 'b@b.com', created_at: null, last_login: undefined }, conv);
+  assert.equal(vazio.created_at, null); assert.equal(vazio.last_login, undefined);
+  assert.equal(U.userForCloud({ password_changed_at: 'X' }, conv, 'Y').password_changed_at, 'X', 'o que o SQL já trouxe não é sobrescrito');
+});
