@@ -451,16 +451,16 @@ h1 em{font-style:normal;background:linear-gradient(100deg,var(--accent),var(--br
 
 /* ---------- rodapé ---------- */
 .rodape{position:relative;z-index:1;padding:2.4rem 0 calc(2rem + env(safe-area-inset-bottom,0px));border-top:1px solid var(--card-line)}
-.rod-in{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.6rem;align-items:start}
+.rod-in{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.4rem 2rem;align-items:start}
 .rod-brand{grid-column:1/-1}
-/* a marca à esquerda e as duas colunas de links junto à borda direita do conteúdo, com a mesma largura e alinhadas ao topo */
-@media (min-width:800px){.rod-in{grid-template-columns:minmax(0,1.1fr) repeat(2,minmax(0,1fr));column-gap:clamp(2rem,6vw,5rem)}.rod-brand{grid-column:auto}}
-.rodape p{font-size:.9rem;color:var(--soft);max-width:26rem;margin-top:.8rem}
-.rodape h3{font-size:.78rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:.6rem 0 .7rem}
-.rodape ul{display:grid;gap:.1rem}
-.rodape ul a{display:inline-block;padding:.35rem 0;font-size:.92rem;font-weight:600;color:var(--soft);text-decoration:none}
-.rodape ul a:hover{color:var(--white);text-decoration:underline}
-.rodape .copy{max-width:none;margin-top:1.8rem;padding-top:1.2rem;border-top:1px solid var(--card-line);font-size:.82rem;color:var(--muted)}
+/* marca à esquerda um pouco mais larga; as duas colunas de links dividem o restante em partes iguais, alinhadas ao topo */
+@media (min-width:800px){.rod-in{grid-template-columns:minmax(0,1.2fr) repeat(2,minmax(0,1fr));column-gap:clamp(2.5rem,7vw,6rem);row-gap:0}.rod-brand{grid-column:auto}}
+.rodape p{font-size:.9rem;color:var(--soft);max-width:24rem;margin-top:1rem}
+.rodape h3{font-size:.78rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:.2rem 0 .9rem}
+.rodape ul{display:grid;gap:.15rem}
+.rodape ul a{display:inline-block;padding:.4rem 0;font-size:.92rem;font-weight:600;color:var(--soft);text-decoration:none;transition:color .2s,transform .2s}
+.rodape ul a:hover{color:var(--white);text-decoration:none;transform:translateX(3px)}
+.rodape .copy{max-width:none;margin-top:2rem;padding-top:1.2rem;border-top:1px solid var(--card-line);font-size:.82rem;color:var(--muted)}
 
 /* telas grandes e baixas */
 @media (max-width:480px){
