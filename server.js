@@ -2263,7 +2263,7 @@ async function setupDatabaseTablesAndSync() {
               ord.client_phone || null,
               ord.client_cpf || null,
               ord.service_type || 'Outros',
-              ord.priority || 'Média',
+              ord.priority || Atendimento.PRIORIDADE_PADRAO,
               ord.title || 'OS',
               ord.description || '',
               ord.status || 'Novo',
@@ -20048,7 +20048,8 @@ window.adminResetTrialAction = async function(targetEmail) {
 
 window.updateAdminModalBadge = function(email) {
   const subBadge = document.getElementById('userAdminCurrentSubBadge');
-  if (!subBadge || !email) return;
+  if (!subBadge) return;
+  if (!email) { subBadge.textContent = 'Nova conta'; subBadge.style.color = '#94A3B8'; return; }
   const u = (registeredUsers || []).find(x => x && x.email && x.email.toLowerCase() === email.toLowerCase());
   if (!u) return;
 
@@ -21085,16 +21086,17 @@ async function exitViewMode(){
 async function toggleUserActive(email){
   await syncUsersWithServer();
   if(!currentUser || currentUser.role !== 'Administrador') return;
-  const u = registeredUsers.find(x => x.email === email);
-  if(!u || u.email === currentUser.email) return;
+  const alvoEmail = admMinusculo(email);
+  const u = registeredUsers.find(x => x.email && admMinusculo(x.email) === alvoEmail);
+  if(!u || admMinusculo(u.email) === admMinusculo(currentUser.email)) return;
 
-  const willDeactivate = u.active !== false;
-  if(willDeactivate && u.role === 'Administrador' && registeredUsers.filter(x=>x.role==='Administrador' && x.active!==false).length <= 1){
+  const willDeactivate = admUsuarioAtivo(u);
+  if(willDeactivate && u.role === 'Administrador' && admAdminsAtivos() <= 1){
     showToast('É necessário manter ao menos um administrador ativo');
     return;
   }
 
-  u.active = willDeactivate ? false : true;
+  u.active = !willDeactivate;
   const salvouAtivo = await saveUsersToServer();
   if(!salvouAtivo){
     u.active = !u.active;
@@ -21117,7 +21119,7 @@ async function deleteUserAdmin(email){
     showCustomAlert('Ação não permitida', 'Você não pode excluir sua própria conta enquanto estiver conectado nela.', 'error');
     return;
   }
-  if(u.role === 'Administrador' && registeredUsers.filter(x => x.role === 'Administrador').length <= 1){
+  if(u.role === 'Administrador' && admUsuarioAtivo(u) && admAdminsAtivos() <= 1){
     showCustomAlert('Ação não permitida', 'É necessário manter ao menos um administrador ativo no sistema.', 'error');
     return;
   }
@@ -25488,6 +25490,9 @@ function applyAdminUserFiltering() {
    (pageUsuariosLegado) continua funcionando. */
 function admMinusculo(v){ return String(v || '').toLowerCase().trim(); }
 function admEhAdmin(){ return !!(currentUser && currentUser.role === 'Administrador' && !isViewingOtherUser); }
+// Conta ativa de verdade: o espelho pode trazer active false, 0 ou '0' (o servidor trata os três como bloqueio)
+function admUsuarioAtivo(u){ return !!u && !(u.active === false || u.active === 0 || u.active === '0'); }
+function admAdminsAtivos(){ return (registeredUsers || []).filter(function(u){ return u && u.role === 'Administrador' && admUsuarioAtivo(u); }).length; }
 
 function admContagens(){
   const lista = Array.isArray(registeredUsers) ? registeredUsers : [];
@@ -25538,7 +25543,16 @@ async function admMudarPerfil(email, perfil){
   if(u.role === perfil) return true;
   const antes = { role: u.role, subscription_status: u.subscription_status, subscription_plan: u.subscription_plan };
   u.role = perfil;
-  if(perfil === 'Administrador'){ u.subscription_status = 'active'; u.subscription_plan = 'administrador_ilimitado'; }
+  // Acesso de administrador vem do perfil (role), não dos campos de assinatura: gravar "active"/"administrador_ilimitado"
+  // aqui sujava o cadastro e, ao rebaixar, a conta ficava com status mentiroso. Ao rebaixar, limpa o plano falso de
+  // contas antigas e devolve a situação real (tempo pago vigente, teste ainda vivo ou expirado).
+  if(perfil === 'Usuário' && u.subscription_plan === 'administrador_ilimitado'){
+    u.subscription_plan = null;
+    const expMs = u.subscription_expires_at ? new Date(u.subscription_expires_at).getTime() : 0;
+    const trialMs = u.trial_started_at ? new Date(u.trial_started_at).getTime() : 0;
+    const trialVivo = !trialMs || !isNaN(trialMs) && (Date.now() - trialMs) < 86400000;
+    u.subscription_status = (expMs > Date.now()) ? 'active' : (trialVivo ? 'trial' : 'expired');
+  }
   const salvou = await saveUsersToServer();
   if(!salvou){
     u.role = antes.role; u.subscription_status = antes.subscription_status; u.subscription_plan = antes.subscription_plan;
@@ -25585,8 +25599,8 @@ async function admDefinirAtivos(emails, ativo){
   (emails || []).forEach(function(e){
     const k = admMinusculo(e);
     const u = registeredUsers.find(function(x){ return x && admMinusculo(x.email) === k; });
-    if(!u || k === eu){ ignoradas++; return; }
-    if((u.active !== false) === !!ativo) return;
+    if(!u || admMinusculo(k) === eu){ ignoradas++; return; }
+    if(admUsuarioAtivo(u) === !!ativo) return;
     mudou.push([u, u.active]);
     u.active = !!ativo;
   });
@@ -25736,7 +25750,7 @@ function pageUsuariosLegado(){
 
   const totalUsers = users.length;
   const adminCount = users.filter(u => u.role === 'Administrador').length;
-  const activeCount = users.filter(u => u.active !== false).length;
+  const activeCount = users.filter(u => admUsuarioAtivo(u)).length;
   const inactiveCount = totalUsers - activeCount;
 
   if (typeof updateAdminSidebarBadges === 'function') setTimeout(updateAdminSidebarBadges, 0);
@@ -25843,7 +25857,7 @@ function pageUsuariosLegado(){
       \${users.map(u=>{
         const stats = getUserActivitySummary(u.email);
         const isAdminUser = u.role === 'Administrador';
-        const isInactive = u.active === false;
+        const isInactive = !admUsuarioAtivo(u);
         const isSelf = currentUser && currentUser.email && u.email && (currentUser.email.toLowerCase() === u.email.toLowerCase());
         const initials = (u.name || 'U').trim().split(/\\s+/).map(w => w[0]).filter(Boolean).slice(0,2).join('').toUpperCase() || 'US';
 
@@ -30464,6 +30478,11 @@ async function openAdminCreateUserModal(){
   }
   document.getElementById('userAdminName').value = '';
   const birthNovo = document.getElementById('userAdminBirth'); if(birthNovo) birthNovo.value = '';
+  const cpfNovo = document.getElementById('userAdminCpf'); if(cpfNovo) cpfNovo.value = '';
+  const phoneNovo = document.getElementById('userAdminPhone'); if(phoneNovo) phoneNovo.value = '';
+  const ativoNovo = document.getElementById('userAdminActive'); if(ativoNovo) ativoNovo.value = 'true';
+  const customNovo = document.getElementById('userAdminCustomTimeVal'); if(customNovo) customNovo.value = '';
+  const metodoNovo = document.getElementById('userAdminPaymentMethod'); if(metodoNovo) metodoNovo.value = 'pix';
   document.getElementById('userAdminRole').value = 'Usuário';
   updateUserAdminRoleHint();
   document.getElementById('userAdminPassword').value = '';
@@ -30553,7 +30572,7 @@ async function openUserAdminModal(email){
   updateUserAdminRoleHint();
 
   const activeSelect = document.getElementById('userAdminActive');
-  if(activeSelect) activeSelect.value = (u.active !== false) ? 'true' : 'false';
+  if(activeSelect) activeSelect.value = admUsuarioAtivo(u) ? 'true' : 'false';
 
   const passInput = document.getElementById('userAdminPassword');
   if(passInput) {
@@ -30617,8 +30636,10 @@ async function saveUserAdmin(){
       role,
       active: active,
       trial_started_at: new Date().toISOString(),
-      subscription_status: role === 'Administrador' ? 'active' : 'trial',
-      subscription_plan: role === 'Administrador' ? 'administrador_ilimitado' : null,
+      // Administrador não precisa de plano de assinatura (o acesso vem do perfil): gravar "active"/"administrador_ilimitado"
+      // aqui sujava o cadastro e deixava status mentiroso se a pessoa fosse rebaixada depois.
+      subscription_status: 'trial',
+      subscription_plan: null,
       created_at: new Date().toISOString()
     };
     try { localStorage.removeItem('nexus_data_' + rawEmail.toLowerCase().trim()); } catch(e) {}
@@ -30649,7 +30670,15 @@ async function saveUserAdmin(){
     return;
   }
 
-  if(u.role === 'Administrador' && role !== 'Administrador' && registeredUsers.filter(x => x.role === 'Administrador').length <= 1){
+  // Proteção do último administrador ativo: rebaixar OU bloquear a conta tira acesso de administração;
+  // e a própria conta nunca pode ser rebaixada/bloqueada por esta tela (senão o admin se tranca do painel).
+  const souEu = admMinusculo(u.email) === admMinusculo(currentUser && currentUser.email);
+  const perdeAdmin = u.role === 'Administrador' && admUsuarioAtivo(u) && (role !== 'Administrador' || !active);
+  if(souEu && perdeAdmin){
+    showToast('Por segurança você não pode rebaixar nem bloquear a própria conta por aqui.');
+    return;
+  }
+  if(perdeAdmin && admAdminsAtivos() <= 1){
     showToast('É necessário manter ao menos um administrador ativo no sistema');
     return;
   }
@@ -32384,7 +32413,7 @@ window.applyPostLoginBg = function(theme) {
 
   const realUser = serverUser;
 
-  if (realUser && realUser.active === false) {
+  if (realUser && (realUser.active === false || realUser.active === 0 || realUser.active === '0')) {
     localStorage.removeItem('nexus_session');
     localStorage.removeItem('nexus_cached_user');
     localStorage.removeItem('nexus_token');
@@ -35673,7 +35702,11 @@ async function handleNexusRequest(req, res) {
               email: emailKey,
               password: finalPassword,
               role: u.role || (existing ? existing.role : 'Usuário'),
-              active: u.active !== false,
+              // Conta bloqueada é active false/0/'0': tratar só "!== false" reativava bloqueios (0 e '0' viravam true) e
+              // um payload sem o campo zerava o bloqueio. Sem o campo no envio, vale o que já estava gravado.
+              active: u.active !== undefined
+                ? !(u.active === false || u.active === 0 || u.active === '0')
+                : (existing ? !(existing.active === false || existing.active === 0 || existing.active === '0') : true),
               cpf: u.cpf !== undefined ? u.cpf : (existing ? existing.cpf : null),
               phone: u.phone !== undefined ? u.phone : (existing ? existing.phone : null),
               birth_date: (u.birth_date || u.birthDate) !== undefined ? (u.birth_date || u.birthDate) : (existing ? (existing.birth_date || existing.birthDate) : null),
@@ -35708,6 +35741,15 @@ async function handleNexusRequest(req, res) {
           return res.end(JSON.stringify({ success: false, error: 'Nenhum cadastro válido (e-mail inválido ou conta excluída). Nada foi salvo.' }));
         }
         const finalUsers = Array.from(userMap.values());
+        // Um administrador logado não pode salvar uma lista que deixe o sistema sem nenhum admin ativo
+        // (rebaixar/bloquear o último). A sincronização interna não passa por aqui: o espelho dela é soberano.
+        if (!requestIsInternalSync) {
+          const adminsAtivos = finalUsers.filter(u => u && u.role === 'Administrador' && u.active !== false && u.active !== 0 && u.active !== '0').length;
+          if (adminsAtivos === 0) {
+            res.writeHead(403, { ...corsHeaders, 'Content-Type': 'application/json' });
+            return res.end(JSON.stringify({ success: false, error: 'É necessário manter ao menos um administrador ativo no sistema.' }));
+          }
+        }
         saveLocalUsers(finalUsers, isOverwrite);
         if (!requestIsInternalSync) await confirmCredentialsInSupabase(); // cadastro/senha definidos pelo administrador (a sincronização interna não espera)
 
