@@ -323,7 +323,8 @@ const SOURCES = {
   'pending_logins.json':       docSource('pending', 'array'),
   'local_avatars.json':        docSource('avatars', 'map'),
   'local_permissions.json':    docSource('permissions', 'map'),  // e-mail -> lista de permissões
-  'local_pagamentos.json':     docSource('pagamentos', 'array')  // livro de pagamentos e cobranças (pagamentos.js): um documento por registro (id)
+  'local_pagamentos.json':     docSource('pagamentos', 'array'), // livro de pagamentos e cobranças (pagamentos.js): um documento por registro (id)
+  'local_financeiro_config.json': docSource('fin_config', 'single') // preço, chave Pix e cobrança mensal definidos pelo administrador (+ histórico de alterações)
 };
 
 // ---------------------------------------------------------------- classificação de erros

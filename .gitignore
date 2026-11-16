@@ -48,3 +48,7 @@ analise_banco_dados/
 # Livro de pagamentos (dados financeiros dos clientes)
 local_pagamentos.json
 local_pagamentos.json.ilegivel-*
+
+# Configuração financeira (preço, chave Pix, cobrança mensal) definida pelo administrador
+local_financeiro_config.json
+local_financeiro_config.json.ilegivel-*

@@ -201,3 +201,89 @@ test('cobrança mensal automática: o resumo explica a regra do dia 5 e a lista 
   assert.ok(!/Todo dia/.test(N.resumoHTML(dados([auto]))));
   assert.match(N.cobrancasHTML({ filtro: { busca: '', situacao: 'todas', mes: 'todos' }, pagina: 1, porPagina: 25, sel: {}, nova: {}, conc: {} }, dados([auto])), /data-pg-a="gerar-mensal"/);
 });
+
+
+/* ---------------------------------------------------------------- aba Configurações */
+function dadosComConfig(extra) {
+  const base = P.validarConfig({ preco: '18,00', pix: { tipo: 'telefone', chave: '(62) 99234-5372', nome: 'Paulo Lima', cidade: 'Goiania' }, whatsapp: '(62) 99234-5372', cobranca: { dia: 5, prazo_dias: 3 } }).config;
+  const d = dados([]);
+  d.cobranca_mensal = { dia: 5, prazo_dias: 3, proxima: '2026-12-05' };
+  d.config = Object.assign({ atual: base, apresentacao: P.apresentarConfig(base), padrao: base, historico: [] }, extra || {});
+  return d;
+}
+const estadoCfg = (extra) => ({ cfg: Object.assign({ form: null, sujo: false, enviando: false, erro: '', campo: '' }, extra || {}) });
+
+test('config: a aba existe, mostra os valores em vigor e o campo da senha vazio (a senha nunca volta ao HTML)', () => {
+  assert.ok(N.navHTML('config', { aguardando: 0, solicitacoes: 0 }).includes('data-pg-aba="config"'));
+  const h = N.configHTML(estadoCfg(), dadosComConfig());
+  assert.match(h, /id="pgCfgPreco"[^>]*value="18,00"/);
+  assert.match(h, /id="pgCfgChave"[^>]*value="\(62\) 99234-5372"/);
+  assert.match(h, /id="pgCfgNome"[^>]*value="PAULO LIMA"/);
+  assert.match(h, /id="pgCfgDia"[^>]*value="5"/);
+  assert.match(h, /id="pgCfgPrazo"[^>]*value="3"/);
+  assert.match(h, /id="pgCfgSenha" type="password"[^>]*value=""/);
+  assert.match(h, /<option value="telefone" selected>Celular<\/option>/);
+  assert.match(h, /Nenhuma alteração registrada/);
+  assert.match(h, /05\/12\/2026/, 'mostra a próxima geração');
+});
+
+test('config: o que o administrador digitou é preservado (e escapado) ao redesenhar; erro do servidor marca o campo', () => {
+  const form = { preco: '19,90', tipo: 'email', chave: '"><script>x</script>', nome: 'Loja', cidade: 'Goiania', whatsapp: '(62) 99999-0000', dia: '7', prazo: '4', senha: 'segredo' };
+  const h = N.configHTML(estadoCfg({ sujo: true, form, erro: 'E-mail inválido para a chave Pix.', campo: 'pix.chave' }), dadosComConfig());
+  assert.match(h, /id="pgCfgPreco"[^>]*value="19,90"/);
+  assert.ok(!h.includes('<script>x</script>'), 'nada digitado vira HTML');
+  assert.match(h, /id="pgCfgChave"[^>]*aria-invalid="true"/);
+  assert.match(h, /E-mail inválido para a chave Pix\./);
+  assert.ok(!h.includes('segredo'), 'a senha digitada não é escrita de volta na página');
+});
+
+test('config: o histórico mostra quem mudou e o que mudou, com texto escapado', () => {
+  const hist = [{ em: '2026-11-15T15:00:00Z', por: { nome: 'Paulo <b>', email: 'admin@nexus.com' }, mudancas: ['Preço mensal: R$ 18,00 → R$ 20,00'] }];
+  const h = N.configHTML(estadoCfg(), dadosComConfig({ historico: hist }));
+  assert.match(h, /Preço mensal: R\$ 18,00 → R\$ 20,00/);
+  assert.ok(!h.includes('Paulo <b>'));
+  assert.match(h, /Paulo &lt;b&gt;/);
+});
+
+test('config: mudancasDaConfig lista só o que mudou e avisa quando mexe no destino do dinheiro', () => {
+  const d = dadosComConfig();
+  const igual = N.mudancasDaConfig(d, N.formDaConfig(d));
+  assert.deepEqual(igual.lista, []);
+  assert.equal(igual.risco, false);
+
+  const soPreco = N.mudancasDaConfig(d, Object.assign(N.formDaConfig(d), { preco: '20,00' }));
+  assert.deepEqual(soPreco.lista, ['Preço mensal: R$ 18,00 → R$ 20,00']);
+  assert.equal(soPreco.precoMudou, true);
+  assert.equal(soPreco.risco, false, 'só o preço não mexe para onde o dinheiro vai');
+
+  const chave = N.mudancasDaConfig(d, Object.assign(N.formDaConfig(d), { tipo: 'email', chave: 'a@b.com' }));
+  assert.equal(chave.risco, true);
+  assert.match(chave.lista[0], /^Chave Pix: celular \(62\) 99234-5372 → a@b\.com$/);
+
+  const nome = N.mudancasDaConfig(d, Object.assign(N.formDaConfig(d), { nome: 'Outra Pessoa' }));
+  assert.equal(nome.risco, true);
+  assert.deepEqual(nome.lista, ['Favorecido: PAULO LIMA → OUTRA PESSOA']);
+
+  const cobranca = N.mudancasDaConfig(d, Object.assign(N.formDaConfig(d), { dia: '10', prazo: '7' }));
+  assert.deepEqual(cobranca.lista, ['Dia da cobrança mensal: 5 → 10', 'Prazo da cobrança: 3 dia(s) → 7 dia(s)']);
+  assert.equal(cobranca.risco, false);
+
+  // máscara diferente da mesma chave não conta como mudança
+  assert.deepEqual(N.mudancasDaConfig(d, Object.assign(N.formDaConfig(d), { chave: '62 99234 5372' })).lista, []);
+});
+
+test('config: corpoDaConfig monta o que o servidor espera e precoDoTexto entende vírgula e ponto de milhar', () => {
+  const d = dadosComConfig();
+  assert.deepEqual(N.corpoDaConfig(N.formDaConfig(d)), { preco: '18,00', pix: { tipo: 'telefone', chave: '(62) 99234-5372', nome: 'PAULO LIMA', cidade: 'GOIANIA' }, whatsapp: '(62) 99234-5372', cobranca: { dia: '5', prazo_dias: '3' } });
+  assert.equal(P.validarConfig(N.corpoDaConfig(N.formDaConfig(d))).ok, true, 'o formulário preenchido com o valor atual passa na validação do servidor');
+  assert.equal(N.precoDoTexto('R$ 1.234,50'), 1234.5);
+  assert.equal(N.precoDoTexto('18,00'), 18);
+  assert.ok(Number.isNaN(N.precoDoTexto('abc')));
+  assert.equal(N.limparPix('Nexus Serviços Digitais Ltda', 25), 'NEXUS SERVICOS DIGITAIS L');
+});
+
+test('config: a mensagem de WhatsApp diz o tipo da chave Pix (não fica escrito "celular" para qualquer chave)', () => {
+  const base = { tipo: 'cobranca', nome: 'Ana Souza', valor: 20, payload: '000201...', ref: 'NX1', favorecido: 'LOJA' };
+  assert.match(N.mensagemWhats(Object.assign({ chave: 'a@b.com', tipoChave: 'e-mail' }, base)), /a chave Pix \(e-mail\) é a@b\.com/);
+  assert.match(N.mensagemWhats(Object.assign({ chave: '(62) 99999-0000' }, base)), /a chave Pix \(celular\) é/);
+});

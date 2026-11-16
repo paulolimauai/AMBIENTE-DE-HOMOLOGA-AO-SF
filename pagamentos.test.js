@@ -434,3 +434,111 @@ test('cobrança mensal: proximaGeracao diz o próximo dia 5 (hoje conta se ainda
   // 02:00 de 06/12 em UTC ainda é dia 05 à noite em Brasília
   assert.equal(P.proximaGeracao(Date.parse('2026-12-06T02:00:00Z'), 5), '2026-12-05');
 });
+
+
+/* ---------------------------------------------------------------- configuração financeira (preço, Pix, cobrança) */
+const CONFIG_OK = () => ({ preco: '18,00', pix: { tipo: 'telefone', chave: '(62) 99234-5372', nome: 'Paulo Lima', cidade: 'Goiânia' }, whatsapp: '(62) 99234-5372', cobranca: { dia: 5, prazo_dias: 3 } });
+
+test('config: valida e normaliza a configuração atual do sistema (celular vira +55, nome e cidade sem acento e em maiúsculas)', () => {
+  const r = P.validarConfig(CONFIG_OK());
+  assert.equal(r.ok, true, JSON.stringify(r));
+  assert.deepEqual(r.config, { preco: 18, pix: { tipo: 'telefone', chave: '+5562992345372', nome: 'PAULO LIMA', cidade: 'GOIANIA' }, whatsapp: '62992345372', cobranca: { dia: 5, prazo_dias: 3 } });
+  const a = P.apresentarConfig(r.config);
+  assert.equal(a.chave_exibicao, '(62) 99234-5372');
+  assert.equal(a.chave_copiar, '62992345372');
+  assert.equal(a.chave_tipo_rotulo, 'celular');
+  assert.equal(a.preco_texto, 'R$ 18,00');
+  assert.equal(a.whatsapp_exibicao, '(62) 99234-5372');
+});
+
+test('config: o preço aceita vírgula e ponto, recusa vazio, zero, acima do teto e o "1.500" ambíguo', () => {
+  const com = (preco) => { const c = CONFIG_OK(); c.preco = preco; return P.validarConfig(c); };
+  assert.equal(com('20,50').config.preco, 20.5);
+  assert.equal(com('R$ 25,00').config.preco, 25);
+  assert.equal(com(19.9).config.preco, 19.9);
+  assert.equal(com('1.234,50').config.preco, 1234.5);
+  for (const ruim of ['', '0', '0,50', '-5', 'abc', '5000,01', 999999, null, undefined]) {
+    const r = com(ruim);
+    assert.equal(r.ok, false, 'deveria recusar ' + String(ruim));
+    assert.equal(r.campo, 'preco');
+  }
+  assert.equal(com('1.500').ok, false, '"1.500" pode ser 1,5 ou 1500: pede a vírgula');
+  assert.equal(com('1.500').campo, 'preco');
+});
+
+test('config: cada tipo de chave Pix confere o formato (CPF e CNPJ com dígitos verificadores)', () => {
+  const com = (tipo, chave) => { const c = CONFIG_OK(); c.pix = { tipo, chave, nome: 'Loja', cidade: 'Goiania' }; return P.validarConfig(c); };
+  assert.equal(com('cpf', '529.982.247-25').config.pix.chave, '52998224725');
+  assert.equal(com('cpf', '111.111.111-11').ok, false, 'todos os dígitos iguais');
+  assert.equal(com('cpf', '529.982.247-24').ok, false, 'dígito verificador errado');
+  assert.equal(com('cnpj', '11.222.333/0001-81').config.pix.chave, '11222333000181');
+  assert.equal(com('cnpj', '11.222.333/0001-80').ok, false);
+  assert.equal(com('email', ' Financeiro@Empresa.COM.br ').config.pix.chave, 'financeiro@empresa.com.br');
+  assert.equal(com('email', 'sem-arroba').ok, false);
+  assert.equal(com('aleatoria', '123E4567-E89B-12D3-A456-426614174000').config.pix.chave, '123e4567-e89b-12d3-a456-426614174000');
+  assert.equal(com('aleatoria', '123e4567').ok, false);
+  assert.equal(com('telefone', '+55 62 99999-0000').config.pix.chave, '+5562999990000');
+  assert.equal(com('telefone', '62 3333-4444').config.pix.chave, '+556233334444', 'fixo (10 dígitos) também é chave válida');
+  assert.equal(com('telefone', '(62) 89999-0000').ok, false, 'celular de 11 dígitos começa com 9 depois do DDD');
+  assert.equal(com('telefone', '(02) 99999-0000').ok, false, 'DDD inexistente');
+  assert.equal(com('telefone', '').ok, false);
+  assert.equal(com('', '62999990000').campo, 'pix.tipo');
+  assert.equal(com('pix-magico', 'x').campo, 'pix.tipo');
+});
+
+test('config: o QR gerado com a chave nova leva a chave, o nome e a cidade normalizados e o CRC confere', () => {
+  const c = CONFIG_OK();
+  c.pix = { tipo: 'email', chave: 'Cobranca@Nexus.com', nome: 'Nexus Serviços Digitais Ltda', cidade: 'São Paulo' };
+  const cfg = P.validarConfig(c).config;
+  const payload = P.pixPayload({ chave: cfg.pix.chave, nome: cfg.pix.nome, cidade: cfg.pix.cidade, valor: cfg.preco, txid: 'NXTESTE1' });
+  const lido = P.pixLer(payload);
+  assert.equal(lido.crcOk, true);
+  assert.equal(lido.campos['59'], 'NEXUS SERVICOS DIGITAIS L');
+  assert.equal(lido.campos['59'].length, 25);
+  assert.equal(lido.campos['60'], 'SAO PAULO');
+  assert.ok(payload.includes('cobranca@nexus.com'));
+  assert.equal(lido.campos['54'], '18.00');
+});
+
+test('config: nome e cidade precisam ter ao menos 2 letras depois de limpos; WhatsApp precisa de DDD; dia 1-28 e prazo 1-30 dias', () => {
+  const com = (f) => { const c = CONFIG_OK(); f(c); return P.validarConfig(c); };
+  assert.equal(com((c) => { c.pix.nome = '@#$'; }).campo, 'pix.nome');
+  assert.equal(com((c) => { c.pix.cidade = 'X'; }).campo, 'pix.cidade');
+  assert.equal(com((c) => { c.whatsapp = '99234-5372'; }).campo, 'whatsapp');
+  assert.equal(com((c) => { c.whatsapp = ''; }).campo, 'whatsapp');
+  assert.equal(com((c) => { c.cobranca.dia = 0; }).campo, 'cobranca.dia');
+  assert.equal(com((c) => { c.cobranca.dia = 29; }).campo, 'cobranca.dia', 'dia 29-31 não existe em todo mês');
+  assert.equal(com((c) => { c.cobranca.dia = 2.5; }).campo, 'cobranca.dia');
+  assert.equal(com((c) => { c.cobranca.dia = 28; }).ok, true);
+  assert.equal(com((c) => { c.cobranca.prazo_dias = 0; }).campo, 'cobranca.prazo_dias');
+  assert.equal(com((c) => { c.cobranca.prazo_dias = 31; }).campo, 'cobranca.prazo_dias');
+  assert.equal(com((c) => { c.cobranca.prazo_dias = '7'; }).config.cobranca.prazo_dias, 7, 'vindo de um formulário, o número chega como texto');
+  assert.equal(P.validarConfig(null).ok, false);
+  assert.equal(P.validarConfig('lixo').ok, false);
+  assert.equal(P.validarConfig({}).campo, 'preco');
+});
+
+test('config: o nome de quem recebe tem no máximo 25 caracteres e a cidade 15 (limite do BR Code)', () => {
+  const c = CONFIG_OK();
+  c.pix.nome = 'Maria das Dores Fernandes de Albuquerque Neto';
+  c.pix.cidade = 'Santa Rita do Passa Quatro';
+  const r = P.validarConfig(c).config.pix;
+  assert.ok(r.nome.length <= 25 && r.cidade.length <= 15);
+  assert.equal(r.nome, 'MARIA DAS DORES FERNANDES');
+  assert.equal(r.cidade, 'SANTA RITA DO P');
+});
+
+test('config: diferencasConfig lista só o que mudou (e tudo na primeira gravação)', () => {
+  const antes = P.validarConfig(CONFIG_OK()).config;
+  assert.deepEqual(P.diferencasConfig(antes, antes), []);
+  const c = CONFIG_OK(); c.preco = '20,00'; c.cobranca.dia = 10;
+  const depois = P.validarConfig(c).config;
+  assert.deepEqual(P.diferencasConfig(antes, depois), ['Preço mensal: R$ 18,00 → R$ 20,00', 'Dia da cobrança mensal: 5 → 10']);
+  const c2 = CONFIG_OK(); c2.pix = { tipo: 'cpf', chave: '52998224725', nome: 'Outra Pessoa', cidade: 'Goiania' };
+  const d2 = P.diferencasConfig(antes, P.validarConfig(c2).config);
+  assert.equal(d2.length, 2);
+  assert.equal(d2[0], 'Chave Pix: celular +55…372 → CPF 529…725', 'a chave aparece mascarada na auditoria');
+  assert.ok(!d2.join(' ').includes('52998224725') && !d2.join(' ').includes('992345372'), 'nem o CPF nem o celular inteiros vão para o histórico');
+  assert.match(d2[1], /^Favorecido do Pix: PAULO LIMA → OUTRA PESSOA$/);
+  assert.ok(P.diferencasConfig(null, antes).length >= 6, 'sem configuração anterior tudo conta como novo');
+});

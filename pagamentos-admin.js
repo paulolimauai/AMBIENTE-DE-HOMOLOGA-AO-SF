@@ -62,7 +62,8 @@
     { id: 'acessos', rotulo: 'Expirados e a vencer' },
     { id: 'nova', rotulo: 'Nova cobrança (2ª via)' },
     { id: 'conciliar', rotulo: 'Conciliar extrato' },
-    { id: 'solicitacoes', rotulo: 'Solicitações de boleto' }
+    { id: 'solicitacoes', rotulo: 'Solicitações de boleto' },
+    { id: 'config', rotulo: 'Configurações' }
   ];
   var ABA_ANTIGA = { pendentes: 'cobrancas', expirados: 'acessos', segunda_via_boleto: 'nova', solicitacoes_boleto: 'solicitacoes' };
 
@@ -108,7 +109,7 @@
       corpo = 'Segue a cobrança da assinatura mensal do Nexus: ' + moeda(o.valor) + (o.vencimento ? ', com vencimento em ' + o.vencimento : '') + '.';
     }
     var linhas = [abre, corpo, '', 'Pix copia e cola (toque e segure para copiar):', o.payload || ''];
-    if (o.chave) linhas.push('', 'Se preferir, a chave Pix (celular) é ' + o.chave + (o.favorecido ? ' — ' + o.favorecido : '') + ', no valor de ' + moeda(o.valor) + '.');
+    if (o.chave) linhas.push('', 'Se preferir, a chave Pix (' + (o.tipoChave || 'celular') + ') é ' + o.chave + (o.favorecido ? ' — ' + o.favorecido : '') + ', no valor de ' + moeda(o.valor) + '.');
     if (o.ref) linhas.push('Referência: ' + o.ref);
     linhas.push('', 'Depois de pagar, o acesso é liberado assim que o recebimento for confirmado. Pode enviar o comprovante por aqui.');
     return linhas.join('\n');
@@ -194,7 +195,7 @@
     return kpis +
       '<div class="pg-grade">' +
         '<section class="pg-painel pg-painel-larga"><h3>Receita dos últimos 6 meses</h3>' + barrasHTML(r.serie) +
-          '<p class="pg-nota">Conta só pagamentos confirmados (recebimento conferido por um administrador). A receita recorrente é uma estimativa: assinantes pagantes ativos × ' + esc(moeda(r.preco)) + '; cortesias e vitalícios não entram.</p>' +
+          '<p class="pg-nota">Conta só pagamentos confirmados (recebimento conferido por um administrador). A receita recorrente é uma estimativa: assinantes pagantes ativos × ' + esc(moeda(r.preco)) + '; cortesias e vitalícios não entram. Receita acumulada desde o início do livro: <b>' + esc(moeda(rec.total)) + '</b> em ' + plural(rec.qtd_total || 0, 'pagamento', 'pagamentos') + '.</p>' +
           cobrancaMensalNota(dados) + '</section>' +
         '<section class="pg-painel"><h3>Esperando confirmação</h3>' + listaPend + '</section>' +
         '<section class="pg-painel"><h3>Vencem em breve</h3>' + listaVenc + '</section>' +
@@ -226,7 +227,7 @@
       '<td class="adm-c-sel"><input type="checkbox" class="adm-chk" data-pg-sel="' + esc(p.id) + '"' + (sel ? ' checked' : '') + (aberta(p) ? '' : ' disabled') + ' aria-label="Selecionar ' + esc(p.nome || p.email) + '"></td>' +
       '<td data-l="Cliente"><b class="adm-nome" title="' + esc(p.nome) + '">' + esc(p.nome || p.email) + '</b><small>' + esc(p.email) + ' · ref. ' + esc(p.ref) + '</small></td>' +
       '<td data-l="Valor"><b class="pg-valor">' + esc(moeda(p.valor)) + '</b><small>' + esc(METODOS[p.metodo] || p.metodo || '') + '</small></td>' +
-      '<td data-l="Situação">' + pill(p.situacao) + (p.origem === 'legado' ? '<small>aviso anterior ao livro</small>' : (p.origem === 'usuario' ? '<small>avisado pelo cliente</small>' : (p.origem === 'automatica' ? '<small>gerada sozinha' + (p.competencia ? ' · ' + esc(rotuloMes(p.competencia)) : '') + '</small>' : ''))) + '</td>' +
+      '<td data-l="Situação">' + pill(p.situacao) + (p.origem === 'legado' ? '<small>aviso anterior ao livro</small>' : (p.origem === 'usuario' ? '<small>avisado pelo cliente</small>' : (p.origem === 'historico' ? '<small>lançamento retroativo</small>' : p.origem === 'automatica' ? '<small>gerada sozinha' + (p.competencia ? ' · ' + esc(rotuloMes(p.competencia)) : '') + '</small>' : ''))) + '</td>' +
       '<td data-l="Datas">' + datas + por + '</td>' +
       '<td class="pg-acoes" data-l="Ações">' + acoesDaLinha(p) + '</td></tr>';
   }
@@ -246,6 +247,7 @@
       '<label class="adm-busca">' + IC.busca + '<input type="search" id="pgBusca" data-pg-busca autocomplete="off" spellcheck="false" placeholder="Buscar nome, e-mail ou referência…" value="' + esc(f.busca) + '" aria-label="Buscar pagamentos"></label>' +
       '<label class="adm-sel"><span>Situação</span><select data-pg-filtro="situacao">' + op(opSit, f.situacao) + '</select></label>' +
       '<label class="adm-sel"><span>Mês</span><select data-pg-filtro="mes">' + op([['todos', 'Todos os meses']].concat(meses.map(function (m) { return [m, rotuloMes(m)]; })), f.mes) + '</select></label>' +
+      '<button type="button" class="adm-btn" data-pg-a="lancar" title="Registrar um pagamento que você já recebeu antes (ou por fora do sistema), na data em que o dinheiro caiu. Não altera o acesso da conta.">Lançar pagamento recebido</button>' +
       '<button type="button" class="adm-btn" data-pg-a="gerar-mensal" title="O sistema já faz isto sozinho todo dia ' + esc(diaDaCobranca(dados)) + '. Use para gerar agora a cobrança do mês de quem ainda não tem.">Gerar cobranças do mês</button>' +
       '<button type="button" class="adm-btn" data-pg-a="csv" title="Baixar a lista filtrada em CSV (abre no Excel)">' + IC.baixar + '<span>Exportar CSV</span></button>' +
       '</div></section>';
@@ -309,11 +311,18 @@
 
   /* ---- Nova cobrança (2ª via) ---- */
   function rotuloConta(u) { return (u.name || u.email) + ' — ' + u.email; }
+  // Depois de uma troca de preço, a conta pode ficar com a cobrança antiga (preço antigo) e a nova abertas ao mesmo tempo: o administrador decide qual cancelar
+  function avisoOutrasAbertas(res) {
+    var o = (res && res.outras_abertas) || [];
+    if (!o.length) return '';
+    return '<p class="pg-aviso">Esta conta tem outra cobrança em aberto: ' + o.map(function (x) { return esc(x.ref) + ' (' + esc(moeda(x.valor)) + ')'; }).join(', ') +
+      '. Se for a mesma assinatura, cancele uma delas na aba Cobranças para o cliente não pagar duas vezes.</p>';
+  }
   function cobrancaResultadoHTML(res, usuario) {
     var p = res.pagamento;
     var pix = res.pix;
     var tel = usuario && usuario.phone;
-    var msg = mensagemWhats({ tipo: 'cobranca', nome: p.nome, valor: p.valor, vencimento: p.vencimento ? diaBR(p.vencimento) : '', payload: pix.payload, ref: p.ref, chave: pix.chave, favorecido: pix.favorecido });
+    var msg = mensagemWhats({ tipo: 'cobranca', nome: p.nome, valor: p.valor, vencimento: p.vencimento ? diaBR(p.vencimento) : '', payload: pix.payload, ref: p.ref, chave: pix.chave, tipoChave: pix.tipo_chave, favorecido: pix.favorecido });
     var link = linkWhats(tel, msg);
     return '<div class="pg-resultado">' +
       '<div class="pg-resultado-qr"><img src="' + esc(pix.qr_url) + '" alt="QR Code Pix da cobrança ' + esc(p.ref) + '" width="220" height="220"></div>' +
@@ -321,7 +330,7 @@
         '<dl class="pg-dl"><div><dt>Cliente</dt><dd>' + esc(p.nome) + '<small>' + esc(p.email) + '</small></dd></div>' +
         '<div><dt>Valor</dt><dd>' + esc(moeda(p.valor)) + '</dd></div><div><dt>Vencimento</dt><dd>' + esc(p.vencimento ? diaBR(p.vencimento) : '—') + '</dd></div>' +
         '<div><dt>Referência</dt><dd>' + esc(p.ref) + '</dd></div></dl>' +
-        (res.reutilizada ? '<p class="pg-aviso">Já existia uma cobrança em aberto para esta conta: esta é a <b>2ª via da mesma cobrança</b> (mesma referência), com o vencimento ajustado.</p>' : '') +
+        (res.reutilizada ? '<p class="pg-aviso">Já existia uma cobrança em aberto para esta conta: esta é a <b>2ª via da mesma cobrança</b> (mesma referência), com o vencimento ajustado.</p>' : '') + avisoOutrasAbertas(res) +
         '<label class="pg-campo"><span>Pix copia e cola</span><textarea readonly rows="4" id="pgPayload" data-pg-copiavel>' + esc(pix.payload) + '</textarea></label>' +
         '<div class="pg-botoes">' +
           '<button type="button" class="adm-btn adm-btn-pri" data-pg-a="copiar" data-alvo="pgPayload">Copiar código Pix</button>' +
@@ -402,6 +411,85 @@
       }).join('') + '</tbody></table></div>';
   }
 
+  /* ---- Configurações: preço da assinatura, recebimento por Pix e cobrança mensal ---- */
+  var TIPOS_CHAVE = [['telefone', 'Celular'], ['cpf', 'CPF'], ['cnpj', 'CNPJ'], ['email', 'E-mail'], ['aleatoria', 'Chave aleatória']];
+  var DICAS_CHAVE = {
+    telefone: 'Celular com DDD. Ex.: (62) 99999-0000', cpf: 'CPF com 11 dígitos', cnpj: 'CNPJ com 14 dígitos',
+    email: 'O e-mail que está cadastrado como chave Pix no seu banco', aleatoria: 'Formato 00000000-0000-0000-0000-000000000000'
+  };
+  // Como o banco do pagador mostra o nome e a cidade (BR Code: sem acento, maiúsculas, 25 e 15 caracteres)
+  function limparPix(s, max) { return semAcento(s).replace(/[^a-z0-9 ]/g, '').replace(/\s+/g, ' ').trim().toUpperCase().slice(0, max).trim(); }
+  function formDaConfig(dados) {
+    var c = dados.config, a = c.apresentacao;
+    return { preco: Number(c.atual.preco).toFixed(2).replace('.', ','), tipo: c.atual.pix.tipo, chave: a.chave_exibicao, nome: c.atual.pix.nome, cidade: c.atual.pix.cidade,
+      whatsapp: a.whatsapp_exibicao, dia: String(c.atual.cobranca.dia), prazo: String(c.atual.cobranca.prazo_dias), senha: '' };
+  }
+  function corpoDaConfig(f) {
+    return { preco: f.preco, pix: { tipo: f.tipo, chave: f.chave, nome: f.nome, cidade: f.cidade }, whatsapp: f.whatsapp, cobranca: { dia: f.dia, prazo_dias: f.prazo } };
+  }
+  function normComparacao(s) { return semAcento(s).replace(/[^a-z0-9@.]/g, ''); }
+  function precoDoTexto(t) { var s = String(t == null ? '' : t).replace(/[R$\s]/g, ''); if (s.indexOf(',') >= 0) s = s.replace(/\./g, '').replace(',', '.'); var n = parseFloat(s); return isNaN(n) ? NaN : n; }
+  // O que muda em relação ao que está valendo (só para o administrador conferir antes de aplicar; quem decide é o servidor)
+  function mudancasDaConfig(dados, f) {
+    var c = dados.config, a = c.atual, ap = c.apresentacao, m = [], risco = false;
+    var novoPreco = precoDoTexto(f.preco);
+    if (isNaN(novoPreco) || Math.abs(novoPreco - a.preco) > 0.004) m.push('Preço mensal: ' + moeda(a.preco) + ' → ' + (isNaN(novoPreco) ? (f.preco || '—') : moeda(novoPreco)));
+    if (f.tipo !== a.pix.tipo || normComparacao(f.chave) !== normComparacao(ap.chave_exibicao)) { m.push('Chave Pix: ' + ap.chave_tipo_rotulo + ' ' + ap.chave_exibicao + ' → ' + (f.chave || '—')); risco = true; }
+    if (limparPix(f.nome, 25) !== a.pix.nome) { m.push('Favorecido: ' + a.pix.nome + ' → ' + (limparPix(f.nome, 25) || '—')); risco = true; }
+    if (limparPix(f.cidade, 15) !== a.pix.cidade) m.push('Cidade do Pix: ' + a.pix.cidade + ' → ' + (limparPix(f.cidade, 15) || '—'));
+    if (normComparacao(f.whatsapp) !== normComparacao(ap.whatsapp_exibicao)) m.push('WhatsApp de suporte: ' + ap.whatsapp_exibicao + ' → ' + (f.whatsapp || '—'));
+    if (String(f.dia).trim() !== String(a.cobranca.dia)) m.push('Dia da cobrança mensal: ' + a.cobranca.dia + ' → ' + (f.dia || '—'));
+    if (String(f.prazo).trim() !== String(a.cobranca.prazo_dias)) m.push('Prazo da cobrança: ' + a.cobranca.prazo_dias + ' dia(s) → ' + (f.prazo || '—') + ' dia(s)');
+    return { lista: m, risco: risco, precoMudou: m.some(function (x) { return x.indexOf('Preço') === 0; }) };
+  }
+  function historicoConfigHTML(c) {
+    var h = (c && c.historico) || [];
+    if (!h.length) return '<p class="pg-nada">Nenhuma alteração registrada: o sistema está com os valores padrão.</p>';
+    return '<ul class="pg-hist">' + h.map(function (x) {
+      return '<li><b>' + esc(dataBR(x.em, true)) + '</b><small>' + esc((x.por && (x.por.nome || x.por.email)) || 'sistema') + '</small>' +
+        (x.mudancas || []).map(function (m) { return '<span>' + esc(m) + '</span>'; }).join('') + '</li>';
+    }).join('') + '</ul>';
+  }
+  function previaConfigTexto(f) {
+    var n = limparPix(f.nome, 25), c = limparPix(f.cidade, 15);
+    return 'No app do banco do cliente aparece: ' + (n || '—') + (c ? ' · ' + c : '') + '.';
+  }
+  function configHTML(estado, dados) {
+    var cfg = dados && dados.config;
+    if (!cfg) return vazio('Configurações indisponíveis', 'O servidor não enviou a configuração. Use "Atualizar".');
+    var e = estado.cfg;
+    var f = e.sujo && e.form ? e.form : formDaConfig(dados);
+    var inv = function (campo) { return e.campo === campo ? ' aria-invalid="true"' : ''; };
+    var tipos = TIPOS_CHAVE.map(function (t) { return '<option value="' + t[0] + '"' + (f.tipo === t[0] ? ' selected' : '') + '>' + esc(t[1]) + '</option>'; }).join('');
+    var proxima = dados.cobranca_mensal && dados.cobranca_mensal.proxima ? diaBR(dados.cobranca_mensal.proxima) : '—';
+    return '<section class="pg-painel"><h3>Preço da assinatura</h3>' +
+        '<div class="pg-form pg-cfg-form"><label class="pg-campo"><span>Valor mensal (R$)</span><input id="pgCfgPreco" data-pg-cfg inputmode="decimal" autocomplete="off" maxlength="12" value="' + esc(f.preco) + '"' + inv('preco') + '></label></div>' +
+        '<p class="pg-nota">Vale na hora para as <b>próximas cobranças</b> e para a tela de assinatura dos clientes. Cobranças já emitidas e pagamentos já recebidos <b>não mudam</b>: cada registro guarda o valor da época. Quem está com a tela de assinatura aberta só vê o preço novo ao atualizar a página.</p></section>' +
+      '<section class="pg-painel"><h3>Recebimento por Pix</h3>' +
+        '<div class="pg-form pg-cfg-form">' +
+          '<label class="pg-campo"><span>Tipo da chave</span><select id="pgCfgTipo" data-pg-cfg' + inv('pix.tipo') + '>' + tipos + '</select></label>' +
+          '<label class="pg-campo"><span>Chave Pix</span><input id="pgCfgChave" data-pg-cfg autocomplete="off" spellcheck="false" maxlength="80" value="' + esc(f.chave) + '"' + inv('pix.chave') + '><small class="pg-dica">' + esc(DICAS_CHAVE[f.tipo] || '') + '</small></label>' +
+          '<label class="pg-campo"><span>Nome do favorecido (como no banco)</span><input id="pgCfgNome" data-pg-cfg autocomplete="off" maxlength="40" value="' + esc(f.nome) + '"' + inv('pix.nome') + '></label>' +
+          '<label class="pg-campo"><span>Cidade do favorecido</span><input id="pgCfgCidade" data-pg-cfg autocomplete="off" maxlength="30" value="' + esc(f.cidade) + '"' + inv('pix.cidade') + '></label>' +
+          '<label class="pg-campo pg-campo-larga"><span>WhatsApp de suporte (recebe os comprovantes dos clientes)</span><input id="pgCfgWhats" data-pg-cfg inputmode="tel" autocomplete="off" maxlength="20" value="' + esc(f.whatsapp) + '"' + inv('whatsapp') + '></label>' +
+        '</div>' +
+        '<p class="pg-nota" id="pgCfgPrevia">' + esc(previaConfigTexto(f)) + '</p>' +
+        '<p class="pg-aviso">Cuidado com a chave: o QR Code e o copia e cola de <b>todos os clientes</b> passam a usá-la na hora. Cobranças que você já enviou por WhatsApp ou imprimiu continuam apontando para a chave antiga: se trocar de conta, avise quem ainda não pagou e gere a 2ª via.</p></section>' +
+      '<section class="pg-painel"><h3>Cobrança mensal automática</h3>' +
+        '<div class="pg-form pg-cfg-form">' +
+          '<label class="pg-campo"><span>Gerar todo dia (1 a 28)</span><input id="pgCfgDia" data-pg-cfg inputmode="numeric" autocomplete="off" maxlength="2" value="' + esc(f.dia) + '"' + inv('cobranca.dia') + '></label>' +
+          '<label class="pg-campo"><span>Vencimento depois de (dias)</span><input id="pgCfgPrazo" data-pg-cfg inputmode="numeric" autocomplete="off" maxlength="2" value="' + esc(f.prazo) + '"' + inv('cobranca.prazo_dias') + '></label>' +
+        '</div>' +
+        '<p class="pg-nota">Próxima geração com a configuração atual: <b>' + esc(proxima) + '</b>. O acesso de cada conta continua dependendo do recebimento confirmado, não do vencimento da cobrança.</p></section>' +
+      '<section class="pg-painel"><h3>Confirmar com a sua senha</h3>' +
+        '<p class="pg-nota">Por segurança, mudar o preço ou a chave Pix exige a senha do administrador. Tudo fica registrado em Auditoria &amp; Logs, com a data e o seu nome.</p>' +
+        '<div class="pg-form pg-cfg-form"><label class="pg-campo"><span>Sua senha</span><input id="pgCfgSenha" type="password" autocomplete="current-password" maxlength="128" value=""' + inv('senha_atual') + '></label></div>' +
+        '<div class="pg-botoes"><button type="button" class="adm-btn adm-btn-pri" data-pg-a="config-salvar"' + (e.enviando ? ' disabled' : '') + '>' + (e.enviando ? 'Salvando…' : 'Salvar configurações') + '</button>' +
+          '<button type="button" class="adm-btn" data-pg-a="config-descartar"' + (e.sujo ? '' : ' disabled') + '>Descartar alterações</button></div>' +
+        (e.erro ? '<p class="pg-erro" role="alert">' + esc(e.erro) + '</p>' : '') + '</section>' +
+      '<section class="pg-painel"><h3>Histórico de alterações</h3>' + historicoConfigHTML(cfg) + '</section>';
+  }
+
   /* ---- documentos para imprimir ---- */
   function docBase(titulo, corpo) {
     return '<!doctype html><html lang="pt-BR"><meta charset="utf-8"><title>' + esc(titulo) + '</title>' +
@@ -414,7 +502,7 @@
       '<header><small>NEXUS FINANCEIRO HUB · COBRANÇA</small><h1>Instrução de pagamento via Pix</h1><small>Referência ' + esc(p.ref) + '</small></header>' +
       '<section class="box grid"><div><small>CLIENTE</small><p><strong>' + esc(p.nome) + '</strong><br>' + esc(p.email) + '</p></div><div><small>PLANO</small><p><strong>Mensal · 30 dias</strong></p></div>' +
       '<div><small>VALOR</small><p><strong>' + esc(moeda(p.valor)) + '</strong></p></div><div><small>VENCIMENTO</small><p><strong>' + esc(p.vencimento ? diaBR(p.vencimento) : '—') + '</strong></p></div></section>' +
-      '<section class="box" style="text-align:center"><h2>Escaneie o QR Code Pix</h2><img class="qr" src="' + esc((origem || '') + pix.qr_url) + '" alt="QR Code Pix"><p>Favorecido: <strong>' + esc(pix.favorecido) + '</strong></p><p>Chave Pix (celular): <strong>' + esc(pix.chave) + '</strong></p></section>' +
+      '<section class="box" style="text-align:center"><h2>Escaneie o QR Code Pix</h2><img class="qr" src="' + esc((origem || '') + pix.qr_url) + '" alt="QR Code Pix"><p>Favorecido: <strong>' + esc(pix.favorecido) + '</strong></p><p>Chave Pix (' + esc(pix.tipo_chave || 'celular') + '): <strong>' + esc(pix.chave) + '</strong></p></section>' +
       '<section class="box"><strong>Pix copia e cola</strong><p class="code">' + esc(pix.payload) + '</p></section>' +
       '<p class="note"><strong>Importante:</strong> este documento é uma instrução de pagamento via Pix, não é um boleto bancário registrado. O acesso é liberado após a confirmação do recebimento.</p>');
   }
@@ -433,7 +521,8 @@
     aba: 'resumo', dados: null, carregando: false, carregadoEm: 0, erro: '',
     filtro: { busca: '', situacao: 'todas', mes: 'todos' }, pagina: 1, porPagina: 25, sel: {},
     nova: { email: '', cliente: '', venc: '', obs: '', resultado: null, usuario: null, enviando: false, erro: '' },
-    conc: { resultado: null, enviando: false, nome: '', erro: '' }
+    conc: { resultado: null, enviando: false, nome: '', erro: '' },
+    cfg: { form: null, sujo: false, enviando: false, erro: '', campo: '' }
   };
   var ctxFn = null, ligado = false, tempoBusca = null;
   function ctx() { return (ctxFn && ctxFn()) || {}; }
@@ -453,6 +542,7 @@
       case 'nova': return novaHTML(estado, c);
       case 'conciliar': return conciliarHTML(estado);
       case 'solicitacoes': return solicitacoesHTML(c);
+      case 'config': return configHTML(estado, estado.dados);
       default: return resumoHTML(estado.dados);
     }
   }
@@ -527,6 +617,12 @@
     if (c) n.cliente = c.value;
     if (v) n.venc = v.value;
     if (o) n.obs = o.value;
+    if (estado.cfg.sujo && doc.getElementById('pgCfgPreco')) estado.cfg.form = lerFormConfig();
+  }
+  function lerFormConfig() {
+    var d = root.document;
+    var v = function (id) { var e = d.getElementById(id); return e ? e.value : ''; };
+    return { preco: v('pgCfgPreco'), tipo: v('pgCfgTipo'), chave: v('pgCfgChave'), nome: v('pgCfgNome'), cidade: v('pgCfgCidade'), whatsapp: v('pgCfgWhats'), dia: v('pgCfgDia'), prazo: v('pgCfgPrazo'), senha: v('pgCfgSenha') };
   }
   // Depois de uma ação que muda contas: recarrega o livro e a lista de contas do app (cadastros e menu usam as mesmas contas)
   function depoisDeMudar() {
@@ -687,14 +783,14 @@
   function mostrarCobranca(res, usuario, tipo, extra) {
     extra = extra || {};
     var p = res.pagamento, pix = res.pix;
-    var msg = mensagemWhats({ tipo: tipo || 'cobranca', nome: p.nome, valor: p.valor, vencimento: p.vencimento ? diaBR(p.vencimento) : '', payload: pix.payload, ref: p.ref, chave: pix.chave, favorecido: pix.favorecido, dias: extra.dias, expira: extra.expira });
+    var msg = mensagemWhats({ tipo: tipo || 'cobranca', nome: p.nome, valor: p.valor, vencimento: p.vencimento ? diaBR(p.vencimento) : '', payload: pix.payload, ref: p.ref, chave: pix.chave, tipoChave: pix.tipo_chave, favorecido: pix.favorecido, dias: extra.dias, expira: extra.expira });
     var link = linkWhats(usuario && usuario.phone, msg);
     estado.ultimaCobranca = res;
     return dialogo({
       titulo: (tipo === 'lembrete' ? 'Lembrete de renovação' : (res.reutilizada ? '2ª via da cobrança' : 'Cobrança gerada')) + ' · ' + (p.nome || p.email), semCancelar: true, ok: 'Fechar', larga: true,
       html: '<div class="pg-resultado"><div class="pg-resultado-qr"><img src="' + esc(pix.qr_url) + '" alt="QR Code Pix" width="200" height="200"></div><div class="pg-resultado-dados">' +
         '<p><b>' + esc(moeda(p.valor)) + '</b> · vence ' + esc(p.vencimento ? diaBR(p.vencimento) : '—') + ' · ref. ' + esc(p.ref) + '</p>' +
-        (res.reutilizada ? '<p class="pg-aviso">Já existia uma cobrança em aberto: esta é a 2ª via dela (mesma referência).</p>' : '') +
+        (res.reutilizada ? '<p class="pg-aviso">Já existia uma cobrança em aberto: esta é a 2ª via dela (mesma referência).</p>' : '') + avisoOutrasAbertas(res) +
         '<label class="pg-campo"><span>Mensagem pronta para o WhatsApp</span><textarea readonly rows="7" id="pgMsg" data-pg-copiavel>' + esc(msg) + '</textarea></label>' +
         '<div class="pg-botoes"><button type="button" class="adm-btn" data-pg-a="copiar" data-alvo="pgMsg">Copiar mensagem</button>' +
         '<button type="button" class="adm-btn" data-pg-a="copiar-pix" data-payload="' + esc(pix.payload) + '">Copiar só o código Pix</button>' +
@@ -774,6 +870,71 @@
       return api('POST', '/api/admin/pagamentos/gerar-mensal', {}).then(function (j) {
         toast(j && j.success ? '✅ ' + j.message : '⚠️ ' + ((j && j.error) || 'Não foi possível gerar as cobranças.'));
         if (j && j.success && j.geradas) return depoisDeMudar();
+      });
+    });
+  }
+  // Registra um pagamento que já foi recebido (antes do livro ou por fora): entra na receita da data informada e NÃO altera o acesso da conta
+  function acaoLancar() {
+    var usuarios = (ctx().usuarios || []).filter(function (u) { return u && u.email && u.role !== 'Administrador'; })
+      .sort(function (a, b) { return String(a.name || a.email).localeCompare(String(b.name || b.email), 'pt-BR'); });
+    var preco = estado.dados ? estado.dados.preco : 0;
+    var hoje = hojeIso();
+    return dialogo({
+      titulo: 'Lançar pagamento recebido', ok: 'Lançar pagamento', larga: true,
+      html: '<p>Use para registrar um pagamento que <b>já caiu na sua conta</b> antes de existir o livro, ou que foi feito por fora do sistema. Ele entra na receita do mês da data informada e <b>não altera o acesso</b> da conta: o prazo dela continua o que já está.</p>' +
+        '<label class="pg-campo"><span>Cliente</span><input list="pgContasLanc" data-campo="cliente" autocomplete="off" placeholder="Digite o nome ou o e-mail…"></label>' +
+        '<datalist id="pgContasLanc">' + usuarios.map(function (u) { return '<option value="' + esc(rotuloConta(u)) + '"></option>'; }).join('') + '</datalist>' +
+        '<label class="pg-campo"><span>Data em que o dinheiro caiu</span><input type="date" data-campo="data" max="' + esc(hoje) + '" value="' + esc(hoje) + '"></label>' +
+        '<label class="pg-campo"><span>Valor recebido (R$)</span><input data-campo="valor" inputmode="decimal" value="' + esc(Number(preco).toFixed(2).replace('.', ',')) + '"></label>' +
+        '<label class="pg-campo"><span>Recebido por</span>' + selectMetodos('pix') + '</label>' +
+        '<label class="pg-campo"><span>Observação (opcional)</span><input data-campo="obs" maxlength="200" placeholder="Ex.: renovação de outubro, paga antes do sistema de cobranças"></label>',
+      validar: function (v) {
+        if (!/[^\s<>()]+@[^\s<>()]+\.[^\s<>()]+/.test(v.cliente || '')) return 'Escolha um cliente da lista (ou digite o e-mail da conta).';
+        if (!v.data) return 'Informe a data em que o dinheiro caiu.';
+        if (v.data > hojeIso()) return 'A data do recebimento não pode ser futura.';
+        return validarValor(v);
+      }
+    }).then(function (v) {
+      if (!v) return null;
+      var achado = /[^\s<>()]+@[^\s<>()]+\.[^\s<>()]+/.exec(v.cliente);
+      return api('POST', '/api/admin/pagamentos/historico', { email: achado[0].toLowerCase(), data: v.data, valor: v.valor, metodo: v.metodo, obs: v.obs }).then(function (j) {
+        toast(j && j.success ? '✅ ' + j.message : '⚠️ ' + ((j && j.error) || 'Não foi possível lançar o pagamento.'));
+        if (j && j.success) return depoisDeMudar();
+      });
+    });
+  }
+  function focarCampoConfig(campo) {
+    var ids = { preco: 'pgCfgPreco', 'pix.tipo': 'pgCfgTipo', 'pix.chave': 'pgCfgChave', 'pix.nome': 'pgCfgNome', 'pix.cidade': 'pgCfgCidade', whatsapp: 'pgCfgWhats', 'cobranca.dia': 'pgCfgDia', 'cobranca.prazo_dias': 'pgCfgPrazo', senha_atual: 'pgCfgSenha' };
+    var el = ids[campo] && root.document.getElementById(ids[campo]);
+    if (el && el.focus) el.focus();
+  }
+  function acaoConfigSalvar() {
+    var e = estado.cfg, dados = estado.dados;
+    if (!dados || !dados.config) return Promise.resolve();
+    var f = lerFormConfig();
+    e.form = f; e.sujo = true; e.erro = ''; e.campo = '';
+    var m = mudancasDaConfig(dados, f);
+    if (!m.lista.length) { e.sujo = false; e.form = null; e.erro = 'Nenhuma alteração para salvar.'; repintarAba(); return Promise.resolve(); }
+    if (!f.senha) { e.erro = 'Digite a sua senha para confirmar a alteração.'; e.campo = 'senha_atual'; repintarAba(); focarCampoConfig('senha_atual'); return Promise.resolve(); }
+    var senha = f.senha;
+    return dialogo({
+      titulo: 'Aplicar estas alterações agora?', ok: 'Aplicar agora', cancelar: 'Voltar', larga: true, perigo: m.risco,
+      html: '<ul class="pg-lista-curta">' + m.lista.map(function (x) { return '<li><div><b>' + esc(x) + '</b></div></li>'; }).join('') + '</ul>' +
+        (m.risco ? '<p class="pg-aviso">Você está mudando <b>para onde o dinheiro vai</b>. Confira a chave e o nome do favorecido: os clientes passam a pagar nela imediatamente.</p>' : '') +
+        (m.precoMudou ? '<p class="pg-nota">Cobranças em aberto continuam com o preço antigo; as próximas saem com o novo.</p>' : '')
+    }).then(function (v) {
+      if (!v) { e.form.senha = ''; repintarAba(); return null; }
+      e.enviando = true; repintarAba();
+      return api('POST', '/api/admin/financeiro/config', { senha_atual: senha, config: corpoDaConfig(f) }).then(function (j) {
+        e.enviando = false;
+        if (j && j.success) {
+          e.sujo = false; e.form = null; e.erro = ''; e.campo = '';
+          toast('✅ ' + j.message);
+          return carregar(true);
+        }
+        e.erro = (j && j.error) || 'Não foi possível salvar a configuração.';
+        e.campo = (j && j.campo) || '';
+        repintarAba(); focarCampoConfig(e.campo);
       });
     });
   }
@@ -864,6 +1025,9 @@
       case 'abrir-os': { var c2 = ctx(); if (c2.abrirOs) c2.abrirOs(id); return; }
       case 'nova-gerar': return acaoNovaGerar();
       case 'gerar-mensal': return acaoGerarMensal();
+      case 'lancar': return acaoLancar();
+      case 'config-salvar': return acaoConfigSalvar();
+      case 'config-descartar': estado.cfg.sujo = false; estado.cfg.form = null; estado.cfg.erro = ''; estado.cfg.campo = ''; repintarAba(); return;
       case 'csv': return baixarCsv();
       case 'copiar': { var alvo = root.document.getElementById(el.getAttribute('data-alvo')); return copiar(alvo ? alvo.value : '', 'Copiado.'); }
       case 'copiar-pix': return copiar(el.getAttribute('data-payload') || '', 'Código Pix copiado.');
@@ -919,6 +1083,8 @@
         return;
       }
       if (t.matches('[data-pg-arquivo]')) { lerArquivo(t.files && t.files[0]); t.value = ''; }
+      // Trocar o tipo da chave redesenha a aba (muda a dica) sem perder o que já foi digitado
+      if (t.id === 'pgCfgTipo') { estado.cfg.sujo = true; estado.cfg.form = lerFormConfig(); estado.cfg.erro = ''; estado.cfg.campo = ''; repintarAba(); }
     });
     d.addEventListener('input', function (ev) {
       var t = ev.target;
@@ -926,6 +1092,14 @@
       if (t.matches('[data-pg-busca]')) {
         clearTimeout(tempoBusca);
         tempoBusca = setTimeout(function () { estado.filtro.busca = t.value; estado.pagina = 1; repintarLista(); }, 140);
+      }
+      if (t.matches('[data-pg-cfg]')) {
+        estado.cfg.sujo = true;
+        estado.cfg.form = lerFormConfig();
+        var prev = root.document.getElementById('pgCfgPrevia');
+        if (prev) prev.textContent = previaConfigTexto(estado.cfg.form);
+        var salvar = root.document.querySelector('[data-pg-a="config-descartar"]');
+        if (salvar) salvar.disabled = false;
       }
     });
   }
@@ -965,6 +1139,7 @@
     filtrar: filtrar, paginar: paginar, mesesDisponiveis: mesesDisponiveis, mensagemWhats: mensagemWhats, linkWhats: linkWhats,
     // telas
     resumoHTML: resumoHTML, cobrancasHTML: cobrancasHTML, acessosHTML: acessosHTML, novaHTML: novaHTML, conciliarHTML: conciliarHTML, solicitacoesHTML: solicitacoesHTML,
+    configHTML: configHTML, mudancasDaConfig: mudancasDaConfig, formDaConfig: formDaConfig, corpoDaConfig: corpoDaConfig, limparPix: limparPix, precoDoTexto: precoDoTexto,
     cobrancaResultadoHTML: cobrancaResultadoHTML, cobrancaDocumento: cobrancaDocumento, reciboDocumento: reciboDocumento, navHTML: navHTML,
     // integração com o app
     html: html, precarregar: precarregar, carregar: carregar, contagem: contagem, estado: estado

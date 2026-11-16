@@ -355,7 +355,7 @@ function resumo(o) {
     gerado_em: new Date(agora).toISOString(),
     preco,
     receita: {
-      mes: arredondar(recMes), mes_anterior: arredondar(recAnt), total: arredondar(total), qtd_mes: (porMes[mesAtual] || { qtd: 0 }).qtd,
+      mes: arredondar(recMes), mes_anterior: arredondar(recAnt), total: arredondar(total), qtd_total: pagos.length, qtd_mes: (porMes[mesAtual] || { qtd: 0 }).qtd,
       variacao_pct: recAnt > 0 ? Math.round(((recMes - recAnt) / recAnt) * 100) : null,
       novos_no_mes: novosNoMes
     },
@@ -567,7 +567,137 @@ function conciliar(lancamentos, pagamentos, agora) {
   return { creditos: creditos.length, ja_conciliados: jaConciliados, sugestoes, sem_par: semPar };
 }
 
+/* ============================================================ configuração financeira (preço, Pix, cobrança mensal) ============================================================ */
+/* O administrador altera aqui o que antes era constante no código. Esta função só VALIDA e NORMALIZA (não grava): o servidor guarda,
+   aplica e registra quem mudou. Tudo que sai daqui já está no formato que o BR Code e as telas esperam. */
+const CHAVE_TIPOS = Object.freeze({ telefone: 'celular', cpf: 'CPF', cnpj: 'CNPJ', email: 'e-mail', aleatoria: 'aleatória' });
+const PRECO_MINIMO = 1;
+
+function cpfValido(d) {
+  if (!/^\d{11}$/.test(d) || /^(\d)\1{10}$/.test(d)) return false;
+  for (const n of [9, 10]) {
+    let soma = 0;
+    for (let i = 0; i < n; i++) soma += +d[i] * (n + 1 - i);
+    if (((soma * 10) % 11) % 10 !== +d[n]) return false;
+  }
+  return true;
+}
+function cnpjValido(d) {
+  if (!/^\d{14}$/.test(d) || /^(\d)\1{13}$/.test(d)) return false;
+  for (const n of [12, 13]) {
+    let soma = 0, peso = n - 7;
+    for (let i = 0; i < n; i++) { soma += +d[i] * peso; peso = peso === 2 ? 9 : peso - 1; }
+    const dv = soma % 11 < 2 ? 0 : 11 - (soma % 11);
+    if (dv !== +d[n]) return false;
+  }
+  return true;
+}
+// Celular/fixo brasileiro com DDD (aceita +55, parênteses, traço); devolve só os dígitos ou ''
+function telefoneBR(v) {
+  let d = String(v == null ? '' : v).replace(/\D/g, '');
+  if (d.length >= 12 && d.indexOf('55') === 0) d = d.slice(2);
+  if (d.length !== 10 && d.length !== 11) return '';
+  if (d.length === 11 && d[2] !== '9') return '';
+  const ddd = +d.slice(0, 2);
+  return ddd >= 11 && ddd <= 99 ? d : '';
+}
+function formatarTelefone(d) {
+  return d.length === 11 ? '(' + d.slice(0, 2) + ') ' + d.slice(2, 7) + '-' + d.slice(7) : '(' + d.slice(0, 2) + ') ' + d.slice(2, 6) + '-' + d.slice(6);
+}
+// Nome e cidade do BR Code: sem acento, só letras/números/espaço, maiúsculas (o banco do pagador mostra isto antes de confirmar)
+function limparPix(s, max) { return semAcento(s).replace(/[^A-Za-z0-9 ]/g, '').replace(/\s+/g, ' ').trim().toUpperCase().slice(0, max).trim(); }
+
+function normalizarChavePix(tipo, valor) {
+  const bruto = String(valor == null ? '' : valor).trim();
+  const digitos = bruto.replace(/\D/g, '');
+  if (!bruto) return { ok: false, erro: 'Informe a chave Pix.' };
+  if (tipo === 'telefone') {
+    const t = telefoneBR(bruto);
+    if (!t) return { ok: false, erro: 'Celular inválido. Informe o DDD e o número (ex.: (62) 99999-0000).' };
+    return { ok: true, chave: '+55' + t, exibicao: formatarTelefone(t), copiar: t };
+  }
+  if (tipo === 'cpf') {
+    if (!cpfValido(digitos)) return { ok: false, erro: 'CPF inválido. Confira os 11 dígitos.' };
+    return { ok: true, chave: digitos, exibicao: digitos.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, '$1.$2.$3-$4'), copiar: digitos };
+  }
+  if (tipo === 'cnpj') {
+    if (!cnpjValido(digitos)) return { ok: false, erro: 'CNPJ inválido. Confira os 14 dígitos.' };
+    return { ok: true, chave: digitos, exibicao: digitos.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5'), copiar: digitos };
+  }
+  if (tipo === 'email') {
+    const e = bruto.toLowerCase();
+    if (e.length > 77 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)) return { ok: false, erro: 'E-mail inválido para a chave Pix.' };
+    return { ok: true, chave: e, exibicao: e, copiar: e };
+  }
+  if (tipo === 'aleatoria') {
+    const u = bruto.toLowerCase();
+    if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(u)) return { ok: false, erro: 'Chave aleatória inválida: ela tem o formato 00000000-0000-0000-0000-000000000000.' };
+    return { ok: true, chave: u, exibicao: u, copiar: u };
+  }
+  return { ok: false, erro: 'Escolha o tipo da chave Pix.' };
+}
+
+function validarConfig(entrada) {
+  const e = entrada && typeof entrada === 'object' ? entrada : {};
+  const pix = e.pix && typeof e.pix === 'object' ? e.pix : {};
+  const cob = e.cobranca && typeof e.cobranca === 'object' ? e.cobranca : {};
+  const falha = (campo, erro) => ({ ok: false, campo, erro });
+
+  const bruto = typeof e.preco === 'string' ? e.preco.trim() : e.preco;
+  // "1.500" (só ponto, três casas) é ambíguo: pode ser 1,5 ou 1500. Pede a vírgula para não adivinhar.
+  if (typeof bruto === 'string' && /^(R\$\s*)?\d{1,3}\.\d{3}$/.test(bruto)) return falha('preco', 'Use vírgula nos centavos (ex.: 18,00).');
+  const preco = typeof bruto === 'number' ? bruto : numeroBR(bruto);
+  if (!Number.isFinite(preco) || preco < PRECO_MINIMO || preco > VALOR_MAXIMO) return falha('preco', 'O preço mensal deve ficar entre ' + brl(PRECO_MINIMO) + ' e ' + brl(VALOR_MAXIMO) + '.');
+
+  const tipo = String(pix.tipo || '').toLowerCase().trim();
+  if (!CHAVE_TIPOS[tipo]) return falha('pix.tipo', 'Escolha o tipo da chave Pix.');
+  const k = normalizarChavePix(tipo, pix.chave);
+  if (!k.ok) return falha('pix.chave', k.erro);
+  const nome = limparPix(pix.nome, 25);
+  if (nome.length < 2) return falha('pix.nome', 'Informe o nome do favorecido, como aparece no banco (mínimo 2 letras).');
+  const cidade = limparPix(pix.cidade, 15);
+  if (cidade.length < 2) return falha('pix.cidade', 'Informe a cidade do favorecido (mínimo 2 letras).');
+
+  const whatsapp = telefoneBR(e.whatsapp);
+  if (!whatsapp) return falha('whatsapp', 'Informe o WhatsApp de suporte com DDD (10 ou 11 dígitos).');
+
+  const dia = Number(cob.dia), prazo = Number(cob.prazo_dias);
+  if (!Number.isInteger(dia) || dia < 1 || dia > 28) return falha('cobranca.dia', 'O dia da cobrança mensal deve ser de 1 a 28.');
+  if (!Number.isInteger(prazo) || prazo < 1 || prazo > 30) return falha('cobranca.prazo_dias', 'O prazo da cobrança deve ser de 1 a 30 dias.');
+
+  return { ok: true, config: { preco: arredondar(preco), pix: { tipo, chave: k.chave, nome, cidade }, whatsapp, cobranca: { dia, prazo_dias: prazo } } };
+}
+// Textos prontos para as telas e para o cliente (chave como aparece, o que copiar, WhatsApp formatado)
+function apresentarConfig(c) {
+  const k = normalizarChavePix(c.pix.tipo, c.pix.chave);
+  return {
+    preco_texto: brl(c.preco),
+    chave_tipo_rotulo: CHAVE_TIPOS[c.pix.tipo] || '',
+    chave_exibicao: k.ok ? k.exibicao : String(c.pix.chave),
+    chave_copiar: k.ok ? k.copiar : String(c.pix.chave),
+    whatsapp_exibicao: formatarTelefone(c.whatsapp)
+  };
+}
+// Chave parcialmente escondida (CPF, e-mail e celular são dados pessoais e o histórico/auditoria pode ser visto por quem recebeu a permissão de logs)
+function mascararChave(c) { const s = String(c || ''); return s.length <= 8 ? '***' : s.slice(0, 3) + '…' + s.slice(-3); }
+// Lista legível do que mudou entre duas configurações (vai para o histórico e para a auditoria)
+function diferencasConfig(antes, depois) {
+  const a = antes || {}, d = depois;
+  const m = [];
+  if (!a.preco || Math.abs(a.preco - d.preco) > 0.004) m.push('Preço mensal: ' + (a.preco ? brl(a.preco) : '—') + ' → ' + brl(d.preco));
+  const pa = a.pix || {}, pd = d.pix;
+  if (pa.tipo !== pd.tipo || pa.chave !== pd.chave) m.push('Chave Pix: ' + (pa.chave ? CHAVE_TIPOS[pa.tipo] + ' ' + mascararChave(pa.chave) : '—') + ' → ' + CHAVE_TIPOS[pd.tipo] + ' ' + mascararChave(pd.chave));
+  if (pa.nome !== pd.nome) m.push('Favorecido do Pix: ' + (pa.nome || '—') + ' → ' + pd.nome);
+  if (pa.cidade !== pd.cidade) m.push('Cidade do Pix: ' + (pa.cidade || '—') + ' → ' + pd.cidade);
+  if (a.whatsapp !== d.whatsapp) m.push('WhatsApp de suporte: ' + (a.whatsapp ? formatarTelefone(a.whatsapp) : '—') + ' → ' + formatarTelefone(d.whatsapp));
+  const ca = a.cobranca || {}, cd = d.cobranca;
+  if (ca.dia !== cd.dia) m.push('Dia da cobrança mensal: ' + (ca.dia || '—') + ' → ' + cd.dia);
+  if (ca.prazo_dias !== cd.prazo_dias) m.push('Prazo da cobrança: ' + (ca.prazo_dias ? ca.prazo_dias + ' dia(s)' : '—') + ' → ' + cd.prazo_dias + ' dia(s)');
+  return m;
+}
+
 module.exports = {
+  CHAVE_TIPOS, PRECO_MINIMO, cpfValido, cnpjValido, telefoneBR, formatarTelefone, limparPix, normalizarChavePix, validarConfig, apresentarConfig, diferencasConfig,
   STATUS, DIA, FIM_VITALICIO, VALOR_MAXIMO,
   paraMs, mesDe, diaDe, rotuloMes, somarMeses, dataIsoValida, arredondar, brl, texto,
   novoId, novaReferencia, limparReferencia,

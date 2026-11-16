@@ -356,3 +356,248 @@ test('a tela carrega o módulo novo e o QR do cliente vem do próprio servidor',
   assert.match(js.headers.get('content-type'), /javascript/);
   assert.equal((await api('GET', '/pagamentos-admin.css')).status, 200);
 });
+
+
+/* ---------------------------------------------------------------- configuração financeira (preço, Pix, cobrança mensal) */
+const CFG_NOVA = () => ({ preco: '20,50', pix: { tipo: 'email', chave: 'Cobranca@Nexus.com', nome: 'Nexus Pagamentos', cidade: 'São Paulo' }, whatsapp: '(11) 98888-7777', cobranca: { dia: 10, prazo_dias: 5 } });
+const salvarConfig = (token, config, senha) => api('POST', '/api/admin/financeiro/config', { token, body: { config, senha_atual: senha } });
+
+async function subirOutraInstancia(pastaDados) {
+  const portaOutra = await portaLivre();
+  const env = { ...process.env, PORT: String(portaOutra), NEXUS_DATA_DIR: pastaDados, NEXUS_DISABLE_DB: '1', NEXUS_COBRANCA_AUTO: '0', JWT_SECRET, NEXUS_SYNC_TOKEN: SYNC_TOKEN, RENDER_CLOUD_URL: 'https://127.0.0.1:9', TRUST_PROXY: '1' };
+  delete env.RENDER; delete env.IS_RENDER; delete env.NEXUS_ALLOW_DB_RESET;
+  const filho = spawn(process.execPath, ['server.js'], { cwd: __dirname, env, stdio: ['ignore', 'pipe', 'pipe'] });
+  let saida = '';
+  filho.stdout.on('data', (d) => { saida += d.toString(); });
+  filho.stderr.on('data', (d) => { saida += d.toString(); });
+  for (let i = 0; i < 80; i++) {
+    try { const r = await fetch('http://127.0.0.1:' + portaOutra + '/api/health'); if (r.ok) break; } catch (e) { /* subindo */ }
+    await dorme(150);
+    if (i === 79) { filho.kill(); throw new Error('segunda instância não subiu:\n' + saida.slice(-1200)); }
+  }
+  const get = async (rota, token) => { const r = await fetch('http://127.0.0.1:' + portaOutra + rota, { headers: { 'X-Forwarded-For': ipNovo(), ...(token ? { Authorization: 'Bearer ' + token } : {}) } }); const texto = await r.text(); let json = null; try { json = JSON.parse(texto); } catch (e) { /* html */ } return { status: r.status, texto, json }; };
+  return { get, saida: () => saida, matar: async () => { filho.kill(); await dorme(250); } };
+}
+
+test('configuração financeira: só administrador lê e altera; sem senha ou com senha errada nada muda', async () => {
+  const lido = await api('GET', '/api/admin/pagamentos', { token: admin });
+  const c = lido.json.config;
+  assert.equal(c.atual.preco, 18);
+  assert.equal(c.atual.cobranca.dia, 5);
+  assert.equal(c.apresentacao.chave_exibicao, '(62) 99234-5372', 'padrão = os valores de antes');
+  assert.deepEqual(c.historico, []);
+
+  assert.equal((await api('POST', '/api/admin/financeiro/config', { body: { config: CFG_NOVA(), senha_atual: 'Admin@12345' } })).status, 401);
+  assert.equal((await salvarConfig(ana, CFG_NOVA(), 'Ana@12345')).status, 403, 'usuário comum não altera, nem com a própria senha');
+  const sem = await salvarConfig(admin, CFG_NOVA(), '');
+  assert.equal(sem.status, 400);
+  assert.equal(sem.json.campo, 'senha_atual');
+  const errada = await salvarConfig(admin, CFG_NOVA(), 'senha-errada');
+  assert.equal(errada.status, 403);
+  assert.equal(errada.json.campo, 'senha_atual');
+  assert.equal(fs.existsSync(path.join(pasta, 'local_financeiro_config.json')), false, 'nada foi gravado');
+  assert.equal((await api('GET', '/api/admin/pagamentos', { token: admin })).json.preco, 18);
+});
+
+test('configuração financeira: valor inválido é recusado com o campo certo e nada muda', async () => {
+  const inv = async (f) => { const cfg = CFG_NOVA(); f(cfg); return salvarConfig(admin, cfg, 'Admin@12345'); };
+  const a = await inv((c) => { c.preco = '0'; });
+  assert.equal(a.status, 422); assert.equal(a.json.campo, 'preco');
+  const b = await inv((c) => { c.pix.chave = 'não é e-mail'; });
+  assert.equal(b.status, 422); assert.equal(b.json.campo, 'pix.chave');
+  const d = await inv((c) => { c.cobranca.dia = 31; });
+  assert.equal(d.status, 422); assert.equal(d.json.campo, 'cobranca.dia');
+  const e = await inv((c) => { c.whatsapp = '123'; });
+  assert.equal(e.status, 422); assert.equal(e.json.campo, 'whatsapp');
+  assert.equal(fs.existsSync(path.join(pasta, 'local_financeiro_config.json')), false);
+  assert.equal((await api('GET', '/api/admin/pagamentos', { token: admin })).json.preco, 18);
+});
+
+test('configuração financeira: o preço e o Pix novos valem na hora (cobrança, QR, página do cliente) sem reiniciar', async () => {
+  const antes = livro().filter((p) => p.email === 'dani@teste.nexus')[0];
+  const r = await salvarConfig(admin, CFG_NOVA(), 'Admin@12345');
+  assert.equal(r.status, 200, r.texto);
+  assert.equal(r.json.mudou, true);
+  assert.equal(r.json.preco, 20.5);
+  assert.equal(r.json.preco_texto, 'R$ 20,50');
+  assert.equal(r.json.config.apresentacao.chave_exibicao, 'cobranca@nexus.com');
+  assert.equal(r.json.config.apresentacao.chave_tipo_rotulo, 'e-mail');
+
+  const lido = (await api('GET', '/api/admin/pagamentos', { token: admin })).json;
+  assert.equal(lido.preco, 20.5);
+  assert.equal(lido.cobranca_mensal.dia, 10);
+  assert.equal(lido.cobranca_mensal.prazo_dias, 5);
+  assert.match(lido.cobranca_mensal.proxima, /-10$/);
+  assert.equal(lido.pix.chave, 'cobranca@nexus.com');
+  assert.equal(lido.pix.tipo_chave, 'e-mail');
+  assert.equal(lido.config.historico.length, 1);
+  assert.equal(lido.config.historico[0].por.email, 'admin@teste.nexus');
+
+  // cobrança nova: valor novo e BR Code com a chave, o nome e a cidade novos (CRC conferido)
+  const cob = await api('POST', '/api/admin/pagamentos/cobranca', { token: admin, body: { email: 'eva@teste.nexus' } });
+  assert.equal(cob.status, 200, cob.texto);
+  assert.equal(cob.json.pagamento.valor, 20.5);
+  assert.ok(Array.isArray(cob.json.outras_abertas));
+  const bc = P.pixLer(cob.json.pix.payload);
+  assert.equal(bc.crcOk, true);
+  assert.equal(bc.campos['54'], '20.50');
+  assert.equal(bc.campos['59'], 'NEXUS PAGAMENTOS');
+  assert.equal(bc.campos['60'], 'SAO PAULO');
+  assert.ok(cob.json.pix.payload.includes('cobranca@nexus.com'));
+  assert.equal(cob.json.pix.chave, 'cobranca@nexus.com');
+
+  // o que já estava emitido/avisado mantém o valor da época
+  assert.equal(livro().filter((p) => p.email === 'dani@teste.nexus')[0].valor, antes.valor);
+  assert.equal(antes.valor, 18);
+
+  // o cliente que avisa o pagamento agora cai no preço novo (o navegador nunca decide o valor)
+  const pay = await api('POST', '/api/subscription/pay', { token: eva, body: { email: 'eva@teste.nexus', plan: 'mensal', method: 'pix', amount: 1 } });
+  assert.equal(pay.status, 200, pay.texto);
+  assert.equal(pay.json.amount, 20.5);
+
+  // repetir a mesma configuração não conta como alteração
+  const igual = await salvarConfig(admin, CFG_NOVA(), 'Admin@12345');
+  assert.equal(igual.status, 200);
+  assert.equal(igual.json.mudou, false);
+  assert.equal((await api('GET', '/api/admin/pagamentos', { token: admin })).json.config.historico.length, 1);
+});
+
+test('configuração financeira: a página do cliente é refeita com o preço, a chave Pix e o WhatsApp novos', async () => {
+  const pagina = (await api('GET', '/')).texto;
+  assert.match(pagina, /const NEXUS_MONTHLY_PRICE = 20\.5;/);
+  assert.match(pagina, /const NEXUS_MONTHLY_LABEL = 'R\$ 20,50';/);
+  assert.ok(pagina.includes('R$ 20,50'));
+  assert.ok(pagina.includes("const pixKey = 'cobranca@nexus.com';"));
+  assert.ok(pagina.includes("const beneficiaryName = 'NEXUS PAGAMENTOS';"));
+  assert.ok(pagina.includes("const city = 'SAO PAULO';"));
+  assert.ok(pagina.includes("const key = 'cobranca@nexus.com';"), 'o botão "Copiar" copia a chave nova');
+  assert.ok(pagina.includes('https://wa.me/5511988887777'));
+  assert.ok(pagina.includes('(11) 98888-7777'));
+  assert.ok(pagina.includes('Chave Pix (e-mail)'));
+  assert.ok(!pagina.includes('62992345372') && !pagina.includes('99234-5372'), 'nenhum rastro da chave e do telefone antigos');
+  assert.ok(!pagina.includes('R$ 18,00'), 'nenhum rastro do preço antigo na página');
+  const glpi = (await api('GET', '/glpi.html')).texto;
+  assert.ok(glpi.includes('assinar o plano Mensal por apenas R$ 20,50.'), 'o texto de ajuda do atendimento também mostra o preço novo');
+  assert.ok(!glpi.includes('{{PRECO_MENSAL}}'));
+});
+
+test('configuração financeira: fica gravada, entra na auditoria (com a chave escondida) e é bloqueada para download', async () => {
+  const arq = lerArquivo('local_financeiro_config.json');
+  assert.equal(arq.config.preco, 20.5);
+  assert.deepEqual(arq.config.pix, { tipo: 'email', chave: 'cobranca@nexus.com', nome: 'NEXUS PAGAMENTOS', cidade: 'SAO PAULO' });
+  assert.equal(arq.config.whatsapp, '11988887777');
+  assert.equal(arq.historico.length, 1);
+  assert.ok(arq.historico[0].mudancas.some((m) => /Preço mensal: R\$ 18,00 → R\$ 20,50/.test(m)));
+  assert.ok(arq.historico[0].mudancas.every((m) => !m.includes('cobranca@nexus.com') && !m.includes('992345372')), 'a chave inteira não vai para o histórico');
+  assert.equal((await api('GET', '/local_financeiro_config.json')).status, 404);
+
+  let trilha = '';
+  for (let i = 0; i < 30 && !/Alterou a configuração financeira/.test(trilha); i++) { await dorme(200); trilha = JSON.stringify((await api('GET', '/api/logs', { token: admin })).json); }
+  assert.match(trilha, /Alterou a configuração financeira/);
+  assert.match(trilha, /Tentou alterar a configuração financeira com a senha incorreta/);
+  assert.ok(!trilha.includes('cobranca@nexus.com'), 'a trilha de auditoria não mostra a chave inteira');
+});
+
+test('configuração financeira: sobrevive a reiniciar o servidor; arquivo inválido volta ao padrão sem derrubar o sistema', async () => {
+  const outra = await subirOutraInstancia(pasta);
+  try {
+    const pagina = (await outra.get('/')).texto;
+    assert.ok(pagina.includes('R$ 20,50') && pagina.includes('https://wa.me/5511988887777'), 'a segunda instância já nasce com o preço e o WhatsApp novos');
+    const tok = (await login('admin@teste.nexus', 'Admin@12345')).token;
+    assert.equal((await outra.get('/api/admin/pagamentos', tok)).json.preco, 20.5);
+  } finally { await outra.matar(); }
+
+  const pastaRuim = fs.mkdtempSync(path.join(os.tmpdir(), 'nexus-pag-cfg-'));
+  try {
+    for (const nome of fs.readdirSync(pasta)) { if (/\.json$/.test(nome)) fs.copyFileSync(path.join(pasta, nome), path.join(pastaRuim, nome)); }
+    fs.writeFileSync(path.join(pastaRuim, 'local_financeiro_config.json'), JSON.stringify({ config: { preco: -5, pix: { tipo: 'cpf', chave: '111' }, cobranca: { dia: 99 } }, historico: [] }));
+    const ruim = await subirOutraInstancia(pastaRuim);
+    try {
+      const pagina = (await ruim.get('/')).texto;
+      assert.ok(pagina.includes('R$ 18,00'), 'configuração inválida: vale o padrão');
+      assert.match(ruim.saida(), /local_financeiro_config\.json inválido/);
+    } finally { await ruim.matar(); }
+  } finally { try { fs.rmSync(pastaRuim, { recursive: true, force: true }); } catch (e) { /* o SO limpa */ } }
+});
+
+test('configuração financeira: depois de 5 senhas erradas o administrador é travado por um tempo (inclusive com a senha certa)', async () => {
+  for (let i = 0; i < 5; i++) {
+    const r = await salvarConfig(admin, CFG_NOVA(), 'chute-' + i);
+    assert.ok(r.status === 403 || r.status === 429, 'tentativa ' + i + ': ' + r.status);
+  }
+  const travado = await salvarConfig(admin, { ...CFG_NOVA(), preco: '25,00' }, 'Admin@12345');
+  assert.equal(travado.status, 429, travado.texto);
+  assert.equal((await api('GET', '/api/admin/pagamentos', { token: admin })).json.preco, 20.5, 'nada foi alterado');
+});
+
+/* ---------------------------------------------------------------- lançamento retroativo de pagamento */
+test('lançamento retroativo: só administrador, e recusa conta inexistente, administrador, data futura/antiga/inválida e valor ausente', async () => {
+  const hist = (token, body) => api('POST', '/api/admin/pagamentos/historico', { token, body });
+  const registrosAntes = livro().length;
+  const ontem = P.diaDe(Date.now() - DIA);
+  assert.equal((await hist(undefined, { email: 'fabio@teste.nexus', data: ontem, valor: '18,00' })).status, 401);
+  assert.equal((await hist(ana, { email: 'fabio@teste.nexus', data: ontem, valor: '18,00' })).status, 403);
+  assert.equal((await hist(admin, { email: 'ninguem@teste.nexus', data: ontem, valor: '18,00' })).status, 404);
+  assert.equal((await hist(admin, { email: 'admin@teste.nexus', data: ontem, valor: '18,00' })).status, 400);
+  const futura = await hist(admin, { email: 'fabio@teste.nexus', data: P.diaDe(Date.now() + 3 * DIA), valor: '18,00' });
+  assert.equal(futura.status, 400); assert.equal(futura.json.campo, 'data');
+  assert.equal((await hist(admin, { email: 'fabio@teste.nexus', data: '2026-02-31', valor: '18,00' })).json.campo, 'data');
+  assert.equal((await hist(admin, { email: 'fabio@teste.nexus', data: P.diaDe(Date.now() - 900 * DIA), valor: '18,00' })).json.campo, 'data');
+  assert.equal((await hist(admin, { email: 'fabio@teste.nexus', data: ontem })).json.campo, 'valor', 'sem valor não chuta o preço atual');
+  assert.equal((await hist(admin, { email: 'fabio@teste.nexus', data: ontem, valor: '0' })).json.campo, 'valor');
+  assert.equal((await hist(admin, { email: 'fabio@teste.nexus', data: ontem, valor: '999999' })).json.campo, 'valor');
+  assert.equal(livro().length, registrosAntes, 'nada foi gravado');
+});
+
+const historicosDoFabio = () => livro().filter((p) => p.email === 'fabio@teste.nexus' && p.origem === 'historico');
+
+test('lançamento retroativo: entra na receita do mês da data, não mexe no acesso da conta e não duplica', async () => {
+  const antes = conta('fabio@teste.nexus');
+  const resumoAntes = (await api('GET', '/api/admin/pagamentos', { token: admin })).json.resumo;
+  const data = P.diaDe(Date.now() - 40 * DIA);
+  const r = await api('POST', '/api/admin/pagamentos/historico', { token: admin, body: { email: 'fabio@teste.nexus', data, valor: '18,00', metodo: 'transferencia', obs: 'paga antes do livro' } });
+  assert.equal(r.status, 200, r.texto);
+  const reg = historicosDoFabio()[0];
+  assert.equal(reg.status, 'paga');
+  assert.equal(reg.origem, 'historico');
+  assert.equal(reg.valor, 18);
+  assert.equal(reg.metodo, 'transferencia');
+  assert.equal(reg.dias, 0, 'não dá dias a ninguém');
+  assert.equal(P.diaDe(Date.parse(reg.paga_em)), data, 'a data do dinheiro, não a de hoje');
+  assert.equal(reg.confirmado_por.email, 'admin@teste.nexus');
+  assert.ok(reg.historico.some((h) => h.acao === 'lancamento'));
+
+  const depois = conta('fabio@teste.nexus');
+  assert.equal(depois.subscription_status, antes.subscription_status, 'o acesso da conta não muda');
+  assert.equal(depois.subscription_expires_at, antes.subscription_expires_at);
+
+  const resumo = (await api('GET', '/api/admin/pagamentos', { token: admin })).json.resumo;
+  const mes = P.mesDe(Date.parse(data + 'T12:00:00-03:00'));
+  const serieAntes = resumoAntes.serie.find((s) => s.mes === mes), serieDepois = resumo.serie.find((s) => s.mes === mes);
+  assert.equal(Math.round((serieDepois.total - serieAntes.total) * 100), 1800, 'a receita do mês da data subiu R$ 18,00');
+  assert.equal(resumo.receita.qtd_total, resumoAntes.receita.qtd_total + 1);
+  assert.equal(Math.round((resumo.receita.total - resumoAntes.receita.total) * 100), 1800);
+
+  const igual = await api('POST', '/api/admin/pagamentos/historico', { token: admin, body: { email: 'fabio@teste.nexus', data, valor: '18,00' } });
+  assert.equal(igual.status, 409, 'mesmo valor, mesma conta, mesma data: provavelmente duplo clique');
+  assert.equal(historicosDoFabio().length, 1);
+  const outroValor = await api('POST', '/api/admin/pagamentos/historico', { token: admin, body: { email: 'fabio@teste.nexus', data, valor: '25,00' } });
+  assert.equal(outroValor.status, 200, 'outro valor na mesma data é outro pagamento');
+});
+
+test('lançamento retroativo: estornar tira da receita sem mexer no acesso, e o CSV e a auditoria mostram a origem', async () => {
+  const antes = conta('fabio@teste.nexus');
+  const reg = historicosDoFabio().filter((p) => p.valor === 25)[0];
+  const est = await api('POST', '/api/admin/pagamentos/acao', { token: admin, body: { id: reg.id, acao: 'estornar', obs: 'lançado por engano' } });
+  assert.equal(est.status, 200, est.texto);
+  assert.match(est.json.message, /registro/, 'só o registro foi estornado');
+  const depois = conta('fabio@teste.nexus');
+  assert.equal(depois.subscription_status, antes.subscription_status);
+  assert.equal(depois.subscription_expires_at, antes.subscription_expires_at, 'nenhum dia foi tirado da conta');
+
+  const csv = (await api('POST', '/api/admin/pagamentos/csv', { token: admin, body: { ids: historicosDoFabio().map((p) => p.id) } })).texto;
+  assert.match(csv, /historico/);
+  let trilha = '';
+  for (let i = 0; i < 30 && !/Lançou o pagamento retroativo/.test(trilha); i++) { await dorme(200); trilha = JSON.stringify((await api('GET', '/api/logs', { token: admin })).json); }
+  assert.match(trilha, /Lançou o pagamento retroativo/);
+});

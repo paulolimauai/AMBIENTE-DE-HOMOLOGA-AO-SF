@@ -207,23 +207,28 @@ async function purgeDeletedUserFromDatabase(email) {
   ]);
 }
 
-// Configuração Centralizada da Chave Pix Oficial (Paulo Lima)
+// Chave Pix oficial. Estes são os valores PADRÃO: o administrador troca tudo em Pagamentos > Configurações (ver aplicarConfigFinanceira,
+// que reescreve este mesmo objeto). `phone_*` é o WhatsApp de suporte (não precisa ser a chave); key_display/key_copy: como a chave aparece e o que se copia.
 const PIX_CONFIG = {
   key: '+5562992345372',
   phone_raw: '62992345372',
   phone_formatted: '(62) 99234-5372',
   name: 'PAULO LIMA',
   city: 'GOIANIA',
-  type: 'Telefone Celular'
+  type: 'Telefone Celular',
+  key_display: '(62) 99234-5372',
+  key_copy: '62992345372',
+  key_type_label: 'celular'
 };
 
 // Oferta de assinatura (FONTE ÚNICA do preço): 1 dia grátis no cadastro e, depois, um único plano: Mensal, somente Pix.
 // O Plano Anual saiu da oferta; "anual" só existe em contas antigas e em liberações manuais do administrador.
 // O cliente recebe estes valores já prontos (SUBSCRIPTION_MONTHLY_LABEL/INT/CENTS entram no HTML e em NEXUS_MONTHLY_PRICE).
-const SUBSCRIPTION_MONTHLY_PRICE = 18;
-const SUBSCRIPTION_MONTHLY_LABEL = 'R$ ' + SUBSCRIPTION_MONTHLY_PRICE.toFixed(2).replace('.', ',');
-const SUBSCRIPTION_MONTHLY_INT = String(Math.trunc(SUBSCRIPTION_MONTHLY_PRICE));
-const SUBSCRIPTION_MONTHLY_CENTS = SUBSCRIPTION_MONTHLY_PRICE.toFixed(2).split('.')[1];
+// Estas 4 variáveis mudam quando o administrador altera o preço (aplicarConfigFinanceira); o padrão é R$ 18,00.
+let SUBSCRIPTION_MONTHLY_PRICE = 18;
+let SUBSCRIPTION_MONTHLY_LABEL = 'R$ ' + SUBSCRIPTION_MONTHLY_PRICE.toFixed(2).replace('.', ',');
+let SUBSCRIPTION_MONTHLY_INT = String(Math.trunc(SUBSCRIPTION_MONTHLY_PRICE));
+let SUBSCRIPTION_MONTHLY_CENTS = SUBSCRIPTION_MONTHLY_PRICE.toFixed(2).split('.')[1];
 
 // ==================== Livro de pagamentos (pagamentos.js) ====================
 // Cada cobrança/pagamento é um registro que nunca é sobrescrito: valor cobrado na época, quem confirmou, quando, e o período que cobre.
@@ -452,8 +457,69 @@ function expirarAssinaturasVencidas() {
 // Cobrança mensal automática: todo dia COBRANCA_MENSAL_DIA o sistema gera a cobrança Pix (SUBSCRIPTION_MONTHLY_PRICE) de cada assinatura ativa.
 // As regras (quem recebe, não repetir no mês, substituir a antiga) estão em Pagamentos.gerarCobrancasMensais; aqui só se lê e se grava.
 // Cobrança gerada vence COBRANCA_MENSAL_PRAZO_DIAS depois; o acesso da conta continua dependendo do pagamento confirmado, não do vencimento.
-const COBRANCA_MENSAL_DIA = Pagamentos.COBRANCA_DIA_PADRAO;
-const COBRANCA_MENSAL_PRAZO_DIAS = 3;
+let COBRANCA_MENSAL_DIA = Pagamentos.COBRANCA_DIA_PADRAO;
+let COBRANCA_MENSAL_PRAZO_DIAS = 3;
+
+// ==================== Configuração financeira (preço, Pix, cobrança mensal) ====================
+// O administrador altera estes valores em Pagamentos > Configurações. As regras de validação estão em Pagamentos.validarConfig; aqui ficam o arquivo
+// (local_financeiro_config.json: valores atuais + histórico de quem mudou o quê), a aplicação em tempo real nas variáveis acima e o recarregamento.
+// Sem arquivo (ou com arquivo inválido) valem os padrões de antes: R$ 18,00, Pix de Paulo Lima, cobrança todo dia 5 com vencimento em 3 dias.
+const LOCAL_FIN_CONFIG_PATH = path.join(RUNTIME_DATA_DIR, 'local_financeiro_config.json');
+const FIN_CONFIG_PADRAO = Object.freeze({ preco: 18, pix: { tipo: 'telefone', chave: '+5562992345372', nome: 'PAULO LIMA', cidade: 'GOIANIA' }, whatsapp: '62992345372', cobranca: { dia: 5, prazo_dias: 3 } });
+const FIN_HISTORICO_MAX = 100;
+let finConfigAtual = JSON.parse(JSON.stringify(FIN_CONFIG_PADRAO));
+let finConfigAssinatura = ''; // JSON da configuração aplicada: o recarregamento só age se o arquivo mudou
+
+function aplicarConfigFinanceira(cfg) {
+  finConfigAtual = JSON.parse(JSON.stringify(cfg));
+  finConfigAssinatura = JSON.stringify(finConfigAtual);
+  const ap = Pagamentos.apresentarConfig(finConfigAtual);
+  SUBSCRIPTION_MONTHLY_PRICE = finConfigAtual.preco;
+  SUBSCRIPTION_MONTHLY_LABEL = 'R$ ' + finConfigAtual.preco.toFixed(2).replace('.', ',');
+  SUBSCRIPTION_MONTHLY_INT = String(Math.trunc(finConfigAtual.preco));
+  SUBSCRIPTION_MONTHLY_CENTS = finConfigAtual.preco.toFixed(2).split('.')[1];
+  Object.assign(PIX_CONFIG, {
+    key: finConfigAtual.pix.chave, name: finConfigAtual.pix.nome, city: finConfigAtual.pix.cidade,
+    phone_raw: finConfigAtual.whatsapp, phone_formatted: ap.whatsapp_exibicao,
+    key_display: ap.chave_exibicao, key_copy: ap.chave_copiar, key_type_label: ap.chave_tipo_rotulo,
+    type: finConfigAtual.pix.tipo === 'telefone' ? 'Telefone Celular' : 'Chave Pix (' + ap.chave_tipo_rotulo + ')'
+  });
+  COBRANCA_MENSAL_DIA = finConfigAtual.cobranca.dia;
+  COBRANCA_MENSAL_PRAZO_DIAS = finConfigAtual.cobranca.prazo_dias;
+}
+function lerArquivoFinanceiro() {
+  try {
+    const c = jsonCache.read(LOCAL_FIN_CONFIG_PATH);
+    if (c.exists && c.value && typeof c.value === 'object' && !Array.isArray(c.value)) {
+      const v = JSON.parse(JSON.stringify(c.value));
+      if (!Array.isArray(v.historico)) v.historico = [];
+      return v;
+    }
+  } catch (e) {
+    console.error('[FINANCEIRO] local_financeiro_config.json ilegível; guardando uma cópia antes de recomeçar:', e.message);
+    try { fs.copyFileSync(LOCAL_FIN_CONFIG_PATH, LOCAL_FIN_CONFIG_PATH + '.ilegivel-' + Date.now()); } catch (copyErr) {}
+  }
+  return { config: null, historico: [] };
+}
+// Lê o arquivo e aplica. Devolve true se a configuração em uso mudou (quem chama limpa o HTML em cache).
+function carregarConfigFinanceira() {
+  const arq = lerArquivoFinanceiro();
+  let cfg = FIN_CONFIG_PADRAO;
+  if (arq.config) {
+    // O arquivo pode ter sido editado à mão ou vir da nuvem: só vale se continuar válido (validarConfig não muda uma configuração já normalizada)
+    const v = Pagamentos.validarConfig(arq.config);
+    if (v.ok) cfg = v.config;
+    else console.warn('[FINANCEIRO] local_financeiro_config.json inválido (' + v.erro + '): usando a configuração padrão.');
+  }
+  if (JSON.stringify(cfg) === finConfigAssinatura) return false;
+  aplicarConfigFinanceira(cfg);
+  return true;
+}
+carregarConfigFinanceira();
+// A chave Pix e o WhatsApp entram no HTML e em strings do script do cliente: escape para texto e para dentro de aspas simples
+function finEscHtml(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[ch]); }
+function finEscJs(s) { return String(s == null ? '' : s).replace(/[\\'"<>&\u2028\u2029\r\n]/g, ch => '\\u' + ch.charCodeAt(0).toString(16).padStart(4, '0')); }
+
 function gerarCobrancasDoMes(opcoes) {
   const forcar = !!(opcoes && opcoes.forcar);
   try {
@@ -476,6 +542,8 @@ function gerarCobrancasDoMes(opcoes) {
 }
 
 function rotinaDeAssinaturas() {
+  // O arquivo da configuração financeira pode ter mudado por fora (restauração do Supabase, edição manual): reaplica e refaz a página em cache
+  try { if (carregarConfigFinanceira()) invalidarHtmlEmCache(); } catch (e) { console.warn('[FINANCEIRO] Recarga da configuração falhou:', e.message); }
   expirarAssinaturasVencidas();
   // NEXUS_COBRANCA_AUTO=0 desliga só a geração agendada (os testes automáticos usam, para o resultado não depender do dia em que rodam); o botão do administrador continua valendo
   if (process.env.NEXUS_COBRANCA_AUTO !== '0') gerarCobrancasDoMes();
@@ -2355,8 +2423,9 @@ async function setupDatabaseTablesAndSync() {
   }
 }
 
-// Conteúdo HTML/JS/CSS da aplicação centralizada com isolamento por usuário
-const htmlContent = `<!DOCTYPE html>
+// Conteúdo HTML/JS/CSS da aplicação centralizada com isolamento por usuário.
+// É uma FUNÇÃO (e não uma constante) porque o preço e a chave Pix entram no HTML: quando o administrador os altera, a página é refeita (ver getHtmlContent).
+function buildHtmlContent() { return `<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
@@ -16859,9 +16928,9 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 
               <div class="pw-pay-col">
                 <div class="pw-key">
-                  <span class="pw-field-label">Chave Pix (celular)</span>
+                  <span class="pw-field-label">Chave Pix (${finEscHtml(PIX_CONFIG.key_type_label)})</span>
                   <div class="pw-key-row">
-                    <div class="pw-key-value">(62) 99234-5372</div>
+                    <div class="pw-key-value">${finEscHtml(PIX_CONFIG.key_display)}</div>
                     <button type="button" id="btnCopyPixKeyDirect" class="pw-btn pw-btn-sky pw-btn-sm" onclick="window.copyPixKeyDirect()">
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
                       <span>Copiar</span>
@@ -16908,7 +16977,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
           <div class="pw-foot">
             <span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-              Dúvidas? Suporte financeiro: <strong>(62) 99234-5372</strong>
+              Dúvidas? Suporte financeiro: <strong>${finEscHtml(PIX_CONFIG.phone_formatted)}</strong>
             </span>
           </div>
         </section>
@@ -19530,7 +19599,7 @@ window.fitPixCodeBox = function() {
 };
 
 window.copyPixKeyDirect = function() {
-  const key = '62992345372';
+  const key = '${finEscJs(PIX_CONFIG.key_copy)}';
   const handleSuccess = () => {
     window.flashCopyButton('btnCopyPixKeyDirect', 'Copiada');
     if (typeof showToast === 'function') showToast('⚡ Chave Pix copiada. Após pagar, envie o comprovante para confirmar o recebimento.');
@@ -19548,9 +19617,9 @@ window.copyPixKeyDirect = function() {
 
 window.updatePixPayloadAndQr = function() {
   const amount = NEXUS_MONTHLY_PRICE;
-  const pixKey = '+5562992345372';
-  const beneficiaryName = 'PAULO LIMA';
-  const city = 'GOIANIA';
+  const pixKey = '${finEscJs(PIX_CONFIG.key)}';
+  const beneficiaryName = '${finEscJs(PIX_CONFIG.name)}';
+  const city = '${finEscJs(PIX_CONFIG.city)}';
   const sessionTxId = 'NX' + String(Date.now()).slice(-8);
   window.__currentPixSessionTxId = sessionTxId;
 
@@ -19603,8 +19672,8 @@ window.sendPaymentProofWhatsApp = function() {
   const email = currentUser ? currentUser.email : '';
   const name = currentUser ? currentUser.name : '';
   const pixTx = document.getElementById('subPixTxIdInput')?.value || window.__currentPixSessionTxId || '';
-  const msg = 'Olá Paulo Lima! Realizei o pagamento da assinatura do Nexus Financeiro Hub.\\n• Conta: ' + name + ' (' + email + ')\\n• Plano: ' + amountStr + '\\n• Protocolo: ' + (pixTx || 'Automático') + '\\nObrigado!';
-  window.open('https://wa.me/5562992345372?text=' + encodeURIComponent(msg), '_blank');
+  const msg = 'Olá! Realizei o pagamento da assinatura do Nexus Financeiro Hub.\\n• Conta: ' + name + ' (' + email + ')\\n• Plano: ' + amountStr + '\\n• Protocolo: ' + (pixTx || 'Automático') + '\\nObrigado!';
+  window.open('https://wa.me/55${finEscJs(PIX_CONFIG.phone_raw)}?text=' + encodeURIComponent(msg), '_blank');
 };
 
 window.processSubscriptionPayment = async function(method, isAutoTriggered = false) {
@@ -32940,7 +33009,7 @@ window.applyPostLoginBg = function(theme) {
 
 </script>
 </body>
-</html>`;
+</html>`; }
 
 // Persistência resiliente de Logs em Arquivo Local + Banco de Dados
 
@@ -33600,6 +33669,12 @@ function mergeFinancialData(serverData, localData) {
 // Servidor HTTP de Alta Performance e Resiliência
 const fileCache = new Map();
 const htmlBufferCache = new Map(); // 'root' | 'plain' -> Buffer da página principal
+// A página é montada uma vez por configuração financeira (preço e chave Pix entram no HTML). Quando o administrador muda a configuração,
+// invalidarHtmlEmCache() descarta o texto e os Buffers; o próximo acesso refaz tudo. Montar já na partida mantém o aviso de erro de antes.
+let htmlContentCache = null;
+function getHtmlContent() { if (htmlContentCache === null) htmlContentCache = buildHtmlContent(); return htmlContentCache; }
+function invalidarHtmlEmCache() { htmlContentCache = null; htmlBufferCache.clear(); }
+getHtmlContent();
 async function handleNexusRequest(req, res) {
   let parsedUrl;
   try {
@@ -36770,7 +36845,17 @@ async function handleNexusRequest(req, res) {
   // O valor cobrado é SEMPRE SUBSCRIPTION_MONTHLY_PRICE: o navegador nunca decide o preço de uma cobrança.
   function pixDaCobranca(reg) {
     const payload = Pagamentos.pixPayload({ chave: PIX_CONFIG.key, nome: PIX_CONFIG.name, cidade: PIX_CONFIG.city, valor: reg.valor, txid: reg.ref });
-    return { payload, qr_url: '/api/pix/qr.svg?data=' + encodeURIComponent(payload), chave: PIX_CONFIG.phone_formatted, favorecido: PIX_CONFIG.name };
+    return { payload, qr_url: '/api/pix/qr.svg?data=' + encodeURIComponent(payload), chave: PIX_CONFIG.key_display, tipo_chave: PIX_CONFIG.key_type_label, favorecido: PIX_CONFIG.name };
+  }
+  // Configuração financeira em vigor + como ela aparece (chave formatada, preço em texto) + últimas alterações (quem, quando, o quê)
+  function configFinanceiraPublica() {
+    const arq = lerArquivoFinanceiro();
+    return {
+      atual: JSON.parse(JSON.stringify(finConfigAtual)),
+      apresentacao: Pagamentos.apresentarConfig(finConfigAtual),
+      padrao: JSON.parse(JSON.stringify(FIN_CONFIG_PADRAO)),
+      historico: arq.historico.slice(-20).reverse()
+    };
   }
   function exigirAdminDePagamentos(req, res) {
     const admin = getAuthenticatedAdmin(req);
@@ -36813,7 +36898,8 @@ async function handleNexusRequest(req, res) {
       agora: new Date(agora).toISOString(),
       preco: SUBSCRIPTION_MONTHLY_PRICE,
       preco_texto: SUBSCRIPTION_MONTHLY_LABEL,
-      pix: { chave: PIX_CONFIG.phone_formatted, favorecido: PIX_CONFIG.name },
+      pix: { chave: PIX_CONFIG.key_display, tipo_chave: PIX_CONFIG.key_type_label, favorecido: PIX_CONFIG.name },
+      config: configFinanceiraPublica(),
       cobranca_mensal: { dia: COBRANCA_MENSAL_DIA, prazo_dias: COBRANCA_MENSAL_PRAZO_DIAS, proxima: Pagamentos.proximaGeracao(agora, COBRANCA_MENSAL_DIA) },
       total: ordenados.length,
       pagamentos: ordenados.slice(0, 3000).map(p => Pagamentos.publico(p, agora)),
@@ -36854,7 +36940,9 @@ async function handleNexusRequest(req, res) {
       }
       saveLocalPagamentos(livro);
       recordSystemLog(por.nome, por.email, 'Cobrança', 'Financeiro', `${reutilizada ? 'Emitiu a 2ª via da' : 'Gerou a'} cobrança Pix ${reg.ref} de ${Pagamentos.brl(reg.valor)} para ${alvo.name || email} (vencimento ${vencimento.split('-').reverse().join('/')})`);
-      return sendJson(res, corsHeaders, 200, { success: true, reutilizada, pagamento: Pagamentos.publico(reg, agora), pix: pixDaCobranca(reg) });
+      // Se o preço mudou, uma cobrança aberta do preço antigo não é reaproveitada: avisa para o administrador cancelar a que sobrar (nada é cancelado sozinho)
+      const outrasAbertas = pagamentoPorEmail(livro, email).filter(x => x.id !== reg.id && Pagamentos.emAberto(x)).map(x => ({ id: x.id, ref: x.ref, valor: x.valor }));
+      return sendJson(res, corsHeaders, 200, { success: true, reutilizada, pagamento: Pagamentos.publico(reg, agora), pix: pixDaCobranca(reg), outras_abertas: outrasAbertas });
     } catch (err) {
       const failure = publicFailure(err, 'Não foi possível gerar a cobrança agora.', 500);
       return sendJson(res, corsHeaders, failure.status, { success: false, error: failure.error });
@@ -36905,6 +36993,45 @@ async function handleNexusRequest(req, res) {
     }
   }
 
+  // Lançamento retroativo: um pagamento que JÁ foi recebido antes de existir o livro (ou por fora do sistema). Entra na receita do mês em que o dinheiro caiu,
+  // mas NÃO mexe no acesso da conta (o prazo dela já está certo) e, por isso, estornar um lançamento destes não tira dias de ninguém (dias = 0). Só administrador.
+  if (req.method === 'POST' && parsedUrl.pathname === '/api/admin/pagamentos/historico') {
+    const admin = exigirAdminDePagamentos(req, res);
+    if (!admin) return;
+    const p = await lerCorpoDePagamentos(req, res);
+    if (!p) return;
+    try {
+      const agora = Date.now();
+      const email = String(p.email || '').toLowerCase().trim();
+      const alvo = getLocalUsers().find(u => u && u.email && u.email.toLowerCase() === email);
+      if (!alvo) return sendJson(res, corsHeaders, 404, { success: false, error: 'Conta não encontrada.' });
+      if (alvo.role === 'Administrador') return sendJson(res, corsHeaders, 400, { success: false, error: 'Administrador tem acesso ilimitado: não há pagamento a lançar.' });
+      const data = Pagamentos.dataIsoValida(p.data);
+      if (!data) return sendJson(res, corsHeaders, 400, { success: false, campo: 'data', error: 'Informe a data em que o dinheiro foi recebido.' });
+      if (data > Pagamentos.diaDe(agora)) return sendJson(res, corsHeaders, 400, { success: false, campo: 'data', error: 'A data do recebimento não pode ser futura.' });
+      if (data < Pagamentos.diaDe(agora - 800 * Pagamentos.DIA)) return sendJson(res, corsHeaders, 400, { success: false, campo: 'data', error: 'Data muito antiga: o lançamento retroativo vai até 800 dias atrás.' });
+      const valor = Pagamentos.valorConfirmado(p.valor, NaN);
+      if (Number.isNaN(valor)) return sendJson(res, corsHeaders, 400, { success: false, campo: 'valor', error: 'Informe o valor recebido (maior que zero, até R$ ' + Pagamentos.VALOR_MAXIMO + ').' });
+      const metodo = PAGAMENTO_METODOS[p.metodo] ? p.metodo : 'pix';
+      const por = { nome: admin.name || 'Administrador', email: String(admin.email || '').toLowerCase() };
+      const livro = getLocalPagamentos();
+      if (livro.some(x => x && x.email === email && x.status === Pagamentos.STATUS.PAGA && Pagamentos.diaDe(Pagamentos.paraMs(x.paga_em)) === data && Math.abs(x.valor - valor) < 0.005)) {
+        return sendJson(res, corsHeaders, 409, { success: false, error: 'Já existe um pagamento de ' + Pagamentos.brl(valor) + ' desta conta em ' + data.split('-').reverse().join('/') + '. Não lancei de novo.' });
+      }
+      const ts = Date.parse(data + 'T12:00:00-03:00'); // meio-dia em Brasília: o dia não muda em nenhum fuso
+      const reg = Pagamentos.criarCobranca({ usuario: alvo, valor, plano: 'mensal', origem: 'historico', por, obs: p.obs, agora: ts, existentes: livro });
+      Pagamentos.marcarPaga(reg, { agora: ts, por, valor, metodo, periodo: { inicio: ts, fim: ts + 30 * Pagamentos.DIA, dias: 0 }, obs: p.obs, nota: 'Lançamento retroativo · ' + (PAGAMENTO_METODOS[metodo] || metodo) });
+      Pagamentos.evento(reg, 'lancamento', por, 'Lançado em ' + Pagamentos.diaDe(agora).split('-').reverse().join('/') + ' como recebido em ' + data.split('-').reverse().join('/') + '; o acesso da conta não foi alterado', agora);
+      livro.push(reg);
+      saveLocalPagamentos(livro);
+      recordSystemLog(por.nome, por.email, 'Pagamento', 'Financeiro', `Lançou o pagamento retroativo ${reg.ref} de ${Pagamentos.brl(valor)} de ${alvo.name || email}, recebido em ${data.split('-').reverse().join('/')} (sem alterar o acesso da conta)`);
+      return sendJson(res, corsHeaders, 200, { success: true, pagamento: Pagamentos.publico(reg, agora), message: `Pagamento de ${Pagamentos.brl(valor)} lançado em ${data.split('-').reverse().join('/')}. O acesso da conta não mudou.` });
+    } catch (err) {
+      const failure = publicFailure(err, 'Não foi possível lançar o pagamento agora.', 500);
+      return sendJson(res, corsHeaders, failure.status, { success: false, error: failure.error });
+    }
+  }
+
   // Conciliação: lê o extrato (OFX ou CSV) e SUGERE quais cobranças abertas foram pagas. Não altera nada: quem confirma é o administrador, uma a uma.
   if (req.method === 'POST' && parsedUrl.pathname === '/api/admin/pagamentos/conciliar') {
     const admin = exigirAdminDePagamentos(req, res);
@@ -36951,6 +37078,62 @@ async function handleNexusRequest(req, res) {
     const lista = getLocalPagamentos().filter(x => x && (!ids || ids.has(x.id))).sort(pagamentoMaisRecente);
     res.writeHead(200, { ...corsHeaders, 'Content-Type': 'text/csv; charset=utf-8', 'Content-Disposition': `attachment; filename="pagamentos-${Pagamentos.diaDe(agora)}.csv"` });
     return res.end(Pagamentos.csv(lista, agora));
+  }
+
+  // Configuração financeira: preço da assinatura, chave Pix e cobrança mensal. Só administrador E com a senha dele: uma sessão esquecida aberta
+  // (ou um token roubado) não pode trocar o preço nem mandar o dinheiro dos clientes para outra chave. Vale na hora, sem reiniciar o servidor.
+  if (req.method === 'POST' && parsedUrl.pathname === '/api/admin/financeiro/config') {
+    const admin = exigirAdminDePagamentos(req, res);
+    if (!admin) return;
+    const p = await lerCorpoDePagamentos(req, res);
+    if (!p) return;
+    try {
+      const email = String(admin.email || '').toLowerCase();
+      const nome = admin.name || 'Administrador';
+      const limite = 'fin-config:' + email;
+      if (peekRateLimit(limite, 5, 15 * 60 * 1000)) return sendJson(res, corsHeaders, 429, { success: false, campo: 'senha_atual', error: 'Muitas tentativas com senha incorreta. Aguarde alguns minutos e tente de novo.' });
+      const senha = String(p.senha_atual || '');
+      if (!senha) return sendJson(res, corsHeaders, 400, { success: false, campo: 'senha_atual', error: 'Digite a sua senha para confirmar a alteração.' });
+      // Mesma fonte da senha que o login e a Minha Conta usam: o SQL Server quando está conectado, senão o espelho local
+      const conta = getLocalUsers().find(u => u && u.email && u.email.toLowerCase() === email);
+      let hash = conta && conta.password;
+      if (pool) {
+        try {
+          const r = await pool.query('SELECT password FROM usuarios WHERE LOWER(email) = LOWER($1)', [email]);
+          if (r.rows && r.rows[0] && r.rows[0].password) hash = r.rows[0].password;
+        } catch (e) { /* segue com o espelho local */ }
+      }
+      if (!hash || !verifyPassword(senha, hash, conta || null)) {
+        recordRateLimitHit(limite);
+        recordSystemLog(nome, email, 'Configuração', 'Financeiro', 'Tentou alterar a configuração financeira com a senha incorreta');
+        return sendJson(res, corsHeaders, 403, { success: false, campo: 'senha_atual', error: 'Senha incorreta.' });
+      }
+      const v = Pagamentos.validarConfig(p.config);
+      if (!v.ok) return sendJson(res, corsHeaders, 422, { success: false, campo: v.campo, error: v.erro });
+      const mudancas = Pagamentos.diferencasConfig(finConfigAtual, v.config);
+      if (!mudancas.length) return sendJson(res, corsHeaders, 200, { success: true, mudou: false, message: 'Nada mudou: a configuração já estava assim.', config: configFinanceiraPublica() });
+      const arq = lerArquivoFinanceiro();
+      arq.config = v.config;
+      arq.historico.push({ em: new Date().toISOString(), por: { nome, email }, mudancas });
+      if (arq.historico.length > FIN_HISTORICO_MAX) arq.historico = arq.historico.slice(-FIN_HISTORICO_MAX);
+      writeJsonFile(LOCAL_FIN_CONFIG_PATH, JSON.stringify(arq, null, 2));
+      aplicarConfigFinanceira(v.config);
+      invalidarHtmlEmCache();
+      recordSystemLog(nome, email, 'Configuração', 'Financeiro', 'Alterou a configuração financeira: ' + mudancas.join(' | '));
+      console.log('⚙️ [FINANCEIRO] Configuração alterada por ' + email + ': ' + mudancas.join(' | '));
+      const novaGeracao = Pagamentos.proximaGeracao(Date.now(), COBRANCA_MENSAL_DIA);
+      return sendJson(res, corsHeaders, 200, {
+        success: true, mudou: true,
+        message: 'Configuração salva: ' + mudancas.length + (mudancas.length === 1 ? ' alteração' : ' alterações') + ' já em vigor.',
+        preco: SUBSCRIPTION_MONTHLY_PRICE, preco_texto: SUBSCRIPTION_MONTHLY_LABEL,
+        pix: { chave: PIX_CONFIG.key_display, tipo_chave: PIX_CONFIG.key_type_label, favorecido: PIX_CONFIG.name },
+        cobranca_mensal: { dia: COBRANCA_MENSAL_DIA, prazo_dias: COBRANCA_MENSAL_PRAZO_DIAS, proxima: novaGeracao },
+        config: configFinanceiraPublica()
+      });
+    } catch (err) {
+      const failure = publicFailure(err, 'Não foi possível salvar a configuração agora.', 500);
+      return sendJson(res, corsHeaders, failure.status, { success: false, error: failure.error });
+    }
   }
 
 
@@ -37584,11 +37767,14 @@ async function handleNexusRequest(req, res) {
     const glpiPath = path.join(__dirname, 'glpi-enterprise.html');
     if (fs.existsSync(glpiPath)) {
       const stat = fs.statSync(glpiPath);
-      const cached = fileCache.get(glpiPath);
-      const glpiHtml = cached && cached.mtimeMs === stat.mtimeMs
-        ? cached.body
-        : fs.readFileSync(glpiPath);
-      if (!cached || cached.mtimeMs !== stat.mtimeMs) fileCache.set(glpiPath, { mtimeMs: stat.mtimeMs, body: glpiHtml });
+      // {{PRECO_MENSAL}} no texto da tela vira o preço em vigor (o administrador pode alterá-lo); o resultado fica em cache por arquivo + preço
+      const glpiChave = glpiPath + '|' + SUBSCRIPTION_MONTHLY_LABEL;
+      let cached = fileCache.get(glpiChave);
+      if (!cached || cached.mtimeMs !== stat.mtimeMs) {
+        cached = { mtimeMs: stat.mtimeMs, body: Buffer.from(fs.readFileSync(glpiPath, 'utf8').split('{{PRECO_MENSAL}}').join(SUBSCRIPTION_MONTHLY_LABEL), 'utf8') };
+        fileCache.set(glpiChave, cached);
+      }
+      const glpiHtml = cached.body;
       return sendTextResponse(res, 200, glpiHtml, 'text/html; charset=utf-8', { ...corsHeaders, 'Cache-Control': 'no-cache, must-revalidate' });
     }
   }
@@ -37597,7 +37783,7 @@ async function handleNexusRequest(req, res) {
     'deleted_accounts.json', 'local_users.json', 'local_users.backup.json',
     'local_database_data.json', 'local_database_data.backup.json',
     'cpf_registry.json', 'cpf_registry.backup.json', 'local_ordens_servico.json',
-    'local_tecnicos.json', 'pending_logins.json', 'system_logs.json', 'local_pagamentos.json'
+    'local_tecnicos.json', 'pending_logins.json', 'system_logs.json', 'local_pagamentos.json', 'local_financeiro_config.json'
   ]);
   if (protectedLocalFiles.has(path.basename(pathname).toLowerCase())) {
     res.writeHead(404, { ...corsHeaders, 'Content-Type': 'application/json' });
@@ -37677,7 +37863,8 @@ async function handleNexusRequest(req, res) {
   const htmlVariant = rootEntryGate ? 'root' : 'plain';
   let responseHtml = htmlBufferCache.get(htmlVariant);
   if (!responseHtml) {
-    responseHtml = Buffer.from(rootEntryGate ? htmlContent.replace('<head>', '<head>' + rootEntryGate) : htmlContent, 'utf8');
+    const htmlAtual = getHtmlContent();
+    responseHtml = Buffer.from(rootEntryGate ? htmlAtual.replace('<head>', '<head>' + rootEntryGate) : htmlAtual, 'utf8');
     htmlBufferCache.set(htmlVariant, responseHtml);
   }
   return sendTextResponse(res, 200, responseHtml, 'text/html; charset=utf-8', {

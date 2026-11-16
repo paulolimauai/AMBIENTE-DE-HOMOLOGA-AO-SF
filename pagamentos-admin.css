@@ -128,4 +128,12 @@
   .pg-dl { grid-template-columns: minmax(0, 1fr) !important; }
 }
 
+/* ---------- Configurações (preço, Pix, cobrança mensal) ---------- */
+.pg-cfg-form { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+.pg-cfg-form .pg-campo-larga { grid-column: 1 / -1 !important; }
+.pg-dica { display: block !important; margin-top: 2px !important; font-size: 12.5px !important; color: var(--adm-mut) !important; }
+.pg-campo input[aria-invalid="true"], .pg-campo select[aria-invalid="true"] { border-color: rgba(248, 113, 113, .85) !important; box-shadow: 0 0 0 3px rgba(239, 68, 68, .18) !important; }
+@media (max-width: 900px) {
+  .pg-cfg-form { grid-template-columns: minmax(0, 1fr) !important; }
+}
 }
