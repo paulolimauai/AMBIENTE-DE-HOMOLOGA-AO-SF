@@ -90,5 +90,19 @@
       "path": "C:\\Users\\Nitro\\AppData\\Local\\agy\\bin\\agy.exe",
       "icon": "sparkle"
     }
-  }
+  },
+  "sqltools.connections": [
+    {
+      "name": "Supabase Nexus (lrklzgssoifudfbllmsq)",
+      "driver": "PostgreSQL",
+      "server": "aws-0-sa-east-1.pooler.supabase.com",
+      "port": 5432,
+      "database": "postgres",
+      "username": "postgres.lrklzgssoifudfbllmsq",
+      "password": "",
+      "connectTimeout": 30,
+      "previewLimit": 50,
+      "group": "Supabase"
+    }
+  ]
 }
