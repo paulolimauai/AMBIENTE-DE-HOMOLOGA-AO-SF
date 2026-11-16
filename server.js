@@ -27,6 +27,7 @@ if (!DB_DISABLED) {
 const BackendUtils = require('./backend-utils'); // utilitários puros e testados (corpo UTF-8, escrita atômica, cache JSON, validações)
 const Pagamentos = require('./pagamentos'); // livro de pagamentos, prazo da assinatura, Pix, resumo financeiro e conciliação de extrato (regras puras e testadas)
 const { qrSvg } = require('./qr-svg'); // QR Code do Pix gerado aqui (antes vinha do site api.qrserver.com)
+const Assinatura = require('./assinatura'); // relógio da assinatura: qual versão vale entre a nuvem e o PC (liberar/bloquear/pagar não pode ser desfeito pelo outro servidor)
 const Credenciais = require('./credenciais'); // qual senha vale quando a conta existe na nuvem, no SQL Server do PC e no Supabase (vale a trocada por último)
 
 const PORT = process.env.PORT || 3000;
@@ -334,6 +335,7 @@ async function executarConfirmacao(o) {
   targetUser.subscription_expires_at = expiresIso;
   targetUser.subscription_method = metodo;
   targetUser.subscription_payment_id = txId;
+  Assinatura.stamp(targetUser);
   saveLocalUsers(localUsers);
   // ---- fim do bloco síncrono ----
 
@@ -357,7 +359,7 @@ async function executarConfirmacao(o) {
 
   recordSystemLog(por.nome, por.email, 'Assinatura', 'Financeiro',
     `Confirmou o recebimento de ${Pagamentos.brl(reg.valor)} via ${PAGAMENTO_METODOS[metodo] || metodo} (ref. ${reg.ref}) e ativou o plano ${plano.toUpperCase()} para ${targetUser.name || alvoEmail} (Tx: ${txId} | Expira: ${expiresSql})`);
-  broadcastEvent('subscription_activated', { email: alvoEmail, plan: plano, method: metodo, transaction_id: txId, expires_at: expiresIso, confirmed_by: por.email });
+  broadcastEvent('subscription_activated', { email: alvoEmail, plan: plano, method: metodo, transaction_id: txId, expires_at: expiresIso, confirmed_by: por.email, confirmed_at: new Date(agora).toISOString() });
   return { status: 200, jaConfirmado: false, registro: reg, expiresIso, plano, metodo, txId, targetUser };
 }
 
@@ -390,6 +392,7 @@ async function executarEstorno(actor, id, nota) {
   }
   saveLocalPagamentos(lista);
   if (sqlSet) {
+    Assinatura.stamp(u);
     saveLocalUsers(localUsers);
     if (pool) {
       try {
@@ -421,6 +424,7 @@ async function executarCancelamento(actor, id, nota) {
   }
   saveLocalPagamentos(lista);
   if (sqlSet) {
+    Assinatura.stamp(u);
     saveLocalUsers(localUsers);
     if (pool) pool.query('UPDATE usuarios SET subscription_status = $1, subscription_payment_id = NULL WHERE LOWER(email) = LOWER($2)', [sqlSet.status, reg.email]).catch(() => {});
   }
@@ -1218,6 +1222,15 @@ function getBrasiliaIsoString(dateInput) {
   const map = {};
   brasiliaParts.forEach(p => map[p.type] = p.value);
   return map.year + '-' + map.month + '-' + map.day + 'T' + map.hour + ':' + map.minute + ':' + map.second + '-03:00';
+}
+
+// Data e hora para mensagens do servidor, sempre em horário de Brasília: "16/12/2026 às 02:00" (vencimento de uma liberação, por exemplo)
+function dataHoraBRServidor(valor) {
+  const d = valor instanceof Date ? valor : new Date(valor);
+  if (isNaN(d.getTime())) return '';
+  if (d.getUTCFullYear() >= 2090) return 'sem prazo de vencimento';
+  const m = /^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2})/.exec(getBrasiliaSqlString(d) || '');
+  return m ? m[3] + '/' + m[2] + '/' + m[1] + ' às ' + m[4] + ':' + m[5] : '';
 }
 
 // ==================== Gerenciador de Eventos em Tempo Real (SSE) ====================
@@ -18828,6 +18841,44 @@ function nexusPlanLabel(plan) {
   return info.id === 'mensal' ? 'Mensal · ' + NEXUS_MONTHLY_LABEL : info.nome + (info.valor ? ' · ' + info.valor : '');
 }
 
+// Data e hora de verdade, SEMPRE em horário de Brasília ("16/12/2026 às 02:00"). As telas mostravam só a data (uma liberação de 60 minutos ficava
+// sem horário) ou a hora em que a tela foi aberta, e o fuso era o do navegador.
+function nexusDataHora(valor) {
+  if (!valor) return '';
+  const d = new Date(valor);
+  if (isNaN(d.getTime())) return '';
+  try {
+    const partes = {};
+    new Intl.DateTimeFormat('pt-BR', { timeZone: 'America/Sao_Paulo', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).formatToParts(d).forEach(function(p) { partes[p.type] = p.value; });
+    return partes.day + '/' + partes.month + '/' + partes.year + ' às ' + partes.hour + ':' + partes.minute;
+  } catch (e) { return d.toLocaleString('pt-BR'); }
+}
+// Texto de validade da assinatura de uma conta: um lugar só (Minha Conta, selo da lateral e atualização ao vivo)
+function nexusTextoValidade(u) {
+  if (!u) return '';
+  const plano = String(u.subscription_plan || '').toLowerCase();
+  if (u.subscription_status === 'active') {
+    if (plano === 'vitalicio' || plano === 'administrador_ilimitado' || (u.subscription_expires_at && new Date(u.subscription_expires_at).getUTCFullYear() >= 2090)) return 'Acesso sem prazo de vencimento';
+    return u.subscription_expires_at ? 'Válido até ' + nexusDataHora(u.subscription_expires_at) : 'Ativo';
+  }
+  return 'Você tem 1 dia grátis para testar todos os recursos. Depois, assine o Plano Mensal por ' + NEXUS_MONTHLY_LABEL + ' e pague via Pix.';
+}
+// Quando a assinatura muda (o administrador liberou, bloqueou ou confirmou um pagamento), a data e a hora e os rótulos se atualizam na hora, sem recarregar
+window.nexusAtualizarAssinaturaNaTela = function() {
+  if (!currentUser) return;
+  try { updateHeaderUser(); } catch (e) {}
+  const caixa = document.querySelector('.subscription-overview');
+  if (caixa) {
+    const texto = caixa.querySelector('#nxSubValidade');
+    if (texto) texto.textContent = nexusTextoValidade(currentUser);
+    const selo = caixa.querySelector('.role-badge');
+    if (selo) {
+      if (currentUser.subscription_status === 'active') { selo.style.background = '#10B981'; selo.textContent = '✓ Assinatura Ativa (' + nexusPlanLabel(currentUser.subscription_plan) + ')'; }
+      else { selo.style.background = '#F59E0B'; selo.textContent = '⏱️ Período Gratuito (1 Dia)'; }
+    }
+  }
+};
+
 window.playPaywallAlertSound = function() {
   try {
     const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -18927,10 +18978,12 @@ window.unlockWithConfirmedReceipt = function(data) {
     methodEl.textContent = methodLabels[payMethod] || String(payMethod).toUpperCase();
   }
   if (expiresEl) {
-    expiresEl.textContent = data.expires_at ? new Date(data.expires_at).toLocaleDateString('pt-BR') : 'Ativo';
+    const semPrazo = plan === 'vitalicio' || (data.expires_at && new Date(data.expires_at).getUTCFullYear() >= 2090);
+    expiresEl.textContent = semPrazo ? 'Sem prazo de vencimento' : (data.expires_at ? nexusDataHora(data.expires_at) : 'Ativo');
   }
   if (dateTimeEl) {
-    dateTimeEl.textContent = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' }) + ' (Brasília)';
+    // O instante REAL da confirmação/liberação (vem do servidor); só na falta dele usa a hora de agora (antes era sempre a hora em que a tela abria)
+    dateTimeEl.textContent = nexusDataHora(data.confirmed_at || data.granted_at || data.updated_at || new Date()) + ' (Brasília)';
   }
 
   // O cabeçalho deixa de falar em bloqueio: o acesso foi liberado.
@@ -19377,24 +19430,31 @@ setInterval(() => {
 
 // Sincronização em tempo real do status de pagamento (a cada 4 segundos)
 if (!window.__paywallSyncPollInterval) {
-  window.__paywallSyncPollInterval = setInterval(async () => {
+  window.nexusConsultarAssinatura = async () => {
     if (!currentUser || !currentUser.email) return;
     try {
       const res = await fetch('/api/subscription/status?email=' + encodeURIComponent(currentUser.email), { headers: { 'Authorization': 'Bearer ' + (loadFromStorage('nexus_token', '') || '') } });
       if (res.ok) {
         const d = await res.json();
         if (d && d.success) {
+          const assinaturaAntes = [currentUser.subscription_status, currentUser.subscription_plan, currentUser.subscription_expires_at, currentUser.subscription_updated_at].join('|');
           currentUser.subscription_status = d.status;
           currentUser.subscription_plan = d.subscription_plan;
           currentUser.subscription_expires_at = d.subscription_expires_at;
           currentUser.subscription_method = d.subscription_method;
+          currentUser.subscription_updated_at = d.subscription_updated_at;
+          if (assinaturaAntes !== [currentUser.subscription_status, currentUser.subscription_plan, currentUser.subscription_expires_at, currentUser.subscription_updated_at].join('|')) {
+            try { saveToStorage('nexus_cached_user', currentUser); } catch (e) {}
+            try { window.nexusAtualizarAssinaturaNaTela(); } catch (e) {}
+          }
           if (d.is_subscribed) {
             if (window.__isPaywallLocked) {
               window.unlockWithConfirmedReceipt({
                 plan: d.subscription_plan,
                 expires_at: d.subscription_expires_at,
                 method: d.subscription_method,
-                transaction_id: d.subscription_payment_id
+                transaction_id: d.subscription_payment_id,
+                updated_at: d.subscription_updated_at
               });
             }
           } else if (d.status === 'expired' || d.status === 'pending_payment' || d.remaining_seconds <= 0) {
@@ -19407,7 +19467,8 @@ if (!window.__paywallSyncPollInterval) {
         }
       }
     } catch(e){}
-  }, 4000);
+  };
+  window.__paywallSyncPollInterval = setInterval(window.nexusConsultarAssinatura, 4000);
 }
 
 // Plano único vigente: Mensal (o Plano Anual saiu da oferta). Mantida com este nome porque quem abre a tela de pagamento ainda a chama.
@@ -19563,8 +19624,18 @@ if (!window.__subSseInitialized && typeof EventSource !== 'undefined') {
         const d = JSON.parse(e.data);
         if (d && currentUser && d.email && d.email.toLowerCase() === currentUser.email.toLowerCase()) {
           window.unlockWithConfirmedReceipt(d);
+          if (window.nexusConsultarAssinatura) window.nexusConsultarAssinatura();
         }
       } catch(err){}
+    });
+    // Bloqueio/estorno e aviso de pagamento: consulta na hora (em vez de esperar o próximo ciclo de 4 s) e atualiza data, hora e rótulos
+    ['subscription_revoked', 'subscription_payment_pending'].forEach(function(nomeEvento) {
+      subEvtSource.addEventListener(nomeEvento, function(e) {
+        try {
+          const d = JSON.parse(e.data);
+          if (d && currentUser && d.email && d.email.toLowerCase() === currentUser.email.toLowerCase() && window.nexusConsultarAssinatura) window.nexusConsultarAssinatura();
+        } catch(err){}
+      });
     });
   } catch(e){}
 }
@@ -20065,7 +20136,7 @@ window.updateAdminModalBadge = function(email) {
       subBadge.textContent = '♾️ Vitalício Gratuito';
       subBadge.style.color = '#34D399';
     } else {
-      const expStr = u.subscription_expires_at ? formatDateBR(u.subscription_expires_at.split('T')[0]) : 'Ativo';
+      const expStr = u.subscription_expires_at ? nexusDataHora(u.subscription_expires_at) : 'Ativo';
       subBadge.textContent = '⭐ Pago / Ativo até ' + expStr;
       subBadge.style.color = '#34D399';
     }
@@ -22492,6 +22563,8 @@ function updateHeaderUser(){
             : plan === 'cortesia_admin'
               ? 'Acesso liberado'
               : 'Plano Gratuito 1 dia';
+    // Passar o mouse mostra até quando vale (data e hora de Brasília)
+    sidebarPlanEl.title = (!nexusIsAdminUser(currentUser) && status === 'active') ? nexusTextoValidade(currentUser) : '';
   }
   if(roleEl) {
     if (isViewingOtherUser) {
@@ -24915,10 +24988,8 @@ function pageConfig(){
             ? '<span class="role-badge" style="background:#10B981; color:#fff; font-weight:800;">✓ Assinatura Ativa (' + nexusPlanLabel(currentUser.subscription_plan) + ')</span>'
             : '<span class="role-badge" style="background:#F59E0B; color:#fff; font-weight:800;">⏱️ Período Gratuito (1 Dia)</span>'}
         </div>
-        <p style="font-size:13px; color:var(--text-dim); margin:4px 0 0 0;">
-          \${(currentUser && currentUser.subscription_status === 'active')
-            ? 'Válido até ' + (currentUser.subscription_expires_at ? new Date(currentUser.subscription_expires_at).toLocaleDateString('pt-BR') : 'Ativo')
-            : 'Você tem 1 dia grátis para testar todos os recursos. Depois, assine o Plano Mensal por ' + NEXUS_MONTHLY_LABEL + ' e pague via Pix.'}
+        <p id="nxSubValidade" style="font-size:13px; color:var(--text-dim); margin:4px 0 0 0;">
+          \${nexusTextoValidade(currentUser)}
         </p>
       </div>
     </div>
@@ -26263,10 +26334,7 @@ const LIB = { contas: null, can: { assinatura: false, contas: false }, carregado
 const LIB_ROTULOS = { 'assinatura.liberar': 'Liberar assinatura manual', 'contas.bloquear': 'Ativar e bloquear contas', 'logs.ver': 'Ver auditoria e logs' };
 
 function libDataBR(iso){
-  if (!iso) return '';
-  const d = new Date(iso);
-  if (isNaN(d.getTime())) return '';
-  return d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  return nexusDataHora(iso);   // data e hora de Brasília (antes: o fuso do navegador de quem olha)
 }
 // Situação de acesso (o servidor já calculou pela regra única: teste de 1 dia, assinatura, vitalício, expirado)
 function libSituacao(c){
@@ -35732,6 +35800,24 @@ async function handleNexusRequest(req, res) {
               }
             }
 
+            // ASSINATURA. A sincronização do PC decide pelo relógio da assinatura (assinatura.js): o que o administrador libera/bloqueia na nuvem não é mais
+            // desfeito pelo SQL Server a cada 10 s. O navegador do administrador NUNCA define a assinatura por esta lista (ele reenvia o que leu, e isso
+            // desfazia liberações feitas depois): o servidor é quem manda, pelas rotas próprias (liberar, confirmar, estornar, bloquear, zerar teste).
+            let subFields; let subClock;
+            if (existing && requestIsInternalSync) {
+              const pickSub = Assinatura.pickSubscription(existing, u, { noClock: 'incoming' });
+              subFields = pickSub.fields; subClock = pickSub.subscription_updated_at;
+            } else if (existing) {
+              // única exceção: limpar o plano falso "administrador_ilimitado" de contas antigas ao rebaixar o perfil (o cliente manda o estado real)
+              const limpezaLegado = existing.subscription_plan === 'administrador_ilimitado' && u.subscription_plan !== 'administrador_ilimitado';
+              const origemSub = limpezaLegado ? u : existing;
+              subFields = {}; Assinatura.CAMPOS.forEach(k => { subFields[k] = origemSub[k] !== undefined ? origemSub[k] : existing[k]; });
+              subClock = limpezaLegado ? Assinatura.stamp({ subscription_updated_at: existing.subscription_updated_at }).subscription_updated_at : existing.subscription_updated_at;
+            } else {
+              subFields = {}; Assinatura.CAMPOS.forEach(k => { subFields[k] = u[k]; });      // conta nova: vale o que veio (padrões de sempre)
+              subClock = requestIsInternalSync ? u.subscription_updated_at : undefined;
+            }
+
             userMap.set(emailKey, {
               id: u.id || (existing ? existing.id : Date.now()),
               name: String(u.name || (existing ? existing.name : 'Usuário')).replace(/[<>"`&]/g, '').trim() || 'Usuário',
@@ -35749,12 +35835,13 @@ async function handleNexusRequest(req, res) {
               terms_accepted: u.terms_accepted !== undefined ? u.terms_accepted : (existing ? existing.terms_accepted : true),
               device_type: u.device_type || (existing ? existing.device_type : 'Computador'),
               must_change_password: u.must_change_password !== undefined ? u.must_change_password : (existing ? existing.must_change_password : false),
-              trial_started_at: u.trial_started_at !== undefined ? u.trial_started_at : (existing ? existing.trial_started_at : null),
-              subscription_plan: u.subscription_plan !== undefined ? u.subscription_plan : (existing ? existing.subscription_plan : null),
-              subscription_status: u.subscription_status !== undefined ? u.subscription_status : (existing ? existing.subscription_status : 'trial'),
-              subscription_expires_at: u.subscription_expires_at !== undefined ? u.subscription_expires_at : (existing ? existing.subscription_expires_at : null),
-              subscription_method: u.subscription_method !== undefined ? u.subscription_method : (existing ? existing.subscription_method : null),
-              subscription_payment_id: u.subscription_payment_id !== undefined ? u.subscription_payment_id : (existing ? existing.subscription_payment_id : null),
+              trial_started_at: subFields.trial_started_at !== undefined ? subFields.trial_started_at : null,
+              subscription_plan: subFields.subscription_plan !== undefined ? subFields.subscription_plan : null,
+              subscription_status: subFields.subscription_status !== undefined ? subFields.subscription_status : 'trial',
+              subscription_expires_at: subFields.subscription_expires_at !== undefined ? subFields.subscription_expires_at : null,
+              subscription_method: subFields.subscription_method !== undefined ? subFields.subscription_method : null,
+              subscription_payment_id: subFields.subscription_payment_id !== undefined ? subFields.subscription_payment_id : null,
+              subscription_updated_at: subClock,
               created_at: u.created_at || (existing ? existing.created_at : new Date().toISOString()),
               last_login: finalLastLogin,
               // Marca de invalidação de sessões: só o servidor define (nunca vem do payload recebido)
@@ -36216,6 +36303,7 @@ async function handleNexusRequest(req, res) {
       subscription_expires_at: (isLifetime || isAdmin) ? '2099-12-31T23:59:59Z' : (user.subscription_expires_at || null),
       subscription_method: user.subscription_method || (isAdmin ? 'acesso_admin' : null),
       subscription_payment_id: user.subscription_payment_id || null,
+      subscription_updated_at: user.subscription_updated_at || null,   // instante da última mudança (liberação, pagamento, bloqueio): a tela mostra data e hora reais
       is_admin: isAdmin,
       pix_info: PIX_CONFIG
     };
@@ -36386,6 +36474,7 @@ async function handleNexusRequest(req, res) {
         targetUser.subscription_expires_at = expiresIso;
         targetUser.subscription_method = 'admin_cortesia';
         targetUser.subscription_payment_id = txId;
+        Assinatura.stamp(targetUser);
         saveLocalUsers(localUsers);
 
         if (pool) {
@@ -36418,13 +36507,14 @@ async function handleNexusRequest(req, res) {
           email: targetEmail,
           plan: planName,
           expires_at: expiresIso,
-          granted_by: adminEmail
+          granted_by: adminEmail,
+          granted_at: new Date().toISOString()
         });
 
         res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
         return res.end(JSON.stringify({
           success: true,
-          message: `Tempo grátis liberado com sucesso: ${msgDesc}!`,
+          message: `Tempo grátis liberado com sucesso: ${msgDesc}!${isLifetime ? '' : ' Vence em ' + dataHoraBRServidor(expiresDate) + '.'}`,
           target_email: targetEmail,
           plan: planName,
           expires_at: expiresIso
@@ -36518,6 +36608,7 @@ async function handleNexusRequest(req, res) {
             targetUser.subscription_expires_at = expiresIso;
             targetUser.subscription_method = method;
             targetUser.subscription_payment_id = txId;
+            Assinatura.stamp(targetUser);
             saveLocalUsers(localUsers);
           }
 
@@ -36573,6 +36664,7 @@ async function handleNexusRequest(req, res) {
             targetUser.subscription_plan = plan;
             targetUser.subscription_method = method;
             targetUser.subscription_payment_id = txId;
+            Assinatura.stamp(targetUser);
             saveLocalUsers(localUsers);
           }
 
@@ -36743,7 +36835,7 @@ async function handleNexusRequest(req, res) {
           already_confirmed: !!resultado.jaConfirmado,
           message: resultado.jaConfirmado
             ? `Este pagamento já estava confirmado: nada foi estendido de novo.`
-            : `Pagamento via ${methodLabels[method] || method} reconhecido! Plano ${planoFinal.toUpperCase()} liberado com sucesso para ${targetEmail}.`,
+            : `Pagamento via ${methodLabels[method] || method} reconhecido! Plano ${planoFinal.toUpperCase()} liberado com sucesso para ${targetEmail}. Vence em ${dataHoraBRServidor(expiresIso)}.`,
           target_email: targetEmail,
           plan: planoFinal,
           method: method,
@@ -36813,6 +36905,7 @@ async function handleNexusRequest(req, res) {
         targetUser.subscription_status = 'expired';
         targetUser.subscription_plan = null;
         targetUser.subscription_expires_at = expiredIso;
+        Assinatura.stamp(targetUser);
         saveLocalUsers(localUsers);
 
         if (pool) {
@@ -36911,6 +37004,7 @@ async function handleNexusRequest(req, res) {
           u.subscription_status = 'expired';
           u.subscription_plan = null;
           u.subscription_expires_at = vencidaIso;
+          Assinatura.stamp(u);
           expiradas.push(email);
         }
 
@@ -36990,6 +37084,7 @@ async function handleNexusRequest(req, res) {
           u.subscription_plan = null;
           u.subscription_expires_at = null;
           u.subscription_method = null;
+          Assinatura.stamp(u);
           saveLocalUsers(localUsers);
         }
 
@@ -37141,7 +37236,7 @@ async function handleNexusRequest(req, res) {
         if (r.status !== 200) return sendJson(res, corsHeaders, r.status, { success: false, error: r.error });
         return sendJson(res, corsHeaders, 200, {
           success: true, already_confirmed: !!r.jaConfirmado, expires_at: r.expiresIso, pagamento: Pagamentos.publico(r.registro, Date.now()),
-          message: r.jaConfirmado ? 'Este pagamento já estava confirmado: nada foi estendido de novo.' : `Recebimento de ${Pagamentos.brl(r.registro.valor)} confirmado. Acesso de ${r.registro.nome || r.registro.email} liberado.`
+          message: r.jaConfirmado ? 'Este pagamento já estava confirmado: nada foi estendido de novo.' : `Recebimento de ${Pagamentos.brl(r.registro.valor)} confirmado. Acesso de ${r.registro.nome || r.registro.email} liberado. Vence em ${dataHoraBRServidor(r.expiresIso)}.`
         });
       }
       const admin = exigirAdminDePagamentos(req, res);
@@ -38298,7 +38393,7 @@ async function syncWithRenderCloud() {
       for (const cu of cloudUsers) {
         if (!cu || !cu.email) continue;
         const cleanEmail = cu.email.toLowerCase().trim();
-        const localCheck = await pool.query('SELECT id, name, cpf, phone, birth_date, last_login, password FROM usuarios WHERE LOWER(email) = LOWER($1)', [cleanEmail]);
+        const localCheck = await pool.query('SELECT id, name, cpf, phone, birth_date, last_login, password, trial_started_at, subscription_plan, subscription_status, subscription_expires_at, subscription_method, subscription_payment_id FROM usuarios WHERE LOWER(email) = LOWER($1)', [cleanEmail]);
         if (!localCheck.rows || localCheck.rows.length === 0) {
           // Se o usuário foi cadastrado pela web/nuvem (Render), grava diretamente no SQL Server
           const isRealUser = cu.name && cu.name.trim() !== '' && cleanEmail.includes('@');
@@ -38380,6 +38475,35 @@ async function syncWithRenderCloud() {
               situacao: 'REGULAR',
               origem: 'Cadastro Oficial de Usuário'
             });
+          }
+
+          // Assinatura (liberar, bloquear, pagamento informado... feitos NA NUVEM): vale a mudança de carimbo mais novo (assinatura.js). Antes o PC só
+          // enviava a dele (overwrite a cada 10 s) e nunca importava a da nuvem, então o que o administrador fazia no site durava poucos segundos.
+          try {
+            const subLista = getLocalUsers();
+            const subIdx = subLista.findIndex(m => m && String(m.email || '').toLowerCase().trim() === cleanEmail);
+            const subEspelho = subIdx >= 0 ? subLista[subIdx] : null;
+            const sqlIso = (v) => (v ? getBrasiliaIsoString(v) : null);
+            const noPc = (subEspelho && Number.isFinite(Assinatura.relogioMs(subEspelho))) ? Assinatura.recortar(subEspelho) : {
+              subscription_status: currentU.subscription_status, subscription_plan: currentU.subscription_plan, subscription_expires_at: sqlIso(currentU.subscription_expires_at),
+              subscription_method: currentU.subscription_method, subscription_payment_id: currentU.subscription_payment_id, trial_started_at: sqlIso(currentU.trial_started_at),
+              subscription_updated_at: undefined
+            };
+            const escolhida = Assinatura.pickSubscription(noPc, cu, { noClock: 'existing' });
+            if (escolhida.source === 'incoming' && !Assinatura.mesmaAssinatura(noPc, escolhida.fields)) {
+              const f = escolhida.fields;
+              await pool.query(
+                `UPDATE usuarios SET subscription_status = $1, subscription_plan = $2, subscription_expires_at = $3, subscription_method = $4, subscription_payment_id = $5, trial_started_at = COALESCE($6, trial_started_at) WHERE LOWER(email) = LOWER($7)`,
+                [f.subscription_status || 'trial', f.subscription_plan || null, f.subscription_expires_at ? getBrasiliaSqlString(f.subscription_expires_at) : null, f.subscription_method || null, f.subscription_payment_id || null, f.trial_started_at ? getBrasiliaSqlString(f.trial_started_at) : null, cleanEmail]
+              );
+              if (subEspelho) { Assinatura.aplicar(subEspelho, escolhida); saveLocalUsers(subLista); }
+              console.log(`⚡ [SYNC RENDER -> SQL SERVER] Assinatura de ${cleanEmail} atualizada pela nuvem: ${f.subscription_status || 'trial'}${f.subscription_expires_at ? ' até ' + getBrasiliaSqlString(f.subscription_expires_at) : ''}`);
+            } else if (escolhida.source === 'incoming' && subEspelho && subEspelho.subscription_updated_at !== escolhida.subscription_updated_at) {
+              subEspelho.subscription_updated_at = escolhida.subscription_updated_at;     // mesma assinatura, carimbo mais novo: só adota o carimbo
+              saveLocalUsers(subLista);
+            }
+          } catch (subErr) {
+            console.warn('[SYNC ASSINATURA] Falha ao importar a assinatura da nuvem (tenta de novo no próximo ciclo):', subErr.message);
           }
 
           // Sincronização automática e contínua do last_login do Render para o SQL Server local (Fuso de Brasília)
@@ -38494,8 +38618,25 @@ async function syncWithRenderCloud() {
     if (syncableLocalUsers.length > 0) {
       // O SQL Server não tem a coluna password_changed_at: o relógio da troca de senha vem do espelho local, para a nuvem saber se este hash é mais novo que o dela
       const passwordClockByEmail = new Map(getLocalUsers().filter(m => m && m.email && m.password_changed_at).map(m => [String(m.email).toLowerCase().trim(), m.password_changed_at]));
-      // Todo carimbo de data sai em horário de Brasília (o created_at ficava cru e a nuvem/Supabase o guardavam 3 h mais cedo)
-      const usersToSync = syncableLocalUsers.map(u => BackendUtils.userForCloud(u, getBrasiliaIsoString, passwordClockByEmail.get(String(u.email || '').toLowerCase().trim())));
+      // Todo carimbo de data sai em horário de Brasília (o created_at ficava cru e a nuvem/Supabase o guardavam 3 h mais cedo).
+      // Assinatura: a mudança CARIMBADA do espelho (a mais recente que o PC conhece) vai com o carimbo; a nuvem decide por ele (assinatura.js).
+      const subEspelhoPorEmail = new Map(getLocalUsers().filter(m => m && m.email).map(m => [String(m.email).toLowerCase().trim(), m]));
+      const usersToSync = [];
+      for (const u of syncableLocalUsers) {
+        const chave = String(u.email || '').toLowerCase().trim();
+        const espelho = subEspelhoPorEmail.get(chave);
+        usersToSync.push(BackendUtils.userForCloud(u, getBrasiliaIsoString, passwordClockByEmail.get(chave), espelho));
+        // O UPDATE de uma liberação no SQL pode ter falhado ou ainda não ter chegado: o SQL é reconciliado com a mudança carimbada do espelho
+        if (espelho && Number.isFinite(Assinatura.relogioMs(espelho))) {
+          const noSql = { subscription_status: u.subscription_status, subscription_plan: u.subscription_plan, subscription_expires_at: u.subscription_expires_at ? getBrasiliaIsoString(u.subscription_expires_at) : null, subscription_method: u.subscription_method, subscription_payment_id: u.subscription_payment_id, trial_started_at: u.trial_started_at ? getBrasiliaIsoString(u.trial_started_at) : null };
+          if (!Assinatura.mesmaAssinatura(noSql, espelho)) {
+            await pool.query(
+              `UPDATE usuarios SET subscription_status = $1, subscription_plan = $2, subscription_expires_at = $3, subscription_method = $4, subscription_payment_id = $5, trial_started_at = COALESCE($6, trial_started_at) WHERE LOWER(email) = LOWER($7)`,
+              [espelho.subscription_status || 'trial', espelho.subscription_plan || null, espelho.subscription_expires_at ? getBrasiliaSqlString(espelho.subscription_expires_at) : null, espelho.subscription_method || null, espelho.subscription_payment_id || null, espelho.trial_started_at ? getBrasiliaSqlString(espelho.trial_started_at) : null, chave]
+            ).catch((e) => { console.warn('[SYNC ASSINATURA] Não foi possível reconciliar o SQL Server com a assinatura carimbada:', e.message); });
+          }
+        }
+      }
       saveLocalUsers(BackendUtils.mergeUsersMirror(getLocalUsers(), usersToSync), true);
       await fetchCloud('/api/users?overwrite=true', {
         method: 'POST',

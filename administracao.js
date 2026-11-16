@@ -123,12 +123,12 @@
     var exp = paraMs(u.subscription_expires_at);
     var rotuloPlano = plano === 'anual' ? 'Anual' : (plano === 'cortesia_admin' ? 'Liberado' : 'Mensal');
     if (st === 'active' && exp > agora) {
-      return { chave: 'ativo', rotulo: rotuloPlano, detalhe: 'até ' + dataBR(exp), acesso: true, expira: exp, diasRestantes: Math.ceil((exp - agora) / DIA) };
+      return { chave: 'ativo', rotulo: rotuloPlano, detalhe: 'até ' + dataBR(exp, true), acesso: true, expira: exp, diasRestantes: Math.ceil((exp - agora) / DIA) };
     }
     var pendente = st === 'pending_payment' || (st === 'trial' && String(u.subscription_payment_id || '').indexOf('NEXUS-SUB-') === 0);
     if (pendente) return { chave: 'pendente', rotulo: 'Aguardando pagamento', detalhe: 'Pagamento informado', acesso: false, expira: null };
     if (st === 'expired' || (exp > 0 && exp <= agora)) {
-      return { chave: 'expirado', rotulo: 'Expirado', detalhe: exp > 0 ? 'desde ' + dataBR(exp) : 'Exige pagamento', acesso: false, expira: exp > 0 ? exp : null };
+      return { chave: 'expirado', rotulo: 'Expirado', detalhe: exp > 0 ? 'desde ' + dataBR(exp, true) : 'Exige pagamento', acesso: false, expira: exp > 0 ? exp : null };
     }
     var ini = paraMs(u.trial_started_at);
     if (!isNaN(ini) && agora - ini >= DIA) return { chave: 'teste_fim', rotulo: 'Teste encerrado', detalhe: 'Exige pagamento', acesso: false, expira: null };
@@ -265,7 +265,7 @@
     var cab = ['Nome', 'E-mail', 'CPF', 'Telefone', 'Nascimento', 'Perfil', 'Conta', 'Assinatura', 'Vencimento', 'Último acesso', 'Cadastro', 'Dispositivo', 'Movimentações', 'Contas'];
     var linhas = [cab].concat(regs.map(function (r) {
       return [r.nome, r.email, r.cpfFmt, r.telFmt, r.nasc, r.admin ? 'Administrador' : 'Usuário', r.ativo ? 'Ativa' : 'Bloqueada',
-        ROTULO_ASSINATURA[r.ass.chave] + (r.ass.chave === 'ativo' ? ' (' + r.ass.rotulo + ')' : ''), r.ass.expira ? dataBR(r.ass.expira) : '',
+        ROTULO_ASSINATURA[r.ass.chave] + (r.ass.chave === 'ativo' ? ' (' + r.ass.rotulo + ')' : ''), r.ass.expira ? dataBR(r.ass.expira, true) : '',
         isNaN(r.ultimoLogin) ? '' : dataBR(r.ultimoLogin, true), isNaN(r.criadoEm) ? '' : dataBR(r.criadoEm), r.disp,
         r.uso ? r.uso.mov : '', r.uso ? r.uso.contas : ''];
     }));
@@ -694,7 +694,7 @@
           linhaDl('Último acesso', isNaN(r.ultimoLogin) ? 'Nunca acessou' : esc(dataBR(r.ultimoLogin, true)) + ' (' + esc(relativo(r.ultimoLogin, m.agora)) + ')') +
           linhaDl('Cadastrado em', isNaN(r.criadoEm) ? '' : esc(dataBR(r.criadoEm, true))) + (r.trocarSenha ? linhaDl('Senha', 'Troca obrigatória no próximo acesso') : '') + '</dl></section>' +
         '<section><h4>Assinatura</h4><dl class="adm-dl">' + linhaDl('Situação', esc(ROTULO_ASSINATURA[r.ass.chave]) + (r.ass.chave === 'ativo' ? ' · ' + esc(r.ass.rotulo) : '')) + linhaDl('Detalhe', esc(r.ass.detalhe)) +
-          linhaDl('Vencimento', r.ass.expira ? esc(dataBR(r.ass.expira)) : '') + linhaDl('Forma de pagamento', esc(r.metodo)) + linhaDl('Protocolo', esc(r.protocolo)) + '</dl></section>' +
+          linhaDl('Vencimento', r.ass.expira ? esc(dataBR(r.ass.expira, true)) : '') + linhaDl('Forma de pagamento', esc(r.metodo)) + linhaDl('Protocolo', esc(r.protocolo)) + '</dl></section>' +
         '<section><h4>Uso do sistema</h4>' + (u
           ? '<div class="adm-uso"><div><b>' + u.mov + '</b><span>movimentações</span></div><div><b>' + u.contas + '</b><span>contas e cartões</span></div><div><b>' + u.orc + '</b><span>orçamentos</span></div><div><b>' + u.metas + '</b><span>metas</span></div></div>' +
             '<p class="adm-nota">' + (u.ultimaMov ? 'Última movimentação em ' + esc(dataBR(u.ultimaMov)) + '.' : 'Ainda não há movimentações.') + '</p>'

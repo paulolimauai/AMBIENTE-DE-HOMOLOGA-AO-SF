@@ -190,3 +190,29 @@ test('userForCloud: TODOS os carimbos de data passam pela conversão de Brasíli
   assert.equal(vazio.created_at, null); assert.equal(vazio.last_login, undefined);
   assert.equal(U.userForCloud({ password_changed_at: 'X' }, conv, 'Y').password_changed_at, 'X', 'o que o SQL já trouxe não é sobrescrito');
 });
+
+test('userForCloud: mudança de assinatura CARIMBADA no espelho vai à nuvem (com o carimbo), mesmo que o SQL ainda esteja atrasado', () => {
+  const conv = (v) => v;
+  const sql = { email: 'a@a.com', subscription_status: 'expired', subscription_plan: null, subscription_expires_at: '2026-11-01T10:00:00-03:00' };
+  const espelho = { email: 'a@a.com', subscription_status: 'active', subscription_plan: 'cortesia_admin', subscription_expires_at: '2026-12-16T02:00:18-03:00', subscription_method: 'admin_cortesia', subscription_payment_id: 'ADMIN-GRANT-1', subscription_updated_at: '2026-11-16T05:00:18.000Z' };
+  const r = U.userForCloud(sql, conv, undefined, espelho);
+  assert.equal(r.subscription_status, 'active'); assert.equal(r.subscription_plan, 'cortesia_admin'); assert.equal(r.subscription_updated_at, '2026-11-16T05:00:18.000Z');
+  assert.equal(r.subscription_expires_at, '2026-12-16T02:00:18-03:00');
+  // espelho SEM carimbo: vale o SQL, como sempre
+  const s = U.userForCloud(sql, conv, undefined, { email: 'a@a.com', subscription_status: 'active' });
+  assert.equal(s.subscription_status, 'expired'); assert.equal(s.subscription_updated_at, undefined);
+});
+
+test('mergeUsersMirror: o carimbo da assinatura sobrevive e uma mudança carimbada não é desfeita por uma linha atrasada do SQL', () => {
+  const espelho = [{ email: 'a@a.com', password: 'scrypt:x', subscription_status: 'active', subscription_plan: 'cortesia_admin', subscription_expires_at: '2026-12-16T02:00:18-03:00', subscription_updated_at: '2026-11-16T05:00:18.000Z' }];
+  const linhaAtrasada = [{ email: 'a@a.com', subscription_status: 'expired', subscription_plan: null, subscription_expires_at: '2026-11-01T10:00:00-03:00' }];
+  const r = U.mergeUsersMirror(espelho, linhaAtrasada)[0];
+  assert.equal(r.subscription_status, 'active', 'o SQL ainda não recebeu o UPDATE: a mudança carimbada fica');
+  assert.equal(r.subscription_plan, 'cortesia_admin'); assert.equal(r.subscription_updated_at, '2026-11-16T05:00:18.000Z'); assert.equal(r.password, 'scrypt:x');
+  // sem carimbo no espelho: o SQL vence (fonte soberana), como sempre
+  const semCarimbo = U.mergeUsersMirror([{ email: 'a@a.com', password: 'scrypt:x', subscription_status: 'active' }], linhaAtrasada)[0];
+  assert.equal(semCarimbo.subscription_status, 'expired');
+  // linha que já traz carimbo (veio da nuvem): vale o que ela trouxe
+  const comCarimbo = U.mergeUsersMirror(espelho, [{ email: 'a@a.com', subscription_status: 'expired', subscription_updated_at: '2026-11-16T06:00:00.000Z' }])[0];
+  assert.equal(comCarimbo.subscription_status, 'expired'); assert.equal(comCarimbo.subscription_updated_at, '2026-11-16T06:00:00.000Z');
+});
