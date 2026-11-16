@@ -519,6 +519,30 @@ test('a página principal sai comprimida e idêntica nas duas primeiras resposta
   assert.ok(ms < 400, 'segunda resposta demorou ' + ms.toFixed(0) + ' ms (compressão não está em cache?)');
 });
 
+test('site inicial: "/" sem sessão abre o /inicio antes do login; o /inicio mostra o preço do servidor e os arquivos do site são servidos', async () => {
+  const raiz = await (await fetch('http://127.0.0.1:' + porta + '/')).text();
+  assert.ok(raiz.includes("window.location.replace('/inicio')"), 'sem sessão, "/" deveria ir ao site inicial');
+  assert.ok(!raiz.includes("window.location.replace('/login.html');}else"), 'o portão não deveria mais ir direto ao login');
+
+  const site = await api('GET', '/inicio');
+  assert.equal(site.status, 200);
+  assert.match(site.headers.get('content-type'), /text\/html/);
+  assert.ok(!site.texto.includes('%%'), 'sobrou marcador sem trocar no site inicial');
+  assert.ok(site.texto.includes('R$ 18,00'), 'o preço do plano deveria vir do servidor');
+  assert.match(site.texto, /href="\/login\.html#criar"/);
+  assert.match(site.texto, /href="\/login\.html"/);
+  assert.match(site.texto, /site-inicial\.css\?v=\d+/);
+  assert.match(site.texto, /site-inicial\.js\?v=\d+/);
+  for (const apelido of ['/site', '/site-inicial.html']) assert.equal((await api('GET', apelido)).status, 200, apelido);
+
+  const css = await api('GET', '/site-inicial.css');
+  assert.equal(css.status, 200);
+  assert.match(css.headers.get('content-type'), /text\/css/);
+  const js = await api('GET', '/site-inicial.js');
+  assert.equal(js.status, 200);
+  assert.match(js.headers.get('content-type'), /javascript/);
+});
+
 test('arquivo de dados ilegível vai para a quarentena e o backup é usado: as outras contas não são apagadas', async () => {
   const ana = (await login('ana@teste.nexus', 'Ana@12345')).token;
   const dadosBia = { categories: [], accounts: [], transactions: [{ id: 1, desc: 'Compra da Bia', val: 10, type: 'out', date: '2026-11-08', cat: 'X', acc: 'Y', status: 'Pago' }], updated_at: '2026-11-08T10:00:00.000Z' };

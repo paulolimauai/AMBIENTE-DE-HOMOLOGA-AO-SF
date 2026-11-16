@@ -1230,6 +1230,8 @@ button,a,label{touch-action:manipulation}
   var us=lembrado();
   if(us){$('email').value=us;$('lembrar').checked=true}
   setModo('entrar',true);
+  /* vindo do site inicial (/inicio): "Criar conta" já abre na aba de cadastro (/login.html#criar) */
+  if(/^#criar$/i.test(location.hash)||/[?&]aba=criar(&|$)/.test(location.search))setModo('criar');
   if(matchMedia('(hover:hover) and (pointer:fine)').matches)(us?$('senha'):$('email')).focus();
 })();
 </script>

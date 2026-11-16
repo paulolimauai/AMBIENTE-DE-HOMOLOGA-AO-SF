@@ -37763,6 +37763,32 @@ async function handleNexusRequest(req, res) {
     }
   }
 
+  // Site inicial (página pública, antes do login): site-inicial.html + .css + .js. O preço do plano entra pelos mesmos valores do paywall
+  // (SUBSCRIPTION_MONTHLY_*), então muda sozinho quando o administrador altera o preço. Cada preço tem sua cópia em memória.
+  if (pathname === '/inicio' || pathname === '/site' || pathname === '/site-inicial.html') {
+    const sitePath = path.join(__dirname, 'site-inicial.html');
+    if (fs.existsSync(sitePath)) {
+      const stat = fs.statSync(sitePath);
+      // ?v= do CSS e do JS = data de modificação do arquivo: quem edita o site nunca fica preso na cópia antiga do navegador
+      const versaoDe = (nome) => { try { return String(Math.floor(fs.statSync(path.join(__dirname, nome)).mtimeMs)); } catch (e) { return '0'; } };
+      const vCss = versaoDe('site-inicial.css');
+      const vJs = versaoDe('site-inicial.js');
+      const siteKey = sitePath + '|' + SUBSCRIPTION_MONTHLY_LABEL + '|' + vCss + '|' + vJs;
+      const cached = fileCache.get(siteKey);
+      let siteHtml = cached && cached.mtimeMs === stat.mtimeMs ? cached.body : null;
+      if (!siteHtml) {
+        siteHtml = Buffer.from(fs.readFileSync(sitePath, 'utf8')
+          .replace(/%%V_CSS%%/g, vCss)
+          .replace(/%%V_JS%%/g, vJs)
+          .replace(/%%PRECO_LABEL%%/g, SUBSCRIPTION_MONTHLY_LABEL)
+          .replace(/%%PRECO_INT%%/g, SUBSCRIPTION_MONTHLY_INT)
+          .replace(/%%PRECO_CENTS%%/g, SUBSCRIPTION_MONTHLY_CENTS), 'utf8');
+        fileCache.set(siteKey, { mtimeMs: stat.mtimeMs, body: siteHtml });
+      }
+      return sendTextResponse(res, 200, siteHtml, 'text/html; charset=utf-8', { ...corsHeaders, 'Cache-Control': 'no-cache, must-revalidate' });
+    }
+  }
+
   if (pathname === '/glpi' || pathname === '/glpi.html' || pathname === '/glpi-enterprise.html') {
     const glpiPath = path.join(__dirname, 'glpi-enterprise.html');
     if (fs.existsSync(glpiPath)) {
@@ -37807,7 +37833,9 @@ async function handleNexusRequest(req, res) {
     '/administracao.css': 'text/css',
     '/administracao.js': 'application/javascript; charset=utf-8',
     '/pagamentos-admin.css': 'text/css',
-    '/pagamentos-admin.js': 'application/javascript; charset=utf-8'
+    '/pagamentos-admin.js': 'application/javascript; charset=utf-8',
+    '/site-inicial.css': 'text/css',
+    '/site-inicial.js': 'application/javascript; charset=utf-8'
   };
   let staticFile = null;
   if (STATIC_EXACT_FILES[pathname]) {
@@ -37856,8 +37884,10 @@ async function handleNexusRequest(req, res) {
     return res.end(JSON.stringify({ error: 'Arquivo não encontrado.' }));
   }
 
+  // Quem chega em "/" sem sessão vê primeiro o site inicial (/inicio); dali segue para o login. NEXUS_SITE_INICIAL=0 volta a ir direto ao login.
+  const rootSemSessao = process.env.NEXUS_SITE_INICIAL === '0' ? '/login.html' : '/inicio';
   const rootEntryGate = pathname === '/'
-    ? `<style>html.root-entry-pending body{visibility:hidden!important;}</style><script>(function(){var root=document.documentElement;root.classList.add('root-entry-pending');try{var active=sessionStorage.getItem('nexus_session_active')==='true';var session=localStorage.getItem('nexus_session')||localStorage.getItem('nexus_cached_user');var v5=localStorage.getItem('nexus_login_v5')==='true';if(!active||!session||!v5){window.location.replace('/login.html');}else{root.classList.remove('root-entry-pending');}}catch(_){window.location.replace('/login.html');}window.addEventListener('pageshow',function(ev){if(!ev.persisted)return;try{if(sessionStorage.getItem('nexus_session_active')!=='true'||!localStorage.getItem('nexus_session')&&!localStorage.getItem('nexus_cached_user')){root.classList.add('nexus-leaving');window.location.replace('/login.html');}}catch(_){}});})();</script>`
+    ? `<style>html.root-entry-pending body{visibility:hidden!important;}</style><script>(function(){var root=document.documentElement;root.classList.add('root-entry-pending');try{var active=sessionStorage.getItem('nexus_session_active')==='true';var session=localStorage.getItem('nexus_session')||localStorage.getItem('nexus_cached_user');var v5=localStorage.getItem('nexus_login_v5')==='true';if(!active||!session||!v5){window.location.replace('${rootSemSessao}');}else{root.classList.remove('root-entry-pending');}}catch(_){window.location.replace('${rootSemSessao}');}window.addEventListener('pageshow',function(ev){if(!ev.persisted)return;try{if(sessionStorage.getItem('nexus_session_active')!=='true'||!localStorage.getItem('nexus_session')&&!localStorage.getItem('nexus_cached_user')){root.classList.add('nexus-leaving');window.location.replace('/login.html');}}catch(_){}});})();</script>`
     : '';
   // As duas versões da página (com e sem o portão de entrada) são montadas UMA vez como Buffer: assim a compressão fica em cache (compressionCache)
   const htmlVariant = rootEntryGate ? 'root' : 'plain';
