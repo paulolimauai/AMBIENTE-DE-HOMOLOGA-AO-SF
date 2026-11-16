@@ -71,7 +71,8 @@ ul{list-style:none;padding:0}
 .bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
 .bg::after{content:"";position:absolute;inset:0;background:radial-gradient(120% 100% at 50% 30%,transparent 55%,rgba(0,0,0,.5))}
 :root[data-mode="light"] .bg::after{background:radial-gradient(120% 100% at 50% 30%,transparent 60%,rgba(30,45,110,.12))}
-.bg i{position:absolute;display:block;border-radius:50%;filter:blur(5rem);animation:drift 30s ease-in-out infinite alternate;will-change:transform}
+.bg>div{position:absolute;inset:0;transition:opacity .6s ease,visibility 0s}
+.bg-a i{position:absolute;display:block;border-radius:50%;filter:blur(5rem);animation:drift 30s ease-in-out infinite alternate;will-change:transform}
 .bg .o1{width:clamp(18rem,52vw,70rem);aspect-ratio:1;left:-14vw;top:-18vw;background:var(--glow-a);opacity:calc(.32 * var(--orb,1))}
 .bg .o2{width:clamp(16rem,46vw,62rem);aspect-ratio:1;right:-12vw;top:30vh;background:var(--glow-b);opacity:calc(.34 * var(--orb,1));animation-duration:36s}
 .bg .o3{width:clamp(12rem,30vw,40rem);aspect-ratio:1;left:30vw;bottom:-14vw;background:var(--brand);opacity:calc(.12 * var(--orb,1));animation-duration:42s}
@@ -79,6 +80,37 @@ ul{list-style:none;padding:0}
 .bg .gr{position:absolute;inset:0;background-image:linear-gradient(var(--tint) 1px,transparent 1px),linear-gradient(90deg,var(--tint) 1px,transparent 1px);background-size:3.5rem 3.5rem;
   -webkit-mask-image:radial-gradient(70% 60% at 50% 20%,#000,transparent);mask-image:radial-gradient(70% 60% at 50% 20%,#000,transparent)}
 @keyframes drift{to{transform:translate3d(4vw,3vw,0) scale(1.08)}}
+
+/* ---------- fundo de vidro (opção "Fundo" do Personalizar; data-bg="vidro" no <html>) ----------
+   Mesma cena do login: esferas de cor com placas de vidro fosco na frente. No login só há um cartão sobre ela; aqui há texto solto por cima,
+   então as esferas ficam bem mais escuras (o script de tema iguala a luminância de cada paleta: --vd* no escuro, --vl* no claro) e as
+   placas clareiam pouco, para o texto manter contraste. A camada que não está em uso fica escondida (visibility), para não gastar
+   desenho com desfoque e vidro que ninguém vê. */
+html[data-bg="vidro"] .bg-a,html:not([data-bg="vidro"]) .bg-v{opacity:0;visibility:hidden;transition:opacity .6s ease,visibility 0s .6s}
+.bg-v i,.bg-v b{position:absolute;display:block}
+.bg-v i{border-radius:50%;animation:drift 26s ease-in-out infinite alternate}
+.bg-v .s1{width:clamp(14rem,36vw,60rem);aspect-ratio:1;left:8vw;top:8vh;background:radial-gradient(circle at 30% 28%,var(--vd1),var(--vd2) 52%,var(--vd3))}
+.bg-v .s2{width:clamp(12rem,30vw,52rem);aspect-ratio:1;right:5vw;bottom:6vh;background:radial-gradient(circle at 30% 28%,var(--vd1),var(--vd3));animation-duration:32s}
+.bg-v .s3{width:clamp(8rem,16vw,28rem);aspect-ratio:1;left:56vw;top:6vh;background:radial-gradient(circle at 30% 28%,var(--vd1),var(--vd2));animation-duration:22s}
+.bg-v b{border-radius:2rem;background:linear-gradient(135deg,rgba(255,255,255,.05),rgba(255,255,255,.01));border:1px solid rgba(255,255,255,.1);
+  box-shadow:0 1.5rem 3rem rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.14);-webkit-backdrop-filter:blur(1.6rem);backdrop-filter:blur(1.6rem)}
+/* o degradê do título (accent -> brand) fica claro demais sobre a esfera da mesma cor: no vidro ele usa só tons claros */
+html[data-bg="vidro"] h1 em{background-image:linear-gradient(100deg,var(--accent),color-mix(in srgb,var(--accent) 55%,#fff))}
+.bg-v .p1{width:clamp(12rem,32vw,50rem);height:60vh;left:2vw;top:20vh;transform:rotate(-8deg)}
+.bg-v .p2{width:clamp(10rem,26vw,42rem);height:44vh;right:7vw;top:26vh;transform:rotate(9deg)}
+.bg-v .p3{width:clamp(8rem,18vw,30rem);height:24vh;left:44vw;bottom:4vh;transform:rotate(-4deg)}
+/* modo claro: esferas claras (o texto também é escuro) e placas mais brancas */
+:root[data-mode="light"] .bg-v .s1{background:radial-gradient(circle at 30% 28%,var(--vl1),var(--vl2) 52%,var(--vl3))}
+:root[data-mode="light"] .bg-v .s2{background:radial-gradient(circle at 30% 28%,var(--vl1),var(--vl3))}
+:root[data-mode="light"] .bg-v .s3{background:radial-gradient(circle at 30% 28%,var(--vl1),var(--vl2))}
+:root[data-mode="light"] .bg-v b{background:linear-gradient(135deg,rgba(255,255,255,.7),rgba(255,255,255,.28));border-color:rgba(255,255,255,.85);
+  box-shadow:0 1.5rem 3rem rgba(30,45,110,.07),inset 0 1px 0 rgba(255,255,255,.9)}
+/* os cartões do site viram vidro também (os que já ficam dentro de um painel de vidro não repetem o desfoque) */
+html[data-bg="vidro"] .kicker{color:color-mix(in srgb,var(--accent) 65%,#fff)}
+html[data-bg="vidro"] .card{background:linear-gradient(135deg,rgba(255,255,255,.10),rgba(255,255,255,.03)),rgba(8,12,30,.7);border-color:rgba(255,255,255,.18);
+  -webkit-backdrop-filter:blur(1.4rem) saturate(160%);backdrop-filter:blur(1.4rem) saturate(160%)}
+:root[data-mode="light"][data-bg="vidro"] .card{background:linear-gradient(135deg,rgba(255,255,255,.8),rgba(255,255,255,.52));border-color:rgba(255,255,255,.9)}
+html[data-bg="vidro"] .glass .card{-webkit-backdrop-filter:none;backdrop-filter:none}
 
 /* ---------- topo ---------- */
 .top{position:fixed;inset:0 0 auto 0;z-index:40;border-bottom:1px solid transparent;transition:background .25s,border-color .25s;
@@ -123,6 +155,7 @@ ul{list-style:none;padding:0}
 .sw-c{position:relative;overflow:hidden;background:conic-gradient(#ff5d5d,#ffd04a,#5fe08a,#3ac8ff,#7a5cff,#ff5de0,#ff5d5d)}
 .sw-c input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;border:0;padding:0}
 .chips{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem}
+.chips.c2{grid-template-columns:repeat(2,1fr)}
 .chip{height:2.75rem;border-radius:.6rem;cursor:pointer;font:600 .85rem var(--sans);color:var(--soft);background:var(--tint);border:1px solid var(--card-line);transition:background .2s,color .2s,border-color .2s}
 .chip:hover{color:var(--white);background:var(--tint2)}
 .chip[aria-pressed="true"]{color:var(--white);background:color-mix(in srgb,var(--brand) 28%,transparent);border-color:var(--brand)}

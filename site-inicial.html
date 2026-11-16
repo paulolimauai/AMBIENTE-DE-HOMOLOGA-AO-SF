@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR" data-mode="dark">
+<html lang="pt-BR" data-mode="dark" data-bg="padrao">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -18,7 +18,8 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%236f94ff'/%3E%3Cstop offset='1' stop-color='%232f55d4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Ctext x='32' y='45' font-family='Georgia,serif' font-size='38' font-weight='700' text-anchor='middle' fill='%23ffffff'%3EN%3C/text%3E%3C/svg%3E">
 <script>
 /* Tema antes do primeiro desenho. Mesmas paletas e mesmas chaves do login e do app (nexus:cores, nexus-modo):
-   a cor e a aparência escolhidas aqui valem também depois do login. */
+   a cor e a aparência escolhidas aqui valem também depois do login. O fundo (padrão ou vidro) é só do site e fica
+   em nexus-site-fundo, chave própria: o login regrava nexus-fundo a cada visita e mudaria o site sem o visitante pedir. */
 (function(){
   var r=document.documentElement;
   r.className+=' js';
@@ -41,6 +42,14 @@
   function lum(c){var v=c.map(function(x){x/=255;return x<=.03928?x/12.92:Math.pow((x+.055)/1.055,2.4)});return .2126*v[0]+.7152*v[1]+.0722*v[2]}
   function hexHs(v){var n=parseInt(v.slice(1),16),R=(n>>16&255)/255,G=(n>>8&255)/255,B=(n&255)/255,mx=Math.max(R,G,B),mn=Math.min(R,G,B),d=mx-mn,h=0;if(d){if(mx===R)h=((G-B)/d)%6;else if(mx===G)h=(B-R)/d+2;else h=(R-G)/d+4;h=Math.round(h*60+360)%360}var l=(mx+mn)/2,sa=d?d/(1-Math.abs(2*l-1)):0;return{h:h,s:Math.round(sa*100)}}
   function tc(){setTimeout(function(){var m=document.querySelector('meta[name="theme-color"]');if(!m||!document.body)return;var c=getComputedStyle(document.body).backgroundColor;if(/^rgb/.test(c))m.content=c},650)}
+  /* Cores das esferas do fundo de vidro: o texto do site fica solto por cima delas, então cada paleta é ajustada para a mesma luminância
+     (HSL com a mesma luminosidade não tem o mesmo brilho: o verde-limão do Neon é muito mais claro que o azul). --vd* no escuro, --vl* no claro. */
+  function achar(h,sa,alvo){var lo=6,hi=94,m,i;for(i=0;i<12;i++){m=(lo+hi)/2;if(lum(hsl2rgb(h,sa,m))<alvo)lo=m;else hi=m}return Math.round((lo+hi)*5)/10}
+  function pintarVidro(st,h0,h2,sa){
+    var c=function(h,a){return 'hsl('+h+' '+sa+'% '+achar(h,sa,a)+'%)'};
+    st.setProperty('--vd1',c(h0,.024));st.setProperty('--vd2',c(h0,.015));st.setProperty('--vd3',c(h2,.018));
+    st.setProperty('--vl1',c(h0,.9));st.setProperty('--vl2',c(h0,.82));st.setProperty('--vl3',c(h2,.78));
+  }
   /* Cor do botão: o texto precisa de 4,6:1 sobre TODO o gradiente do botão. Tenta o texto branco no tom mais claro em que ele passa; se a cor for
      clara demais para isso (amarelo, verde, ciano), usa texto escuro. Vale para botão, selo, número de passo e ícone (--btn-a, --btn-b, --on-brand). */
   function botao(h,sa){
@@ -58,6 +67,7 @@
     st.setProperty('--orb',String(Math.max(.5,Math.min(1,.26/lum(hsl2rgb(h0,sa*.77,57))))));
     var bt=botao(h0,sa);
     st.setProperty('--btn-a','hsl('+h0+' '+sa+'% '+bt.a+'%)');st.setProperty('--btn-b','hsl('+h0+' '+sa+'% '+bt.b+'%)');st.setProperty('--on-brand',bt.t);
+    pintarVidro(st,h0,h2,sa);
     tc();
   }
   function avisar(){if(T.onChange)T.onChange()}
@@ -81,12 +91,20 @@
     tc();avisar();
   }
   if(mq.addEventListener)mq.addEventListener('change',function(){if(modo==='auto')setModo('auto')});
-  var T=window.NxTema={PALETAS:P,PADRAO:PADRAO,escolher:escolher,personalizada:personalizada,setModo:setModo,corAtual:function(){return cor},modo:function(){return modo},onChange:null};
+  var FUNDOS=[['padrao','Padrão'],['vidro','Vidro']],fundo='padrao';
+  function setFundo(f,salvar){
+    if(!FUNDOS.some(function(x){return x[0]===f}))f='padrao';
+    fundo=f;r.setAttribute('data-bg',f);
+    if(salvar)s('nexus-site-fundo',f);
+    avisar();
+  }
+  var T=window.NxTema={PALETAS:P,PADRAO:PADRAO,FUNDOS:FUNDOS,escolher:escolher,personalizada:personalizada,setModo:setModo,setFundo:setFundo,corAtual:function(){return cor},modo:function(){return modo},fundo:function(){return fundo},onChange:null};
   var salvo=null;try{salvo=JSON.parse(g('nexus:cores'))}catch(e){}
   if(salvo&&salvo.id==='custom'&&/^#[0-9a-f]{6}$/i.test(salvo.hex||''))personalizada(salvo.hex,false);
   else if(salvo&&P.some(function(p){return p.id===salvo.id}))escolher(salvo.id,false);
   else escolher(PADRAO,false);
   setModo(g('nexus-modo')||'auto',false);
+  setFundo(g('nexus-site-fundo')||'padrao',false);
 })();
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -97,7 +115,10 @@
 <body>
 <a class="skip" href="#conteudo">Ir para o conteúdo</a>
 
-<div class="bg" aria-hidden="true"><i class="o1"></i><i class="o2"></i><i class="o3"></i><span class="gr"></span></div>
+<div class="bg" aria-hidden="true">
+  <div class="bg-a"><i class="o1"></i><i class="o2"></i><i class="o3"></i><span class="gr"></span></div>
+  <div class="bg-v"><i class="s1"></i><i class="s2"></i><i class="s3"></i><b class="p1"></b><b class="p2"></b><b class="p3"></b></div>
+</div>
 
 <header class="top" id="topo">
   <div class="wrap top-in">
@@ -113,12 +134,13 @@
     </nav>
     <div class="top-act">
       <div class="cfg">
-        <button class="cfg-btn" id="cfg-btn" type="button" aria-expanded="false" aria-controls="cfg-pop" aria-label="Personalizar cores e aparência">
+        <button class="cfg-btn" id="cfg-btn" type="button" aria-expanded="false" aria-controls="cfg-pop" aria-label="Personalizar cores, fundo e aparência">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.8-.8 1.8-1.7 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2 0-.9.7-1.6 1.6-1.6H16a5 5 0 0 0 5-5c0-4-4-7.3-9-7.3Z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10" cy="7" r="1"/><circle cx="15" cy="7.5" r="1"/></svg>
           <span class="lb">Personalizar</span>
         </button>
         <div class="cfg-pop" id="cfg-pop" hidden>
           <div class="grp"><span>Aparência</span><div class="chips" data-modos role="group" aria-label="Aparência"></div></div>
+          <div class="grp"><span>Fundo</span><div class="chips c2" data-fundos role="group" aria-label="Fundo do site"></div></div>
           <div class="grp"><span>Cor de destaque</span><div class="sws" data-cores role="group" aria-label="Paleta de cores"></div></div>
           <button class="chip" id="cfg-reset" type="button" style="width:100%;margin-top:1.1rem">Restaurar padrão</button>
         </div>
@@ -145,6 +167,7 @@
     <a class="btn gho lg" data-cta="entrar" href="/login.html"><span class="t">Entrar</span></a>
   </div>
   <div class="grp"><span>Aparência</span><div class="chips" data-modos role="group" aria-label="Aparência"></div></div>
+  <div class="grp" style="margin-top:.8rem"><span>Fundo</span><div class="chips c2" data-fundos role="group" aria-label="Fundo do site"></div></div>
   <div class="grp" style="margin-top:.8rem"><span>Cor de destaque</span><div class="sws" data-cores role="group" aria-label="Paleta de cores"></div></div>
 </div>
 
@@ -335,8 +358,9 @@
         <div>
           <span class="kicker">Do seu jeito</span>
           <h2 id="h-pers">O painel com a sua cara</h2>
-          <p class="lead">Escolha uma das 10 paletas, ou a sua própria cor, e o modo claro, escuro ou automático. Experimente aqui: a escolha vale também para o login e para o painel, e fica salva neste navegador.</p>
+          <p class="lead">Escolha uma das 10 paletas, ou a sua própria cor, o modo claro, escuro ou automático e o fundo do site, padrão ou de vidro. Experimente aqui: a cor e a aparência valem também para o login e para o painel, e as escolhas ficam salvas neste navegador.</p>
           <div class="grp"><span>Aparência</span><div class="chips" data-modos role="group" aria-label="Aparência"></div></div>
+          <div class="grp"><span>Fundo</span><div class="chips c2" data-fundos role="group" aria-label="Fundo do site"></div></div>
           <div class="grp"><span>Cor de destaque</span><div class="sws" data-cores role="group" aria-label="Paleta de cores"></div></div>
         </div>
         <div class="pers-info">
@@ -420,7 +444,7 @@
         <details name="faq"><summary>Como falo com o suporte?</summary><p>Pela Central de Serviços: abra um chamado, escolha a categoria e acompanhe pelo protocolo. O prazo de atendimento é de 5 dias úteis.</p></details>
         <details name="faq"><summary>Funciona no celular?</summary><p>Sim. O layout se adapta a celular, tablet, computador e telas 4K, e a escala da tela pode ser ajustada em Minha Conta.</p></details>
         <details name="faq"><summary>Alguém vê os meus lançamentos?</summary><p>Cada conta acessa somente os próprios lançamentos, e o servidor confere o acesso em cada requisição. O acesso administrativo é restrito a contas com perfil de administrador, e as operações ficam registradas em logs.</p></details>
-        <details name="faq"><summary>Posso mudar as cores do sistema?</summary><p>Sim. São 10 paletas, mais uma cor personalizada, nos modos claro, escuro ou automático. A escolha vale para este site, para o login e para o painel.</p></details>
+        <details name="faq"><summary>Posso mudar as cores do sistema?</summary><p>Sim. São 10 paletas, mais uma cor personalizada, nos modos claro, escuro ou automático. A cor e a aparência valem para este site, para o login e para o painel. O site ainda tem a opção de fundo de vidro.</p></details>
       </div>
     </div>
   </section>

@@ -196,9 +196,19 @@
       box.appendChild(b);
     });
   }
+  function montarFundos(box) {
+    if (!T || !box) return;
+    T.FUNDOS.forEach(function (f) {
+      var b = D.createElement('button');
+      b.type = 'button'; b.className = 'chip'; b.dataset.f = f[0]; b.textContent = f[1]; b.setAttribute('aria-pressed', 'false');
+      b.addEventListener('click', function () { T.setFundo(f[0], true); });
+      box.appendChild(b);
+    });
+  }
   function sincronizarControles() {
     if (!T) return;
-    var cor = T.corAtual(), modo = T.modo();
+    var cor = T.corAtual(), modo = T.modo(), fundo = T.fundo();
+    $$('.chip[data-f]').forEach(function (c) { c.setAttribute('aria-pressed', String(c.dataset.f === fundo)); });
     $$('.sw[data-id]').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.id === cor.id)); });
     $$('.sw-c').forEach(function (l) {
       l.setAttribute('aria-pressed', String(cor.id === 'custom'));
@@ -209,6 +219,7 @@
   function iniciarPersonalizar() {
     $$('[data-cores]').forEach(montarCores);
     $$('[data-modos]').forEach(montarModos);
+    $$('[data-fundos]').forEach(montarFundos);
     if (T) { T.onChange = sincronizarControles; sincronizarControles(); }
     var btn = $('#cfg-btn'), pop = $('#cfg-pop');
     if (!btn || !pop) return;
@@ -218,7 +229,7 @@
     D.addEventListener('click', function () { abrir(false); });
     D.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !pop.hidden) { abrir(false); btn.focus(); } });
     var reset = $('#cfg-reset');
-    if (reset && T) reset.addEventListener('click', function () { T.escolher(T.PADRAO, true); T.setModo('auto', true); });
+    if (reset && T) reset.addEventListener('click', function () { T.escolher(T.PADRAO, true); T.setModo('auto', true); T.setFundo('padrao', true); });
   }
 
   /* ---------- topo, menu do celular e seção ativa ---------- */
