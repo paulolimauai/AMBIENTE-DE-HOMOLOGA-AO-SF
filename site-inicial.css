@@ -139,6 +139,11 @@ html[data-bg="vidro"] .glass .card{-webkit-backdrop-filter:none;backdrop-filter:
 .btn:active{transform:translateY(1px)}
 .btn.lg{height:3.3rem;padding:0 1.7rem;font-size:1rem;border-radius:.9rem}
 @media (max-width:640px){.hide-sm{display:none!important}}
+/* "Abrir chamado" no topo, junto de Entrar e Criar conta. Medido de 320 a 2560px: o texto cabe de 760 a 1279px e de 1360px para cima;
+   nas faixas apertadas (561-759px e 1280-1359px, onde os 7 links ocupam o centro) fica só o ícone; abaixo de 561px sai do topo e vai para o menu. */
+.btn-chamado{padding:0 1rem}
+@media (max-width:560px){.btn-chamado{display:none}}
+@media (max-width:759px),(min-width:1280px) and (max-width:1359px){.btn-chamado{width:2.9rem;padding:0}.btn-chamado .t{display:none}}
 
 /* personalizar (mesmo comportamento do login) */
 .cfg{position:relative}
