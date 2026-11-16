@@ -154,16 +154,17 @@
         <div class="mock glass rv" style="--d:.1s" role="img" aria-label="Exemplo ilustrativo do Dashboard Financeiro, com saldo, receitas, despesas, gráfico por mês, despesas por categoria, orçamento e meta.">
           <div class="mock-bar"><span class="d"></span><span class="d"></span><span class="d"></span><b>Dashboard Financeiro</b><span class="pill">Exemplo · R$</span></div>
           <div class="kpis">
-            <div class="kpi"><small>Saldo</small><b data-count="12480">12.480</b></div>
-            <div class="kpi in"><small>Receitas</small><b data-count="8900">8.900</b></div>
-            <div class="kpi out"><small>Despesas</small><b data-count="5327">5.327</b></div>
+            <div class="kpi"><small>Saldo</small><b><span class="rs">R$</span><span data-count="12480">12.480</span></b></div>
+            <div class="kpi in"><small>Receitas</small><b><span class="rs">R$</span><span data-count="8900">8.900</span></b></div>
+            <div class="kpi out"><small>Despesas</small><b><span class="rs">R$</span><span data-count="5327">5.327</span></b></div>
           </div>
           <div class="mock-row">
             <div class="box"><small>Receitas e despesas por mês</small>
-              <div class="bars"><i style="--v:46%;--i:0"></i><i style="--v:62%;--i:1"></i><i style="--v:38%;--i:2"></i><i style="--v:71%;--i:3"></i><i style="--v:55%;--i:4"></i><i style="--v:84%;--i:5"></i><i style="--v:66%;--i:6"></i></div>
+              <div class="key" aria-hidden="true"><span><i style="--c:var(--brand)"></i>Receitas</span><span><i style="--c:var(--glow-b)"></i>Despesas</span></div>
+              <div class="bars"><span class="g"><i style="--v:62%;--i:0"></i><i style="--v:48%;--i:0"></i></span><span class="g"><i style="--v:70%;--i:1"></i><i style="--v:56%;--i:1"></i></span><span class="g"><i style="--v:58%;--i:2"></i><i style="--v:62%;--i:2"></i></span><span class="g"><i style="--v:80%;--i:3"></i><i style="--v:52%;--i:3"></i></span><span class="g"><i style="--v:66%;--i:4"></i><i style="--v:50%;--i:4"></i></span><span class="g"><i style="--v:90%;--i:5"></i><i style="--v:58%;--i:5"></i></span><span class="g"><i style="--v:76%;--i:6"></i><i style="--v:46%;--i:6"></i></span></div>
               <div class="bars-l"><span>Mai</span><span>Jun</span><span>Jul</span><span>Ago</span><span>Set</span><span>Out</span><span>Nov</span></div>
             </div>
-            <div class="box"><small>Despesas por categoria</small>
+            <div class="box dn"><small>Despesas por categoria</small>
               <div class="donut-w"><div class="donut"></div>
                 <div class="legend"><span><i style="--c:var(--brand)"></i>Moradia</span><span><i style="--c:var(--glow-b)"></i>Alimentação</span><span><i style="--c:var(--accent)"></i>Transporte</span></div>
               </div>
@@ -317,7 +318,7 @@
           <h2 id="h-pers">O painel com a sua cara</h2>
           <p class="lead">Escolha uma das 10 paletas, ou a sua própria cor, e o modo claro, escuro ou automático. Experimente aqui: a escolha vale também para o login e para o painel, e fica salva neste navegador.</p>
           <div class="grp"><h4>Aparência</h4><div class="chips" data-modos role="group" aria-label="Aparência"></div></div>
-          <div class="grp"><h4>Cor de destaque</h4><div class="sws" data-cores role="group" aria-label="Paleta de cores" style="max-width:26rem;justify-items:start"></div></div>
+          <div class="grp"><h4>Cor de destaque</h4><div class="sws" data-cores role="group" aria-label="Paleta de cores"></div></div>
         </div>
         <div class="pers-info">
           <div class="card"><span class="ico soft"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18h2"/></svg></span><div><b>Celular, tablet e computador</b><span>O layout se adapta a cada tela, inclusive monitores 4K.</span></div></div>

@@ -44,7 +44,11 @@
 
   /* ---------- módulos do sistema (texto = telas reais do app) ---------- */
   function row(a, b, cls) { return '<div class="row"><span>' + a + '</span><b class="' + (cls || '') + '">' + b + '</b></div>'; }
-  function bars(vs) { return '<div class="bars">' + vs.map(function (v, i) { return '<i style="--v:' + v + '%;--i:' + i + '"></i>'; }).join('') + '</div>'; }
+  /* pares [receita, despesa] por mês; a legenda diz qual cor é qual */
+  function bars(vs) {
+    return '<div class="key"><span><i style="--c:var(--brand)"></i>Receitas</span><span><i style="--c:var(--glow-b)"></i>Despesas</span></div><div class="bars">' +
+      vs.map(function (p, i) { return '<span class="g"><i style="--v:' + p[0] + '%;--i:' + i + '"></i><i style="--v:' + p[1] + '%;--i:' + i + '"></i></span>'; }).join('') + '</div>';
+  }
   function barra(nome, pct, cor, rotulo) {
     return '<div><div class="mrow"><span>' + nome + '</span><b>' + rotulo + '</b></div><div class="meter"><i style="--w:' + Math.min(pct, 100) + '%;--c:' + cor + '"></i></div></div>';
   }
@@ -54,8 +58,8 @@
       resumo: 'O centro de controle do seu dinheiro: saldo, entradas e saídas do período em uma tela só, com atalhos para o que pede ação.',
       itens: ['Saldo consolidado, receitas e despesas do período', 'Gráficos por categoria e comparativo entre entradas e saídas', 'Nota de saúde financeira e média diária de gastos dos últimos 30 dias', 'Período por mês, por ano ou o histórico completo'],
       vz: function () {
-        return '<div class="vz" aria-hidden="true"><div class="kpis"><div class="kpi"><small>Saldo</small><b>12.480</b></div><div class="kpi in"><small>Receitas</small><b>8.900</b></div><div class="kpi out"><small>Despesas</small><b>5.327</b></div></div>' +
-          '<div class="box"><small>Entradas e saídas por mês</small>' + bars([46, 62, 38, 71, 55, 84, 66]) + '</div></div>';
+        return '<div class="vz" aria-hidden="true"><div class="kpis"><div class="kpi"><small>Saldo</small><b><span class="rs">R$</span>12.480</b></div><div class="kpi in"><small>Receitas</small><b><span class="rs">R$</span>8.900</b></div><div class="kpi out"><small>Despesas</small><b><span class="rs">R$</span>5.327</b></div></div>' +
+          '<div class="box"><small>Entradas e saídas por mês</small>' + bars([[62, 48], [70, 56], [58, 62], [80, 52], [66, 50], [90, 58], [76, 46]]) + '</div></div>';
       }
     },
     {
@@ -232,7 +236,7 @@
     burger.addEventListener('click', function () { menu(gaveta.hidden); });
     $$('a', gaveta).forEach(function (a) { a.addEventListener('click', function () { menu(false); }); });
     D.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !gaveta.hidden) { menu(false); burger.focus(); } });
-    window.addEventListener('resize', function () { if (window.innerWidth >= 1200 && !gaveta.hidden) menu(false); });
+    window.addEventListener('resize', function () { if (window.innerWidth >= 1280 && !gaveta.hidden) menu(false); });
 
     var links = $$('.nav a'), alvos = links.map(function (a) { return $(a.getAttribute('href')); });
     if ('IntersectionObserver' in window) {

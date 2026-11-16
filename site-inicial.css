@@ -62,6 +62,10 @@ ul{list-style:none;padding:0}
 .skip:focus{top:1rem}
 .wrap{width:min(calc(100% - 2rem),75rem);margin-inline:auto}
 @media (min-width:700px){.wrap{width:min(calc(100% - 3rem),75rem)}}
+/* Notebook: o topo (logo + 7 links + 3 botões) precisa de ~77rem; com 75rem ele passava 20 a 35px da borda direita do conteúdo */
+@media (min-width:1200px){.wrap{width:min(calc(100% - 3rem),80rem)}}
+/* Full HD, 2K e 4K: a coluna cresce junto com a escala (rem) e passa a ocupar ~70% da tela, em vez de 62% com faixas vazias dos lados */
+@media (min-width:1600px){.wrap{width:min(calc(100% - 4rem),84rem)}}
 
 /* ---------- fundo (vidro) ---------- */
 .bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
@@ -85,10 +89,10 @@ ul{list-style:none;padding:0}
 .mark{width:2.5rem;height:2.5rem;border-radius:.8rem;display:grid;place-items:center;color:var(--on-brand);font:600 1.45rem/1 var(--serif);
   background:linear-gradient(145deg,var(--brand),var(--brand-d));box-shadow:0 .5rem 1.2rem color-mix(in srgb,var(--brand) 38%,transparent),inset 0 1px 0 rgba(255,255,255,.35)}
 .nav{display:none;margin-inline:auto;gap:.15rem}
-.nav a{padding:.5rem .8rem;border-radius:99rem;font-size:.9rem;font-weight:600;color:var(--soft);text-decoration:none;white-space:nowrap;transition:color .2s,background .2s}
+.nav a{padding:.5rem .7rem;border-radius:99rem;font-size:.9rem;font-weight:600;color:var(--soft);text-decoration:none;white-space:nowrap;transition:color .2s,background .2s}
 .nav a:hover,.nav a.on{color:var(--white);background:var(--tint2)}
 .top-act{display:flex;align-items:center;gap:.6rem;margin-left:auto}
-@media (min-width:1200px){.nav{display:flex}.top-act{margin-left:0}}
+@media (min-width:1280px){.nav{display:flex}.top-act{margin-left:0}}
 
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:.55rem;height:2.9rem;padding:0 1.3rem;border-radius:.8rem;border:1px solid transparent;cursor:pointer;
   font:700 .95rem var(--sans);text-decoration:none;white-space:nowrap;transition:transform .15s,filter .2s,background .2s,border-color .2s}
@@ -129,7 +133,7 @@ ul{list-style:none;padding:0}
 /* menu do celular */
 .burger{display:inline-grid;place-items:center;width:2.9rem;height:2.9rem;border-radius:.8rem;cursor:pointer;background:var(--tint);border:1px solid var(--card-line)}
 .burger svg{width:1.3rem;height:1.3rem}
-@media (min-width:1200px){.burger{display:none}}
+@media (min-width:1280px){.burger{display:none}}
 .gaveta{position:fixed;inset:4.25rem 0 0 0;z-index:39;padding:1rem 1rem calc(1.5rem + env(safe-area-inset-bottom,0px));overflow:auto;
   background:color-mix(in srgb,var(--base) 94%,transparent);-webkit-backdrop-filter:blur(1.4rem);backdrop-filter:blur(1.4rem)}
 .gaveta nav{display:grid;gap:.25rem}
@@ -140,16 +144,17 @@ body.menu-aberto{overflow:hidden}
 
 /* ---------- blocos ---------- */
 section{position:relative;z-index:1}
-.sec{padding:clamp(3.5rem,8vw,6.5rem) 0}
+.sec{padding:clamp(3.25rem,6vw,5.25rem) 0}
 .sec-head{max-width:46rem;margin-bottom:clamp(2rem,4vw,3.25rem)}
 .sec-head.c{margin-inline:auto;text-align:center}
 .kicker{display:inline-block;margin-bottom:.8rem;font-size:.8rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
 h1,h2,h3,h4{color:var(--white);text-wrap:balance}
-h2{font:600 clamp(1.9rem,3.6vw,2.9rem)/1.12 var(--serif);letter-spacing:-.02em}
+h2{font:600 clamp(1.9rem,3.6vw,2.9rem)/1.14 var(--serif);letter-spacing:-.012em;word-spacing:.06em}
 .lead{margin-top:1rem;font-size:clamp(1.02rem,1.25vw,1.18rem);color:var(--soft);max-width:42rem}
 .sec-head.c .lead{margin-inline:auto}
 .glass{background:var(--glass);border:1px solid var(--glass-line);box-shadow:var(--shadow);-webkit-backdrop-filter:blur(1.6rem) saturate(160%);backdrop-filter:blur(1.6rem) saturate(160%)}
-.card{background:var(--card);border:1px solid var(--card-line);border-radius:var(--r)}
+.card{background:var(--card);border:1px solid var(--card-line);border-radius:var(--r);box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 .9rem 2.2rem rgba(0,0,0,.16)}
+:root[data-mode="light"] .card{box-shadow:inset 0 1px 0 rgba(255,255,255,.8),0 .9rem 2.2rem rgba(30,45,110,.08)}
 .ico{flex:none;display:grid;place-items:center;width:2.8rem;height:2.8rem;border-radius:.85rem;color:var(--on-brand);background:linear-gradient(145deg,var(--brand),var(--brand-d));box-shadow:0 .4rem 1rem color-mix(in srgb,var(--brand) 28%,transparent),inset 0 1px 0 rgba(255,255,255,.3)}
 .ico svg{width:1.4rem;height:1.4rem}
 .ico.soft{color:var(--accent);background:var(--tint2);box-shadow:none;border:1px solid var(--card-line)}
@@ -177,7 +182,7 @@ h2{font:600 clamp(1.9rem,3.6vw,2.9rem)/1.12 var(--serif);letter-spacing:-.02em}
 @media (min-width:1024px){.hero-grid{grid-template-columns:minmax(0,1fr) minmax(0,1.05fr)}}
 .eyebrow{display:inline-flex;align-items:center;gap:.55rem;padding:.4rem .9rem .4rem .5rem;border-radius:99rem;font-size:.82rem;font-weight:700;color:var(--soft);background:var(--tint);border:1px solid var(--card-line)}
 .eyebrow b{padding:.12rem .55rem;border-radius:99rem;font-size:.75rem;color:var(--on-brand);background:linear-gradient(180deg,var(--brand),var(--brand-d))}
-h1{margin-top:1.2rem;font:600 clamp(2.35rem,5.1vw,4.1rem)/1.06 var(--serif);letter-spacing:-.025em}
+h1{margin-top:1.2rem;font:600 clamp(2.35rem,5.1vw,4.1rem)/1.08 var(--serif);letter-spacing:-.014em;word-spacing:.07em}
 h1 em{font-style:normal;background:linear-gradient(100deg,var(--accent),var(--brand) 55%,var(--glow-b));-webkit-background-clip:text;background-clip:text;color:transparent}
 .hero .lead{max-width:36rem}
 .cta{display:flex;flex-wrap:wrap;gap:.8rem;margin-top:1.8rem}
@@ -192,21 +197,32 @@ h1 em{font-style:normal;background:linear-gradient(100deg,var(--accent),var(--br
 .mock-bar b{margin-left:.5rem;font-size:.85rem;color:var(--text)}
 .mock-bar .pill{margin-left:auto}
 .kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.6rem}
-.kpi{padding:.75rem .8rem;border-radius:.9rem;background:var(--tint);border:1px solid var(--card-line);min-width:0}
+.kpi{padding:.75rem .8rem;border-radius:.9rem;background:var(--tint);border:1px solid var(--card-line);min-width:0;container-type:inline-size}
 .kpi small{display:block;font-size:.75rem;font-weight:700;color:var(--muted);letter-spacing:.02em}
-.kpi b{display:block;margin-top:.15rem;font-size:clamp(.95rem,1.55vw,1.25rem);font-weight:800;color:var(--white);font-variant-numeric:tabular-nums;white-space:nowrap}
+/* o número acompanha a largura do próprio cartão (cqi): nunca estoura, seja no painel do topo (4K) ou na ilustração estreita dos módulos */
+.kpi b{display:block;margin-top:.15rem;font-size:clamp(.75rem,20cqi,1.25rem);font-weight:800;color:var(--white);font-variant-numeric:tabular-nums;white-space:nowrap}
+.kpi b .rs{margin-right:.22em;font-size:max(.6em,12px);font-weight:700;letter-spacing:.02em;color:var(--muted)}
+/* cartão estreito (celular, ilustração dos módulos): o "R$" sai para o número caber sem passar da caixa e sem ficar abaixo de 12px */
+@container (max-width:5.4rem){.kpi b .rs{display:none}}
 .kpi.in b{color:var(--ok)}.kpi.out b{color:var(--danger)}
 .mock-row{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:.6rem;margin-top:.6rem}
 .box{padding:.85rem .9rem;border-radius:.9rem;background:var(--tint);border:1px solid var(--card-line);min-width:0}
 .box>small{display:block;font-size:.75rem;font-weight:700;color:var(--muted);margin-bottom:.6rem}
-.bars{display:flex;align-items:flex-end;gap:.4rem;height:6.6rem}
-.bars i{flex:1;height:var(--v);border-radius:.4rem .4rem .12rem .12rem;background:linear-gradient(180deg,var(--brand),var(--brand-d));transform-origin:bottom;transform:scaleY(1);transition:transform .8s cubic-bezier(.2,.7,.2,1);transition-delay:calc(var(--i,0) * 70ms)}
+/* barras em pares (receita e despesa de cada mês), com legenda: antes as cores só se alternavam e não diziam nada */
+.bars{display:flex;align-items:flex-end;gap:.55rem;height:6.6rem}
+.bars .g{flex:1;min-width:0;height:100%;display:flex;align-items:flex-end;gap:.15rem}
+.bars i{flex:1;height:var(--v);border-radius:.3rem .3rem .1rem .1rem;background:linear-gradient(180deg,var(--brand),var(--brand-d));transform-origin:bottom;transform:scaleY(1);transition:transform .8s cubic-bezier(.2,.7,.2,1);transition-delay:calc(var(--i,0) * 70ms)}
 .bars i:nth-child(even){background:linear-gradient(180deg,var(--glow-b),color-mix(in srgb,var(--glow-b) 60%,#000))}
 .js .mock:not(.go) .bars i{transform:scaleY(.04)}
-.bars-l{display:flex;gap:.4rem;margin-top:.4rem}
+.bars-l{display:flex;gap:.55rem;margin-top:.4rem}
 .bars-l span{flex:1;text-align:center;font-size:.76rem;color:var(--muted)}
+.key{display:flex;flex-wrap:wrap;gap:.2rem .9rem;margin:-.25rem 0 .6rem;font-size:.76rem;font-weight:600;color:var(--soft)}
+.key i{display:inline-block;width:.6rem;height:.6rem;border-radius:.18rem;margin-right:.4rem;background:var(--c)}
+.box.dn{display:flex;flex-direction:column}
+.box.dn .donut-w{flex:1}
 .donut-w{display:flex;align-items:center;gap:.8rem}
 .donut{flex:none;width:5.2rem;aspect-ratio:1;border-radius:50%;background:conic-gradient(var(--brand) 0 38%,var(--glow-b) 38% 62%,var(--accent) 62% 80%,var(--tint2) 80%);-webkit-mask:radial-gradient(circle,transparent 52%,#000 53%);mask:radial-gradient(circle,transparent 52%,#000 53%)}
+.box.dn .donut{width:6rem}
 .legend{display:grid;gap:.3rem;font-size:.76rem;color:var(--soft)}
 .legend i{display:inline-block;width:.6rem;height:.6rem;border-radius:50%;margin-right:.4rem;background:var(--c)}
 .mock-foot{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem;margin-top:.6rem}
@@ -236,9 +252,10 @@ h1 em{font-style:normal;background:linear-gradient(100deg,var(--accent),var(--br
 .tab[aria-selected="true"]{color:var(--white);background:color-mix(in srgb,var(--brand) 16%,transparent);border-color:color-mix(in srgb,var(--brand) 45%,transparent)}
 .tab[aria-selected="true"] svg{color:var(--accent)}
 @media (max-width:959px){.tab{white-space:nowrap}}
-.painel{padding:clamp(1.3rem,3vw,2.2rem);border-radius:1.5rem;min-height:21rem}
+.painel{padding:clamp(1.3rem,3vw,2.2rem);border-radius:1.5rem;min-height:21rem;container-type:inline-size}
 .painel-in{display:grid;gap:1.6rem;align-items:center}
-@media (min-width:760px){.painel-in{grid-template-columns:minmax(0,1.1fr) minmax(0,1fr)}}
+/* duas colunas pela largura do PRÓPRIO painel (e não da tela): entre 960 e 1200px ele fica estreito e a ilustração não cabia */
+@container (min-width:46rem){.painel-in{grid-template-columns:minmax(0,1.1fr) minmax(0,1fr)}}
 .painel h3{font:600 clamp(1.4rem,2.3vw,1.85rem)/1.2 var(--serif);letter-spacing:-.015em;margin-top:.9rem}
 .painel p{margin-top:.6rem;color:var(--soft)}
 .painel .tick{margin-top:1.1rem}
@@ -314,6 +331,7 @@ h1 em{font-style:normal;background:linear-gradient(100deg,var(--accent),var(--br
 .et.now i{background:linear-gradient(180deg,var(--brand),var(--brand-d));color:var(--on-brand);border-color:transparent;transform:scale(1.12);box-shadow:0 .5rem 1.1rem color-mix(in srgb,var(--brand) 40%,transparent)}
 .et.now{color:var(--white)}
 .et.opc i{border-style:dashed}
+.et small{font-size:max(.72rem,12px);font-weight:600}
 .etdesc{margin-top:1rem;padding:.9rem 1rem;border-radius:.9rem;min-height:4.6rem;font-size:.92rem;color:var(--soft);background:var(--tint);border:1px solid var(--card-line)}
 .etdesc b{display:block;color:var(--white);margin-bottom:.15rem}
 @media (max-width:520px){.et{font-size:.76rem}.et i{width:1.9rem;height:1.9rem}.et::before{top:1.15rem}.et small{font-size:.76rem}}
@@ -337,6 +355,8 @@ h1 em{font-style:normal;background:linear-gradient(100deg,var(--accent),var(--br
 @media (min-width:900px){.pers{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:2.6rem}}
 .pers .grp{margin-top:1.3rem}
 .pers .chips{max-width:24rem}
+/* as 11 bolinhas de cor cabem numa linha só quando há espaço; quando falta, quebram por igual em vez de deixar uma sobrando */
+.pers .sws{grid-template-columns:repeat(auto-fill,2.5rem);justify-content:start;justify-items:start;gap:.6rem}
 .pers-info{display:grid;gap:.8rem}
 .pers-info .card{display:flex;gap:.9rem;align-items:center;padding:1rem 1.1rem}
 .pers-info b{display:block;color:var(--white);font-size:.98rem}
@@ -364,7 +384,8 @@ h1 em{font-style:normal;background:linear-gradient(100deg,var(--accent),var(--br
 .plano .tick{margin:1.4rem 0 1.7rem}
 .plano .btn{width:100%}
 .plano .nota{margin-top:.9rem;font-size:.82rem;color:var(--muted);text-align:center}
-.pagar{padding:clamp(1.3rem,3vw,2rem)}
+.pagar{padding:clamp(1.3rem,3vw,2rem);display:flex;flex-direction:column}
+.pagar>p:last-child{margin-top:auto!important;padding-top:1.2rem;border-top:1px solid var(--card-line)}
 .pagar h3{font:600 1.4rem/1.2 var(--serif);letter-spacing:-.015em}
 .pagar>p{margin-top:.5rem;color:var(--soft)}
 .fluxo{display:grid;gap:.9rem;margin-top:1.4rem;counter-reset:f}
@@ -374,7 +395,7 @@ h1 em{font-style:normal;background:linear-gradient(100deg,var(--accent),var(--br
 .fluxo span{font-size:.9rem;color:var(--soft)}
 
 /* ---------- dúvidas ---------- */
-.faq{display:grid;gap:.7rem;max-width:50rem;margin-inline:auto}
+.faq{display:grid;gap:.7rem;max-width:54rem;margin-inline:auto}
 .faq details{border-radius:1rem;background:var(--card);border:1px solid var(--card-line);transition:border-color .2s,background .2s}
 .faq details[open]{border-color:color-mix(in srgb,var(--brand) 45%,transparent)}
 .faq summary{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.05rem 1.2rem;min-height:3.4rem;cursor:pointer;font-weight:700;color:var(--white);list-style:none}
@@ -404,7 +425,6 @@ h1 em{font-style:normal;background:linear-gradient(100deg,var(--accent),var(--br
 @media (max-width:480px){
   .top-in{gap:.6rem}
   .logo small{display:none}
-  .kpi b{font-size:.92rem}
   .mock{padding:.8rem}
   .mock-row,.mock-foot{grid-template-columns:1fr}
   .btn.lg{width:100%}
@@ -428,3 +448,7 @@ h1 em{font-style:normal;background:linear-gradient(100deg,var(--accent),var(--br
   .js .mock:not(.go) .meter i{transform:none}
 }
 @media print{.top,.gaveta,.bg{display:none!important}.js .rv{opacity:1;transform:none}}
+
+/* Fraunces em tamanho grande usa o eixo "opsz" no máximo (144), que fecha letras e espaços ("Todoo seu dinheiro"). Fixar o eixo devolve
+   o respiro do desenho. Fica no fim do arquivo de propósito: o atalho `font:` de cada título zera font-variation-settings. */
+h1,h2,h3,.preco,.num b,.mark,.passo::before,.fluxo li::before{font-variation-settings:"opsz" 72}
