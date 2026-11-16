@@ -321,7 +321,9 @@ const SOURCES = {
   'system_logs.json':          { plan: planLogs, debounce: 3000 },
   'local_filas.json':          docSource('filas', 'array'),
   'local_os_sequencia.json':   docSource('os_seq', 'single'),
-  'pending_logins.json':       docSource('pending', 'array'),
+  // fila TRANSITÓRIA de logins feitos na nuvem esperando o PC (os eventos e o último login ficam em system_logs e em usuarios.last_login,
+  // conferidos um a um): o espelho por posição repete eventos e dois servidores o reescrevem, então a conferência de conteúdo só a conta à parte
+  'pending_logins.json':       Object.assign(docSource('pending', 'array'), { volatile: true }),
   'local_avatars.json':        docSource('avatars', 'map'),
   'local_permissions.json':    docSource('permissions', 'map'),  // e-mail -> lista de permissões
   'local_pagamentos.json':     docSource('pagamentos', 'array'), // livro de pagamentos e cobranças (pagamentos.js): um documento por registro (id)
@@ -416,6 +418,7 @@ function createSync() {
   let verifying = false;
   let credentialGuards = 0;           // quantas vezes uma senha MAIS NOVA que já estava no Supabase foi preservada
   let sequenceGuards = 0;             // idem para o contador de protocolo (vale sempre o maior)
+  let staleHealed = 0;                // registros reenviados porque o Supabase tinha uma versão mais antiga (cura)
   let lastAudit = null;               // resultado da última conferência de conteúdo
   let lastAuditAt = 0;
 
@@ -711,6 +714,47 @@ function createSync() {
   }
   const GUARDS = { 'local_users.json': guardCredentials, 'local_os_sequencia.json': guardSequence };
 
+  // Cura do ponto cego do ack ("enviei" ≠ "está lá"): se outro servidor gravou depois uma versão MAIS ANTIGA, reenvia a nossa. Só nos dois
+  // casos em que qual é a mais nova é inequívoco (relógio da senha e contador de protocolo); o resto não é "curado" para os dois
+  // servidores não ficarem trocando a mesma linha de lugar. O reenvio passa pelas guardas acima.
+  async function healStale() {
+    let healed = 0;
+    const users = readSource('local_users.json').json;
+    if (Array.isArray(users) && users.length) {
+      const emails = users.map(u => lc(u && u.email)).filter(Boolean);
+      const remote = new Map();
+      for (const part of chunkArr(emails, 50)) {
+        const res = await call(() => sb.from('dados_financeiros').select('email,dados').in('email', part));
+        if (res.error) return healed;
+        for (const r of (res.data || [])) remote.set(lc(r.email), r.dados);
+      }
+      let users_n = 0;
+      for (const u of users) {
+        const email = lc(u && u.email); const r = remote.get(email);
+        if (!email || !r || typeof r !== 'object' || !isScrypt(u.password)) continue;
+        const lClock = Date.parse(u.password_changed_at);
+        if (!Number.isFinite(lClock)) continue;                                     // sem relógio local não há como saber qual é a mais nova
+        const rClock = Date.parse(r.password_changed_at);
+        if (r.password !== u.password && (!Number.isFinite(rClock) || rClock < lClock)) {
+          for (const t of ['usuarios', 'dados_financeiros']) delete state.acked['local_users.json|' + t + '|' + email];
+          users_n++;
+        }
+      }
+      if (users_n) { healed += users_n; markDirty('local_users.json', 0); }
+    }
+    const seq = readSource('local_os_sequencia.json').json;
+    const mine = Number(seq && seq.ultimo);
+    if (Number.isFinite(mine) && mine > 0) {
+      const res = await call(() => sb.from('nexus_dados_financeiros').select('email,dados').eq('email', docKey('os_seq', '_')));
+      if (!res.error) {
+        const rUlt = Number(((res.data || [])[0] || {}).dados && ((res.data || [])[0]).dados.ultimo);
+        if (!(rUlt >= mine)) { delete state.acked['local_os_sequencia.json|nexus_dados_financeiros|' + docKey('os_seq', '_')]; markDirty('local_os_sequencia.json', 0); healed++; }
+      }
+    }
+    if (healed) { staleHealed += healed; say('warn', 'healstale', healed + ' registro(s) estavam MAIS ANTIGOS no Supabase do que neste servidor (outro servidor gravou depois): reenviados.'); }
+    return healed;
+  }
+
   // 4. Exclusões: nunca em massa
   async function applyRemovals(file, removed, totalBefore) {
     if (!removed.length) { heldByFile.set(file, 0); return; }
@@ -879,6 +923,7 @@ function createSync() {
           if (!have.has(String(key))) { delete state.acked[id]; markDirty(file, 0); }
         }
       }
+      try { await healStale(); } catch (e) { /* sem como ler agora: fica para o próximo conferimento */ }
       saveState();
     } catch (e) { /* sem conexão: o ciclo normal cuida disso */ }
     finally { verifying = false; }
@@ -983,9 +1028,9 @@ function createSync() {
     }
     return out;
   }
-  async function audit() {
+  async function audit(opts) {                       // audit({ flush: false }) = zero escrita (só lê)
     if (!enabled || !sb) return { enabled: false, reason: disabledReason };
-    try { await flushNow(); } catch (e) { /* conferir mesmo assim */ }
+    if (!opts || opts.flush !== false) { try { await flushNow(); } catch (e) { /* conferir mesmo assim */ } }
     const first = planEverything();
     const tables = new Set(); for (const u of first.values()) if (TABLES[u.table].kind !== 'append') tables.add(u.table);
     const remoteRows = {}; const replaceCount = {};
@@ -995,11 +1040,12 @@ function createSync() {
       else { const m = new Map(); (await selectAll(t, meta.ownerCol, null, [meta.ownerCol, 'id'])).forEach(r => { const k = lc(r[meta.ownerCol]); m.set(k, (m.get(k) || 0) + 1); }); replaceCount[t] = m; }
     }
     const second = planEverything();
-    const byTable = {}; const samples = [];
+    const byTable = {}; const samples = []; let transient = 0;
     const bump = (t, k) => { (byTable[t] = byTable[t] || { planned: 0, ok: 0, missing: 0, different: 0, moving: 0 })[k]++; };
     const label = (u) => String(u.key).replace(/[^\x20-\x7e]/g, '?').replace(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+/g, maskEmail).slice(0, 60);   // e-mail nunca sai em claro
     for (const u of first.values()) {
       if (TABLES[u.table].kind === 'append') continue;
+      if (SOURCES[u.file] && SOURCES[u.file].volatile) { transient++; continue; }          // fila transitória: fora da consistência
       bump(u.table, 'planned');
       const again = second.get(u.id);
       if (!again || again.hash !== u.hash) { bump(u.table, 'moving'); continue; }
@@ -1018,7 +1064,7 @@ function createSync() {
     const sum = (k) => Object.values(byTable).reduce((s, v) => s + v[k], 0);
     lastAuditAt = Date.now();
     lastAudit = { enabled: true, checkedAt: new Date().toISOString(), project: projectRef, files: new Set(Array.from(first.values()).map(u => u.file)).size,
-      planned: sum('planned'), ok: sum('ok'), missing: sum('missing'), different: sum('different'), moving: sum('moving'),
+      planned: sum('planned'), ok: sum('ok'), missing: sum('missing'), different: sum('different'), moving: sum('moving'), transient,
       consistent: sum('missing') === 0 && sum('different') === 0, byTable, samples };
     return lastAudit;
   }
@@ -1038,7 +1084,7 @@ function createSync() {
       degradedTables: Object.fromEntries(Object.entries(degraded).filter(([, d]) => d.until > Date.now()).map(([t, d]) => [t, d.message])),
       omittedColumns: Object.fromEntries(Object.entries(skipCols).map(([t, s]) => [t, Array.from(s)])),
       confirmedRecords: state ? Object.keys(state.acked).length : 0, restoredFiles,
-      guards: { credentials: credentialGuards, sequence: sequenceGuards },
+      guards: { credentials: credentialGuards, sequence: sequenceGuards, staleHealed },
       lastAudit: lastAudit ? { checkedAt: lastAudit.checkedAt, planned: lastAudit.planned, ok: lastAudit.ok, missing: lastAudit.missing, different: lastAudit.different, moving: lastAudit.moving, consistent: lastAudit.consistent } : null
     };
   }

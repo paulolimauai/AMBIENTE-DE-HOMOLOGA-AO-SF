@@ -656,3 +656,66 @@ test('audit: com o Supabase desligado devolve enabled:false e não toca em nada'
   assert.deepEqual(await s.audit(), { enabled: false, reason: 'desligado por variável de ambiente' });
   assert.equal(fake.calls.length, 0);
 });
+
+test('CURA: ack diz "enviado" mas o Supabase tem uma versão MAIS ANTIGA (outro servidor gravou depois): o conferimento reenvia (contador e senha)', async () => {
+  const dir = tmpDir();
+  put(dir, 'local_users.json', [Object.assign({}, ANA, { password: 'scrypt:nova:x', password_changed_at: '2026-11-16T10:00:00.000Z' }), ADM]);
+  put(dir, 'local_os_sequencia.json', { ultimo: 8, atualizado_em: '2026-11-15T16:58:33.407Z' });
+  const fake = createFake(); const s = make(fake, dir);
+  await s.syncEverythingNow();
+  const seq = () => fake.tables.nexus_dados_financeiros.find(r => r.email === DOC_PREFIX + 'os_seq/_').dados;
+  const ana = () => fake.tables.dados_financeiros.find(r => r.email === 'ana@exemplo.com').dados;
+  assert.equal(seq().ultimo, 8); assert.equal(ana().password, 'scrypt:nova:x');
+
+  // um servidor atrasado grava por cima versões ANTIGAS (o ack local continua dizendo "enviado")
+  fake.tables.nexus_dados_financeiros.find(r => r.email === DOC_PREFIX + 'os_seq/_').dados = { ultimo: 7, atualizado_em: '2026-11-11T23:17:43.464Z' };
+  fake.tables.dados_financeiros.find(r => r.email === 'ana@exemplo.com').dados = Object.assign({}, ANA, { password: 'scrypt:velha:x', password_changed_at: '2026-11-10T10:00:00.000Z' });
+  fake.tables.usuarios.find(u => u.email === 'ana@exemplo.com').password = 'scrypt:velha:x';
+  assert.equal((await s.flushNow()).pending, 0, 'o ack diz que está tudo enviado');
+
+  await s.verifyRemote();
+  const st = await s.flushNow();
+  assert.equal(seq().ultimo, 8, 'contador voltou ao maior'); assert.equal(ana().password, 'scrypt:nova:x'); assert.equal(ana().password_changed_at, '2026-11-16T10:00:00.000Z');
+  assert.equal(fake.tables.usuarios.find(u => u.email === 'ana@exemplo.com').password, 'scrypt:nova:x');
+  assert.equal(st.guards.staleHealed, 2);
+  assert.equal(st.inSync, true, JSON.stringify(st));
+});
+
+test('CURA: Supabase com versão MAIS NOVA não é "curado" (sem briga entre servidores); sem relógio local a senha não é tocada', async () => {
+  const dir = tmpDir();
+  put(dir, 'local_users.json', [Object.assign({}, ANA, { password: 'scrypt:local:x', password_changed_at: '2026-11-10T10:00:00.000Z' }), Object.assign({}, ADM, { password: 'scrypt:adm:local' })]);
+  put(dir, 'local_os_sequencia.json', { ultimo: 5, atualizado_em: '2026-11-10T00:00:00Z' });
+  const fake = createFake(); const s = make(fake, dir);
+  await s.syncEverythingNow();
+  // outro servidor gravou versões MAIS NOVAS (e a conta admin local não tem relógio)
+  fake.tables.dados_financeiros.find(r => r.email === 'ana@exemplo.com').dados = Object.assign({}, ANA, { password: 'scrypt:remota:y', password_changed_at: '2026-11-15T10:00:00.000Z' });
+  fake.tables.dados_financeiros.find(r => r.email === 'admin@exemplo.com').dados = Object.assign({}, ADM, { password: 'scrypt:adm:remota', password_changed_at: '2026-11-15T10:00:00.000Z' });
+  fake.tables.nexus_dados_financeiros.find(r => r.email === DOC_PREFIX + 'os_seq/_').dados = { ultimo: 9, atualizado_em: '2026-11-15T00:00:00Z' };
+  await s.verifyRemote(); const st = await s.flushNow();
+  assert.equal(st.guards.staleHealed, 0);
+  assert.equal(fake.tables.dados_financeiros.find(r => r.email === 'ana@exemplo.com').dados.password, 'scrypt:remota:y', 'a mais nova (remota) fica');
+  assert.equal(fake.tables.dados_financeiros.find(r => r.email === 'admin@exemplo.com').dados.password, 'scrypt:adm:remota', 'sem relógio local não decide');
+  assert.equal(fake.tables.nexus_dados_financeiros.find(r => r.email === DOC_PREFIX + 'os_seq/_').dados.ultimo, 9);
+});
+
+test('audit({ flush: false }) só LÊ: nenhuma escrita no Supabase, mesmo com envio pendente', async () => {
+  const dir = tmpDir(); seedAll(dir); const fake = createFake(); const s = make(fake, dir);
+  const antes = fake.calls.length;
+  const a = await s.audit({ flush: false });
+  assert.equal(a.enabled, true);
+  const escritas = fake.calls.slice(antes).filter(c => c.op !== 'select');
+  assert.deepEqual(escritas, [], 'só leituras');
+  assert.ok(a.missing > 0, 'nada foi enviado ainda: tudo aparece como ausente');
+});
+
+test('audit: a fila transitória de logins (pending_logins) não derruba a consistência; é contada à parte', async () => {
+  const dir = tmpDir(); seedAll(dir);
+  put(dir, 'pending_logins.json', [{ id: 73, email: 'ana@exemplo.com', name: 'Ana', last_login: '2026-11-15T10:00:00Z', timestamp: '2026-11-15T10:00:00.000Z', ack: false }, { id: 73, email: 'ana@exemplo.com', name: 'Ana', last_login: '2026-11-15T11:00:00Z', timestamp: '2026-11-15T11:00:00.000Z', ack: false }]);
+  const fake = createFake(); const s = make(fake, dir);
+  await s.syncEverythingNow();
+  fake.tables.nexus_dados_financeiros.filter(r => r.email.startsWith(DOC_PREFIX + 'pending/')).forEach(r => { r.dados.ack = true; r.dados.timestamp = 'outra'; });   // a nuvem reescreveu a fila
+  const a = await s.audit();
+  assert.equal(a.consistent, true, JSON.stringify(a));
+  assert.equal(a.transient, 2);
+  assert.ok(fake.tables.nexus_dados_financeiros.some(r => r.email.startsWith(DOC_PREFIX + 'pending/')), 'a fila continua sendo gravada no Supabase');
+});
