@@ -532,9 +532,35 @@
       '<button type="button" class="adm-btn" data-adm-acao="limpar">Limpar busca e filtros</button></div>';
   }
 
+  // Quem a ação em lote "Expirar assinaturas" alcança: só assinatura ATIVA com vencimento (a mesma regra do botão "Exigir pagamento" de uma conta).
+  // O resto da seleção é ignorado e contado por motivo, para a confirmação dizer exatamente o que vai acontecer. O servidor confere tudo de novo.
+  function alvosExpirar(regs, emails, eu) {
+    var sel = {};
+    (emails || []).forEach(function (e) { sel[String(e).toLowerCase()] = true; });
+    var out = { elegiveis: [], ignoradas: { voce: 0, admin: 0, vitalicio: 0, semAssinatura: 0 } };
+    (regs || []).forEach(function (r) {
+      if (!sel[r.email]) return;
+      if (r.email === eu) out.ignoradas.voce++;
+      else if (r.admin) out.ignoradas.admin++;
+      else if (r.ass.chave === 'vitalicio') out.ignoradas.vitalicio++;
+      else if (r.ass.chave !== 'ativo') out.ignoradas.semAssinatura++;
+      else out.elegiveis.push(r);
+    });
+    return out;
+  }
+  function textoIgnoradas(ig) {
+    var p = [];
+    if (ig.semAssinatura) p.push(ig.semAssinatura + ' sem assinatura ativa');
+    if (ig.vitalicio) p.push(plural(ig.vitalicio, 'vitalícia', 'vitalícias'));
+    if (ig.admin) p.push(plural(ig.admin, 'administrador', 'administradores'));
+    if (ig.voce) p.push('a sua conta');
+    return p.join(', ');
+  }
+
   function htmlSelecao(m) {
     var emails = Object.keys(estado.sel).filter(function (e) { return estado.sel[e]; });
     if (!emails.length) return '';
+    var nExp = alvosExpirar(m.todos, emails, m.eu).elegiveis.length;
     var naoSel = m.ordenados.filter(function (r) { return r.email !== m.eu && !estado.sel[r.email]; }).length;
     return '<div class="adm-selbar" role="region" aria-label="Ações em lote"><b>' + plural(emails.length, 'selecionado', 'selecionados') + '</b>' +
       (naoSel > 0 ? '<button type="button" class="adm-link" data-adm-acao="sel-filtrados">Selecionar todos os ' + m.ordenados.filter(function (r) { return r.email !== m.eu; }).length + ' da lista</button>' : '') +
@@ -542,6 +568,7 @@
       '<button type="button" class="adm-btn adm-btn-sm" data-adm-acao="lote-ativar">' + IC.ok + '<span>Ativar contas</span></button>' +
       '<button type="button" class="adm-btn adm-btn-sm" data-adm-acao="lote-bloquear">' + IC.bloq + '<span>Bloquear contas</span></button>' +
       '<button type="button" class="adm-btn adm-btn-sm" data-adm-acao="lote-exportar">' + IC.baixar + '<span>Exportar seleção</span></button>' +
+      '<button type="button" class="adm-btn adm-btn-sm adm-btn-perigo" data-adm-acao="lote-expirar"' + (nExp ? ' title="Exige novo pagamento de ' + plural(nExp, 'conta com assinatura ativa', 'contas com assinatura ativa') + '"' : ' disabled title="Nenhuma conta selecionada tem assinatura ativa"') + '>' + IC.cadeado + '<span>Expirar assinaturas' + (nExp ? ' (' + nExp + ')' : '') + '</span></button>' +
       '<button type="button" class="adm-btn adm-btn-sm adm-btn-perigo" data-adm-acao="lote-excluir">' + IC.lixeira + '<span>Excluir</span></button>' +
       '<button type="button" class="adm-ib" data-adm-acao="lote-limpar" title="Limpar seleção" aria-label="Limpar seleção">' + IC.x + '</button></div>';
   }
@@ -940,6 +967,25 @@
         estado.sel = {};
         break;
       }
+      case 'lote-expirar': {
+        var selE = selecionados();
+        if (!selE.length) return;
+        var al = alvosExpirar(par.m.todos, selE, par.m.eu);
+        var nE = al.elegiveis.length;
+        if (!nE) { t('Nenhuma das contas selecionadas tem assinatura ativa para expirar.'); return; }
+        var ignE = textoIgnoradas(al.ignoradas);
+        var itens = al.elegiveis.slice(0, 8).map(function (x) { return '<li>' + esc(x.nome) + '<small>' + esc(x.email) + '</small></li>'; }).join('');
+        if (nE > 8) itens += '<li class="adm-dlg-mais">e mais ' + (nE - 8) + '</li>';
+        if (!await dialogo({
+          titulo: 'Expirar ' + plural(nE, 'assinatura', 'assinaturas') + '?',
+          html: '<p>' + (nE === 1 ? 'Esta conta perde' : 'Estas contas perdem') + ' o acesso agora e só ' + (nE === 1 ? 'volta' : 'voltam') + ' a usar o Nexus depois que um novo pagamento for confirmado:</p>' +
+            '<ul class="adm-dlg-lista">' + itens + '</ul>' + (ignE ? '<p class="adm-nota">Ignoradas, por não terem assinatura ativa para expirar: ' + esc(ignE) + '.</p>' : ''),
+          ok: 'Expirar ' + plural(nE, 'assinatura', 'assinaturas'), perigo: true
+        })) return;
+        ok = A.expirarVarios ? await A.expirarVarios(al.elegiveis.map(function (x) { return x.email; })) : false;
+        if (ok) estado.sel = {};              // se o servidor recusou, a seleção fica para tentar de novo
+        break;
+      }
       case 'lote-excluir': {
         var lista2 = selecionados();
         if (!lista2.length) return;
@@ -1113,6 +1159,7 @@
     dataBR: dataBR, nascimentoBR: nascimentoBR, nascimentoISO: nascimentoISO, relativo: relativo,
     senhaForte: senhaForte, gerarSenha: gerarSenha,
     classificarAssinatura: classificarAssinatura, normalizarUsuario: normalizarUsuario, filtrar: filtrar, ordenar: ordenar, paginar: paginar, resumo: resumo, csv: csv,
+    alvosExpirar: alvosExpirar, textoIgnoradas: textoIgnoradas,
     // telas
     shellHTML: shellHTML, cadastrosHTML: cadastrosHTML, detalheHTML: detalheHTML, cabecalhoHTML: cabecalhoHTML, kpisFixosHTML: kpisFixosHTML, htmlLinha: linhaTabela, htmlCartao: cartao, htmlResumo: htmlResumo,
     // integração com o app

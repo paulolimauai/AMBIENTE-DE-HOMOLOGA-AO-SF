@@ -25649,6 +25649,32 @@ async function admExcluirVarios(emails){
   return true;
 }
 
+// Expirar as assinaturas de várias contas de uma vez (a confirmação já foi feita pelo módulo). O servidor confere cada conta, ignora as que
+// não podem (administrador, a própria, vitalícia, sem assinatura ativa) e devolve quais expirou; a lista do painel é recarregada dele.
+async function admExpirarVarios(emails){
+  if(!nexusTemPermissao(currentUser, 'assinatura.liberar')){
+    showToast('Apenas administradores, ou quem recebeu a permissão de liberar assinatura, podem expirar assinaturas.');
+    return false;
+  }
+  const lista = (emails || []).map(admMinusculo).filter(Boolean);
+  if(!lista.length) return false;
+  try {
+    const res = await fetch(window.location.origin + '/api/subscription/revoke-payment-bulk', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + (loadFromStorage('nexus_token', '') || '') },
+      body: JSON.stringify({ target_emails: lista })
+    });
+    const d = await res.json().catch(function(){ return {}; });
+    if(!res.ok || !d || !d.success){ showToast((d && d.error) || 'O servidor não aceitou a expiração das assinaturas.'); return false; }
+    const n = Array.isArray(d.expired) ? d.expired.length : 0;
+    const ign = Array.isArray(d.skipped) ? d.skipped.length : 0;
+    showToast(n ? '🔒 ' + n + (n === 1 ? ' assinatura expirada' : ' assinaturas expiradas') + (ign ? ' · ' + ign + ' ignorada(s)' : '') + '. Só voltam a acessar após um novo pagamento.' : 'Nenhuma assinatura precisou expirar.');
+    await syncUsersWithServer();
+    render();
+    return true;
+  } catch(e){ showToast('Falha na comunicação com o servidor'); return false; }
+}
+
 // Permissões delegadas: o catálogo vem do servidor (fonte única) e a gravação sempre passa por ele, que recusa o que não pode
 let admPermCatalogo = null, admPermErro = '', admPermPedido = false;
 async function admCarregarPermissoes(){
@@ -25710,6 +25736,7 @@ function admContexto(){
       redefinirSenha: admRedefinirSenha,
       definirAtivos: admDefinirAtivos,
       excluirVarios: admExcluirVarios,
+      expirarVarios: admExpirarVarios,
       salvarPermissoes: admSalvarPermissoes
     }
   };
@@ -36824,6 +36851,101 @@ async function handleNexusRequest(req, res) {
         }));
       } catch(err) {
         const failure = publicFailure(err, 'Não foi possível bloquear a assinatura agora.', 500);
+        res.writeHead(failure.status, { ...corsHeaders, 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ success: false, error: failure.error }));
+      }
+    });
+    return;
+  }
+
+  // Rota POST para expirar VÁRIAS assinaturas de uma vez (exige novo pagamento em cada uma). Mesma regra do bloqueio individual
+  // (/api/subscription/revoke-payment: administrador, ou quem tem a permissão assinatura.liberar), mas o servidor confere cada conta e devolve o que
+  // ignorou: administrador e a própria conta nunca entram; assinatura vitalícia e quem não tem assinatura ativa com vencimento também não.
+  if (req.method === 'POST' && parsedUrl.pathname === '/api/subscription/revoke-payment-bulk') {
+    let body = '';
+    req.on('data', chunk => body += BackendUtils.decodeBodyChunk(req, chunk));
+    req.on('end', async () => {
+      try {
+        let parsed = null;
+        try { parsed = JSON.parse(body); } catch (e) { parsed = null; }
+        const actor = getAuthenticatedWithPermission(req, 'assinatura.liberar');   // quem manda é o token: o admin_email do corpo não vale
+        if (!actor) {
+          res.writeHead(403, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'Somente administradores, ou quem recebeu a permissão de liberar assinatura, podem expirar assinaturas.' }));
+        }
+        const pedidos = parsed && Array.isArray(parsed.target_emails) ? parsed.target_emails : null;
+        if (!pedidos || !pedidos.length) {
+          res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'Informe as contas que devem ter a assinatura expirada.' }));
+        }
+        if (pedidos.length > 500) {
+          res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'No máximo 500 contas por vez.' }));
+        }
+        const alvos = [...new Set(pedidos.filter(e => typeof e === 'string').map(e => e.toLowerCase().trim()).filter(Boolean))];
+        if (!alvos.length) {
+          res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'Informe as contas que devem ter a assinatura expirada.' }));
+        }
+
+        const localUsers = getLocalUsers();
+        const agora = Date.now();
+        const actorEmail = String(actor.email || '').toLowerCase().trim();
+        const vencida = new Date(agora - 60 * 1000);
+        const vencidaIso = getBrasiliaIsoString(vencida);
+        const vencidaSql = getBrasiliaSqlString(vencida);
+        const expiradas = [];
+        const ignoradas = [];
+        for (const email of alvos) {
+          const u = localUsers.find(x => x && x.email && String(x.email).toLowerCase() === email);
+          let motivo = '';
+          if (!u) motivo = 'nao_encontrada';
+          else if (email === actorEmail) motivo = 'propria_conta';
+          else if (u.role === 'Administrador') motivo = 'administrador';
+          else if (String(u.subscription_plan || '').toLowerCase() === 'vitalicio') motivo = 'vitalicia';
+          else {
+            const venceEm = Pagamentos.paraMs(getBrasiliaIsoString(u.subscription_expires_at) || u.subscription_expires_at);
+            if (String(u.subscription_status || '').toLowerCase() !== 'active' || !(venceEm > agora)) motivo = 'sem_assinatura_ativa';
+          }
+          if (motivo) { ignoradas.push({ email, reason: motivo }); continue; }
+          u.subscription_status = 'expired';
+          u.subscription_plan = null;
+          u.subscription_expires_at = vencidaIso;
+          expiradas.push(email);
+        }
+
+        if (expiradas.length) {
+          saveLocalUsers(localUsers);
+          if (pool) {
+            for (const email of expiradas) {
+              try {
+                await pool.query(
+                  `UPDATE usuarios SET subscription_status = 'expired', subscription_plan = NULL, subscription_expires_at = $1 WHERE LOWER(email) = LOWER($2)`,
+                  [vencidaSql, email]
+                );
+              } catch (sqlErr) {
+                console.warn('[AVISO BD] Falha ao expirar assinatura no SQL Server:', sqlErr.message);
+              }
+            }
+          }
+          const mostradas = expiradas.slice(0, 20).join(', ') + (expiradas.length > 20 ? ' e mais ' + (expiradas.length - 20) : '');
+          console.log(`🔒 [ASSINATURAS EXPIRADAS] ${expiradas.length} conta(s) por ${actorEmail} (exige pagamento confirmado)`);
+          recordSystemLog(actor.name || 'Administrador', actorEmail, 'Assinatura', 'Financeiro',
+            `Expirou ${expiradas.length} assinatura(s) em lote e passou a exigir pagamento confirmado: ${mostradas}`);
+          expiradas.forEach(email => broadcastEvent('subscription_revoked', { email, revoked_by: actorEmail }));
+        }
+
+        res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({
+          success: true,
+          expired: expiradas,
+          skipped: ignoradas,
+          message: expiradas.length
+            ? `${expiradas.length} assinatura(s) expirada(s). Essas contas só voltam a acessar depois que um novo pagamento for confirmado.` + (ignoradas.length ? ` ${ignoradas.length} conta(s) ignorada(s).` : '')
+            : 'Nenhuma assinatura precisou ser expirada.'
+        }));
+      } catch (err) {
+        const failure = publicFailure(err, 'Não foi possível expirar as assinaturas agora.', 500);
         res.writeHead(failure.status, { ...corsHeaders, 'Content-Type': 'application/json' });
         return res.end(JSON.stringify({ success: false, error: failure.error }));
       }

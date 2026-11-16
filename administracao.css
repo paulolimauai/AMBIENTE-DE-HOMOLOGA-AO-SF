@@ -358,6 +358,12 @@ html.adm-gaveta-aberta { overflow: hidden !important; }
 .adm-dlg-cx { position: relative !important; width: min(460px, 100%) !important; padding: 22px !important; border-radius: 20px !important; border: 1px solid var(--adm-line) !important; background: linear-gradient(180deg, #111A2D, #0A101C) !important; box-shadow: 0 30px 80px -20px rgba(0, 0, 0, .95) !important; }
 .adm-dlg-cx h3 { margin: 0 0 10px !important; font-size: 18px !important; font-weight: 800 !important; color: #fff !important; line-height: 1.25 !important; }
 .adm-dlg-tx p { margin: 0 0 12px !important; font-size: 14px !important; color: var(--adm-ink2) !important; line-height: 1.5 !important; }
+.adm-dlg-lista { margin: 0 0 12px !important; padding: 0 !important; list-style: none !important; max-height: 220px !important; overflow: auto !important; border-radius: 12px !important; border: 1px solid var(--adm-line) !important; background: rgba(0, 0, 0, .28) !important; }
+.adm-dlg-lista li { padding: 8px 12px !important; font-size: 13.5px !important; font-weight: 650 !important; color: var(--adm-ink) !important; border-bottom: 1px solid var(--adm-line2) !important; overflow-wrap: anywhere !important; }
+.adm-dlg-lista li:last-child { border-bottom: 0 !important; }
+.adm-dlg-lista small { display: block !important; font-size: 12px !important; font-weight: 500 !important; color: var(--adm-mut) !important; }
+.adm-dlg-lista .adm-dlg-mais { font-style: italic !important; font-weight: 500 !important; color: var(--adm-ink2) !important; }
+.adm-btn:disabled { opacity: .38 !important; cursor: not-allowed !important; }
 .adm-dlg-bt { display: flex !important; justify-content: flex-end !important; gap: 10px !important; margin-top: 8px !important; flex-wrap: wrap !important; }
 .adm-senha { display: flex !important; align-items: center !important; gap: 10px !important; padding: 10px 12px !important; border-radius: 12px !important; background: rgba(0, 0, 0, .4) !important; border: 1px solid rgba(var(--adm-acc), .55) !important; margin-bottom: 8px !important; }
 .adm-senha code { flex: 1 1 auto !important; min-width: 0 !important; font-family: ui-monospace, SFMono-Regular, Consolas, monospace !important; font-size: 18px !important; font-weight: 700 !important; letter-spacing: .06em !important; color: #fff !important; overflow-wrap: anywhere !important; user-select: all !important; }

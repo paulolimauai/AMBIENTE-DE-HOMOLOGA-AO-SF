@@ -443,6 +443,83 @@ test('oferta: 1 dia grátis no cadastro e depois plano único Mensal de R$ 18,00
   assert.ok(dias > 29 && dias <= 30.01, 'validade de 30 dias: ' + dias);
 });
 
+test('expirar assinaturas em lote: o servidor confere cada conta e só expira assinatura ativa de usuário comum', async () => {
+  const admin = (await login('admin@teste.nexus', 'Admin@12345')).token;
+  const ana = (await login('ana@teste.nexus', 'Ana@12345')).token;
+  const rota = '/api/subscription/revoke-payment-bulk';
+  const lote = (token, emails) => api('POST', rota, { token, body: { target_emails: emails } });
+  const permissoes = (email, lista) => api('POST', '/api/admin/permissions', { token: admin, body: { email, permissions: lista } });
+  const criar = async (n, cpfBase) => {
+    const email = 'lote' + n + '@teste.nexus';
+    const nome = ['Lote Alfa', 'Lote Beta', 'Lote Gama', 'Lote Delta', 'Lote Epsilon'][n - 1];   // o cadastro só aceita letras no nome
+    const r = await api('POST', '/api/register', { body: { name: nome, email, password: 'Lote@12345', cpf: cpfValido(cpfBase), terms_accepted: true, truthful_declaration: true } });
+    assert.equal(r.status, 200, r.texto);
+    return email;
+  };
+  const status = async (email) => (await api('GET', '/api/subscription/status?email=' + encodeURIComponent(email), { token: (await login(email, 'Lote@12345')).token })).json;
+  const mensal = (email) => api('POST', '/api/subscription/confirm-payment', { token: admin, body: { admin_email: 'admin@teste.nexus', target_email: email, plan: 'mensal', method: 'pix' } });
+
+  const a = await criar(1, 310245871), b = await criar(2, 428917305), c = await criar(3, 536078142), d = await criar(4, 641829073), e = await criar(5, 752093614);
+  assert.equal((await mensal(a)).status, 200);
+  assert.equal((await mensal(b)).status, 200);
+  assert.equal((await mensal(e)).status, 200);
+  const vit = await api('POST', '/api/subscription/admin-grant-time', { token: admin, body: { admin_email: 'admin@teste.nexus', target_email: c, is_lifetime: true } });
+  assert.equal(vit.status, 200, vit.texto);
+  assert.equal((await status(a)).is_subscribed, true);
+
+  // quem não tem a permissão (ou nem entrou) não expira nada
+  assert.ok([401, 403].includes((await api('POST', rota, { body: { target_emails: [a] } })).status), 'sem login');
+  assert.equal((await lote(ana, [a])).status, 403, 'usuário comum');
+  assert.equal((await status(a)).is_subscribed, true, 'a recusa não mexeu na conta');
+
+  // pedido malformado
+  for (const corpo of [{}, { target_emails: 'a@b.com' }, { target_emails: [] }, { target_emails: [123, { toString: 1 }, null] }, { target_emails: Array.from({ length: 501 }, (_, i) => 'x' + i + '@teste.nexus') }]) {
+    const r = await api('POST', rota, { token: admin, body: corpo });
+    assert.equal(r.status, 400, JSON.stringify(corpo).slice(0, 60) + ' -> ' + r.texto);
+  }
+
+  // o administrador manda 7 contas: 2 com assinatura ativa (uma repetida e em maiúsculas), 1 vitalícia, 1 em teste, a própria, uma que não existe
+  const r1 = await lote(admin, [a, b.toUpperCase(), a, c, d, 'admin@teste.nexus', 'nao@existe.nexus']);
+  assert.equal(r1.status, 200, r1.texto);
+  assert.equal(r1.json.success, true);
+  assert.deepEqual([...r1.json.expired].sort(), [a, b].sort());
+  const motivo = Object.fromEntries(r1.json.skipped.map((s) => [s.email, s.reason]));
+  assert.deepEqual(motivo, { [c]: 'vitalicia', [d]: 'sem_assinatura_ativa', 'admin@teste.nexus': 'propria_conta', 'nao@existe.nexus': 'nao_encontrada' });
+  assert.match(r1.json.message, /2 assinatura/);
+
+  // de verdade: as duas voltam a exigir pagamento (arquivo e consulta), as outras ficam como estavam
+  for (const u of [a, b]) {
+    const s = await status(u);
+    assert.equal(s.is_subscribed, false, u + ' deveria exigir pagamento');
+    assert.equal(s.status, 'expired');
+    const reg = lerArquivo('local_users.json').find((x) => x.email === u);
+    assert.equal(reg.subscription_status, 'expired');
+    assert.equal(reg.subscription_plan, null);
+    assert.ok(new Date(reg.subscription_expires_at).getTime() < Date.now(), 'vencimento no passado');
+  }
+  assert.equal((await status(c)).is_subscribed, true, 'vitalícia intacta');
+  assert.equal((await status(e)).is_subscribed, true, 'conta fora do pedido intacta');
+  assert.equal((await status(d)).is_subscribed, false);
+
+  // repetir não faz nada de novo (já estão expiradas) e a auditoria registrou a primeira vez
+  const r2 = await lote(admin, [a, b]);
+  assert.equal(r2.status, 200);
+  assert.deepEqual(r2.json.expired, []);
+  assert.deepEqual(r2.json.skipped.map((s) => s.reason), ['sem_assinatura_ativa', 'sem_assinatura_ativa']);
+  assert.match(r2.json.message, /Nenhuma/);
+  assert.ok(JSON.stringify((await api('GET', '/api/logs', { token: admin })).json).includes('Expirou 2 assinatura(s) em lote'), 'a auditoria registra o lote');
+
+  // quem só recebeu a permissão de liberar assinatura também pode, mas nunca em administrador nem na própria conta
+  assert.equal((await permissoes('ana@teste.nexus', ['assinatura.liberar'])).status, 200);
+  const r3 = await lote(ana, [e, 'admin@teste.nexus', 'ana@teste.nexus']);
+  assert.equal(r3.status, 200, r3.texto);
+  assert.deepEqual(r3.json.expired, [e]);
+  assert.deepEqual(Object.fromEntries(r3.json.skipped.map((s) => [s.email, s.reason])), { 'admin@teste.nexus': 'administrador', 'ana@teste.nexus': 'propria_conta' });
+  assert.equal((await status(e)).is_subscribed, false);
+  assert.equal((await permissoes('ana@teste.nexus', [])).status, 200);
+  assert.equal((await lote(ana, [a])).status, 403, 'tirada a permissão, corta na hora');
+});
+
 test('SSE: limite de conexões por usuário e resposta 429 acima dele', async () => {
   const token = (await login('bia@teste.nexus', 'Bia@12345')).token;
   const abertas = [];

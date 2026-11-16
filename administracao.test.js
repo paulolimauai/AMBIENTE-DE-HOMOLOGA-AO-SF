@@ -245,6 +245,41 @@ test('detalheHTML: ações do administrador sobre outra conta e bloqueio das aç
   assert.ok(!dBia.includes('data-adm-a="boleto"') && !dBia.includes('data-adm-a="tempo"') && dBia.includes('acesso ilimitado'), 'nem 2ª via de boleto nem liberar tempo para administrador');
 });
 
+test('alvosExpirar: só assinatura ativa de usuário comum; o resto é ignorado e contado por motivo', () => {
+  const futuro = new Date(AGORA + 20 * DIA).toISOString();
+  const ativa = (email) => usuario({ email, name: email, subscription_status: 'active', subscription_plan: 'mensal', subscription_expires_at: futuro });
+  const ctx = {
+    agora: AGORA, eu: { email: 'ana@x.com' },
+    usuarios: [usuario({ email: 'ana@x.com', role: 'Administrador' }), usuario({ email: 'bia@x.com', role: 'Administrador' }), ativa('c1@x.com'), ativa('c2@x.com'),
+      usuario({ email: 'vit@x.com', subscription_status: 'active', subscription_plan: 'vitalicio' }), usuario({ email: 'teste@x.com' }),
+      usuario({ email: 'velha@x.com', subscription_status: 'active', subscription_plan: 'mensal', subscription_expires_at: new Date(AGORA - DIA).toISOString() }), usuario({ email: 'fora@x.com' })]
+  };
+  const m = A.calcular(ctx);
+  const r = A.alvosExpirar(m.todos, ['C1@x.com', 'c2@x.com', 'vit@x.com', 'teste@x.com', 'velha@x.com', 'bia@x.com', 'ana@x.com', 'nao@existe.com'], m.eu);
+  assert.deepEqual(r.elegiveis.map((x) => x.email).sort(), ['c1@x.com', 'c2@x.com']);
+  assert.deepEqual(r.ignoradas, { voce: 1, admin: 1, vitalicio: 1, semAssinatura: 2 });
+  assert.equal(A.textoIgnoradas(r.ignoradas), '2 sem assinatura ativa, 1 vitalícia, 1 administrador, a sua conta');
+  assert.equal(A.textoIgnoradas({ voce: 0, admin: 0, vitalicio: 0, semAssinatura: 0 }), '');
+  assert.deepEqual(A.alvosExpirar(m.todos, [], m.eu).elegiveis, [], 'seleção vazia não alcança ninguém');
+});
+
+test('barra de lote: o botão "Expirar assinaturas" mostra quantas contas serão afetadas e fica desligado sem assinatura ativa', () => {
+  const futuro = new Date(AGORA + 20 * DIA).toISOString();
+  const ativa = (email) => usuario({ email, name: email, subscription_status: 'active', subscription_plan: 'mensal', subscription_expires_at: futuro });
+  const ctx = { agora: AGORA, eu: { email: 'ana@x.com' }, acoes: {}, usuarios: [usuario({ email: 'ana@x.com', role: 'Administrador' }), ativa('c1@x.com'), ativa('c2@x.com'), usuario({ email: 'teste@x.com' })] };
+  const salvo = Object.assign({}, A.estado.sel);
+  A.estado.sel = { 'c1@x.com': true, 'c2@x.com': true, 'teste@x.com': true };
+  let h = A.html(() => ctx);
+  assert.ok(h.includes('data-adm-acao="lote-expirar"') && h.includes('Expirar assinaturas (2)'), 'conta só as 2 com assinatura ativa');
+  assert.ok(!/data-adm-acao="lote-expirar"[^>]*disabled/.test(h));
+  A.estado.sel = { 'teste@x.com': true };
+  h = A.html(() => ctx);
+  assert.ok(/data-adm-acao="lote-expirar" disabled title="Nenhuma conta selecionada tem assinatura ativa"/.test(h), 'sem assinatura ativa na seleção o botão fica desligado');
+  A.estado.sel = {};
+  assert.ok(!A.html(() => ctx).includes('lote-expirar'), 'sem seleção não há barra de lote');
+  A.estado.sel = salvo;
+});
+
 test('permissões delegadas: a gaveta mostra uma caixa por permissão só para outra conta de usuário', () => {
   const cat = [{ id: 'assinatura.liberar', label: 'Liberar assinatura manual', desc: 'Conceder tempo.' }, { id: 'logs.ver', label: 'Ver auditoria e logs', desc: 'Somente leitura.' }];
   const base = [usuario({ email: 'ana@x.com', name: 'Ana', role: 'Administrador' }), usuario({ permissions: ['assinatura.liberar'] }), usuario({ email: 'bia@x.com', name: 'Bia', role: 'Administrador' })];
