@@ -59,9 +59,9 @@ html.user-logged-in { --nx-sidebar-w: clamp(280px, 23vw, 344px) !important; }
 @media (min-width: 861px) {
   /* Títulos de seção: um único padrão (tamanho, espaçamento, cor neutra e discreta) para todas as seções, inclusive a do admin */
   html.user-logged-in:not(.sidebar-collapsed) body:not(.sidebar-collapsed) #menu .menu-section-title {
-    font-size: 10.5px !important;
+    font-size: 14px !important;
     font-weight: 700 !important;
-    letter-spacing: .14em !important;
+    letter-spacing: .08em !important;
     line-height: 1 !important;
     text-transform: uppercase !important;
     color: #BAC7DA !important;   /* cinza-azulado neutro; no pior pixel (brilho dourado do topo) dá >= 4,5:1 */
@@ -116,7 +116,7 @@ html.user-logged-in { --nx-sidebar-w: clamp(280px, 23vw, 344px) !important; }
     border-radius: 999px !important;
     background: rgba(16, 185, 129, .12) !important;
     color: #A7F0D1 !important;
-    font-size: 10.5px !important;
+    font-size: 14px !important;
     font-weight: 600 !important;
     letter-spacing: .02em !important;
     line-height: 1.35 !important;
@@ -169,7 +169,7 @@ html.user-logged-in #mobileBottomBar .mobile-bottom-btn {
   background: transparent !important;
   box-shadow: none !important;
   color: var(--nx-sh-muted) !important;
-  font-size: 12px !important;
+  font-size: 14px !important;
   font-weight: 650 !important;
   line-height: 1.1 !important;
   letter-spacing: 0 !important;
@@ -247,7 +247,7 @@ html.user-logged-in #mobileDrawer #closeMobileDrawer {
 html.user-logged-in #mobileDrawer .brand { display: flex !important; align-items: center !important; gap: 12px !important; }
 html.user-logged-in #mobileDrawer .brand .name { display: flex !important; flex-direction: column !important; align-items: flex-start !important; justify-content: center !important; gap: 2px !important; width: auto !important; }
 html.user-logged-in #mobileDrawer .brand-title { display: block !important; font-size: 17px !important; font-weight: 800 !important; letter-spacing: .22em !important; color: #fff !important; line-height: 1 !important; }
-html.user-logged-in #mobileDrawer .brand-sub { display: block !important; font-size: 9px !important; font-weight: 700 !important; letter-spacing: .16em !important; color: var(--nx-sh-muted) !important; line-height: 1 !important; }
+html.user-logged-in #mobileDrawer .brand-sub { display: block !important; font-size: 14px !important; font-weight: 700 !important; letter-spacing: .08em !important; color: var(--nx-sh-muted) !important; line-height: 1 !important; }
 
 html.user-logged-in #mobileDrawer .mobile-drawer-user {
   flex: 0 0 auto !important;
@@ -291,7 +291,7 @@ html.user-logged-in #mobileDrawer .mobile-drawer-user-copy small {
   border-radius: 999px !important;
   background: rgba(16, 185, 129, .12) !important;
   color: #A7F0D1 !important;
-  font-size: 11px !important;
+  font-size: 14px !important;
   font-weight: 600 !important;
   letter-spacing: .02em !important;
   line-height: 1.4 !important;
@@ -324,9 +324,9 @@ html.user-logged-in #mobileDrawer .mobile-drawer-section-title {
   gap: 12px !important;
   margin: 0 !important;
   padding: 16px 4px 8px !important;
-  font-size: 10.5px !important;
+  font-size: 14px !important;
   font-weight: 700 !important;
-  letter-spacing: .14em !important;
+  letter-spacing: .08em !important;
   text-transform: uppercase !important;
   text-align: center !important;
   color: var(--nx-sh-muted) !important;
@@ -469,8 +469,8 @@ html.user-logged-in #pageContent label[style*="justify-content:space-between"] >
   html.user-logged-in #pageContent .subscription-overview > div:last-child { width: 100% !important; margin-left: 0 !important; flex-wrap: wrap !important; }
   html.user-logged-in #pageContent .subscription-overview > div:last-child button { flex: 1 1 auto !important; }
 }
-/* Etiquetas dos cartões de resumo: no mínimo 10,5px para leitura */
-html.user-logged-in #pageContent .kpi-tag { font-size: 10.5px !important; }
+/* Etiquetas dos cartões de resumo: padrão 14px para leitura */
+html.user-logged-in #pageContent .kpi-tag { font-size: 14px !important; }
 
 /* =====================================================================================
    7. Placas de vidro de sessão: entrada ("Sessão Autenticada"), saída e expiração por inatividade
@@ -568,13 +568,13 @@ html.user-logged-in #pageContent .kpi-tag { font-size: 10.5px !important; }
 .sg-meta { display: flex !important; align-items: center !important; flex-wrap: wrap !important; gap: 6px 12px !important; margin: 1px 0 9px !important; min-width: 0 !important; }
 .sg-status-pill {
   display: inline-flex !important; align-items: center !important; gap: 6px !important; padding: 5px 11px 5px 9px !important; border-radius: 999px !important;
-  font-size: 10.5px !important; font-weight: 800 !important; letter-spacing: .08em !important; text-transform: uppercase !important; line-height: 1 !important;
+  font-size: 14px !important; font-weight: 800 !important; letter-spacing: .08em !important; text-transform: uppercase !important; line-height: 1 !important;
   color: #fff !important; border: 1px solid rgba(var(--sg), .8) !important;
   background: linear-gradient(rgba(4, 9, 22, .56), rgba(4, 9, 22, .56)), linear-gradient(135deg, rgba(var(--sg), .42), rgba(var(--sg-2), .34)) !important;
   box-shadow: 0 4px 16px -4px rgba(var(--sg), .5), inset 0 1px 0 rgba(255, 255, 255, .28) !important;
 }
 .sg-status-pill svg { width: 12px !important; height: 12px !important; flex: none !important; color: rgb(var(--sg)) !important; filter: brightness(1.45) !important; }
-.sg-state { display: inline-flex !important; align-items: center !important; gap: 7px !important; font-size: 12px !important; font-weight: 600 !important; color: #E6ECF6 !important; }
+.sg-state { display: inline-flex !important; align-items: center !important; gap: 7px !important; font-size: 14px !important; font-weight: 600 !important; color: #E6ECF6 !important; }
 .sg-dot { position: relative !important; width: 8px !important; height: 8px !important; border-radius: 50% !important; background: rgb(var(--sg)) !important; box-shadow: 0 0 10px rgb(var(--sg)) !important; }
 .sg-dot::after { content: "" !important; position: absolute !important; inset: 0 !important; border-radius: 50% !important; background: rgb(var(--sg)) !important; animation: sgPulse 1.9s ease-out infinite; }
 @keyframes sgPulse { 0% { transform: scale(1); opacity: .7; } 100% { transform: scale(3); opacity: 0; } }
@@ -589,12 +589,12 @@ html.user-logged-in #pageContent .kpi-tag { font-size: 10.5px !important; }
 .sg-x svg { width: 14px !important; height: 14px !important; }
 .sg-plaque:focus { outline: none !important; }
 .sg-title { margin: 0 0 4px !important; font-size: 19px !important; font-weight: 800 !important; letter-spacing: -.02em !important; line-height: 1.25 !important; color: #fff !important; text-shadow: 0 2px 16px rgba(0, 0, 0, .4) !important; }
-.sg-text { margin: 0 !important; font-size: 13px !important; line-height: 1.5 !important; color: #DDE5F1 !important; }
+.sg-text { margin: 0 !important; font-size: 14px !important; line-height: 1.5 !important; color: #DDE5F1 !important; }
 .sg-text strong { color: #fff !important; font-weight: 700 !important; }
 .sg-chips { display: flex !important; flex-wrap: wrap !important; gap: 6px !important; margin: 0 !important; padding: 14px 0 0 !important; border: 0 !important; border-top: 1px solid rgba(255, 255, 255, .14) !important; }
 .sg-chip {
   display: inline-flex !important; align-items: center !important; gap: 6px !important; padding: 5px 10px 5px 8px !important; border-radius: 999px !important;
-  font-size: 11.5px !important; font-weight: 600 !important; line-height: 1 !important; color: #EAF0F9 !important;
+  font-size: 14px !important; font-weight: 600 !important; line-height: 1 !important; color: #EAF0F9 !important;
   background: rgba(255, 255, 255, .08) !important; border: 1px solid rgba(255, 255, 255, .18) !important; box-shadow: inset 0 1px 0 rgba(255, 255, 255, .12) !important;
 }
 .sg-chip svg { width: 12px !important; height: 12px !important; flex: none !important; color: rgb(var(--sg)) !important; filter: brightness(1.45) saturate(1.1) !important; }
@@ -734,8 +734,8 @@ html.nexus-farewell #authPage { display: none !important; }
   .sg-plate { width: 44px !important; height: 44px !important; border-radius: 14px !important; }
   .sg-plate svg { width: 22px !important; height: 22px !important; }
   .sg-title { font-size: 17.5px !important; }
-  .sg-text { font-size: 13px !important; }
-  .sg-chip { font-size: 11px !important; }
+  .sg-text { font-size: 14px !important; }
+  .sg-chip { font-size: 14px !important; }
 }
 @media (prefers-reduced-motion: reduce) {
   .sg, .sg-stage { transition: opacity .2s ease !important; transform: none !important; }
@@ -805,7 +805,7 @@ html.user-logged-in.is-admin .topheader #headerMirrorExitBtn { height: var(--nx-
 /* Controle do tamanho (dentro da lista "Tamanho / Resolução"; só o administrador vê) */
 html.user-logged-in:not(.is-admin) .scale-dropdown .nx-topic-sec { display: none !important; }
 html.user-logged-in.is-admin .scale-dropdown .nx-topic-sec { margin: 6px 0 0 !important; padding: 10px 10px 6px !important; border-top: 1px solid var(--nx-sh-line) !important; }
-html.user-logged-in .scale-dropdown .nx-topic-lbl { margin: 0 0 7px !important; font-size: 11px !important; font-weight: 800 !important; letter-spacing: .06em !important; text-transform: uppercase !important; color: var(--nx-sh-muted) !important; }
+html.user-logged-in .scale-dropdown .nx-topic-lbl { margin: 0 0 7px !important; font-size: 14px !important; font-weight: 800 !important; letter-spacing: .06em !important; text-transform: uppercase !important; color: var(--nx-sh-muted) !important; }
 html.user-logged-in .scale-dropdown .nx-topic-row { display: flex !important; gap: 6px !important; }
 html.user-logged-in .scale-dropdown .nx-topic-btn {
   flex: 1 1 0 !important;
@@ -816,7 +816,7 @@ html.user-logged-in .scale-dropdown .nx-topic-btn {
   border-radius: 10px !important;
   background: var(--nx-sh-wash) !important;
   color: var(--nx-sh-ink-2) !important;
-  font-size: 12.5px !important;
+  font-size: 14px !important;
   font-weight: 700 !important;
   cursor: pointer !important;
   justify-content: center !important;
@@ -849,12 +849,11 @@ html.user-logged-in .adm-ferr .adm-ftog { position: absolute !important; opacity
 
 @media (max-width: 600px) {
 
-  /* 10.1 Marca do cabeçalho e da gaveta (7px e 9px eram ilegíveis) */
+  /* 10.1 Marca do cabeçalho e da gaveta (padrão 14px) */
   html.user-logged-in .topheader .brand-sub,
-  html.user-logged-in #mobileDrawer .brand-sub { font-size: 10px !important; letter-spacing: .08em !important; }
+  html.user-logged-in #mobileDrawer .brand-sub { font-size: 14px !important; letter-spacing: .08em !important; }
 
-  /* 10.2 Texto: nada abaixo de 12px. A lista abaixo foi gerada a partir das regras de dashboard-financeiro.css, transacoes.css e administracao.css
-     que usavam 10-11,5px; o restante (classes antigas e tamanhos fixos escritos no HTML) é pego por seletor de classe e de atributo. */
+  /* 10.2 Texto: padrão 14px em toda a interface. */
   html.user-logged-in :is(
     .fd-data,
     .fd-sub,
@@ -905,9 +904,9 @@ html.user-logged-in .adm-ferr .adm-ftog { position: absolute !important; opacity
     .adm-card-meta dt,
     .adm-uso span,
     .adm-eventos small
-  ) { font-size: 12px !important; }
-  html.user-logged-in #pageContent :is(.kpi-tag, .kpi .sub, .kpi .row1 > span:first-child, .sub, small, .role-badge, .pill, dt, th, .tag, .type-pill, .acc-card-chip, .acc-subgrid-label, .btn-count-pill, .acc-metric-hero-label, .profile-photo-copy span, .pg-barra-v, label.profile-photo-button) { font-size: 12px !important; }
-  html.user-logged-in #pageContent :is([style*="font-size:9px"], [style*="font-size: 9px"], [style*="font-size:9.5px"], [style*="font-size: 9.5px"], [style*="font-size:10px"], [style*="font-size: 10px"], [style*="font-size:10.5px"], [style*="font-size: 10.5px"], [style*="font-size:11px"], [style*="font-size: 11px"], [style*="font-size:11.5px"], [style*="font-size: 11.5px"]) { font-size: 12px !important; }
+  ) { font-size: 14px !important; }
+  html.user-logged-in #pageContent :is(.kpi-tag, .kpi .sub, .kpi .row1 > span:first-child, .sub, small, .role-badge, .pill, dt, th, .tag, .type-pill, .acc-card-chip, .acc-subgrid-label, .btn-count-pill, .acc-metric-hero-label, .profile-photo-copy span, .pg-barra-v, label.profile-photo-button) { font-size: 14px !important; }
+  html.user-logged-in #pageContent :is([style*="font-size:9px"], [style*="font-size: 9px"], [style*="font-size:9.5px"], [style*="font-size: 9.5px"], [style*="font-size:10px"], [style*="font-size: 10px"], [style*="font-size:10.5px"], [style*="font-size: 10.5px"], [style*="font-size:11px"], [style*="font-size: 11px"], [style*="font-size:11.5px"], [style*="font-size: 11.5px"], [style*="font-size:12px"], [style*="font-size: 12px"], [style*="font-size:12.5px"], [style*="font-size: 12.5px"], [style*="font-size:13px"], [style*="font-size: 13px"], [style*="font-size:13.5px"], [style*="font-size: 13.5px"]) { font-size: 14px !important; }
   /* 10.3 Alvos de toque: 40px (44px nos botões principais) */
   html.user-logged-in #pageContent :is(.btn-action-edit, .btn-action-del) { width: 40px !important; height: 40px !important; min-width: 40px !important; }
   html.user-logged-in #pageContent :is(.btn-ghost, .pass-toggle, label.profile-photo-button, .txp-status, .tx-toolbar button, .fd-btn, .fd-aba, .fd-btn-tabela, .fd-btn-baixa) { min-height: 40px !important; }
@@ -920,6 +919,14 @@ html.user-logged-in .adm-ferr .adm-ftog { position: absolute !important; opacity
   html.user-logged-in #pageContent #periodBtn.period,
   html.user-logged-in #pageContent :is(.fd-btn-receita, .fd-btn-despesa) { min-height: 44px !important; }
   html.user-logged-in #pageContent .fd-link { display: inline-flex !important; align-items: center !important; min-height: 40px !important; padding: 0 6px !important; }
+  /* 10.3b Alvos de toque complementares (auditoria real em 390px, 17/11/2026): CTA principal 44px; paginação, rodapé de transações,
+     nome da conta em Assinaturas e selects das janelas 40px; caixa de seleção dos cartões ~42px; fechar do aviso ~33px */
+  html.user-logged-in :is(.btn-primary, button.save, #saveBtn, #accSaveBtn, #catSaveBtn) { min-height: 44px !important; }
+  html.user-logged-in #pageContent :is(.txp-more, .txp-export) { min-height: 40px !important; }
+  html.user-logged-in .adm-pg { min-height: 40px !important; min-width: 40px !important; }
+  html.user-logged-in .as-nome { display: inline-flex !important; align-items: center !important; min-height: 40px !important; padding: 0 4px !important; }
+  html.user-logged-in .as-custom :is(input, select), html.user-logged-in .as-lote-tempo select { min-height: 40px !important; }
+  html.user-logged-in .toast-close { padding: 8px 10px !important; }
 
   /* 10.4 Resumos em 2 colunas (antes uma pilha de cartões de ~130px: 4 cartões = 550px de rolagem) */
   html.user-logged-in #pageContent :is(.tx-kpis, .orc-summary, .cards-summary-panel .kpi-grid) { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 10px !important; }
@@ -961,7 +968,7 @@ html.user-logged-in .adm-ferr .adm-ftog { position: absolute !important; opacity
   html.user-logged-in #pageContent table.nx-rec td:nth-child(10) { grid-column: 1 / -1 !important; grid-row: 6 !important; padding-top: 10px !important; border-top: 1px solid var(--nx-sh-line) !important; }
   html.user-logged-in #pageContent table.nx-rec td:nth-child(10) .row-actions { display: flex !important; width: 100% !important; justify-content: flex-end !important; gap: 10px !important; }
   html.user-logged-in #pageContent table.nx-rec td:nth-child(n+2):nth-child(-n+7)::before {
-    display: block !important; margin: 0 0 4px !important; font-size: 12px !important; font-weight: 700 !important; letter-spacing: .06em !important; text-transform: uppercase !important; color: var(--nx-sh-muted) !important;
+    display: block !important; margin: 0 0 4px !important; font-size: 14px !important; font-weight: 700 !important; letter-spacing: .06em !important; text-transform: uppercase !important; color: var(--nx-sh-muted) !important;
   }
   html.user-logged-in #pageContent table.nx-rec td:nth-child(2)::before { content: "Categoria" !important; }
   html.user-logged-in #pageContent table.nx-rec td:nth-child(3)::before { content: "Conta / cartão" !important; }
@@ -1045,8 +1052,8 @@ html.user-logged-in .adm-ferr .adm-ftog { position: absolute !important; opacity
   html.user-logged-in .adm-corpo .adm-card-meta dd { overflow-wrap: anywhere !important; }
   html.user-logged-in .adm-corpo .adm-card-acoes { display: flex !important; justify-content: flex-end !important; gap: 8px !important; }
   html.user-logged-in .adm-corpo .adm-ib { width: 44px !important; height: 44px !important; min-width: 44px !important; }
-  /* A caixa de seleção do cartão tinha 18px: ampliada (a área de toque cresce junto com a escala) */
-  html.user-logged-in .adm-corpo input.adm-chk { width: 22px !important; height: 22px !important; transform: scale(1.7) !important; margin: 0 12px 0 9px !important; }
+  /* A caixa de seleção do cartão tinha 18px: ampliada (a área de toque cresce junto com a escala; 1.9 ≈ 42px) */
+  html.user-logged-in .adm-corpo input.adm-chk { width: 22px !important; height: 22px !important; transform: scale(1.9) !important; margin: 0 12px 0 9px !important; }
   html.user-logged-in .adm-corpo .adm-btn.adm-btn-sm { min-height: 44px !important; }
   /* Cadastros & Contas: "x" da busca, itens do menu "⋯" da linha (alvo de toque) e o convite "Ver →" dos cartões, que no celular são fichas que rolam */
   html.user-logged-in .adm-corpo .adm-busca-x { width: 40px !important; height: 40px !important; }
@@ -1060,6 +1067,80 @@ html.user-logged-in .adm-ferr .adm-ftog { position: absolute !important; opacity
   html.user-logged-in .topheader .brand-sub { display: none !important; }
   html.user-logged-in #pageContent .kpi .row1 > .ic { display: none !important; }
   html.user-logged-in #pageContent table.nx-rec td:nth-child(9) { font-size: 18px !important; white-space: nowrap !important; }
+}
+
+/* =====================================================================================
+   Padronização Definitiva da Interface: Padrão Tamanho 14 (Global)
+   ===================================================================================== */
+html.user-logged-in,
+html.user-logged-in body,
+html.user-logged-in #pageContent,
+html.user-logged-in #pageContent p,
+html.user-logged-in #pageContent span,
+html.user-logged-in #pageContent label,
+html.user-logged-in #pageContent input,
+html.user-logged-in #pageContent select,
+html.user-logged-in #pageContent textarea,
+html.user-logged-in #pageContent td,
+html.user-logged-in #pageContent th,
+html.user-logged-in #pageContent dt,
+html.user-logged-in #pageContent dd,
+html.user-logged-in #pageContent li,
+html.user-logged-in #pageContent small,
+html.user-logged-in #pageContent .sub,
+html.user-logged-in #pageContent .tag,
+html.user-logged-in #pageContent .pill,
+html.user-logged-in #pageContent .chip,
+html.user-logged-in #pageContent .role-badge,
+html.user-logged-in #pageContent .kpi-tag,
+html.user-logged-in #pageContent .kpi .sub,
+html.user-logged-in .topheader .brand-title,
+html.user-logged-in .topheader .brand-sub,
+html.user-logged-in .header-user-name,
+html.user-logged-in .header-user-role,
+html.user-logged-in #menu .menu-section-title,
+html.user-logged-in #menu button span.label,
+html.user-logged-in #mobileDrawer button,
+html.user-logged-in #mobileDrawer span,
+html.user-logged-in #mobileBottomBar .mobile-bottom-btn {
+  font-size: 14px !important;
+}
+
+html.user-logged-in :is(
+  .fd-data, .fd-sub, .fd-aviso span:not(.fd-aviso-ic), .fd-legenda, .fd-selo, .fd-sub-titulo,
+  .fd-dica, .fd-acum-eixo, .fd-acum-legenda, .fd-hero-cap span, .fd-spark-eixo, .fd-mini-rot,
+  .fd-mini-item em, .fd-tile-linha, .fd-delta, .fd-delta-rot, .fd-aba, .fd-abas-peq .fd-aba,
+  .fd-btn-tabela, .fd-tabela, .fd-tabela th, .fd-tabela td, .fd-metrica span, .fd-metrica em, .fd-rank-valor small,
+  .fd-rank-resto, .fd-rodape-nota, .fd-resumo-agenda em, .fd-grupo h3, .fd-grupo h3 em, .fd-ag-data span,
+  .fd-ag-info span, .fd-btn-baixa, .fd-link, .fd-pilar-topo, .fd-cartao-topo, .fd-pilar-topo strong,
+  .fd-cartao-topo strong, .fd-cartao-nota, .fd-ult-data, .fd-ult-info span, .fd-vazio span,
+  .txp-table thead th, .txp-table tbody td, .txp-w, .txp-chip, .txp-foot-chip, .txp-foot-info, .txp-sub,
+  .adm-eu-t small, .adm-eu-t b, .adm-card-meta dt, .adm-uso span, .adm-eventos small, .adm-sinc,
+  .adm-kpi-t, .adm-kpi-gt, .adm-kpi-p, .adm-kpi-d, .adm-kpi small, .as-receita small, .as-tabela thead th,
+  .as-tabela tbody td, .as-aviso, .as-erro, .as-dr .adm-nota, .pg-nota, .pg-nada, .pg-aviso, .pg-erro,
+  .pg-barra-v, .pg-barra-m, .pg-barra small, .pg-lista-curta small, .pg-campo span, .pg-dl dt, .pg-dl dd small,
+  .tx-kpi-note, .profile-photo-copy strong, .profile-photo-copy span,
+  .orc-chip-txt strong, .orc-chip-txt small, .orc-steps strong, .orc-steps p, .orc-empty-note,
+  .notif-empty, .toast, .toast-text, .toast-close
+) {
+  font-size: 14px !important;
+}
+
+html.user-logged-in :is(
+  [style*="font-size:7px"], [style*="font-size: 7px"],
+  [style*="font-size:8px"], [style*="font-size: 8px"],
+  [style*="font-size:9px"], [style*="font-size: 9px"],
+  [style*="font-size:9.5px"], [style*="font-size: 9.5px"],
+  [style*="font-size:10px"], [style*="font-size: 10px"],
+  [style*="font-size:10.5px"], [style*="font-size: 10.5px"],
+  [style*="font-size:11px"], [style*="font-size: 11px"],
+  [style*="font-size:11.5px"], [style*="font-size: 11.5px"],
+  [style*="font-size:12px"], [style*="font-size: 12px"],
+  [style*="font-size:12.5px"], [style*="font-size: 12.5px"],
+  [style*="font-size:13px"], [style*="font-size: 13px"],
+  [style*="font-size:13.5px"], [style*="font-size: 13.5px"]
+) {
+  font-size: 14px !important;
 }
 
 } /* fim da layer nx-shell */

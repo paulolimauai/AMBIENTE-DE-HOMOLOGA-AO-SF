@@ -1,0 +1,164 @@
+{
+  "usuarios": {
+    "vw": 390,
+    "scrollW": 390,
+    "pageOverflowX": false,
+    "docH": 2039,
+    "hash": "#usuarios",
+    "curPage": "usuarios",
+    "renderedPage": "usuarios",
+    "offenders": [],
+    "smallFonts": [],
+    "smallTargets": [
+      {
+        "tag": "button",
+        "id": "",
+        "cls": "toast-close",
+        "w": 30,
+        "h": 33,
+        "label": "✕"
+      }
+    ],
+    "smallTargetsTotal": 1
+  },
+  "assinaturas": {
+    "vw": 390,
+    "scrollW": 390,
+    "pageOverflowX": false,
+    "docH": 1505,
+    "hash": "#assinaturas",
+    "curPage": "assinaturas",
+    "renderedPage": "assinaturas",
+    "offenders": [],
+    "smallFonts": [],
+    "smallTargets": [
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 32,
+        "h": 42,
+        "label": "on"
+      },
+      {
+        "tag": "button",
+        "id": "",
+        "cls": "toast-close",
+        "w": 30,
+        "h": 33,
+        "label": "✕"
+      }
+    ],
+    "smallTargetsTotal": 2
+  },
+  "pagamentos": {
+    "vw": 390,
+    "scrollW": 390,
+    "pageOverflowX": false,
+    "docH": 1795,
+    "hash": "#pagamentos",
+    "curPage": "pagamentos",
+    "renderedPage": "pagamentos",
+    "offenders": [],
+    "smallFonts": [],
+    "smallTargets": [
+      {
+        "tag": "button",
+        "id": "",
+        "cls": "toast-close",
+        "w": 30,
+        "h": 33,
+        "label": "✕"
+      }
+    ],
+    "smallTargetsTotal": 1
+  },
+  "logs": {
+    "vw": 390,
+    "scrollW": 390,
+    "pageOverflowX": false,
+    "docH": 20918,
+    "hash": "#logs",
+    "curPage": "logs",
+    "renderedPage": "logs",
+    "offenders": [],
+    "smallFonts": [],
+    "smallTargets": [
+      {
+        "tag": "button",
+        "id": "",
+        "cls": "toast-close",
+        "w": 30,
+        "h": 33,
+        "label": "✕"
+      }
+    ],
+    "smallTargetsTotal": 1
+  },
+  "dashboard": {
+    "vw": 390,
+    "scrollW": 390,
+    "pageOverflowX": false,
+    "docH": 2039,
+    "hash": "#usuarios",
+    "curPage": "usuarios",
+    "renderedPage": "usuarios",
+    "offenders": [],
+    "smallFonts": [],
+    "smallTargets": [
+      {
+        "tag": "button",
+        "id": "",
+        "cls": "toast-close",
+        "w": 30,
+        "h": 33,
+        "label": "✕"
+      }
+    ],
+    "smallTargetsTotal": 1
+  },
+  "transacoes": {
+    "vw": 390,
+    "scrollW": 390,
+    "pageOverflowX": false,
+    "docH": 2039,
+    "hash": "#usuarios",
+    "curPage": "usuarios",
+    "renderedPage": "usuarios",
+    "offenders": [],
+    "smallFonts": [],
+    "smallTargets": [
+      {
+        "tag": "button",
+        "id": "",
+        "cls": "toast-close",
+        "w": 30,
+        "h": 33,
+        "label": "✕"
+      }
+    ],
+    "smallTargetsTotal": 1
+  },
+  "_drawer": {
+    "vw": 390,
+    "scrollW": 390,
+    "pageOverflowX": false,
+    "docH": 2039,
+    "hash": "#usuarios",
+    "curPage": "usuarios",
+    "renderedPage": "usuarios",
+    "offenders": [],
+    "smallFonts": [],
+    "smallTargets": [
+      {
+        "tag": "button",
+        "id": "",
+        "cls": "toast-close",
+        "w": 30,
+        "h": 33,
+        "label": "✕"
+      }
+    ],
+    "smallTargetsTotal": 1
+  }
+}

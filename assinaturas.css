@@ -5,7 +5,7 @@
 
 /* ---------- cabeçalho: receita estimada ---------- */
 .as-receita { display: flex !important; flex-direction: column !important; align-items: flex-end !important; margin-right: 6px !important; line-height: 1.15 !important; cursor: help !important; }
-.as-receita small { font-size: 12px !important; font-weight: 600 !important; color: var(--adm-mut) !important; }
+.as-receita small { font-size: 14px !important; font-weight: 600 !important; color: var(--adm-mut) !important; }
 .as-receita b { font-size: 19px !important; font-weight: 800 !important; color: #6EE7B7 !important; font-variant-numeric: tabular-nums !important; }
 
 /* ---------- resumo: 8 cartões sempre em linhas inteiras (8, depois 4 + 4; no celular uma faixa que rola) ---------- */
@@ -33,7 +33,7 @@
 .as-tabela .as-c-plano { width: 150px !important; }
 .as-tabela .as-c-venc { width: 188px !important; white-space: nowrap !important; }
 .as-tabela .as-c-acoes { width: 268px !important; white-space: nowrap !important; text-align: right !important; }
-.as-tabela thead th { padding: 13px 14px !important; font-size: 12px !important; font-weight: 800 !important; letter-spacing: .05em !important; text-transform: uppercase !important; }
+.as-tabela thead th { padding: 13px 14px !important; font-size: 14px !important; font-weight: 800 !important; letter-spacing: .05em !important; text-transform: uppercase !important; }
 .as-tabela thead .as-c-sel { padding: 0 0 0 14px !important; }
 .as-tabela thead .as-c-acoes { padding: 0 !important; }
 .as-tabela td b { display: block !important; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; color: var(--adm-ink) !important; font-weight: 700 !important; }
@@ -58,12 +58,12 @@
 
 /* ---------- barra de lote ---------- */
 .as-lote-tempo { display: inline-flex !important; margin: 0 !important; }
-.as-aviso, .as-dr .adm-nota.as-aviso { padding: 8px 10px !important; border-radius: 10px !important; border: 1px solid rgba(252, 211, 77, .45) !important; background: rgba(245, 158, 11, .12) !important; color: #FCD34D !important; font-size: 13px !important; }
+.as-aviso, .as-dr .adm-nota.as-aviso { padding: 8px 10px !important; border-radius: 10px !important; border: 1px solid rgba(252, 211, 77, .45) !important; background: rgba(245, 158, 11, .12) !important; color: #FCD34D !important; font-size: 14px !important; }
 .as-aviso b { color: #FDE68A !important; }
 .adm-dlg-tx p.as-aviso { color: #FCD34D !important; margin: 0 0 12px !important; }
 .as-lote-tempo select {
   width: 120px !important; height: 34px !important; min-width: 96px !important; padding: 0 28px 0 10px !important; border-radius: 10px !important; border: 1px solid var(--adm-line) !important; background-color: rgba(0, 0, 0, .32) !important;
-  color: var(--adm-ink) !important; font: inherit !important; font-size: 13px !important; color-scheme: dark !important; cursor: pointer !important;
+  color: var(--adm-ink) !important; font: inherit !important; font-size: 14px !important; color-scheme: dark !important; cursor: pointer !important;
 }
 
 /* ---------- nome da pessoa: botão que abre o painel da conta ---------- */
@@ -119,15 +119,15 @@
 .as-custom select { flex: 1 1 auto !important; min-width: 0 !important; width: auto !important; padding: 0 28px 0 10px !important; cursor: pointer !important; }
 .as-custom input:focus, .as-custom select:focus { border-color: rgba(var(--adm-acc), .8) !important; outline: 0 !important; box-shadow: 0 0 0 3px rgba(var(--adm-acc), .18) !important; }
 .as-custom .adm-btn { flex: 0 0 auto !important; }
-.as-erro { margin: 4px 0 0 !important; font-size: 13px !important; font-weight: 650 !important; color: #FCA5A5 !important; }
+.as-erro { margin: 4px 0 0 !important; font-size: 14px !important; font-weight: 650 !important; color: #FCA5A5 !important; }
 .as-erro[hidden] { display: none !important; }
-.as-dr .adm-nota { margin: 0 0 10px !important; font-size: 13px !important; color: var(--adm-mut) !important; }
+.as-dr .adm-nota { margin: 0 0 10px !important; font-size: 14px !important; color: var(--adm-mut) !important; }
 
 /* ---------- janela de confirmação ---------- */
 .as-dlg-lista { margin: 0 0 12px !important; padding: 0 !important; list-style: none !important; max-height: 190px !important; overflow-y: auto !important; border-radius: 12px !important; border: 1px solid var(--adm-line2) !important; background: rgba(0, 0, 0, .25) !important; }
-.as-dlg-lista li { padding: 8px 12px !important; font-size: 13.5px !important; color: var(--adm-ink) !important; border-top: 1px solid var(--adm-line2) !important; }
+.as-dlg-lista li { padding: 8px 12px !important; font-size: 14px !important; color: var(--adm-ink) !important; border-top: 1px solid var(--adm-line2) !important; }
 .as-dlg-lista li:first-child { border-top: 0 !important; }
-.as-dlg-lista small { margin-left: 6px !important; color: var(--adm-mut) !important; font-size: 12px !important; }
+.as-dlg-lista small { margin-left: 6px !important; color: var(--adm-mut) !important; font-size: 14px !important; }
 .as-dlg-campo { margin: 0 0 6px !important; }
 .adm-dlg .as-dlg-campo select { width: 100% !important; }
 

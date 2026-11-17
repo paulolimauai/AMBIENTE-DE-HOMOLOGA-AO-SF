@@ -234,7 +234,7 @@ test('técnicos: nome e e-mail validados', async () => {
   assert.equal(ok.status, 200, ok.texto);
 });
 
-test('fila de chamados: filas e técnicos, requisição/incidente, SLA 4 h e ciclo Novo -> Atendimento atribuído -> Resolvido -> Fechado', async () => {
+test('fila de chamados: filas e técnicos, requisição/incidente, SLA 5 dias úteis e ciclo Novo -> Atendimento atribuído -> Resolvido -> Fechado', async () => {
   const admin = (await login('admin@teste.nexus', 'Admin@12345')).token;
   const ana = (await login('ana@teste.nexus', 'Ana@12345')).token;
 

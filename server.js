@@ -35297,8 +35297,11 @@ async function handleNexusRequest(req, res) {
           });
           // Para quem não é a sincronização interna a consulta NÃO traz a coluna password: gravar essas linhas direto no espelho apagava a senha
           // de TODOS os usuários do arquivo (o login sem banco deixava de funcionar) e a marca password_changed_at (sessões revogadas voltavam a valer).
-          saveLocalUsers(BackendUtils.mergeUsersMirror(getLocalUsers(), rows), true);
-          const sanitized = shapeUsersForViewer(rows);
+          // A resposta usa o resultado da mescla (e não as linhas cruas do SQL): o espelho guarda o que o SQL não tem
+          // (subscription_updated_at, o relógio da assinatura) e a assinatura mais nova quando o UPDATE ainda não chegou.
+          const mergedRows = BackendUtils.mergeUsersMirror(getLocalUsers(), rows);
+          saveLocalUsers(mergedRows, true);
+          const sanitized = shapeUsersForViewer(isInternalSync ? rows : mergedRows);
           res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
           res.end(JSON.stringify(sanitized));
         })

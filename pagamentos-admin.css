@@ -10,7 +10,7 @@
 .pg-abas { position: relative !important; display: flex !important; gap: 6px !important; flex-wrap: wrap !important; margin: 0 0 16px !important; padding: 6px !important; border-radius: 14px !important; border: 1px solid var(--adm-line2) !important; background: rgba(255, 255, 255, .03) !important; }
 .pg-aba {
   display: inline-flex !important; align-items: center !important; gap: 8px !important; height: 40px !important; padding: 0 14px !important; border-radius: 10px !important; border: 1px solid transparent !important; background: transparent !important;
-  color: var(--adm-ink2) !important; font: inherit !important; font-size: 13.5px !important; font-weight: 650 !important; cursor: pointer !important; white-space: nowrap !important; transition: background-color .15s ease, color .15s ease !important;
+  color: var(--adm-ink2) !important; font: inherit !important; font-size: 14px !important; font-weight: 650 !important; cursor: pointer !important; white-space: nowrap !important; transition: background-color .15s ease, color .15s ease !important;
 }
 .pg-aba:hover { background: var(--adm-wash) !important; color: #fff !important; }
 .pg-aba.is-on { background: rgba(var(--adm-acc), .17) !important; border-color: rgba(var(--adm-acc), .55) !important; color: #fff !important; }
@@ -27,29 +27,29 @@
 .pg-bloco { margin: 0 0 22px !important; }
 .pg-bloco-t { display: flex !important; align-items: center !important; gap: 10px !important; margin: 0 0 10px !important; }
 .pg-bloco-t h3 { margin: 0 !important; }
-.pg-nota { margin: 10px 0 0 !important; font-size: 12.5px !important; line-height: 1.5 !important; color: var(--adm-mut) !important; max-width: 86ch !important; }
+.pg-nota { margin: 10px 0 0 !important; font-size: 14px !important; line-height: 1.5 !important; color: var(--adm-mut) !important; max-width: 86ch !important; }
 .pg-nota b { color: var(--adm-ink2) !important; }
 .pg-nada { margin: 4px 0 0 !important; font-size: 14px !important; color: var(--adm-mut) !important; }
-.pg-aviso { margin: 10px 0 !important; padding: 10px 12px !important; border-radius: 10px !important; border: 1px solid rgba(252, 211, 77, .4) !important; background: rgba(245, 158, 11, .1) !important; color: #FDE68A !important; font-size: 13px !important; line-height: 1.45 !important; }
-.pg-erro { margin: 10px 0 0 !important; padding: 10px 12px !important; border-radius: 10px !important; border: 1px solid rgba(248, 113, 113, .5) !important; background: rgba(239, 68, 68, .12) !important; color: #FECACA !important; font-size: 13.5px !important; }
+.pg-aviso { margin: 10px 0 !important; padding: 10px 12px !important; border-radius: 10px !important; border: 1px solid rgba(252, 211, 77, .4) !important; background: rgba(245, 158, 11, .1) !important; color: #FDE68A !important; font-size: 14px !important; line-height: 1.45 !important; }
+.pg-erro { margin: 10px 0 0 !important; padding: 10px 12px !important; border-radius: 10px !important; border: 1px solid rgba(248, 113, 113, .5) !important; background: rgba(239, 68, 68, .12) !important; color: #FECACA !important; font-size: 14px !important; }
 .pg-erro[hidden] { display: none !important; }
 
 /* ---------- gráfico de barras (receita por mês) ---------- */
 .pg-barras { display: grid !important; grid-template-columns: repeat(6, minmax(0, 1fr)) !important; gap: 12px !important; align-items: end !important; }
 .pg-barra { display: flex !important; flex-direction: column !important; align-items: center !important; gap: 6px !important; min-width: 0 !important; text-align: center !important; }
-.pg-barra-v { font-size: 13px !important; font-weight: 750 !important; color: var(--adm-ink) !important; font-variant-numeric: tabular-nums !important; white-space: nowrap !important; }
+.pg-barra-v { font-size: 14px !important; font-weight: 750 !important; color: var(--adm-ink) !important; font-variant-numeric: tabular-nums !important; white-space: nowrap !important; }
 .pg-barra-trilho { display: flex !important; align-items: flex-end !important; width: 100% !important; max-width: 78px !important; height: 150px !important; border-radius: 10px !important; background: rgba(255, 255, 255, .05) !important; overflow: hidden !important; }
 .pg-barra-trilho i { display: block !important; width: 100% !important; border-radius: 10px 10px 0 0 !important; background: rgba(var(--adm-acc), .55) !important; }
 .pg-barra.is-atual .pg-barra-trilho i { background: linear-gradient(180deg, rgb(var(--adm-acc)), rgb(var(--adm-acc2))) !important; }
-.pg-barra-m { font-size: 13px !important; font-weight: 700 !important; color: var(--adm-ink2) !important; }
-.pg-barra small { font-size: 12px !important; color: var(--adm-mut) !important; }
+.pg-barra-m { font-size: 14px !important; font-weight: 700 !important; color: var(--adm-ink2) !important; }
+.pg-barra small { font-size: 14px !important; color: var(--adm-mut) !important; }
 
 /* ---------- listas curtas ---------- */
 .pg-lista-curta { list-style: none !important; margin: 0 !important; padding: 0 !important; display: grid !important; gap: 8px !important; }
 .pg-lista-curta li { display: flex !important; align-items: center !important; justify-content: space-between !important; gap: 12px !important; padding: 10px 12px !important; border-radius: 12px !important; border: 1px solid var(--adm-line2) !important; background: rgba(255, 255, 255, .03) !important; }
 .pg-lista-curta li > div { min-width: 0 !important; }
 .pg-lista-curta b { color: #fff !important; font-size: 14px !important; }
-.pg-lista-curta small { display: block !important; margin-top: 2px !important; font-size: 12.5px !important; color: var(--adm-mut) !important; overflow: hidden !important; text-overflow: ellipsis !important; }
+.pg-lista-curta small { display: block !important; margin-top: 2px !important; font-size: 14px !important; color: var(--adm-mut) !important; overflow: hidden !important; text-overflow: ellipsis !important; }
 
 /* ---------- tabela de cobranças ---------- */
 .pg-lista-raiz { min-width: 0 !important; }
@@ -62,19 +62,19 @@
 .pg-tabela td small { white-space: normal !important; }
 .pg-acoes { display: flex !important; flex-wrap: wrap !important; gap: 6px !important; align-items: center !important; }
 .pg-pags { display: inline-flex !important; align-items: center !important; gap: 10px !important; }
-.pg-tabela .adm-btn { height: 32px !important; padding: 0 11px !important; font-size: 12.5px !important; }
+.pg-tabela .adm-btn { height: 32px !important; padding: 0 11px !important; font-size: 14px !important; }
 
 /* ---------- formulários ---------- */
 .pg-form { display: grid !important; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) !important; gap: 12px !important; margin: 12px 0 !important; }
 .pg-campo { display: flex !important; flex-direction: column !important; gap: 5px !important; margin: 0 0 12px !important; min-width: 0 !important; }
 .pg-form .pg-campo { margin: 0 !important; }
 .pg-campo-larga { grid-column: 1 / -1 !important; }
-.pg-campo span { font-size: 12px !important; font-weight: 700 !important; letter-spacing: .02em !important; color: var(--adm-mut) !important; }
+.pg-campo span { font-size: 14px !important; font-weight: 700 !important; letter-spacing: .02em !important; color: var(--adm-mut) !important; }
 .pg-campo input, .pg-campo select, .pg-campo textarea {
   width: 100% !important; min-height: 44px !important; padding: 0 12px !important; border-radius: 12px !important; border: 1px solid var(--adm-line) !important; background: rgba(0, 0, 0, .32) !important; color: var(--adm-ink) !important;
   font: inherit !important; font-size: 14px !important; color-scheme: dark !important; box-shadow: none !important; box-sizing: border-box !important;
 }
-.pg-campo textarea { padding: 10px 12px !important; font: 12.5px/1.45 ui-monospace, Consolas, monospace !important; resize: vertical !important; word-break: break-all !important; }
+.pg-campo textarea { padding: 10px 12px !important; font: 14px/1.45 ui-monospace, Consolas, monospace !important; resize: vertical !important; word-break: break-all !important; }
 .pg-campo input:focus, .pg-campo select:focus, .pg-campo textarea:focus { outline: 0 !important; border-color: rgba(var(--adm-acc), .8) !important; box-shadow: 0 0 0 3px rgba(var(--adm-acc), .18) !important; }
 .pg-botoes { display: flex !important; flex-wrap: wrap !important; gap: 10px !important; align-items: center !important; margin: 12px 0 0 !important; }
 .pg-botoes .pg-arquivo { position: relative !important; overflow: hidden !important; flex: 0 0 auto !important; width: auto !important; min-width: 0 !important; }
@@ -89,13 +89,13 @@
 .pg-resultado-qr img { width: 100% !important; height: auto !important; display: block !important; }
 .pg-resultado-dados { min-width: 0 !important; }
 .pg-dl { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 10px 16px !important; margin: 0 0 8px !important; }
-.pg-dl dt { font-size: 12px !important; font-weight: 700 !important; letter-spacing: .03em !important; text-transform: uppercase !important; color: var(--adm-mut) !important; }
+.pg-dl dt { font-size: 14px !important; font-weight: 700 !important; letter-spacing: .03em !important; text-transform: uppercase !important; color: var(--adm-mut) !important; }
 .pg-dl dd { margin: 2px 0 0 !important; font-size: 15px !important; font-weight: 700 !important; color: #fff !important; overflow-wrap: anywhere !important; }
-.pg-dl dd small { display: block !important; font-size: 12.5px !important; font-weight: 500 !important; color: var(--adm-mut) !important; }
+.pg-dl dd small { display: block !important; font-size: 14px !important; font-weight: 500 !important; color: var(--adm-mut) !important; }
 
 /* ---------- histórico e janelas ---------- */
 .pg-hist { list-style: none !important; margin: 8px 0 0 !important; padding: 0 !important; display: grid !important; gap: 8px !important; max-height: 46vh !important; overflow: auto !important; }
-.pg-hist li { padding: 9px 12px !important; border-radius: 10px !important; border: 1px solid var(--adm-line2) !important; background: rgba(255, 255, 255, .03) !important; color: var(--adm-ink2) !important; font-size: 13.5px !important; }
+.pg-hist li { padding: 9px 12px !important; border-radius: 10px !important; border: 1px solid var(--adm-line2) !important; background: rgba(255, 255, 255, .03) !important; color: var(--adm-ink2) !important; font-size: 14px !important; }
 .pg-hist li b { color: #fff !important; text-transform: capitalize !important; }
 .pg-hist li small { margin-left: 6px !important; color: var(--adm-mut) !important; }
 .pg-hist li span { display: block !important; margin-top: 3px !important; color: var(--adm-ink2) !important; }
@@ -112,7 +112,7 @@
   .pg-tabela tr { padding: 12px 14px !important; border-top: 1px solid var(--adm-line2) !important; }
   .pg-tabela tbody tr:first-child { border-top: 0 !important; }
   .pg-tabela td { padding: 4px 0 !important; border: 0 !important; }
-  .pg-tabela td[data-l]::before { content: attr(data-l) !important; display: block !important; font-size: 11.5px !important; font-weight: 800 !important; letter-spacing: .05em !important; text-transform: uppercase !important; color: var(--adm-mut) !important; }
+  .pg-tabela td[data-l]::before { content: attr(data-l) !important; display: block !important; font-size: 14px !important; font-weight: 800 !important; letter-spacing: .05em !important; text-transform: uppercase !important; color: var(--adm-mut) !important; }
   .pg-tabela td.adm-c-sel { text-align: left !important; }
   .pg-tabela td.pg-acoes { padding-top: 10px !important; }
 }
@@ -124,14 +124,14 @@
   .pg-resultado, .pg-dlg .pg-resultado { grid-template-columns: minmax(0, 1fr) !important; }
   .pg-resultado-qr { max-width: 240px !important; }
   .pg-barras { gap: 6px !important; }
-  .pg-barra-v { font-size: 11.5px !important; }
+  .pg-barra-v { font-size: 14px !important; }
   .pg-dl { grid-template-columns: minmax(0, 1fr) !important; }
 }
 
 /* ---------- Configurações (preço, Pix, cobrança mensal) ---------- */
 .pg-cfg-form { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
 .pg-cfg-form .pg-campo-larga { grid-column: 1 / -1 !important; }
-.pg-dica { display: block !important; margin-top: 2px !important; font-size: 12.5px !important; color: var(--adm-mut) !important; }
+.pg-dica { display: block !important; margin-top: 2px !important; font-size: 14px !important; color: var(--adm-mut) !important; }
 .pg-campo input[aria-invalid="true"], .pg-campo select[aria-invalid="true"] { border-color: rgba(248, 113, 113, .85) !important; box-shadow: 0 0 0 3px rgba(239, 68, 68, .18) !important; }
 @media (max-width: 900px) {
   .pg-cfg-form { grid-template-columns: minmax(0, 1fr) !important; }

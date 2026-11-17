@@ -76,8 +76,8 @@ test('validarAbertura normaliza e escapa o pedido do público', () => {
   assert.equal(d.client_cpf, '52998224725');
   assert.equal(d.service_type, 'Reset de senha');
   assert.equal(d.ticket_type, 'Requisição'); // sem escolha, vale o tipo sugerido pela categoria
-  assert.equal(d.priority, 'Alta');
-  assert.equal(d.sla, '8 Horas');
+  assert.equal(d.priority, 'Baixa'); // o pedido de teste manda 'alta' (nome retirado): vale Baixa
+  assert.equal(d.sla, '5 Dias Úteis');
   assert.equal(d.title, 'Erro &lt;b&gt;grave&lt;/b&gt; &amp; &quot;urgente&quot;');
   assert.equal(d.status, 'Novo');
   assert.equal(d.tecnico_responsavel, null);
@@ -103,7 +103,7 @@ test('validarAbertura recusa pedido incompleto com mensagem específica', () => 
     [{ client_email: '<img onerror=x>@x.com' }, 'Informe um e-mail válido.'],
     [{ client_phone: '123' }, 'Informe o telefone com DDD (ex.: (62) 99999-9999).'],
     [{ service_type: 'Hackear o sistema' }, 'Selecione uma categoria válida.'],
-    [{ priority: 'Crítica máxima' }, 'Severidade inválida. Use: Crítica, Alta, Média, Baixa.'],
+    [{ priority: 'Crítica máxima' }, 'Severidade inválida. Use: Baixa.'],
     [{ ticket_type: 'Reclamação' }, 'Escolha o tipo do chamado: Requisição ou Incidente.'],
     [{ title: 'ab' }, 'Informe o assunto do chamado.'],
     [{ description: 'curta' }, 'Descreva o que você precisa com um pouco mais de detalhes (mínimo de 10 caracteres).']
@@ -316,19 +316,15 @@ test('validarCpf', () => {
   assert.ok(!A.validarCpf('123'));
 });
 
-test('política de SLA: Crítica 4 h, Alta 8 h, Média 24 h e Baixa 5 dias úteis (padrão = Média)', () => {
-  assert.equal(A.calcularSlaPorPrioridade('Crítica'), '4 Horas');
-  assert.equal(A.calcularSlaPorPrioridade('critica'), '4 Horas');
-  assert.equal(A.calcularSlaPorPrioridade('Urgente'), '4 Horas');
-  assert.equal(A.calcularSlaPorPrioridade('Alta'), '8 Horas');
-  assert.equal(A.calcularSlaPorPrioridade('Média'), '24 Horas');
-  assert.equal(A.calcularSlaPorPrioridade('Normal'), '24 Horas');
-  assert.equal(A.calcularSlaPorPrioridade(''), '24 Horas');
-  assert.equal(A.calcularSlaPorPrioridade('Baixa'), '5 Dias Úteis');
+test('política de SLA: só existe Baixa, 5 dias úteis; os níveis retirados valem Baixa', () => {
+  for (const nome of ['Baixa', 'baixa', 'Crítica', 'critica', 'Urgente', 'Alta', 'Média', 'Normal', '']) {
+    assert.equal(A.calcularSlaPorPrioridade(nome), '5 Dias Úteis', nome);
+  }
   const base = { client_name: 'Ana', client_email: 'ana@empresa.com.br', service_type: 'Dados Cadastrais', title: 'Duvida sobre relatorio', description: 'Gostaria de entender o relatorio de faturamento', canal_atendimento: 'GLPI Tela de Login' };
   const media = A.validarAbertura({ ...base, priority: 'Média' });
   assert.ok(media.ok);
-  assert.equal(media.dados.sla, '24 Horas');
+  assert.equal(media.dados.priority, 'Baixa');
+  assert.equal(media.dados.sla, '5 Dias Úteis');
   const baixa = A.validarAbertura({ ...base, priority: 'Baixa' });
   assert.ok(baixa.ok);
   assert.equal(baixa.dados.sla, '5 Dias Úteis');
@@ -346,10 +342,10 @@ test('integração GLPI 10: SLA automático, ativo CMDB, horas, timeline públic
     canal_atendimento: 'GLPI Tela de Login'
   });
   assert.ok(r.ok);
-  assert.equal(r.dados.sla, '4 Horas');
+  assert.equal(r.dados.sla, '5 Dias Úteis'); // 'Crítica' (nome retirado) vale Baixa
   assert.equal(r.dados.ticket_type, 'Incidente');
   const ordem = A.montarOrdem(r.dados, { protocolo: 'OS-261102-GLPI', id: 10, agoraIso: AGORA });
-  assert.equal(ordem.sla, '4 Horas');
+  assert.equal(ordem.sla, '5 Dias Úteis');
   assert.equal(ordem.timeline.length, 1);
 
   const att1 = A.aplicarAtualizacao(ordem, {
@@ -384,20 +380,29 @@ test('integração GLPI 10: SLA automático, ativo CMDB, horas, timeline públic
 
 // ---------- Histórico automático, visão e ações do solicitante ----------
 const ordemAberta = () => A.montarOrdem(A.validarAbertura({
-  client_name: 'Ana Souza', client_email: 'ana@empresa.com.br', service_type: 'Pagamento não reconhecido', priority: 'Média',
+  client_name: 'Ana Souza', client_email: 'ana@empresa.com.br', service_type: 'Pagamento não reconhecido', priority: 'Baixa',
   title: 'Boleto não liquidou', description: 'O boleto pago ontem continua em aberto na conciliação.', canal_atendimento: 'Central GLPI'
 }).dados, { protocolo: 'OS-261107-ABCD', id: 77, agoraIso: AGORA });
 
-test('aplicarAtualizacao registra no histórico quem assumiu, status e severidade, e recalcula o SLA', () => {
+test('aplicarAtualizacao registra no histórico quem assumiu e o status; severidade "Alta" (retirada) vale Baixa e não gera linha', () => {
   const r = A.aplicarAtualizacao(ordemAberta(), { status: 'Atendimento atribuído', tecnico_responsavel: 'Carlos', priority: 'Alta' }, { agoraIso: AGORA, ator: 'Admin Paulo' });
   assert.ok(r.ok);
-  assert.equal(r.ordem.sla, '8 Horas');
+  assert.equal(r.ordem.priority, 'Baixa');
+  assert.equal(r.ordem.sla, '5 Dias Úteis');
   const eventos = r.ordem.timeline.filter((i) => i.event);
-  assert.deepEqual(eventos.map((e) => e.sender), ['Sistema', 'Sistema', 'Sistema']);
+  assert.deepEqual(eventos.map((e) => e.sender), ['Sistema', 'Sistema']);
   assert.ok(eventos.some((e) => /de "Novo" para "Atendimento atribuído"/.test(e.text)));
   assert.ok(eventos.some((e) => /assumido por Carlos/.test(e.text)));
-  assert.ok(eventos.some((e) => /Severidade alterada de "Média" para "Alta"/.test(e.text) && /8 Horas/.test(e.text)));
+  assert.ok(!eventos.some((e) => /Severidade alterada/.test(e.text)));
   assert.ok(eventos.every((e) => e.author === 'Admin Paulo' && e.internal === false));
+});
+
+test('aplicarAtualizacao: chamado antigo gravado como Crítica já vale Baixa (mandar Baixa não é mudança)', () => {
+  const antigo = { ...ordemAberta(), priority: 'Crítica', sla: '4 Horas' };
+  const r = A.aplicarAtualizacao(antigo, { priority: 'Baixa' }, { agoraIso: AGORA });
+  assert.ok(r.ok);
+  assert.equal(r.ordem.timeline.filter((i) => i.event).length, 0);
+  assert.equal(r.ordem.priority, 'Baixa');
 });
 
 test('aplicarAtualizacao: a resposta vem antes das linhas automáticas; sem mudança não cria linha; SLA enviado vale', () => {
@@ -532,14 +537,14 @@ test('aplicarAcaoSolicitante não altera o chamado original e respeita o limite 
   assert.equal(A.aplicarAcaoSolicitante(cheia, { acao: 'responder', texto: 'Mais uma' }, { agoraIso: AGORA }).codigo, 409);
 });
 // ---------- Fila de chamados 10/11: status, severidade, tipo, categorias e filas ----------
-test('catálogos: 5 status, 4 severidades, 2 tipos e as 9 categorias pedidas (mais "Outros")', () => {
+test('catálogos: 5 status, 1 severidade (Baixa), 2 tipos e as 9 categorias pedidas (mais "Outros")', () => {
   assert.deepEqual([...A.STATUS], ['Novo', 'Pendente', 'Atendimento atribuído', 'Resolvido', 'Fechado']);
-  assert.deepEqual([...A.PRIORIDADES], ['Crítica', 'Alta', 'Média', 'Baixa']);
+  assert.deepEqual([...A.PRIORIDADES], ['Baixa']);
   assert.deepEqual([...A.TIPOS], ['Requisição', 'Incidente']);
   for (const c of ['Reset de senha', 'Pagamento não reconhecido', 'Desbloqueio de usuário', 'Conta/Login', 'Dados Cadastrais', 'Liberação de degustação', '2ª Via de fatura', 'Atendimento Técnico', 'Falhas/Bugs/Correções']) {
     assert.ok(A.CATEGORIAS.includes(c), c);
   }
-  assert.deepEqual({ ...A.SLA_POLITICA }, { 'Crítica': '4 Horas', 'Alta': '8 Horas', 'Média': '24 Horas', 'Baixa': '5 Dias Úteis' });
+  assert.deepEqual({ ...A.SLA_POLITICA }, { 'Baixa': '5 Dias Úteis' });
 });
 
 test('validarAbertura: requisição ou incidente (o tipo sugerido vem da categoria, mas o solicitante escolhe)', () => {
@@ -559,18 +564,20 @@ test('validarAbertura: categorias novas, sem acento e nomes antigos de categoria
   // aba antiga aberta: o nome velho cai na categoria nova mais próxima
   assert.equal(A.validarAbertura({ ...pedidoValido(), service_type: 'Gestão de Acessos & Reset de Senha' }).dados.service_type, 'Reset de senha');
   assert.equal(A.validarAbertura({ ...pedidoValido(), service_type: 'Sistema Financeiro & ERP' }).dados.service_type, 'Outros');
-  assert.equal(A.validarAbertura({ ...pedidoValido(), priority: 'Urgente' }).dados.priority, 'Crítica');
-  assert.equal(A.validarAbertura({ ...pedidoValido(), priority: 'Normal' }).dados.priority, 'Média');
-  assert.equal(A.validarAbertura({ ...pedidoValido(), priority: '' }).dados.priority, 'Média');
+  for (const nome of ['Urgente', 'Normal', 'Crítica', 'Alta', 'Média', '']) {
+    assert.equal(A.validarAbertura({ ...pedidoValido(), priority: nome }).dados.priority, 'Baixa', nome);
+  }
 });
 
-test('SLA: Crítica 4 h e Alta 8 h entram no chamado; a severidade recalcula o prazo', () => {
-  const critica = A.validarAbertura({ ...pedidoValido(), priority: 'Crítica' }).dados;
-  assert.equal(critica.sla, '4 Horas');
-  const ordem = A.montarOrdem(critica, { protocolo: 'OS-261110-AAAA', id: 1, agoraIso: AGORA });
-  const alta = A.aplicarAtualizacao(ordem, { priority: 'Alta' }, { agoraIso: AGORA });
-  assert.equal(alta.ordem.sla, '8 Horas');
-  assert.ok(alta.ordem.timeline.some((i) => i.event && /Severidade alterada de "Crítica" para "Alta"/.test(i.text) && /8 Horas/.test(i.text)));
+test('SLA: todo chamado nasce Baixa com 5 dias úteis, qualquer que seja o nome de severidade enviado', () => {
+  for (const nome of ['Crítica', 'Alta', 'Média', 'Baixa']) {
+    const dados = A.validarAbertura({ ...pedidoValido(), priority: nome }).dados;
+    assert.equal(dados.priority, 'Baixa', nome);
+    assert.equal(dados.sla, '5 Dias Úteis', nome);
+    const ordem = A.montarOrdem(dados, { protocolo: 'OS-261110-AAAA', id: 1, agoraIso: AGORA });
+    assert.equal(ordem.priority, 'Baixa');
+    assert.equal(ordem.sla, '5 Dias Úteis');
+  }
 });
 
 test('filas: a categoria cai na fila que a atende ("Suporte Técnico N2") e a abertura registra isso', () => {
@@ -666,13 +673,18 @@ test('normalizarOrdem: chamado gravado antes da mudança migra os nomes sem perd
   assert.deepEqual(A.normalizarOrdem(uma), uma);
 
   const antigo = A.normalizarOrdem({ protocol: 'OS-2', priority: 'Urgente', sla: '30 Minutos', service_type: 'Relato de Bug' });
-  assert.equal(antigo.priority, 'Crítica');
-  assert.equal(antigo.sla, '4 Horas'); // prazo padrão antigo passa à política nova
+  assert.equal(antigo.priority, 'Baixa');
+  assert.equal(antigo.sla, '5 Dias Úteis'); // prazo padrão antigo passa ao prazo único
   assert.equal(antigo.ticket_type, 'Incidente');
   assert.equal(antigo.service_type, 'Relato de Bug'); // categoria antiga é preservada no chamado antigo
-  assert.equal(A.normalizarOrdem({ protocol: 'OS-3', priority: 'Alta', sla: '1 Hora' }).sla, '8 Horas');
-  assert.equal(A.normalizarOrdem({ protocol: 'OS-4', priority: 'Média', sla: '1 Hora' }).sla, '1 Hora'); // prazo combinado à mão não muda
-  assert.equal(A.normalizarOrdem({ protocol: 'OS-5', priority: 'Normal' }).priority, 'Média');
+  // todos os prazos padrão das políticas anteriores (30 min, 1 h, 4 h, 8 h, 24 h) passam a 5 dias úteis, qualquer que fosse a severidade
+  for (const [prio, prazo] of [['Crítica', '4 Horas'], ['Alta', '8 Horas'], ['Média', '24 Horas'], ['Alta', '1 Hora'], ['Crítica', '30 Minutos']]) {
+    const o = A.normalizarOrdem({ protocol: 'OS-3', priority: prio, sla: prazo });
+    assert.equal(o.priority, 'Baixa', prio);
+    assert.equal(o.sla, '5 Dias Úteis', prio + ' ' + prazo);
+  }
+  assert.equal(A.normalizarOrdem({ protocol: 'OS-4', priority: 'Média', sla: '2 Dias' }).sla, '2 Dias'); // prazo combinado à mão não muda
+  assert.equal(A.normalizarOrdem({ protocol: 'OS-5', priority: 'Normal' }).priority, 'Baixa');
 });
 
 test('visões do solicitante e pública trazem tipo e fila; a atualização aceita chamado antigo (Concluído)', () => {

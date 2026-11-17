@@ -1,0 +1,944 @@
+{
+  "dashboard": {
+    "vw": 390,
+    "scrollW": 390,
+    "pageOverflowX": false,
+    "docH": 2039,
+    "offenders": [],
+    "smallFonts": [
+      {
+        "sel": "span.toast-text",
+        "count": 1,
+        "fs": 13.5,
+        "sample": "Salvo com sucesso!"
+      }
+    ],
+    "smallTargets": [
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 37,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 37,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 30,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 37,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 37,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "button",
+        "id": "",
+        "cls": "toast-close",
+        "w": 21,
+        "h": 21,
+        "label": "✕"
+      }
+    ],
+    "smallTargetsTotal": 6
+  },
+  "transacoes": {
+    "vw": 390,
+    "scrollW": 390,
+    "pageOverflowX": false,
+    "docH": 2039,
+    "offenders": [],
+    "smallFonts": [
+      {
+        "sel": "span.toast-text",
+        "count": 1,
+        "fs": 13.5,
+        "sample": "Salvo com sucesso!"
+      }
+    ],
+    "smallTargets": [
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 37,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 37,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 30,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 37,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 37,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "button",
+        "id": "",
+        "cls": "toast-close",
+        "w": 21,
+        "h": 21,
+        "label": "✕"
+      }
+    ],
+    "smallTargetsTotal": 6
+  },
+  "cartoes": {
+    "vw": 390,
+    "scrollW": 390,
+    "pageOverflowX": false,
+    "docH": 2039,
+    "offenders": [],
+    "smallFonts": [
+      {
+        "sel": "span.toast-text",
+        "count": 1,
+        "fs": 13.5,
+        "sample": "Salvo com sucesso!"
+      }
+    ],
+    "smallTargets": [
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 37,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 37,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 30,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 37,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 37,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "button",
+        "id": "",
+        "cls": "toast-close",
+        "w": 21,
+        "h": 21,
+        "label": "✕"
+      }
+    ],
+    "smallTargetsTotal": 6
+  },
+  "orcamentos": {
+    "vw": 390,
+    "scrollW": 390,
+    "pageOverflowX": false,
+    "docH": 2039,
+    "offenders": [],
+    "smallFonts": [
+      {
+        "sel": "span.toast-text",
+        "count": 1,
+        "fs": 13.5,
+        "sample": "Salvo com sucesso!"
+      }
+    ],
+    "smallTargets": [
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 37,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 37,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 30,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 37,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 37,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "button",
+        "id": "",
+        "cls": "toast-close",
+        "w": 21,
+        "h": 21,
+        "label": "✕"
+      }
+    ],
+    "smallTargetsTotal": 6
+  },
+  "metas": {
+    "vw": 390,
+    "scrollW": 390,
+    "pageOverflowX": false,
+    "docH": 2039,
+    "offenders": [],
+    "smallFonts": [
+      {
+        "sel": "span.toast-text",
+        "count": 1,
+        "fs": 13.5,
+        "sample": "Salvo com sucesso!"
+      }
+    ],
+    "smallTargets": [
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 37,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 37,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 30,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 37,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 37,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "button",
+        "id": "",
+        "cls": "toast-close",
+        "w": 21,
+        "h": 21,
+        "label": "✕"
+      }
+    ],
+    "smallTargetsTotal": 6
+  },
+  "relatorios": {
+    "vw": 390,
+    "scrollW": 390,
+    "pageOverflowX": false,
+    "docH": 2039,
+    "offenders": [],
+    "smallFonts": [
+      {
+        "sel": "span.toast-text",
+        "count": 1,
+        "fs": 13.5,
+        "sample": "Salvo com sucesso!"
+      }
+    ],
+    "smallTargets": [
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 37,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 37,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 30,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 37,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 37,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "button",
+        "id": "",
+        "cls": "toast-close",
+        "w": 21,
+        "h": 21,
+        "label": "✕"
+      }
+    ],
+    "smallTargetsTotal": 6
+  },
+  "recorrentes": {
+    "vw": 390,
+    "scrollW": 390,
+    "pageOverflowX": false,
+    "docH": 2039,
+    "offenders": [],
+    "smallFonts": [
+      {
+        "sel": "span.toast-text",
+        "count": 1,
+        "fs": 13.5,
+        "sample": "Salvo com sucesso!"
+      }
+    ],
+    "smallTargets": [
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 37,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 37,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 30,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 37,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 37,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "button",
+        "id": "",
+        "cls": "toast-close",
+        "w": 21,
+        "h": 21,
+        "label": "✕"
+      }
+    ],
+    "smallTargetsTotal": 6
+  },
+  "importar": {
+    "vw": 390,
+    "scrollW": 390,
+    "pageOverflowX": false,
+    "docH": 2039,
+    "offenders": [],
+    "smallFonts": [
+      {
+        "sel": "span.toast-text",
+        "count": 1,
+        "fs": 13.5,
+        "sample": "Salvo com sucesso!"
+      }
+    ],
+    "smallTargets": [
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 37,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 37,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 30,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 37,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 37,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "button",
+        "id": "",
+        "cls": "toast-close",
+        "w": 21,
+        "h": 21,
+        "label": "✕"
+      }
+    ],
+    "smallTargetsTotal": 6
+  },
+  "anexos": {
+    "vw": 390,
+    "scrollW": 390,
+    "pageOverflowX": false,
+    "docH": 2039,
+    "offenders": [],
+    "smallFonts": [
+      {
+        "sel": "span.toast-text",
+        "count": 1,
+        "fs": 13.5,
+        "sample": "Salvo com sucesso!"
+      }
+    ],
+    "smallTargets": [
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 37,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 37,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 30,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 37,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 37,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "button",
+        "id": "",
+        "cls": "toast-close",
+        "w": 21,
+        "h": 21,
+        "label": "✕"
+      }
+    ],
+    "smallTargetsTotal": 6
+  },
+  "config": {
+    "vw": 390,
+    "scrollW": 390,
+    "pageOverflowX": false,
+    "docH": 2039,
+    "offenders": [],
+    "smallFonts": [
+      {
+        "sel": "span.toast-text",
+        "count": 1,
+        "fs": 13.5,
+        "sample": "Salvo com sucesso!"
+      }
+    ],
+    "smallTargets": [
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 37,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 37,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 30,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 37,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 37,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "button",
+        "id": "",
+        "cls": "toast-close",
+        "w": 21,
+        "h": 21,
+        "label": "✕"
+      }
+    ],
+    "smallTargetsTotal": 6
+  },
+  "usuarios": {
+    "vw": 390,
+    "scrollW": 390,
+    "pageOverflowX": false,
+    "docH": 2039,
+    "offenders": [],
+    "smallFonts": [
+      {
+        "sel": "span.toast-text",
+        "count": 1,
+        "fs": 13.5,
+        "sample": "Salvo com sucesso!"
+      }
+    ],
+    "smallTargets": [
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 37,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 37,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 30,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 37,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 37,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "button",
+        "id": "",
+        "cls": "toast-close",
+        "w": 21,
+        "h": 21,
+        "label": "✕"
+      }
+    ],
+    "smallTargetsTotal": 6
+  },
+  "assinaturas": {
+    "vw": 390,
+    "scrollW": 390,
+    "pageOverflowX": false,
+    "docH": 1442,
+    "offenders": [],
+    "smallFonts": [
+      {
+        "sel": "span.toast-text",
+        "count": 1,
+        "fs": 13.5,
+        "sample": "Salvo com sucesso!"
+      }
+    ],
+    "smallTargets": [
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 29,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "button",
+        "id": "",
+        "cls": "adm-nome as-nome",
+        "w": 236,
+        "h": 20,
+        "label": "LUCAS GABRIEL FRANCISCO DOS SANTOS"
+      },
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 37,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "button",
+        "id": "",
+        "cls": "adm-nome as-nome",
+        "w": 182,
+        "h": 20,
+        "label": "CICERA DE LIMA PEREIRA"
+      },
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 37,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "button",
+        "id": "",
+        "cls": "adm-nome as-nome",
+        "w": 194,
+        "h": 20,
+        "label": "Lucas Rodrigo Bento Souza"
+      },
+      {
+        "tag": "button",
+        "id": "",
+        "cls": "adm-pg",
+        "w": 36,
+        "h": 36,
+        "label": "Página anterior"
+      },
+      {
+        "tag": "button",
+        "id": "",
+        "cls": "adm-pg is-on",
+        "w": 36,
+        "h": 36,
+        "label": "1"
+      },
+      {
+        "tag": "button",
+        "id": "",
+        "cls": "adm-pg",
+        "w": 36,
+        "h": 36,
+        "label": "Próxima página"
+      },
+      {
+        "tag": "button",
+        "id": "",
+        "cls": "toast-close",
+        "w": 21,
+        "h": 21,
+        "label": "✕"
+      }
+    ],
+    "smallTargetsTotal": 10
+  },
+  "pagamentos": {
+    "vw": 390,
+    "scrollW": 390,
+    "pageOverflowX": false,
+    "docH": 1795,
+    "offenders": [],
+    "smallFonts": [
+      {
+        "sel": "span.toast-text",
+        "count": 1,
+        "fs": 13.5,
+        "sample": "Salvo com sucesso!"
+      }
+    ],
+    "smallTargets": [
+      {
+        "tag": "button",
+        "id": "",
+        "cls": "toast-close",
+        "w": 21,
+        "h": 21,
+        "label": "✕"
+      }
+    ],
+    "smallTargetsTotal": 1
+  },
+  "logs": {
+    "vw": 390,
+    "scrollW": 390,
+    "pageOverflowX": false,
+    "docH": 20918,
+    "offenders": [],
+    "smallFonts": [
+      {
+        "sel": "span.toast-text",
+        "count": 1,
+        "fs": 13.5,
+        "sample": "Salvo com sucesso!"
+      }
+    ],
+    "smallTargets": [
+      {
+        "tag": "button",
+        "id": "",
+        "cls": "toast-close",
+        "w": 21,
+        "h": 21,
+        "label": "✕"
+      }
+    ],
+    "smallTargetsTotal": 1
+  },
+  "_drawer": {
+    "vw": 390,
+    "scrollW": 390,
+    "pageOverflowX": false,
+    "docH": 2039,
+    "offenders": [],
+    "smallFonts": [
+      {
+        "sel": "span.toast-text",
+        "count": 1,
+        "fs": 13.5,
+        "sample": "Salvo com sucesso!"
+      }
+    ],
+    "smallTargets": [
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 37,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 37,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 30,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 37,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "input",
+        "id": "",
+        "cls": "adm-chk",
+        "w": 37,
+        "h": 37,
+        "label": "on"
+      },
+      {
+        "tag": "button",
+        "id": "",
+        "cls": "toast-close",
+        "w": 21,
+        "h": 21,
+        "label": "✕"
+      }
+    ],
+    "smallTargetsTotal": 6
+  }
+}

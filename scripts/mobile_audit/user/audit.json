@@ -1,0 +1,244 @@
+{
+  "dashboard": {
+    "vw": 390,
+    "scrollW": 390,
+    "pageOverflowX": false,
+    "docH": 3605,
+    "hash": "#dashboard",
+    "curPage": "dashboard",
+    "renderedPage": "dashboard",
+    "offenders": [],
+    "smallFonts": [],
+    "smallTargets": [
+      {
+        "tag": "button",
+        "id": "",
+        "cls": "toast-close",
+        "w": 30,
+        "h": 33,
+        "label": "✕"
+      }
+    ],
+    "smallTargetsTotal": 1
+  },
+  "transacoes": {
+    "vw": 390,
+    "scrollW": 390,
+    "pageOverflowX": false,
+    "docH": 1284,
+    "hash": "#transacoes",
+    "curPage": "transacoes",
+    "renderedPage": "transacoes",
+    "offenders": [],
+    "smallFonts": [],
+    "smallTargets": [
+      {
+        "tag": "button",
+        "id": "",
+        "cls": "toast-close",
+        "w": 30,
+        "h": 33,
+        "label": "✕"
+      }
+    ],
+    "smallTargetsTotal": 1
+  },
+  "cartoes": {
+    "vw": 390,
+    "scrollW": 390,
+    "pageOverflowX": false,
+    "docH": 2251,
+    "hash": "#cartoes",
+    "curPage": "cartoes",
+    "renderedPage": "cartoes",
+    "offenders": [],
+    "smallFonts": [],
+    "smallTargets": [
+      {
+        "tag": "button",
+        "id": "",
+        "cls": "toast-close",
+        "w": 30,
+        "h": 33,
+        "label": "✕"
+      }
+    ],
+    "smallTargetsTotal": 1
+  },
+  "orcamentos": {
+    "vw": 390,
+    "scrollW": 390,
+    "pageOverflowX": false,
+    "docH": 1747,
+    "hash": "#orcamentos",
+    "curPage": "orcamentos",
+    "renderedPage": "orcamentos",
+    "offenders": [],
+    "smallFonts": [],
+    "smallTargets": [
+      {
+        "tag": "button",
+        "id": "",
+        "cls": "toast-close",
+        "w": 30,
+        "h": 33,
+        "label": "✕"
+      }
+    ],
+    "smallTargetsTotal": 1
+  },
+  "metas": {
+    "vw": 390,
+    "scrollW": 390,
+    "pageOverflowX": false,
+    "docH": 844,
+    "hash": "#metas",
+    "curPage": "metas",
+    "renderedPage": "metas",
+    "offenders": [],
+    "smallFonts": [],
+    "smallTargets": [
+      {
+        "tag": "button",
+        "id": "",
+        "cls": "toast-close",
+        "w": 30,
+        "h": 33,
+        "label": "✕"
+      }
+    ],
+    "smallTargetsTotal": 1
+  },
+  "relatorios": {
+    "vw": 390,
+    "scrollW": 390,
+    "pageOverflowX": false,
+    "docH": 1325,
+    "hash": "#relatorios",
+    "curPage": "relatorios",
+    "renderedPage": "relatorios",
+    "offenders": [],
+    "smallFonts": [],
+    "smallTargets": [
+      {
+        "tag": "button",
+        "id": "",
+        "cls": "toast-close",
+        "w": 30,
+        "h": 33,
+        "label": "✕"
+      }
+    ],
+    "smallTargetsTotal": 1
+  },
+  "recorrentes": {
+    "vw": 390,
+    "scrollW": 390,
+    "pageOverflowX": false,
+    "docH": 1247,
+    "hash": "#recorrentes",
+    "curPage": "recorrentes",
+    "renderedPage": "recorrentes",
+    "offenders": [],
+    "smallFonts": [],
+    "smallTargets": [
+      {
+        "tag": "button",
+        "id": "",
+        "cls": "toast-close",
+        "w": 30,
+        "h": 33,
+        "label": "✕"
+      }
+    ],
+    "smallTargetsTotal": 1
+  },
+  "importar": {
+    "vw": 390,
+    "scrollW": 390,
+    "pageOverflowX": false,
+    "docH": 844,
+    "hash": "#importar",
+    "curPage": "importar",
+    "renderedPage": "importar",
+    "offenders": [],
+    "smallFonts": [],
+    "smallTargets": [
+      {
+        "tag": "button",
+        "id": "",
+        "cls": "toast-close",
+        "w": 30,
+        "h": 33,
+        "label": "✕"
+      }
+    ],
+    "smallTargetsTotal": 1
+  },
+  "anexos": {
+    "vw": 390,
+    "scrollW": 390,
+    "pageOverflowX": false,
+    "docH": 1116,
+    "hash": "#anexos",
+    "curPage": "anexos",
+    "renderedPage": "anexos",
+    "offenders": [],
+    "smallFonts": [],
+    "smallTargets": [
+      {
+        "tag": "button",
+        "id": "",
+        "cls": "toast-close",
+        "w": 30,
+        "h": 33,
+        "label": "✕"
+      }
+    ],
+    "smallTargetsTotal": 1
+  },
+  "config": {
+    "vw": 390,
+    "scrollW": 390,
+    "pageOverflowX": false,
+    "docH": 2201,
+    "hash": "#config",
+    "curPage": "config",
+    "renderedPage": "config",
+    "offenders": [],
+    "smallFonts": [],
+    "smallTargets": [
+      {
+        "tag": "button",
+        "id": "",
+        "cls": "toast-close",
+        "w": 30,
+        "h": 33,
+        "label": "✕"
+      }
+    ],
+    "smallTargetsTotal": 1
+  },
+  "_drawer": {
+    "vw": 390,
+    "scrollW": 390,
+    "pageOverflowX": false,
+    "docH": 3605,
+    "hash": "#dashboard",
+    "curPage": "dashboard",
+    "renderedPage": "dashboard",
+    "offenders": [],
+    "smallFonts": [],
+    "smallTargets": [
+      {
+        "tag": "button",
+        "id": "",
+        "cls": "toast-close",
+        "w": 30,
+        "h": 33,
+        "label": "✕"
+      }
+    ],
+    "smallTargetsTotal": 1
+  }
+}

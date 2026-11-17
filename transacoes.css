@@ -8,10 +8,10 @@
 /* ---------- Tabela ---------- */
 .txp-wrap { display: block !important; }
 .txp-scroll { overflow-x: auto !important; border: 1px solid var(--nx-line, rgba(148, 163, 184, .17)) !important; border-radius: 14px !important; background: rgba(255, 255, 255, .012) !important; }
-.txp-table { width: 100% !important; min-width: 0 !important; border-collapse: separate !important; border-spacing: 0 !important; font-size: 13.5px !important; }  /* min-width: 0 anula "#pageContent table { min-width: 620px }" do celular */
+.txp-table { width: 100% !important; min-width: 0 !important; border-collapse: separate !important; border-spacing: 0 !important; font-size: 14px !important; }  /* min-width: 0 anula "#pageContent table { min-width: 620px }" do celular */
 .txp-sr, .txp-table caption { position: absolute !important; width: 1px !important; height: 1px !important; margin: -1px !important; padding: 0 !important; overflow: hidden !important; clip: rect(0 0 0 0) !important; white-space: nowrap !important; border: 0 !important; }
 
-.txp-table thead th { padding: 0 !important; text-align: left !important; font-size: 11.5px !important; font-weight: 650 !important; letter-spacing: .06em !important; text-transform: uppercase !important; white-space: nowrap !important; color: var(--nx-muted, #8ea3bb) !important; background: var(--tx-thead, rgba(255, 255, 255, .04)) !important; border: 0 !important; border-bottom: 1px solid var(--nx-line, rgba(148, 163, 184, .17)) !important; }
+.txp-table thead th { padding: 0 !important; text-align: left !important; font-size: 14px !important; font-weight: 650 !important; letter-spacing: .06em !important; text-transform: uppercase !important; white-space: nowrap !important; color: var(--nx-muted, #8ea3bb) !important; background: var(--tx-thead, rgba(255, 255, 255, .04)) !important; border: 0 !important; border-bottom: 1px solid var(--nx-line, rgba(148, 163, 184, .17)) !important; }
 .txp-table thead th.txp-c-val { text-align: right !important; }
 .txp-table thead th.txp-c-act { text-align: center !important; }
 .txp-th-plain { display: block !important; padding: 12px 16px !important; }
@@ -25,7 +25,7 @@
 .txp-sort:focus-visible, .txp-more:focus-visible, .txp-export:focus-visible, .txp-status:focus-visible, .txp-act:focus-visible, .txp-seg button:focus-visible { outline: 2px solid rgba(var(--nx-o1, 250, 189, 46), .9) !important; outline-offset: -2px !important; }
 .txp-table tbody tr:focus { outline: none !important; }
 
-.txp-table tbody td { padding: 13px 16px !important; vertical-align: middle !important; text-align: left !important; font-size: 13.5px !important; font-weight: 400 !important; white-space: nowrap !important; color: var(--nx-text, #edf5ff) !important; background: transparent !important; border: 0 !important; border-top: 1px solid rgba(148, 163, 184, .08) !important; transition: background-color .12s ease !important; }
+.txp-table tbody td { padding: 13px 16px !important; vertical-align: middle !important; text-align: left !important; font-size: 14px !important; font-weight: 400 !important; white-space: nowrap !important; color: var(--nx-text, #edf5ff) !important; background: transparent !important; border: 0 !important; border-top: 1px solid rgba(148, 163, 184, .08) !important; transition: background-color .12s ease !important; }
 .txp-table tbody tr:first-child td { border-top: 0 !important; }
 .txp-table tbody tr.txp-day-start:not(:first-child) td { border-top-color: rgba(148, 163, 184, .24) !important; }
 .txp-table tbody tr:hover td { background: var(--tx-row-hover, rgba(255, 255, 255, .045)) !important; }
@@ -34,11 +34,11 @@
 /* Colunas: só a descrição se estica; as outras ficam do tamanho do conteúdo (sem "buracos" entre colunas) */
 .txp-table .txp-c-date { width: 1% !important; min-width: 128px !important; }
 .txp-d { color: var(--nx-text, #edf5ff) !important; font-weight: 500 !important; font-variant-numeric: tabular-nums !important; }
-.txp-w { display: block !important; margin-top: 2px !important; font-size: 11.5px !important; font-weight: 500 !important; letter-spacing: .02em !important; text-transform: capitalize !important; color: var(--nx-faint, #60758e) !important; }
+.txp-w { display: block !important; margin-top: 2px !important; font-size: 14px !important; font-weight: 500 !important; letter-spacing: .02em !important; text-transform: capitalize !important; color: var(--nx-faint, #60758e) !important; }
 .txp-w b { font-weight: 650 !important; text-transform: none !important; color: rgb(var(--nx-o1, 250, 189, 46)) !important; }
 .txp-table .txp-c-desc { width: 100% !important; min-width: 220px !important; max-width: 0 !important; }
 .txp-desc { display: inline-block !important; max-width: min(100%, 46ch) !important; overflow: hidden !important; text-overflow: ellipsis !important; vertical-align: middle !important; font-weight: 600 !important; color: var(--nx-text, #edf5ff) !important; }
-.txp-chip { display: inline-block !important; margin-left: 8px !important; padding: 2px 8px !important; border: 1px solid var(--nx-line, rgba(148, 163, 184, .17)) !important; border-radius: 6px !important; font-size: 11px !important; font-weight: 600 !important; line-height: 1.4 !important; vertical-align: middle !important; color: var(--nx-muted, #8ea3bb) !important; }
+.txp-chip { display: inline-block !important; margin-left: 8px !important; padding: 2px 8px !important; border: 1px solid var(--nx-line, rgba(148, 163, 184, .17)) !important; border-radius: 6px !important; font-size: 14px !important; font-weight: 600 !important; line-height: 1.4 !important; vertical-align: middle !important; color: var(--nx-muted, #8ea3bb) !important; }
 .txp-cat { display: inline-flex !important; align-items: center !important; gap: 8px !important; font-weight: 500 !important; }
 .txp-cat i { flex: 0 0 auto !important; width: 8px !important; height: 8px !important; border-radius: 50% !important; }
 .txp-acc { display: inline-flex !important; align-items: center !important; gap: 8px !important; color: var(--nx-muted, #8ea3bb) !important; }
@@ -49,7 +49,7 @@
 .txp-table tbody td.txp-c-act, .txp-table thead th.txp-c-act { width: 1% !important; text-align: center !important; }
 
 /* Status: pílula clicável (alterna Pendente <-> Pago/Recebido). "Vencido" é pendente com data passada. */
-.txp-status { display: inline-flex !important; align-items: center !important; gap: 7px !important; height: 26px !important; min-height: 0 !important; margin: 0 !important; padding: 0 11px !important; border: 1px solid transparent !important; border-radius: 999px !important; font-size: 12px !important; font-weight: 600 !important; line-height: 1 !important; white-space: nowrap !important; cursor: pointer !important; box-shadow: none !important; transition: filter .12s ease !important; }
+.txp-status { display: inline-flex !important; align-items: center !important; gap: 7px !important; height: 26px !important; min-height: 0 !important; margin: 0 !important; padding: 0 11px !important; border: 1px solid transparent !important; border-radius: 999px !important; font-size: 14px !important; font-weight: 600 !important; line-height: 1 !important; white-space: nowrap !important; cursor: pointer !important; box-shadow: none !important; transition: filter .12s ease !important; }
 .txp-status i { flex: 0 0 auto !important; width: 6px !important; height: 6px !important; border-radius: 50% !important; background: currentColor !important; }
 .txp-status:hover { filter: brightness(1.14) !important; }
 .txp-status.is-done { color: var(--tx-in, #34d399) !important; border-color: rgba(52, 211, 153, .4) !important; background: rgba(52, 211, 153, .1) !important; }
@@ -76,7 +76,7 @@
 /* Painel médio (notebook): menos respiro lateral e a conta/cartão sob a categoria */
 @container txp (max-width: 1039px) {
   .txp-table .txp-c-acc { display: none !important; }
-  .txp-sub { display: flex !important; align-items: center !important; gap: 6px !important; margin-top: 3px !important; font-size: 12px !important; font-weight: 500 !important; color: var(--nx-muted, #8ea3bb) !important; }
+  .txp-sub { display: flex !important; align-items: center !important; gap: 6px !important; margin-top: 3px !important; font-size: 14px !important; font-weight: 500 !important; color: var(--nx-muted, #8ea3bb) !important; }
   .txp-sub span { color: inherit !important; }
   .txp-sort, .txp-th-plain { padding-left: 12px !important; padding-right: 12px !important; }
   .txp-table tbody td { padding-left: 12px !important; padding-right: 12px !important; }
@@ -86,12 +86,12 @@
 
 /* ---------- Rodapé da lista ---------- */
 .txp-foot { display: flex !important; flex-wrap: wrap !important; align-items: center !important; gap: 8px 12px !important; padding: 14px 2px 0 !important; }
-.txp-foot-info { margin: 0 !important; font-size: 12.5px !important; color: var(--nx-muted, #8ea3bb) !important; }
+.txp-foot-info { margin: 0 !important; font-size: 14px !important; color: var(--nx-muted, #8ea3bb) !important; }
 .txp-foot-info strong { font-weight: 650 !important; color: var(--nx-text, #edf5ff) !important; }
-.txp-foot-chip { display: inline-flex !important; align-items: center !important; height: 22px !important; padding: 0 9px !important; border: 1px solid rgba(243, 191, 100, .38) !important; border-radius: 999px !important; background: rgba(243, 191, 100, .1) !important; font-size: 11.5px !important; font-weight: 600 !important; color: var(--tx-warn, #f3bf64) !important; }
+.txp-foot-chip { display: inline-flex !important; align-items: center !important; height: 22px !important; padding: 0 9px !important; border: 1px solid rgba(243, 191, 100, .38) !important; border-radius: 999px !important; background: rgba(243, 191, 100, .1) !important; font-size: 14px !important; font-weight: 600 !important; color: var(--tx-warn, #f3bf64) !important; }
 .txp-foot-chip.is-overdue { border-color: rgba(251, 113, 133, .42) !important; background: rgba(251, 113, 133, .11) !important; color: var(--tx-out, #fb7185) !important; }
 .txp-foot-gap { flex: 1 1 auto !important; }
-.txp-more, .txp-export { display: inline-flex !important; align-items: center !important; justify-content: center !important; gap: 8px !important; height: 36px !important; min-height: 0 !important; margin: 0 !important; padding: 0 15px !important; border: 1px solid var(--nx-line-strong, rgba(148, 163, 184, .28)) !important; border-radius: 10px !important; background: var(--tx-control, rgba(255, 255, 255, .05)) !important; box-shadow: none !important; color: var(--nx-text, #edf5ff) !important; font-size: 12.5px !important; font-weight: 600 !important; line-height: 1 !important; white-space: nowrap !important; cursor: pointer !important; transform: none !important; transition: background-color .12s ease, border-color .12s ease !important; }
+.txp-more, .txp-export { display: inline-flex !important; align-items: center !important; justify-content: center !important; gap: 8px !important; height: 36px !important; min-height: 0 !important; margin: 0 !important; padding: 0 15px !important; border: 1px solid var(--nx-line-strong, rgba(148, 163, 184, .28)) !important; border-radius: 10px !important; background: var(--tx-control, rgba(255, 255, 255, .05)) !important; box-shadow: none !important; color: var(--nx-text, #edf5ff) !important; font-size: 14px !important; font-weight: 600 !important; line-height: 1 !important; white-space: nowrap !important; cursor: pointer !important; transform: none !important; transition: background-color .12s ease, border-color .12s ease !important; }
 .txp-more:hover, .txp-export:hover { background: var(--tx-control-hover, rgba(255, 255, 255, .09)) !important; transform: none !important; }
 .txp-more { border-color: rgba(var(--nx-o1, 250, 189, 46), .5) !important; }
 
@@ -114,7 +114,7 @@
 
 /* ---------- Filtro de tipo (Todos / Receitas / Despesas) ---------- */
 .txp-seg { display: inline-flex !important; flex: 0 0 auto !important; align-items: center !important; gap: 2px !important; height: 42px !important; padding: 3px !important; border: 1px solid var(--nx-line-strong, rgba(148, 163, 184, .28)) !important; border-radius: 11px !important; background: var(--tx-control, rgba(255, 255, 255, .05)) !important; }
-.txp-seg button { height: 34px !important; min-height: 0 !important; margin: 0 !important; padding: 0 14px !important; border: 0 !important; border-radius: 8px !important; background: transparent !important; box-shadow: none !important; color: var(--nx-muted, #8ea3bb) !important; font-size: 13px !important; font-weight: 600 !important; line-height: 1 !important; white-space: nowrap !important; cursor: pointer !important; transform: none !important; transition: background-color .12s ease, color .12s ease !important; }
+.txp-seg button { height: 34px !important; min-height: 0 !important; margin: 0 !important; padding: 0 14px !important; border: 0 !important; border-radius: 8px !important; background: transparent !important; box-shadow: none !important; color: var(--nx-muted, #8ea3bb) !important; font-size: 14px !important; font-weight: 600 !important; line-height: 1 !important; white-space: nowrap !important; cursor: pointer !important; transform: none !important; transition: background-color .12s ease, color .12s ease !important; }
 .txp-seg button:hover { color: var(--nx-text, #edf5ff) !important; background: var(--tx-control-hover, rgba(255, 255, 255, .09)) !important; }
 .txp-seg button.is-on { color: var(--nx-text, #edf5ff) !important; background: rgba(var(--nx-o1, 250, 189, 46), .2) !important; box-shadow: inset 0 0 0 1px rgba(var(--nx-o1, 250, 189, 46), .5) !important; }
 .txp-seg button.is-on[data-txtipo="in"] { color: var(--tx-in, #34d399) !important; background: rgba(52, 211, 153, .13) !important; box-shadow: inset 0 0 0 1px rgba(52, 211, 153, .42) !important; }
@@ -126,7 +126,7 @@
 .txp-empty { display: flex !important; flex-direction: column !important; align-items: center !important; text-align: center !important; padding: 34px 22px 36px !important; border: 1px dashed var(--nx-line-strong, rgba(148, 163, 184, .28)) !important; border-radius: 14px !important; background: transparent !important; }
 .txp-empty-ic { display: grid !important; place-items: center !important; width: 52px !important; height: 52px !important; margin: 0 0 14px !important; border: 1px solid var(--nx-line-strong, rgba(148, 163, 184, .28)) !important; border-radius: 15px !important; color: var(--nx-green, #5ee0ae) !important; background: rgba(94, 224, 174, .1) !important; }
 .txp-empty h3 { margin: 0 0 6px !important; font-size: 16px !important; font-weight: 700 !important; letter-spacing: -.01em !important; color: var(--nx-text, #edf5ff) !important; }
-.txp-empty p { max-width: 460px !important; margin: 0 0 18px !important; font-size: 13.5px !important; font-weight: 400 !important; line-height: 1.55 !important; color: var(--nx-muted, #8ea3bb) !important; }
+.txp-empty p { max-width: 460px !important; margin: 0 0 18px !important; font-size: 14px !important; font-weight: 400 !important; line-height: 1.55 !important; color: var(--nx-muted, #8ea3bb) !important; }
 .txp-empty p strong { font-weight: 600 !important; color: var(--nx-text, #edf5ff) !important; }
 .txp-empty-acts { display: flex !important; flex-wrap: wrap !important; align-items: center !important; justify-content: center !important; gap: 10px !important; }
 .txp-spinner { width: 26px !important; height: 26px !important; margin: 0 0 14px !important; border: 3px solid var(--nx-line-strong, rgba(148, 163, 184, .28)) !important; border-top-color: var(--nx-green, #5ee0ae) !important; border-radius: 50% !important; animation: tx-spin .8s linear infinite !important; }
@@ -151,9 +151,9 @@
   .txp-status { height: 30px !important; }
   .txp-act { width: 40px !important; height: 40px !important; }
   .txp-table tbody td.txp-c-val { grid-area: val !important; align-self: center !important; font-size: 15px !important; }
-  .txp-table tbody td.txp-c-cat { grid-area: cat !important; font-size: 13px !important; }
+  .txp-table tbody td.txp-c-cat { grid-area: cat !important; font-size: 14px !important; }
   .txp-sub { display: none !important; }
-  .txp-table tbody td.txp-c-acc { grid-area: acc !important; font-size: 12.5px !important; }
+  .txp-table tbody td.txp-c-acc { grid-area: acc !important; font-size: 14px !important; }
   .txp-table tbody td.txp-c-act { grid-area: act !important; align-self: center !important; }
   .txp-foot { padding: 4px 2px 0 !important; }
   .txp-foot-gap { flex-basis: 100% !important; height: 0 !important; }

@@ -11,10 +11,11 @@
 // ---------- Catálogos ----------
 // Fila de chamados: Novo -> Atendimento atribuído (-> Pendente, quando espera retorno) -> Resolvido -> Fechado
 const STATUS = Object.freeze(['Novo', 'Pendente', 'Atendimento atribuído', 'Resolvido', 'Fechado']);
-// Severidade (antes "prioridade"): quatro níveis. "Normal" e "Urgente" são nomes antigos.
-const PRIORIDADES = Object.freeze(['Crítica', 'Alta', 'Média', 'Baixa']);
-const PRIORIDADES_ANTIGAS = Object.freeze({ 'normal': 'Média', 'urgente': 'Crítica' });
-const PRIORIDADE_PADRAO = 'Média';
+// Severidade (antes "prioridade"): só existe "Baixa" (prazo de 5 dias úteis). Crítica, Alta e Média foram retiradas; quem ainda envia
+// um desses nomes (aba antiga aberta, "Normal"/"Urgente" de antes) é aceito e vale "Baixa", e os chamados antigos seguem o mesmo prazo.
+const PRIORIDADES = Object.freeze(['Baixa']);
+const PRIORIDADES_ANTIGAS = Object.freeze({ 'critica': 'Baixa', 'alta': 'Baixa', 'media': 'Baixa', 'normal': 'Baixa', 'urgente': 'Baixa' });
+const PRIORIDADE_PADRAO = 'Baixa';
 
 // Tipo do chamado: o solicitante escolhe entre pedir algo (requisição) ou relatar algo que parou (incidente)
 const TIPOS = Object.freeze(['Requisição', 'Incidente']);
@@ -62,17 +63,18 @@ const CANAIS_PUBLICOS = Object.freeze(['Tela de Login', 'Portal Web', 'App Mobil
 
 const LIMITES = Object.freeze({ nome: 120, email: 254, telefone: 40, titulo: 200, descricao: 5000, notas: 2000, tecnico: 150, canal: 60, categoria: 100, sla: 40, asset: 150, solution: 4000, fila: 60 });
 
-// Política de SLA por severidade: Crítica 4 h, Alta 8 h, Média 24 h (corridas), Baixa 5 dias úteis (sáb. e dom. não contam)
-const SLA_POLITICA = Object.freeze({ 'Crítica': '4 Horas', 'Alta': '8 Horas', 'Média': '24 Horas', 'Baixa': '5 Dias Úteis' });
-// Prazos padrão da política anterior (Crítica 30 min, Alta 1 h): chamado que ainda guarda um deles passa a seguir a política nova
-const SLA_ANTIGO_PADRAO = Object.freeze({ 'Crítica': ['30 minutos', '30 minuto'], 'Alta': ['1 hora'] });
+// Política de SLA: um prazo só, 5 dias úteis (sáb. e dom. não contam)
+const SLA_POLITICA = Object.freeze({ 'Baixa': '5 Dias Úteis' });
+// Prazos padrão das políticas anteriores (30 min, 1 h, 4 h, 8 h e 24 h): chamado que ainda guarda um deles passa a seguir o prazo novo.
+// Um prazo combinado à mão com outro texto (ex.: "2 Dias") não muda.
+const SLA_ANTIGO_PADRAO = Object.freeze(['30 minutos', '30 minuto', '1 hora', '4 horas', '8 horas', '24 horas']);
 
 // Sem acento, minúsculo e sem espaços nas pontas: chave de comparação dos catálogos
 function chaveDe(valor) {
   return String(valor == null ? '' : valor).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/\s+/g, ' ').trim();
 }
 
-// "alta", "ALTA", "Urgente", "Normal"... -> um dos quatro níveis (ou null se não for nenhum)
+// "baixa", "BAIXA", "Alta", "Urgente", "Normal"... -> "Baixa" (ou null se não for nenhum nome conhecido)
 function prioridadeCanonica(valor) {
   const chave = chaveDe(valor);
   if (!chave) return null;
@@ -583,7 +585,8 @@ function aplicarAtualizacao(ordemBruta, payload, { agoraIso, ator, filas } = {})
   if (veio(p.priority)) {
     const prioridade = prioridadeCanonica(p.priority);
     if (!prioridade) return { ok: false, mensagem: 'Severidade inválida. Use: ' + PRIORIDADES.join(', ') + '.' };
-    if (prioridade !== ordem.priority) {
+    // Chamado antigo gravado como Crítica/Alta/Média já vale Baixa: mandar "Baixa" não é mudança (nem linha na timeline)
+    if (prioridade !== (prioridadeCanonica(ordem.priority) || PRIORIDADE_PADRAO)) {
       mudancas.push('severidade: ' + (ordem.priority || '—') + ' → ' + prioridade);
       prioridadeMudou = true;
     }
@@ -928,7 +931,7 @@ function normalizarOrdem(linha) {
 
   const serviceType = texto(linha.service_type).trim() || CATEGORIA_PADRAO;
   let sla = texto(linha.sla).trim();
-  if (!sla || (SLA_ANTIGO_PADRAO[priority] || []).includes(chaveDe(sla))) sla = calcularSlaPorPrioridade(priority);
+  if (!sla || SLA_ANTIGO_PADRAO.includes(chaveDe(sla))) sla = calcularSlaPorPrioridade(priority);
 
   return {
     ...linha,
