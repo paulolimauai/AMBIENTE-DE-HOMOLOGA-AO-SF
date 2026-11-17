@@ -17524,6 +17524,7 @@ syncUsersWithServer().catch(() => {});
 async function saveUsersToServer() {
   saveToStorage('nexus_users', registeredUsers);
   const apiBase = getApiBaseUrl();
+  window.__lastUsersSyncError = null;
   try {
     const resp = await fetch(apiBase + '/api/users', {
       method: 'POST',
@@ -17535,8 +17536,13 @@ async function saveUsersToServer() {
     });
     let corpo = null;
     try { corpo = await resp.json(); } catch(parseErr) {}
-    return !!(resp && resp.ok && (!corpo || corpo.success !== false));
+    const ok = !!(resp && resp.ok && (!corpo || corpo.success !== false));
+    if (!ok) {
+      window.__lastUsersSyncError = 'HTTP ' + (resp ? resp.status : '?') + (corpo && corpo.error ? ': ' + corpo.error : '');
+    }
+    return ok;
   } catch(e){
+    window.__lastUsersSyncError = 'falha de rede: ' + (e && e.message ? e.message : String(e));
     return false;
   }
 }
@@ -30865,7 +30871,7 @@ async function saveUserAdmin(){
 
   const salvouEdicao = await saveUsersToServer();
   if(!salvouEdicao){
-    showToast('⚠️ Não foi possível salvar no servidor. As alterações não foram aplicadas.');
+    showToast('⚠️ Não foi possível salvar no servidor. ' + (window.__lastUsersSyncError || 'As alterações não foram aplicadas.'));
     await syncUsersWithServer();
     render();
     return;
