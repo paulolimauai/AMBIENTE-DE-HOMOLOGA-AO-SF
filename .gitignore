@@ -55,3 +55,8 @@ local_financeiro_config.json.ilegivel-*
 # Estado de runtime/dados de cliente: nunca no repositório (o do Supabase é a cópia; o servidor lê só da pasta de dados)
 local_boletos.json
 local_os_sequencia.json
+
+# Segredos e dados de execucao que nao devem ser versionados
+.nexus_smtp
+.nexus_sync_token
+deleted_accounts.json
