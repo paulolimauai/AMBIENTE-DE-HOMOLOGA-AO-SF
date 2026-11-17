@@ -219,21 +219,28 @@ h2{font:600 clamp(1.9rem,3.6vw,2.9rem)/1.14 var(--serif);letter-spacing:-.012em;
 /* ---------- início ---------- */
 .hero{padding:calc(4.25rem + clamp(1rem,2.5vw,1.6rem)) 0 clamp(2rem,4vw,3rem)}
 .hero-grid{display:grid;gap:clamp(2rem,5vw,3.5rem);align-items:center}
-/* banner do valor da assinatura (primeiro bloco do início): preço | texto | botões; empilha no celular */
-.bn{display:grid;grid-template-columns:minmax(0,1fr);gap:.9rem 1.6rem;align-items:center;margin-bottom:clamp(1.5rem,3.5vw,2.6rem);padding:1rem 1.2rem;border-radius:1.2rem}
+/* banner do valor da assinatura (primeiro bloco do início): preço | texto | botões; empilha no celular.
+   Toda a escrita fica alinhada à esquerda e o preço assenta numa única linha de base (R$, valor, centavos e /mês) */
+.bn{display:grid;grid-template-columns:minmax(0,1fr);gap:1rem 1.75rem;align-items:center;margin-bottom:clamp(1.5rem,3.5vw,2.6rem);padding:1.1rem 1.25rem;border-radius:1.2rem;text-align:left}
 .bn>*{min-width:0}
-.bn-p{display:flex;flex-direction:column;gap:.3rem}
-.bn-k{font-size:.78rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+.bn-p{display:flex;flex-direction:column;align-items:flex-start;gap:.45rem}
+.bn-k{font-size:.78rem;font-weight:800;line-height:1;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
 :root[data-mode="light"] .bn-k{color:color-mix(in srgb,var(--brand-d) 45%,#0e1530)}
-.bn-preco{display:flex;align-items:flex-start;gap:.2rem;color:var(--white);font-family:var(--serif);font-weight:600;line-height:1}
-.bn-preco .m{margin-top:.4rem;font-size:1.05rem}
+.bn-preco{display:flex;align-items:baseline;gap:.2rem;color:var(--white);font-family:var(--serif);font-weight:600;line-height:1;white-space:nowrap}
+.bn-preco .m{font-size:1.1rem}
 .bn-preco .v{font-size:2.7rem;letter-spacing:-.03em}
-.bn-preco .c{margin-top:.4rem;font-size:1.15rem}
-.bn-preco .u{align-self:flex-end;margin:0 0 .25rem .4rem;font:600 .92rem/1 var(--sans);color:var(--soft)}
-.bn-t{font-size:.95rem;color:var(--soft)}
-.bn-t b{color:var(--white)}
+.bn-preco .c{font-size:1.3rem}
+.bn-preco .u{margin-left:.4rem;font:600 .95rem/1 var(--sans);color:var(--soft)}
+.bn-t{display:flex;flex-direction:column;justify-content:center;gap:.25rem;margin:0;font-size:.95rem;line-height:1.45;color:var(--soft);text-wrap:pretty}
+.bn-t b{font-size:1.08rem;line-height:1.3;color:var(--white)}
 .bn-a{display:flex;flex-wrap:wrap;gap:.6rem}
-@media (min-width:860px){.bn{grid-template-columns:auto minmax(0,1fr) auto;gap:1rem 2rem;padding:1.1rem 1.5rem}}
+@media (min-width:860px){
+  .bn{grid-template-columns:auto minmax(0,1fr) auto;gap:1rem 1.75rem;padding:1.15rem 1.6rem}
+  /* filete entre o preço e o texto: a escrita do meio começa numa borda própria, na altura do bloco do preço */
+  .bn-t{align-self:stretch;padding-left:1.75rem;border-left:1px solid var(--glass-line)}
+  .bn-a{flex-wrap:nowrap;justify-content:flex-end}
+  .bn-a .btn{white-space:nowrap}
+}
 @media (max-width:480px){.bn-a{flex-direction:column}.bn-a .btn{width:100%}}
 @media (min-width:1024px){.hero-grid{grid-template-columns:minmax(0,1fr) minmax(0,1.05fr)}}
 h1{font:600 clamp(2.35rem,5.1vw,4.1rem)/1.08 var(--serif);letter-spacing:-.014em;word-spacing:.07em}
