@@ -66,6 +66,44 @@
   color: var(--adm-ink) !important; font: inherit !important; font-size: 13px !important; color-scheme: dark !important; cursor: pointer !important;
 }
 
+/* ---------- nome da pessoa: botão que abre o painel da conta ---------- */
+.as-nome {
+  display: block !important; width: auto !important; max-width: 100% !important; height: auto !important; min-height: 0 !important; margin: 0 !important; padding: 0 !important;
+  border: 0 !important; border-radius: 4px !important; background: none !important; box-shadow: none !important; text-align: left !important;
+  font: inherit !important; font-size: 14.5px !important; font-weight: 750 !important; color: #fff !important; cursor: pointer !important;
+}
+.as-nome:hover { text-decoration: underline !important; text-decoration-color: rgb(var(--adm-acc)) !important; text-underline-offset: 3px !important; }
+.as-nome:focus-visible { outline: 2px solid rgb(var(--adm-acc)) !important; outline-offset: 2px !important; }
+
+/* ---------- painel da conta: largura ajustável ---------- */
+/* A largura vem da variável --as-dr-w (arrastar a alça, setas, duplo clique); no celular o painel segue ocupando a tela toda */
+@media (min-width: 561px) {
+  .as-dr .adm-dr-painel {
+    width: min(var(--as-dr-w, 540px), 100%) !important; container-type: inline-size !important; container-name: asdr !important;
+    transition: transform .22s cubic-bezier(.2, .7, .2, 1), width .18s ease !important;
+  }
+  .as-dr.is-cheia .adm-dr-painel { width: 100% !important; }
+  .as-dr.is-arrastando .adm-dr-painel, .as-dr.is-arrastando .adm-dr-fundo { transition: none !important; }
+  .as-dr.is-arrastando { user-select: none !important; -webkit-user-select: none !important; cursor: col-resize !important; }
+}
+.as-dr-alca { position: absolute !important; left: -7px !important; top: 0 !important; bottom: 0 !important; z-index: 5 !important; display: flex !important; align-items: center !important; justify-content: center !important; width: 14px !important; cursor: col-resize !important; touch-action: none !important; outline: 0 !important; }
+.as-dr.is-cheia .as-dr-alca { left: 0 !important; width: 10px !important; }
+.as-dr-alca i { display: block !important; width: 4px !important; height: 52px !important; border-radius: 99px !important; background: rgba(255, 255, 255, .24) !important; transition: background-color .15s ease, height .15s ease !important; }
+.as-dr-alca:hover i, .as-dr-alca:focus-visible i, .as-dr.is-arrastando .as-dr-alca i { height: 80px !important; background: rgb(var(--adm-acc)) !important; }
+.as-dr-alca:focus-visible { outline: 2px solid rgb(var(--adm-acc)) !important; outline-offset: -2px !important; border-radius: 6px !important; }
+/* celular: sem alça nem botão de expandir; o painel ocupa a tela toda (100% do container, que já desconta o zoom do app) */
+@media (max-width: 560px) {
+  .as-dr-alca, .as-expandir { display: none !important; }
+  .as-dr .adm-dr-painel { width: 100% !important; }
+}
+/* painel largo: situação e histórico à esquerda, ações à direita */
+@container asdr (min-width: 880px) {
+  .as-dr .adm-dr-corpo { display: grid !important; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important; grid-template-rows: auto minmax(0, 1fr) !important; column-gap: 32px !important; align-items: start !important; align-content: start !important; }
+  .as-dr-a { grid-column: 1 !important; grid-row: 1 !important; }
+  .as-dr-c { grid-column: 1 !important; grid-row: 2 !important; }
+  .as-dr-b { grid-column: 2 !important; grid-row: 1 / span 2 !important; }
+}
+
 /* ---------- gaveta de uma conta ---------- */
 .as-cheio { width: 100% !important; height: 44px !important; justify-content: center !important; }
 .as-grade { display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 8px !important; margin: 0 0 12px !important; }

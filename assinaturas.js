@@ -216,16 +216,41 @@
   }
 
   /* ============================================================ estado ============================================================ */
-  var estado = { busca: '', sit: 'todas', ordem: 'prioridade', pagina: 1, porPagina: 25, sel: {}, detalhe: null, retorno: null, ocupado: false };
+  // larguraDr: largura do painel da conta em px (null = padrão); drMax: painel em tela cheia
+  var estado = { busca: '', sit: 'todas', ordem: 'prioridade', pagina: 1, porPagina: 25, sel: {}, detalhe: null, retorno: null, ocupado: false, larguraDr: null, drMax: false };
   var ctxFn = null, ligado = false, tempoBusca = null, ultimo = {};
   var CHAVE_PREFS = 'nexus_ass_prefs';
+  var LARG_MIN = 400, LARG_PADRAO = 540;
   function lerPrefs() {
     try {
       var p = JSON.parse(root.localStorage.getItem(CHAVE_PREFS) || '{}');
       if ([25, 50, 100].indexOf(p.porPagina) >= 0) estado.porPagina = p.porPagina;
+      if (p.larguraDr >= LARG_MIN && p.larguraDr <= 4000) estado.larguraDr = Math.round(p.larguraDr);
     } catch (e) {}
   }
-  function gravarPrefs() { try { root.localStorage.setItem(CHAVE_PREFS, JSON.stringify({ porPagina: estado.porPagina })); } catch (e) {} }
+  function gravarPrefs() { try { root.localStorage.setItem(CHAVE_PREFS, JSON.stringify({ porPagina: estado.porPagina, larguraDr: estado.larguraDr })); } catch (e) {} }
+  // Largura do painel da conta: nunca menor que o mínimo e nunca maior que a tela menos uma faixa (o fundo escuro continua clicável para fechar)
+  function limitarLargura(px, vw) {
+    vw = vw || 1280;
+    var max = Math.max(LARG_MIN, vw - 40);
+    // Sem valor (nada guardado, texto, NaN) = padrão; qualquer número, mesmo zero ou negativo (arrastou além da borda), é limitado ao mínimo
+    var n = px === null || px === '' || px === undefined ? NaN : Math.round(Number(px));
+    if (!isFinite(n)) n = LARG_PADRAO;
+    return Math.min(max, Math.max(LARG_MIN, n));
+  }
+  // O app aplica zoom no <body> (escala automática) e a gaveta fica dentro dele: o mouse anda em pixels de tela, o painel mede em pixels do painel.
+  // larguraTela() = largura que "100%" tem para o painel (o container fixo da gaveta); zoomTela() = quantos pixels de tela vale 1 px do painel.
+  function larguraTela() {
+    var d = root.document, el = d && d.getElementById('asGaveta');
+    // clientWidth (sem a borda de 1 px que o app põe em todo role="dialog") é exatamente o que 100% vale para o painel
+    return (el && el.clientWidth) || (d && d.documentElement && d.documentElement.clientWidth) || root.innerWidth || 1280;
+  }
+  function zoomTela() {
+    var d = root.document, el = d && d.getElementById('asGaveta');
+    if (!el || !el.offsetWidth) return 1;
+    var z = el.getBoundingClientRect().width / el.offsetWidth;
+    return z > 0.2 && z < 5 ? z : 1;
+  }
 
   function contexto() { return ctxFn ? ctxFn() : { usuarios: [], acoes: {} }; }
   function calcular(ctx) {
@@ -266,7 +291,9 @@
     lapis: svg('<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>'),
     copiar: svg('<rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>'),
     inf: svg('<path d="M18.2 8.3a4 4 0 0 0-5.6 0L12 9l-.6-.7a4 4 0 1 0 0 5.7l.6-.7.6.7a4 4 0 1 0 5.6-5.7Z"/>'),
-    cartao: svg('<rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/>')
+    cartao: svg('<rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/>'),
+    expandir: svg('<polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/>'),
+    recolher: svg('<polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="14" y1="10" x2="21" y2="3"/><line x1="3" y1="21" x2="10" y2="14"/>')
   };
 
   /* ============================================================ HTML: página ============================================================ */
@@ -343,6 +370,10 @@
     return (q && !eu ? '<button type="button" class="adm-btn adm-btn-sm' + (q.pri ? ' adm-btn-pri' : '') + '" data-as-a="' + q.a + '"' + (q.min ? ' data-min="' + q.min + '"' : '') + ' data-email="' + esc(r.email) + '" title="' + esc(q.dica) + '">' + IC[q.ic] + '<span>' + esc(q.rotulo) + '</span></button>' : '') +
       '<button type="button" class="adm-ib" data-as-abrir="' + esc(r.email) + '" title="Ver detalhes e todas as ações" aria-label="Gerenciar a assinatura de ' + esc(r.nome) + '">' + IC.olho + '</button>';
   }
+  // O nome é um botão de verdade: dá para clicar, alcançar pelo Tab e abrir com Enter
+  function nomeBtn(r) {
+    return '<button type="button" class="adm-nome as-nome" data-as-abrir="' + esc(r.email) + '" title="Abrir a assinatura de ' + esc(r.nome) + '">' + esc(r.nome) + '</button>';
+  }
   function checkbox(r, m) {
     var eu = r.email === m.eu;
     return '<input type="checkbox" class="adm-chk" data-as-sel="' + esc(r.email) + '"' + (estado.sel[r.email] ? ' checked' : '') + (eu ? ' disabled title="Você não pode agir sobre a própria conta"' : '') + ' aria-label="Selecionar ' + esc(r.nome) + '">';
@@ -362,7 +393,7 @@
   function linhaTabela(r, m) {
     return '<tr class="adm-lin as-lin' + (r.ativo ? '' : ' is-off') + (estado.sel[r.email] ? ' is-sel' : '') + (estado.detalhe === r.email ? ' is-aberto' : '') + '" data-as-abrir="' + esc(r.email) + '">' +
       '<td class="as-c-sel">' + checkbox(r, m) + '</td>' +
-      '<td class="as-c-tit"><div class="adm-tit">' + avatar(r) + '<div class="adm-tit-t"><b class="adm-nome" title="' + esc(r.nome) + '">' + esc(r.nome) + '</b><small title="' + esc(r.email) + '">' + esc(r.email) + '</small></div></div></td>' +
+      '<td class="as-c-tit"><div class="adm-tit">' + avatar(r) + '<div class="adm-tit-t">' + nomeBtn(r) + '<small title="' + esc(r.email) + '">' + esc(r.email) + '</small></div></div></td>' +
       '<td class="as-c-sit">' + pill(r.sit, vencendo(r, m.agora) ? SIT[r.sit].rotulo + ' · vence logo' : '') + (r.ativo ? '' : '<small>Conta bloqueada</small>') + '</td>' +
       '<td class="as-c-plano">' + celulaPlano(r) + '</td>' +
       '<td class="as-c-venc">' + celulaVenc(r, m) + '</td>' +
@@ -381,7 +412,7 @@
   function cartao(r, m) {
     var t = textoVenc(r, m.agora);
     return '<article class="adm-card as-card' + (r.ativo ? '' : ' is-off') + (estado.sel[r.email] ? ' is-sel' : '') + (estado.detalhe === r.email ? ' is-aberto' : '') + '" data-as-abrir="' + esc(r.email) + '">' +
-      '<header class="adm-card-cab">' + checkbox(r, m) + avatar(r) + '<div class="adm-tit-t"><b class="adm-nome" title="' + esc(r.nome) + '">' + esc(r.nome) + '</b><small>' + esc(r.email) + '</small></div></header>' +
+      '<header class="adm-card-cab">' + checkbox(r, m) + avatar(r) + '<div class="adm-tit-t">' + nomeBtn(r) + '<small>' + esc(r.email) + '</small></div></header>' +
       '<div class="adm-card-pills">' + pill(r.sit) + pillConta(r) + '</div>' +
       '<dl class="adm-card-meta"><div><dt>Plano</dt><dd>' + esc(r.sit === 'paga' || r.sit === 'cortesia' ? r.ass.rotulo + (r.metodoRotulo ? ' · ' + r.metodoRotulo : '') : '—') + '</dd></div>' +
       '<div><dt>Vencimento</dt><dd>' + (r.sit === 'vitalicia' ? 'Sem vencimento' : (r.venc ? esc(dataBR(r.venc, true)) : '—')) + '</dd></div>' +
@@ -489,24 +520,29 @@
         return '<li><b>' + esc(e.action || 'Evento') + '</b><span>' + esc(String(e.details || '').slice(0, 160)) + '</span><small>' + esc(dataBR(e.timestamp || e.created_at, true)) + '</small></li>';
       }).join('') + '</ul>'
       : '<p class="adm-nd">Nenhum evento de assinatura registrado para esta conta.</p>';
+    var cheia = !!estado.drMax;
     return '<div class="adm-dr-fundo" data-as-a="fechar"></div>' +
       '<div class="adm-dr-painel" role="document">' +
+      '<div class="as-dr-alca" id="asDrAlca" data-as-alca role="separator" aria-orientation="vertical" tabindex="0" aria-label="Ajustar a largura do painel. Setas esquerda e direita ajustam; Enter alterna tela cheia"' +
+        ' aria-valuemin="' + LARG_MIN + '" aria-valuenow="' + (estado.larguraDr || LARG_PADRAO) + '" title="Arraste para ajustar a largura. Duplo clique restaura o tamanho padrão."><i aria-hidden="true"></i></div>' +
       '<header class="adm-dr-cab"><div class="adm-dr-id">' + avatar(r, 'adm-av-lg') + '<div class="adm-dr-nome"><h3 id="asDrTitulo">' + esc(r.nome) + '</h3><span class="adm-mail">' + esc(r.email) + '</span>' +
         '<div class="adm-dr-pills">' + pill(r.sit) + pillConta(r) + '</div></div></div>' +
         '<div class="adm-dr-nav">' +
           '<button type="button" class="adm-ib" data-as-a="ant" data-email="' + esc(r.email) + '" title="Conta anterior da lista (←)" aria-label="Conta anterior"' + (idx <= 0 ? ' disabled' : '') + '>' + IC.ant + '</button>' +
           '<span class="adm-dr-pos">' + (idx >= 0 ? (idx + 1) + ' de ' + m.ordenados.length : '') + '</span>' +
           '<button type="button" class="adm-ib" data-as-a="prox" data-email="' + esc(r.email) + '" title="Próxima conta da lista (→)" aria-label="Próxima conta"' + (idx < 0 || idx >= m.ordenados.length - 1 ? ' disabled' : '') + '>' + IC.prox + '</button>' +
+          '<button type="button" class="adm-ib as-expandir" data-as-a="expandir" aria-pressed="' + cheia + '" title="' + (cheia ? 'Voltar à largura anterior' : 'Ocupar a tela toda') + '" aria-label="' + (cheia ? 'Voltar à largura anterior' : 'Ocupar a tela toda') + '">' + (cheia ? IC.recolher : IC.expandir) + '</button>' +
           '<button type="button" class="adm-ib" data-as-a="fechar" id="asDrFechar" title="Fechar (Esc)" aria-label="Fechar">' + IC.x + '</button></div></header>' +
       '<div class="adm-dr-corpo">' +
-        '<section><h4>Situação</h4><dl class="adm-dl">' +
+        '<div class="as-dr-a"><section><h4>Situação</h4><dl class="adm-dl">' +
           linhaDl('Situação', esc(SIT[r.sit].rotulo) + (r.sit === 'paga' || r.sit === 'cortesia' ? ' · ' + esc(r.ass.rotulo) : '')) +
           linhaDl('Vencimento', vencTxt) +
           linhaDl('Forma de pagamento', esc(r.metodoRotulo)) + linhaDl('Último protocolo', esc(r.protocolo)) +
           linhaDl('Teste iniciado em', isNaN(r.testeInicio) ? '' : esc(dataBR(r.testeInicio, true))) +
-          linhaDl('Conta', r.ativo ? 'Ativa' : 'Bloqueada') + '</dl></section>' +
-        corpoAcoes +
-        '<section><h4>Histórico da assinatura</h4>' + ev + '</section>' +
+          linhaDl('Conta', r.ativo ? 'Ativa' : 'Bloqueada') + '</dl></section></div>' +
+        // Em painel largo: situação e histórico na coluna da esquerda, ações na da direita (CSS por container query)
+        '<div class="as-dr-b">' + corpoAcoes + '</div>' +
+        '<div class="as-dr-c"><section><h4>Histórico da assinatura</h4>' + ev + '</section></div>' +
       '</div></div>';
   }
 
@@ -564,6 +600,61 @@
     if (u2 && guardado.u) u2.value = guardado.u;
     if (guardado.foco && d.getElementById(guardado.foco)) d.getElementById(guardado.foco).focus({ preventScroll: true });
   }
+  /* ---- largura ajustável do painel ---- */
+  function marcarExpandir(el) {
+    var b = el && el.querySelector('.as-expandir');
+    if (!b) return;
+    var t = estado.drMax ? 'Voltar à largura anterior' : 'Ocupar a tela toda';
+    b.setAttribute('aria-pressed', String(!!estado.drMax)); b.title = t; b.setAttribute('aria-label', t);
+    b.innerHTML = estado.drMax ? IC.recolher : IC.expandir;
+  }
+  // Põe no elemento a largura guardada (variável CSS) e o modo tela cheia; chamado ao abrir e quando a janela muda de tamanho
+  function sincronizarLargura() {
+    var el = doc() && doc().getElementById('asGaveta');
+    if (!el) return;
+    var w = limitarLargura(estado.larguraDr || LARG_PADRAO, larguraTela());
+    el.style.setProperty('--as-dr-w', w + 'px');
+    el.classList.toggle('is-cheia', !!estado.drMax);
+    var a = el.querySelector('[data-as-alca]'); if (a) a.setAttribute('aria-valuenow', String(estado.drMax ? larguraTela() : w));
+    marcarExpandir(el);
+  }
+  function aplicarLargura(px, persistir) {
+    estado.larguraDr = limitarLargura(px, larguraTela());
+    estado.drMax = false;
+    sincronizarLargura();
+    if (persistir) gravarPrefs();
+  }
+  function alternarCheia() {
+    estado.drMax = !estado.drMax;
+    sincronizarLargura();
+  }
+  function arrastarAlca(ev) {
+    var d = doc(), el = d.getElementById('asGaveta');
+    if (!el) return;
+    ev.preventDefault();
+    el.classList.add('is-arrastando');
+    // A borda direita do painel é a borda direita da tela: largura = distância do mouse até ela, convertida para pixels do painel
+    var z = zoomTela(), telaPx = d.documentElement.clientWidth || root.innerWidth || 1280;
+    var mover = function (e) { aplicarLargura((telaPx - e.clientX) / z, false); };
+    var fim = function () {
+      d.removeEventListener('pointermove', mover); d.removeEventListener('pointerup', fim); d.removeEventListener('pointercancel', fim);
+      el.classList.remove('is-arrastando'); gravarPrefs();
+    };
+    d.addEventListener('pointermove', mover); d.addEventListener('pointerup', fim); d.addEventListener('pointercancel', fim);
+  }
+  // Teclado na alça: ← alarga, → estreita (Shift = passo grande), Home = mínimo, End = máximo, Enter = tela cheia
+  function teclaAlca(ev) {
+    var passo = ev.shiftKey ? 128 : 32;
+    var atual = estado.drMax ? larguraTela() : (estado.larguraDr || LARG_PADRAO);
+    if (ev.key === 'ArrowLeft') aplicarLargura(atual + passo, true);
+    else if (ev.key === 'ArrowRight') aplicarLargura(atual - passo, true);
+    else if (ev.key === 'Home') aplicarLargura(LARG_MIN, true);
+    else if (ev.key === 'End') aplicarLargura(larguraTela(), true);
+    else if (ev.key === 'Enter' || ev.key === ' ') alternarCheia();
+    else return;
+    ev.preventDefault();
+  }
+
   function abrirDetalhe(email) {
     var d = doc();
     email = String(email || '').toLowerCase();
@@ -575,6 +666,7 @@
     delete ultimo.asGaveta;
     el.hidden = false;
     atualizarGaveta(ctx, m);
+    sincronizarLargura();
     if (!el.classList.contains('is-aberta')) root.requestAnimationFrame ? root.requestAnimationFrame(function () { el.classList.add('is-aberta'); }) : el.classList.add('is-aberta');
     var f = d.getElementById('asDrFechar'); if (f) f.focus({ preventScroll: true });
     pintar('asLista', htmlLista(m));
@@ -583,8 +675,9 @@
     var d = doc(), el = d && d.getElementById('asGaveta');
     if (!estado.detalhe && !(el && !el.hidden)) return;
     estado.detalhe = null;
+    estado.drMax = false; // a largura escolhida fica guardada; a tela cheia vale só enquanto o painel está aberto
     delete ultimo.asGaveta;
-    if (el) { el.classList.remove('is-aberta'); el.hidden = true; el.innerHTML = ''; }
+    if (el) { el.classList.remove('is-aberta', 'is-cheia', 'is-arrastando'); el.hidden = true; el.innerHTML = ''; }
     var volta = estado.retorno; estado.retorno = null;
     if (paginaAtiva()) repintar();
     if (volta && volta.focus && d.contains(volta)) { try { volta.focus({ preventScroll: true }); } catch (e) {} }
@@ -734,6 +827,7 @@
     var r = email ? achar(m, email) : null;
     switch (acao) {
       case 'fechar': fecharDetalhe(); return;
+      case 'expandir': alternarCheia(); return;
       case 'ant': vizinho(email, -1); return;
       case 'prox': vizinho(email, 1); return;
       case 'limpar': estado.busca = ''; estado.sit = 'todas'; estado.pagina = 1; var b = doc().getElementById('asBusca'); if (b) b.value = ''; repintar(); return;
@@ -830,10 +924,21 @@
         tempoBusca = setTimeout(function () { estado.busca = t.value; estado.pagina = 1; repintar(); }, 140);
       }
     });
+    // Alça de largura do painel: arrastar com o mouse ou o dedo; duplo clique volta ao tamanho padrão
+    d.addEventListener('pointerdown', function (ev) {
+      var a = ev.target && ev.target.closest && ev.target.closest('[data-as-alca]');
+      if (!a || !paginaAtiva() || (ev.button != null && ev.button > 0)) return;
+      arrastarAlca(ev);
+    });
+    d.addEventListener('dblclick', function (ev) {
+      if (ev.target && ev.target.closest && ev.target.closest('[data-as-alca]') && paginaAtiva()) aplicarLargura(LARG_PADRAO, true);
+    });
+    root.addEventListener('resize', function () { if (estado.detalhe) sincronizarLargura(); });
     d.addEventListener('keydown', function (ev) {
       if (!paginaAtiva() || !estado.detalhe || d.getElementById('asDialogo')) return;
       var tag = ev.target && ev.target.tagName;
       if (ev.key === 'Escape') { ev.preventDefault(); fecharDetalhe(); return; }
+      if (ev.target && ev.target.closest && ev.target.closest('[data-as-alca]')) { teclaAlca(ev); return; }
       if ((ev.key === 'ArrowLeft' || ev.key === 'ArrowRight') && tag !== 'INPUT' && tag !== 'SELECT' && tag !== 'TEXTAREA') {
         ev.preventDefault(); vizinho(estado.detalhe, ev.key === 'ArrowRight' ? 1 : -1);
       }
@@ -859,7 +964,7 @@
   return {
     // modelo
     SIT: SIT, situacaoDe: situacaoDe, registro: registro, vencendo: vencendo, textoVenc: textoVenc, filtrar: filtrar, ordenar: ordenar, resumo: resumo, paginar: paginar,
-    minutosDe: minutosDe, textoMinutos: textoMinutos, alvosConceder: alvosConceder, textoIgnoradasConceder: textoIgnoradasConceder, csv: csv, acaoRapida: acaoRapida,
+    limitarLargura: limitarLargura, LARG_MIN: LARG_MIN, LARG_PADRAO: LARG_PADRAO, minutosDe: minutosDe, textoMinutos: textoMinutos, alvosConceder: alvosConceder, textoIgnoradasConceder: textoIgnoradasConceder, csv: csv, acaoRapida: acaoRapida,
     // telas
     paginaHTML: paginaHTML, htmlResumo: htmlResumo, htmlLista: htmlLista, htmlSelecao: htmlSelecao, htmlLinha: linhaTabela, htmlCartao: cartao, detalheHTML: detalheHTML,
     // integração com o app
