@@ -25577,13 +25577,13 @@ async function admSincronizar(){
   render();
 }
 
-// Perfil: Administrador (Nexus + GLPI) ou Usuário. Nunca a própria conta; sempre sobra o administrador logado.
+// Perfil: Administrador (Nexus + GLPI) ou Usuário. A própria conta também pode mudar de perfil
+// (o servidor garante que sempre reste ao menos um administrador ativo).
 async function admMudarPerfil(email, perfil){
   await syncUsersWithServer();
   if(!admEhAdmin()) return false;
   if(perfil !== 'Administrador' && perfil !== 'Usuário') return false;
   const alvo = admMinusculo(email);
-  if(alvo === admMinusculo(currentUser.email)){ showToast('Você não pode alterar o próprio perfil por aqui.'); return false; }
   const u = registeredUsers.find(function(x){ return x && admMinusculo(x.email) === alvo; });
   if(!u) return false;
   if(u.role === perfil) return true;
@@ -25607,6 +25607,12 @@ async function admMudarPerfil(email, perfil){
     await syncUsersWithServer();
     render();
     return false;
+  }
+  // Se o admin alterou o próprio perfil, reflete na sessão atual na hora
+  if(alvo === admMinusculo(currentUser.email)){
+    currentUser.role = perfil;
+    saveToStorage('nexus_cached_user', currentUser);
+    document.documentElement.classList.toggle('is-admin', nexusIsAdminUser(currentUser));
   }
   showToast(u.name + ' agora é ' + (perfil === 'Administrador' ? 'administrador (Nexus + GLPI).' : 'usuário comum.'));
   logActivity('Alteração de Função', 'Usuário / Permissões', 'Administrador alterou a função do usuário ' + u.email + ' (' + u.name + ') de ' + antes.role + ' para ' + perfil);
@@ -30820,14 +30826,9 @@ async function saveUserAdmin(){
     return;
   }
 
-  // Proteção do último administrador ativo: rebaixar OU bloquear a conta tira acesso de administração;
-  // e a própria conta nunca pode ser rebaixada/bloqueada por esta tela (senão o admin se tranca do painel).
-  const souEu = admMinusculo(u.email) === admMinusculo(currentUser && currentUser.email);
+  // Proteção do último administrador ativo: rebaixar OU bloquear a conta tira acesso de administração.
+  // A própria conta também pode ser rebaixada/bloqueada, desde que reste ao menos um administrador ativo.
   const perdeAdmin = u.role === 'Administrador' && admUsuarioAtivo(u) && (role !== 'Administrador' || !active);
-  if(souEu && perdeAdmin){
-    showToast('Por segurança você não pode rebaixar nem bloquear a própria conta por aqui.');
-    return;
-  }
   if(perdeAdmin && admAdminsAtivos() <= 1){
     showToast('É necessário manter ao menos um administrador ativo no sistema');
     return;
@@ -30878,6 +30879,7 @@ async function saveUserAdmin(){
     currentUser.phone = u.phone;
     saveToStorage('nexus_cached_user', currentUser);
     saveToStorage('nexus_session', { email: currentUser.email });
+    document.documentElement.classList.toggle('is-admin', nexusIsAdminUser(currentUser));
   }
 
   showToast('Cadastro de ' + u.name + ' corrigido e salvo com sucesso!');
