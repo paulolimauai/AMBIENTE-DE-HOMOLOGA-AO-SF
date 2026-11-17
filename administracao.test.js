@@ -203,9 +203,63 @@ test('shellHTML: três abas no topo, a ativa marcada, contadores e identidade do
   assert.ok(h.includes('data-adm-ir="usuarios"') && h.includes('data-adm-ir="pagamentos"') && h.includes('data-adm-ir="logs"'));
   assert.ok(/data-adm-ir="pagamentos" aria-selected="true" aria-current="page"/.test(h));
   assert.ok(/data-adm-ir="usuarios" aria-selected="false"/.test(h));
-  assert.ok(h.includes('>12<') && h.includes('3 pend.') && h.includes('>529<'));
+  assert.ok(h.includes('3 pend.'), 'o contador de Pagamentos pede ação');
+  assert.ok(!h.includes('>12<') && !h.includes('>529<'), 'totais neutros (cadastros e eventos) não repetem na aba');
+  assert.equal((h.match(/adm-tab-n/g) || []).length, 1, 'só a aba Pagamentos tem contador');
   assert.ok(h.includes('Ana Admin Teste') && h.includes('id="admCorpo"') && h.includes('<p id="x">corpo</p>'));
   assert.ok(!A.shellHTML('usuarios', { contagens: { usuarios: 1, pagamentos: 0, logs: 0 }, eu: {} }).includes('pend.'), 'sem pendências não mostra o aviso');
+  assert.ok(!h.includes('data-adm-acao="novo"'), '"Novo cadastro" mora no cabeçalho da tela de Cadastros, não na barra global');
+});
+
+test('cadastrosHTML: "Novo cadastro" fica ao lado de Exportar CSV, no cabeçalho da tela', () => {
+  const h = A.html(() => ({ agora: AGORA, usuarios: [usuario()], acoes: {} }));
+  assert.equal((h.match(/data-adm-acao="novo"/g) || []).length, 1);
+  assert.ok(h.indexOf('data-adm-acao="exportar"') < h.indexOf('data-adm-acao="novo"') && h.indexOf('data-adm-acao="novo"') < h.indexOf('id="admResumo"'));
+});
+
+test('resumo: dois grupos (Pessoas e Assinatura), % do total, cartão zerado apagado e cartões que pedem atenção', () => {
+  const us = [
+    usuario({ email: 'a@x.com', role: 'Administrador' }),
+    usuario({ email: 'b@x.com', subscription_status: 'pending_payment' }),
+    usuario({ email: 'c@x.com', subscription_status: 'expired' }),
+    usuario({ email: 'd@x.com' })
+  ];
+  const h = A.htmlResumo(A.calcular({ agora: AGORA, usuarios: us }));
+  assert.ok(h.includes('>Pessoas<') && h.includes('>Assinatura<'), 'os dois grupos têm título');
+  assert.equal((h.match(/class="adm-kpi-grupo/g) || []).length, 2);
+  assert.equal((h.match(/data-adm-kpi=/g) || []).length, 8);
+  assert.ok(h.indexOf('data-adm-kpi="inativo"') < h.indexOf('>Assinatura<') && h.indexOf('>Assinatura<') < h.indexOf('data-adm-kpi="assinantes"'), 'Pessoas vem antes de Assinatura');
+  const cartao = (id) => (h.match(new RegExp('<button[^>]*data-adm-kpi="' + id + '"[\\s\\S]*?</button>')) || [''])[0];
+  assert.ok(cartao('admin').includes('25%') && cartao('admin').includes('de 4 cadastros'), 'proporção do total no próprio cartão');
+  assert.ok(!cartao('todos').includes('adm-kpi-p'), 'o Total não repete a porcentagem');
+  assert.ok(/class="adm-kpi [^"]*is-zero/.test(cartao('inativo')) && !cartao('inativo').includes('adm-kpi-p'), 'zero fica apagado e sem porcentagem');
+  assert.ok(/is-atencao/.test(cartao('pendente')) && cartao('pendente').includes('adm-kpi-al'), 'pagamento aguardando > 0 pede atenção');
+  assert.ok(/is-atencao/.test(cartao('sem_acesso')) && cartao('sem_acesso').includes('Acesso encerrado') && cartao('sem_acesso').includes('teste ou plano vencido'), 'rótulo novo e significado na linha pequena');
+  assert.ok(!h.includes('>Sem acesso<'), 'o nome antigo saiu');
+  assert.ok(!/is-atencao/.test(cartao('inativo')) && !/is-atencao/.test(cartao('ativo')), 'só Aguardando pagamento e Acesso encerrado pedem atenção');
+  const zero = A.htmlResumo(A.calcular({ agora: AGORA, usuarios: [usuario({ email: 'z@x.com', role: 'Administrador' })] }));
+  assert.ok(!/is-atencao/.test(zero), 'sem pendência e sem acesso encerrado nada pede atenção');
+  assert.ok(/class="adm-kpi [^"]*is-zero[^"]*"[^>]*data-adm-kpi="pendente"/.test(zero));
+  assert.ok(A.htmlResumo(A.calcular({ agora: AGORA, usuarios: [] })).includes('data-adm-kpi="todos"'), 'sem cadastros não divide por zero');
+});
+
+test('barra: uma linha (busca, Filtros, ordem, contador, vista) e o painel com grupos de botões', () => {
+  A.estado.busca = ''; A.estado.perfil = 'todos'; A.estado.status = 'todos'; A.estado.plano = 'todos'; A.estado.disp = 'todos';
+  const h = A.html(() => ({ agora: AGORA, usuarios: [usuario(), usuario({ id: 9, email: 'o@y.com' })], acoes: {} }));
+  const barra = h.slice(h.indexOf('class="adm-barra"'), h.indexOf('id="admChips"'));
+  assert.ok(barra.includes('id="admFtog"') && barra.includes('class="adm-fbtn"') && barra.includes('data-adm-ordem-sel') && barra.includes('id="admCont"') && barra.includes('data-adm-vista="tabela"'));
+  assert.ok(barra.indexOf('id="admBusca"') < barra.indexOf('class="adm-fbtn"') && barra.indexOf('class="adm-fbtn"') < barra.indexOf('data-adm-ordem-sel') && barra.indexOf('data-adm-ordem-sel') < barra.indexOf('id="admCont"') && barra.indexOf('id="admCont"') < barra.indexOf('class="adm-fpainel"'));
+  assert.ok(barra.includes('<b>2</b> de 2 cadastros'), 'contador na linha da busca');
+  for (const v of ['perfil:todos', 'perfil:admin', 'perfil:user', 'status:todos', 'status:ativo', 'status:inativo', 'disp:todos', 'disp:Desktop', 'disp:Mobile']) assert.ok(barra.includes('data-adm-seg="' + v + '"'), 'falta o botão ' + v);
+  assert.ok(/data-adm-seg="perfil:todos" aria-pressed="true"/.test(barra) && /data-adm-seg="perfil:admin" aria-pressed="false"/.test(barra));
+  assert.ok(barra.includes('data-adm-filtro="plano"') && !barra.includes('data-adm-filtro="perfil"'), 'só Assinatura continua em lista (tem 10 opções)');
+  assert.ok(barra.includes('data-adm-fn hidden'), 'sem filtros ligados o selo de contagem fica escondido');
+  assert.ok(h.includes('id="admChips"></div>'), 'sem filtros a faixa de etiquetas fica vazia (e some)');
+  A.estado.perfil = 'admin'; A.estado.plano = 'pendente';
+  const filtrado = A.html(() => ({ agora: AGORA, usuarios: [usuario()], acoes: {} }));
+  assert.ok(/data-adm-seg="perfil:admin" aria-pressed="true"/.test(filtrado) && /class="adm-fn" data-adm-fn>2</.test(filtrado), 'selo mostra quantos filtros estão ligados');
+  assert.ok(filtrado.includes('data-adm-chip="perfil"') && filtrado.includes('data-adm-chip="plano"') && filtrado.includes('Limpar tudo'));
+  A.estado.perfil = 'todos'; A.estado.plano = 'todos';
 });
 
 test('cadastrosHTML: monta resumo, filtros e a lista; nomes com HTML são escapados', () => {

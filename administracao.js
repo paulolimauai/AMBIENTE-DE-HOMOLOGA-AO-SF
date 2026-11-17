@@ -372,10 +372,11 @@
     d = d || {};
     var c = d.contagens || {};
     var eu = d.eu || {};
+    // Só a aba Pagamentos tem contador: ele pede ação (pagamento aguardando ou acesso expirado). Total de cadastros e de eventos
+    // já aparecem no corpo de cada tela, e um número neutro na aba só repetia o cartão "Total de cadastros".
     var contador = function (id) {
-      if (id === 'usuarios') return c.usuarios == null ? '' : '<span class="adm-tab-n">' + esc(c.usuarios) + '</span>';
       if (id === 'pagamentos') return c.pagamentos > 0 ? '<span class="adm-tab-n adm-tab-warn" title="Pagamentos aguardando ou acessos expirados">' + esc(c.pagamentos) + ' pend.</span>' : '';
-      return c.logs == null ? '' : '<span class="adm-tab-n">' + esc(c.logs) + '</span>';
+      return '';
     };
     return '<div class="adm-shell" data-adm-pagina="' + esc(pagina) + '">' +
       '<nav class="adm-tabs" aria-label="Painel administrativo">' +
@@ -385,7 +386,6 @@
             IC[a.ic] + '<span class="adm-tab-t">' + esc(a.rotulo) + '</span>' + contador(a.id) + '</button>';
         }).join('') + '</div>' +
         '<div class="adm-tabs-dir">' +
-          '<button type="button" class="adm-btn adm-btn-pri" data-adm-acao="novo" title="Cadastrar um usuário ou administrador">' + IC.mais + '<span>Novo cadastro</span></button>' +
           '<div class="adm-eu" title="' + esc(eu.email || '') + '"><span class="adm-av adm-av-admin adm-av-sm">' + esc(iniciais(eu.nome || eu.email)) + '</span>' +
             '<span class="adm-eu-t"><b>' + esc(eu.nome || 'Administrador') + '</b><small>Administrador</small></span></div>' +
         '</div>' +
@@ -395,66 +395,97 @@
   }
 
   /* ============================================================ HTML: Cadastros & Contas ============================================================ */
+  // Dois grupos de cartões: quem são as pessoas (cadastro) e em que pé está a assinatura de cada uma.
+  // `atencao`: cartão que pede ação do administrador quando o número é maior que zero (ganha destaque e ponto pulsante).
+  var GRUPOS_KPI = [{ id: 'pessoas', rotulo: 'Pessoas' }, { id: 'assinatura', rotulo: 'Assinatura' }];
   var KPIS = [
-    { id: 'todos', rotulo: 'Total de cadastros', campo: 'total', filtro: null, cor: 'neutro' },
-    { id: 'admin', rotulo: 'Administradores', campo: 'admins', filtro: { perfil: 'admin' }, cor: 'ouro' },
-    { id: 'ativo', rotulo: 'Contas ativas', campo: 'ativos', filtro: { status: 'ativo' }, cor: 'ok' },
-    { id: 'inativo', rotulo: 'Bloqueadas', campo: 'bloqueados', filtro: { status: 'inativo' }, cor: 'ruim' },
-    { id: 'assinantes', rotulo: 'Assinantes', campo: 'assinantes', filtro: { plano: 'assinantes' }, cor: 'ok' },
-    { id: 'teste', rotulo: 'Em teste', campo: 'teste', filtro: { plano: 'teste' }, cor: 'aviso' },
-    { id: 'pendente', rotulo: 'Aguardando pagamento', campo: 'pendentes', filtro: { plano: 'pendente' }, cor: 'info' },
-    { id: 'sem_acesso', rotulo: 'Sem acesso', campo: 'semAcesso', filtro: { plano: 'sem_acesso' }, cor: 'ruim' }
+    { id: 'todos', grupo: 'pessoas', rotulo: 'Total de cadastros', dica: 'Nexus e GLPI', campo: 'total', filtro: null, cor: 'neutro' },
+    { id: 'admin', grupo: 'pessoas', rotulo: 'Administradores', dica: 'acesso ilimitado', campo: 'admins', filtro: { perfil: 'admin' }, cor: 'ouro' },
+    { id: 'ativo', grupo: 'pessoas', rotulo: 'Contas ativas', dica: 'podem entrar', campo: 'ativos', filtro: { status: 'ativo' }, cor: 'ok' },
+    { id: 'inativo', grupo: 'pessoas', rotulo: 'Bloqueadas', dica: 'login impedido', campo: 'bloqueados', filtro: { status: 'inativo' }, cor: 'ruim' },
+    { id: 'assinantes', grupo: 'assinatura', rotulo: 'Assinantes', dica: 'ativa ou vitalícia', campo: 'assinantes', filtro: { plano: 'assinantes' }, cor: 'ok' },
+    { id: 'teste', grupo: 'assinatura', rotulo: 'Em teste', dica: 'período grátis', campo: 'teste', filtro: { plano: 'teste' }, cor: 'aviso' },
+    { id: 'pendente', grupo: 'assinatura', rotulo: 'Aguardando pagamento', dica: 'pagamento informado', campo: 'pendentes', filtro: { plano: 'pendente' }, cor: 'info', atencao: true },
+    { id: 'sem_acesso', grupo: 'assinatura', rotulo: 'Acesso encerrado', dica: 'teste ou plano vencido', campo: 'semAcesso', filtro: { plano: 'sem_acesso' }, cor: 'ruim', atencao: true }
   ];
   function kpiAtivo(k) {
     if (!k.filtro) return contarFiltros() === 0;
     return Object.keys(k.filtro).every(function (c) { return estado[c] === k.filtro[c]; }) && contarFiltros() === Object.keys(k.filtro).length;
   }
+  function htmlKpi(k, r) {
+    var n = r[k.campo];
+    var on = kpiAtivo(k);
+    var alerta = !!k.atencao && n > 0;
+    var pct = k.filtro && n > 0 && r.total > 0 ? Math.round(n / r.total * 100) + '%' : '';
+    return '<button type="button" role="listitem" class="adm-kpi adm-k-' + k.cor + (on ? ' is-on' : '') + (n === 0 ? ' is-zero' : '') + (alerta ? ' is-atencao' : '') + '" data-adm-kpi="' + k.id + '" aria-pressed="' + on + '"' +
+      ' title="Filtrar: ' + esc(k.rotulo) + ' (' + esc(k.dica) + ')' + (alerta ? ' - pede atenção' : '') + '">' +
+      (alerta ? '<i class="adm-kpi-al" aria-hidden="true"></i><span class="adm-sr">Pede atenção: </span>' : '') +
+      '<span class="adm-kpi-n">' + n + (pct ? '<em class="adm-kpi-p" title="' + n + ' de ' + r.total + ' cadastros">' + pct + '</em>' : '') + '</span>' +
+      '<span class="adm-kpi-t">' + esc(k.rotulo) + '</span><small class="adm-kpi-d">' + esc(k.dica) + '</small></button>';
+  }
   function htmlResumo(m) {
     var r = m.resumo;
-    return '<div class="adm-kpis" role="list">' + KPIS.map(function (k) {
-      var n = r[k.campo];
-      var on = kpiAtivo(k);
-      return '<button type="button" role="listitem" class="adm-kpi adm-k-' + k.cor + (on ? ' is-on' : '') + '" data-adm-kpi="' + k.id + '" aria-pressed="' + on + '" title="Filtrar: ' + esc(k.rotulo) + '">' +
-        '<span class="adm-kpi-n">' + n + '</span><span class="adm-kpi-t">' + esc(k.rotulo) + '</span></button>';
+    return '<div class="adm-kpis adm-kpis-grp">' + GRUPOS_KPI.map(function (g) {
+      return '<div class="adm-kpi-grupo adm-kg-' + g.id + '"><span class="adm-kpi-gt" id="admKg-' + g.id + '">' + esc(g.rotulo) + '</span>' +
+        '<div class="adm-kpi-g" role="list" aria-labelledby="admKg-' + g.id + '">' +
+        KPIS.filter(function (k) { return k.grupo === g.id; }).map(function (k) { return htmlKpi(k, r); }).join('') + '</div></div>';
     }).join('') + '</div>';
   }
 
   var NOME_FILTRO = {
     perfil: { admin: 'Administradores', user: 'Usuários' },
     status: { ativo: 'Contas ativas', inativo: 'Contas bloqueadas' },
-    plano: { admin: 'Ilimitado (administrador)', vitalicio: 'Vitalício', ativo: 'Assinatura ativa', teste: 'Em teste', teste_fim: 'Teste encerrado', pendente: 'Aguardando pagamento', expirado: 'Expirado', assinantes: 'Assinantes', sem_acesso: 'Sem acesso' },
+    plano: { admin: 'Ilimitado (administrador)', vitalicio: 'Vitalício', ativo: 'Assinatura ativa', teste: 'Em teste', teste_fim: 'Teste encerrado', pendente: 'Aguardando pagamento', expirado: 'Expirado', assinantes: 'Assinantes', sem_acesso: 'Acesso encerrado' },
     disp: { Desktop: 'Computador', Mobile: 'Celular' }
   };
-  function htmlChips(m) {
+  // Contador na linha da busca ("5 de 5 cadastros") e, só quando há filtro, a faixa de etiquetas removíveis logo abaixo
+  function htmlContador(m) {
+    return '<span class="adm-cont" aria-live="polite"><b>' + m.pag.total + '</b> de ' + m.todos.length + ' cadastro' + (m.todos.length === 1 ? '' : 's') + '</span>';
+  }
+  function htmlChips() {
     var chips = [];
     if (estado.busca) chips.push(['busca', 'Busca: "' + estado.busca + '"']);
     ['perfil', 'status', 'plano', 'disp'].forEach(function (k) { if (estado[k] !== 'todos') chips.push([k, NOME_FILTRO[k][estado[k]] || estado[k]]); });
-    var cont = '<span class="adm-cont" aria-live="polite"><b>' + m.pag.total + '</b> de ' + m.todos.length + ' cadastro' + (m.todos.length === 1 ? '' : 's') + '</span>';
-    if (!chips.length) return cont;
-    return cont + chips.map(function (c) {
+    if (!chips.length) return '';
+    return chips.map(function (c) {
       return '<button type="button" class="adm-chip" data-adm-chip="' + c[0] + '" title="Remover este filtro">' + esc(c[1]) + IC.x + '</button>';
     }).join('') + '<button type="button" class="adm-link" data-adm-acao="limpar">Limpar tudo</button>';
   }
+  function filtrosAtivos() { return ['perfil', 'status', 'plano', 'disp'].filter(function (k) { return estado[k] !== 'todos'; }).length; }
 
   function opcoes(lista, atual) {
     return lista.map(function (o) { return '<option value="' + esc(o[0]) + '"' + (String(atual) === String(o[0]) ? ' selected' : '') + '>' + esc(o[1]) + '</option>'; }).join('');
   }
   var ORDENS = [['nome:asc', 'Nome (A a Z)'], ['nome:desc', 'Nome (Z a A)'], ['login:desc', 'Último acesso (mais recente)'], ['login:asc', 'Último acesso (mais antigo)'],
     ['criado:desc', 'Cadastro (mais recente)'], ['criado:asc', 'Cadastro (mais antigo)'], ['assinatura:asc', 'Assinatura'], ['uso:desc', 'Mais movimentações']];
-  function htmlBarra() {
+  // Grupo de botões lado a lado (1 clique) para filtros de 2 ou 3 opções; o valor "todos" é o estado neutro
+  function segmento(campo, titulo, itens) {
+    return '<div class="adm-fg"><span class="adm-fg-t" id="admSg-' + campo + '">' + esc(titulo) + '</span>' +
+      '<div class="adm-seg" role="group" aria-labelledby="admSg-' + campo + '">' + itens.map(function (o) {
+        return '<button type="button" data-adm-seg="' + campo + ':' + esc(o[0]) + '" aria-pressed="' + (estado[campo] === o[0]) + '">' + esc(o[1]) + '</button>';
+      }).join('') + '</div></div>';
+  }
+  var ICONE_FILTRO = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="22 3 2 3 10 12.5 10 19 14 21 14 12.5 22 3"/></svg>';
+  // Linha única: busca, botão Filtros (abre o painel com perfil/conta/assinatura/dispositivo), ordem, contador e forma de exibir.
+  // A caixa #admFtog liga/desliga o painel só com CSS (sobrevive aos repinte da lista porque esta barra não é repintada).
+  function htmlBarra(m) {
+    var nf = filtrosAtivos();
     return '<div class="adm-barra">' +
       '<label class="adm-busca">' + IC.busca + '<input type="search" id="admBusca" data-adm-busca autocomplete="off" spellcheck="false" placeholder="Buscar nome, e-mail, CPF…" value="' + esc(estado.busca) + '" aria-label="Buscar cadastros"><kbd title="Atalho: tecla /">/</kbd></label>' +
-      // Só aparece no celular (CSS): recolhe os filtros para a lista de cadastros subir na tela
       '<input type="checkbox" id="admFtog" class="adm-ftog" aria-label="Mostrar ou esconder os filtros">' +
-      '<label for="admFtog" class="adm-fbtn"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="22 3 2 3 10 12.5 10 19 14 21 14 12.5 22 3"/></svg><span>Filtros</span></label>' +
-      '<label class="adm-sel"><span>Perfil</span><select data-adm-filtro="perfil">' + opcoes([['todos', 'Todos'], ['admin', 'Administradores'], ['user', 'Usuários']], estado.perfil) + '</select></label>' +
-      '<label class="adm-sel"><span>Conta</span><select data-adm-filtro="status">' + opcoes([['todos', 'Todas'], ['ativo', 'Ativas'], ['inativo', 'Bloqueadas']], estado.status) + '</select></label>' +
-      '<label class="adm-sel"><span>Assinatura</span><select data-adm-filtro="plano">' + opcoes([['todos', 'Todas'], ['assinantes', 'Assinantes (ativa + vitalícia)'], ['admin', 'Ilimitado (administrador)'], ['vitalicio', 'Vitalício'], ['ativo', 'Assinatura ativa'], ['teste', 'Em teste'], ['pendente', 'Aguardando pagamento'], ['expirado', 'Expirado'], ['teste_fim', 'Teste encerrado'], ['sem_acesso', 'Sem acesso (expirado ou teste encerrado)']], estado.plano) + '</select></label>' +
-      '<label class="adm-sel"><span>Dispositivo</span><select data-adm-filtro="disp">' + opcoes([['todos', 'Todos'], ['Desktop', 'Computador'], ['Mobile', 'Celular']], estado.disp) + '</select></label>' +
-      '<label class="adm-sel"><span>Ordenar por</span><select data-adm-ordem-sel>' + opcoes(ORDENS, estado.ordem.col + ':' + estado.ordem.dir) + '</select></label>' +
+      '<label for="admFtog" class="adm-fbtn" title="Perfil, conta, assinatura e dispositivo">' + ICONE_FILTRO + '<span>Filtros</span><b class="adm-fn" data-adm-fn' + (nf ? '' : ' hidden') + '>' + (nf || '') + '</b></label>' +
+      '<label class="adm-sel adm-sel-ord"><span>Ordenar por</span><select data-adm-ordem-sel>' + opcoes(ORDENS, estado.ordem.col + ':' + estado.ordem.dir) + '</select></label>' +
+      '<span class="adm-cont-w" id="admCont">' + (m ? htmlContador(m) : '') + '</span>' +
       '<div class="adm-vista" role="group" aria-label="Forma de exibir">' +
         '<button type="button" data-adm-vista="tabela" aria-pressed="' + (estado.vista === 'tabela') + '" title="Tabela">' + IC.tabela + '</button>' +
         '<button type="button" data-adm-vista="cartoes" aria-pressed="' + (estado.vista === 'cartoes') + '" title="Cartões">' + IC.grade + '</button></div>' +
+      '<div class="adm-fpainel" role="group" aria-label="Filtros">' +
+        segmento('perfil', 'Perfil', [['todos', 'Todos'], ['admin', 'Administradores'], ['user', 'Usuários']]) +
+        segmento('status', 'Conta', [['todos', 'Todas'], ['ativo', 'Ativas'], ['inativo', 'Bloqueadas']]) +
+        segmento('disp', 'Dispositivo', [['todos', 'Todos'], ['Desktop', 'Computador'], ['Mobile', 'Celular']]) +
+        '<label class="adm-fg adm-sel adm-fg-ass"><span class="adm-fg-t">Assinatura</span><select data-adm-filtro="plano">' + opcoes([['todos', 'Todas'], ['assinantes', 'Assinantes (ativa + vitalícia)'], ['admin', 'Ilimitado (administrador)'], ['vitalicio', 'Vitalício'], ['ativo', 'Assinatura ativa'], ['teste', 'Em teste'], ['pendente', 'Aguardando pagamento'], ['expirado', 'Expirado'], ['teste_fim', 'Teste encerrado'], ['sem_acesso', 'Acesso encerrado (teste ou plano vencido)']], estado.plano) + '</select></label>' +
+        '<button type="button" class="adm-link adm-fp-limpar" data-adm-acao="limpar">Limpar busca e filtros</button>' +
+      '</div>' +
     '</div>';
   }
 
@@ -599,7 +630,7 @@
       '<div class="adm-cab-acoes">' + (hora ? '<span class="adm-sinc" id="admSinc">Atualizado às ' + esc(hora) + '</span>' : '<span class="adm-sinc" id="admSinc"></span>') +
       '<button type="button" class="adm-btn" data-adm-acao="sincronizar">' + IC.sinc + '<span>Sincronizar</span></button>' +
       '<button type="button" class="adm-btn" data-adm-acao="exportar" title="Baixar a lista filtrada em CSV (abre no Excel)">' + IC.baixar + '<span>Exportar CSV</span></button>' +
-      '<button type="button" class="adm-btn adm-btn-pri" data-adm-acao="novo">' + IC.mais + '<span>Novo cadastro</span></button></div></header>';
+      '<button type="button" class="adm-btn adm-btn-pri" data-adm-acao="novo" title="Cadastrar um usuário ou administrador">' + IC.mais + '<span>Novo cadastro</span></button></div></header>';
   }
 
   // Cabeçalho e cartões de resumo (sem filtro) para as outras telas do painel (Pagamentos e Auditoria): mesma cara da aba de cadastros
@@ -617,8 +648,8 @@
   function cadastrosHTML(ctx) {
     var m = calcular(ctx);
     return htmlCabecalhoPagina(ctx) +
-      '<section id="admResumo" aria-label="Resumo">' + htmlResumo(m) + '</section>' +
-      '<section class="adm-ferr" aria-label="Busca e filtros">' + htmlBarra() + '<div class="adm-chips" id="admChips">' + htmlChips(m) + '</div></section>' +
+      '<section id="admResumo" class="adm-resumo" aria-label="Resumo">' + htmlResumo(m) + '</section>' +
+      '<section class="adm-ferr" aria-label="Busca e filtros">' + htmlBarra(m) + '<div class="adm-chips" id="admChips">' + htmlChips() + '</div></section>' +
       '<section class="adm-lista" id="admLista" aria-label="Lista de cadastros">' + htmlLista(m) + '</section>';
   }
 
@@ -724,6 +755,13 @@
       var s = d.querySelector('[data-adm-filtro="' + k + '"]');
       if (s && s.value !== estado[k]) s.value = estado[k];
     });
+    // Grupos de botões do painel Filtros e o número de filtros ligados no botão
+    d.querySelectorAll('[data-adm-seg]').forEach(function (bt) {
+      var p = bt.getAttribute('data-adm-seg').split(':');
+      bt.setAttribute('aria-pressed', String(estado[p[0]] === p[1]));
+    });
+    var fn = d.querySelector('[data-adm-fn]');
+    if (fn) { var nf = filtrosAtivos(); fn.textContent = nf ? String(nf) : ''; fn.hidden = !nf; }
     var o = d.querySelector('[data-adm-ordem-sel]');
     if (o) o.value = estado.ordem.col + ':' + estado.ordem.dir;
     d.querySelectorAll('[data-adm-vista]').forEach(function (bt) { bt.setAttribute('aria-pressed', String(bt.getAttribute('data-adm-vista') === estado.vista)); });
@@ -740,7 +778,8 @@
     var m = calcular(ctx);
     limparSelecaoInvalida(m);
     pintar('admResumo', htmlResumo(m));
-    pintar('admChips', htmlChips(m));
+    pintar('admChips', htmlChips());
+    pintar('admCont', htmlContador(m));
     pintar('admLista', htmlLista(m));
     sincronizarBarra();
     atualizarGaveta(ctx, m);
@@ -1039,6 +1078,12 @@
         repintar();
         return;
       }
+      var seg = alvo.closest('[data-adm-seg]');
+      if (seg) {
+        var ps = seg.getAttribute('data-adm-seg').split(':');
+        if (NOME_FILTRO[ps[0]] && ps[0] !== 'plano' && (ps[1] === 'todos' || NOME_FILTRO[ps[0]][ps[1]])) { estado[ps[0]] = ps[1]; estado.pagina = 1; repintar(); }
+        return;
+      }
       var chip = alvo.closest('[data-adm-chip]');
       if (chip) { var f = chip.getAttribute('data-adm-chip'); estado[f] = f === 'busca' ? '' : 'todos'; if (f === 'busca') limparCampoBusca(); estado.pagina = 1; repintar(); return; }
       var th = alvo.closest('[data-adm-ordem]');
@@ -1145,8 +1190,8 @@
     d.querySelectorAll('.adm-tab').forEach(function (tb) {
       var id = tb.getAttribute('data-adm-ir');
       var n = tb.querySelector('.adm-tab-n');
-      var valor = id === 'usuarios' ? c.usuarios : id === 'logs' ? c.logs : c.pagamentos;
-      var texto = id === 'pagamentos' ? (valor > 0 ? valor + ' pend.' : '') : (valor == null ? '' : String(valor));
+      // Só Pagamentos tem contador (pendências); as outras abas não mostram número
+      var texto = id === 'pagamentos' && c.pagamentos > 0 ? c.pagamentos + ' pend.' : '';
       if (!texto) { if (n) n.remove(); return; }
       if (!n) { n = d.createElement('span'); n.className = 'adm-tab-n' + (id === 'pagamentos' ? ' adm-tab-warn' : ''); tb.appendChild(n); }
       if (n.textContent !== texto) n.textContent = texto;
