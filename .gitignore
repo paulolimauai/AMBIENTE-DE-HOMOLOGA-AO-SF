@@ -60,3 +60,4 @@ local_os_sequencia.json
 .nexus_smtp
 .nexus_sync_token
 deleted_accounts.json
+.tmp_*
