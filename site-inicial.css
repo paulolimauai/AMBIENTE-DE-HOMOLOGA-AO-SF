@@ -1,7 +1,7 @@
 /* Nexus Financeiro: site inicial (página pública, antes do login).
    Mesma identidade do login (vidro, Fraunces + Plus Jakarta Sans) e mesmas paletas do app (chave nexus:cores).
-   A cor de destaque vem de --h, --h2 e --sat, definidos pelo script de tema (site-inicial.html, <head>). Tudo em rem:
-   a escala acompanha a tela (16px em Full HD, 32px em 4K), como no login. */
+   A cor de destaque vem de --h, --h2 e --sat, definidos pelo script de tema (site-inicial.html, <head>). Tudo em rem
+   sobre uma base fixa de 14px (tamanho de letra padronizado em todas as telas). */
 
 :root{
   --h:224; --h2:260; --sat:100%;
@@ -44,7 +44,7 @@
 :root[data-mode="light"] h1 em{background:linear-gradient(100deg,color-mix(in srgb,var(--brand-d) 35%,#0e1530),color-mix(in srgb,var(--brand-d) 60%,#0e1530));-webkit-background-clip:text;background-clip:text}
 
 *{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
-html{font-size:clamp(14px,.7292vw,42px);-webkit-text-size-adjust:100%;scroll-behavior:smooth;scroll-padding-top:5.25rem}
+html{font-size:14px;-webkit-text-size-adjust:100%;scroll-behavior:smooth;scroll-padding-top:5.25rem}
 body{
   min-height:100vh;min-height:100dvh;position:relative;overflow-x:hidden;
   font-family:var(--sans);font-size:1rem;line-height:1.55;color:var(--text);background:var(--base);
