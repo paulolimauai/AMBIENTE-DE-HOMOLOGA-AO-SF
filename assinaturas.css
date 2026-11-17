@@ -137,4 +137,28 @@
   .as-custom select { flex: 1 1 120px !important; }
 }
 
+/* ---------- painel da conta no MEIO da tela ---------- */
+/* Janela centralizada, com folga em volta (nada colado no canto): o fundo escuro continua clicável para fechar, o cabeçalho com as setas e o X
+   fica sempre à vista e só o corpo rola quando a tela é baixa. A largura continua vindo de --as-dr-w (alça na borda esquerda, de dentro da moldura;
+   o JS conta 2 x a distância até o centro porque a janela cresce dos dois lados). Largo (1040 px) = situação/histórico ao lado das ações, sem corte. */
+.as-dr { align-items: center !important; justify-content: center !important; padding: clamp(10px, 3vh, 32px) 20px !important; }
+.as-dr .adm-dr-fundo { backdrop-filter: blur(3px) !important; -webkit-backdrop-filter: blur(3px) !important; }
+@media (min-width: 561px) { .as-dr .adm-dr-painel { width: min(var(--as-dr-w, 1040px), 100%) !important; } }
+.as-dr .adm-dr-painel {
+  height: auto !important; max-height: 100% !important; overflow: hidden !important;
+  border: 1px solid var(--adm-line) !important; border-radius: 20px !important;
+  box-shadow: 0 32px 90px -24px rgba(0, 0, 0, .92), inset 0 1px 0 rgba(255, 255, 255, .04) !important;
+  opacity: 0 !important; transform: translateY(14px) scale(.975) !important;
+  transition: transform .22s cubic-bezier(.2, .7, .2, 1), opacity .18s ease, width .18s ease !important;
+}
+.as-dr.is-aberta .adm-dr-painel { opacity: 1 !important; transform: none !important; }
+.as-dr.is-cheia .adm-dr-painel { height: 100% !important; border-radius: 16px !important; }
+.as-dr .as-dr-alca { left: 0 !important; }
+/* celular: a janela ocupa a tela toda */
+@media (max-width: 560px) {
+  .as-dr { padding: 0 !important; }
+  .as-dr .adm-dr-painel, .as-dr.is-cheia .adm-dr-painel { width: 100% !important; height: 100% !important; border-radius: 0 !important; border-width: 0 !important; }
+}
+@media (prefers-reduced-motion: reduce) { .as-dr .adm-dr-painel { transition: none !important; transform: none !important; } }
+
 }

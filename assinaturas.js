@@ -220,15 +220,18 @@
   var estado = { busca: '', sit: 'todas', ordem: 'prioridade', pagina: 1, porPagina: 25, sel: {}, detalhe: null, retorno: null, ocupado: false, larguraDr: null, drMax: false };
   var ctxFn = null, ligado = false, tempoBusca = null, ultimo = {};
   var CHAVE_PREFS = 'nexus_ass_prefs';
-  var LARG_MIN = 400, LARG_PADRAO = 540;
+  // O painel da conta é uma janela no MEIO da tela: 1040 px mostra situação, histórico e ações lado a lado (2 colunas) sem cortar nada
+  // Mínimo 520: abaixo disso o nome da pessoa quebra no meio da palavra (avatar + setas + tela cheia + fechar dividem o cabeçalho)
+  var LARG_MIN = 520, LARG_PADRAO = 1040;
   function lerPrefs() {
     try {
       var p = JSON.parse(root.localStorage.getItem(CHAVE_PREFS) || '{}');
       if ([25, 50, 100].indexOf(p.porPagina) >= 0) estado.porPagina = p.porPagina;
-      if (p.larguraDr >= LARG_MIN && p.larguraDr <= 4000) estado.larguraDr = Math.round(p.larguraDr);
+      // chave própria (larguraJanela): o valor antigo (larguraDr) era de quando o painel ficava colado no canto direito e não vale para a janela central
+      if (p.larguraJanela >= LARG_MIN && p.larguraJanela <= 4000) estado.larguraDr = Math.round(p.larguraJanela);
     } catch (e) {}
   }
-  function gravarPrefs() { try { root.localStorage.setItem(CHAVE_PREFS, JSON.stringify({ porPagina: estado.porPagina, larguraDr: estado.larguraDr })); } catch (e) {} }
+  function gravarPrefs() { try { root.localStorage.setItem(CHAVE_PREFS, JSON.stringify({ porPagina: estado.porPagina, larguraJanela: estado.larguraDr })); } catch (e) {} }
   // Largura do painel da conta: nunca menor que o mínimo e nunca maior que a tela menos uma faixa (o fundo escuro continua clicável para fechar)
   function limitarLargura(px, vw) {
     vw = vw || 1280;
@@ -633,9 +636,11 @@
     if (!el) return;
     ev.preventDefault();
     el.classList.add('is-arrastando');
-    // A borda direita do painel é a borda direita da tela: largura = distância do mouse até ela, convertida para pixels do painel
-    var z = zoomTela(), telaPx = d.documentElement.clientWidth || root.innerWidth || 1280;
-    var mover = function (e) { aplicarLargura((telaPx - e.clientX) / z, false); };
+    // O painel fica no meio e cresce dos dois lados: largura = 2 x a distância do mouse até o centro da janela, convertida para pixels do painel
+    // A alça fica dentro da moldura: guarda onde o mouse a agarrou para a borda acompanhar o mouse sem dar um pulo ao começar
+    var z = zoomTela(), r0 = el.getBoundingClientRect(), centro = r0.left + r0.width / 2;
+    var painel = el.querySelector('.adm-dr-painel'), desvio = painel ? ev.clientX - painel.getBoundingClientRect().left : 0;
+    var mover = function (e) { aplicarLargura(2 * Math.abs(centro - (e.clientX - desvio)) / z, false); };
     var fim = function () {
       d.removeEventListener('pointermove', mover); d.removeEventListener('pointerup', fim); d.removeEventListener('pointercancel', fim);
       el.classList.remove('is-arrastando'); gravarPrefs();

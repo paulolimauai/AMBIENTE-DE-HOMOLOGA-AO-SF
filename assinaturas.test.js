@@ -260,16 +260,17 @@ test('gaveta da própria conta não tem ações de assinatura', () => {
 });
 
 test('limitarLargura: respeita o mínimo, deixa uma faixa da tela e cai no padrão com valor inválido', () => {
-  assert.equal(S.LARG_PADRAO, 540);
+  assert.equal(S.LARG_PADRAO, 1040, 'janela no meio da tela: larga o bastante para situação e ações lado a lado');
   assert.equal(S.limitarLargura(700, 1440), 700);
   assert.equal(S.limitarLargura(100, 1440), S.LARG_MIN, 'não fica menor que o mínimo');
-  assert.equal(S.limitarLargura(5000, 1440), 1400, 'deixa 40 px de fundo clicável para fechar');
+  assert.equal(S.limitarLargura(5000, 1440), 1400, 'deixa 20 px de cada lado de fundo clicável para fechar');
   assert.equal(S.limitarLargura(5000, 1000), 960);
-  assert.equal(S.limitarLargura('abc', 1440), 540);
-  assert.equal(S.limitarLargura(null, 1440), 540);
-  assert.equal(S.limitarLargura(undefined, 1440), 540);
-  assert.equal(S.limitarLargura('', 1440), 540);
-  assert.equal(S.limitarLargura(NaN, 1440), 540);
+  assert.equal(S.limitarLargura(S.LARG_PADRAO, 1000), 960, 'o padrão nunca passa da tela');
+  assert.equal(S.limitarLargura('abc', 1440), S.LARG_PADRAO);
+  assert.equal(S.limitarLargura(null, 1440), S.LARG_PADRAO);
+  assert.equal(S.limitarLargura(undefined, 1440), S.LARG_PADRAO);
+  assert.equal(S.limitarLargura('', 1440), S.LARG_PADRAO);
+  assert.equal(S.limitarLargura(NaN, 1440), S.LARG_PADRAO);
   assert.equal(S.limitarLargura(0, 1440), S.LARG_MIN, 'arrastou até a borda: fica no mínimo, não volta ao padrão');
   assert.equal(S.limitarLargura(-250, 1440), S.LARG_MIN, 'arrastou para além da borda direita');
   assert.equal(S.limitarLargura(612.7, 1440), 613, 'arredonda');
@@ -281,7 +282,7 @@ test('gaveta: tem a alça de largura (acessível por teclado) e o botão de tela
   const m = S.calcular(c);
   const h = S.detalheHTML(m.todos[0], m, c);
   assert.ok(/id="asDrAlca" data-as-alca role="separator" aria-orientation="vertical" tabindex="0"/.test(h));
-  assert.ok(/aria-valuemin="400" aria-valuenow="540"/.test(h));
+  assert.ok(/aria-valuemin="520" aria-valuenow="1040"/.test(h));
   assert.ok(/data-as-a="expandir" aria-pressed="false"/.test(h) && h.includes('Ocupar a tela toda'));
   assert.ok(h.includes('as-dr-a') && h.includes('as-dr-b') && h.includes('as-dr-c'), 'blocos para o painel largo ficar em duas colunas');
   const ordem = ['as-dr-a', 'as-dr-b', 'as-dr-c'].map((k) => h.indexOf('class="' + k + '"'));
