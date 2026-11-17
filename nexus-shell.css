@@ -1048,6 +1048,10 @@ html.user-logged-in .adm-ferr .adm-ftog { position: absolute !important; opacity
   /* A caixa de seleção do cartão tinha 18px: ampliada (a área de toque cresce junto com a escala) */
   html.user-logged-in .adm-corpo input.adm-chk { width: 22px !important; height: 22px !important; transform: scale(1.7) !important; margin: 0 12px 0 9px !important; }
   html.user-logged-in .adm-corpo .adm-btn.adm-btn-sm { min-height: 44px !important; }
+  /* Cadastros & Contas: "x" da busca, itens do menu "⋯" da linha (alvo de toque) e o convite "Ver →" dos cartões, que no celular são fichas que rolam */
+  html.user-logged-in .adm-corpo .adm-busca-x { width: 40px !important; height: 40px !important; }
+  html.user-logged-in .adm-menu .adm-mi { min-height: 44px !important; }
+  html.user-logged-in .adm-corpo #admResumo .adm-kpi-ver { display: none !important; }
 }
 
 /* 10.8 Celulares muito estreitos (<= 359px, ex.: 320px): a marca do cabeçalho encostava no sino, o ícone dos cartões de resumo roubava espaço do título

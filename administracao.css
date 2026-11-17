@@ -4,7 +4,7 @@
    Cor de destaque = paleta escolhida pelo usuário (--nx-o1, r g b); cores de significado (ativo/bloqueado/teste/pendente) são fixas. */
 @layer nx-adm {
 
-.adm-shell, .adm-dr, .adm-dlg {
+.adm-shell, .adm-dr, .adm-dlg, .adm-menu {
   --adm-ink: #EEF3FA;
   --adm-ink2: #C3CEDF;
   --adm-mut: #9EACC2;
@@ -23,7 +23,7 @@
   line-height: 1.4 !important;
   box-sizing: border-box !important;
 }
-.adm-shell *, .adm-dr *, .adm-dlg * { box-sizing: border-box !important; }
+.adm-shell *, .adm-dr *, .adm-dlg *, .adm-menu * { box-sizing: border-box !important; }
 .adm-sr { position: absolute !important; width: 1px !important; height: 1px !important; overflow: hidden !important; clip: rect(0 0 0 0) !important; white-space: nowrap !important; }
 [hidden].adm-dr { display: none !important; }
 
@@ -88,7 +88,7 @@
 .adm-ib svg { width: 16px !important; height: 16px !important; }
 .adm-link { border: 0 !important; background: none !important; padding: 4px 2px !important; color: rgb(var(--adm-acc)) !important; font: inherit !important; font-size: 13px !important; font-weight: 700 !important; cursor: pointer !important; text-decoration: underline !important; text-underline-offset: 3px !important; }
 .adm-shell button:focus-visible, .adm-shell a:focus-visible, .adm-shell input:focus-visible, .adm-shell select:focus-visible,
-.adm-shell tr:focus-visible, .adm-shell article:focus-visible, .adm-dr button:focus-visible, .adm-dr a:focus-visible, .adm-dlg button:focus-visible {
+.adm-shell tr:focus-visible, .adm-shell article:focus-visible, .adm-dr button:focus-visible, .adm-dr a:focus-visible, .adm-dlg button:focus-visible, .adm-menu button:focus-visible {
   outline: 2px solid rgb(var(--adm-acc)) !important; outline-offset: 2px !important;
 }
 
@@ -135,7 +135,10 @@
 .adm-kpi.is-zero::before { opacity: .35 !important; }
 /* pede atenção (pagamento aguardando, acesso encerrado) e tem número maior que zero: borda e número na cor do significado + ponto pulsante */
 .adm-kpi.is-atencao { border-color: var(--k) !important; background: rgba(8, 12, 22, .66) !important; background: color-mix(in srgb, var(--k) 11%, rgba(8, 12, 22, .66)) !important; }
-.adm-kpi.is-atencao .adm-kpi-n { color: var(--k) !important; }
+.adm-kpi.is-atencao .adm-kpi-n { color: var(--k) !important; align-self: stretch !important; }
+/* convite "Ver →" / "Limpar ×" no canto do cartão que pede atenção (o ponto pulsante fica no canto, por isso a folga à direita); só visual: o estado está em aria-pressed */
+.adm-kpi-ver { flex: 0 1 auto !important; min-width: 0 !important; margin: 0 22px 0 auto !important; overflow: hidden !important; align-self: center !important; font-size: 12px !important; font-weight: 800 !important; letter-spacing: .02em !important; line-height: 1.2 !important; color: var(--k) !important; white-space: nowrap !important; opacity: .92 !important; }
+.adm-kpi:hover .adm-kpi-ver, .adm-kpi.is-on .adm-kpi-ver { opacity: 1 !important; text-decoration: underline !important; text-underline-offset: 3px !important; }
 .adm-kpi-al { position: absolute !important; top: 13px !important; right: 13px !important; width: 9px !important; height: 9px !important; border-radius: 50% !important; background: var(--k) !important; }
 .adm-kpi-al::after { content: "" !important; position: absolute !important; inset: 0 !important; border-radius: 50% !important; background: var(--k) !important; animation: admPulso 2.2s ease-out infinite !important; }
 @keyframes admPulso { 0% { transform: scale(1); opacity: .7; } 100% { transform: scale(3.2); opacity: 0; } }
@@ -158,6 +161,7 @@
 }
 @container admkpi (max-width: 639px) {
   .adm-kpi-g { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  .adm-kpi-ver { display: none !important; }
 }
 
 .adm-kpi small { font-size: 12px !important; color: var(--adm-mut) !important; font-weight: 500 !important; }
@@ -207,6 +211,12 @@
 .adm-busca input { flex: 1 1 auto !important; min-width: 0 !important; height: 100% !important; padding: 0 !important; border: 0 !important; background: transparent !important; color: var(--adm-ink) !important; font: inherit !important; font-size: 14.5px !important; outline: 0 !important; box-shadow: none !important; }
 .adm-busca input::placeholder { color: var(--adm-mut) !important; opacity: 1 !important; }
 .adm-busca kbd { padding: 1px 7px !important; border-radius: 6px !important; border: 1px solid var(--adm-line) !important; background: var(--adm-wash) !important; color: var(--adm-mut) !important; font: inherit !important; font-size: 12px !important; }
+/* "x" que limpa só a busca (aparece com texto; o atalho "/" some enquanto ele está lá) */
+.adm-busca-x { display: inline-grid !important; place-items: center !important; flex: 0 0 auto !important; width: 28px !important; height: 28px !important; padding: 0 !important; margin: 0 !important; border: 0 !important; border-radius: 8px !important; background: transparent !important; color: var(--adm-mut) !important; cursor: pointer !important; }
+.adm-busca-x:hover { background: var(--adm-wash2) !important; color: #fff !important; }
+.adm-busca-x[hidden] { display: none !important; }
+.adm-busca .adm-busca-x svg { width: 15px !important; height: 15px !important; }
+.adm-busca:has(.adm-busca-x:not([hidden])) kbd { display: none !important; }
 .adm-sel { display: flex !important; flex-direction: column !important; gap: 4px !important; flex: 1 1 140px !important; min-width: 128px !important; margin: 0 !important; }
 .adm-sel span { font-size: 12px !important; font-weight: 700 !important; letter-spacing: .02em !important; color: var(--adm-mut) !important; }
 .adm-sel select {
@@ -303,6 +313,18 @@
 .adm-mail { display: block !important; max-width: 100% !important; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; font-size: 13.5px !important; color: var(--adm-ink) !important; }
 .adm-c-acc b { display: block !important; font-size: 13.5px !important; font-weight: 700 !important; color: var(--adm-ink) !important; }
 .adm-acoes { display: inline-flex !important; align-items: center !important; justify-content: flex-end !important; gap: 6px !important; }
+/* botão "⋯" da linha (abre o menu .adm-menu): fica realçado enquanto o menu está aberto */
+.adm-mais svg { width: 18px !important; height: 18px !important; }
+.adm-mais[aria-expanded="true"] { background: rgba(var(--adm-acc), .22) !important; border-color: rgba(var(--adm-acc), .6) !important; color: #fff !important; }
+/* menu das ações da linha: fica no <body> e é posicionado por script (left/top inline) para a tabela não cortá-lo */
+.adm-menu { position: fixed !important; z-index: 100001 !important; min-width: 236px !important; max-width: calc(100vw - 16px) !important; padding: 6px !important; border-radius: 14px !important; border: 1px solid var(--adm-line) !important; background: linear-gradient(180deg, #111A2D, #0A101C) !important; box-shadow: 0 24px 54px -16px rgba(0, 0, 0, .95) !important; }
+.adm-mi { display: flex !important; align-items: center !important; gap: 11px !important; width: 100% !important; min-height: 40px !important; padding: 0 12px !important; margin: 0 !important; border: 0 !important; border-radius: 10px !important; background: transparent !important; color: var(--adm-ink) !important; font: inherit !important; font-size: 13.5px !important; font-weight: 650 !important; line-height: 1.2 !important; text-align: left !important; white-space: nowrap !important; cursor: pointer !important; }
+.adm-mi:hover, .adm-mi:focus-visible { background: var(--adm-wash2) !important; }
+.adm-mi svg { width: 16px !important; height: 16px !important; flex: 0 0 auto !important; }
+.adm-mi-ok { color: #6EE7B7 !important; }
+.adm-mi-perigo { color: #FCA5A5 !important; }
+.adm-mi-perigo:hover, .adm-mi-perigo:focus-visible { background: rgba(239, 68, 68, .2) !important; }
+.adm-mi-sep { height: 1px !important; margin: 5px 6px !important; background: var(--adm-line2) !important; }
 .adm-chk { width: 18px !important; height: 18px !important; margin: 0 !important; accent-color: rgb(var(--adm-acc)) !important; cursor: pointer !important; vertical-align: middle !important; }
 .adm-chk:disabled { opacity: .35 !important; cursor: not-allowed !important; }
 
@@ -331,6 +353,9 @@
 @container admlista (max-width: 1399px) { .adm-c-uso { display: none !important; } }
 @container admlista (max-width: 1249px) { .adm-c-perf { display: none !important; } }
 @container admlista (max-width: 1059px) { .adm-tabela-wrap { display: none !important; } .adm-cartoes.adm-auto { display: grid !important; } }
+/* "Administrador · " no subtítulo do titular só vale onde o perfil não aparece em outro lugar da linha: com a coluna Perfil visível (>= 1250px) e nos cartões (têm o selo) ele some */
+.adm-card .adm-sub-perfil { display: none !important; }
+@container admlista (min-width: 1250px) { .adm-tabela .adm-sub-perfil { display: none !important; } }
 
 .adm-cartoes { display: grid !important; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)) !important; gap: 12px !important; }
 .adm-card { display: flex !important; flex-direction: column !important; gap: 10px !important; padding: 14px !important; border-radius: 16px !important; border: 1px solid var(--adm-line) !important; background: var(--adm-panel) !important; cursor: pointer !important; min-width: 0 !important; transition: border-color .15s ease, background-color .15s ease !important; }

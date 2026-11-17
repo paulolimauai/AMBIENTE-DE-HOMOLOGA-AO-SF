@@ -279,8 +279,110 @@ test('cadastrosHTML: lista vazia e busca sem resultado mostram avisos diferentes
   assert.ok(vazio.includes('Nenhum cadastro ainda'));
   A.estado.busca = 'zzzz';
   const semResultado = A.html(() => ({ agora: AGORA, usuarios: [usuario()], acoes: {} }));
-  assert.ok(semResultado.includes('Nenhum cadastro encontrado') && semResultado.includes('data-adm-chip="busca"'));
+  assert.ok(semResultado.includes('Nenhum cadastro encontrado') && semResultado.includes('data-adm-acao="limpar"'), 'o aviso oferece limpar a busca');
+  assert.ok(!semResultado.includes('data-adm-chip="busca"'), 'a busca não vira etiqueta: o texto já está no campo');
   A.estado.busca = '';
+});
+
+/* ----------------------------------------------------------------- melhorias de 17/11: repetições, seleção, KPIs e menu da linha ----------------------------------------------------------------- */
+function zerarEstado() {
+  Object.assign(A.estado, { busca: '', perfil: 'todos', status: 'todos', plano: 'todos', disp: 'todos', pagina: 1, porPagina: 25, sel: {}, detalhe: null });
+}
+
+test('caixa "selecionar todos": a própria conta (caixa desativada) não conta como marcada', () => {
+  zerarEstado();
+  const so = { agora: AGORA, eu: { email: 'ana@x.com' }, acoes: {}, usuarios: [usuario({ email: 'ana@x.com', name: 'Ana', role: 'Administrador' })] };
+  const th = (h) => h.slice(h.indexOf('data-adm-sel-pagina') - 40, h.indexOf('data-adm-sel-pagina') + 220);
+  let h = A.htmlTabela(A.calcular(so));
+  assert.ok(!/data-adm-sel-pagina checked/.test(h), 'com só a própria conta nada pode vir marcado');
+  assert.ok(/data-adm-sel-pagina [^>]*disabled/.test(th(h)), 'e a caixa do cabeçalho fica desativada');
+  const tres = { agora: AGORA, eu: { email: 'ana@x.com' }, acoes: {}, usuarios: [so.usuarios[0], usuario({ email: 'b@x.com', name: 'B' }), usuario({ email: 'c@x.com', name: 'C' })] };
+  h = A.htmlTabela(A.calcular(tres));
+  assert.ok(!/data-adm-sel-pagina checked/.test(h) && !/data-adm-parcial/.test(h) && !/data-adm-sel-pagina [^>]*disabled/.test(th(h)), 'nada selecionado: desmarcada, sem traço, ativa');
+  A.estado.sel = { 'b@x.com': true };
+  h = A.htmlTabela(A.calcular(tres));
+  assert.ok(/data-adm-parcial/.test(h) && !/data-adm-sel-pagina checked/.test(h), 'parte selecionada: caixa com traço (indeterminada)');
+  A.estado.sel = { 'b@x.com': true, 'c@x.com': true };
+  h = A.htmlTabela(A.calcular(tres));
+  assert.ok(/data-adm-sel-pagina checked/.test(h) && !/data-adm-parcial/.test(h), 'todas as selecionáveis marcadas: caixa marcada');
+  zerarEstado();
+});
+
+test('linha: "Administrador" só aparece onde ainda não está, e a assinatura do admin diz "Sem cobrança"', () => {
+  zerarEstado();
+  const ctx = { agora: AGORA, eu: { email: 'zz@x.com' }, acoes: {}, usuarios: [usuario({ email: 'ana@x.com', name: 'Ana', role: 'Administrador' }), usuario()] };
+  const m = A.calcular(ctx);
+  const adm = A.htmlLinha(m.todos.find((r) => r.email === 'ana@x.com'), m);
+  const com = A.htmlLinha(m.todos.find((r) => r.email === 'maria.teste@example.com'), m);
+  assert.ok(adm.includes('<span class="adm-sub-perfil">Administrador · </span>Computador') || adm.includes('<span class="adm-sub-perfil">Administrador · </span>Celular'), 'o perfil fica no subtítulo (o CSS o esconde quando a coluna Perfil está visível)');
+  assert.ok(!com.includes('adm-sub-perfil'), 'usuário comum não tem perfil no subtítulo');
+  const ass = adm.slice(adm.indexOf('adm-c-ass'), adm.indexOf('adm-c-acc'));
+  assert.ok(ass.includes('Ilimitado') && ass.includes('Sem cobrança') && !ass.includes('>Administrador<'), 'a linha pequena da assinatura não repete o perfil');
+  const cartao = A.htmlCartao(m.todos.find((r) => r.email === 'ana@x.com'), m);
+  assert.ok(cartao.includes('adm-sub-perfil') && cartao.includes('Administrador'), 'o cartão traz o texto e o CSS o esconde (o selo já diz o perfil)');
+});
+
+test('etiquetas de filtro: a busca não vira etiqueta; o campo ganha um "x" que só aparece com texto', () => {
+  zerarEstado();
+  A.estado.busca = 'maria';
+  assert.equal(A.htmlChips(), '', 'só a busca ligada: nenhuma etiqueta');
+  A.estado.perfil = 'admin';
+  const c = A.htmlChips();
+  assert.ok(c.includes('data-adm-chip="perfil"') && !c.includes('data-adm-chip="busca"') && c.includes('Limpar tudo'), 'filtro escolhido vira etiqueta; busca continua só no campo');
+  const barra = A.htmlBarra();
+  assert.ok(barra.includes('class="adm-busca-x" data-adm-acao="limpar-busca"'), 'o "x" dispara a ação de limpar só a busca');
+  assert.ok(!/class="adm-busca-x"[^>]*hidden/.test(barra), 'com texto o "x" aparece');
+  zerarEstado();
+  assert.ok(/class="adm-busca-x"[^>]*hidden/.test(A.htmlBarra()), 'sem texto o "x" fica escondido');
+});
+
+test('rodapé: some quando tudo cabe em 1 página pequena; sem páginas não mostra os botões de página', () => {
+  zerarEstado();
+  const gente = (n) => Array.from({ length: n }, (_, i) => usuario({ id: 100 + i, email: 'p' + i + '@x.com', name: 'Pessoa ' + String(i).padStart(3, '0') }));
+  const rodape = (n) => A.htmlRodape(A.calcular({ agora: AGORA, acoes: {}, usuarios: gente(n) }));
+  assert.equal(rodape(1), '', '1 cadastro: sem rodapé');
+  assert.equal(rodape(25), '', '25 cabem na 1ª página: sem rodapé');
+  const dois = rodape(26);
+  assert.ok(dois.includes('adm-pags') && dois.includes('Mostrando <b>1–25</b> de <b>26</b>') && dois.includes('data-adm-pp'), '26 viram 2 páginas: rodapé completo');
+  A.estado.porPagina = 100;
+  const uma = rodape(40);
+  assert.ok(!uma.includes('adm-pags') && uma.includes('Mostrando <b>1–40</b> de <b>40</b>') && uma.includes('data-adm-pp'), '1 página com mais de 25: sem botões de página, mas com o seletor');
+  zerarEstado();
+});
+
+test('cartões do resumo que pedem atenção mostram "Ver →" (ou "Limpar ×" com o filtro ligado); os outros não', () => {
+  zerarEstado();
+  const velho = new Date(AGORA - 40 * HORA).toISOString();
+  const ctx = { agora: AGORA, acoes: {}, usuarios: [usuario({ email: 'a@x.com', trial_started_at: velho }), usuario({ email: 'b@x.com', role: 'Administrador' })] };
+  let h = A.htmlResumo(A.calcular(ctx));
+  const cartao = (id) => h.slice(h.indexOf('data-adm-kpi="' + id + '"'), h.indexOf('</button>', h.indexOf('data-adm-kpi="' + id + '"')));
+  assert.ok(cartao('sem_acesso').includes('adm-kpi-ver" aria-hidden="true">Ver →<'), 'acesso encerrado > 0: convite para filtrar');
+  assert.ok(!cartao('pendente').includes('adm-kpi-ver'), 'sem pendência não há convite (cartão apagado)');
+  for (const id of ['todos', 'admin', 'ativo', 'inativo', 'assinantes', 'teste']) assert.ok(!cartao(id).includes('adm-kpi-ver'), id + ' não pede atenção');
+  A.estado.plano = 'sem_acesso';
+  h = A.htmlResumo(A.calcular(ctx));
+  assert.ok(cartao('sem_acesso').includes('>Limpar ×<') && /data-adm-kpi="sem_acesso" aria-pressed="true"/.test(h), 'filtro ligado: o texto vira "Limpar ×"');
+  zerarEstado();
+});
+
+test('menu "⋯" da linha: ações do dia a dia por situação da conta; a própria conta não tem menu e o espelho saiu da linha', () => {
+  zerarEstado();
+  const ctx = { agora: AGORA, eu: { email: 'ana@x.com' }, acoes: {}, usuarios: [usuario({ email: 'ana@x.com', name: 'Ana', role: 'Administrador' }), usuario({ email: 'bia@x.com', name: 'Bia', role: 'Administrador' }),
+    usuario(), usuario({ id: 12, email: 'blo@x.com', name: 'Bloqueada', active: false })] };
+  const m = A.calcular(ctx);
+  const por = (e) => m.todos.find((r) => r.email === e);
+  const itens = (h) => (h.match(/data-adm-a="([a-z]+)"/g) || []).map((s) => s.slice(12, -1));
+  assert.deepEqual(itens(A.htmlMenuLinha(por('maria.teste@example.com'))), ['senha', 'bloquear', 'promover', 'assinatura', 'espelho', 'copiar'], 'usuário ativo');
+  assert.deepEqual(itens(A.htmlMenuLinha(por('blo@x.com'))), ['senha', 'ativar', 'promover', 'assinatura', 'espelho', 'copiar'], 'conta bloqueada oferece Ativar em vez de Bloquear');
+  assert.deepEqual(itens(A.htmlMenuLinha(por('bia@x.com'))), ['senha', 'bloquear', 'rebaixar', 'espelho', 'copiar'], 'administrador: rebaixar e sem aba Assinaturas (acesso ilimitado)');
+  assert.ok(!A.htmlMenuLinha(por('bia@x.com')).includes('data-adm-a="excluir"'), 'excluir continua só na gaveta (zona de risco)');
+  assert.ok(A.htmlMenuLinha(por('maria.teste@example.com')).includes('role="menuitem"'));
+  const linhaOutra = A.htmlLinha(por('bia@x.com'), m);
+  assert.ok(linhaOutra.includes('data-adm-menu="bia@x.com"') && linhaOutra.includes('aria-haspopup="menu"') && linhaOutra.includes('aria-expanded="false"'));
+  assert.ok(!linhaOutra.includes('data-adm-a="espelho"') && linhaOutra.includes('data-adm-abrir=') && linhaOutra.includes('data-adm-a="editar"'), 'o espelho saiu da linha; olho e lápis ficam');
+  const linhaEu = A.htmlLinha(por('ana@x.com'), m);
+  assert.ok(!linhaEu.includes('data-adm-menu') && linhaEu.includes('Você'), 'a própria conta mostra "Você" e não tem menu');
+  assert.ok(A.htmlCartao(por('bia@x.com'), m).includes('data-adm-menu="bia@x.com"'), 'o cartão tem o mesmo menu');
 });
 
 test('detalheHTML: ações do administrador sobre outra conta e bloqueio das ações sobre si mesmo', () => {

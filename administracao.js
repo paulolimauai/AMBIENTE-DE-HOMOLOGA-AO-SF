@@ -359,7 +359,8 @@
     tabela: svg('<rect x="3" y="4" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="9" y1="10" x2="9" y2="20"/>'),
     grade: svg('<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>'),
     ok: svg('<polyline points="20 6 9 17 4 12"/>'),
-    bloq: svg('<circle cx="12" cy="12" r="9"/><line x1="5.6" y1="5.6" x2="18.4" y2="18.4"/>')
+    bloq: svg('<circle cx="12" cy="12" r="9"/><line x1="5.6" y1="5.6" x2="18.4" y2="18.4"/>'),
+    mais3: svg('<circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/>')
   };
 
   /* ============================================================ HTML: menus no topo ============================================================ */
@@ -421,7 +422,9 @@
     return '<button type="button" role="listitem" class="adm-kpi adm-k-' + k.cor + (on ? ' is-on' : '') + (n === 0 ? ' is-zero' : '') + (alerta ? ' is-atencao' : '') + '" data-adm-kpi="' + k.id + '" aria-pressed="' + on + '"' +
       ' title="Filtrar: ' + esc(k.rotulo) + ' (' + esc(k.dica) + ')' + (alerta ? ' - pede atenção' : '') + '">' +
       (alerta ? '<i class="adm-kpi-al" aria-hidden="true"></i><span class="adm-sr">Pede atenção: </span>' : '') +
-      '<span class="adm-kpi-n">' + n + (pct ? '<em class="adm-kpi-p" title="' + n + ' de ' + r.total + ' cadastros">' + pct + '</em>' : '') + '</span>' +
+      // Só nos cartões que pedem atenção: deixa claro que o cartão é um botão (o estado já está em aria-pressed, por isso o texto é só visual)
+      '<span class="adm-kpi-n">' + n + (pct ? '<em class="adm-kpi-p" title="' + n + ' de ' + r.total + ' cadastros">' + pct + '</em>' : '') +
+        (alerta ? '<span class="adm-kpi-ver" aria-hidden="true">' + (on ? 'Limpar ×' : 'Ver →') + '</span>' : '') + '</span>' +
       '<span class="adm-kpi-t">' + esc(k.rotulo) + '</span><small class="adm-kpi-d">' + esc(k.dica) + '</small></button>';
   }
   function htmlResumo(m) {
@@ -445,7 +448,7 @@
   }
   function htmlChips() {
     var chips = [];
-    if (estado.busca) chips.push(['busca', 'Busca: "' + estado.busca + '"']);
+    // A busca não vira etiqueta: o texto já está no campo logo acima (que ganha um "x" para limpar); só os filtros escolhidos aparecem aqui
     ['perfil', 'status', 'plano', 'disp'].forEach(function (k) { if (estado[k] !== 'todos') chips.push([k, NOME_FILTRO[k][estado[k]] || estado[k]]); });
     if (!chips.length) return '';
     return chips.map(function (c) {
@@ -472,7 +475,9 @@
   function htmlBarra(m) {
     var nf = filtrosAtivos();
     return '<div class="adm-barra">' +
-      '<label class="adm-busca">' + IC.busca + '<input type="search" id="admBusca" data-adm-busca autocomplete="off" spellcheck="false" placeholder="Buscar nome, e-mail, CPF…" value="' + esc(estado.busca) + '" aria-label="Buscar cadastros"><kbd title="Atalho: tecla /">/</kbd></label>' +
+      '<label class="adm-busca">' + IC.busca + '<input type="search" id="admBusca" data-adm-busca autocomplete="off" spellcheck="false" placeholder="Buscar nome, e-mail, CPF…" value="' + esc(estado.busca) + '" aria-label="Buscar cadastros">' +
+        '<button type="button" class="adm-busca-x" data-adm-acao="limpar-busca" title="Limpar a busca" aria-label="Limpar a busca"' + (estado.busca ? '' : ' hidden') + '>' + IC.x + '</button>' +
+        '<kbd title="Atalho: tecla /">/</kbd></label>' +
       '<input type="checkbox" id="admFtog" class="adm-ftog" aria-label="Mostrar ou esconder os filtros">' +
       '<label for="admFtog" class="adm-fbtn" title="Perfil, conta, assinatura e dispositivo">' + ICONE_FILTRO + '<span>Filtros</span><b class="adm-fn" data-adm-fn' + (nf ? '' : ' hidden') + '>' + (nf || '') + '</b></label>' +
       '<label class="adm-sel adm-sel-ord"><span>Ordenar por</span><select data-adm-ordem-sel>' + opcoes(ORDENS, estado.ordem.col + ':' + estado.ordem.dir) + '</select></label>' +
@@ -499,6 +504,8 @@
   function textoUsoCurto(r) { return r.uso ? r.uso.mov + ' mov. · ' + plural(r.uso.contas, 'conta', 'contas') : '—'; }
   // O código (#id) é longo e só interessa na gaveta; aqui vai o essencial para reconhecer a conta mesmo com a coluna Perfil escondida
   function subTitular(r) { return (r.admin ? 'Administrador · ' : '') + (r.disp === 'Mobile' ? 'Celular' : 'Computador'); }
+  // O perfil só aparece aqui quando não está em outro lugar da linha: com a coluna Perfil visível (tabela larga) e nos cartões (que têm o selo) o CSS esconde `.adm-sub-perfil`
+  function subTitularHTML(r) { return (r.admin ? '<span class="adm-sub-perfil">Administrador · </span>' : '') + esc(r.disp === 'Mobile' ? 'Celular' : 'Computador'); }
   function avatar(r, extra) {
     return '<span class="adm-av' + (r.admin ? ' adm-av-admin' : '') + (extra ? ' ' + extra : '') + '" aria-hidden="true">' + esc(r.iniciais) + '<i class="adm-dot' + (r.ativo ? '' : ' is-off') + '"></i></span>';
   }
@@ -510,17 +517,33 @@
     var eu = r.email === m.eu;
     return '<button type="button" class="adm-ib" data-adm-abrir="' + esc(r.email) + '" title="Ver detalhes e todas as ações" aria-label="Detalhes de ' + esc(r.nome) + '">' + IC.olho + '</button>' +
       '<button type="button" class="adm-ib" data-adm-a="editar" data-email="' + esc(r.email) + '" title="Editar cadastro" aria-label="Editar ' + esc(r.nome) + '">' + IC.lapis + '</button>' +
-      (eu ? '<span class="adm-pill adm-p-ouro">Você</span>' : '<button type="button" class="adm-ib" data-adm-a="espelho" data-email="' + esc(r.email) + '" title="Ver a conta como o usuário vê (modo espelho)" aria-label="Modo espelho de ' + esc(r.nome) + '">' + IC.usuarios + '</button>');
+      (eu ? '<span class="adm-pill adm-p-ouro">Você</span>'
+        : '<button type="button" class="adm-ib adm-mais" data-adm-menu="' + esc(r.email) + '" aria-haspopup="menu" aria-expanded="false" title="Mais ações: redefinir senha, bloquear, tornar administrador…" aria-label="Mais ações de ' + esc(r.nome) + '">' + IC.mais3 + '</button>');
+  }
+  // Menu "⋯" da linha: as ações do dia a dia sem abrir a gaveta (o modo espelho, que era um ícone solto na linha, mora aqui com nome por extenso).
+  // Cada item é o mesmo `data-adm-a` da gaveta, então a confirmação e a execução são as mesmas. Excluir fica só na gaveta, na zona de risco.
+  function itemMenu(a, email, ic, rotulo, classe) {
+    return '<button type="button" role="menuitem" tabindex="-1" class="adm-mi' + (classe ? ' ' + classe : '') + '" data-adm-a="' + a + '" data-email="' + esc(email) + '">' + IC[ic] + '<span>' + esc(rotulo) + '</span></button>';
+  }
+  function htmlMenuLinha(r) {
+    return itemMenu('senha', r.email, 'chave', 'Redefinir senha') +
+      (r.ativo ? itemMenu('bloquear', r.email, 'bloq', 'Bloquear conta', 'adm-mi-perigo') : itemMenu('ativar', r.email, 'ok', 'Ativar conta', 'adm-mi-ok')) +
+      (r.admin ? itemMenu('rebaixar', r.email, 'usuarios', 'Tornar usuário comum') : itemMenu('promover', r.email, 'coroa', 'Tornar administrador')) +
+      '<div class="adm-mi-sep" role="separator"></div>' +
+      (r.admin ? '' : itemMenu('assinatura', r.email, 'escudo', 'Abrir em Assinaturas')) +
+      itemMenu('espelho', r.email, 'olho', 'Ver como o usuário') +
+      itemMenu('copiar', r.email, 'copiar', 'Copiar e-mail');
   }
 
   function linhaTabela(r, m) {
     return '<tr class="adm-lin' + (r.ativo ? '' : ' is-off') + (estado.sel[r.email] ? ' is-sel' : '') + (estado.detalhe === r.email ? ' is-aberto' : '') + '" data-adm-abrir="' + esc(r.email) + '">' +
       '<td class="adm-c-sel">' + checkbox(r, m) + '</td>' +
-      '<td class="adm-c-tit"><div class="adm-tit">' + avatar(r) + '<div class="adm-tit-t"><b class="adm-nome" title="' + esc(r.nome) + '">' + esc(r.nome) + '</b><small>' + esc(subTitular(r)) + '</small></div></div></td>' +
+      '<td class="adm-c-tit"><div class="adm-tit">' + avatar(r) + '<div class="adm-tit-t"><b class="adm-nome" title="' + esc(r.nome) + '">' + esc(r.nome) + '</b><small>' + subTitularHTML(r) + '</small></div></div></td>' +
       '<td class="adm-c-ct"><span class="adm-mail" title="' + esc(r.email) + '">' + esc(r.email) + '</span><small>' + (r.cpfFmt ? esc(r.cpfFmt) : 'Sem CPF') + (r.telFmt ? ' · ' + esc(r.telFmt) : '') + '</small></td>' +
       '<td class="adm-c-perf">' + pillPerfil(r) + '</td>' +
       '<td class="adm-c-conta">' + pillConta(r) + '</td>' +
-      '<td class="adm-c-ass">' + pillAssinatura(r) + '<small>' + esc(r.ass.detalhe) + '</small></td>' +
+      // Administrador: o detalhe ("Administrador") repetia o perfil que já está na linha; aqui vai o que a pessoa de fato não tem
+      '<td class="adm-c-ass">' + pillAssinatura(r) + '<small>' + esc(r.ass.chave === 'admin' ? 'Sem cobrança' : r.ass.detalhe) + '</small></td>' +
       '<td class="adm-c-acc"><b>' + esc(relativo(r.ultimoLogin, m.agora)) + '</b><small>' + (isNaN(r.ultimoLogin) ? '—' : esc(dataBR(r.ultimoLogin, true))) + '</small></td>' +
       '<td class="adm-c-cad">' + esc(isNaN(r.criadoEm) ? '—' : dataBR(r.criadoEm)) + '</td>' +
       '<td class="adm-c-uso" title="' + esc(textoUso(r)) + '">' + esc(textoUsoCurto(r)) + '</td>' +
@@ -534,10 +557,15 @@
       '<button type="button" class="adm-th" data-adm-ordem="' + col + '">' + esc(rotulo) + '<i class="adm-seta' + (on ? ' is-on' : '') + '">' + (on ? (dir === 'asc' ? '▲' : '▼') : '↕') + '</i></button></th>';
   }
   function htmlTabela(m) {
-    var todosNaPagina = m.pag.itens.length > 0 && m.pag.itens.every(function (r) { return r.email === m.eu || estado.sel[r.email]; });
+    // A própria conta nunca entra na seleção (a caixa dela é desativada): contá-la como "já marcada" deixava o cabeçalho marcado sem nada selecionado
+    var selecionaveis = m.pag.itens.filter(function (r) { return r.email !== m.eu; });
+    var marcadas = selecionaveis.filter(function (r) { return estado.sel[r.email]; }).length;
+    var todosNaPagina = selecionaveis.length > 0 && marcadas === selecionaveis.length;
+    var parcial = marcadas > 0 && !todosNaPagina;
     return '<div class="adm-tabela-wrap"><table class="adm-tabela">' +
       '<colgroup><col class="adm-c-sel"><col class="adm-c-tit"><col class="adm-c-ct"><col class="adm-c-perf"><col class="adm-c-conta"><col class="adm-c-ass"><col class="adm-c-acc"><col class="adm-c-cad"><col class="adm-c-uso"><col class="adm-c-acoes"></colgroup><thead><tr>' +
-      '<th scope="col" class="adm-c-sel"><input type="checkbox" class="adm-chk" data-adm-sel-pagina ' + (todosNaPagina ? 'checked ' : '') + 'aria-label="Selecionar todos desta página"></th>' +
+      '<th scope="col" class="adm-c-sel"><input type="checkbox" class="adm-chk" data-adm-sel-pagina ' + (todosNaPagina ? 'checked ' : '') + (parcial ? 'data-adm-parcial ' : '') +
+        (selecionaveis.length ? '' : 'disabled title="Nenhum cadastro desta página pode ser selecionado" ') + 'aria-label="Selecionar todos desta página"></th>' +
       cabecalho('nome', 'Titular', 'adm-c-tit') + cabecalho('email', 'Contato', 'adm-c-ct') + cabecalho('perfil', 'Perfil', 'adm-c-perf') + cabecalho('status', 'Conta', 'adm-c-conta') +
       cabecalho('assinatura', 'Assinatura', 'adm-c-ass') + cabecalho('login', 'Último acesso', 'adm-c-acc') + cabecalho('criado', 'Cadastro', 'adm-c-cad') + cabecalho('uso', 'Uso', 'adm-c-uso') +
       '<th scope="col" class="adm-c-acoes"><span class="adm-sr">Ações</span></th></tr></thead><tbody>' +
@@ -545,7 +573,7 @@
   }
   function cartao(r, m) {
     return '<article class="adm-card' + (r.ativo ? '' : ' is-off') + (estado.sel[r.email] ? ' is-sel' : '') + (estado.detalhe === r.email ? ' is-aberto' : '') + '" data-adm-abrir="' + esc(r.email) + '">' +
-      '<header class="adm-card-cab">' + checkbox(r, m) + avatar(r) + '<div class="adm-tit-t"><b class="adm-nome" title="' + esc(r.nome) + '">' + esc(r.nome) + '</b><small>' + esc(subTitular(r)) + '</small></div></header>' +
+      '<header class="adm-card-cab">' + checkbox(r, m) + avatar(r) + '<div class="adm-tit-t"><b class="adm-nome" title="' + esc(r.nome) + '">' + esc(r.nome) + '</b><small>' + subTitularHTML(r) + '</small></div></header>' +
       '<div class="adm-card-pills">' + pillPerfil(r) + pillConta(r) + pillAssinatura(r) + '</div>' +
       '<div class="adm-card-ct"><span class="adm-mail" title="' + esc(r.email) + '">' + esc(r.email) + '</span><small>' + (r.cpfFmt ? esc(r.cpfFmt) : 'Sem CPF') + (r.telFmt ? ' · ' + esc(r.telFmt) : '') + '</small></div>' +
       '<dl class="adm-card-meta"><div><dt>Último acesso</dt><dd>' + esc(relativo(r.ultimoLogin, m.agora)) + '</dd></div><div><dt>Cadastro</dt><dd>' + esc(isNaN(r.criadoEm) ? '—' : dataBR(r.criadoEm)) + '</dd></div><div><dt>Uso</dt><dd>' + esc(textoUsoCurto(r)) + '</dd></div></dl>' +
@@ -605,17 +633,23 @@
       '<button type="button" class="adm-ib" data-adm-acao="lote-limpar" title="Limpar seleção" aria-label="Limpar seleção">' + IC.x + '</button></div>';
   }
 
+  var POR_PAGINA = [[25, '25'], [50, '50'], [100, '100']];
   function htmlRodape(m) {
     var p = m.pag;
     if (!p.total) return '';
-    var botoes = '';
-    var ini = Math.max(1, Math.min(p.pagina - 2, p.paginas - 4)), fim = Math.min(p.paginas, ini + 4);
-    for (var i = ini; i <= fim; i++) botoes += '<button type="button" class="adm-pg' + (i === p.pagina ? ' is-on' : '') + '" data-adm-pag="' + i + '"' + (i === p.pagina ? ' aria-current="page"' : '') + '>' + i + '</button>';
-    return '<div class="adm-rodape"><span class="adm-rodape-t">Mostrando <b>' + p.de + '–' + p.ate + '</b> de <b>' + p.total + '</b></span>' +
-      '<div class="adm-pags" role="navigation" aria-label="Páginas">' +
+    // Tudo cabe numa página e é pouca gente: o contador da barra ("N de M cadastros") já diz isso, então o rodapé inteiro só atrapalharia
+    if (p.paginas <= 1 && p.total <= POR_PAGINA[0][0]) return '';
+    var nav = '';
+    if (p.paginas > 1) {
+      var botoes = '';
+      var ini = Math.max(1, Math.min(p.pagina - 2, p.paginas - 4)), fim = Math.min(p.paginas, ini + 4);
+      for (var i = ini; i <= fim; i++) botoes += '<button type="button" class="adm-pg' + (i === p.pagina ? ' is-on' : '') + '" data-adm-pag="' + i + '"' + (i === p.pagina ? ' aria-current="page"' : '') + '>' + i + '</button>';
+      nav = '<div class="adm-pags" role="navigation" aria-label="Páginas">' +
         '<button type="button" class="adm-pg" data-adm-pag="' + (p.pagina - 1) + '"' + (p.pagina <= 1 ? ' disabled' : '') + ' aria-label="Página anterior">' + IC.ant + '</button>' + botoes +
-        '<button type="button" class="adm-pg" data-adm-pag="' + (p.pagina + 1) + '"' + (p.pagina >= p.paginas ? ' disabled' : '') + ' aria-label="Próxima página">' + IC.prox + '</button></div>' +
-      '<label class="adm-sel adm-sel-pp"><span>Por página</span><select data-adm-pp>' + opcoes([[25, '25'], [50, '50'], [100, '100']], estado.porPagina) + '</select></label></div>';
+        '<button type="button" class="adm-pg" data-adm-pag="' + (p.pagina + 1) + '"' + (p.pagina >= p.paginas ? ' disabled' : '') + ' aria-label="Próxima página">' + IC.prox + '</button></div>';
+    }
+    return '<div class="adm-rodape"><span class="adm-rodape-t">Mostrando <b>' + p.de + '–' + p.ate + '</b> de <b>' + p.total + '</b></span>' + nav +
+      '<label class="adm-sel adm-sel-pp"><span>Por página</span><select data-adm-pp>' + opcoes(POR_PAGINA, estado.porPagina) + '</select></label></div>';
   }
 
   function htmlLista(m) {
@@ -763,6 +797,8 @@
     });
     var fn = d.querySelector('[data-adm-fn]');
     if (fn) { var nf = filtrosAtivos(); fn.textContent = nf ? String(nf) : ''; fn.hidden = !nf; }
+    var bx = d.querySelector('.adm-busca-x');
+    if (bx) bx.hidden = !estado.busca;
     var o = d.querySelector('[data-adm-ordem-sel]');
     if (o) o.value = estado.ordem.col + ':' + estado.ordem.dir;
     d.querySelectorAll('[data-adm-vista]').forEach(function (bt) { bt.setAttribute('aria-pressed', String(bt.getAttribute('data-adm-vista') === estado.vista)); });
@@ -774,6 +810,71 @@
     Object.keys(estado.sel).forEach(function (e) { if (!existe[e] || e === m.eu) delete estado.sel[e]; });
   }
 
+  // "Indeterminado" (traço na caixa do cabeçalho) não tem atributo HTML: aplica pela propriedade depois de cada desenho da lista
+  function marcarParcial() {
+    var d = root.document;
+    if (!d) return;
+    d.querySelectorAll('[data-adm-sel-pagina]').forEach(function (c) { c.indeterminate = c.hasAttribute('data-adm-parcial'); });
+  }
+
+  /* ----- menu "⋯" da linha: fica no <body> (a tabela corta o que passa da borda) e é posicionado pela tela ----- */
+  var menu = { email: null, botao: null };
+  function menuEl() { return root.document && root.document.getElementById('admMenuLinha'); }
+  function fecharMenu(devolverFoco) {
+    var d = root.document;
+    if (!d) return;
+    var el = menuEl();
+    if (el) el.remove();
+    var bt = menu.botao;
+    menu.email = null; menu.botao = null;
+    if (bt) {
+      try { bt.setAttribute('aria-expanded', 'false'); } catch (e) {}
+      if (devolverFoco && d.contains(bt)) { try { bt.focus(); } catch (e2) {} }
+    }
+  }
+  // O app aplica zoom no <body> (escala automática): left/top de um elemento fixo valem "pixels do painel", e o retângulo do botão vem em pixels de tela.
+  // z = quantos pixels de tela vale 1 px do painel (mesma conta de zoomTela() em assinaturas.js).
+  function posicionarMenu(el, botao) {
+    var rm = el.getBoundingClientRect();
+    var z = el.offsetWidth ? rm.width / el.offsetWidth : 1;
+    if (!(z > 0.2 && z < 5)) z = 1;
+    var rb = botao.getBoundingClientRect();
+    var vw = root.innerWidth || 1280, vh = root.innerHeight || 800;
+    var esq = Math.min(Math.max(8, rb.right - rm.width), vw - rm.width - 8);
+    var topo = rb.bottom + 6;
+    if (topo + rm.height > vh - 8) topo = Math.max(8, rb.top - rm.height - 6);       // sem espaço embaixo: abre para cima
+    el.style.left = Math.round(esq / z) + 'px';
+    el.style.top = Math.round(topo / z) + 'px';
+  }
+  function abrirMenu(botao, email) {
+    var d = root.document;
+    email = String(email || '').toLowerCase();
+    var par = registro(email);
+    if (!par.r || par.r.email === par.m.eu) return;
+    fecharMenu(false);
+    var el = d.createElement('div');
+    el.id = 'admMenuLinha';
+    el.className = 'adm-menu';
+    el.setAttribute('role', 'menu');
+    el.setAttribute('aria-label', 'Ações de ' + par.r.nome);
+    el.innerHTML = htmlMenuLinha(par.r);
+    d.body.appendChild(el);
+    menu.email = email; menu.botao = botao;
+    botao.setAttribute('aria-expanded', 'true');
+    posicionarMenu(el, botao);
+    var primeiro = el.querySelector('.adm-mi');
+    if (primeiro) primeiro.focus({ preventScroll: true });
+  }
+  // A lista é repintada de tempos em tempos (sincronização, filtros): o botão que abriu o menu é outro elemento; se a conta saiu da página, o menu fecha
+  function renovarMenu() {
+    if (!menu.email) return;
+    var d = root.document;
+    var bt = d && Array.prototype.slice.call(d.querySelectorAll('[data-adm-menu]')).find(function (x) { return String(x.getAttribute('data-adm-menu')).toLowerCase() === menu.email; });
+    if (!bt) { fecharMenu(false); return; }
+    menu.botao = bt;
+    bt.setAttribute('aria-expanded', 'true');
+  }
+
   function repintar() {
     var ctx = contexto();
     var m = calcular(ctx);
@@ -782,6 +883,8 @@
     pintar('admChips', htmlChips());
     pintar('admCont', htmlContador(m));
     pintar('admLista', htmlLista(m));
+    marcarParcial();
+    renovarMenu();
     sincronizarBarra();
     atualizarGaveta(ctx, m);
     var t = root.document && root.document.getElementById('admSinc');
@@ -939,6 +1042,14 @@
       case 'editar': case 'tempo': fecharDetalhe(); if (A.editar) A.editar(email); return;
       case 'espelho': fecharDetalhe(); if (A.espelho) A.espelho(email); return;
       case 'boleto': fecharDetalhe(); if (A.segundaVia) A.segundaVia(r); return;
+      case 'assinatura': {
+        // Vai para a aba Assinaturas já com o painel desta conta aberto (a aba termina de desenhar antes do próximo quadro)
+        fecharDetalhe();
+        if (ctx.irPara) ctx.irPara('assinaturas');
+        var abrirAss = function () { if (root.NexusAss && root.NexusAss.abrirDetalhe) root.NexusAss.abrirDetalhe(email); };
+        if (root.requestAnimationFrame) root.requestAnimationFrame(abrirAss); else abrirAss();
+        return;
+      }
       case 'copiar':
         try { await root.navigator.clipboard.writeText(email); t('E-mail copiado: ' + email); } catch (e) { t('Não foi possível copiar. Selecione o e-mail e copie com Ctrl+C.'); }
         return;
@@ -989,6 +1100,12 @@
         return;
       }
       case 'limpar': limparFiltros(); limparCampoBusca(); break;
+      case 'limpar-busca': {
+        estado.busca = ''; estado.pagina = 1; limparCampoBusca();
+        var campoBusca = root.document && root.document.getElementById('admBusca');
+        if (campoBusca) campoBusca.focus({ preventScroll: true });
+        break;
+      }
       case 'sel-filtrados': par.m.ordenados.forEach(function (x) { if (x.email !== par.m.eu) estado.sel[x.email] = true; }); break;
       case 'lote-limpar': estado.sel = {}; break;
       case 'lote-exportar': {
@@ -1056,14 +1173,24 @@
         try { root.navigator.clipboard.writeText(tx ? tx.textContent : ''); var b = alvo.closest('#admSenhaCopiar'); b.querySelector('span').textContent = 'Copiada'; } catch (e) {}
         return;
       }
+      // Menu "⋯" aberto: qualquer clique fora dele (e fora do botão que o abriu) fecha e segue o clique normalmente
+      if (menu.email && !alvo.closest('#admMenuLinha') && !alvo.closest('[data-adm-menu]')) fecharMenu(false);
       var ir = alvo.closest('[data-adm-ir]');
       if (ir) { var c0 = contexto(); if (c0.irPara) c0.irPara(ir.getAttribute('data-adm-ir')); return; }
+      var mbt = alvo.closest('[data-adm-menu]');
+      if (mbt && mbt.closest('#admLista')) {
+        ev.preventDefault();
+        var emMenu = String(mbt.getAttribute('data-adm-menu') || '').toLowerCase();
+        if (menu.email === emMenu) fecharMenu(true); else abrirMenu(mbt, emMenu);
+        return;
+      }
       var a = alvo.closest('[data-adm-a]');
-      if (a && (a.closest('#admGaveta') || a.closest('#admLista'))) {
+      if (a && (a.closest('#admGaveta') || a.closest('#admLista') || a.closest('#admMenuLinha'))) {
         if (a.tagName === 'A') return;
         // Caixa de permissão: o clique precisa marcar/desmarcar (preventDefault desfaria a marca)
         if (!(a.tagName === 'INPUT' && a.type === 'checkbox')) ev.preventDefault();
         if (a.disabled) return;
+        if (a.closest('#admMenuLinha')) fecharMenu(false);
         executar(a.getAttribute('data-adm-a'), String(a.getAttribute('data-email') || '').toLowerCase());
         return;
       }
@@ -1131,6 +1258,10 @@
       }
     });
 
+    // O menu "⋯" é fixo na tela: se a página rola (em qualquer container) ou a janela muda de tamanho, ele fecha em vez de ficar solto no ar
+    d.addEventListener('scroll', function (ev) { if (menu.email && !(ev.target && ev.target.closest && ev.target.closest('#admMenuLinha'))) fecharMenu(false); }, true);
+    root.addEventListener('resize', function () { if (menu.email) fecharMenu(false); });
+
     d.addEventListener('input', function (ev) {
       var alvo = ev.target;
       if (!alvo || !alvo.matches || !alvo.matches('[data-adm-busca]')) return;
@@ -1141,6 +1272,18 @@
     d.addEventListener('keydown', function (ev) {
       var alvo = ev.target;
       var digitando = alvo && alvo.matches && alvo.matches('input,textarea,select,[contenteditable="true"]');
+      if (menu.email) {
+        var itens = Array.prototype.slice.call(d.querySelectorAll('#admMenuLinha .adm-mi'));
+        var pos = itens.indexOf(d.activeElement);
+        if (ev.key === 'Escape') { ev.preventDefault(); ev.stopPropagation(); fecharMenu(true); return; }
+        if (ev.key === 'Tab') { fecharMenu(true); return; }      // o foco volta ao botão e o Tab segue dali
+        if (itens.length && (ev.key === 'ArrowDown' || ev.key === 'ArrowUp' || ev.key === 'Home' || ev.key === 'End')) {
+          ev.preventDefault();
+          var prox = ev.key === 'Home' ? 0 : ev.key === 'End' ? itens.length - 1 : ev.key === 'ArrowDown' ? (pos + 1) % itens.length : (pos <= 0 ? itens.length - 1 : pos - 1);
+          itens[prox].focus({ preventScroll: true });
+          return;
+        }
+      }
       if (ev.key === 'Escape' && estado.detalhe && !d.getElementById('admDialogo')) { fecharDetalhe(); return; }
       if (!paginaAtiva()) return;
       if (ev.key === '/' && !digitando && !ev.ctrlKey && !ev.metaKey && !ev.altKey) {
@@ -1180,7 +1323,7 @@
   function aoRenderizar() {
     if (!ctxFn) return;
     if (paginaAtiva()) { carregarUso(false); if (estado.detalhe) { var c = contexto(); atualizarGaveta(c, calcular(c)); } }
-    else if (estado.detalhe) fecharDetalhe();
+    else { fecharMenu(false); if (estado.detalhe) fecharDetalhe(); }
   }
   function atualizarTudo() { if (paginaAtiva()) repintar(); else atualizarAbas(); }
   // Contadores das abas do topo (usuários, pagamentos pendentes, eventos de auditoria): valem em qualquer uma das três telas
@@ -1208,6 +1351,7 @@
     alvosExpirar: alvosExpirar, textoIgnoradas: textoIgnoradas,
     // telas
     shellHTML: shellHTML, cadastrosHTML: cadastrosHTML, detalheHTML: detalheHTML, cabecalhoHTML: cabecalhoHTML, kpisFixosHTML: kpisFixosHTML, htmlLinha: linhaTabela, htmlCartao: cartao, htmlResumo: htmlResumo,
+    htmlTabela: htmlTabela, htmlChips: htmlChips, htmlRodape: htmlRodape, htmlMenuLinha: htmlMenuLinha, htmlBarra: htmlBarra,
     // integração com o app
     html: html, shell: shell, aoRenderizar: aoRenderizar, atualizarTudo: atualizarTudo, atualizarAbas: atualizarAbas, abrirDetalhe: abrirDetalhe, fecharDetalhe: fecharDetalhe,
     estado: estado, calcular: calcular
