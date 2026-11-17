@@ -401,6 +401,24 @@ test('detalheHTML: ações do administrador sobre outra conta e bloqueio das aç
   assert.ok(!dBia.includes('data-adm-a="boleto"') && !dBia.includes('data-adm-a="tempo"') && dBia.includes('acesso ilimitado'), 'nem 2ª via de boleto nem liberar tempo para administrador');
 });
 
+test('detalheHTML: corpo em duas colunas (dados | permissões, ações e eventos), com os blocos bem fechados e na ordem de leitura no celular', () => {
+  const ctx = { agora: AGORA, usuarios: [usuario({ email: 'ana@x.com', name: 'Ana', role: 'Administrador' }), usuario()], eu: { email: 'ana@x.com' }, acoes: {}, eventos: () => [] };
+  const m = A.calcular(ctx);
+  for (const email of ['maria.teste@example.com', 'ana@x.com']) {
+    const h = A.detalheHTML(m.todos.find((r) => r.email === email), m, ctx);
+    assert.equal((h.match(/<div[\s>]/g) || []).length, (h.match(/<\/div>/g) || []).length, 'divs abertas e fechadas em igual número (' + email + ')');
+    const c1 = h.indexOf('class="adm-dr-c1"'), c2 = h.indexOf('class="adm-dr-c2"');
+    assert.ok(c1 > 0 && c2 > c1, 'a coluna de dados vem antes da de ações');
+    const em = (titulo) => h.indexOf('<h4>' + titulo + '</h4>');
+    for (const t of ['Identificação', 'Acesso', 'Assinatura', 'Uso do sistema']) assert.ok(em(t) > c1 && em(t) < c2, t + ' fica na coluna dos dados');
+    for (const t of ['Ações', 'Eventos recentes']) assert.ok(em(t) > c2, t + ' fica na coluna das ações');
+    assert.ok(h.indexOf('class="adm-dr-corpo"') < c1);
+  }
+  const outra = A.detalheHTML(m.todos.find((r) => r.email === 'maria.teste@example.com'), m, ctx);
+  assert.ok(outra.indexOf('<h4>Permissões</h4>') > outra.indexOf('class="adm-dr-c2"'), 'Permissões abre a coluna das ações');
+  assert.ok(!A.detalheHTML(m.todos.find((r) => r.email === 'ana@x.com'), m, ctx).includes('<h4>Permissões</h4>'), 'a própria conta continua sem Permissões');
+});
+
 test('alvosExpirar: só assinatura ativa de usuário comum; o resto é ignorado e contado por motivo', () => {
   const futuro = new Date(AGORA + 20 * DIA).toISOString();
   const ativa = (email) => usuario({ email, name: email, subscription_status: 'active', subscription_plan: 'mensal', subscription_expires_at: futuro });

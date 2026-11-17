@@ -499,4 +499,30 @@ html.adm-gaveta-aberta { overflow: hidden !important; }
   .adm-kpi-al::after { animation: none !important; opacity: 0 !important; }
 }
 
+/* ---------- gaveta de Cadastros no MEIO da tela (mesmo visual da janela da aba Assinaturas) ---------- */
+/* Janela centralizada com folga em volta, em vez de colada na borda direita e cortada embaixo: o cabeçalho (setas e X) fica sempre à vista e só o corpo rola
+   quando a tela é baixa. Larga (1040 px) = dados da conta ao lado de permissões/ações/eventos, sem rolar à toa. Escopo #admGaveta: não muda a base .adm-dr. */
+#admGaveta.adm-dr { align-items: center !important; justify-content: center !important; padding: clamp(10px, 3vh, 32px) 20px !important; }
+#admGaveta .adm-dr-fundo { backdrop-filter: blur(3px) !important; -webkit-backdrop-filter: blur(3px) !important; }
+@media (min-width: 561px) { #admGaveta .adm-dr-painel { width: min(1040px, 100%) !important; } }
+#admGaveta .adm-dr-painel {
+  container-type: inline-size !important; container-name: admdr !important;
+  height: auto !important; max-height: 100% !important; overflow: hidden !important;
+  border: 1px solid var(--adm-line) !important; border-radius: 20px !important;
+  box-shadow: 0 32px 90px -24px rgba(0, 0, 0, .92), inset 0 1px 0 rgba(255, 255, 255, .04) !important;
+  opacity: 0 !important; transform: translateY(14px) scale(.975) !important;
+  transition: transform .22s cubic-bezier(.2, .7, .2, 1), opacity .18s ease !important;
+}
+#admGaveta.is-aberta .adm-dr-painel { opacity: 1 !important; transform: none !important; }
+/* janela larga: duas colunas (dados | permissões, ações e eventos) */
+@container admdr (min-width: 880px) {
+  #admGaveta .adm-dr-corpo { display: grid !important; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important; column-gap: 32px !important; align-items: start !important; align-content: start !important; }
+}
+/* celular: a janela ocupa a tela toda */
+@media (max-width: 560px) {
+  #admGaveta.adm-dr { padding: 0 !important; }
+  #admGaveta .adm-dr-painel { width: 100% !important; height: 100% !important; border-radius: 0 !important; border-width: 0 !important; }
+}
+@media (prefers-reduced-motion: reduce) { #admGaveta .adm-dr-painel { transition: none !important; transform: none !important; } }
+
 }

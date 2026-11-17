@@ -754,6 +754,8 @@
           '<button type="button" class="adm-ib" data-adm-a="fechar" id="admDrFechar" title="Fechar (Esc)" aria-label="Fechar detalhes">' + IC.x + '</button></div>' +
       '</header>' +
       '<div class="adm-dr-corpo">' +
+        // Duas colunas quando a janela é larga (CSS por container query): dados da conta à esquerda, permissões, ações e eventos à direita
+        '<div class="adm-dr-c1">' +
         '<section><h4>Identificação</h4><dl class="adm-dl">' + linhaDl('Nome completo', esc(r.nome)) + linhaDl('E-mail (login)', esc(r.email)) + linhaDl('CPF', esc(r.cpfFmt)) + linhaDl('Telefone', esc(r.telFmt)) +
           linhaDl('Nascimento', esc(r.nasc)) + linhaDl('Código', r.id ? '#' + esc(r.id) : '') + linhaDl('Dispositivo', r.disp === 'Mobile' ? 'Celular' : 'Computador') + linhaDl('Termos aceitos', r.termos ? 'Sim' : 'Não') + '</dl></section>' +
         '<section><h4>Acesso</h4><dl class="adm-dl">' + linhaDl('Perfil', r.admin ? 'Administrador (Nexus + GLPI)' : 'Usuário') + linhaDl('Conta', r.ativo ? 'Ativa' : 'Bloqueada') +
@@ -765,9 +767,11 @@
           ? '<div class="adm-uso"><div><b>' + u.mov + '</b><span>movimentações</span></div><div><b>' + u.contas + '</b><span>contas e cartões</span></div><div><b>' + u.orc + '</b><span>orçamentos</span></div><div><b>' + u.metas + '</b><span>metas</span></div></div>' +
             '<p class="adm-nota">' + (u.ultimaMov ? 'Última movimentação em ' + esc(dataBR(u.ultimaMov)) + '.' : 'Ainda não há movimentações.') + '</p>'
           : '<p class="adm-nd">Carregando o uso desta conta…</p>') + '</section>' +
+        '</div><div class="adm-dr-c2">' +
         (eu ? '' : '<section><h4>Permissões</h4>' + permissoesHTML(r, ctx) + '</section>') +
         '<section><h4>Ações</h4>' + acoes + '</section>' +
         '<section><h4>Eventos recentes</h4>' + ev + '</section>' +
+        '</div>' +
       '</div></div>';
   }
 
