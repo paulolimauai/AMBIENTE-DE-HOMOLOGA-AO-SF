@@ -15951,7 +15951,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 
 <!-- Modal Usuário (Admin) - Central de Correção Cadastral -->
 <div class="overlay" id="overlayUserAdmin" onclick="if(event.target===this) closeUserAdminModal()">
-  <div class="modal" style="max-width:490px; border-radius:20px; border:1px solid rgba(255,255,255,0.18); border-top:1.5px solid rgba(255,255,255,0.45); background:linear-gradient(145deg, rgba(20,28,48,0.96) 0%, rgba(10,15,30,0.99) 100%); backdrop-filter:blur(36px); -webkit-backdrop-filter:blur(36px); box-shadow:0 24px 60px rgba(0,0,0,0.9), 0 0 32px rgba(5, 150, 105,0.16); padding:18px 20px;">
+  <div class="modal" style="max-width:760px; border-radius:20px; border:1px solid rgba(255,255,255,0.18); border-top:1.5px solid rgba(255,255,255,0.45); background:linear-gradient(145deg, rgba(20,28,48,0.96) 0%, rgba(10,15,30,0.99) 100%); backdrop-filter:blur(36px); -webkit-backdrop-filter:blur(36px); box-shadow:0 24px 60px rgba(0,0,0,0.9), 0 0 32px rgba(5, 150, 105,0.16); padding:18px 20px;">
     <button class="close-x" id="closeUserAdminModal" type="button" onclick="closeUserAdminModal()">✕</button>
     <div style="display:inline-flex; align-items:center; gap:5px; padding:2px 8px; border-radius:999px; background:rgba(245,158,11,0.14); border:1px solid rgba(245,158,11,0.35); color:#FBBF24; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px;">
       <span>🛠️ Gestão & Correção Cadastral</span>
