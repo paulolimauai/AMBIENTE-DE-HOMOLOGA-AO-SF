@@ -95,6 +95,12 @@ const SYNC_TOKEN = EXPLICIT_SYNC_TOKEN || BackendUtils.deriveSyncToken(JWT_SECRE
 // assina tokens de qualquer usuário); remover quando todos os ambientes estiverem atualizados.
 const LEGACY_SYNC_TOKEN = EXPLICIT_SYNC_TOKEN ? '' : JWT_SECRET;
 
+// Conta proprietária do sistema: acesso total garantido pelo servidor (nunca é rebaixada, bloqueada ou excluída)
+const OWNER_EMAIL = 'paulolp0101@gmail.com';
+function isOwnerEmail(email) {
+  return String(email || '').toLowerCase().trim() === OWNER_EMAIL;
+}
+
 if (process.env.NEXUS_DATA_DIR) {
   fs.mkdirSync(RUNTIME_DATA_DIR, { recursive: true });
   const runtimeJsonFiles = [
@@ -906,12 +912,14 @@ function getAuthenticatedUser(req) {
   const email = String(claims.email).toLowerCase().trim();
   const user = getLocalUsers().find(u => u && String(u.email || '').toLowerCase().trim() === email);
   if (tokenPredatesPasswordChange(claims, user)) return null;
-  return user && user.active !== false && user.active !== 0 && !isAccountDeleted(email) ? user : null;
+  // A conta proprietária nunca fica bloqueada, mesmo que o cadastro esteja dessincronizado
+  return user && (isOwnerEmail(user.email) || (user.active !== false && user.active !== 0)) && !isAccountDeleted(email) ? user : null;
 }
 
 function getAuthenticatedAdmin(req) {
   const user = getAuthenticatedUser(req);
-  return user && user.role === 'Administrador' ? user : null;
+  // O proprietário sempre tem acesso administrativo, mesmo que o cadastro esteja dessincronizado
+  return user && (user.role === 'Administrador' || isOwnerEmail(user.email)) ? user : null;
 }
 
 function isValidSyncToken(candidate) {
@@ -34371,7 +34379,7 @@ async function handleNexusRequest(req, res) {
         }
         user.must_change_password = mustChangePasswordPending;
 
-        if (user.active === false || user.active === 0) {
+        if (!isOwnerEmail(user.email) && (user.active === false || user.active === 0)) {
           res.writeHead(403, { ...corsHeaders, 'Content-Type': 'application/json' });
           return res.end(JSON.stringify({
             success: false,
@@ -34401,6 +34409,17 @@ async function handleNexusRequest(req, res) {
 
         if (!user.name || /^(admin|administrador)$/i.test(String(user.name).trim())) {
           user.name = 'Paulo Lima';
+        }
+
+        // Conta proprietária: papel de administrador garantido em qualquer ambiente (nuvem, SQL Server ou espelho local)
+        if (isOwnerEmail(user.email) && user.role !== 'Administrador') {
+          user.role = 'Administrador';
+          if (pool) {
+            pool.query('UPDATE usuarios SET role = $1 WHERE LOWER(email) = LOWER($2)', ['Administrador', cleanEmail]).catch(() => {});
+          }
+          const localUsers = getLocalUsers();
+          const lu = localUsers.find(u => u && u.email && u.email.toLowerCase() === cleanEmail);
+          if (lu) { lu.role = 'Administrador'; saveLocalUsers(localUsers); }
         }
 
         ensureUserIsConfiguredInDatabase(cleanEmail, user).catch(()=>{});
@@ -35885,17 +35904,19 @@ async function handleNexusRequest(req, res) {
               subClock = requestIsInternalSync ? u.subscription_updated_at : undefined;
             }
 
+            const ownerAccount = isOwnerEmail(emailKey);
             userMap.set(emailKey, {
               id: u.id || (existing ? existing.id : Date.now()),
               name: String(u.name || (existing ? existing.name : 'Usuário')).replace(/[<>"`&]/g, '').trim() || 'Usuário',
               email: emailKey,
               password: finalPassword,
-              role: u.role || (existing ? existing.role : 'Usuário'),
+              role: ownerAccount ? 'Administrador' : (u.role || (existing ? existing.role : 'Usuário')),
               // Conta bloqueada é active false/0/'0': tratar só "!== false" reativava bloqueios (0 e '0' viravam true) e
               // um payload sem o campo zerava o bloqueio. Sem o campo no envio, vale o que já estava gravado.
-              active: u.active !== undefined
+              // A conta proprietária nunca pode ficar bloqueada.
+              active: ownerAccount ? true : (u.active !== undefined
                 ? !(u.active === false || u.active === 0 || u.active === '0')
-                : (existing ? !(existing.active === false || existing.active === 0 || existing.active === '0') : true),
+                : (existing ? !(existing.active === false || existing.active === 0 || existing.active === '0') : true)),
               cpf: u.cpf !== undefined ? u.cpf : (existing ? existing.cpf : null),
               phone: u.phone !== undefined ? u.phone : (existing ? existing.phone : null),
               birth_date: (u.birth_date || u.birthDate) !== undefined ? (u.birth_date || u.birthDate) : (existing ? (existing.birth_date || existing.birthDate) : null),
@@ -36042,6 +36063,10 @@ async function handleNexusRequest(req, res) {
     if (String(adminUser.email || '').toLowerCase().trim() === emailToDelete) {
       res.writeHead(403, { ...corsHeaders, 'Content-Type': 'application/json' });
       return res.end(JSON.stringify({ success: false, error: 'Não é possível excluir a conta administrativa conectada.' }));
+    }
+    if (isOwnerEmail(emailToDelete)) {
+      res.writeHead(403, { ...corsHeaders, 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({ success: false, error: 'A conta proprietária não pode ser excluída.' }));
     }
     const targetUser = localUsers.find(u => String(u.email || '').toLowerCase().trim() === emailToDelete);
     if (targetUser && targetUser.role === 'Administrador' && localUsers.filter(u => u.role === 'Administrador' && u.active !== false && u.active !== 0).length <= 1) {
