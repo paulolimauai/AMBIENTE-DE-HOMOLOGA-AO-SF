@@ -1,0 +1,102 @@
+/* ===== assinaturas.css: aba "Assinaturas" do painel do administrador (assinaturas.js) =====
+   Usa as classes .adm-* do administracao.css (cabeçalho, KPIs, busca, tabela, gaveta, janela) e acrescenta só o que é próprio desta aba (.as-*).
+   Mesma regra do administracao.css: tudo em @layer nx-adm e com !important, porque o app tem regras globais em table/th/td/button/select/input. */
+@layer nx-adm {
+
+/* ---------- cabeçalho: receita estimada ---------- */
+.as-receita { display: flex !important; flex-direction: column !important; align-items: flex-end !important; margin-right: 6px !important; line-height: 1.15 !important; cursor: help !important; }
+.as-receita small { font-size: 12px !important; font-weight: 600 !important; color: var(--adm-mut) !important; }
+.as-receita b { font-size: 19px !important; font-weight: 800 !important; color: #6EE7B7 !important; font-variant-numeric: tabular-nums !important; }
+
+/* ---------- resumo: 8 cartões sempre em linhas inteiras (8, depois 4 + 4; no celular uma faixa que rola) ---------- */
+.adm-kpis.as-kpis { grid-template-columns: repeat(8, minmax(0, 1fr)) !important; }
+.as-kpis .adm-kpi small { display: block !important; overflow: hidden !important; text-overflow: ellipsis !important; }
+@media (max-width: 1249px) { .adm-kpis.as-kpis { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; } }
+@media (max-width: 600px) {
+  .adm-kpis.as-kpis { display: flex !important; flex-wrap: nowrap !important; gap: 8px !important; overflow-x: auto !important; scroll-snap-type: x proximity !important; padding: 2px 2px 8px !important; margin: 0 -2px 6px !important; scrollbar-width: none !important; }
+  .adm-kpis.as-kpis::-webkit-scrollbar { display: none !important; }
+  .as-kpis .adm-kpi { flex: 0 0 auto !important; width: auto !important; min-width: 118px !important; min-height: 0 !important; padding: 10px 14px 10px 17px !important; scroll-snap-align: start !important; }
+  .as-kpis .adm-kpi-t { white-space: nowrap !important; }
+  .as-kpis .adm-kpi small { display: none !important; }
+  .as-receita { width: 100% !important; flex-direction: row !important; justify-content: space-between !important; align-items: baseline !important; margin: 0 0 4px !important; }
+}
+
+/* ---------- busca e filtros ---------- */
+.as-barra .adm-sel:not(.adm-sel-ord) { flex: 0 0 230px !important; }
+.as-barra .adm-sel-ord select { width: 270px !important; }
+/* o botão "Filtros" só existe no celular (no computador Situação e Ordenar já aparecem na linha) */
+@media (min-width: 601px) { .as-barra .as-fbtn { display: none !important; } }
+
+/* ---------- lista: colunas ---------- */
+.as-tabela .as-c-sel { width: 46px !important; text-align: center !important; }
+.as-tabela .as-c-sit { width: 196px !important; }
+.as-tabela .as-c-plano { width: 150px !important; }
+.as-tabela .as-c-venc { width: 188px !important; white-space: nowrap !important; }
+.as-tabela .as-c-acoes { width: 268px !important; white-space: nowrap !important; text-align: right !important; }
+.as-tabela thead th { padding: 13px 14px !important; font-size: 12px !important; font-weight: 800 !important; letter-spacing: .05em !important; text-transform: uppercase !important; }
+.as-tabela thead .as-c-sel { padding: 0 0 0 14px !important; }
+.as-tabela thead .as-c-acoes { padding: 0 !important; }
+.as-tabela td b { display: block !important; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; color: var(--adm-ink) !important; font-weight: 700 !important; }
+.as-tabela td.as-c-tit b.adm-nome { color: #fff !important; }
+.as-tabela td.as-c-sit small { white-space: nowrap !important; }
+
+/* prazo ("vence em 3 dias"): a cor diz a urgência */
+.as-rel { font-weight: 700 !important; }
+.as-rel-ok { color: #6EE7B7 !important; }
+.as-rel-aviso { color: #FCD34D !important; }
+.as-rel-ruim { color: #FCA5A5 !important; }
+.as-rel-neutro { color: var(--adm-mut) !important; }
+.adm-tabela small.as-rel, .adm-card small.as-rel { font-weight: 700 !important; }
+.adm-tabela small.as-rel-ok, .adm-dl .as-rel-ok { color: #6EE7B7 !important; }
+.adm-tabela small.as-rel-aviso, .adm-dl .as-rel-aviso { color: #FCD34D !important; }
+.adm-tabela small.as-rel-ruim, .adm-dl .as-rel-ruim { color: #FCA5A5 !important; }
+
+/* cartões: só quando a lista fica estreita (mesmo ponto em que a tabela do administracao.css some) */
+.adm-cartoes.as-cartoes { display: none !important; }
+@container admlista (max-width: 1059px) { .adm-cartoes.as-cartoes { display: grid !important; } }
+.as-card .adm-card-acoes { flex-wrap: wrap !important; }
+
+/* ---------- barra de lote ---------- */
+.as-lote-tempo { display: inline-flex !important; margin: 0 !important; }
+.as-aviso, .as-dr .adm-nota.as-aviso { padding: 8px 10px !important; border-radius: 10px !important; border: 1px solid rgba(252, 211, 77, .45) !important; background: rgba(245, 158, 11, .12) !important; color: #FCD34D !important; font-size: 13px !important; }
+.as-aviso b { color: #FDE68A !important; }
+.adm-dlg-tx p.as-aviso { color: #FCD34D !important; margin: 0 0 12px !important; }
+.as-lote-tempo select {
+  width: 120px !important; height: 34px !important; min-width: 96px !important; padding: 0 28px 0 10px !important; border-radius: 10px !important; border: 1px solid var(--adm-line) !important; background-color: rgba(0, 0, 0, .32) !important;
+  color: var(--adm-ink) !important; font: inherit !important; font-size: 13px !important; color-scheme: dark !important; cursor: pointer !important;
+}
+
+/* ---------- gaveta de uma conta ---------- */
+.as-cheio { width: 100% !important; height: 44px !important; justify-content: center !important; }
+.as-grade { display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 8px !important; margin: 0 0 12px !important; }
+.as-grade .adm-btn { width: 100% !important; justify-content: center !important; padding: 0 8px !important; }
+.as-vital { color: #6EE7B7 !important; border-color: rgba(52, 211, 153, .5) !important; background: rgba(16, 185, 129, .14) !important; }
+.as-vital:hover { background: rgba(16, 185, 129, .26) !important; border-color: rgba(52, 211, 153, .75) !important; }
+.as-custom { display: flex !important; align-items: center !important; gap: 8px !important; margin: 0 0 6px !important; }
+.as-custom input, .as-custom select {
+  height: 36px !important; border-radius: 10px !important; border: 1px solid var(--adm-line) !important; background-color: rgba(0, 0, 0, .32) !important; color: var(--adm-ink) !important;
+  font: inherit !important; font-size: 14px !important; color-scheme: dark !important; box-shadow: none !important;
+}
+.as-custom input { width: 84px !important; flex: 0 0 auto !important; padding: 0 8px !important; text-align: center !important; font-weight: 700 !important; }
+.as-custom select { flex: 1 1 auto !important; min-width: 0 !important; width: auto !important; padding: 0 28px 0 10px !important; cursor: pointer !important; }
+.as-custom input:focus, .as-custom select:focus { border-color: rgba(var(--adm-acc), .8) !important; outline: 0 !important; box-shadow: 0 0 0 3px rgba(var(--adm-acc), .18) !important; }
+.as-custom .adm-btn { flex: 0 0 auto !important; }
+.as-erro { margin: 4px 0 0 !important; font-size: 13px !important; font-weight: 650 !important; color: #FCA5A5 !important; }
+.as-erro[hidden] { display: none !important; }
+.as-dr .adm-nota { margin: 0 0 10px !important; font-size: 13px !important; color: var(--adm-mut) !important; }
+
+/* ---------- janela de confirmação ---------- */
+.as-dlg-lista { margin: 0 0 12px !important; padding: 0 !important; list-style: none !important; max-height: 190px !important; overflow-y: auto !important; border-radius: 12px !important; border: 1px solid var(--adm-line2) !important; background: rgba(0, 0, 0, .25) !important; }
+.as-dlg-lista li { padding: 8px 12px !important; font-size: 13.5px !important; color: var(--adm-ink) !important; border-top: 1px solid var(--adm-line2) !important; }
+.as-dlg-lista li:first-child { border-top: 0 !important; }
+.as-dlg-lista small { margin-left: 6px !important; color: var(--adm-mut) !important; font-size: 12px !important; }
+.as-dlg-campo { margin: 0 0 6px !important; }
+.adm-dlg .as-dlg-campo select { width: 100% !important; }
+
+@media (max-width: 560px) {
+  .as-grade { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  .as-custom { flex-wrap: wrap !important; }
+  .as-custom select { flex: 1 1 120px !important; }
+}
+
+}

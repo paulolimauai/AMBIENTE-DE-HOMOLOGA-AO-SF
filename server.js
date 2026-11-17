@@ -14731,6 +14731,8 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 <script src="/transacoes.js?v=${ASSETS_V}"></script>
 <link rel="stylesheet" href="/administracao.css?v=${ASSETS_V}" />
 <script src="/administracao.js?v=${ASSETS_V}"></script>
+<link rel="stylesheet" href="/assinaturas.css?v=${ASSETS_V}" />
+<script src="/assinaturas.js?v=${ASSETS_V}"></script>
 <link rel="stylesheet" href="/pagamentos-admin.css?v=${ASSETS_V}" />
 <script src="/pagamentos-admin.js?v=${ASSETS_V}"></script>
 <script src="/importacao.js?v=${ASSETS_V}"></script>
@@ -15438,6 +15440,13 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         </span>
         <span class="admin-menu-count-pill" id="menuUsersCountBadge">0</span>
       </button>
+      <button data-page="assinaturas" id="menuAssinaturasBtn" class="menu-btn-admin" style="display:none;" title="Assinaturas: quem paga, quem vence, liberar tempo e bloquear">
+        <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 5 3.4 8 8 9 4.6-1 8-4 8-9V6l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg></span>
+        <span class="admin-menu-field-body">
+          <span class="label">Assinaturas</span>
+          <span class="sub-label">Vencimentos, Liberação e Bloqueio</span>
+        </span>
+      </button>
       <!-- "Central GLPI & O.S." saiu do Painel Administrativo (pedido de 10/11/2026): o atendimento de chamados é feito no GLPI (/glpi.html) por quem tem perfil Administrador -->
       <button data-page="pagamentos" id="menuPagamentosBtn" class="menu-btn-admin" style="display:none;" title="Pagamentos (Pix, Cartão, Boleto), Liberação & 2ª Via de Boleto">
         <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><path d="M6 15h4"/><path d="M14 15h4"/></svg></span>
@@ -15504,6 +15513,10 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
     <button type="button" data-page="usuarios" class="mobile-bottom-btn mobile-btn-admin" style="display:none;" title="Usuários">
       <span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
       <span>Usuários</span>
+    </button>
+    <button type="button" data-page="assinaturas" class="mobile-bottom-btn mobile-btn-admin" style="display:none;" title="Assinaturas">
+      <span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 5 3.4 8 8 9 4.6-1 8-4 8-9V6l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg></span>
+      <span>Assinaturas</span>
     </button>
     <button type="button" data-page="pagamentos" class="mobile-bottom-btn mobile-btn-admin" style="display:none;" title="Pagamentos & 2ª Via de Boleto">
       <span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></span>
@@ -15641,6 +15654,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
       <!-- Seção Administrativa Móvel (Exclusiva Administrador) -->
       <div class="mobile-drawer-section-title menu-section-admin" style="display:none;">Painel Administrativo</div>
       <button data-page="usuarios" id="mobileDrawerUsuariosBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span class="label">Cadastros & Contas</span></button>
+      <button data-page="assinaturas" id="mobileDrawerAssinaturasBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 5 3.4 8 8 9 4.6-1 8-4 8-9V6l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg></span><span class="label">Assinaturas</span></button>
       <button data-page="pagamentos" id="mobileDrawerPagamentosBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></span><span class="label">Pagamentos & Boletos</span></button>
       <button data-page="logs" id="mobileDrawerLogsBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span><span class="label">Auditoria & Logs</span></button>
     </nav>
@@ -21350,7 +21364,7 @@ function pd(day){ return pdCustom(currentPeriod.year, currentPeriod.month, day);
 
 // Perfis de acesso: cada papel enxerga SOMENTE as suas páginas. Menu lateral, gaveta mobile, barra inferior,
 // hash da URL, página salva no navegador e render() usam esta mesma fonte (a primeira página é o destino padrão).
-const NEXUS_ADMIN_PAGES = ['usuarios', 'pagamentos', 'logs'];
+const NEXUS_ADMIN_PAGES = ['usuarios', 'assinaturas', 'pagamentos', 'logs'];
 const NEXUS_USER_PAGES = ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'config'];
 function nexusIsAdminUser(u) { return !!(u && u.role === 'Administrador'); }
 // Permissões delegadas: o administrador marca, conta a conta, ações extras para um usuário comum (lista "permissions" vinda do servidor).
@@ -22236,6 +22250,23 @@ function render(){
             if (_lastRenderedHtml !== freshHTML) {
               _lastRenderedHtml = freshHTML;
               uEl.innerHTML = freshHTML;
+              attachPageEvents();
+            }
+          }
+        }).catch(() => {});
+      }
+    }
+    else if(currentPage==='assinaturas') {
+      newHTML = pageAssinaturas();
+      if (!window._lastUsersSyncTime || now - window._lastUsersSyncTime > 20000) {
+        window._lastUsersSyncTime = now;
+        syncUsersWithServer().then(() => {
+          const aEl = document.getElementById('pageContent');
+          if (aEl && currentPage === 'assinaturas' && !isUserTypingInPageContent()) {
+            const freshHTML = pageAssinaturas();
+            if (_lastRenderedHtml !== freshHTML) {
+              _lastRenderedHtml = freshHTML;
+              aEl.innerHTML = freshHTML;
               attachPageEvents();
             }
           }
@@ -25829,6 +25860,86 @@ function admGerarSenhaNoModal(){
 function admTopoPagina(icone, titulo, subtitulo, acoesHtml, kpis){
   if(window.NexusAdm) return NexusAdm.cabecalhoHTML({ icone: icone, titulo: titulo, subtitulo: subtitulo, acoes: acoesHtml }) + NexusAdm.kpisFixosHTML(kpis || []);
   return '<div class="page-head admin-page-head"><div><h1>' + txEsc(titulo) + '</h1><p>' + txEsc(subtitulo) + '</p></div><div class="admin-head-actions">' + acoesHtml + '</div></div>';
+}
+
+/* ==================== Assinaturas: ligação com o módulo assinaturas.js (aba "Assinaturas" do painel) ====================
+   O módulo reaproveita as ações que já existiam na janela de edição do cadastro (liberar mensal, dar tempo, vitalício, bloquear, reiniciar
+   teste, 2ª via); o servidor continua conferindo permissão e regras em cada rota. */
+// Histórico da assinatura de uma conta: eventos da trilha de auditoria que falam dela e de acesso, pagamento ou tempo
+function assEventosDe(email){
+  const k = admMinusculo(email);
+  const tema = /assinatura|pagamento|vital|cortesia|tempo|teste|expir|bloque|libera/i;
+  return (Array.isArray(systemLogs) ? systemLogs : []).filter(function(l){
+    if(!l) return false;
+    const daConta = admMinusculo(l.user_email) === k || String(l.details || '').toLowerCase().indexOf(k) >= 0;
+    return daConta && tema.test(String(l.action || '') + ' ' + String(l.module || '') + ' ' + String(l.details || ''));
+  }).slice(0, 10);
+}
+// Dar tempo de cortesia a várias contas (a confirmação já foi feita pelo módulo): uma chamada por conta; o servidor confere tudo de novo
+async function admConcederVarios(emails, minutos){
+  if(!nexusTemPermissao(currentUser, 'assinatura.liberar')){
+    showToast('Apenas administradores, ou quem recebeu a permissão de liberar assinatura, podem conceder tempo.');
+    return false;
+  }
+  const lista = Array.from(new Set((emails || []).map(admMinusculo).filter(Boolean)));
+  const min = parseInt(minutos, 10);
+  if(!lista.length || !(min > 0)) return false;
+  const token = loadFromStorage('nexus_token', '') || '';
+  let feitas = 0;
+  const falhas = [];
+  for(const alvo of lista){
+    try {
+      const res = await fetch(window.location.origin + '/api/subscription/admin-grant-time', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+        body: JSON.stringify({ admin_email: currentUser.email, target_email: alvo, duration_minutes: min })
+      });
+      const d = await res.json().catch(function(){ return {}; });
+      if(res.ok && d && d.success) feitas++; else falhas.push(alvo);
+    } catch(e) { falhas.push(alvo); }
+  }
+  await syncUsersWithServer();
+  showToast(falhas.length
+    ? feitas + ' de ' + lista.length + ' conta(s) receberam o tempo; ' + falhas.length + ' não puderam receber (veja a auditoria).'
+    : 'Tempo liberado para ' + feitas + (feitas === 1 ? ' conta.' : ' contas.'));
+  render();
+  return feitas > 0;
+}
+function assContexto(){
+  // Preço em vigor: o que o administrador configurou (livro de pagamentos, já carregado) ou o da época em que a página foi montada
+  const precoVivo = (window.NexusPag && NexusPag.estado && NexusPag.estado.dados && NexusPag.estado.dados.preco > 0) ? NexusPag.estado.dados.preco : ${SUBSCRIPTION_MONTHLY_PRICE};
+  return {
+    agora: Date.now(),
+    usuarios: Array.isArray(registeredUsers) ? registeredUsers : [],
+    eu: currentUser ? { email: currentUser.email, nome: currentUser.name } : null,
+    preco: { numero: precoVivo },
+    sincronizadoEm: window._lastUsersSyncTime || 0,
+    eventos: assEventosDe,
+    toast: showToast,
+    acoes: {
+      conceder: function(email, minutos){ return window.adminGrantTimeQuick(email, minutos); },
+      vitalicio: function(email){ return window.adminGrantTimeLifetime(email); },
+      mensal: function(email, metodo){ return window.adminConfirmUserPayment(email, 'mensal', metodo || 'pix'); },
+      bloquear: function(email){ return window.adminRevokeUserPayment(email); },
+      reiniciarTeste: function(email){ return window.adminResetTrialAction(email); },
+      segundaVia: function(r){ window.abrirSegundaViaBoletoParaUsuario(r.email, r.nome, r.cpf, r.tel); },
+      abrirCadastro: function(email){ openUserAdminModal(email); },
+      sincronizar: admSincronizar,
+      concederVarios: admConcederVarios,
+      expirarVarios: admExpirarVarios
+    }
+  };
+}
+function pageAssinaturas(){
+  const isAdmin = currentUser && currentUser.role === 'Administrador';
+  if(!isAdmin || isViewingOtherUser){
+    return '<div class="placeholder"><div class="big">🔒</div><h3>Acesso restrito</h3><p>Esta área é exclusiva para administradores.</p></div>';
+  }
+  if(!window.NexusAss || !window.NexusAdm){
+    return '<div class="placeholder"><div class="big">⚠️</div><h3>Não foi possível carregar as assinaturas</h3><p>Atualize a página (Ctrl+F5). Se continuar, verifique a conexão com o servidor.</p></div>';
+  }
+  if (typeof updateAdminSidebarBadges === 'function') setTimeout(updateAdminSidebarBadges, 0);
+  return admEnvolver('assinaturas', NexusAss.html(assContexto));
 }
 
 function pageUsuarios(){
@@ -31270,6 +31381,8 @@ async function deleteAttachment(id){
 function attachPageEvents(){
   // Administração (administracao.js): depois de cada desenho da página refaz a gaveta de detalhes e busca o uso real das contas
   if (window.NexusAdm) { try { NexusAdm.aoRenderizar(); } catch(eAdm) {} }
+  // Assinaturas (assinaturas.js): mantém a gaveta da conta em dia depois de cada desenho e a fecha ao sair da aba
+  if (window.NexusAss) { try { NexusAss.aoRenderizar(); } catch(eAss) {} }
   document.querySelectorAll('[data-nav]').forEach(el=>el.onclick = ()=>{ navigate(el.getAttribute('data-nav')); });
 
   const nova = document.getElementById('btnNovaTransacao'); if(nova) nova.onclick = ()=>openModal(null);
@@ -38106,6 +38219,8 @@ async function handleNexusRequest(req, res) {
     '/transacoes.js': 'application/javascript; charset=utf-8',
     '/administracao.css': 'text/css',
     '/administracao.js': 'application/javascript; charset=utf-8',
+    '/assinaturas.css': 'text/css',
+    '/assinaturas.js': 'application/javascript; charset=utf-8',
     '/pagamentos-admin.css': 'text/css',
     '/pagamentos-admin.js': 'application/javascript; charset=utf-8',
     '/site-inicial.css': 'text/css',

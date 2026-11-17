@@ -365,6 +365,7 @@
   /* ============================================================ HTML: menus no topo ============================================================ */
   var ABAS = [
     { id: 'usuarios', rotulo: 'Cadastros & Contas', ic: 'usuarios' },
+    { id: 'assinaturas', rotulo: 'Assinaturas', ic: 'escudo' },
     { id: 'pagamentos', rotulo: 'Pagamentos & Boletos', ic: 'cartao' },
     { id: 'logs', rotulo: 'Auditoria & Logs', ic: 'doc' }
   ];
