@@ -217,8 +217,24 @@ h2{font:600 clamp(1.9rem,3.6vw,2.9rem)/1.14 var(--serif);letter-spacing:-.012em;
 .hero-grid>*,.rec>*,.atd>*,.pers>*,.plano-w>*,.painel-in>*{min-width:0}
 
 /* ---------- início ---------- */
-.hero{padding:calc(4.25rem + clamp(1.75rem,4.5vw,3.25rem)) 0 clamp(2rem,4vw,3rem)}
+.hero{padding:calc(4.25rem + clamp(1rem,2.5vw,1.6rem)) 0 clamp(2rem,4vw,3rem)}
 .hero-grid{display:grid;gap:clamp(2rem,5vw,3.5rem);align-items:center}
+/* banner do valor da assinatura (primeiro bloco do início): preço | texto | botões; empilha no celular */
+.bn{display:grid;grid-template-columns:minmax(0,1fr);gap:.9rem 1.6rem;align-items:center;margin-bottom:clamp(1.5rem,3.5vw,2.6rem);padding:1rem 1.2rem;border-radius:1.2rem}
+.bn>*{min-width:0}
+.bn-p{display:flex;flex-direction:column;gap:.3rem}
+.bn-k{font-size:.78rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+:root[data-mode="light"] .bn-k{color:color-mix(in srgb,var(--brand-d) 45%,#0e1530)}
+.bn-preco{display:flex;align-items:flex-start;gap:.2rem;color:var(--white);font-family:var(--serif);font-weight:600;line-height:1}
+.bn-preco .m{margin-top:.4rem;font-size:1.05rem}
+.bn-preco .v{font-size:2.7rem;letter-spacing:-.03em}
+.bn-preco .c{margin-top:.4rem;font-size:1.15rem}
+.bn-preco .u{align-self:flex-end;margin:0 0 .25rem .4rem;font:600 .92rem/1 var(--sans);color:var(--soft)}
+.bn-t{font-size:.95rem;color:var(--soft)}
+.bn-t b{color:var(--white)}
+.bn-a{display:flex;flex-wrap:wrap;gap:.6rem}
+@media (min-width:860px){.bn{grid-template-columns:auto minmax(0,1fr) auto;gap:1rem 2rem;padding:1.1rem 1.5rem}}
+@media (max-width:480px){.bn-a{flex-direction:column}.bn-a .btn{width:100%}}
 @media (min-width:1024px){.hero-grid{grid-template-columns:minmax(0,1fr) minmax(0,1.05fr)}}
 h1{font:600 clamp(2.35rem,5.1vw,4.1rem)/1.08 var(--serif);letter-spacing:-.014em;word-spacing:.07em}
 h1 em{font-style:normal;background:linear-gradient(100deg,var(--accent),var(--brand) 55%,color-mix(in srgb,var(--glow-b) 40%,var(--accent)));-webkit-background-clip:text;background-clip:text;color:transparent}
