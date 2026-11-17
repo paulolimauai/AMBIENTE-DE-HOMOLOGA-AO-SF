@@ -16011,66 +16011,6 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
       <div id="userAdminRoleHint" style="grid-column:1 / -1; margin:0; padding:7px 10px; border-radius:9px; font-size:11px; line-height:1.4; color:var(--text-dim); background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1);"></div>
     </div>
 
-    <!-- Seção Executiva de Confirmação de Pagamento Não Reconhecido, Modalidades e 2ª Via de Boleto -->
-    <div style="margin-bottom:12px; padding:11px 12px; border-radius:13px; background:linear-gradient(135deg, rgba(245,158,11,0.10) 0%, rgba(16,185,129,0.06) 100%); border:1px solid rgba(245,158,11,0.35);">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; gap:6px;">
-        <span style="font-size:11px; font-weight:900; color:#FBBF24; display:flex; align-items:center; gap:5px;">
-          <span>👑</span> LIBERAR PAGAMENTO NÃO RECONHECIDO & 2ª VIA BOLETO
-        </span>
-        <span id="userAdminCurrentSubBadge" style="font-size:10px; padding:2px 8px; border-radius:6px; background:rgba(255,255,255,0.08); font-weight:800; border:1px solid rgba(255,255,255,0.15);">Carregando...</span>
-      </div>
-
-      <div style="display:grid; grid-template-columns:1fr auto; gap:6px; margin-bottom:8px; align-items:center;">
-        <select id="userAdminPaymentMethod" style="height:30px; border-radius:8px; font-size:11px; font-weight:800; padding:0 8px; background:rgba(0,0,0,0.35); border:1px solid rgba(16,185,129,0.4); color:#6EE7B7;" title="Modalidade do pagamento não reconhecido a liberar">
-          <option value="pix">💠 Modalidade: Pix (SPI Instantâneo)</option>
-          <option value="credit_card">💳 Modalidade: Cartão de Crédito</option>
-          <option value="debit_card">🏧 Modalidade: Cartão de Débito</option>
-          <option value="boleto">📄 Modalidade: Boleto Bancário</option>
-        </select>
-        <button type="button" onclick="window.abrirSegundaViaBoletoParaUsuario(editingUserEmail)" style="height:30px; padding:0 10px; border-radius:8px; background:rgba(56,189,248,0.18); border:1px solid rgba(56,189,248,0.45); color:#BAE6FD; font-size:10.5px; font-weight:800; cursor:pointer; white-space:nowrap;">
-          📄 Imprimir 2ª Via Boleto
-        </button>
-      </div>
-
-      <!-- Botões de Confirmação Oficial de Pagamento / Bloqueio -->
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:8px;">
-        <button type="button" onclick="window.adminConfirmUserPayment(editingUserEmail, 'mensal', document.getElementById('userAdminPaymentMethod')?.value)" style="height:30px; padding:0 6px; border-radius:8px; background:linear-gradient(135deg, #10B981, #059669); color:#FFFFFF; font-size:10.5px; font-weight:800; border:none; cursor:pointer;" title="Reconhecer pagamento e liberar Plano Mensal (30 dias)">
-          🔓 Liberar Mensal (${SUBSCRIPTION_MONTHLY_LABEL})
-        </button>
-        <button type="button" onclick="window.adminRevokeUserPayment(editingUserEmail)" style="height:30px; padding:0 6px; border-radius:8px; background:rgba(239,68,68,0.16); border:1px solid rgba(239,68,68,0.45); color:#FCA5A5; font-size:10.5px; font-weight:800; cursor:pointer;">
-          🔒 Bloquear
-        </button>
-      </div>
-
-      <!-- Botões de Concessão Rápida -->
-      <div style="display:grid; grid-template-columns:repeat(6, 1fr); gap:5px; margin-bottom:8px;">
-        <button type="button" class="btn-ghost" onclick="adminGrantTimeQuick(editingUserEmail, 60)" style="font-size:10px; height:26px; padding:0 4px; border-radius:7px; font-weight:700;">+1h</button>
-        <button type="button" class="btn-ghost" onclick="adminGrantTimeQuick(editingUserEmail, 1440)" style="font-size:10px; height:26px; padding:0 4px; border-radius:7px; font-weight:700;">+24h</button>
-        <button type="button" class="btn-ghost" onclick="adminGrantTimeQuick(editingUserEmail, 10080)" style="font-size:10px; height:26px; padding:0 4px; border-radius:7px; font-weight:700;">+7d</button>
-        <button type="button" class="btn-ghost" onclick="adminGrantTimeQuick(editingUserEmail, 43200)" style="font-size:10px; height:26px; padding:0 4px; border-radius:7px; font-weight:700;">+30d</button>
-        <button type="button" class="btn-ghost" onclick="adminGrantTimeQuick(editingUserEmail, 525600)" style="font-size:10px; height:26px; padding:0 4px; border-radius:7px; font-weight:700;">+1 Ano</button>
-        <button type="button" style="font-size:10px; height:26px; padding:0 4px; border-radius:7px; font-weight:800; background:linear-gradient(135deg, #10B981, #059669); color:#FFFFFF; border:none; cursor:pointer;" onclick="adminGrantTimeLifetime(editingUserEmail)">♾️ Vital</button>
-      </div>
-
-      <!-- Concessão Personalizada -->
-      <div style="display:flex; align-items:center; gap:6px;">
-        <input type="number" id="userAdminCustomTimeVal" placeholder="Qtd" min="1" style="width:60px; height:30px; border-radius:8px; font-size:12px; font-weight:700; padding:0 6px; text-align:center;">
-        <select id="userAdminCustomTimeUnit" style="height:30px; border-radius:8px; font-size:11.5px; font-weight:700; flex:1; padding:0 6px;">
-          <option value="minutes">Minuto(s)</option>
-          <option value="hours" selected>Hora(s)</option>
-          <option value="days">Dia(s)</option>
-          <option value="months">Mês(es)</option>
-          <option value="years">Ano(s)</option>
-        </select>
-        <button type="button" onclick="adminGrantCustomTime(editingUserEmail)" style="height:30px; padding:0 12px; border-radius:8px; background:linear-gradient(135deg, #F59E0B, #D97706); color:#000000; font-size:11px; font-weight:900; border:none; cursor:pointer;">
-          Liberar ✓
-        </button>
-        <button type="button" class="btn-ghost" onclick="adminResetTrialAction(editingUserEmail)" title="Resetar período de teste para 1 dia" style="height:30px; padding:0 8px; border-radius:8px; font-size:10.5px; font-weight:700;">
-          🔄 1d
-        </button>
-      </div>
-    </div>
-
     <div class="field" style="margin-bottom:12px; border-top:1px solid rgba(255,255,255,0.08); padding-top:9px;">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
         <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin:0;">Senha de Acesso</label>
@@ -16086,7 +16026,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
     <div class="modal-actions" style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-top:10px;">
       <button id="userAdminCancelBtn" type="button" onclick="closeUserAdminModal()" style="height:34px; padding:0 14px; border-radius:9px; font-size:12px;">Cancelar</button>
       <button class="save" id="userAdminSaveBtn" type="button" onclick="saveUserAdmin()" style="height:34px; padding:0 18px; border-radius:9px; background:linear-gradient(135deg, #059669, #059669); font-weight:800; font-size:12px;">
-        Salvar Cadastro ✓
+        Atualizar Cadastro ✓
       </button>
     </div>
   </div>
@@ -30676,6 +30616,7 @@ async function openAdminCreateUserModal(){
   editingUserEmail = null;
   const modalTitle = document.querySelector('#overlayUserAdmin h2');
   if(modalTitle) modalTitle.textContent = 'Cadastrar Novo Usuário';
+  const salvarBtnNovo = document.getElementById('userAdminSaveBtn'); if(salvarBtnNovo) salvarBtnNovo.textContent = 'Cadastrar Usuário ✓';
   const passHint = document.getElementById('userAdminPasswordHint');
   if(passHint) passHint.textContent = 'Senha inicial do novo usuário: 8+ caracteres, maiúscula, minúscula, número e símbolo';
   const emailInput = document.getElementById('userAdminEmail');
@@ -30691,8 +30632,6 @@ async function openAdminCreateUserModal(){
   const cpfNovo = document.getElementById('userAdminCpf'); if(cpfNovo) cpfNovo.value = '';
   const phoneNovo = document.getElementById('userAdminPhone'); if(phoneNovo) phoneNovo.value = '';
   const ativoNovo = document.getElementById('userAdminActive'); if(ativoNovo) ativoNovo.value = 'true';
-  const customNovo = document.getElementById('userAdminCustomTimeVal'); if(customNovo) customNovo.value = '';
-  const metodoNovo = document.getElementById('userAdminPaymentMethod'); if(metodoNovo) metodoNovo.value = 'pix';
   document.getElementById('userAdminRole').value = 'Usuário';
   updateUserAdminRoleHint();
   document.getElementById('userAdminPassword').value = '';
@@ -30747,6 +30686,7 @@ async function openUserAdminModal(email){
 
   const modalTitle = document.querySelector('#overlayUserAdmin h2');
   if(modalTitle) modalTitle.textContent = 'Corrigir Cadastro do Usuário';
+  const salvarBtnEdit = document.getElementById('userAdminSaveBtn'); if(salvarBtnEdit) salvarBtnEdit.textContent = 'Atualizar Cadastro ✓';
   const passHint = document.getElementById('userAdminPasswordHint');
   if(passHint) passHint.textContent = 'Deixe em branco para manter a senha atual';
 
