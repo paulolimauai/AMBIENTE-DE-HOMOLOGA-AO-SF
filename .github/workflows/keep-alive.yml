@@ -1,13 +1,14 @@
-name: Keep Render Alive
+name: Keep-Alive Render
 
 on:
   schedule:
-    - cron: '*/14 * * * *'
+    - cron: '*/10 * * * *'
   workflow_dispatch:
 
 jobs:
-  ping:
+  keep-alive:
+    name: Ping Render Instance
     runs-on: ubuntu-latest
     steps:
-      - name: Ping Render URL
-        run: curl -fsS -o /dev/null --max-time 60 https://ambiente-de-homologa-ao-sf.onrender.com/health
+      - name: Send Keep-Alive Ping
+        run: curl -f -s -A "GitHub-Actions-KeepAlive/1.0" https://ambiente-de-homologa-ao-sf.onrender.com/ping

@@ -34029,10 +34029,10 @@ async function handleNexusRequest(req, res) {
     }
   }
 
-  // Ping ultra-leve para keep-alive externo (UptimeRobot/Render): retorna 200 sem tocar no banco
+  // Ping ultra-leve para keep-alive externo (GitHub Actions / UptimeRobot / Render): retorna 200 sem tocar no banco
   if (req.method === 'GET' && (parsedUrl.pathname === '/ping' || parsedUrl.pathname === '/health')) {
-    res.writeHead(200, { ...corsHeaders, 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-store' });
-    return res.end('ok');
+    res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+    return res.end(JSON.stringify({ status: 'ok' }));
   }
 
   if (req.method === 'GET' && parsedUrl.pathname === '/api/health') {
