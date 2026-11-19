@@ -1,17 +1,122 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-mode="dark" data-bg="padrao" data-pers="on">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#050E1A">
 <title>Admin | Assinaturas & Acessos GLPI | Nexus Financeiro Hub</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script>
+/* Mesmo tema do site principal (site-inicial.html): paletas e chaves idênticas (nexus:cores, nexus-modo,
+   nexus-site-fundo). A cor escolhida no Personalizar daqui replica para o site, o financeiro e o GLPI. */
+(function(){
+  var r=document.documentElement;
+  var P=[
+    {id:'multicolor',nome:'Multicolor',h:[265,335,190,45]},
+    {id:'aurora',nome:'Aurora',h:[250,320,190,280]},
+    {id:'oceano',nome:'Oceano',h:[212,188,255,165]},
+    {id:'por-do-sol',nome:'Pôr do sol',h:[18,340,45,285]},
+    {id:'esmeralda',nome:'Esmeralda',h:[155,185,85,205]},
+    {id:'rose',nome:'Rosé',h:[335,285,15,255]},
+    {id:'ouro',nome:'Dourado',h:[42,26,50,10]},
+    {id:'turquesa',nome:'Turquesa',h:[176,215,135,265]},
+    {id:'carmesim',nome:'Carmesim',h:[352,20,285,320]},
+    {id:'neon',nome:'Neon',h:[85,150,195,50]}
+  ];
+  var PADRAO='oceano',HUE_UI={oceano:224},cor={id:PADRAO},modo='auto';
+  function g(k){try{return localStorage.getItem(k)}catch(e){return null}}
+  function s(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+  function hsl2rgb(h,s,l){s/=100;l/=100;var k=function(n){return(n+h/30)%12},a=s*Math.min(l,1-l);var f=function(n){return l-a*Math.max(-1,Math.min(k(n)-3,Math.min(9-k(n),1)))};return[Math.round(255*f(0)),Math.round(255*f(8)),Math.round(255*f(4))]}
+  function lum(c){var v=c.map(function(x){x/=255;return x<=.03928?x/12.92:Math.pow((x+.055)/1.055,2.4)});return .2126*v[0]+.7152*v[1]+.0722*v[2]}
+  function hexHs(v){var n=parseInt(v.slice(1),16),R=(n>>16&255)/255,G=(n>>8&255)/255,B=(n&255)/255,mx=Math.max(R,G,B),mn=Math.min(R,G,B),d=mx-mn,h=0;if(d){if(mx===R)h=((G-B)/d)%6;else if(mx===G)h=(B-R)/d+2;else h=(R-G)/d+4;h=Math.round(h*60+360)%360}var l=(mx+mn)/2,sa=d?d/(1-Math.abs(2*l-1)):0;return{h:h,s:Math.round(sa*100)}}
+  function achar(h,sa,alvo){var lo=6,hi=94,m,i;for(i=0;i<12;i++){m=(lo+hi)/2;if(lum(hsl2rgb(h,sa,m))<alvo)lo=m;else hi=m}return Math.round((lo+hi)*5)/10}
+  function pintarVidro(st,h0,h2,sa){
+    var c=function(h,a){return 'hsl('+h+' '+sa+'% '+achar(h,sa,a)+'%)'};
+    st.setProperty('--vd1',c(h0,.024));st.setProperty('--vd2',c(h0,.015));st.setProperty('--vd3',c(h2,.018));
+    st.setProperty('--vl1',c(h0,.9));st.setProperty('--vl2',c(h0,.82));st.setProperty('--vl3',c(h2,.78));
+  }
+  function botao(h,sa){
+    var esc=lum(hsl2rgb(h,55,9)),L,b;
+    function bt(L){return 1.05/(lum(hsl2rgb(h,sa,L))+.05)>=4.6}
+    function ed(L){return (lum(hsl2rgb(h,sa,L))+.05)/(esc+.05)>=4.6}
+    for(L=62;L>=48;L--){if(bt(L))return{a:L,b:Math.max(L-8,40),t:'#fff'}}
+    for(L=66;L>=60;L--){if(ed(L)){b=L;while(b>L-8&&ed(b-1))b--;return{a:L,b:b,t:'hsl('+h+' 55% 9%)'}}}
+    return{a:48,b:42,t:'#fff'};
+  }
+  function pintar(h0,h2,sat){
+    var sa=Math.max(70,Math.min(100,sat==null?100:sat)),st=r.style;
+    st.setProperty('--h',String(h0));st.setProperty('--h2',String(h2));st.setProperty('--sat',sa+'%');
+    st.setProperty('--orb',String(Math.max(.5,Math.min(1,.26/lum(hsl2rgb(h0,sa*.77,57))))));
+    var bt=botao(h0,sa);
+    st.setProperty('--btn-a','hsl('+h0+' '+sa+'% '+bt.a+'%)');st.setProperty('--btn-b','hsl('+h0+' '+sa+'% '+bt.b+'%)');st.setProperty('--on-brand',bt.t);
+    pintarVidro(st,h0,h2,sa);
+  }
+  function avisar(){if(T.onChange)T.onChange()}
+  function escolher(id,salvar){
+    var p=P.filter(function(x){return x.id===id})[0]||P.filter(function(x){return x.id===PADRAO})[0];
+    cor={id:p.id};pintar(HUE_UI[p.id]||p.h[0],p.h[2],100);
+    if(salvar)s('nexus:cores',JSON.stringify({id:p.id}));
+    avisar();
+  }
+  function personalizada(hex,salvar){
+    if(!/^#[0-9a-f]{6}$/i.test(hex||''))return;
+    var hs=hexHs(hex);cor={id:'custom',hex:hex};pintar(hs.h,(hs.h+36)%360,hs.s);
+    if(salvar)s('nexus:cores',JSON.stringify({id:'custom',hex:hex}));
+    avisar();
+  }
+  var mq=window.matchMedia?matchMedia('(prefers-color-scheme: light)'):{matches:false};
+  function setModo(m,salvar){
+    if(['auto','escuro','claro'].indexOf(m)<0)m='auto';
+    modo=m;r.setAttribute('data-mode',m==='claro'||(m==='auto'&&mq.matches)?'light':'dark');
+    if(salvar)s('nexus-modo',m);
+    avisar();
+  }
+  if(mq.addEventListener)mq.addEventListener('change',function(){if(modo==='auto')setModo('auto')});
+  var FUNDOS=[['padrao','Padrão'],['vidro','Vidro']],fundo='padrao';
+  function setFundo(f,salvar){
+    if(!FUNDOS.some(function(x){return x[0]===f}))f='padrao';
+    fundo=f;r.setAttribute('data-bg',f);
+    if(salvar)s('nexus-site-fundo',f);
+    avisar();
+  }
+  var T=window.NxTema={PALETAS:P,PADRAO:PADRAO,FUNDOS:FUNDOS,escolher:escolher,personalizada:personalizada,setModo:setModo,setFundo:setFundo,corAtual:function(){return cor},modo:function(){return modo},fundo:function(){return fundo},onChange:null};
+  var salvo=null;try{salvo=JSON.parse(g('nexus:cores'))}catch(e){}
+  if(salvo&&salvo.id==='custom'&&/^#[0-9a-f]{6}$/i.test(salvo.hex||''))personalizada(salvo.hex,false);
+  else if(salvo&&P.some(function(p){return p.id===salvo.id}))escolher(salvo.id,false);
+  else escolher(PADRAO,true);
+  setModo(g('nexus-modo')||'auto',false);
+  setFundo(g('nexus-site-fundo')||'padrao',false);
+})();
+</script>
 <style>
-:root{color-scheme:dark;--bg:#050E1A;--b:rgba(255,255,255,.09);--t:#e6edf7;--m:#8ea3bd;--a:#38bdf8;--e:#34d399;--w:#fbbf24;--r:#fb7185;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root{color-scheme:dark;--h:224;--h2:260;--sat:100%;--orb:1;--bg:hsl(var(--h) calc(var(--sat)*.68) 7%);--glow-a:hsl(var(--h) calc(var(--sat)*.77) 57%);--glow-b:hsl(var(--h2) calc(var(--sat)*.6) 47%);--brand:hsl(var(--h) var(--sat) 66%);--tint:rgba(255,255,255,.05);--b:rgba(255,255,255,.09);--t:#e6edf7;--m:#8ea3bd;--a:hsl(var(--h) var(--sat) 62%);--e:#34d399;--w:#fbbf24;--r:#fb7185;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *{box-sizing:border-box;margin:0}
-body{font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--t);min-height:100vh;font-size:14px;overflow-x:hidden}
-body::before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(70vw 50vw at 12% -10%,rgba(56,189,248,.11),transparent 60%),radial-gradient(60vw 50vw at 100% 115%,rgba(52,211,153,.06),transparent 60%),linear-gradient(180deg,#071426,#050E1A)}
+body{font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--t);min-height:100vh;font-size:14px;overflow-x:hidden;position:relative;transition:background-color .5s}
+/* Fundo de vidro igual ao site principal (site-inicial.css): esferas coloridas pela paleta + painéis de vidro.
+   data-bg="vidro" no <html> troca as esferas do fundo padrão pelas do vidro (chave nexus-site-fundo). */
+.bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.bg::after{content:"";position:absolute;inset:0;background:radial-gradient(120% 100% at 50% 30%,transparent 55%,rgba(0,0,0,.5))}
+.bg>div{position:absolute;inset:0;transition:opacity .6s ease,visibility 0s}
+.bg-a i{position:absolute;display:block;border-radius:50%;filter:blur(5rem);animation:drift 30s ease-in-out infinite alternate;will-change:transform}
+.bg .o1{width:clamp(18rem,52vw,70rem);aspect-ratio:1;left:-14vw;top:-18vw;background:var(--glow-a);opacity:calc(.32 * var(--orb,1))}
+.bg .o2{width:clamp(16rem,46vw,62rem);aspect-ratio:1;right:-12vw;top:30vh;background:var(--glow-b);opacity:calc(.34 * var(--orb,1));animation-duration:36s}
+.bg .o3{width:clamp(12rem,30vw,40rem);aspect-ratio:1;left:30vw;bottom:-14vw;background:var(--brand);opacity:calc(.12 * var(--orb,1));animation-duration:42s}
+.bg .gr{position:absolute;inset:0;background-image:linear-gradient(var(--tint) 1px,transparent 1px),linear-gradient(90deg,var(--tint) 1px,transparent 1px);background-size:3.5rem 3.5rem;
+  -webkit-mask-image:radial-gradient(80% 70% at 50% 20%,#000 30%,transparent 100%);mask-image:radial-gradient(80% 70% at 50% 20%,#000 30%,transparent 100%)}
+@keyframes drift{from{transform:translate3d(0,0,0) scale(1)}to{transform:translate3d(4vw,-3vh,0) scale(1.08)}}
+html[data-bg="vidro"] .bg-a,html:not([data-bg="vidro"]) .bg-v{opacity:0;visibility:hidden;transition:opacity .6s ease,visibility 0s .6s}
+.bg-v i,.bg-v b{position:absolute;display:block}
+.bg-v i{border-radius:50%;animation:drift 26s ease-in-out infinite alternate}
+.bg-v .s1{width:clamp(14rem,36vw,60rem);aspect-ratio:1;left:8vw;top:8vh;background:radial-gradient(circle at 30% 28%,var(--vd1),var(--vd2) 52%,var(--vd3))}
+.bg-v .s2{width:clamp(12rem,30vw,52rem);aspect-ratio:1;right:5vw;bottom:6vh;background:radial-gradient(circle at 30% 28%,var(--vd1),var(--vd3));animation-duration:32s}
+.bg-v .s3{width:clamp(8rem,16vw,28rem);aspect-ratio:1;left:56vw;top:6vh;background:radial-gradient(circle at 30% 28%,var(--vd1),var(--vd2));animation-duration:22s}
+.bg-v b{border-radius:2rem;background:linear-gradient(135deg,rgba(255,255,255,.05),rgba(255,255,255,.01));border:1px solid rgba(255,255,255,.1);
+  -webkit-backdrop-filter:blur(18px) saturate(140%);backdrop-filter:blur(18px) saturate(140%)}
+.bg-v .p1{width:clamp(12rem,32vw,50rem);height:60vh;left:2vw;top:20vh;transform:rotate(-8deg)}
+.bg-v .p2{width:clamp(10rem,26vw,42rem);height:44vh;right:7vw;top:26vh;transform:rotate(9deg)}
+.bg-v .p3{width:clamp(8rem,18vw,30rem);height:24vh;left:44vw;bottom:4vh;transform:rotate(-4deg)}
+#login,#app,header.top,main{position:relative;z-index:1}
 .glass{background:rgba(255,255,255,.035);border:1px solid var(--b);border-radius:14px;backdrop-filter:blur(14px) saturate(130%);-webkit-backdrop-filter:blur(14px) saturate(130%)}
 .hide{display:none!important}
 button,input,select,textarea{font:inherit;color:inherit}
@@ -69,9 +174,31 @@ tr:hover td{background:rgba(255,255,255,.025)}
 #toasts{position:fixed;right:18px;bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:70;display:flex;flex-direction:column;gap:8px}
 .toast{padding:12px 16px;border-radius:12px;background:rgba(10,22,38,.97);border:1px solid var(--b);border-left:4px solid var(--e);font-size:12.5px;font-weight:500}
 @media(max-width:980px){#app{flex-direction:column}aside{width:100%;height:auto;position:static;padding:10px 10px 0}aside .glass{height:auto}#nav{display:none}#nav.open{display:block}#mb{display:block}main{padding:12px}}
+/* ---------- Personalizar (mesmo painel do site principal) ---------- */
+.cfg{position:relative}
+.cfg-btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;height:2.9rem;min-width:2.9rem;padding:0 .85rem;border-radius:99rem;cursor:pointer;font:600 13px Inter,sans-serif;color:var(--t);background:rgba(255,255,255,.05);border:1px solid var(--b);white-space:nowrap}
+.cfg-btn:hover,.cfg-btn[aria-expanded="true"]{background:rgba(255,255,255,.12)}
+.cfg-btn svg{width:1.05rem;height:1.05rem;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+@media(max-width:640px){.cfg-btn .lb{display:none}}
+.cfg-pop{position:absolute;right:0;top:3.4rem;z-index:80;width:min(22rem,calc(100vw - 2rem));padding:1.1rem;border-radius:1rem;background:rgba(10,16,32,.96);border:1px solid var(--b);backdrop-filter:blur(18px) saturate(140%);-webkit-backdrop-filter:blur(18px) saturate(140%);box-shadow:0 1.4rem 3rem rgba(0,0,0,.5)}
+.grp+.grp{margin-top:1.1rem}
+.grp>span{display:block;font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--m);margin-bottom:.6rem}
+.sws{display:grid;grid-template-columns:repeat(auto-fill,minmax(2.4rem,1fr));gap:.55rem;justify-items:center}
+.sw{display:block;aspect-ratio:1;width:2.3rem;border-radius:50%;border:2px solid transparent;cursor:pointer;padding:0;background:var(--c);box-shadow:0 0 0 1px rgba(255,255,255,.25);transition:transform .15s}
+.sw:hover{transform:scale(1.08)}
+.sw[aria-pressed="true"]{border-color:#fff;box-shadow:0 0 0 2px var(--a)}
+.sw-c{position:relative;overflow:hidden;background:conic-gradient(#ff5d5d,#ffd04a,#5fe08a,#3ac8ff,#7a5cff,#ff5de0,#ff5d5d)}
+.sw-c input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;border:0;padding:0}
+.chips{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem}
+.chips.c2{grid-template-columns:repeat(2,1fr)}
+.chip{height:2.5rem;border-radius:.6rem;cursor:pointer;font:600 12.5px Inter,sans-serif;color:var(--m);background:rgba(255,255,255,.05);border:1px solid var(--b);transition:background .2s,color .2s,border-color .2s}
+.chip:hover{color:var(--t);background:rgba(255,255,255,.1)}
+.chip[aria-pressed="true"]{color:#fff;background:color-mix(in srgb,var(--a) 30%,transparent);border-color:var(--a)}
+#cfg-reset{margin-top:1rem}
 </style>
 </head>
 <body>
+<div class="bg" aria-hidden="true"><div class="bg-a"><i class="o1"></i><i class="o2"></i><i class="o3"></i><span class="gr"></span></div><div class="bg-v"><i class="s1"></i><i class="s2"></i><i class="s3"></i><b class="p1"></b><b class="p2"></b><b class="p3"></b></div></div>
 <div id="login"><div class="glass">
  <div style="text-align:center;margin-bottom:22px"><div class="logo" style="margin:0 auto 12px">NX</div><h1>Nexus Financeiro Hub</h1><p class="sub">Administração de assinaturas e acessos GLPI</p></div>
  <form id="lf" class="col"><div><label>E-mail do administrador</label><input type="email" required value="admin@nexusfinanceirohub.com.br"></div><div><label>Senha</label><input type="password" required placeholder="••••••••••••"></div>
@@ -87,7 +214,20 @@ tr:hover td{background:rgba(255,255,255,.025)}
   <div style="margin-top:auto;padding-top:16px" class="row"><button class="btn sm" style="flex:1" id="rst">↺ Resetar</button><button class="btn sm d" style="flex:1" id="out">Sair</button></div>
  </div></aside>
  <main>
-  <header class="glass top"><div><span style="color:var(--m)">Administração /</span> <b id="crumb"></b></div><div class="row"><span class="mono sub" style="margin:0;font-size:11px">nexusfinanceirohub.com.br</span><div class="logo" style="width:32px;height:32px;font-size:11px">AD</div></div></header>
+  <header class="glass top"><div><span style="color:var(--m)">Administração /</span> <b id="crumb"></b></div><div class="row"><span class="mono sub" style="margin:0;font-size:11px">nexusfinanceirohub.com.br</span>
+   <div class="cfg">
+    <button class="cfg-btn" id="cfg-btn" type="button" aria-expanded="false" aria-controls="cfg-pop" title="Personalizar cores, fundo e aparência">
+     <svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.8-.8 1.8-1.7 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2 0-.9.7-1.6 1.6-1.6H16a5 5 0 0 0 5-5c0-4-4-7.3-9-7.3Z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10.5" cy="7.5" r="1"/><circle cx="15" cy="8" r="1"/></svg>
+     <span class="lb">Personalizar</span>
+    </button>
+    <div class="cfg-pop" id="cfg-pop" hidden>
+     <div class="grp"><span>Cor de destaque</span><div class="sws" data-cores role="group" aria-label="Paleta de cores"></div></div>
+     <div class="grp"><span>Aparência</span><div class="chips" data-modos role="group" aria-label="Modo de aparência"></div></div>
+     <div class="grp"><span>Fundo</span><div class="chips c2" data-fundos role="group" aria-label="Fundo do site"></div></div>
+     <button class="chip" id="cfg-reset" type="button">Restaurar padrão</button>
+    </div>
+   </div>
+   <div class="logo" style="width:32px;height:32px;font-size:11px">AD</div></div></header>
   <div id="view"></div>
  </main>
 </div>
@@ -303,6 +443,76 @@ if(S.auth)enter();
       }
     }catch(e){}
   }).catch(function(){ showLogin(); });
+})();
+</script>
+<script>
+/* Personalizar: mesma lógica do site principal (site-inicial.js). Escreve nas mesmas chaves
+   (nexus:cores, nexus-modo, nexus-site-fundo), então a escolha aqui replica para o site,
+   o financeiro Nexus e o GLPI — e permanece até ser alterada de novo. */
+(function(){
+  var T=window.NxTema; if(!T) return;
+  var D=document;
+  function $(i){return D.getElementById(i)}
+  function qa(s){return Array.prototype.slice.call(D.querySelectorAll(s))}
+  function montarCores(box){
+    if(!box) return;
+    var cor=function(h){return 'hsl('+h+' 95% 58%)'};
+    T.PALETAS.forEach(function(p){
+      var b=D.createElement('button');
+      b.type='button'; b.className='sw'; b.dataset.id=p.id; b.title=p.nome;
+      b.setAttribute('aria-label','Paleta '+p.nome); b.setAttribute('aria-pressed','false');
+      b.style.setProperty('--c','linear-gradient(135deg,'+cor(p.h[0])+' 0 34%,'+cor(p.h[1])+' 34% 67%,'+cor(p.h[2])+' 67%)');
+      b.addEventListener('click',function(){T.escolher(p.id,true)});
+      box.appendChild(b);
+    });
+    var l=D.createElement('label');
+    l.className='sw sw-c'; l.title='Cor personalizada'; l.setAttribute('aria-pressed','false');
+    l.innerHTML='<input type="color" value="#4f7cff" aria-label="Escolher cor personalizada">';
+    l.querySelector('input').addEventListener('input',function(){T.personalizada(this.value,true)});
+    box.appendChild(l);
+  }
+  function montarModos(box){
+    if(!box) return;
+    [['auto','Automático'],['escuro','Escuro'],['claro','Claro']].forEach(function(m){
+      var b=D.createElement('button');
+      b.type='button'; b.className='chip'; b.dataset.m=m[0]; b.textContent=m[1]; b.setAttribute('aria-pressed','false');
+      b.addEventListener('click',function(){T.setModo(m[0],true)});
+      box.appendChild(b);
+    });
+  }
+  function montarFundos(box){
+    if(!box) return;
+    T.FUNDOS.forEach(function(f){
+      var b=D.createElement('button');
+      b.type='button'; b.className='chip'; b.dataset.f=f[0]; b.textContent=f[1]; b.setAttribute('aria-pressed','false');
+      b.addEventListener('click',function(){T.setFundo(f[0],true)});
+      box.appendChild(b);
+    });
+  }
+  function sincronizar(){
+    var cor=T.corAtual(), modo=T.modo(), fundo=T.fundo();
+    qa('.chip[data-f]').forEach(function(c){c.setAttribute('aria-pressed',String(c.dataset.f===fundo))});
+    qa('.sw[data-id]').forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.id===cor.id))});
+    qa('.sw-c').forEach(function(l){
+      l.setAttribute('aria-pressed',String(cor.id==='custom'));
+      if(cor.id==='custom'&&cor.hex){var i=l.querySelector('input');if(i)i.value=cor.hex}
+    });
+    qa('.chip[data-m]').forEach(function(c){c.setAttribute('aria-pressed',String(c.dataset.m===modo))});
+  }
+  qa('[data-cores]').forEach(montarCores);
+  qa('[data-modos]').forEach(montarModos);
+  qa('[data-fundos]').forEach(montarFundos);
+  T.onChange=sincronizar; sincronizar();
+  var btn=$('cfg-btn'), pop=$('cfg-pop');
+  if(btn&&pop){
+    function abrir(v){pop.hidden=!v;btn.setAttribute('aria-expanded',String(v))}
+    btn.addEventListener('click',function(e){e.stopPropagation();abrir(pop.hidden)});
+    pop.addEventListener('click',function(e){e.stopPropagation()});
+    D.addEventListener('click',function(){abrir(false)});
+    D.addEventListener('keydown',function(e){if(e.key==='Escape'&&!pop.hidden){abrir(false);btn.focus()}});
+  }
+  var reset=$('cfg-reset');
+  if(reset) reset.addEventListener('click',function(){T.escolher(T.PADRAO,true);T.setModo('auto',true);T.setFundo('padrao',true)});
 })();
 </script>
 </body>
