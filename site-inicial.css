@@ -521,7 +521,7 @@ h1 em{font-style:normal;background:linear-gradient(100deg,var(--accent),var(--br
 .rodape ul{display:grid;gap:.15rem;width:100%}
 .rodape ul a{display:inline-block;padding:.4rem 0;font-size:.92rem;font-weight:600;color:var(--soft);text-decoration:none;transition:color .2s,transform .2s}
 .rodape ul a:hover{color:var(--white);text-decoration:none;transform:translateX(3px)}
-.rodape .copy{max-width:none;margin-top:1.4rem;padding-top:1.2rem;border-top:1px solid var(--card-line);font-size:.82rem;color:var(--muted)}
+.rodape .copy{max-width:none;margin-top:1.4rem;padding-top:1.2rem;border-top:1px solid var(--card-line);font-size:.82rem;color:var(--muted);text-align:center}
 
 /* telas grandes e baixas */
 @media (max-width:480px){
