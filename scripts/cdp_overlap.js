@@ -79,20 +79,27 @@ class CDP {
     await cdp.send('Emulation.setDeviceMetricsOverride', { width: W, height: 1000, deviceScaleFactor: 1, mobile: W < 800 });
     await cdp.send('Page.navigate', { url: URL });
     await new Promise(r => setTimeout(r, 4000));
+    // revela todos os .rv (o IntersectionObserver só dispara com scroll; sem isso tudo fica transladado e gera falsos positivos)
+    await cdp.eval(`document.querySelectorAll('.rv').forEach(e=>e.classList.add('in'))`);
+    await new Promise(r => setTimeout(r, 900));
 
     const report = await cdp.eval(`(() => {
       const vw = innerWidth, vh = innerHeight;
-      const sel = 'header,main section,.hero,.sec-head,.mini,.card,.ticket,.glass,.float-badge,.tab,[role=tabpanel],#painel,.mock,.stats,.trust,.hero-grid,.pill,.btn,.painel-in,.painel-l,form,input,.field';
+      const sel = 'main *';
       const els = [...document.querySelectorAll(sel)];
       const vis = els.filter(e => {
+        if (e.closest('svg')) return false;
+        if (e.checkVisibility && !e.checkVisibility({checkVisibilityCSS:true})) return false;
         const r = e.getBoundingClientRect();
         const cs = getComputedStyle(e);
-        return r.width > 4 && r.height > 4 && cs.visibility !== 'hidden' && cs.display !== 'none' && r.bottom > 0 && r.top < document.documentElement.scrollHeight;
+        return r.width > 4 && r.height > 4 && cs.visibility !== 'hidden' && cs.display !== 'none' && cs.position !== 'fixed' && r.bottom > 0 && r.top < document.documentElement.scrollHeight;
       });
       function rect(e){const r=e.getBoundingClientRect();return {t:r.top+scrollY,l:r.left,b:r.bottom+scrollY,r:r.right};}
       function contains(a,b){return a.contains(b)||b.contains(a);}
       function label(e){return e.tagName.toLowerCase()+(e.id?'#'+e.id:'')+(e.className&&typeof e.className==='string'?'.'+e.className.trim().split(/\\s+/).slice(0,3).join('.'):'' );}
+      function sectionOf(e){const s=e.closest('section');return s?(s.id||s.className):'?';}
       const overlaps=[];
+      const seen=new Set();
       for(let i=0;i<vis.length;i++){
         const a=vis[i], ra=rect(a);
         for(let j=i+1;j<vis.length;j++){
@@ -106,7 +113,9 @@ class CDP {
             const inter=ox*oy;
             // ignora sobreposições pequenas (<8% do menor)
             if(inter/Math.min(areaA,areaB) < 0.08) continue;
-            overlaps.push({a:label(a),ar:ra,b:label(b),br:rb,interPct:Math.round(inter/Math.min(areaA,areaB)*100)});
+            const key=sectionOf(a)+'|'+label(a)+'|'+label(b);
+            if(seen.has(key)) continue; seen.add(key);
+            overlaps.push({sec:sectionOf(a),a:label(a),ar:ra,b:label(b),br:rb,interPct:Math.round(inter/Math.min(areaA,areaB)*100)});
           }
         }
       }
@@ -115,7 +124,7 @@ class CDP {
       // overflow horizontal
       const docW=document.documentElement.scrollWidth;
       const overflowers=[...document.querySelectorAll('body *')].filter(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.right>vw+2&&getComputedStyle(e).position!=='fixed';}).slice(0,10).map(e=>label(e)+' right='+(e.getBoundingClientRect().right|0));
-      return {vw,docW,overlaps:overlaps.slice(0,40),overflowers};
+      return {vw,docW,overlaps:overlaps.slice(0,120),overflowers};
     })()`);
 
     console.log('VIEWPORT', W);
