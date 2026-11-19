@@ -17,5 +17,22 @@ services:
         value: 10000
       - key: NEXUS_DATA_DIR
         value: /var/data
+      # Segredos: gerenciados no painel do Render (Environment), nunca no repositorio.
+      # sync:false = o blueprint declara a variavel mas NAO grava o valor (ele fica no dashboard).
       - key: NEXUS_SYNC_TOKEN
-        value: 6ba1627dc5d07a497d3d529b720da55d7de498ec78a80174e52a708c8164b97f
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: SUPABASE_ANON_KEY
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: GOOGLE_REDIRECT_URI
+        sync: false
+

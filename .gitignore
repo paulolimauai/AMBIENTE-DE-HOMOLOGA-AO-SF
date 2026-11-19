@@ -61,3 +61,9 @@ local_os_sequencia.json
 .nexus_sync_token
 deleted_accounts.json
 .tmp_*
+
+# Credenciais do Supabase versionadas por engano (contem service_role key) — configuracao vai por variaveis de ambiente
+.nexus_supabase
+# Logs e dumps com dados pessoais de usuarios — nunca versionar
+system_logs_completo.txt
+mb.txt
