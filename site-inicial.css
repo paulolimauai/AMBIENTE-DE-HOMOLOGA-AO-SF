@@ -255,6 +255,7 @@ h1 em{font-style:normal;background:linear-gradient(100deg,var(--accent),var(--br
 .hero-badge{margin-bottom:1.1rem}
 .hero-copy,.hero-visual{min-width:0}
 .hero-visual{position:relative}
+.hero-stage{position:relative}
 
 /* selos flutuantes sobre a ilustração do painel */
 .float-badge{display:flex;align-items:center;gap:.6rem;width:max-content;max-width:100%;padding:.55rem .8rem;border-radius:1rem}
@@ -266,6 +267,8 @@ h1 em{font-style:normal;background:linear-gradient(100deg,var(--accent),var(--br
 @media (min-width:768px){
   .fb-top{position:absolute;z-index:2;top:-.9rem;right:-.6rem}
   .fb-bottom{position:absolute;z-index:2;bottom:-.9rem;left:-.6rem}
+  /* o selo de baixo passa .9rem da borda do mock: a nota precisa de folga para não ficar embaixo dele */
+  .hero-visual>.mock-note{margin-top:1.5rem}
 }
 @media (max-width:767px){
   .float-badge{margin-top:.7rem}
