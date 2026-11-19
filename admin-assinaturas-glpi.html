@@ -84,7 +84,7 @@ tr:hover td{background:rgba(255,255,255,.025)}
     // Administrador liberado: na PRIMEIRA visita entra direto (o login da página é só a porta de demo;
     // depois disso quem clicou em "Sair" continua vendo a tela de entrada normalmente).
     try{
-      if(!localStorage.getItem('nexus_admin_v3')){
+      if(!localStorage.getItem('nexus_admin_v4')){
         var demo=document.getElementById('demo');
         if(demo) demo.click();
       }
@@ -114,7 +114,7 @@ tr:hover td{background:rgba(255,255,255,.025)}
 <div id="toasts"></div>
 
 <script>
-const KEY='nexus_admin_v3';
+const KEY='nexus_admin_v4';
 const D={auth:false,price:18,
 subs:[
 {id:1,n:'Carlos Silva',c:'Silva Logística',e:'carlos@silvalog.com.br',p:'Nexus Mensal',v:18,s:'Ativo',cpf:'111.222.333-44',tel:'(62) 99111-0001',nasc:'14/03/1985',cad:'02/09/2026',val:'19/12/2026'},
@@ -122,7 +122,7 @@ subs:[
 {id:3,n:'Fernanda Lima',c:'Lima Tech',e:'fernanda@limatech.br',p:'Teste grátis',v:0,s:'Ativo',cpf:'333.444.555-66',tel:'(62) 99333-0003',nasc:'05/11/1992',cad:'19/11/2026',val:'20/11/2026'},
 {id:4,n:'Eduardo Santos',c:'Grupo Horizonte',e:'eduardo@horizonte.com',p:'Nexus Mensal',v:18,s:'Ativo',cpf:'444.555.666-77',tel:'(62) 99444-0004',nasc:'30/01/1980',cad:'01/08/2026',val:'12/11/2026'}],
 users:[
-{id:1,n:'Administrador Master',e:'admin@nexusfinanceirohub.com.br',t:'',p:'Proprietário',o:'Manual',on:true,g:true},
+{id:1,n:'Alexandre',e:'admin@nexusfinanceirohub.com.br',t:'',p:'Proprietário',o:'Manual',on:true,g:true},
 {id:2,n:'Ana Souza',e:'ana@nexusfinanceirohub.com.br',t:'',p:'Técnico N1',o:'Manual',on:true,g:true},
 {id:3,n:'Bruno Reis',e:'bruno@nexusfinanceirohub.com.br',t:'',p:'Administrador',o:'Manual',on:true,g:true},
 {id:4,n:'Carlos Silva',e:'carlos@silvalog.com.br',t:'',p:'Assinante',o:'Site',on:true,g:true},
