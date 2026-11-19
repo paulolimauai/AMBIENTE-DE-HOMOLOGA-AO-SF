@@ -38202,7 +38202,9 @@ async function handleNexusRequest(req, res) {
     '/pagamentos-admin.js': 'application/javascript; charset=utf-8',
     '/site-inicial.css': 'text/css',
     '/site-inicial.js': 'application/javascript; charset=utf-8',
-    '/favicon.svg': 'image/svg+xml'
+    '/favicon.svg': 'image/svg+xml',
+    '/termos.html': 'text/html; charset=utf-8',
+    '/privacidade.html': 'text/html; charset=utf-8'
   };
   let staticFile = null;
   if (STATIC_EXACT_FILES[pathname]) {
