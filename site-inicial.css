@@ -185,9 +185,9 @@ body.menu-aberto{overflow:hidden}
 
 /* ---------- blocos ---------- */
 section{position:relative;z-index:1}
-.sec{padding:clamp(4rem,6vw,6rem) 0}
+.sec{padding:clamp(2.8rem,4.5vw,4rem) 0}
 /* títulos das seções alinhados à esquerda, na mesma borda do hero, da Central de Serviços e dos cartões logo abaixo */
-.sec-head{text-align:center;max-width:40rem;margin:0 auto 3.5rem}
+.sec-head{text-align:center;max-width:40rem;margin:0 auto 2.4rem}
 .kicker{display:inline-block;margin-bottom:.8rem;font-size:14px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
 h1,h2,h3,h4{color:var(--white);text-wrap:balance}
 h2{font:700 clamp(1.75rem,3vw,2.25rem)/1.2 var(--sans);letter-spacing:-.02em}
@@ -217,8 +217,8 @@ h2{font:700 clamp(1.75rem,3vw,2.25rem)/1.2 var(--sans);letter-spacing:-.02em}
 .hero-grid>*,.rec>*,.atd>*,.pers>*,.plano-w>*,.painel-in>*{min-width:0}
 
 /* ---------- início ---------- */
-.hero{padding:calc(4.25rem + clamp(1rem,2.5vw,1.6rem)) 0 clamp(2rem,4vw,3rem)}
-.hero-grid{display:grid;gap:clamp(2rem,5vw,3.5rem);align-items:center}
+.hero{padding:calc(4.25rem + clamp(1rem,2.5vw,1.6rem)) 0 clamp(1.5rem,3vw,2.2rem)}
+.hero-grid{display:grid;gap:clamp(1.6rem,4vw,2.6rem);align-items:center}
 /* banner do valor da assinatura (primeiro bloco do início): preço | texto | botões; empilha no celular.
    Toda a escrita fica alinhada à esquerda e o preço assenta numa única linha de base (R$, valor, centavos e /mês) */
 .bn{display:grid;grid-template-columns:minmax(0,1fr);gap:1rem 1.75rem;align-items:center;margin-bottom:clamp(1.5rem,3.5vw,2.6rem);padding:1.1rem 1.25rem;border-radius:1.2rem;text-align:left}
@@ -396,10 +396,10 @@ h1 em{font-style:normal;background:linear-gradient(100deg,var(--accent),var(--br
 .passo p{margin-top:.45rem;font-size:.94rem;color:var(--soft)}
 
 /* ---------- atendimento ---------- */
-.atd{display:grid;gap:1.6rem;align-items:start}
+.atd{display:grid;gap:1.2rem;align-items:start}
 @media (min-width:1000px){.atd{grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:2.4rem}}
-.atd .tick{margin-top:1.4rem}
-.atd .cta{margin-top:1.6rem}
+.atd .tick{margin-top:1.1rem}
+.atd .cta{margin-top:1.2rem}
 .demo{padding:clamp(1.1rem,2.4vw,1.7rem);border-radius:1.5rem}
 .demo h3{font-size:.8rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:.7rem}
 .cats{display:flex;flex-wrap:wrap;gap:.45rem}
@@ -428,7 +428,7 @@ h1 em{font-style:normal;background:linear-gradient(100deg,var(--accent),var(--br
 .etdesc{margin-top:1rem;padding:.9rem 1rem;border-radius:.9rem;min-height:4.6rem;font-size:.92rem;color:var(--soft);background:var(--tint);border:1px solid var(--card-line)}
 .etdesc b{display:block;color:var(--white);margin-bottom:.15rem}
 @media (max-width:520px){.et{font-size:.76rem}.et i{width:1.9rem;height:1.9rem}.et::before{top:1.15rem}.et small{font-size:.76rem}}
-.mini{display:grid;place-items:center;margin-top:2rem}
+.mini{display:grid;place-items:center;margin-top:1.4rem}
 
 /* ticket de acompanhamento de chamado */
 .ticket{padding:1.4rem;border-radius:1.25rem;max-width:28rem;margin:0 auto}
@@ -457,7 +457,7 @@ h1 em{font-style:normal;background:linear-gradient(100deg,var(--accent),var(--br
 @media (min-width:900px){.perfil .tick{grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem 2rem}}
 
 /* ---------- personalizar ---------- */
-.pers{display:grid;gap:1.6rem;align-items:center;padding:clamp(1.3rem,3vw,2.4rem);border-radius:1.5rem}
+.pers{display:grid;gap:1.2rem;align-items:center;padding:clamp(1.3rem,3vw,2.4rem);border-radius:1.5rem}
 @media (min-width:900px){.pers{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:2.6rem}}
 .pers .grp{margin-top:1.3rem}
 .pers .chips{max-width:24rem}
@@ -479,7 +479,7 @@ h1 em{font-style:normal;background:linear-gradient(100deg,var(--accent),var(--br
 
 
 /* ---------- planos ---------- */
-.plano-w{display:grid;gap:1.4rem;align-items:stretch}
+.plano-w{display:grid;gap:1.1rem;align-items:stretch}
 @media (min-width:960px){.plano-w{grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:2rem}}
 .plano{padding:clamp(1.5rem,3vw,2.3rem);border-radius:1.6rem;position:relative}
 .plano .pill{position:absolute;right:1.4rem;top:1.4rem}
@@ -524,7 +524,7 @@ h1 em{font-style:normal;background:linear-gradient(100deg,var(--accent),var(--br
 .rodape ul{display:grid;gap:.15rem;width:100%}
 .rodape ul a{display:inline-block;padding:.4rem 0;font-size:.92rem;font-weight:600;color:var(--soft);text-decoration:none;transition:color .2s,transform .2s}
 .rodape ul a:hover{color:var(--white);text-decoration:none;transform:translateX(3px)}
-.rodape .copy{max-width:none;margin-top:2rem;padding-top:1.2rem;border-top:1px solid var(--card-line);font-size:.82rem;color:var(--muted)}
+.rodape .copy{max-width:none;margin-top:1.4rem;padding-top:1.2rem;border-top:1px solid var(--card-line);font-size:.82rem;color:var(--muted)}
 
 /* telas grandes e baixas */
 @media (max-width:480px){
