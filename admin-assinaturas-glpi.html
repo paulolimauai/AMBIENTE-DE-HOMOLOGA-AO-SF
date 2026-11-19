@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#050E1A">
+<title>Admin | Assinaturas & Acessos GLPI | Nexus Financeiro Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:dark;--bg:#050E1A;--b:rgba(255,255,255,.09);--t:#e6edf7;--m:#8ea3bd;--a:#38bdf8;--e:#34d399;--w:#fbbf24;--r:#fb7185;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box;margin:0}
+body{font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--t);min-height:100vh;font-size:14px;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(70vw 50vw at 12% -10%,rgba(56,189,248,.11),transparent 60%),radial-gradient(60vw 50vw at 100% 115%,rgba(52,211,153,.06),transparent 60%),linear-gradient(180deg,#071426,#050E1A)}
+.glass{background:rgba(255,255,255,.035);border:1px solid var(--b);border-radius:14px;backdrop-filter:blur(14px) saturate(130%);-webkit-backdrop-filter:blur(14px) saturate(130%)}
+.hide{display:none!important}
+button,input,select,textarea{font:inherit;color:inherit}
+input,select,textarea{width:100%;padding:9px 12px;border-radius:10px;background:rgba(5,14,26,.55);border:1px solid var(--b);outline:0}
+input:focus,select:focus,textarea:focus{border-color:var(--a)}
+input[type=checkbox]{width:17px;height:17px;accent-color:var(--a);padding:0}
+option{background:#0a1a2e}
+label{display:block;font-size:11px;font-weight:600;color:var(--m);margin:0 0 5px;text-transform:uppercase;letter-spacing:.04em}
+.btn{padding:8px 14px;border-radius:10px;border:1px solid var(--b);background:rgba(255,255,255,.05);cursor:pointer;font-weight:500;font-size:12.5px;white-space:nowrap}
+.btn:hover{background:rgba(255,255,255,.12)}
+.btn.p{background:#1f6feb;border-color:transparent}.btn.p:hover{background:#3b82f6}
+.btn.s{background:#0f9f77;border-color:transparent}
+.btn.d{color:var(--r);border-color:rgba(251,113,133,.35)}
+.btn.sm{padding:5px 10px;font-size:11.5px}
+.tag{display:inline-block;padding:2px 9px;border-radius:99px;font-size:10.5px;font-weight:600;border:1px solid}
+.ok{color:var(--e);background:rgba(52,211,153,.1);border-color:rgba(52,211,153,.35)}
+.wa{color:var(--w);background:rgba(251,191,36,.1);border-color:rgba(251,191,36,.35)}
+.er{color:var(--r);background:rgba(251,113,133,.1);border-color:rgba(251,113,133,.35)}
+.in{color:var(--a);background:rgba(56,189,248,.1);border-color:rgba(56,189,248,.35)}
+.mu{color:var(--m);background:rgba(255,255,255,.05);border-color:var(--b)}
+h1{font-size:20px;font-weight:700;letter-spacing:-.01em}h3{font-size:14px;font-weight:600}
+.sub{color:var(--m);font-size:13px;margin-top:4px}
+.grid{display:grid;gap:16px}.g2{grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}.g4{grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+.pad{padding:20px}.row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.sp{justify-content:space-between}.col{display:flex;flex-direction:column;gap:14px}
+.mono{font-family:ui-monospace,Menlo,monospace}
+#login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+#login .glass{width:100%;max-width:410px;padding:32px}
+.logo{width:40px;height:40px;border-radius:10px;background:#0f2a47;color:var(--a);border:1px solid rgba(56,189,248,.3);display:grid;place-items:center;font-weight:700;font-size:13px}
+#app{display:flex;min-height:100vh}
+aside{width:250px;flex-shrink:0;padding:12px 0 12px 12px;position:sticky;top:0;height:100vh}
+aside .glass{height:100%;padding:14px;display:flex;flex-direction:column}
+.sec{font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--m);text-transform:uppercase;margin:18px 10px 6px}
+.nav{display:flex;align-items:center;gap:10px;width:100%;padding:9px 10px;border-radius:8px;border:0;background:none;color:var(--m);font-weight:500;cursor:pointer;text-align:left;font-size:13px}
+.nav:hover{background:rgba(255,255,255,.06);color:var(--t)}
+.nav.on{background:rgba(56,189,248,.1);box-shadow:inset 2px 0 0 var(--a);color:#fff}
+.nav svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.nav b{margin-left:auto;background:var(--w);color:#241a00;border-radius:99px;font-size:10px;padding:1px 7px}
+main{flex:1;min-width:0;padding:12px 22px 40px}
+.top{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;margin-bottom:20px}
+#view>section{display:flex;flex-direction:column;gap:18px;animation:f .2s ease}
+@keyframes f{from{opacity:0;transform:translateY(5px)}}
+.kpi .v{font-size:24px;font-weight:700;margin-top:6px}.kpi small{color:var(--m);font-size:11.5px}
+table{width:100%;border-collapse:collapse}
+th{font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--m);text-align:left;padding:12px 16px;border-bottom:1px solid var(--b)}
+td{padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.06);vertical-align:middle}
+tr:hover td{background:rgba(255,255,255,.025)}
+.scroll{overflow-x:auto}
+.tk{padding:4px 14px;border-radius:12px;background:rgba(5,14,26,.4);border:1px solid var(--b)}
+.log{display:flex;gap:10px;font-size:12.5px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.log:last-child{border:0}
+.log i{font-style:normal;color:var(--a);font-family:ui-monospace,monospace;font-size:11px;background:rgba(56,189,248,.1);padding:1px 7px;border-radius:6px;height:fit-content}
+#mb{background:none;border:0;display:none;font-size:20px;cursor:pointer}
+#mod{position:fixed;inset:0;z-index:60;background:rgba(2,8,16,.7);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:18px}
+#mod .glass{width:100%;max-width:520px;max-height:90vh;overflow:auto;padding:24px;background:rgba(12,24,40,.97)}
+#toasts{position:fixed;right:18px;bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:70;display:flex;flex-direction:column;gap:8px}
+.toast{padding:12px 16px;border-radius:12px;background:rgba(10,22,38,.97);border:1px solid var(--b);border-left:4px solid var(--e);font-size:12.5px;font-weight:500}
+@media(max-width:980px){#app{flex-direction:column}aside{width:100%;height:auto;position:static;padding:10px 10px 0}aside .glass{height:auto}#nav{display:none}#nav.open{display:block}#mb{display:block}main{padding:12px}}
+</style>
+</head>
+<body>
+<script>
+/* Guarda de administrador: mesmo token das rotas /api/admin/site/*. Sem ele a página nem chega a abrir. */
+(function(){
+  var token='';try{token=localStorage.getItem('nexus_token')||''}catch(e){}
+  fetch('/api/admin/site/files',{headers:{Authorization:'Bearer '+token}}).then(function(r){
+    if(r.status===401||r.status===403){
+      document.body.innerHTML='<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;font-family:Inter,system-ui,sans-serif;background:#050E1A;color:#e6edf7;padding:20px"><div style="text-align:center;max-width:420px"><h1 style="font-size:20px;margin:0 0 10px">Acesso restrito</h1><p style="color:#8ea3bd;margin:0 0 18px">Esta área é exclusiva para contas com perfil Administrador.</p><a href="/admin-site.html" style="color:#38bdf8;font-weight:600">← Voltar à Administração do Site</a></div></div>';
+      return;
+    }
+    // Administrador liberado: na PRIMEIRA visita entra direto (o login da página é só a porta de demo;
+    // depois disso quem clicou em "Sair" continua vendo a tela de entrada normalmente).
+    try{
+      if(!localStorage.getItem('nexus_admin_v3')){
+        var demo=document.getElementById('demo');
+        if(demo) demo.click();
+      }
+    }catch(e){}
+  }).catch(function(){});
+})();
+</script>
+<div id="login"><div class="glass">
+ <div style="text-align:center;margin-bottom:22px"><div class="logo" style="margin:0 auto 12px">NX</div><h1>Nexus Financeiro Hub</h1><p class="sub">Administração de assinaturas e acessos GLPI</p></div>
+ <form id="lf" class="col"><div><label>E-mail do administrador</label><input type="email" required value="admin@nexusfinanceirohub.com.br"></div><div><label>Senha</label><input type="password" required placeholder="••••••••••••"></div>
+ <button class="btn p" style="padding:11px">Entrar</button><button type="button" class="btn s" id="demo">Entrar em modo demonstração</button></form>
+ <p class="sub" style="text-align:center;margin-top:16px;font-size:11px">Demonstração visual. A autenticação real deve ser feita no servidor.</p>
+</div></div>
+
+<div id="app" class="hide">
+ <aside><div class="glass">
+  <div class="row sp"><div class="row"><div class="logo">NX</div><div><b>Nexus Admin</b><div style="font-size:11px;color:var(--m)">Assinaturas & GLPI</div></div></div><button id="mb">☰</button></div>
+  <div id="nav"></div>
+  <div style="margin-top:auto;padding-top:16px" class="row"><button class="btn sm" style="flex:1" id="rst">↺ Resetar</button><button class="btn sm d" style="flex:1" id="out">Sair</button></div>
+ </div></aside>
+ <main>
+  <header class="glass top"><div><span style="color:var(--m)">Administração /</span> <b id="crumb"></b></div><div class="row"><span class="mono sub" style="margin:0;font-size:11px">nexusfinanceirohub.com.br</span><div class="logo" style="width:32px;height:32px;font-size:11px">AD</div></div></header>
+  <div id="view"></div>
+ </main>
+</div>
+<div id="mod"><div class="glass" id="mc"></div></div>
+<div id="toasts"></div>
+
+<script>
+const KEY='nexus_admin_v3';
+const D={auth:false,price:18,
+subs:[
+{id:1,n:'Carlos Silva',c:'Silva Logística',e:'carlos@silvalog.com.br',p:'Nexus Mensal',v:18,s:'Ativo',cpf:'111.222.333-44',tel:'(62) 99111-0001',nasc:'14/03/1985',cad:'02/09/2026',val:'19/12/2026'},
+{id:2,n:'Mariana Costa',c:'Costa Consultoria',e:'mariana@costaconsult.io',p:'Nexus Mensal',v:18,s:'Ativo',cpf:'222.333.444-55',tel:'(62) 99222-0002',nasc:'22/07/1990',cad:'15/09/2026',val:'10/12/2026'},
+{id:3,n:'Fernanda Lima',c:'Lima Tech',e:'fernanda@limatech.br',p:'Teste grátis',v:0,s:'Ativo',cpf:'333.444.555-66',tel:'(62) 99333-0003',nasc:'05/11/1992',cad:'19/11/2026',val:'20/11/2026'},
+{id:4,n:'Eduardo Santos',c:'Grupo Horizonte',e:'eduardo@horizonte.com',p:'Nexus Mensal',v:18,s:'Ativo',cpf:'444.555.666-77',tel:'(62) 99444-0004',nasc:'30/01/1980',cad:'01/08/2026',val:'12/11/2026'}],
+users:[
+{id:1,n:'Administrador Master',e:'admin@nexusfinanceirohub.com.br',t:'',p:'Proprietário',o:'Manual',on:true,g:true},
+{id:2,n:'Ana Souza',e:'ana@nexusfinanceirohub.com.br',t:'',p:'Técnico N1',o:'Manual',on:true,g:true},
+{id:3,n:'Bruno Reis',e:'bruno@nexusfinanceirohub.com.br',t:'',p:'Administrador',o:'Manual',on:true,g:true},
+{id:4,n:'Carlos Silva',e:'carlos@silvalog.com.br',t:'',p:'Assinante',o:'Site',on:true,g:true},
+{id:5,n:'Mariana Costa',e:'mariana@costaconsult.io',t:'',p:'Assinante',o:'Site',on:true,g:true}],
+profs:[
+{n:'Proprietário',sys:true,x:{t:3,u:3,a:3,r:3,c:3}},
+{n:'Administrador',x:{t:3,u:3,a:3,r:3,c:2}},
+{n:'Técnico N2',x:{t:3,u:1,a:2,r:1,c:0}},
+{n:'Técnico N1',x:{t:2,u:0,a:1,r:0,c:0}},
+{n:'Assinante',x:{t:1,u:0,a:0,r:0,c:0}}],
+logs:[{t:'09:30',x:'Pagamento Pix confirmado: Carlos Silva.'}]};
+let S;try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}if(!S)S=JSON.parse(JSON.stringify(D));
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+if(!S.pays){S.pays=[{id:'PG-10412',sid:3,n:'Fernanda Lima',v:18,m:'Pix',st:'Em análise',d:'19/11/2026, 10:05',ref:'Comprovante enviado por WhatsApp'},{id:'PG-10398',sid:1,n:'Carlos Silva',v:18,m:'Pix',st:'Confirmado',d:'19/11/2026, 09:30',ref:'E00012'},{id:'PG-10377',sid:4,n:'Eduardo Santos',v:18,m:'Pix',st:'Aguardando',d:'18/11/2026, 16:20',ref:''},{id:'PG-10301',sid:2,n:'Mariana Costa',v:18,m:'Pix',st:'Confirmado',d:'10/11/2026, 11:42',ref:'E00009'}]}
+S.pix=S.pix||{key:'',name:''};
+const $=i=>document.getElementById(i);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const brl=n=>'R$ '+Number(n).toFixed(2).replace('.',',');
+const log=x=>{S.logs.unshift({t:new Date().toTimeString().slice(0,5),x});S.logs=S.logs.slice(0,50);save()};
+function toast(m,c){const e=document.createElement('div');e.className='toast';if(c)e.style.borderLeftColor=c;e.textContent=m;$('toasts').appendChild(e);setTimeout(()=>e.remove(),3000)}
+function modal(h){$('mc').innerHTML=h;$('mod').style.display='flex'}
+function closeM(){$('mod').style.display='none'}
+$('mod').onclick=e=>{if(e.target.id==='mod')closeM()};
+const fd=d=>d.toLocaleDateString('pt-BR'),sub=id=>S.subs.find(s=>s.id===id);
+const ptBR=v=>{const m=String(v||'').match(/(\d+)\/(\d+)\/(\d+)(?:[ ,]+(\d+):(\d+))?/);return m?new Date(+m[3],m[2]-1,+m[1],+(m[4]||23),+(m[5]||59)):null};
+
+/* ===== Situação da assinatura ===== */
+function pinfo(s){if(!s)return{c:'mu',l:'Sem cadastro no site',d:''};
+if(s.val==='Vitalício')return{c:'ok',l:s.p+' • Vitalício',d:'sem vencimento'};
+const d=ptBR(s.val);
+if(d&&d<new Date())return{c:'er',l:s.p+' • Expirado',d:'expirou em '+s.val};
+if(s.p==='Teste grátis')return{c:'wa',l:'Teste grátis • 1 dia',d:'válido até '+(s.val||'—')+' — ainda não contratou o Mensal'};
+return{c:'ok',l:s.p+' • '+brl(s.v),d:'válido até '+(s.val||'—')}}
+const pcell=s=>{const p=pinfo(s);return`<span class="tag ${p.c}">${esc(p.l)}</span><div class="sub" style="font-size:11px;margin:3px 0 0">${esc(p.d)}</div>`};
+const mask=c=>c?String(c).replace(/^(\d{3})\.?\d{3}\.?\d{3}-?(\d{2})$/,'$1.•••.•••-$2'):'—';
+const planTag=e=>{const s=S.subs.find(x=>x.e.toLowerCase()===String(e).toLowerCase());if(!s)return'';const p=pinfo(s);return`<div style="margin-top:4px"><span class="tag ${p.c}">${esc(p.l)}</span></div>`};
+
+/* ===== Menu ===== */
+const IC={subs:'<path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM23 21v-2a4 4 0 00-3-3.9M16 3.1a4 4 0 010 7.8"/>',pay:'<path d="M2 5h20v14H2zM2 10h20"/>',acc:'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/>'};
+const MODS=[['subs','Assinaturas'],['pay','Pagamentos'],['acc','Acessos GLPI']];
+const cur=()=>{const h=location.hash.slice(1);return MODS.some(m=>m[0]===h)?h:'subs'};
+function nav(){const pend=S.users.filter(u=>!u.g).length,pp=S.pays.filter(p=>p.st==='Em análise').length;
+$('nav').innerHTML='<div class="sec">Administração</div>'+MODS.map(([k,n])=>`<button class="nav ${cur()===k?'on':''}" data-m="${k}"><svg viewBox="0 0 24 24">${IC[k]}</svg><span>${n}</span>${k==='acc'&&pend?`<b>${pend}</b>`:''}${k==='pay'&&pp?`<b>${pp}</b>`:''}</button>`).join('');
+$('nav').querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{location.hash=b.dataset.m;$('nav').classList.remove('open')})}
+
+/* ===== Views ===== */
+const AR=[['t','Chamados'],['u','Usuários e perfis'],['a','Ativos (CMDB)'],['r','Relatórios'],['c','Configuração GLPI']],LV=['Nenhum','Ler','Editar','Total'];
+const V={
+subs(){const P=S.subs.map(pinfo),pag=S.subs.filter((s,i)=>P[i].c==='ok'&&s.p!=='Teste grátis'),teste=P.filter(p=>p.c==='wa').length,exp=P.filter(p=>p.c==='er').length;
+return`<section><div class="row sp"><div><h1>Assinaturas</h1><p class="sub">Cadastros do site, plano atual de cada pessoa e liberação de acesso.</p></div><div class="row"><button class="btn s" onclick="grant()">✓ Liberar assinatura Mensal</button><button class="btn p" onclick="newSub()">＋ Novo assinante</button></div></div>
+<div class="grid g4">${[['Assinantes pagantes',pag.length,'Mensal ativo'],['Em teste (1 dia)',teste,'Aguardando contratar'],['Expirados',exp,'Precisam renovar'],['Receita mensal',brl(pag.reduce((x,s)=>x+s.v,0)),'Recorrência atual']].map(k=>`<div class="glass pad kpi"><small style="text-transform:uppercase;font-weight:700;letter-spacing:.06em">${k[0]}</small><div class="v">${k[1]}</div><small>${k[2]}</small></div>`).join('')}</div>
+<div class="glass pad row"><input id="q" placeholder="Buscar por nome, CPF, empresa ou e-mail…" style="flex:1;min-width:200px" oninput="rows()"><select id="fs" style="width:190px" onchange="rows()"><option value="">Todas as situações</option><option value="wa">Em teste</option><option value="ok">Ativas</option><option value="er">Expiradas</option><option value="blk">Acesso bloqueado</option></select><div class="row" style="gap:6px"><span class="sub" style="margin:0;font-size:12px">Mensalidade R$</span><input type="number" step="0.01" min="0" value="${S.price}" style="width:90px" onchange="S.price=parseFloat(this.value)||0;save();rend();toast('Valor da mensalidade atualizado')"></div></div>
+<div class="glass scroll"><table><thead><tr><th>Assinante</th><th>Plano atual</th><th>Acesso</th><th style="text-align:right">Ações</th></tr></thead><tbody id="tb"></tbody></table></div></section>`},
+pay(){const P=S.pays,sum=st=>P.filter(p=>p.st===st).reduce((x,p)=>x+p.v,0),cnt=st=>P.filter(p=>p.st===st).length;
+return`<section><div class="row sp"><div><h1>Pagamentos</h1><p class="sub">Confirme comprovantes Pix, registre recebimentos e libere a assinatura automaticamente.</p></div><button class="btn p" onclick="payNew()">＋ Registrar pagamento</button></div>
+<div class="grid g4">${[['Recebido',brl(sum('Confirmado')),cnt('Confirmado')+' pagamento(s) confirmado(s)'],['Em análise',cnt('Em análise'),brl(sum('Em análise'))+' aguardando conferência'],['Aguardando Pix',cnt('Aguardando'),brl(sum('Aguardando'))+' ainda não pago'],['Recusados / estornados',cnt('Recusado')+cnt('Estornado'),brl(sum('Recusado')+sum('Estornado'))]].map(k=>`<div class="glass pad kpi"><small style="text-transform:uppercase;font-weight:700;letter-spacing:.06em">${k[0]}</small><div class="v">${k[1]}</div><small>${k[2]}</small></div>`).join('')}</div>
+<div class="grid g2"><div class="glass pad col"><h3>Conta de recebimento (Pix)</h3><div><label>Chave Pix</label><input id="pk" value="${esc(S.pix.key)}" placeholder="Celular, e-mail, CPF/CNPJ ou chave aleatória"></div><div><label>Favorecido</label><input id="pn" value="${esc(S.pix.name)}" placeholder="Nome do titular"></div><div class="row sp"><span class="sub" style="margin:0">Mensalidade: <b style="color:var(--t)">${brl(S.price)}</b></span><button class="btn p" onclick="savePix()">Salvar conta</button></div></div>
+<div class="glass pad col"><h3>Como funciona a liberação</h3><div class="tk" style="padding:12px 14px;font-size:12.5px;line-height:1.9">1. O cliente paga o Pix e envia o comprovante<br>2. Você confere e clica em <b>Confirmar</b><br>3. A assinatura Mensal é ativada por +30 dias (renovações somam ao vencimento)<br>4. O acesso é liberado no GLPI automaticamente</div><div class="sub" style="font-size:12px">Para baixa automática, ligue um gateway no servidor. Chaves de API nunca devem ficar neste arquivo.</div></div></div>
+<div class="glass pad row"><input id="pq" placeholder="Buscar por pedido, nome ou referência…" style="flex:1;min-width:200px" oninput="prows()"><select id="pf" style="width:190px" onchange="prows()"><option value="">Todos os status</option><option>Em análise</option><option>Aguardando</option><option>Confirmado</option><option>Recusado</option><option>Estornado</option></select></div>
+<div class="glass scroll"><table><thead><tr><th>Pedido</th><th>Assinante</th><th>Valor</th><th>Forma</th><th>Status</th><th style="text-align:right">Ações</th></tr></thead><tbody id="pb"></tbody></table></div></section>`},
+acc(){const u=(window.at||'u')==='u',pend=S.users.filter(x=>!x.g).length;
+return`<section><div class="row sp"><div><h1>Acessos GLPI</h1><p class="sub">Inclua, altere, bloqueie ou remova usuários e crie perfis de acesso.</p></div><div class="row"><button class="btn" onclick="pull()">⇣ Importar do site</button><button class="btn" onclick="gsync()">Sincronizar GLPI</button><button class="btn p" onclick="${u?'userM()':'profM()'}">＋ ${u?'Novo usuário':'Novo perfil'}</button></div></div>
+<div class="row"><button class="btn ${u?'p':''}" onclick="atab('u')">Usuários (${S.users.length})</button><button class="btn ${u?'':'p'}" onclick="atab('p')">Perfis & permissões (${S.profs.length})</button>${pend?`<span class="tag wa">${pend} sem sincronizar</span>`:''}</div>
+${u?`<div class="glass pad row"><input id="uq" placeholder="Buscar nome ou e-mail…" style="flex:1;min-width:200px" oninput="urows()"><select id="up" style="width:200px" onchange="urows()"><option value="">Todos os perfis</option>${S.profs.map(p=>`<option>${esc(p.n)}</option>`).join('')}</select></div>
+<div class="glass scroll"><table><thead><tr><th>Usuário</th><th>Perfil</th><th>Origem</th><th>GLPI</th><th>Status</th><th style="text-align:right">Ações</th></tr></thead><tbody id="ub"></tbody></table></div>`
+:`<div class="grid g2">${S.profs.map((p,i)=>`<div class="glass pad col"><div class="row sp"><div><h3>${esc(p.n)}</h3><div class="sub" style="font-size:12px;margin:2px 0 0">${S.users.filter(x=>x.p===p.n).length} usuário(s)${p.sys?' • perfil do sistema':''}</div></div><div class="row">${p.sys?'<span class="tag wa">Protegido</span>':`<button class="btn sm" onclick="profM(${i})">Editar</button><button class="btn sm d" onclick="pdel(${i})">Excluir</button>`}</div></div>${AR.map(([k,l])=>`<div class="row sp" style="font-size:12.5px"><span>${l}</span><span class="tag ${p.x[k]>=3?'ok':p.x[k]>=1?'in':'mu'}">${LV[p.x[k]]}</span></div>`).join('')}</div>`).join('')}</div>`}</section>`}};
+const T={subs:'Assinaturas',pay:'Pagamentos',acc:'Acessos GLPI'};
+function rend(){const m=cur();$('view').innerHTML=V[m]();$('crumb').textContent=T[m];nav();if(m==='subs')rows();if(m==='pay')prows();if(m==='acc')urows()}
+
+/* ===== Assinaturas ===== */
+function rows(){const q=($('q').value||'').toLowerCase(),f=$('fs').value;
+const L=S.subs.filter(s=>{const p=pinfo(s);return(!f||(f==='blk'?s.s==='Bloqueado':p.c===f))&&[s.n,s.c,s.e,s.cpf].join(' ').toLowerCase().includes(q)});
+$('tb').innerHTML=L.map(s=>{const p=pinfo(s);return`<tr><td><b>${esc(s.n)}</b><div class="sub" style="font-size:11.5px;margin:0">${esc(s.c||'Pessoa física')} • ${esc(s.e)}<br>CPF ${esc(mask(s.cpf))}${s.tel?' • '+esc(s.tel):''}</div></td><td>${pcell(s)}</td><td>${s.s==='Bloqueado'?'<span class="tag mu">Bloqueado</span>':p.c==='er'?'<span class="tag er">Vencido</span>':'<span class="tag ok">Liberado</span>'}</td><td style="text-align:right;white-space:nowrap"><button class="btn sm" onclick="ficha(${s.id})">Ficha</button> <button class="btn sm s" onclick="grant(${s.id})">Liberar</button> <button class="btn sm" onclick="blk(${s.id})">${s.s==='Bloqueado'?'Desbloquear':'Bloquear'}</button> <button class="btn sm d" onclick="del(${s.id})">Excluir</button></td></tr>`}).join('')||'<tr><td colspan="4" style="text-align:center;color:var(--m);padding:30px">Nenhum assinante encontrado.</td></tr>'}
+function setUser(s,on){const u=S.users.find(x=>x.e.toLowerCase()===s.e.toLowerCase());if(u){u.on=on;u.g=true}else S.users.push({id:Date.now(),n:s.n,e:s.e,t:s.tel||'',p:'Assinante',o:'Site',on,g:true})}
+function blk(id){const s=sub(id);s.s=s.s==='Bloqueado'?'Ativo':'Bloqueado';setUser(s,s.s==='Ativo');log(`Acesso de ${s.n} ${s.s==='Ativo'?'liberado':'bloqueado'}.`);save();rend()}
+function del(id){const s=sub(id);if(!confirm('Excluir o cadastro de '+s.n+'?'))return;S.subs=S.subs.filter(x=>x.id!==id);log('Assinante removido: '+s.n);save();rend()}
+function ficha(id){const s=sub(id),p=pinfo(s),u=S.users.find(x=>x.e.toLowerCase()===s.e.toLowerCase());
+const R=[['Nome completo',s.n],['CPF',s.cpf||'—'],['Data de nascimento',s.nasc||'—'],['Celular / WhatsApp',s.tel||'—'],['E-mail (login)',s.e],['Empresa',s.c||'Pessoa física'],['Cadastrado em',s.cad||'—'],['Plano contratado',s.p],['Valor',brl(s.v)],['Validade',s.val||'—'],['Status da conta',s.s],['Acesso GLPI',u?(u.on?'Liberado':'Bloqueado')+' • '+(u.g?'sincronizado':'pendente de sincronizar'):'Não cadastrado no GLPI']];
+const H=S.logs.filter(l=>l.x.includes(s.n)).slice(0,5);
+modal(`<div class="row sp" style="margin-bottom:4px"><h3 style="font-size:18px">${esc(s.n)}</h3><button class="btn sm" onclick="closeM()">✕</button></div><span class="tag ${p.c}">${esc(p.l)}</span><div class="sub" style="font-size:12px;margin:6px 0 14px">${esc(p.d)}</div><div class="tk">${R.map(r=>`<div class="log" style="justify-content:space-between"><span style="color:var(--m)">${r[0]}</span><b style="text-align:right;font-weight:600">${esc(r[1])}</b></div>`).join('')}</div>${H.length?`<h3 style="margin:14px 0 4px;font-size:13px">Histórico recente</h3>${H.map(l=>`<div class="log"><i>${esc(l.t)}</i><span>${esc(l.x)}</span></div>`).join('')}`:''}<div class="row" style="justify-content:flex-end;margin-top:14px"><button class="btn s" onclick="grant(${s.id})">Liberar Mensal ${brl(S.price)}</button></div>`)}
+function grant(id){const pr=S.price,PE=[['+1 hora (cortesia)',1/24],['+24 horas (cortesia)',1],['+7 dias',7],['+30 dias (1 mensalidade)',30],['+1 ano',365],['Vitalício',0]];
+modal(`<h3 style="font-size:17px;margin-bottom:4px">Liberar assinatura Nexus Mensal</h3><p class="sub" style="margin-bottom:14px">Valor: <b style="color:var(--t)">${brl(pr)}</b> via Pix. O acesso é liberado no site e no GLPI.</p><form id="f" class="col"><div><label>Assinante</label><select id="gs2">${S.subs.map(s=>`<option value="${s.id}" ${s.id===id?'selected':''}>${esc(s.n)} — ${esc(s.e)}</option>`).join('')}</select></div><div><label>Período de acesso</label><select id="gd">${PE.map((p,i)=>`<option value="${i}" ${i===3?'selected':''}>${p[0]}</option>`).join('')}</select></div><div><label>Comprovante / ID do Pix (opcional)</label><input id="gr" placeholder="Ex.: E123…"></div><label class="row" style="text-transform:none;font-size:13px;color:var(--t)"><input type="checkbox" id="gp2" checked> Confirmo que o pagamento de ${brl(pr)} foi recebido</label><div class="row" style="justify-content:flex-end"><button type="button" class="btn" onclick="closeM()">Cancelar</button><button class="btn s">Liberar agora</button></div></form>`);
+$('f').onsubmit=e=>{e.preventDefault();const s=sub(+$('gs2').value),i=+$('gd').value,d=PE[i][1];
+if(!$('gp2').checked&&i>=3)return toast('Confirme o recebimento do pagamento','var(--r)');
+let val='Vitalício';if(d){const x=new Date(Date.now()+d*864e5);val=d<1?x.toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'}):fd(x)}
+s.s='Ativo';s.p='Nexus Mensal';s.v=pr;s.val=val;setUser(s,true);if(i>=3)S.pays.unshift({id:'PG-'+String(Date.now()).slice(-5),sid:s.id,n:s.n,v:pr,m:'Pix',st:'Confirmado',d:nowS(),ref:$('gr').value,conf:nowS()});
+log(`Assinatura Mensal (${brl(pr)}) liberada para ${s.n} até ${val}${$('gr').value?' • ref. '+$('gr').value:''}.`);save();closeM();rend();toast('Assinatura liberada para '+s.n+' até '+val)}}
+function newSub(){modal(`<h3 style="font-size:17px;margin-bottom:14px">Novo assinante</h3><form id="f" class="col"><div><label>Nome completo</label><input id="n" required></div><div><label>Empresa</label><input id="c"></div><div><label>E-mail (login)</label><input id="e" type="email" required></div><div class="row"><div style="flex:1"><label>CPF</label><input id="cp" placeholder="000.000.000-00"></div><div style="flex:1"><label>Nascimento</label><input id="nc" placeholder="dd/mm/aaaa"></div></div><div><label>Celular / WhatsApp</label><input id="tl" placeholder="(62) 90000-0000"></div><div><label>Plano</label><select id="p"><option value="0">Teste grátis (1 dia)</option><option value="1">Nexus Mensal — ${brl(S.price)}</option></select></div><div class="row" style="justify-content:flex-end"><button type="button" class="btn" onclick="closeM()">Cancelar</button><button class="btn p">Salvar e liberar acesso</button></div></form>`);
+$('f').onsubmit=e=>{e.preventDefault();const m=$('p').value==='1',em=$('e').value;
+if(S.subs.some(s=>s.e.toLowerCase()===em.toLowerCase()))return toast('E-mail já cadastrado','var(--r)');
+const s={id:Date.now(),n:$('n').value,c:$('c').value,e:em,p:m?'Nexus Mensal':'Teste grátis',v:m?S.price:0,s:'Ativo',cpf:$('cp').value,nasc:$('nc').value,tel:$('tl').value,cad:fd(new Date()),val:fd(new Date(Date.now()+(m?30:1)*864e5))};
+S.subs.unshift(s);setUser(s,true);log(`Novo assinante: ${s.n} (${s.p}).`);save();closeM();rend();toast('Assinante cadastrado')}}
+
+/* ===== Acessos GLPI ===== */
+function atab(t){window.at=t;rend()}
+function urows(){if(!$('ub'))return;const q=($('uq').value||'').toLowerCase(),f=$('up').value;
+const L=S.users.filter(u=>(!f||u.p===f)&&(u.n+u.e).toLowerCase().includes(q));
+$('ub').innerHTML=L.map(u=>`<tr><td><b>${esc(u.n)}</b><div class="sub" style="font-size:11.5px;margin:0">${esc(u.e)}</div>${planTag(u.e)}</td><td><span class="tag ${u.p==='Proprietário'?'wa':'in'}">${esc(u.p)}</span></td><td><span class="tag mu">${esc(u.o)}</span></td><td>${u.g?'<span class="tag ok">Sincronizado</span>':'<span class="tag er">Pendente</span>'}</td><td><span class="tag ${u.on?'ok':'mu'}">${u.on?'Ativo':'Bloqueado'}</span></td><td style="text-align:right;white-space:nowrap"><button class="btn sm" onclick="userM(${u.id})">Editar</button> ${u.p==='Proprietário'?'':`<button class="btn sm" onclick="utog(${u.id})">${u.on?'Bloquear':'Ativar'}</button> <button class="btn sm d" onclick="udel(${u.id})">Remover</button>`}</td></tr>`).join('')||'<tr><td colspan="6" style="text-align:center;color:var(--m);padding:30px">Nenhum usuário encontrado.</td></tr>'}
+function userM(id){const u=S.users.find(x=>x.id===id)||{n:'',e:'',t:'',p:'Assinante',on:true},own=u.p==='Proprietário';
+modal(`<h3 style="font-size:17px;margin-bottom:14px">${id?'Editar':'Novo'} usuário</h3><form id="f" class="col"><div><label>Nome</label><input id="n" required value="${esc(u.n)}"></div><div><label>E-mail (login único)</label><input id="e" type="email" required value="${esc(u.e)}"></div><div><label>Telefone</label><input id="t" value="${esc(u.t||'')}"></div><div class="row"><div style="flex:1"><label>Perfil</label><select id="p" ${own?'disabled':''}>${S.profs.filter(p=>own||p.n!=='Proprietário').map(p=>`<option ${p.n===u.p?'selected':''}>${esc(p.n)}</option>`).join('')}</select></div><div style="flex:1"><label>Status</label><select id="s"><option value="1" ${u.on?'selected':''}>Ativo</option><option value="0" ${u.on?'':'selected'}>Bloqueado</option></select></div></div><label class="row" style="text-transform:none;font-size:13px;color:var(--t)"><input type="checkbox" id="rp"> Exigir nova senha no próximo login</label><div class="row" style="justify-content:flex-end"><button type="button" class="btn" onclick="closeM()">Cancelar</button><button class="btn p">Salvar e enviar ao GLPI</button></div></form>`);
+$('f').onsubmit=e=>{e.preventDefault();const d={n:$('n').value,e:$('e').value,t:$('t').value,p:own?u.p:$('p').value,on:$('s').value==='1',g:true};
+if(S.users.some(x=>x.e.toLowerCase()===d.e.toLowerCase()&&x.id!==id))return toast('E-mail já cadastrado','var(--r)');
+if(id)Object.assign(u,d);else S.users.unshift({id:Date.now(),o:'Manual',...d});
+log(`Usuário ${d.n} ${id?'alterado':'incluído'} (${d.p}).`);save();closeM();rend();toast('Usuário salvo')}}
+function utog(id){const u=S.users.find(x=>x.id===id);u.on=!u.on;log(`Acesso de ${u.n} ${u.on?'liberado':'bloqueado'}.`);save();urows()}
+function udel(id){const u=S.users.find(x=>x.id===id);if(!confirm('Remover '+u.n+' do GLPI?'))return;S.users=S.users.filter(x=>x.id!==id);log('Usuário removido: '+u.n);save();rend()}
+function pull(){let n=0;S.subs.forEach(s=>{if(!S.users.some(u=>u.e.toLowerCase()===s.e.toLowerCase())){S.users.push({id:Date.now()+n++,n:s.n,e:s.e,t:s.tel||'',p:'Assinante',o:'Site',on:s.s!=='Bloqueado',g:false})}});log(`Importação do site: ${n} usuário(s) novo(s).`);save();rend();toast(n?n+' usuário(s) importado(s) — sincronize com o GLPI':'Nenhum usuário novo para importar')}
+function gsync(){const n=S.users.filter(u=>!u.g).length;S.users.forEach(u=>u.g=true);log(`Sincronização GLPI: ${n} usuário(s) enviado(s).`);save();rend();toast(n+' usuário(s) sincronizado(s)')}
+function profM(i){const p=i==null?{n:'',x:{t:1,u:0,a:0,r:0,c:0}}:S.profs[i];
+modal(`<h3 style="font-size:17px;margin-bottom:14px">${i==null?'Novo':'Editar'} perfil</h3><form id="f" class="col"><div><label>Nome do perfil</label><input id="n" required value="${esc(p.n)}"></div>${AR.map(([k,l])=>`<div class="row sp"><label style="margin:0">${l}</label><select data-x="${k}" style="width:140px">${LV.map((v,j)=>`<option value="${j}" ${p.x[k]===j?'selected':''}>${v}</option>`).join('')}</select></div>`).join('')}<div class="row" style="justify-content:flex-end"><button type="button" class="btn" onclick="closeM()">Cancelar</button><button class="btn p">Salvar perfil</button></div></form>`);
+$('f').onsubmit=e=>{e.preventDefault();const n=$('n').value.trim(),x={};document.querySelectorAll('[data-x]').forEach(s=>x[s.dataset.x]=+s.value);
+if(S.profs.some((q,j)=>q.n.toLowerCase()===n.toLowerCase()&&j!==i))return toast('Já existe perfil com esse nome','var(--r)');
+if(i==null)S.profs.push({n,x});else{const old=S.profs[i].n;S.profs[i]={n,x};S.users.forEach(u=>{if(u.p===old)u.p=n})}
+log('Perfil '+n+(i==null?' criado.':' alterado.'));save();closeM();rend()}}
+function pdel(i){const p=S.profs[i];if(S.users.some(u=>u.p===p.n))return toast('Há usuários neste perfil. Mova-os antes.','var(--r)');if(!confirm('Excluir o perfil '+p.n+'?'))return;S.profs.splice(i,1);log('Perfil excluído: '+p.n);save();rend()}
+
+/* ===== Pagamentos ===== */
+const PS={'Confirmado':'ok','Em análise':'wa','Aguardando':'in','Recusado':'er','Estornado':'er'};
+const nowS=()=>new Date().toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'});
+function prows(){if(!$('pb'))return;const q=($('pq').value||'').toLowerCase(),f=$('pf').value;
+const L=S.pays.filter(p=>(!f||p.st===f)&&[p.id,p.n,p.ref].join(' ').toLowerCase().includes(q));
+$('pb').innerHTML=L.map(p=>{const s=sub(p.sid);return`<tr><td class="mono" style="font-size:12px">${esc(p.id)}<div class="sub" style="font-size:11px;margin:0;font-family:Inter,sans-serif">${esc(p.d)}</div></td><td><b>${esc(p.n)}</b><div class="sub" style="font-size:11.5px;margin:0">${esc(s?s.e:'cadastro removido')}</div></td><td class="mono">${brl(p.v)}</td><td>${esc(p.m)}${p.ref?`<div class="sub" style="font-size:11px;margin:0">${esc(p.ref)}</div>`:''}</td><td><span class="tag ${PS[p.st]}">${p.st}</span>${p.conf?`<div class="sub" style="font-size:11px;margin:3px 0 0">em ${esc(p.conf)}</div>`:''}</td><td style="text-align:right;white-space:nowrap">${['Em análise','Aguardando'].includes(p.st)?`<button class="btn sm s" onclick="payOk('${p.id}')">Confirmar</button> <button class="btn sm d" onclick="payNo('${p.id}')">Recusar</button>`:p.st==='Confirmado'?`<button class="btn sm d" onclick="payRef('${p.id}')">Estornar</button>`:'<span class="sub" style="font-size:12px">—</span>'}</td></tr>`}).join('')||'<tr><td colspan="6" style="text-align:center;color:var(--m);padding:30px">Nenhum pagamento encontrado.</td></tr>'}
+function applyPay(p){const s=sub(p.sid);p.st='Confirmado';p.conf=nowS();if(!s)return;if(s.val!=='Vitalício'){const cur=ptBR(s.val),b=(s.p==='Nexus Mensal'&&cur&&cur>new Date())?cur:new Date();b.setDate(b.getDate()+30);s.val=fd(b)}s.p='Nexus Mensal';s.v=p.v;s.s='Ativo';setUser(s,true)}
+function payOk(id){const p=S.pays.find(x=>x.id===id);applyPay(p);const s=sub(p.sid);log(`Pagamento ${p.id} (${brl(p.v)}) confirmado: ${p.n}${s?' — Mensal até '+s.val:''}.`);save();rend();toast('Pagamento confirmado'+(s?' — assinatura até '+s.val:''))}
+function payNo(id){const p=S.pays.find(x=>x.id===id);p.st='Recusado';log(`Pagamento ${p.id} recusado: ${p.n}.`);save();rend();toast('Pagamento recusado','var(--w)')}
+function payRef(id){const p=S.pays.find(x=>x.id===id),s=sub(p.sid);if(!confirm('Estornar '+brl(p.v)+' de '+p.n+'? A assinatura será encerrada e o acesso GLPI bloqueado.'))return;p.st='Estornado';if(s){s.val=fd(new Date(Date.now()-864e5));setUser(s,false)}log(`Pagamento ${p.id} estornado: ${p.n}.`);save();rend();toast('Pagamento estornado','var(--w)')}
+function payNew(){modal(`<h3 style="font-size:17px;margin-bottom:14px">Registrar pagamento</h3><form id="f" class="col"><div><label>Assinante</label><select id="ps">${S.subs.map(s=>`<option value="${s.id}">${esc(s.n)} — ${esc(s.e)}</option>`).join('')}</select></div><div class="row"><div style="flex:1"><label>Valor (R$)</label><input id="pv" type="number" step="0.01" min="0" value="${S.price}"></div><div style="flex:1"><label>Forma</label><select id="pm"><option>Pix</option><option>Transferência</option><option>Dinheiro</option><option>Cartão</option></select></div></div><div><label>Comprovante / referência</label><input id="pr" placeholder="ID do Pix, observação…"></div><div><label>Situação</label><select id="pst"><option value="c">Já recebido — confirmar e liberar 30 dias</option><option value="a">Em análise (conferir depois)</option><option value="w">Aguardando pagamento</option></select></div><div class="row" style="justify-content:flex-end"><button type="button" class="btn" onclick="closeM()">Cancelar</button><button class="btn p">Registrar</button></div></form>`);
+$('f').onsubmit=e=>{e.preventDefault();const s=sub(+$('ps').value),k=$('pst').value,p={id:'PG-'+String(Date.now()).slice(-5),sid:s.id,n:s.n,v:parseFloat($('pv').value)||0,m:$('pm').value,st:k==='a'?'Em análise':'Aguardando',d:nowS(),ref:$('pr').value};
+if(k==='c')applyPay(p);S.pays.unshift(p);log(`Pagamento ${p.id} (${brl(p.v)}) registrado para ${s.n}: ${p.st}.`);save();closeM();rend();toast('Pagamento registrado')}}
+function savePix(){S.pix={key:$('pk').value,name:$('pn').value};log('Conta de recebimento Pix atualizada.');save();toast('Conta de recebimento salva')}
+
+/* ===== Sessão ===== */
+function enter(){$('login').classList.add('hide');$('app').classList.remove('hide');S.auth=true;save();rend()}
+$('lf').onsubmit=e=>{e.preventDefault();enter()};$('demo').onclick=enter;
+$('out').onclick=()=>{S.auth=false;save();$('app').classList.add('hide');$('login').classList.remove('hide')};
+$('rst').onclick=()=>{if(!confirm('Restaurar dados de demonstração?'))return;S=JSON.parse(JSON.stringify(D));S.auth=true;save();rend();toast('Dados restaurados')};
+$('mb').onclick=()=>$('nav').classList.toggle('open');
+addEventListener('hashchange',()=>S.auth&&rend());
+if(S.auth)enter();
+</script>
+</body>
+</html>

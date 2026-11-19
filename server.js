@@ -35572,6 +35572,7 @@ async function handleNexusRequest(req, res) {
     'termos.html': '/termos.html',
     'privacidade.html': '/privacidade.html',
     'glpi-enterprise.html': '/suporte',
+    'admin-assinaturas-glpi.html': '/admin-assinaturas-glpi.html',
     'favicon.svg': '/favicon.svg'
   };
   const SITE_ADMIN_BACKUP_DIR = path.join(__dirname, 'site_backups');
@@ -38229,6 +38230,7 @@ async function handleNexusRequest(req, res) {
     '/admin-site.html': 'text/html; charset=utf-8',
     '/admin-site.css': 'text/css',
     '/admin-site.js': 'application/javascript; charset=utf-8',
+    '/admin-assinaturas-glpi.html': 'text/html; charset=utf-8',
     '/favicon.svg': 'image/svg+xml',
     '/termos.html': 'text/html; charset=utf-8',
     '/privacidade.html': 'text/html; charset=utf-8'
