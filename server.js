@@ -38152,7 +38152,8 @@ async function handleNexusRequest(req, res) {
     }
   }
 
-  if (pathname === '/glpi' || pathname === '/glpi.html' || pathname === '/glpi-enterprise.html') {
+  // /suporte é a rota amigável pública da Central de Serviços: serve a mesma página do GLPI sem expor o nome da ferramenta na URL.
+  if (pathname === '/suporte' || pathname === '/glpi' || pathname === '/glpi.html' || pathname === '/glpi-enterprise.html') {
     const glpiPath = path.join(__dirname, 'glpi-enterprise.html');
     if (fs.existsSync(glpiPath)) {
       const stat = fs.statSync(glpiPath);
@@ -38200,7 +38201,8 @@ async function handleNexusRequest(req, res) {
     '/pagamentos-admin.css': 'text/css',
     '/pagamentos-admin.js': 'application/javascript; charset=utf-8',
     '/site-inicial.css': 'text/css',
-    '/site-inicial.js': 'application/javascript; charset=utf-8'
+    '/site-inicial.js': 'application/javascript; charset=utf-8',
+    '/favicon.svg': 'image/svg+xml'
   };
   let staticFile = null;
   if (STATIC_EXACT_FILES[pathname]) {

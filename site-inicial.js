@@ -361,7 +361,7 @@
     }).join('');
     function pintarCat() {
       $$('.cat', cats).forEach(function (b, i) { b.setAttribute('aria-pressed', String(i === cat)); });
-      ficha.innerHTML = '<div><small>Categoria</small><b>' + esc(CATEGORIAS[cat][0]) + '</b></div><div><small>Tipo sugerido</small><b>' + CATEGORIAS[cat][1] + '</b></div><div><small>Prazo de atendimento</small><b>5 dias úteis</b></div>';
+      ficha.innerHTML = '<div><small>Categoria</small><b>' + esc(CATEGORIAS[cat][0]) + '</b></div><div><small>Tipo sugerido</small><b>' + CATEGORIAS[cat][1] + '</b></div><div><small>Prazo de atendimento</small><b>até 5 dias úteis</b></div>';
     }
     function pintarEtapa() {
       $$('.et', linha).forEach(function (b, i) { b.classList.toggle('ok', i < etapa); b.classList.toggle('now', i === etapa); b.setAttribute('aria-current', i === etapa ? 'step' : 'false'); });

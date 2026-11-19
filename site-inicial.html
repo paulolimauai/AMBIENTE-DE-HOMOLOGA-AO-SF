@@ -15,7 +15,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Nexus Financeiro">
 <meta name="twitter:description" content="Todo o seu dinheiro em um só lugar, com clareza. Teste 1 dia grátis.">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%236f94ff'/%3E%3Cstop offset='1' stop-color='%232f55d4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Ctext x='32' y='45' font-family='Georgia,serif' font-size='38' font-weight='700' text-anchor='middle' fill='%23ffffff'%3EN%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <script>
 /* PERSONALIZAR ESCONDIDO: o <html> tem data-pers="off". Tudo o que é controle de cor/fundo/aparência do site leva o atributo data-pers
    (botão do topo, grupos da gaveta do celular, seção "O painel com a sua cara" e o link dela no rodapé) e some pelo CSS.
@@ -149,9 +149,8 @@
           <button class="chip" id="cfg-reset" type="button" style="width:100%;margin-top:1.1rem">Restaurar padrão</button>
         </div>
       </div>
-      <a class="btn gho btn-chamado" href="/glpi.html?entry=login" target="_blank" rel="opener" aria-label="Abrir chamado" title="Abrir um chamado na Central de Serviços"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/><path d="M20 20c0 1.1-1.8 2-4 2h-2"/></svg><span class="t">Abrir chamado</span></a>
-      <a class="btn gho" data-cta="entrar" href="/login.html" target="_blank" rel="opener"><span class="t">Entrar</span></a>
-      <a class="btn pri hide-sm" data-cta="criar" href="/login.html#criar" target="_blank" rel="opener"><span class="t">Criar conta</span></a>
+      <a class="btn gho hide-sm" data-cta="entrar" href="/login.html" ><span class="t">Entrar</span></a>
+      <a class="btn pri hide-sm" data-cta="criar" href="/login.html#criar" ><span class="t">Criar conta</span></a>
       <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="gaveta" aria-label="Abrir menu"></button>
     </div>
   </div>
@@ -168,9 +167,8 @@
     <a href="#duvidas">Dúvidas</a>
   </nav>
   <div class="btns">
-    <a class="btn pri lg" data-cta="criar" href="/login.html#criar" target="_blank" rel="opener"><span class="t">Criar conta grátis</span></a>
-    <a class="btn gho lg" href="/glpi.html?entry=login" target="_blank" rel="opener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/><path d="M20 20c0 1.1-1.8 2-4 2h-2"/></svg><span class="t">Abrir chamado</span></a>
-    <a class="btn gho lg" data-cta="entrar" href="/login.html" target="_blank" rel="opener"><span class="t">Entrar</span></a>
+    <a class="btn pri lg" data-cta="criar" href="/login.html#criar" ><span class="t">Criar conta grátis</span></a>
+    <a class="btn gho lg" data-cta="entrar" href="/login.html" ><span class="t">Entrar</span></a>
   </div>
   <div class="grp" data-pers><span>Aparência</span><div class="chips" data-modos role="group" aria-label="Aparência"></div></div>
   <div class="grp" data-pers style="margin-top:.8rem"><span>Fundo</span><div class="chips c2" data-fundos role="group" aria-label="Fundo do site"></div></div>
@@ -181,34 +179,22 @@
 
   <!-- ===== Início ===== -->
   <section class="hero" id="inicio" aria-labelledby="h-inicio">
-    <!-- Banner do valor da assinatura: o preço vem do mesmo valor do plano (muda sozinho quando o administrador altera o preço) -->
-    <div class="wrap">
-      <aside class="bn glass rv" aria-label="Valor da assinatura">
-        <div class="bn-p">
-          <span class="bn-k">Plano Mensal</span>
-          <div class="bn-preco" role="img" aria-label="%%PRECO_LABEL%% por mês"><span class="m" aria-hidden="true">R$</span><span class="v" aria-hidden="true">%%PRECO_INT%%</span><span class="c" aria-hidden="true">,%%PRECO_CENTS%%</span><span class="u" aria-hidden="true">/mês</span></div>
-        </div>
-        <p class="bn-t"><b>Teste 1 dia grátis</b><span>Assine só quando decidir. Pagamento somente via Pix.</span></p>
-        <div class="bn-a">
-          <a class="btn pri" data-cta="criar" href="/login.html#criar" target="_blank" rel="opener"><span class="t">Começar com 1 dia grátis</span></a>
-          <a class="btn gho" href="#planos"><span class="t">Ver o plano</span></a>
-        </div>
-      </aside>
-    </div>
     <div class="wrap hero-grid">
-      <div>
-        <h1 id="h-inicio" class="rv">Todo o seu dinheiro em um só lugar, <em>com clareza.</em></h1>
-        <p class="lead rv" style="--d:.06s">O Nexus Financeiro reúne lançamentos, contas e cartões, orçamentos, metas e relatórios em um painel único e traz uma Central de Serviços para abrir chamados quando você precisar de ajuda.</p>
-        <div class="cta rv" style="--d:.12s">
-          <a class="btn pri lg" data-cta="criar" href="/login.html#criar" target="_blank" rel="opener"><span class="t">Criar conta grátis</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-          <a class="btn gho lg" data-cta="entrar" href="/login.html" target="_blank" rel="opener"><span class="t">Já tenho conta</span></a>
+      <div class="hero-copy">
+        <span class="pill hero-badge rv">Gestão financeira pessoal e suporte integrado</span>
+        <h1 id="h-inicio" class="rv" style="--d:.05s">Organize suas finanças com <em>clareza</em> e previsibilidade.</h1>
+        <p class="lead rv" style="--d:.1s">Controle contas, cartões, metas e orçamentos em um painel único. Importe extratos em segundos e conte com suporte dedicado dentro da plataforma.</p>
+        <div class="cta rv" style="--d:.15s">
+          <a class="btn pri lg" data-cta="criar" href="/login.html#criar" ><span class="t">Testar gratuitamente</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          <a class="btn gho lg" href="#recursos"><span class="t">Explorar recursos</span></a>
         </div>
-        <ul class="trust rv" style="--d:.18s">
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4 10-10"/></svg>Pagamento somente via Pix</li>
+        <ul class="trust rv" style="--d:.2s">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4 10-10"/></svg>Sem cartão de crédito</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18h2"/></svg>Acesso imediato no navegador</li>
         </ul>
       </div>
 
-      <div>
+      <div class="hero-visual">
         <div class="mock glass rv" style="--d:.1s" role="img" aria-label="Exemplo ilustrativo do Dashboard Financeiro, com saldo, receitas, despesas, gráfico por mês, despesas por categoria, orçamento e meta.">
           <div class="mock-bar"><span class="d"></span><span class="d"></span><span class="d"></span><b>Dashboard Financeiro</b></div>
           <div class="kpis">
@@ -233,18 +219,20 @@
             <div class="box"><div class="mrow"><span>Meta · Viagem</span><b>68%</b></div><div class="meter"><i style="--w:68%"></i></div></div>
           </div>
         </div>
+        <div class="float-badge fb-top glass" aria-hidden="true"><span class="fb-ico">!</span><div><b>Alerta de orçamento</b><span>Lazer atingiu 85% do limite</span></div></div>
+        <div class="float-badge fb-bottom glass" aria-hidden="true"><span class="fb-ico ok">✓</span><div><b>Extrato OFX importado</b><span>42 lançamentos categorizados</span></div></div>
         <p class="mock-note">Exemplo ilustrativo com valores fictícios.</p>
       </div>
     </div>
   </section>
 
-  <!-- ===== Números ===== -->
-  <section class="faixa" aria-label="O sistema em números">
+  <!-- ===== Destaques ===== -->
+  <section class="faixa" aria-label="Destaques do sistema">
     <div class="wrap">
       <div class="nums rv">
-        <div class="num"><b data-count="9">9</b><span>módulos financeiros no painel</span></div>
-        <div class="num"><b data-count="10">10</b><span>categorias na Central de Serviços</span></div>
-        <div class="num"><b data-count="10">10</b><span>paletas de cor, além da sua própria</span></div>
+        <div class="num"><span class="num-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg></span><b data-count="9">9</b><span>módulos integrados de controle financeiro</span></div>
+        <div class="num"><span class="num-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg></span><b>OFX/CSV</b><span>importação automática de extratos bancários</span></div>
+        <div class="num"><span class="num-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18h2"/></svg></span><b>100%</b><span>responsivo, sincronizado entre computador e celular</span></div>
       </div>
     </div>
   </section>
@@ -260,6 +248,7 @@
       <div class="rec rv">
         <div class="tabs" id="tabs" role="tablist" aria-label="Módulos do sistema" aria-orientation="vertical"></div>
         <div class="painel glass" id="painel" role="tabpanel" tabindex="0">
+          <div class="painel-in"><div><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg></span><h3>Dashboard Financeiro</h3><p>O centro de controle do seu dinheiro: saldo, entradas e saídas do período em uma tela só, com atalhos para o que pede ação.</p><ul class="tick"><li>Saldo consolidado, receitas e despesas do período</li><li>Gráficos por categoria e comparativo entre entradas e saídas</li><li>Nota de saúde financeira e média diária de gastos dos últimos 30 dias</li><li>Período por mês, por ano ou o histórico completo</li></ul></div><div class="vz" aria-hidden="true"><small>Saúde financeira · nota do período</small><div class="saude"><div class="nota">90<small>/100</small></div><div class="sd"><span class="pill ok">Excelente</span><small>Média diária de gastos · R$ 177,58</small></div></div><div><div class="mrow"><span>Poupança</span><b>40%</b></div><div class="meter"><i style="--w:40%;--c:var(--ok)"></i></div></div><div><div class="mrow"><span>Comprometimento</span><b>60%</b></div><div class="meter"><i style="--w:60%;--c:var(--ok)"></i></div></div><div><div class="mrow"><span>Uso do cartão</span><b>33%</b></div><div class="meter"><i style="--w:33%;--c:var(--ok)"></i></div></div><div><div class="mrow"><span>Pontualidade</span><b>75%</b></div><div class="meter"><i style="--w:75%;--c:var(--warn)"></i></div></div></div></div>
           <noscript>
             <ul class="tick">
               <li><b>Dashboard Financeiro:</b> saldo, receitas, despesas e saúde financeira.</li>
@@ -287,7 +276,7 @@
         <p class="lead">Sem instalar nada: o Nexus roda no navegador, no computador ou no celular.</p>
       </div>
       <ol class="passos" style="list-style:none;padding:0">
-        <li class="passo card rv"><h3>Crie sua conta</h3><p>Informe nome, CPF e e-mail, crie uma senha forte e aceite os termos. Leva menos de um minuto.</p></li>
+        <li class="passo card rv"><h3>Crie sua conta</h3><p>Informe nome, e-mail, senha forte e CPF para começar. O CPF é pedido para evitar múltiplos testes grátis e emitir seu recibo. Leva menos de um minuto.</p></li>
         <li class="passo card rv" style="--d:.07s"><h3>Teste por 1 dia</h3><p>O dia grátis começa no cadastro: explore todos os módulos antes de assinar.</p></li>
         <li class="passo card rv" style="--d:.14s"><h3>Lance ou importe</h3><p>Registre os lançamentos, importe o extrato em OFX ou CSV e cadastre as despesas fixas.</p></li>
         <li class="passo card rv" style="--d:.21s"><h3>Acompanhe e decida</h3><p>Veja o dashboard, os alertas do orçamento, o progresso das metas e os relatórios do período.</p></li>
@@ -305,12 +294,12 @@
           <p class="lead">O suporte fica dentro do próprio sistema: você descreve o que precisa, recebe um protocolo e acompanha cada etapa do atendimento.</p>
           <ul class="tick">
             <li><b>Requisição ou incidente:</b> peça algo ou relate o que parou de funcionar.</li>
-            <li><b>Prazo de atendimento de 5 dias úteis</b>, sem contar sábado e domingo.</li>
+            <li><b>Atendimento organizado por protocolo com prazo máximo de até 5 dias úteis</b>, sem contar sábado e domingo.</li>
             <li><b>Histórico completo</b> do chamado, com as respostas do técnico e as suas.</li>
             <li>Chamado resolvido pode ser <b>reaberto em até 7 dias</b>.</li>
           </ul>
           <div class="cta">
-            <a class="btn pri lg" href="/glpi.html?entry=login" target="_blank" rel="opener"><span class="t">Abrir um chamado</span></a>
+            <a class="btn pri lg" href="/suporte?entry=login" ><span class="t">Abrir um chamado</span></a>
           </div>
           <p class="mock-note" style="text-align:left">Para abrir e acompanhar chamados é preciso entrar na sua conta.</p>
         </div>
@@ -385,7 +374,7 @@
         <p class="lead">Cuidados que já fazem parte do sistema, do cadastro à auditoria.</p>
       </div>
       <div class="seg">
-        <div class="card rv"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></span><h3>Senhas protegidas</h3><p>As senhas são guardadas com hash e sal (scrypt), nunca em texto puro.</p></div>
+        <div class="card rv"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></span><h3>Senhas protegidas</h3><p>As senhas são protegidas com criptografia avançada com salt exclusivo, nunca em texto puro.</p></div>
         <div class="card rv" style="--d:.06s"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="15" r="4"/><path d="M10.8 12.2 20 3M16 7l3 3"/></svg></span><h3>Senha forte no cadastro</h3><p>Mínimo de 8 caracteres, com maiúscula, minúscula, número e símbolo.</p></div>
         <div class="card rv" style="--d:.12s"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.8c1.9.7 3.1 2.4 3.5 5.2"/></svg></span><h3>Dados isolados por conta</h3><p>Cada conta acessa só os próprios lançamentos, e o servidor confere o acesso a cada requisição.</p></div>
         <div class="card rv"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><h3>Sessão com expiração</h3><p>O acesso é feito por token e a sessão é encerrada sozinha depois de um período sem uso.</p></div>
@@ -415,7 +404,7 @@
             <li>Aparência personalizável, clara e escura</li>
             <li>Acesso pelo celular, tablet e computador</li>
           </ul>
-          <a class="btn pri lg" data-cta="criar" href="/login.html#criar" target="_blank" rel="opener"><span class="t">Começar com 1 dia grátis</span></a>
+          <a class="btn pri lg" data-cta="criar" href="/login.html#criar" ><span class="t">Começar com 1 dia grátis</span></a>
         </div>
         <div class="pagar card rv" id="pagamento" style="--d:.08s">
           <h3>Como o pagamento funciona</h3>
@@ -426,7 +415,7 @@
             <li><div><b>Pague no app do seu banco</b><span>Faça o Pix pelo aplicativo, no valor do plano.</span></div></li>
             <li><div><b>Receba a confirmação</b><span>Com o pagamento conferido, o acesso é liberado e você recebe o recibo.</span></div></li>
           </ol>
-          <p style="margin-top:1.2rem;font-size:.88rem;color:var(--muted)">A cobrança do mês seguinte é gerada automaticamente.</p>
+          <p style="margin-top:1.2rem;font-size:.88rem;color:var(--muted)">Todo mês uma nova fatura Pix é gerada no painel  nada é debitado sem você autorizar.</p>
         </div>
       </div>
     </div>
@@ -449,7 +438,7 @@
         <details name="faq"><summary>Consigo importar meu extrato do banco?</summary><p>Sim. O módulo Importar Extrato aceita arquivos OFX e CSV: você sobe o arquivo e os lançamentos entram no sistema prontos para revisão e categorização.</p></details>
         <details name="faq"><summary>Como funcionam orçamentos e metas?</summary><p>Em Planejamento Orçamentário você define um limite por categoria e recebe alertas quando o gasto se aproxima do teto. Em Planejamento de Metas você cadastra valor alvo e prazo, e acompanha o progresso na barra de cada meta.</p></details>
         <details name="faq"><summary>Posso guardar comprovantes e documentos?</summary><p>Sim, o módulo Gestão de Documentos permite anexar comprovantes e arquivos ligados aos seus lançamentos, tudo dentro da sua conta.</p></details>
-        <details name="faq"><summary>Como peço ajuda ou abro um chamado?</summary><p>Pelo botão "Abrir chamado" no topo do site ou dentro do sistema, na Central de Serviços. Você escolhe a categoria, descreve o problema e recebe um protocolo para acompanhar cada etapa do atendimento.</p></details>
+        <details name="faq"><summary>Como peço ajuda ou abro um chamado?</summary><p>Pela Central de Serviços, dentro do sistema ou pelo link "Abrir um chamado" no rodapé deste site. Você escolhe a categoria, descreve o problema e recebe um protocolo para acompanhar cada etapa do atendimento.</p></details>
         <details name="faq"><summary>Posso personalizar a aparência do painel?</summary><p>Sim. Você escolhe entre 10 paletas de cor ou a sua própria cor, alterna entre modo claro, escuro e automático, e ajusta a escala da tela em Minha Conta. A mesma aparência vale no site, no login e no painel.</p></details>
         <details name="faq"><summary>Meus dados ficam salvos onde?</summary><p>Na nuvem, vinculados à sua conta. Você acessa de qualquer computador, tablet ou celular com o mesmo login, e pode sair da conta a qualquer momento.</p></details>
       </div>
@@ -462,8 +451,8 @@
   <div class="wrap">
     <div class="rod-in">
       <div><h3>O sistema</h3><ul><li><a href="#recursos">Recursos</a></li><li><a href="#como-funciona">Como funciona</a></li><li><a href="#planos">Planos</a></li><li><a href="#seguranca">Segurança</a></li><li data-pers><a href="#personalizar">Personalizar</a></li></ul></div>
-      <div><h3>Sua conta</h3><ul><li><a href="/login.html#criar" target="_blank" rel="opener">Criar conta grátis</a></li><li><a href="/login.html" target="_blank" rel="opener">Entrar</a></li><li><a href="#perfis">Sua conta no sistema</a></li><li><a href="#planos">Assinatura e pagamento</a></li></ul></div>
-      <div><h3>Ajuda e suporte</h3><ul><li><a href="#duvidas">O que mais perguntam</a></li><li><a href="#atendimento">Central de Serviços</a></li><li><a href="/glpi.html?entry=login" target="_blank" rel="opener">Abrir um chamado</a></li><li><a href="#como-funciona">Como utilizar</a></li></ul></div>
+      <div><h3>Sua conta</h3><ul><li><a href="/login.html#criar" >Criar conta grátis</a></li><li><a href="/login.html" >Entrar</a></li><li><a href="#perfis">Sua conta no sistema</a></li><li><a href="#planos">Assinatura e pagamento</a></li></ul></div>
+      <div><h3>Ajuda e suporte</h3><ul><li><a href="#duvidas">O que mais perguntam</a></li><li><a href="#atendimento">Central de Serviços</a></li><li><a href="/suporte?entry=login" >Abrir um chamado</a></li><li><a href="#como-funciona">Como utilizar</a></li></ul></div>
     </div>
     <p class="copy" id="ano">© Nexus Financeiro. Todos os direitos reservados.</p>
   </div>
