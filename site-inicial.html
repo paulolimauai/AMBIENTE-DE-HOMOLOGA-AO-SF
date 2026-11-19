@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR" data-mode="dark" data-bg="padrao" data-pers="off">
+<html lang="pt-BR" data-mode="dark" data-bg="padrao" data-pers="on">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -17,10 +17,11 @@
 <meta name="twitter:description" content="Todo o seu dinheiro em um só lugar, com clareza. Teste 1 dia grátis.">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <script>
-/* PERSONALIZAR ESCONDIDO: o <html> tem data-pers="off". Tudo o que é controle de cor/fundo/aparência do site leva o atributo data-pers
-   (botão do topo, grupos da gaveta do celular, seção "O painel com a sua cara" e o link dela no rodapé) e some pelo CSS.
-   Para mostrar de novo, troque para data-pers="on": nada mais precisa mudar. Escondido, o site usa o fundo padrão e só segue a cor
-   salva em nexus:cores (a mesma do financeiro e do GLPI), que na primeira visita é gravada como o padrão (oceano).
+/* PERSONALIZAR VISÍVEL: o <html> tem data-pers="on". Tudo o que é controle de cor/fundo/aparência do site leva o atributo data-pers
+   (botão do topo, grupos da gaveta do celular, seção "O painel com a sua cara" e o link dela no rodapé) e aparece pelo CSS.
+   Para esconder de novo, troque para data-pers="off": nada mais precisa mudar. O fundo do site fica em nexus-site-fundo (chave
+   própria) e a cor de destaque em nexus:cores, a MESMA chave do financeiro e do GLPI: a cor escolhida aqui vale também depois do
+   login e ali, e permanece até ser trocada de novo no site (ou nos painéis que compartilham a chave).
    Tema antes do primeiro desenho. Mesmas paletas e mesmas chaves do login e do app (nexus:cores, nexus-modo):
    a cor e a aparência escolhidas aqui valem também depois do login. O fundo (padrão ou vidro) é só do site e fica
    em nexus-site-fundo, chave própria: o login regrava nexus-fundo a cada visita e mudaria o site sem o visitante pedir. */
@@ -108,7 +109,7 @@
   else if(salvo&&P.some(function(p){return p.id===salvo.id}))escolher(salvo.id,false);
   else escolher(PADRAO,true); /* 1ª visita: grava o padrão em nexus:cores, para o financeiro e o GLPI usarem exatamente a mesma cor do site */
   setModo(g('nexus-modo')||'auto',false);
-  setFundo(r.getAttribute('data-pers')==='on'?(g('nexus-site-fundo')||'padrao'):'padrao',false); /* escondido: ignora um fundo salvo antes (não haveria como desfazer) */
+  setFundo(g('nexus-site-fundo')||'padrao',false); /* fundo do site é chave própria: o login regrava nexus-fundo a cada visita e mudaria o site sem o visitante pedir */
 })();
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">

@@ -56,7 +56,7 @@ button{font:inherit;color:inherit}
 a{color:inherit}
 ul{list-style:none;padding:0}
 [hidden]{display:none!important}
-/* Personalizar escondido (interruptor: data-pers="on" no <html> mostra de novo) */
+/* Personalizar visível (interruptor: data-pers="on" no <html>; "off" volta a esconder tudo que leva data-pers) */
 html:not([data-pers="on"]) [data-pers]{display:none!important}
 :focus-visible{outline:.15rem solid var(--accent);outline-offset:.18rem;border-radius:.4rem}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
