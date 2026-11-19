@@ -139,11 +139,6 @@ html[data-bg="vidro"] .glass .card{-webkit-backdrop-filter:none;backdrop-filter:
 .btn:active{transform:translateY(1px)}
 .btn.lg{height:3.3rem;padding:0 1.7rem;font-size:14px;border-radius:.9rem}
 @media (max-width:640px){.hide-sm{display:none!important}}
-/* "Abrir chamado" no topo, junto de Entrar e Criar conta. Medido de 320 a 2560px: o texto cabe de 760 a 1279px e de 1360px para cima;
-   nas faixas apertadas (561-759px e 1280-1359px, onde os 7 links ocupam o centro) fica só o ícone; abaixo de 561px sai do topo e vai para o menu. */
-.btn-chamado{padding:0 1rem}
-@media (max-width:560px){.btn-chamado{display:none}}
-@media (max-width:759px),(min-width:1280px) and (max-width:1359px){.btn-chamado{width:2.9rem;padding:0}.btn-chamado .t{display:none}}
 
 /* personalizar (mesmo comportamento do login) */
 .cfg{position:relative}
@@ -186,7 +181,7 @@ body.menu-aberto{overflow:hidden}
 /* ---------- blocos ---------- */
 section{position:relative;z-index:1}
 .sec{padding:clamp(2.8rem,4.5vw,4rem) 0}
-/* títulos das seções alinhados à esquerda, na mesma borda do hero, da Central de Serviços e dos cartões logo abaixo */
+/* cabeçalhos de seção centralizados: título e subtítulo dividem a mesma coluna de leitura */
 .sec-head{text-align:center;max-width:40rem;margin:0 auto 2.4rem}
 .kicker{display:inline-block;margin-bottom:.8rem;font-size:14px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
 h1,h2,h3,h4{color:var(--white);text-wrap:balance}
@@ -261,6 +256,7 @@ h1 em{font-style:normal;background:linear-gradient(100deg,var(--accent),var(--br
 .float-badge{display:flex;align-items:center;gap:.6rem;width:max-content;max-width:100%;padding:.55rem .8rem;border-radius:1rem}
 .float-badge .fb-ico{flex:none;display:grid;place-items:center;width:1.9rem;height:1.9rem;border-radius:.6rem;font-size:14px;font-weight:800;color:var(--on-brand);background:linear-gradient(145deg,var(--btn-a),var(--btn-b));box-shadow:inset 0 1px 0 rgba(255,255,255,.3)}
 .float-badge .fb-ico.ok{color:var(--base);background:var(--ok);box-shadow:none}
+.float-badge .fb-ico svg{width:.95rem;height:.95rem}
 .float-badge>div{min-width:0}
 .float-badge b{display:block;font-size:14px;line-height:1.25;color:var(--white)}
 .float-badge span{display:block;font-size:14px;line-height:1.3;color:var(--soft)}
@@ -440,6 +436,7 @@ h1 em{font-style:normal;background:linear-gradient(100deg,var(--accent),var(--br
 .ticket-ico{flex:none;width:1.6rem;height:1.6rem;border-radius:50%;display:grid;place-items:center;font-size:.75rem;font-weight:700;background:var(--tint2);color:var(--muted);border:1px solid var(--card-line)}
 .ticket-ico.ok{background:color-mix(in srgb,var(--ok) 18%,transparent);color:var(--ok);border-color:color-mix(in srgb,var(--ok) 40%,transparent)}
 .ticket-ico.now{background:color-mix(in srgb,var(--brand) 22%,transparent);color:var(--accent);border-color:color-mix(in srgb,var(--brand) 45%,transparent)}
+.ticket-ico svg{width:.8rem;height:.8rem;flex:none}
 .ticket-item b{display:block;font-size:.92rem;font-weight:700;color:var(--white)}
 .ticket-item small{display:block;font-size:.8rem;color:var(--soft)}
 .ticket-foot{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding-top:1rem;border-top:1px solid var(--card-line);font-size:.88rem;color:var(--soft)}
@@ -503,8 +500,8 @@ h1 em{font-style:normal;background:linear-gradient(100deg,var(--accent),var(--br
 .fluxo span{font-size:.9rem;color:var(--soft)}
 
 /* ---------- dúvidas ---------- */
-/* perguntas na largura toda, na mesma borda dos outros blocos (sem coluna estreita solta no meio nem buraco ao lado da pergunta aberta) */
-.faq{display:grid;gap:.7rem}
+/* perguntas em coluna única e centralizada, no ritmo de leitura de um texto corrido */
+.faq{display:grid;gap:.7rem;max-width:54rem;margin:0 auto}
 .faq details{border-radius:1rem;background:var(--card);border:1px solid var(--card-line);transition:border-color .2s,background .2s}
 .faq details[open]{border-color:color-mix(in srgb,var(--brand) 45%,transparent)}
 .faq summary{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.05rem 1.2rem;min-height:3.4rem;cursor:pointer;font-weight:700;color:var(--white);list-style:none}
