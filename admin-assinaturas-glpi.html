@@ -72,31 +72,12 @@ tr:hover td{background:rgba(255,255,255,.025)}
 </style>
 </head>
 <body>
-<script>
-/* Guarda de administrador: mesmo token das rotas /api/admin/site/*. Sem ele a página nem chega a abrir. */
-(function(){
-  var token='';try{token=localStorage.getItem('nexus_token')||''}catch(e){}
-  fetch('/api/admin/site/files',{headers:{Authorization:'Bearer '+token}}).then(function(r){
-    if(r.status===401||r.status===403){
-      document.body.innerHTML='<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;font-family:Inter,system-ui,sans-serif;background:#050E1A;color:#e6edf7;padding:20px"><div style="text-align:center;max-width:420px"><h1 style="font-size:20px;margin:0 0 10px">Acesso restrito</h1><p style="color:#8ea3bd;margin:0 0 18px">Esta área é exclusiva para contas com perfil Administrador.</p><a href="/admin-site.html" style="color:#38bdf8;font-weight:600">← Voltar à Administração do Site</a></div></div>';
-      return;
-    }
-    // Administrador liberado: na PRIMEIRA visita entra direto (o login da página é só a porta de demo;
-    // depois disso quem clicou em "Sair" continua vendo a tela de entrada normalmente).
-    try{
-      if(!localStorage.getItem('nexus_admin_v4')){
-        var demo=document.getElementById('demo');
-        if(demo) demo.click();
-      }
-    }catch(e){}
-  }).catch(function(){});
-})();
-</script>
 <div id="login"><div class="glass">
  <div style="text-align:center;margin-bottom:22px"><div class="logo" style="margin:0 auto 12px">NX</div><h1>Nexus Financeiro Hub</h1><p class="sub">Administração de assinaturas e acessos GLPI</p></div>
  <form id="lf" class="col"><div><label>E-mail do administrador</label><input type="email" required value="admin@nexusfinanceirohub.com.br"></div><div><label>Senha</label><input type="password" required placeholder="••••••••••••"></div>
+ <div id="lerr" class="sub" style="display:none;color:var(--r);font-size:12px"></div>
  <button class="btn p" style="padding:11px">Entrar</button><button type="button" class="btn s" id="demo">Entrar em modo demonstração</button></form>
- <p class="sub" style="text-align:center;margin-top:16px;font-size:11px">Demonstração visual. A autenticação real deve ser feita no servidor.</p>
+ <p class="sub" style="text-align:center;margin-top:16px;font-size:11px">Login real da conta Nexus (somente administradores). O modo demonstração usa dados locais de exemplo.</p>
 </div></div>
 
 <div id="app" class="hide">
@@ -256,12 +237,73 @@ function savePix(){S.pix={key:$('pk').value,name:$('pn').value};log('Conta de re
 
 /* ===== Sessão ===== */
 function enter(){$('login').classList.add('hide');$('app').classList.remove('hide');S.auth=true;save();rend()}
-$('lf').onsubmit=e=>{e.preventDefault();enter()};$('demo').onclick=enter;
+/* Login REAL: valida e-mail e senha no mesmo /api/login do sistema e exige perfil Administrador.
+   O token fica em nexus_token (mesmo do app), então as rotas /api/admin/* continuam protegidas. */
+$('lf').onsubmit=function(e){
+  e.preventDefault();
+  var em=(this.querySelector('input[type="email"]')||{}).value||'';
+  var pw=(this.querySelector('input[type="password"]')||{}).value||'';
+  var err=$('lerr'); if(err){err.style.display='none';err.textContent='';}
+  var btn=this.querySelector('button.btn.p'); if(btn)btn.disabled=true;
+  fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:em,password:pw})})
+  .then(function(r){return r.json().then(function(d){return{s:r.status,d:d}})})
+  .then(function(res){
+    if(btn)btn.disabled=false;
+    var d=res.d||{};
+    if(d.success&&d.token){
+      var u=d.user||{};
+      if(u.role!=='Administrador'){
+        if(err){err.textContent='Esta conta não é administradora. Acesso permitido apenas a administradores.';err.style.display='block';}
+        return;
+      }
+      try{
+        localStorage.setItem('nexus_token',d.token);
+        localStorage.setItem('nexus_cached_user',JSON.stringify(u));
+        localStorage.setItem('nexus_session',JSON.stringify({email:u.email}));
+        sessionStorage.setItem('nexus_session_active','true');
+        localStorage.setItem('nexus_login_v5','true');
+      }catch(_){}
+      enter();
+      return;
+    }
+    var msg=(d&&d.error)?d.error:'Não foi possível entrar. Verifique e-mail e senha.';
+    if(err){err.textContent=msg;err.style.display='block';}
+  })
+  .catch(function(){
+    if(btn)btn.disabled=false;
+    if(err){err.textContent='Falha de conexão com o servidor. Tente novamente.';err.style.display='block';}
+  });
+};
+$('demo').onclick=enter;
 $('out').onclick=()=>{S.auth=false;save();$('app').classList.add('hide');$('login').classList.remove('hide')};
 $('rst').onclick=()=>{if(!confirm('Restaurar dados de demonstração?'))return;S=JSON.parse(JSON.stringify(D));S.auth=true;save();rend();toast('Dados restaurados')};
 $('mb').onclick=()=>$('nav').classList.toggle('open');
 addEventListener('hashchange',()=>S.auth&&rend());
 if(S.auth)enter();
+</script>
+<script>
+/* Guarda de administrador (roda depois do script principal):
+   - sem token de sessão: garante que só a tela de login apareça;
+   - com token: confirma no servidor que é administrador; se não for, volta para o login;
+   - admin confirmado na primeira visita: entra direto no painel. */
+(function(){
+  function showLogin(){
+    try{ if(typeof S!=='undefined'&&S){ S.auth=false; save(); } }catch(e){}
+    var l=document.getElementById('login'); if(l) l.classList.remove('hide');
+    var a=document.getElementById('app'); if(a) a.classList.add('hide');
+  }
+  var token='';try{token=localStorage.getItem('nexus_token')||''}catch(e){}
+  if(!token){ showLogin(); return; }
+  fetch('/api/admin/site/files',{headers:{Authorization:'Bearer '+token}}).then(function(r){
+    if(r.status===401||r.status===403){ showLogin(); return; }
+    try{
+      if(!localStorage.getItem('nexus_admin_v4')){
+        var demo=document.getElementById('demo');
+        if(demo) demo.click();
+      }
+    }catch(e){}
+  }).catch(function(){ showLogin(); });
+})();
 </script>
 </body>
 </html>
