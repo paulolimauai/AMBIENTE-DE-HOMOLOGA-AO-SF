@@ -35,7 +35,7 @@
             var saiu = false, tem = false;
             try { saiu = sessionStorage.getItem('glpi_manual_logout') === '1'; } catch (e) {}
             try { tem = !!(localStorage.getItem('nexus_session') || localStorage.getItem('nexus_cached_user') || localStorage.getItem('glpi_10_session')); } catch (e) {}
-            if (tem && !saiu && !(entrada === 'login' && !recarga)) {
+            if (tem && !saiu && !(entrada === 'login' && !recarga && !tem)) {
                 h.setAttribute('data-boot', 'restore');
                 setTimeout(function () { h.removeAttribute('data-boot'); }, 12000);
             }
@@ -3737,6 +3737,31 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             return Boolean(u && (u.role === 'Administrador' || u.role === 'admin' || u.isAdmin === true));
         }
 
+        // O perfil gravado no navegador pode estar velho (a conta foi promovida a Administrador ou bloqueada
+        // depois do login). Antes de abrir o console técnico, pergunta ao servidor quem é o usuário de verdade.
+        // Devolve o usuário fresco do servidor, o usuário salvo quando o servidor não responde, ou null
+        // quando a sessão não existe mais (conta excluída ou token expirado).
+        async function fetchFreshNexusUser() {
+            const stored = getNexusSessionUser();
+            if (!stored || !stored.email) return null;
+            const r = await api('GET', '/api/users');
+            if (r.status === 401) return null;
+            if (!r.ok) return stored;
+            const lista = Array.isArray(r.data) ? r.data : (Array.isArray(r.data.users) ? r.data.users : []);
+            const email = String(stored.email || '').toLowerCase().trim();
+            const fresco = lista.find((u) => u && String(u.email || '').toLowerCase().trim() === email);
+            if (!fresco) return null;
+            try { localStorage.setItem('nexus_cached_user', JSON.stringify(fresco)); } catch (e) {}
+            return fresco;
+        }
+
+        async function resolveNexusSessionUser() {
+            const stored = getNexusSessionUser();
+            if (!stored || !stored.email) return null;
+            const fresco = await fetchFreshNexusUser();
+            return fresco || stored;
+        }
+
         // Converte os dados cadastrados no Sistema Financeiro para o perfil correspondente no GLPI:
         // - Usuário comum -> role: 'user' (abre e acompanha os seus chamados)
         // - Administrador -> role: 'tech' (trata, atribui e resolve chamados), ou 'user' se foi o último modo que ele escolheu
@@ -4027,9 +4052,12 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 if (backBtn) backBtn.classList.add('hidden');
             }
 
-            // Aberto dentro do Perfil Admin (?mode=tech): usa o administrador logado no Sistema Financeiro
+            // Aberto dentro do Perfil Admin (?mode=tech): usa o administrador logado no Sistema Financeiro.
+            // O papel é conferido no SERVIDOR na hora: quem entrou pela página inicial com perfil de
+            // Administrador abre a Área do Administrador direto, sem redigitar a senha.
             if (mode === 'tech') {
-                const glpiUser = buildGlpiUserFromNexus(getNexusSessionUser());
+                const nexusUser = await resolveNexusSessionUser();
+                const glpiUser = nexusUser ? buildGlpiUserFromNexus(nexusUser) : null;
                 if (glpiUser && glpiUser.isAdmin) {
                     glpiUser.role = 'tech';   // ?mode=tech pede o modo de atendimento, seja qual for o último modo gravado
                     currentUser = glpiUser;
@@ -4042,10 +4070,12 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 return;
             }
 
-            // Aberto pelo botão "Abrir Chamado GLPI" na tela de login (?entry=login): tela de login limpa.
+            // Aberto pelo botão "Abrir Chamado GLPI" na tela de login (?entry=login): tela de login limpa
+            // SOMENTE para quem não tem sessão. Quem já entrou pela página inicial/login é reconhecido
+            // direto — o link é o mesmo usado pelos botões do site ("Abrir chamado", "Criar conta").
             // Só vale para quem CHEGOU pelo botão: ao atualizar a página (F5) ou voltar, quem já tem sessão continua logado
             // (antes o ?entry=login ficava preso no endereço e cada F5 pedia o login de novo).
-            if (entry === 'login' && !atualizouPagina) {
+            if (entry === 'login' && !atualizouPagina && !getNexusSessionUser()) {
                 showLoginView();
                 return;
             }
@@ -4056,7 +4086,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             try { manualLogout = sessionStorage.getItem('glpi_manual_logout') === '1'; } catch (e) {}
 
             if (!manualLogout) {
-                const nexusUser = getNexusSessionUser();
+                const nexusUser = await resolveNexusSessionUser();
                 if (nexusUser && nexusUser.email) {
                     currentUser = buildGlpiUserFromNexus(nexusUser);
                     localStorage.setItem('glpi_10_session', JSON.stringify(currentUser));
