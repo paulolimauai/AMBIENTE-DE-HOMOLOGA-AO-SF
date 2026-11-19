@@ -22291,6 +22291,17 @@ function updateAdminMenuVisibility(force = false){
   // O painel administrativo saiu do app (virará página própria): administrador usa as mesmas páginas do usuário.
   const isAdmin = false;
   updateAdminSidebarBadges();
+
+  // "Administrar Site": só o perfil Administrador real (fora do modo espelho) vê o atalho; o conteúdo
+  // em si continua protegido no servidor pelas rotas /api/admin/site/*. Fica ANTES do retorno por cache:
+  // o papel do usuário chega de forma assíncrona e a chave abaixo não muda quando ele vira administrador.
+  const showSiteAdmin = nexusIsAdminUser(currentUser) && !isViewingOtherUser;
+  ['menuSiteAdminBtn', 'mobileDrawerSiteAdminBtn'].forEach(function(id) {
+    const siteBtn = document.getElementById(id);
+    // !important inline vence as regras de perfil (.menu-btn-user é ligado/desligado por html.is-admin)
+    if (siteBtn) siteBtn.style.setProperty('display', showSiteAdmin ? 'flex' : 'none', 'important');
+  });
+
   const currentKey = String(isAdmin) + '|' + (nexusTemLiberacoes(currentUser) ? '1' : '0');
   if (!force && _lastAdminVisibilityKey === currentKey) return;
   _lastAdminVisibilityKey = currentKey;
@@ -22332,15 +22343,6 @@ function updateAdminMenuVisibility(force = false){
     document.querySelectorAll('button[data-page="' + pg + '"]').forEach(function(btn) {
       btn.style.display = isAdmin ? 'flex' : 'none';
     });
-  });
-
-  // "Administrar Site": só o perfil Administrador real (fora do modo espelho) vê o atalho; o conteúdo
-  // em si continua protegido no servidor pelas rotas /api/admin/site/*.
-  const showSiteAdmin = nexusIsAdminUser(currentUser) && !isViewingOtherUser;
-  ['menuSiteAdminBtn', 'mobileDrawerSiteAdminBtn'].forEach(function(id) {
-    const siteBtn = document.getElementById(id);
-    // !important inline vence as regras de perfil (.menu-btn-user é ligado/desligado por html.is-admin)
-    if (siteBtn) siteBtn.style.setProperty('display', showSiteAdmin ? 'flex' : 'none', 'important');
   });
 
   // Liberações: só para conta de usuário com permissão delegada (assinatura manual, bloquear contas ou ver logs)
