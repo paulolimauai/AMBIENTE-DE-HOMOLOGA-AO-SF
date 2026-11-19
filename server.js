@@ -15399,6 +15399,13 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         <span class="label">Minha Conta</span>
       </button>
 
+      <!-- Administração do Site: exclusiva do perfil Administrador. Abre /admin-site.html em nova aba;
+           o servidor só entrega o conteúdo dos arquivos com token de administrador. -->
+      <button type="button" id="menuSiteAdminBtn" class="menu-btn-user" title="Administrar o site público (nexusfinanceirohub.com.br)" style="display:none !important;" onclick="window.open('/admin-site.html','_blank','noopener')">
+        <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
+        <span class="label">Administrar Site</span>
+      </button>
+
       <!-- Liberações: só aparece para conta de usuário a quem o administrador deu permissão (assinatura manual, bloquear contas, ver logs) -->
       <div class="menu-section-header menu-section-liberacoes" style="display:none;">
         <span class="menu-section-title">Liberações</span>
@@ -15571,6 +15578,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
       <!-- Seção: Minha Conta -->
       <div class="mobile-drawer-section-title menu-section-minha-conta">Preferências</div>
       <button data-page="config" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><span class="label">Minha Conta</span></button>
+      <button type="button" id="mobileDrawerSiteAdminBtn" class="menu-btn-user" style="display:none !important;" onclick="window.open('/admin-site.html','_blank','noopener')"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span><span class="label">Administrar Site</span></button>
 
       <!-- Liberações (só para conta de usuário com permissão delegada pelo administrador) -->
       <div class="mobile-drawer-section-title menu-section-liberacoes" style="display:none;">Liberações</div>
@@ -22324,6 +22332,15 @@ function updateAdminMenuVisibility(force = false){
     document.querySelectorAll('button[data-page="' + pg + '"]').forEach(function(btn) {
       btn.style.display = isAdmin ? 'flex' : 'none';
     });
+  });
+
+  // "Administrar Site": só o perfil Administrador real (fora do modo espelho) vê o atalho; o conteúdo
+  // em si continua protegido no servidor pelas rotas /api/admin/site/*.
+  const showSiteAdmin = nexusIsAdminUser(currentUser) && !isViewingOtherUser;
+  ['menuSiteAdminBtn', 'mobileDrawerSiteAdminBtn'].forEach(function(id) {
+    const siteBtn = document.getElementById(id);
+    // !important inline vence as regras de perfil (.menu-btn-user é ligado/desligado por html.is-admin)
+    if (siteBtn) siteBtn.style.setProperty('display', showSiteAdmin ? 'flex' : 'none', 'important');
   });
 
   // Liberações: só para conta de usuário com permissão delegada (assinatura manual, bloquear contas ou ver logs)
@@ -35541,6 +35558,168 @@ async function handleNexusRequest(req, res) {
     return sendJson(res, corsHeaders, 200, { success: true, email: permEmail, permissions: depois });
   }
 
+  // ==================== ADMINISTRAÇÃO DO SITE PÚBLICO (somente administrador) ====================
+  // Editor dos arquivos que montam o site (landing /inicio, login, termos, privacidade, Central de Serviços /suporte e favicon).
+  // Cada gravação copia o arquivo atual para site_backups/ antes de sobrescrever: o administrador desfaz qualquer
+  // alteração em um clique. A lista é uma whitelist fechada — server.js, banco e configurações internas nunca entram aqui.
+  const SITE_ADMIN_FILES = {
+    'site-inicial.html': '/inicio',
+    'site-inicial.css': null,
+    'site-inicial.js': null,
+    'login-nexus-v5.html': '/login.html',
+    'termos.html': '/termos.html',
+    'privacidade.html': '/privacidade.html',
+    'glpi-enterprise.html': '/suporte',
+    'favicon.svg': '/favicon.svg'
+  };
+  const SITE_ADMIN_BACKUP_DIR = path.join(__dirname, 'site_backups');
+  const SITE_ADMIN_MAX_BYTES = 3 * 1024 * 1024;
+  const SITE_ADMIN_MAX_BACKUPS = 40;
+
+  function siteAdminFileInfo(nome) {
+    if (!Object.prototype.hasOwnProperty.call(SITE_ADMIN_FILES, nome)) return null;
+    const filePath = path.join(__dirname, nome);
+    try {
+      const stat = fs.statSync(filePath);
+      if (!stat.isFile()) return null;
+      return { name: nome, filePath, rota: SITE_ADMIN_FILES[nome], size: stat.size, mtime: stat.mtime.toISOString() };
+    } catch (e) { return null; }
+  }
+  function siteAdminBackupPath(nome) {
+    const carimbo = new Date().toISOString().replace(/[:.]/g, '-').replace('T', '_').slice(0, 19);
+    return path.join(SITE_ADMIN_BACKUP_DIR, nome + '.' + carimbo + '.bak');
+  }
+  function siteAdminListBackups(nome) {
+    if (!siteAdminFileInfo(nome)) return null;
+    let nomes = [];
+    try { nomes = fs.readdirSync(SITE_ADMIN_BACKUP_DIR); } catch (e) { return []; }
+    const prefixo = nome + '.';
+    return nomes
+      .filter(n => n.indexOf(prefixo) === 0 && n.slice(-4) === '.bak')
+      .map(n => {
+        const p = path.join(SITE_ADMIN_BACKUP_DIR, n);
+        try { const s = fs.statSync(p); return { file: n, size: s.size, mtime: s.mtime.toISOString() }; }
+        catch (e) { return null; }
+      })
+      .filter(Boolean)
+      .sort((a, b) => b.file.localeCompare(a.file));
+  }
+  function siteAdminPodaBackups(nome) {
+    const lista = siteAdminListBackups(nome) || [];
+    lista.slice(SITE_ADMIN_MAX_BACKUPS).forEach(b => {
+      try { fs.unlinkSync(path.join(SITE_ADMIN_BACKUP_DIR, b.file)); } catch (e) {}
+    });
+  }
+
+  // Lista os arquivos do site que o administrador pode editar.
+  if (req.method === 'GET' && parsedUrl.pathname === '/api/admin/site/files') {
+    if (!getAuthenticatedAdmin(req)) {
+      return sendJson(res, corsHeaders, 401, { success: false, error: 'Autenticação de administrador obrigatória.' });
+    }
+    const files = Object.keys(SITE_ADMIN_FILES).map(siteAdminFileInfo).filter(Boolean);
+    return sendJson(res, corsHeaders, 200, { success: true, files });
+  }
+
+  // Conteúdo de um arquivo do site.
+  if (req.method === 'GET' && parsedUrl.pathname === '/api/admin/site/file') {
+    if (!getAuthenticatedAdmin(req)) {
+      return sendJson(res, corsHeaders, 401, { success: false, error: 'Autenticação de administrador obrigatória.' });
+    }
+    const info = siteAdminFileInfo(String(parsedUrl.query.name || ''));
+    if (!info) return sendJson(res, corsHeaders, 404, { success: false, error: 'Arquivo não editável.' });
+    try {
+      const content = fs.readFileSync(info.filePath, 'utf8');
+      return sendJson(res, corsHeaders, 200, { success: true, file: info, content });
+    } catch (e) {
+      return sendJson(res, corsHeaders, 500, { success: false, error: 'Não foi possível ler o arquivo.' });
+    }
+  }
+
+  // Backups automáticos de um arquivo (mais recentes primeiro).
+  if (req.method === 'GET' && parsedUrl.pathname === '/api/admin/site/backups') {
+    if (!getAuthenticatedAdmin(req)) {
+      return sendJson(res, corsHeaders, 401, { success: false, error: 'Autenticação de administrador obrigatória.' });
+    }
+    const nomeBackup = String(parsedUrl.query.name || '');
+    const lista = siteAdminListBackups(nomeBackup);
+    if (lista === null) return sendJson(res, corsHeaders, 404, { success: false, error: 'Arquivo não editável.' });
+    return sendJson(res, corsHeaders, 200, { success: true, backups: lista });
+  }
+
+  // Grava um arquivo do site. Antes de sobrescrever, copia o atual para site_backups/ (restauração em 1 clique).
+  if (req.method === 'POST' && parsedUrl.pathname === '/api/admin/site/file') {
+    const siteAdmin = getAuthenticatedAdmin(req);
+    if (!siteAdmin) {
+      return sendJson(res, corsHeaders, 401, { success: false, error: 'Autenticação de administrador obrigatória.' });
+    }
+    const leituraSite = await lerCorpoJson(req, SITE_ADMIN_MAX_BYTES + 1024 * 64);
+    if (!leituraSite.ok) return sendJson(res, corsHeaders, leituraSite.status, { success: false, error: leituraSite.mensagem });
+    const nomeSite = String(leituraSite.dados.name || '');
+    const conteudoSite = leituraSite.dados.content;
+    const infoSite = siteAdminFileInfo(nomeSite);
+    if (!infoSite) return sendJson(res, corsHeaders, 404, { success: false, error: 'Arquivo não editável.' });
+    if (typeof conteudoSite !== 'string') {
+      return sendJson(res, corsHeaders, 400, { success: false, error: 'Envie o conteúdo do arquivo como texto.' });
+    }
+    if (Buffer.byteLength(conteudoSite, 'utf8') > SITE_ADMIN_MAX_BYTES) {
+      return sendJson(res, corsHeaders, 413, { success: false, error: 'Arquivo grande demais (máx. 3 MB).' });
+    }
+    try {
+      fs.mkdirSync(SITE_ADMIN_BACKUP_DIR, { recursive: true });
+      if (fs.existsSync(infoSite.filePath)) {
+        fs.copyFileSync(infoSite.filePath, siteAdminBackupPath(nomeSite));
+        siteAdminPodaBackups(nomeSite);
+      }
+      fs.writeFileSync(infoSite.filePath, conteudoSite, 'utf8');
+      try { fileCache.delete(infoSite.filePath); } catch (e) {}
+      const statNovo = fs.statSync(infoSite.filePath);
+      recordSystemLog(siteAdmin.name || 'Administrador', siteAdmin.email, 'Edição do site', 'Site',
+        'Alterou o arquivo público ' + nomeSite + ' (' + statNovo.size + ' bytes). Backup automático criado em site_backups/.');
+      return sendJson(res, corsHeaders, 200, {
+        success: true,
+        size: statNovo.size,
+        mtime: statNovo.mtime.toISOString(),
+        backup: nomeSite
+      });
+    } catch (e) {
+      console.error('[ADMIN SITE] Falha ao gravar arquivo do site:', e);
+      return sendJson(res, corsHeaders, 500, { success: false, error: 'Não foi possível gravar o arquivo.' });
+    }
+  }
+
+  // Restaura um backup: o estado atual vira backup novo e o escolhido volta a ser o arquivo em uso.
+  if (req.method === 'POST' && parsedUrl.pathname === '/api/admin/site/restore') {
+    const siteAdminRestore = getAuthenticatedAdmin(req);
+    if (!siteAdminRestore) {
+      return sendJson(res, corsHeaders, 401, { success: false, error: 'Autenticação de administrador obrigatória.' });
+    }
+    const leituraRestore = await lerCorpoJson(req);
+    if (!leituraRestore.ok) return sendJson(res, corsHeaders, leituraRestore.status, { success: false, error: leituraRestore.mensagem });
+    const nomeRestore = String(leituraRestore.dados.name || '');
+    const backupNome = String(leituraRestore.dados.backup || '');
+    const infoRestore = siteAdminFileInfo(nomeRestore);
+    if (!infoRestore) return sendJson(res, corsHeaders, 404, { success: false, error: 'Arquivo não editável.' });
+    // O nome do backup precisa ser exatamente "<arquivo>.<carimbo>.bak" — nada de caminho ou nome livre
+    if (!new RegExp('^' + nomeRestore.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\.[0-9]{4}-[0-9]{2}-[0-9]{2}_[0-9]{2}-[0-9]{2}-[0-9]{2}\\.bak$').test(backupNome)) {
+      return sendJson(res, corsHeaders, 400, { success: false, error: 'Backup inválido.' });
+    }
+    const backupPath = path.join(SITE_ADMIN_BACKUP_DIR, backupNome);
+    try {
+      if (!fs.existsSync(backupPath)) return sendJson(res, corsHeaders, 404, { success: false, error: 'Backup não encontrado.' });
+      fs.mkdirSync(SITE_ADMIN_BACKUP_DIR, { recursive: true });
+      fs.copyFileSync(infoRestore.filePath, siteAdminBackupPath(nomeRestore));
+      fs.copyFileSync(backupPath, infoRestore.filePath);
+      try { fileCache.delete(infoRestore.filePath); } catch (e) {}
+      const statRest = fs.statSync(infoRestore.filePath);
+      recordSystemLog(siteAdminRestore.name || 'Administrador', siteAdminRestore.email, 'Restauração do site', 'Site',
+        'Restaurou o arquivo público ' + nomeRestore + ' a partir do backup ' + backupNome + '.');
+      return sendJson(res, corsHeaders, 200, { success: true, size: statRest.size, mtime: statRest.mtime.toISOString() });
+    } catch (e) {
+      console.error('[ADMIN SITE] Falha ao restaurar backup:', e);
+      return sendJson(res, corsHeaders, 500, { success: false, error: 'Não foi possível restaurar o backup.' });
+    }
+  }
+
   // Contas de usuário comum para quem recebeu "liberar assinatura" ou "bloquear contas" (administrador também): só o necessário
   // para decidir (nome, e-mail, situação e vencimento) — sem CPF, telefone nem nascimento — e nunca administradores nem a própria conta.
   if (req.method === 'GET' && parsedUrl.pathname === '/api/delegate/accounts') {
@@ -38045,6 +38224,9 @@ async function handleNexusRequest(req, res) {
     '/pagamentos-admin.js': 'application/javascript; charset=utf-8',
     '/site-inicial.css': 'text/css',
     '/site-inicial.js': 'application/javascript; charset=utf-8',
+    '/admin-site.html': 'text/html; charset=utf-8',
+    '/admin-site.css': 'text/css',
+    '/admin-site.js': 'application/javascript; charset=utf-8',
     '/favicon.svg': 'image/svg+xml',
     '/termos.html': 'text/html; charset=utf-8',
     '/privacidade.html': 'text/html; charset=utf-8'

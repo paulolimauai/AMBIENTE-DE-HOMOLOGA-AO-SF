@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Administração do Site · Nexus Financeiro</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/admin-site.css">
+</head>
+<body>
+<header class="ads-top">
+  <div class="ads-brand">
+    <svg width="26" height="26" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+      <rect x="4.5" y="5" width="4" height="18" rx="2" fill="#10B981"/>
+      <path d="M7 5.5L18.5 20.5H22.5L11 5.5H7Z" fill="#34D399"/>
+      <rect x="19.5" y="5" width="4" height="18" rx="2" fill="#059669"/>
+      <circle cx="21.5" cy="5.5" r="2.2" fill="#F59E0B"/>
+    </svg>
+    <div>
+      <strong>NEXUS</strong> <span>FINANCEIRO HUB</span>
+      <small>Administração do Site</small>
+    </div>
+  </div>
+  <div class="ads-actions">
+    <a class="ads-btn ghost" id="adsOpenSite" href="/inicio" target="_blank" rel="noopener">Abrir site</a>
+    <a class="ads-btn ghost" href="/">Voltar ao painel</a>
+    <button class="ads-btn" id="adsReload" type="button">Atualizar</button>
+  </div>
+</header>
+
+<div class="ads-wrap" id="adsWrap">
+  <div class="ads-loading" id="adsLoading">Verificando acesso de administrador…</div>
+  <div class="ads-denied" id="adsDenied" hidden>
+    <h2>Acesso restrito</h2>
+    <p>Esta área é exclusiva para contas com perfil <strong>Administrador</strong>.</p>
+    <a class="ads-btn" href="/login.html">Ir para o login</a>
+  </div>
+
+  <div class="ads-body" id="adsBody" hidden>
+    <aside class="ads-side">
+      <h3>Arquivos do site</h3>
+      <p class="ads-hint">Escolha um arquivo para editar. Toda gravação gera backup automático.</p>
+      <ul class="ads-files" id="adsFiles"></ul>
+      <div class="ads-side-foot">
+        <span id="adsCount"></span>
+      </div>
+    </aside>
+
+    <section class="ads-editor">
+      <div class="ads-editor-bar">
+        <div class="ads-file-info">
+          <strong id="adsFileName">—</strong>
+          <span id="adsFileMeta"></span>
+        </div>
+        <div class="ads-editor-actions">
+          <a class="ads-btn ghost" id="adsPreview" href="#" target="_blank" rel="noopener">Visualizar página</a>
+          <button class="ads-btn ghost" id="adsBackupsBtn" type="button">Backups</button>
+          <button class="ads-btn" id="adsSave" type="button">Salvar alterações</button>
+        </div>
+      </div>
+      <textarea id="adsContent" spellcheck="false" placeholder="Selecione um arquivo à esquerda…"></textarea>
+      <div class="ads-status" id="adsStatus"></div>
+    </section>
+  </div>
+</div>
+
+<div class="ads-modal" id="adsModal" hidden>
+  <div class="ads-modal-box">
+    <div class="ads-modal-head">
+      <h3 id="adsModalTitle">Backups</h3>
+      <button class="ads-btn ghost" id="adsModalClose" type="button">Fechar</button>
+    </div>
+    <div class="ads-modal-body" id="adsModalBody"></div>
+  </div>
+</div>
+
+<script src="/admin-site.js" defer></script>
+</body>
+</html>

@@ -67,3 +67,6 @@ deleted_accounts.json
 # Logs e dumps com dados pessoais de usuarios — nunca versionar
 system_logs_completo.txt
 mb.txt
+
+# Backups automáticos dos arquivos do site criados pelo "Administrar Site" (estado local de execução)
+site_backups/
