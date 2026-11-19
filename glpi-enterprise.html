@@ -2001,7 +2001,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
 
             <section class="glass lg-card" aria-label="Acesso ao GLPI">
                 <h2>Central de Chamados e Suporte</h2>
-                <p class="sub">Abra, acompanhe e resolva chamados de suporte com protocolo único. Entre com o e-mail e a senha do Nexus Financeiro — seu perfil de acesso é carregado automaticamente.</p>
+                <p class="sub">Abra, acompanhe e resolva chamados com protocolo único. Use o mesmo e-mail e a mesma senha do Nexus Financeiro — seu perfil é reconhecido automaticamente.</p>
 
                 <!-- Login manual (mesmo acesso do Sistema Financeiro) -->
                 <form onsubmit="handleManualLogin(event)">
@@ -2136,16 +2136,16 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                             <div class="hero-main">
                                 <span class="hero-tag"><i class="fa-solid fa-headset"></i> Central de Suporte &amp; Autoatendimento</span>
                                 <h2 id="user-greeting">Como podemos ajudar?</h2>
-                                <p>Escolha o serviço, descreva o ocorrido com clareza e acompanhe cada atualização do atendimento em "Meus Chamados".</p>
+                                <p>Escolha o serviço, conte o que aconteceu e acompanhe cada etapa do atendimento em "Meus Chamados".</p>
                             </div>
                             <div class="hero-acts" role="group" aria-label="Abrir um chamado">
                                 <button type="button" onclick="openFormModal('', 'Requisição')" class="btn btn-blue hero-act">
                                     <span class="ha-ico" aria-hidden="true"><i class="fa-solid fa-hand-holding-hand"></i></span>
-                                    <span class="ha-txt"><b>Abrir Requisição</b><small>Peça um serviço ou um acesso</small></span>
+                                    <span class="ha-txt"><b>Abrir Requisição</b><small>Peça um serviço, acesso ou liberação</small></span>
                                 </button>
                                 <button type="button" onclick="openFormModal('', 'Incidente')" class="btn btn-ghost hero-act">
                                     <span class="ha-ico" aria-hidden="true"><i class="fa-solid fa-triangle-exclamation"></i></span>
-                                    <span class="ha-txt"><b>Reportar Incidente</b><small>Algo parou de funcionar</small></span>
+                                    <span class="ha-txt"><b>Reportar Incidente</b><small>Algo parou ou está errado</small></span>
                                 </button>
                             </div>
                         </div>
@@ -2678,7 +2678,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                     <div class="mh-ico"><i class="fa-solid fa-pen-to-square"></i></div>
                     <div>
                         <h3 id="modal-form-title" class="mh-title">Abrir Chamado de Suporte</h3>
-                        <p id="modal-form-sub" class="mh-sub">Preencha os detalhes para abertura do chamado</p>
+                        <p id="modal-form-sub" class="mh-sub">Conte o que você precisa em poucos passos — leva menos de um minuto.</p>
                     </div>
                 </div>
                 <button type="button" onclick="closeModal('modal-form')" class="btn btn-icon" aria-label="Fechar">
@@ -2705,10 +2705,10 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                         <h4 class="fs-h"><span class="n">1</span> Que tipo de chamado?</h4>
                         <div class="picks typ" role="radiogroup" aria-label="Tipo do chamado">
                             <button type="button" class="pick k-req" role="radio" data-typ="Requisição" onclick="pickType(this.dataset.typ)">
-                                <i class="fa-solid fa-hand-holding-hand"></i><span><b>Requisição</b><small>Quero pedir algo: acesso, segunda via, alteração de cadastro, liberação</small></span>
+                                <i class="fa-solid fa-hand-holding-hand"></i><span><b>Requisição</b><small>Pedir um serviço ou liberação: acesso, 2ª via, correção de cadastro</small></span>
                             </button>
                             <button type="button" class="pick k-inc" role="radio" data-typ="Incidente" onclick="pickType(this.dataset.typ)">
-                                <i class="fa-solid fa-triangle-exclamation"></i><span><b>Incidente</b><small>Algo parou ou está errado: erro, falha, cobrança ou acesso que não funciona</small></span>
+                                <i class="fa-solid fa-triangle-exclamation"></i><span><b>Incidente</b><small>Algo parou ou está errado: erro, falha, cobrança indevida</small></span>
                             </button>
                         </div>
                         <select id="form-type" onchange="onFormTypeChange()" class="sr-only" tabindex="-1" aria-hidden="true">
@@ -2791,7 +2791,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
 
                         <div class="field">
                             <label for="form-desc">Descrição detalhada *</label>
-                            <textarea id="form-desc" rows="4" maxlength="5000" oninput="onFormInput()" class="textarea focus-blue" placeholder="Por favor informe mensagens de erro, telas afetadas e passos para reproduzir..."></textarea>
+                            <textarea id="form-desc" rows="4" maxlength="5000" oninput="onFormInput()" class="textarea focus-blue" placeholder="Descreva o que aconteceu: mensagens de erro, telas afetadas e o passo a passo para reproduzir..."></textarea>
                             <div class="field-foot"><p id="err-desc" class="field-err hidden"></p><span id="cnt-desc" class="counter">mínimo de 10 caracteres</span></div>
                         </div>
 
@@ -2815,7 +2815,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                         <div class="sla-l">
                             <i class="fa-solid fa-stopwatch"></i>
                             <div>
-                                <span>SLA estimado</span>
+                                <span>Previsão de resposta</span>
                                 <small id="form-sla-due"></small>
                             </div>
                         </div>
@@ -2829,7 +2829,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                     <span class="hint"><kbd>Ctrl</kbd>+<kbd>Enter</kbd> envia</span>
                     <button type="button" onclick="closeModal('modal-form')" class="btn btn-ghost">Cancelar</button>
                     <button type="submit" id="btn-submit-ticket" class="btn btn-blue">
-                        <i class="fa-solid fa-paper-plane"></i> Registrar Chamado
+                        <i class="fa-solid fa-paper-plane"></i> Enviar chamado
                     </button>
                 </div>
             </form>
@@ -2840,7 +2840,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                     <div class="success-ico"><i class="fa-solid fa-check"></i></div>
                     <div>
                         <h4 id="success-title">Chamado registrado!</h4>
-                        <p id="success-sub">Guarde o protocolo: com ele você acompanha o andamento a qualquer momento em "Meus Chamados".</p>
+                        <p id="success-sub">Guarde o protocolo: com ele você acompanha cada etapa do atendimento em "Meus Chamados".</p>
                     </div>
                     <div class="proto-big">
                         <b id="success-protocol" class="mono">OS-0000</b>
@@ -4713,7 +4713,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             $('form-ticket').classList.remove('hidden');
             $('form-success').classList.add('hidden');
             $('modal-form-title').textContent = 'Abrir Chamado de Suporte';
-            $('modal-form-sub').textContent = 'Preencha os detalhes para abertura do chamado';
+            $('modal-form-sub').textContent = 'Conte o que você precisa em poucos passos — leva menos de um minuto.';
             $('form-banner').classList.add('hidden');
             ['subject', 'desc', 'phone'].forEach((k) => showFieldError('err-' + k, ''));
             ['form-subject', 'form-desc', 'form-req-phone'].forEach((id) => $(id).classList.remove('is-invalid'));
@@ -4807,8 +4807,8 @@ html[data-bg="vidro"] .l-glass{opacity:1}
 
         function validateTicketForm(v) {
             const errs = {};
-            if (v.subject.length < 3) errs.subject = 'Informe o assunto do chamado (mínimo de 3 caracteres).';
-            if (v.desc.length < 10) errs.desc = 'Descreva o que você precisa com um pouco mais de detalhes (mínimo de 10 caracteres).';
+            if (v.subject.length < 3) errs.subject = 'Resuma o assunto em poucas palavras (mínimo de 3 caracteres).';
+            if (v.desc.length < 10) errs.desc = 'Conte o que aconteceu com um pouco mais de detalhe (mínimo de 10 caracteres).';
             if (v.phone) {
                 const d = v.phone.replace(/\D/g, '');
                 const nat = d.length > 11 && d.startsWith('55') ? d.slice(2) : d;
@@ -4900,7 +4900,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             $('success-title').textContent = data.duplicate ? 'Este chamado já havia sido registrado' : 'Chamado registrado!';
             $('success-sub').textContent = data.duplicate
                 ? 'Identificamos um chamado igual enviado há pouco, então não criamos outro. Guarde o protocolo para acompanhar o andamento.'
-                : 'Guarde o protocolo: com ele você acompanha o andamento a qualquer momento em "Meus Chamados".';
+                : 'Guarde o protocolo: com ele você acompanha cada etapa do atendimento em "Meus Chamados".';
             $('success-protocol').textContent = lastCreatedProtocol;
             $('success-type').textContent = v.type;
             $('success-cat').textContent = v.category;
