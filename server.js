@@ -14737,12 +14737,6 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 <script src="/dashboard-financeiro.js?v=${ASSETS_V}"></script>
 <link rel="stylesheet" href="/transacoes.css?v=${ASSETS_V}" />
 <script src="/transacoes.js?v=${ASSETS_V}"></script>
-<link rel="stylesheet" href="/administracao.css?v=${ASSETS_V}" />
-<script src="/administracao.js?v=${ASSETS_V}"></script>
-<link rel="stylesheet" href="/assinaturas.css?v=${ASSETS_V}" />
-<script src="/assinaturas.js?v=${ASSETS_V}"></script>
-<link rel="stylesheet" href="/pagamentos-admin.css?v=${ASSETS_V}" />
-<script src="/pagamentos-admin.js?v=${ASSETS_V}"></script>
 <script src="/importacao.js?v=${ASSETS_V}"></script>
 </head>
 <body>
@@ -15338,17 +15332,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
   <!-- BARRA LATERAL EXECUTIVA (SIDEBAR DESIGN 4K - LIQUID GLASS) -->
   <aside class="menu sidebar-menu" id="menu">
     <div class="sidebar-scroll" id="menuTrack">
-      <!-- Botão de Ação Rápida: Novo Cadastro (Admin). O atalho "Nova Transação" foi retirado da barra lateral (continua na página Transações) -->
-
-      <div class="sidebar-action-wrap">
-        <button type="button" class="sidebar-quick-action-btn" id="sidebarAdminQuickCreateBtn" onclick="openAdminCreateUserModal()" style="display:none;" title="Novo Cadastro Administrativo">
-          <span class="quick-action-ic">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
-          </span>
-          <span class="label">Novo Cadastro</span>
-          <span class="quick-action-badge">ADM</span>
-        </button>
-      </div>
+      <!-- O atalho "Nova Transação" foi retirado da barra lateral (continua na página Transações) -->
 
       <!-- Seção: Visão Geral -->
       <div class="menu-section-header menu-section-visao">
@@ -15425,45 +15409,6 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         <span class="label">Liberações</span>
       </button>
 
-      <!-- Seção Administrativa Executiva (Exclusiva para Administrador) -->
-      <div class="menu-section-header menu-section-admin" style="display:none;">
-        <span class="menu-section-title">Painel Administrativo</span>
-        <span class="menu-section-line"></span>
-      </div>
-      <button data-page="usuarios" id="menuUsuariosBtn" class="menu-btn-admin" style="display:none;" title="Gestão de Cadastros & Assinaturas">
-        <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
-        <span class="admin-menu-field-body">
-          <span class="label">Cadastros & Contas</span>
-          <span class="sub-label">Usuários, Planos e Acessos</span>
-        </span>
-        <span class="admin-menu-count-pill" id="menuUsersCountBadge">0</span>
-      </button>
-      <button data-page="assinaturas" id="menuAssinaturasBtn" class="menu-btn-admin" style="display:none;" title="Assinaturas: quem paga, quem vence, liberar tempo e bloquear">
-        <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 5 3.4 8 8 9 4.6-1 8-4 8-9V6l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg></span>
-        <span class="admin-menu-field-body">
-          <span class="label">Assinaturas</span>
-          <span class="sub-label">Vencimentos, Liberação e Bloqueio</span>
-        </span>
-      </button>
-      <!-- "Central GLPI & O.S." saiu do Painel Administrativo (pedido de 10/11/2026): o atendimento de chamados é feito no GLPI (/glpi.html) por quem tem perfil Administrador -->
-      <button data-page="pagamentos" id="menuPagamentosBtn" class="menu-btn-admin" style="display:none;" title="Pagamentos (Pix, Cartão, Boleto), Liberação & 2ª Via de Boleto">
-        <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><path d="M6 15h4"/><path d="M14 15h4"/></svg></span>
-        <span class="admin-menu-field-body">
-          <span class="label">Pagamentos & Boletos</span>
-          <span class="sub-label">Pix, Cartão, 2ª Via e Liberação</span>
-        </span>
-      </button>
-      <button data-page="logs" id="menuLogsBtn" class="menu-btn-admin" style="display:none;" title="Logs do Sistema & Auditoria">
-        <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>
-        <span class="admin-menu-field-body">
-          <span class="label">Auditoria & Logs</span>
-          <span class="sub-label">Eventos e Segurança</span>
-        </span>
-        <span class="admin-menu-count-pill" id="menuLogsCountBadge">0</span>
-      </button>
-
-      <!-- O cartão "Governança ativa" (Contas / O.S. Fila / Técnicos) foi retirado do menu do administrador (pedido de 10/11/2026) -->
-
     </div>
 
     <!-- Rodapé da Sidebar: Conta e Botão de Recolher Menu -->
@@ -15505,24 +15450,6 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
     <button type="button" data-page="metas" class="mobile-bottom-btn mobile-btn-user" title="Metas">
       <span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2" fill="currentColor"/></svg></span>
       <span>Metas</span>
-    </button>
-
-    <!-- Abas para Administrador (Exclusivas) -->
-    <button type="button" data-page="usuarios" class="mobile-bottom-btn mobile-btn-admin" style="display:none;" title="Usuários">
-      <span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
-      <span>Usuários</span>
-    </button>
-    <button type="button" data-page="assinaturas" class="mobile-bottom-btn mobile-btn-admin" style="display:none;" title="Assinaturas">
-      <span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 5 3.4 8 8 9 4.6-1 8-4 8-9V6l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg></span>
-      <span>Assinaturas</span>
-    </button>
-    <button type="button" data-page="pagamentos" class="mobile-bottom-btn mobile-btn-admin" style="display:none;" title="Pagamentos & 2ª Via de Boleto">
-      <span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></span>
-      <span>Pagamentos</span>
-    </button>
-    <button type="button" data-page="logs" class="mobile-bottom-btn mobile-btn-admin" style="display:none;" title="Logs do Sistema">
-      <span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>
-      <span>Logs</span>
     </button>
 
     <button type="button" class="mobile-bottom-btn" id="mobileBottomMoreBtn" title="Todas as Opções">
@@ -15649,12 +15576,6 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
       <div class="mobile-drawer-section-title menu-section-liberacoes" style="display:none;">Liberações</div>
       <button data-page="liberacoes" id="mobileDrawerLiberacoesBtn" class="menu-btn-user menu-btn-delegate" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg></span><span class="label">Liberações</span></button>
 
-      <!-- Seção Administrativa Móvel (Exclusiva Administrador) -->
-      <div class="mobile-drawer-section-title menu-section-admin" style="display:none;">Painel Administrativo</div>
-      <button data-page="usuarios" id="mobileDrawerUsuariosBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span class="label">Cadastros & Contas</span></button>
-      <button data-page="assinaturas" id="mobileDrawerAssinaturasBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 5 3.4 8 8 9 4.6-1 8-4 8-9V6l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg></span><span class="label">Assinaturas</span></button>
-      <button data-page="pagamentos" id="mobileDrawerPagamentosBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></span><span class="label">Pagamentos & Boletos</span></button>
-      <button data-page="logs" id="mobileDrawerLogsBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span><span class="label">Auditoria & Logs</span></button>
     </nav>
 
     <!-- Botão de Sair no Rodapé do Mobile Drawer -->
@@ -16790,32 +16711,11 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
           <span>Trocar conta</span>
         </button>
-        <button type="button" id="subAdminBypassBtn" class="pw-btn pw-btn-amber" onclick="window.closeSubscriptionPaywall(true)" style="display:none;">Admin: ignorar</button>
-        <button type="button" id="subAdminResetBtn" class="pw-btn pw-btn-sky" onclick="window.resetTrialForTesting()" style="display:none;">Admin: +1 dia de teste</button>
         <button type="button" id="subModalCloseBtn" class="pw-btn pw-icon-btn" onclick="window.closeSubscriptionPaywall(false)" style="display:none;" title="Fechar" aria-label="Fechar">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
       </div>
     </header>
-
-    <!-- Controle do administrador (somente admin) -->
-    <div id="subAdminFullControlBar" class="pw-admin" style="display:none;">
-      <div class="pw-admin-inner">
-        <span class="pw-admin-title">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7l4 4 5-7 5 7 4-4-2 11H5L3 7z"/></svg>
-          <span>Controle do administrador &bull; concessão rápida de acesso</span>
-        </span>
-        <div class="pw-admin-actions">
-          <button type="button" class="pw-btn pw-btn-sm" onclick="adminGrantTimeToActiveUser(60)">+1 hora</button>
-          <button type="button" class="pw-btn pw-btn-sm" onclick="adminGrantTimeToActiveUser(1440)">+24 horas</button>
-          <button type="button" class="pw-btn pw-btn-sm" onclick="adminGrantTimeToActiveUser(10080)">+7 dias</button>
-          <button type="button" class="pw-btn pw-btn-sm" onclick="adminGrantTimeToActiveUser(43200)">+30 dias</button>
-          <button type="button" class="pw-btn pw-btn-sm" onclick="adminGrantTimeToActiveUser(525600)">+1 ano</button>
-          <button type="button" class="pw-btn pw-btn-sm pw-btn-solid" onclick="adminGrantTimeToActiveUser('lifetime')">Vitalício</button>
-          <button type="button" class="pw-btn pw-btn-sm pw-btn-amber" onclick="window.closeSubscriptionPaywall(true)">Fechar</button>
-        </div>
-      </div>
-    </div>
 
     <!-- Checkout -->
     <div id="subCheckoutView">
@@ -21318,7 +21218,7 @@ function nexusTemPermissao(u, id) { return !!u && (u.role === 'Administrador' ||
 function nexusTemLiberacoes(u) {
   return !!u && u.role !== 'Administrador' && (nexusTemPermissao(u, 'assinatura.liberar') || nexusTemPermissao(u, 'contas.bloquear') || nexusTemPermissao(u, 'logs.ver'));
 }
-function nexusPagesFor(u) { return nexusIsAdminUser(u) ? NEXUS_ADMIN_PAGES : (nexusTemLiberacoes(u) ? NEXUS_USER_PAGES.concat(NEXUS_DELEGATE_PAGES) : NEXUS_USER_PAGES); }
+function nexusPagesFor(u) { return NEXUS_USER_PAGES.concat(nexusTemLiberacoes(u) ? NEXUS_DELEGATE_PAGES : []); }
 // Quem está logado muda a lista de permissões no servidor (o administrador marcou ou tirou algo): atualiza menu e tela sem novo login
 function nexusRefreshOwnPermissions() {
   if (!currentUser || isViewingOtherUser || nexusIsAdminUser(currentUser)) return;
@@ -21338,7 +21238,7 @@ function nexusPagamentoAguardando(u) {
     (u.subscription_status === 'trial' && String(u.subscription_payment_id || '').indexOf('NEXUS-SUB-') === 0));
 }
 function nexusResolvePage(page, isAdmin) {
-  const allowed = isAdmin ? NEXUS_ADMIN_PAGES : nexusPagesFor(currentUser);
+  const allowed = nexusPagesFor(currentUser);
   return allowed.includes(page) ? page : allowed[0];
 }
 
@@ -22380,7 +22280,8 @@ function updateAdminSidebarBadges(){
 }
 
 function updateAdminMenuVisibility(force = false){
-  const isAdmin = nexusIsAdminUser(currentUser);
+  // O painel administrativo saiu do app (virará página própria): administrador usa as mesmas páginas do usuário.
+  const isAdmin = false;
   updateAdminSidebarBadges();
   const currentKey = String(isAdmin) + '|' + (nexusTemLiberacoes(currentUser) ? '1' : '0');
   if (!force && _lastAdminVisibilityKey === currentKey) return;
