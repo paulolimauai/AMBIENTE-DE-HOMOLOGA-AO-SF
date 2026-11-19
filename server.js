@@ -15322,16 +15322,6 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         </div>
 
 
-        <div class="nx-palette-wrap" id="nxPaletteWrap">
-          <div class="icon-btn" id="nxPaletteBtn" role="button" tabindex="0" aria-haspopup="true" aria-expanded="false" title="Cores do fundo">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
-          </div>
-          <div class="nx-palette-pop" id="nxPalettePop" role="group" aria-label="Escolher cores do fundo">
-            <span class="nx-palette-lbl">Cores do fundo</span>
-            <div class="nx-palette-swatches" id="nxPaletteSwatches"></div>
-          </div>
-        </div>
-
         <button type="button" class="btn-primary" id="headerMirrorExitBtn" onclick="exitViewMode()" style="display:none; background:linear-gradient(135deg, #F59E0B 0%, #D97706 100%) !important; color:#060B18 !important; font-weight:800 !important; font-size:12px !important; padding:6px 14px !important; border-radius:10px !important; border:1.5px solid #FDE68A !important; box-shadow:0 0 16px rgba(245,158,11,0.5) !important; cursor:pointer !important; align-items:center; gap:6px;">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>
           <span>Voltar ao Admin</span>
@@ -32410,56 +32400,8 @@ window.applyPostLoginBg = function(theme) {
   } catch(e){}
 })();
 
-// ==================== Seletor de Cores do Fundo (mesmas cores da tela de login) ====================
-(function initNexusPaletteMenu() {
-  const api = window.__nxPalette;
-  const wrap = document.getElementById('nxPaletteWrap');
-  const btn = document.getElementById('nxPaletteBtn');
-  const swatches = document.getElementById('nxPaletteSwatches');
-  if (!api || !wrap || !btn || !swatches) return;
-
-  const hue = h => 'hsl(' + h + ' 95% 58%)';
-  api.PALETAS.forEach(p => {
-    const b = document.createElement('button');
-    b.type = 'button';
-    b.className = 'nx-sw';
-    b.dataset.id = p.id;
-    b.title = p.nome;
-    b.setAttribute('aria-label', 'Paleta ' + p.nome);
-    b.style.setProperty('--c', 'linear-gradient(135deg, ' + hue(p.h[0]) + ' 0 34%, ' + hue(p.h[1]) + ' 34% 67%, ' + hue(p.h[2]) + ' 67%)');
-    b.addEventListener('click', () => { api.choose(p.id); mark(); });
-    swatches.appendChild(b);
-  });
-
-  const customLabel = document.createElement('label');
-  customLabel.className = 'nx-sw-custom';
-  customLabel.title = 'Escolher uma cor personalizada';
-  const customInput = document.createElement('input');
-  customInput.type = 'color';
-  customInput.value = (api.current().hex) || '#8c5aff';
-  customInput.setAttribute('aria-label', 'Escolher uma cor personalizada');
-  customInput.addEventListener('input', e => { api.chooseCustom(e.target.value); mark(); });
-  customLabel.appendChild(customInput);
-  swatches.appendChild(customLabel);
-
-  function mark() {
-    const cur = api.current();
-    swatches.querySelectorAll('.nx-sw').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.id === cur.id)));
-    customLabel.classList.toggle('on', cur.id === 'custom');
-  }
-  mark();
-
-  function setOpen(open) {
-    wrap.classList.toggle('open', open);
-    btn.setAttribute('aria-expanded', String(open));
-  }
-  btn.addEventListener('click', e => { e.stopPropagation(); setOpen(!wrap.classList.contains('open')); });
-  btn.addEventListener('keydown', e => {
-    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpen(!wrap.classList.contains('open')); }
-  });
-  document.addEventListener('click', e => { if (!wrap.contains(e.target)) setOpen(false); });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') setOpen(false); });
-})();
+/* O seletor "Cores do fundo" foi removido do painel: a personalização é exclusiva do site principal (/inicio).
+   __nxPalette continua ativo apenas para LER nexus:cores e pintar o painel com a cor escolhida no site. */
 
 
 /* ==================== Restaurar sessão ao atualizar a página sem flicker ==================== */

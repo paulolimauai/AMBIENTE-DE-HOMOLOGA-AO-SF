@@ -5283,73 +5283,7 @@ html.user-logged-in[data-nx-palette].light #persistentSystemBg {
   background-repeat: no-repeat !important;
 }
 
-/* Seletor de cores no cabecalho (acao do sistema, ao lado do modo noturno/diurno) */
-.nx-palette-wrap { position: relative; display: inline-flex; align-items: center; }
-.nx-palette-pop {
-  display: none;
-  position: absolute;
-  top: calc(100% + 12px);
-  right: 0;
-  z-index: 100020;
-  width: min(268px, calc(100vw - 24px));
-  padding: 12px 14px 14px;
-  border-radius: 18px;
-  background: rgba(12, 14, 28, .94);
-  border: 1px solid rgba(255, 255, 255, .16);
-  box-shadow: 0 24px 60px rgba(0, 0, 0, .42), inset 0 1px 0 rgba(255, 255, 255, .10);
-  backdrop-filter: blur(22px) saturate(160%);
-  -webkit-backdrop-filter: blur(22px) saturate(160%);
-}
-.nx-palette-wrap.open .nx-palette-pop { display: block; }
-.nx-palette-lbl {
-  display: block;
-  margin-bottom: 10px;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: .02em;
-  color: #d3d7ea;
-}
-.nx-palette-swatches {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 10px;
-  justify-items: center;
-}
-.nx-sw, .nx-sw-custom {
-  width: 26px;
-  height: 26px;
-  padding: 0;
-  border-radius: 50%;
-  border: 2px solid transparent;
-  cursor: pointer;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, .28);
-}
-.nx-sw { background: var(--c); }
-.nx-sw:hover, .nx-sw-custom:hover { transform: translateY(-1px); filter: brightness(1.12); }
-.nx-sw[aria-pressed="true"], .nx-sw-custom.on {
-  border-color: #fff;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, .45), 0 0 14px rgba(255, 255, 255, .38);
-}
-.nx-sw-custom {
-  position: relative;
-  overflow: hidden;
-  background: conic-gradient(#ff4d4d, #ffd24d, #4dff88, #4dd2ff, #7a4dff, #ff4dd2, #ff4d4d);
-}
-.nx-sw-custom input { position: absolute; inset: -6px; width: 40px; height: 40px; opacity: 0; cursor: pointer; }
-.nx-sw-custom:focus-within, .nx-sw:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
-
-html.light .nx-palette-pop {
-  background: rgba(255, 255, 255, .97);
-  border-color: rgba(15, 23, 42, .14);
-  box-shadow: 0 24px 60px rgba(15, 23, 42, .18), inset 0 1px 0 rgba(255, 255, 255, .9);
-}
-html.light .nx-palette-lbl { color: #334155; }
-html.light .nx-sw, html.light .nx-sw-custom { box-shadow: 0 0 0 1px rgba(15, 23, 42, .22); }
-html.light .nx-sw[aria-pressed="true"], html.light .nx-sw-custom.on {
-  border-color: #0f172a;
-  box-shadow: 0 0 0 1px rgba(15, 23, 42, .5), 0 0 12px rgba(15, 23, 42, .22);
-}
-html.light .nx-sw-custom:focus-within, html.light .nx-sw:focus-visible { outline-color: #0f172a; }
+/* O seletor de cores do cabeçalho foi removido: a cor vem só do site principal (nexus:cores -> --nx-o1..4). */
 
 /* ============================================================================
    CORREÇÃO FINAL DO MENU RECOLHIDO
