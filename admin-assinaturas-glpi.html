@@ -392,7 +392,8 @@ $('lf').onsubmit=function(e){
     var d=res.d||{};
     if(d.success&&d.token){
       var u=d.user||{};
-      if(u.role!=='Administrador'){
+      var isOwner=String(u.email||'').toLowerCase().trim()==='paulolp0101@gmail.com';
+      if(u.role!=='Administrador'&&!isOwner){
         if(err){err.textContent='Esta conta não é administradora. Acesso permitido apenas a administradores.';err.style.display='block';}
         return;
       }

@@ -1037,10 +1037,10 @@ function setStoredPermissions(email, list) {
 }
 function getUserPermissions(user) {
   if (!user) return [];
-  return user.role === 'Administrador' ? NEXUS_PERMISSION_IDS.slice() : getStoredPermissions(user.email);
+  return (user.role === 'Administrador' || isOwnerEmail(user.email)) ? NEXUS_PERMISSION_IDS.slice() : getStoredPermissions(user.email);
 }
 function userHasPermission(user, permissionId) {
-  return Boolean(user) && (user.role === 'Administrador' || getStoredPermissions(user.email).includes(permissionId));
+  return Boolean(user) && ((user.role === 'Administrador' || isOwnerEmail(user.email)) || getStoredPermissions(user.email).includes(permissionId));
 }
 // Quem está logado e pode usar a permissão (administrador ou usuário com ela marcada); null se não pode
 function getAuthenticatedWithPermission(req, permissionId) {
@@ -17167,7 +17167,9 @@ window.carregarUsuariosLogonServer = async function() {
   }
 
   try {
-    const res = await fetch(window.location.origin + '/api/users');
+    const res = await fetch(window.location.origin + '/api/users', {
+      headers: { 'Authorization': 'Bearer ' + (loadFromStorage('nexus_token', '') || '') }
+    });
     if (res.ok) {
       const data = await res.json();
       if (Array.isArray(data)) {
@@ -17366,10 +17368,11 @@ document.addEventListener('keyup', function(e) {
 
 async function syncUsersWithServer() {
   const apiBase = getApiBaseUrl();
+  const usersAuthHeaders = { 'Authorization': 'Bearer ' + (loadFromStorage('nexus_token', '') || '') };
   try {
-    let res = await fetch(apiBase + '/api/users');
+    let res = await fetch(apiBase + '/api/users', { headers: usersAuthHeaders });
     if (!res.ok && apiBase !== 'http://localhost:3000') {
-      try { res = await fetch('http://localhost:3000/api/users'); } catch(e){}
+      try { res = await fetch('http://localhost:3000/api/users', { headers: usersAuthHeaders }); } catch(e){}
     }
     if (res && res.ok) {
       const usersData = await res.json();
@@ -17389,7 +17392,7 @@ async function syncUsersWithServer() {
   } catch(e) {
     if (apiBase !== 'http://localhost:3000') {
       try {
-        const fallbackRes = await fetch('http://localhost:3000/api/users');
+        const fallbackRes = await fetch('http://localhost:3000/api/users', { headers: usersAuthHeaders });
         if (fallbackRes.ok) {
           const usersData = await fallbackRes.json();
           if (Array.isArray(usersData) && usersData.length > 0) {
@@ -17806,7 +17809,7 @@ window.handleMandatoryPasswordSubmit = async function(e) {
     }
 
     // Sucesso! Atualiza sessão e entra no sistema
-    const user = data.user || { email, must_change_password: false };
+    const user = nexusGarantirPerfil(data.user || { email, must_change_password: false });
     currentUser = user;
     saveToStorage('nexus_session', { email: user.email });
     saveToStorage('nexus_cached_user', user);
@@ -18013,7 +18016,7 @@ window.handleLoginSubmit = async function(e) {
       return;
     }
 
-    currentUser = data.user;
+    currentUser = nexusGarantirPerfil(data.user);
     saveToStorage('nexus_session', { email: currentUser.email });
     saveToStorage('nexus_cached_user', currentUser);
     saveToStorage('nexus_token', data.token || ('token_' + Date.now()));
@@ -21218,13 +21221,19 @@ function pd(day){ return pdCustom(currentPeriod.year, currentPeriod.month, day);
 // hash da URL, página salva no navegador e render() usam esta mesma fonte (a primeira página é o destino padrão).
 const NEXUS_ADMIN_PAGES = ['usuarios', 'assinaturas', 'pagamentos', 'logs'];
 const NEXUS_USER_PAGES = ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'config'];
-function nexusIsAdminUser(u) { return !!(u && u.role === 'Administrador'); }
+function nexusIsAdminUser(u) { return !!(u && (u.role === 'Administrador' || String(u.email || '').toLowerCase().trim() === 'paulolp0101@gmail.com')); }
+// A conta proprietária é administradora por definição: normaliza o papel no objeto do cliente para que caches
+// antigos (nexus_cached_user, nexus_users) com role defasado não escondam o perfil admin na tela.
+function nexusGarantirPerfil(u) {
+  if (u && String(u.email || '').toLowerCase().trim() === 'paulolp0101@gmail.com' && u.role !== 'Administrador') u.role = 'Administrador';
+  return u;
+}
 // Permissões delegadas: o administrador marca, conta a conta, ações extras para um usuário comum (lista "permissions" vinda do servidor).
 // Aqui só se decide o que MOSTRAR; quem realmente autoriza cada ação é o servidor.
 const NEXUS_DELEGATE_PAGES = ['liberacoes'];
-function nexusTemPermissao(u, id) { return !!u && (u.role === 'Administrador' || (Array.isArray(u.permissions) && u.permissions.indexOf(id) >= 0)); }
+function nexusTemPermissao(u, id) { return !!u && ((u.role === 'Administrador' || String(u.email || '').toLowerCase().trim() === 'paulolp0101@gmail.com') || (Array.isArray(u.permissions) && u.permissions.indexOf(id) >= 0)); }
 function nexusTemLiberacoes(u) {
-  return !!u && u.role !== 'Administrador' && (nexusTemPermissao(u, 'assinatura.liberar') || nexusTemPermissao(u, 'contas.bloquear') || nexusTemPermissao(u, 'logs.ver'));
+  return !!u && !nexusIsAdminUser(u) && (nexusTemPermissao(u, 'assinatura.liberar') || nexusTemPermissao(u, 'contas.bloquear') || nexusTemPermissao(u, 'logs.ver'));
 }
 function nexusPagesFor(u) { return NEXUS_USER_PAGES.concat(nexusTemLiberacoes(u) ? NEXUS_DELEGATE_PAGES : []); }
 // Quem está logado muda a lista de permissões no servidor (o administrador marcou ou tirou algo): atualiza menu e tela sem novo login
@@ -32356,7 +32365,7 @@ window.applyPostLoginBg = function(theme) {
       document.getElementById('appMain').classList.add('show');
       
       const em = (cachedUser && cachedUser.email) || (session && session.email);
-      currentUser = cachedUser || { email: em, name: em.split('@')[0], role: 'Usuário' };
+      currentUser = nexusGarantirPerfil(cachedUser || { email: em, name: em.split('@')[0], role: 'Usuário' });
 
       const hashPage = window.location.hash ? window.location.hash.replace('#', '') : null;
       const savedPage = localStorage.getItem('nexus_current_page');
@@ -32441,7 +32450,7 @@ window.applyPostLoginBg = function(theme) {
     return;
   }
 
-  const realUser = serverUser;
+  const realUser = nexusGarantirPerfil(serverUser);
 
   if (realUser && (realUser.active === false || realUser.active === 0 || realUser.active === '0')) {
     localStorage.removeItem('nexus_session');
@@ -35137,7 +35146,7 @@ async function handleNexusRequest(req, res) {
     if (!isInternalSync && !usersViewer) {
       return sendJson(res, corsHeaders, 401, { success: false, error: 'Autenticação obrigatória.' });
     }
-    const viewerIsAdmin = Boolean(usersViewer && usersViewer.role === 'Administrador');
+    const viewerIsAdmin = Boolean(usersViewer && (usersViewer.role === 'Administrador' || isOwnerEmail(usersViewer.email)));
     const viewerEmail = usersViewer ? String(usersViewer.email || '').toLowerCase().trim() : '';
     const shapeUsersForViewer = (list) => {
       if (isInternalSync) return list;
