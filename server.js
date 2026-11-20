@@ -15502,15 +15502,15 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
       </div>
       <button data-page="orcamentos" class="menu-btn-user" title="Planejamento Orçamentário">
         <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg></span>
-        <span class="label">Planejamento Orçamentário</span>
+        <span class="label">Orçamentos</span>
       </button>
       <button data-page="metas" class="menu-btn-user" title="Planejamento de Metas">
         <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg></span>
-        <span class="label">Planejamento de Metas</span>
+        <span class="label">Metas</span>
       </button>
       <button data-page="relatorios" class="menu-btn-user" title="Relatórios e Insights">
         <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
-        <span class="label">Relatórios e Insights</span>
+        <span class="label">Relatórios</span>
       </button>
 
       <!-- Seção: Ferramentas & Fluxos -->
@@ -15528,7 +15528,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
       </button>
       <button data-page="anexos" class="menu-btn-user" title="Gestão de Documentos">
         <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg></span>
-        <span class="label">Gestão de Documentos</span>
+        <span class="label">Documentos</span>
       </button>
       <!-- "Ordem de Serviço" é exclusiva do perfil Administrador (botão #menuOrdensBtn no Painel Administrativo). Usuário comum abre chamado pela tela de login. -->
 
@@ -15708,15 +15708,15 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
       
       <!-- Seção: Planejamento -->
       <div class="mobile-drawer-section-title menu-section-planejamento">Planejamento</div>
-      <button data-page="orcamentos" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg></span><span class="label">Planejamento Orçamentário</span></button>
-      <button data-page="metas" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2" fill="currentColor"/></svg></span><span class="label">Planejamento de Metas</span></button>
-      <button data-page="relatorios" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><path d="M3 20h18"/></svg></span><span class="label">Relatórios e Insights</span></button>
+      <button data-page="orcamentos" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg></span><span class="label">Orçamentos</span></button>
+      <button data-page="metas" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2" fill="currentColor"/></svg></span><span class="label">Metas</span></button>
+      <button data-page="relatorios" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><path d="M3 20h18"/></svg></span><span class="label">Relatórios</span></button>
       
       <!-- Seção: Ferramentas -->
       <div class="mobile-drawer-section-title menu-section-ferramentas">Ferramentas</div>
       <button data-page="recorrentes" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6"/><path d="M2.5 22v-6h6"/><path d="M2 11.5a10 10 0 0 1 18.8-4.3L21.5 8"/><path d="M22 12.5a10 10 0 0 1-18.8 4.2L2.5 16"/></svg></span><span class="label">Despesas Fixas</span></button>
       <button data-page="importar" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span><span class="label">Importar Extrato</span></button>
-      <button data-page="anexos" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg></span><span class="label">Gestão de Documentos</span></button>
+      <button data-page="anexos" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg></span><span class="label">Documentos</span></button>
       
       <!-- Seção: Minha Conta -->
       <div class="mobile-drawer-section-title menu-section-minha-conta">Preferências</div>
@@ -31971,6 +31971,24 @@ if(menuDesktop){
   menuDesktop.addEventListener('pointerdown', handleMenuNav, { passive: true });
   menuDesktop.addEventListener('click', handleMenuNav);
 }
+
+// Dica nativa (title) dos itens do menu só com o menu recolhido (só ícones): aberto, o rótulo já está escrito e a dica cobria o título da seção de baixo
+(function() {
+  var sincTitulos = function() {
+    var recolhido = document.documentElement.classList.contains('sidebar-collapsed') || document.body.classList.contains('sidebar-collapsed');
+    document.querySelectorAll('#menu button.menu-btn-user').forEach(function(b) {
+      var rot = b.querySelector('.label');
+      if (!rot) return;
+      if (recolhido) { b.setAttribute('title', rot.textContent.trim()); } else { b.removeAttribute('title'); }
+    });
+  };
+  sincTitulos();
+  if (typeof MutationObserver !== 'undefined') {
+    var obsTitulos = new MutationObserver(sincTitulos);
+    obsTitulos.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    obsTitulos.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+  }
+})();
 
 // Controle de Recolhimento e Expansão da Sidebar
 document.querySelectorAll('#sidebarCollapseBtn, #sidebarFooterCollapseBtn, .sidebar-header-toggle, .sidebar-toggle-btn').forEach(function(toggleBtn) {

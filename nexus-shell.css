@@ -52,9 +52,9 @@ html.user-logged-in #menu.sidebar-menu { height: auto !important; bottom: 0 !imp
    Só no menu EXPANDIDO (o recolhido em trilho de ícones e a gaveta do celular não mudam). Não há "display" nas regras de
    itens (o JS esconde itens de admin por perfil). O menu do administrador (.menu-btn-admin) tem layout próprio e não entra aqui.
    ===================================================================================== */
-/* Largura: um pouco maior para caber "Planejamento Orçamentário" sem apertar (antes clamp(272px, 22vw, 320px): +8px no mínimo, +24px no máximo); o conteúdo
+/* Largura: com os rótulos curtos ("Orçamentos", "Metas", "Relatórios", "Documentos") o menu volta a ser estreito (era clamp(280px, 23vw, 344px)); o conteúdo
    (.main) usa a mesma variável no frontend-polish.css, então acompanha sozinho. */
-html.user-logged-in { --nx-sidebar-w: clamp(280px, 23vw, 344px) !important; }
+html.user-logged-in { --nx-sidebar-w: clamp(272px, 19vw, 292px) !important; }
 
 @media (min-width: 861px) {
   /* Títulos de seção: um único padrão (tamanho, espaçamento, cor neutra e discreta) para todas as seções, inclusive a do admin */
@@ -787,6 +787,9 @@ html.user-logged-in.is-admin .topheader #scaleMenuBtn {
   white-space: nowrap !important;
 }
 html.user-logged-in.is-admin .topheader #scaleMenuBtn #currentScaleLabel { white-space: nowrap !important; line-height: 1 !important; }
+/* Mesma correção para o usuário comum: o rótulo "Auto (100%)" quebrava em 2 linhas dentro do botão de 36px e invadia o botão Sair */
+html.user-logged-in:not(.is-admin) .topheader #scaleMenuBtn { width: auto !important; padding: 0 12px !important; gap: 8px !important; white-space: nowrap !important; }
+html.user-logged-in:not(.is-admin) .topheader #scaleMenuBtn #currentScaleLabel { white-space: nowrap !important; line-height: 1 !important; }
 html.user-logged-in.is-admin .topheader #logoutBtn {
   height: var(--nx-tb) !important;
   min-height: var(--nx-tb) !important;
