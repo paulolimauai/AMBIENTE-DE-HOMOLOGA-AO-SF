@@ -38560,7 +38560,9 @@ async function handleNexusRequest(req, res) {
       res.writeHead(404, { ...corsHeaders, 'Content-Type': 'application/json' });
       return res.end(JSON.stringify({ error: 'Arquivo não encontrado.' }));
     }
-    const cacheControl = staticFile.isImage ? 'public, max-age=31536000, immutable' : 'public, max-age=86400';
+    // CSS/JS: no-cache (o navegador revalida a cada carga e recebe 304 quando nada mudou).
+    // Antes era max-age=86400: uma correção de estilo podia ficar até 24h "invisível" no celular.
+    const cacheControl = staticFile.isImage ? 'public, max-age=31536000, immutable' : 'no-cache';
     if (!staticFile.isImage) {
       const stat = fs.statSync(staticFile.filePath);
       const cached = fileCache.get(staticFile.filePath);
