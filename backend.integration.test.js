@@ -712,6 +712,12 @@ test('visitas: abrir página grava o IP completo na pasta visitas/; só o admini
   assert.equal(minhas[0].origem, 'google.com');
   assert.ok(!JSON.stringify(minhas[0]).includes('segredo'), 'a query da origem não pode ser gravada');
 
+  // a aba "Visitas" do painel: o painel carrega o script e o servidor o entrega como JavaScript
+  assert.match((await api('GET', '/admin-assinaturas-glpi')).texto, /<script src="\/admin-visitas\.js"><\/script>/);
+  const scriptAba = await api('GET', '/admin-visitas.js');
+  assert.equal(scriptAba.status, 200);
+  assert.match(scriptAba.headers.get('content-type'), /javascript/);
+
   assert.equal((await api('GET', '/api/admin/visitas')).status, 401, 'sem login');
   const ana = (await login('ana@teste.nexus', 'Ana@12345')).token;
   assert.ok([401, 403].includes((await api('GET', '/api/admin/visitas', { token: ana })).status), 'usuário comum');

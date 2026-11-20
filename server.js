@@ -38642,6 +38642,7 @@ async function handleNexusRequest(req, res) {
     '/admin-assinaturas-glpi.html': 'text/html; charset=utf-8',
     '/nexus-sso.js': 'application/javascript; charset=utf-8',
     '/admin-liberacao.js': 'application/javascript; charset=utf-8',
+    '/admin-visitas.js': 'application/javascript; charset=utf-8',
     '/favicon.svg': 'image/svg+xml',
     '/fonts.css': 'text/css',
     '/termos.html': 'text/html; charset=utf-8',
