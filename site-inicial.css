@@ -208,7 +208,7 @@ h2{font:700 clamp(1.75rem,3vw,2.25rem)/1.2 var(--sans);letter-spacing:-.02em}
 .js .rv.in{opacity:1;transform:none}
 
 /* grades empilhadas: a coluna única nunca passa da largura da tela (sem isto o conteúdo longo alarga a página no celular) */
-.hero-grid,.rec,.atd,.pers,.plano-w,.perfis,.seg,.mini,.passos,.painel-in,.mock-row,.mock-foot{grid-template-columns:minmax(0,1fr)}
+.hero-grid,.rec,.atd,.pers,.plano-w,.perfis,.seg,.passos,.painel-in,.mock-row,.mock-foot{grid-template-columns:minmax(0,1fr)}
 .hero-grid>*,.rec>*,.atd>*,.pers>*,.plano-w>*,.painel-in>*{min-width:0}
 
 /* ---------- início ---------- */
@@ -424,23 +424,6 @@ h1 em{font-style:normal;background:linear-gradient(100deg,var(--accent),var(--br
 .etdesc{margin-top:1rem;padding:.9rem 1rem;border-radius:.9rem;min-height:4.6rem;font-size:1rem;color:var(--soft);background:var(--tint);border:1px solid var(--card-line)}
 .etdesc b{display:block;color:var(--white);margin-bottom:.15rem}
 @media (max-width:520px){.et{font-size:1rem}.et i{width:1.9rem;height:1.9rem}.et::before{top:1.15rem}.et small{font-size:1rem}}
-.mini{display:grid;place-items:center;margin-top:1.4rem}
-
-/* ticket de acompanhamento de chamado */
-.ticket{padding:1.4rem;border-radius:1.25rem;max-width:28rem;margin:0 auto}
-.ticket-head{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding-bottom:1rem;border-bottom:1px solid var(--card-line)}
-.ticket-head small{display:block;font-size:1rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-.ticket-head b{display:block;font:600 1.4rem/1.2 var(--serif);color:var(--white);letter-spacing:-.01em}
-.ticket-body{display:grid;gap:.9rem;padding:1.2rem 0}
-.ticket-item{display:flex;align-items:center;gap:.8rem}
-.ticket-ico{flex:none;width:1.6rem;height:1.6rem;border-radius:50%;display:grid;place-items:center;font-size:1rem;font-weight:700;background:var(--tint2);color:var(--muted);border:1px solid var(--card-line)}
-.ticket-ico.ok{background:color-mix(in srgb,var(--ok) 18%,transparent);color:var(--ok);border-color:color-mix(in srgb,var(--ok) 40%,transparent)}
-.ticket-ico.now{background:color-mix(in srgb,var(--brand) 22%,transparent);color:var(--accent);border-color:color-mix(in srgb,var(--brand) 45%,transparent)}
-.ticket-ico svg{width:.8rem;height:.8rem;flex:none}
-.ticket-item b{display:block;font-size:1rem;font-weight:700;color:var(--white)}
-.ticket-item small{display:block;font-size:1rem;color:var(--soft)}
-.ticket-foot{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding-top:1rem;border-top:1px solid var(--card-line);font-size:1rem;color:var(--soft)}
-.ticket-foot b{color:var(--white);font-weight:700}
 .btn.sm{height:2.4rem;padding:0 1rem;font-size:1rem}
 
 /* ---------- perfis ---------- */
