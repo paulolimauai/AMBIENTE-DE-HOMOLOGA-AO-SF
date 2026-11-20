@@ -124,16 +124,17 @@ html[data-bg="topografia"] .l-glow,html[data-bg="topografia"] .l-topo{opacity:1}
 .t{fill:none;stroke:var(--ln2);stroke-width:1;vector-effect:non-scaling-stroke}.t2{stroke:var(--accent);opacity:.35}
 html[data-bg="vidro"] .l-glass{opacity:1}
 .l-glass i,.l-glass b{position:absolute;display:block}
-.l-glass i{border-radius:50%;background:radial-gradient(circle at 30% 28%,var(--accent),var(--brand) 52%,var(--glow-b));animation:drift 26s ease-in-out infinite alternate}
-.l-glass .o1{width:clamp(14rem,36vw,60rem);aspect-ratio:1;left:8vw;top:8vh}
-.l-glass .o2{width:clamp(12rem,30vw,52rem);aspect-ratio:1;right:5vw;bottom:6vh;background:radial-gradient(circle at 30% 28%,var(--glow-a),var(--glow-b));animation-duration:32s}
+.l-glass i{border-radius:50%;background:radial-gradient(circle at 30% 28%,var(--accent),var(--brand) 52%,var(--glow-b));opacity:.62;filter:saturate(.82);animation:drift 26s ease-in-out infinite alternate}
+.l-glass .o1{width:clamp(13rem,30vw,50rem);aspect-ratio:1;left:8vw;top:8vh}
+.l-glass .o2{width:clamp(11rem,26vw,44rem);aspect-ratio:1;right:5vw;bottom:6vh;background:radial-gradient(circle at 30% 28%,var(--glow-a),var(--glow-b));animation-duration:32s}
 .l-glass .o3{width:clamp(8rem,16vw,28rem);aspect-ratio:1;left:56vw;top:6vh;background:radial-gradient(circle at 30% 28%,var(--accent),var(--glow-a));animation-duration:22s}
-.l-glass b{border-radius:2rem;background:linear-gradient(135deg,rgba(255,255,255,.18),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.22);box-shadow:0 1.5rem 3rem rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.35);-webkit-backdrop-filter:blur(1.6rem) saturate(150%);backdrop-filter:blur(1.6rem) saturate(150%)}
+.l-glass b{border-radius:2rem;background:linear-gradient(135deg,rgba(255,255,255,.10),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.10);box-shadow:0 1.5rem 3rem rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.16);-webkit-backdrop-filter:blur(1.6rem) saturate(150%);backdrop-filter:blur(1.6rem) saturate(150%)}
 .l-glass .p1{width:clamp(12rem,32vw,50rem);height:60vh;left:2vw;top:20vh;transform:rotate(-8deg)}
 .l-glass .p2{width:clamp(10rem,26vw,42rem);height:44vh;right:7vw;top:26vh;transform:rotate(9deg)}
 .l-glass .p3{width:clamp(8rem,18vw,30rem);height:24vh;left:44vw;bottom:4vh;transform:rotate(-4deg)}
 html[data-bg="vidro"] .card{background:linear-gradient(135deg,rgba(255,255,255,.14),rgba(255,255,255,.04)),rgba(8,12,30,.42);border-color:rgba(255,255,255,.22);-webkit-backdrop-filter:blur(2rem) saturate(170%);backdrop-filter:blur(2rem) saturate(170%)}
 :root[data-mode="light"][data-bg="vidro"] .card{background:linear-gradient(135deg,rgba(255,255,255,.75),rgba(255,255,255,.38));border-color:rgba(255,255,255,.8)}
+:root[data-mode="light"] .l-glass i{opacity:.82;filter:none}
 :root[data-mode="light"] .l-glass b{box-shadow:0 1.5rem 3rem rgba(30,45,110,.18),inset 0 1px 0 rgba(255,255,255,.7)}
 /* ---------- estrutura ---------- */
 main{position:relative;z-index:2;width:100%;max-width:29rem;margin:auto 0;display:flex;flex-direction:column;align-items:center}
