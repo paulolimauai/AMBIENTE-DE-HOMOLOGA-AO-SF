@@ -1872,6 +1872,70 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             .hero { padding: 1.1rem; }
             .hero-acts { grid-template-columns: minmax(0, 1fr); }
         }
+
+        /* ==================== Fila de chamados: leitura mais fácil (20/11) ==================== */
+        /* painéis mais opacos sobre o fundo de vidro: o texto não disputa com as formas coloridas */
+        #tech-subview-queue .toolbar,
+        #tech-queue-table-wrap { background: linear-gradient(rgba(var(--dk), .5), rgba(var(--dk), .5)), var(--glass-fill); }
+        #tech-subview-queue .table-wrap { background: rgba(var(--dk), .5); }
+        #tech-subview-queue .toolbar.stacked { gap: 1rem; padding: 1.1rem 1.2rem; }
+
+        /* filtros rápidos em dois grupos, cada um com seu título */
+        #tech-chips { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1.2rem; }
+        #tech-chips .fgrp { display: flex; flex-wrap: wrap; align-items: center; gap: .45rem; min-width: 0; }
+        #tech-chips .fgrp-t { margin-right: .25rem; font-size: max(.75rem, 12px); font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+        #tech-chips .fchip { font-weight: 600; }
+        #tech-chips .fchip.is-on { font-weight: 800; }
+        #tech-chips .fchip.is-zero:not(.is-on) { color: var(--muted); }
+        #tech-chips .fchip.is-zero:not(.is-on) b { color: var(--muted); background: transparent; box-shadow: inset 0 0 0 1px var(--line); }
+        @container (min-width: 104rem) { #tech-chips .fgrp + .fgrp { padding-left: 1.2rem; border-left: 1px solid var(--line); } }
+        #tech-queue-sub { text-wrap: balance; }
+
+        /* busca e filtros alinhados em grade (sem filtro sozinho na linha de baixo); ações agrupadas */
+        #tech-subview-queue .toolbar-row { display: grid; grid-template-columns: minmax(0, 1fr); gap: .9rem; align-items: center; }
+        #tech-subview-queue .toolbar-l { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem; flex: none; }
+        #tech-subview-queue .toolbar-l .input-icon { grid-column: 1 / -1; min-width: 0; }
+        #tech-subview-queue .toolbar-l .select { width: 100%; min-width: 0; }
+        #tech-subview-queue .toolbar-r { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; }
+        #tech-subview-queue .toolbar-r .view-mode-toggle { margin-right: auto; }
+        @container (min-width: 52rem) {
+            #tech-subview-queue .toolbar-l { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+        }
+        @container (min-width: 84rem) {
+            #tech-subview-queue .toolbar-l { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+            #tech-subview-queue .toolbar-l .input-icon { grid-column: span 2; }
+        }
+        @container (max-width: 40rem) {
+            /* celular: cada grupo de filtros vira uma faixa de rolagem lateral (em vez de 7 linhas empilhadas) */
+            #tech-chips { display: grid; gap: .5rem; }
+            #tech-chips .fgrp { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding: .1rem .1rem .15rem; -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 1.6rem), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 1.6rem), transparent); }
+            #tech-chips .fgrp::-webkit-scrollbar { display: none; }
+            #tech-chips .fgrp > * { flex: none; }
+            #tech-subview-queue .toolbar-r { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            #tech-subview-queue .toolbar-r .view-mode-toggle { grid-column: 1 / -1; margin: 0; }
+            #tech-subview-queue .toolbar-r .view-mode-toggle .btn { flex: 1; justify-content: center; }
+            #tech-subview-queue .toolbar-r > .btn { width: 100%; justify-content: center; }
+        }
+
+        /* notebook e tablet: a tabela da fila cabe sem rolar de lado (botões só com ícone e título um pouco mais estreito) */
+        @container (max-width: 100rem) {
+            #tech-subview-queue .tbl th, #tech-subview-queue .tbl td { padding-left: .65rem; padding-right: .65rem; }
+            #tech-subview-queue .tbl .act-txt { display: none; }
+            #tech-subview-queue .tbl .row-acts .btn-sm { width: var(--ctl-sm); padding: 0; }
+        }
+        @container (max-width: 76rem) { #tech-subview-queue .tbl td.t-cell { min-width: 10rem; } }
+
+        /* cabeçalho da tabela: menor e mais leve, para o conteúdo das linhas ser o que se lê primeiro */
+        #tech-subview-queue .tbl th { padding-top: .7rem; padding-bottom: .7rem; font-size: max(.8125rem, 12px); font-weight: 700; letter-spacing: .06em; }
+
+        /* estado vazio com título, explicação e (quando há filtros) o caminho de volta */
+        #tech-queue-tbody tr.q-empty td { padding: 3rem 1rem 3.3rem; }
+        .qe { display: grid; justify-items: center; gap: .5rem; text-align: center; }
+        .qe-ico { width: 3.5rem; height: 3.5rem; display: grid; place-items: center; margin-bottom: .3rem; border-radius: 1.1rem; background: rgba(var(--acc-rgb), .14); border: 1px solid rgba(var(--acc-rgb), .3); }
+        .t-empty .qe-ico i { display: block; margin: 0; font-size: 1.5rem; color: var(--acc-l); }
+        .qe-t { font-size: 1.15rem; font-weight: 800; color: var(--white); }
+        .qe-s { max-width: 34rem; line-height: 1.5; color: var(--ink-2); }
+        .qe .btn { margin-top: .6rem; }
     </style>
 </head>
 <body>
@@ -2429,7 +2493,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                             <div>
                                 <div class="crumbs"><i class="fa-solid fa-house"></i> ITSM Operations <i class="fa-solid fa-chevron-right"></i> <span id="tech-queue-crumb" class="here">Fila de Chamados</span></div>
                                 <h2 id="tech-queue-title">Fila de Chamados</h2>
-                                <p id="tech-queue-sub">Todos os chamados registrados: filtre, assuma e atenda direto da lista.</p>
+                                <p id="tech-queue-sub">Filtre, assuma e atenda os chamados direto da lista. A fila atualiza sozinha a cada 20 segundos.</p>
                             </div>
                             <div class="ph-actions">
                                 <span id="tech-sync-stamp" class="sync-stamp"><span class="dotlive"></span><span id="tech-sync-text">Atualizando...</span></span>
@@ -2474,36 +2538,40 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                                     </select>
                                 </div>
 
-                                <div class="kbd-wrap">
-                                    <button type="button" onclick="toggleShortcuts()" class="btn btn-ghost btn-icon" title="Atalhos do atendimento" aria-label="Atalhos do atendimento"><i class="fa-regular fa-keyboard"></i></button>
-                                    <div id="shortcuts-pop" class="menu-pop hidden">
-                                        <div class="mp-head">Atalhos do atendimento</div>
-                                        <div class="sc-list">
-                                            <div><span>Buscar na fila</span><kbd>/</kbd></div>
-                                            <div><span>Abrir o chamado</span><kbd>clique na linha</kbd></div>
-                                            <div><span>Chamado anterior / próximo</span><span><kbd>[</kbd> <kbd>]</kbd></span></div>
-                                            <div><span>Anterior / próximo (digitando)</span><span><kbd>Alt</kbd> + <kbd>↑</kbd><kbd>↓</kbd></span></div>
-                                            <div><span>Registrar a resposta</span><span><kbd>Ctrl</kbd> + <kbd>Enter</kbd></span></div>
-                                            <div><span>Fechar a gaveta</span><kbd>Esc</kbd></div>
+                                <!-- ações da fila: modo de exibição à esquerda; exportar, assumir e atalhos à direita -->
+                                <div class="toolbar-r">
+                                    <div class="view-mode-toggle" role="group" aria-label="Modo de visualização da fila">
+                                        <button type="button" id="btn-view-table" onclick="setQueueViewMode('table')" class="btn is-active" title="Visualização em Lista/Tabela">
+                                            <i class="fa-solid fa-table-list"></i> Tabela
+                                        </button>
+                                        <button type="button" id="btn-view-kanban" onclick="setQueueViewMode('kanban')" class="btn" title="Visualização em Quadro Kanban Ágil">
+                                            <i class="fa-solid fa-table-columns"></i> Kanban
+                                        </button>
+                                    </div>
+
+                                    <button type="button" onclick="exportQueueToCSV()" class="btn btn-ghost" title="Exportar chamados filtrados para CSV/Excel">
+                                        <i class="fa-solid fa-file-csv c-green"></i> Exportar CSV
+                                    </button>
+
+                                    <button type="button" onclick="assignBulkToMe()" class="btn btn-ghost" title="Assumir os chamados marcados na lista">
+                                        <i class="fa-solid fa-hand-holding-hand c-amber"></i> Assumir selecionados
+                                    </button>
+
+                                    <div class="kbd-wrap">
+                                        <button type="button" onclick="toggleShortcuts()" class="btn btn-ghost btn-icon" title="Atalhos do atendimento" aria-label="Atalhos do atendimento"><i class="fa-regular fa-keyboard"></i></button>
+                                        <div id="shortcuts-pop" class="menu-pop hidden">
+                                            <div class="mp-head">Atalhos do atendimento</div>
+                                            <div class="sc-list">
+                                                <div><span>Buscar na fila</span><kbd>/</kbd></div>
+                                                <div><span>Abrir o chamado</span><kbd>clique na linha</kbd></div>
+                                                <div><span>Chamado anterior / próximo</span><span><kbd>[</kbd> <kbd>]</kbd></span></div>
+                                                <div><span>Anterior / próximo (digitando)</span><span><kbd>Alt</kbd> + <kbd>↑</kbd><kbd>↓</kbd></span></div>
+                                                <div><span>Registrar a resposta</span><span><kbd>Ctrl</kbd> + <kbd>Enter</kbd></span></div>
+                                                <div><span>Fechar a gaveta</span><kbd>Esc</kbd></div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="view-mode-toggle" role="group" aria-label="Modo de visualização da fila">
-                                    <button type="button" id="btn-view-table" onclick="setQueueViewMode('table')" class="btn is-active" title="Visualização em Lista/Tabela">
-                                        <i class="fa-solid fa-table-list"></i> Tabela
-                                    </button>
-                                    <button type="button" id="btn-view-kanban" onclick="setQueueViewMode('kanban')" class="btn" title="Visualização em Quadro Kanban Ágil">
-                                        <i class="fa-solid fa-table-columns"></i> Kanban
-                                    </button>
-                                </div>
-
-                                <button type="button" onclick="exportQueueToCSV()" class="btn btn-ghost" title="Exportar chamados filtrados para CSV/Excel">
-                                    <i class="fa-solid fa-file-csv c-green"></i> Exportar CSV
-                                </button>
-
-                                <button type="button" onclick="assignBulkToMe()" class="btn btn-ghost">
-                                    <i class="fa-solid fa-hand-holding-hand c-amber"></i> Assumir Selecionados
-                                </button>
                             </div>
                         </div>
 
@@ -4559,7 +4627,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 if (manter !== true) queueQuick = 'open';
                 $('tech-queue-title').innerText = 'Fila de Chamados';
                 $('tech-queue-crumb').innerText = 'Fila de Chamados';
-                $('tech-queue-sub').innerText = 'Novo, Pendente, Atendimento atribuído, Resolvido e Fechado: filtre, assuma e atenda direto da lista. A fila atualiza sozinha a cada 20 segundos.';
+                $('tech-queue-sub').innerText = 'Filtre, assuma e atenda os chamados direto da lista. A fila atualiza sozinha a cada 20 segundos.';
                 renderTechQueue();
             }
             scrollMainTop();
@@ -5255,11 +5323,32 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         function renderQueueChips() {
             const box = $('tech-chips');
             if (!box) return;
-            box.innerHTML = QUICK_FILTERS.map(([key, label, fn]) => {
+            // Dois grupos com título: a situação do chamado e os atalhos de trabalho; contagem zerada fica em tom suave
+            const chip = ([key, label, fn]) => {
                 const n = ticketsList.filter(fn).length;
                 const extra = (key === 'late' && n) ? ' late' : ((key === 'unassigned' || key === 'new') && n) ? ' warn' : '';
-                return `<button type="button" class="fchip${queueQuick === key ? ' is-on' : ''}${extra}" onclick="setQueueQuick('${key}')" aria-pressed="${queueQuick === key}">${label}<b>${n}</b></button>`;
-            }).join('');
+                return `<button type="button" class="fchip${queueQuick === key ? ' is-on' : ''}${extra}${n ? '' : ' is-zero'}" onclick="setQueueQuick('${key}')" aria-pressed="${queueQuick === key}">${label}<b>${n}</b></button>`;
+            };
+            const grupo = (titulo, chaves) => `<div class="fgrp" role="group" aria-label="${titulo}"><span class="fgrp-t">${titulo}</span>${QUICK_FILTERS.filter((q) => chaves.includes(q[0])).map(chip).join('')}</div>`;
+            box.innerHTML = grupo('Situação', ['open', 'new', 'pending', 'assigned', 'resolved', 'closed', 'all']) + grupo('Atalhos', ['unassigned', 'mine', 'late']);
+        }
+
+        // Estado vazio da fila: explica o motivo e, quando há chamados escondidos pelos filtros, oferece o caminho de volta
+        function queueEmptyHtml(temChamados) {
+            const titulo = temChamados ? 'Nenhum chamado com esses filtros' : 'Nenhum chamado registrado ainda';
+            const texto = temChamados
+                ? 'Existem chamados na fila, mas nenhum combina com a busca e os filtros escolhidos.'
+                : 'Quando alguém abrir um chamado, ele aparece aqui sozinho. A fila atualiza a cada 20 segundos.';
+            const botao = temChamados ? '<button type="button" class="btn btn-ghost" onclick="clearQueueFilters()"><i class="fa-solid fa-filter-circle-xmark"></i> Ver todos os chamados</button>' : '';
+            return `<tr class="t-empty q-empty"><td colspan="8"><div class="qe"><span class="qe-ico"><i class="fa-regular fa-folder-open"></i></span><b class="qe-t">${titulo}</b><span class="qe-s">${texto}</span>${botao}</div></td></tr>`;
+        }
+
+        function clearQueueFilters() {
+            const busca = $('tech-queue-search');
+            if (busca) busca.value = '';
+            ['tech-filter-urgency', 'tech-filter-type', 'tech-filter-queue'].forEach((id) => { const el = $(id); if (el) el.value = 'ALL'; });
+            queueQuick = 'all';
+            renderTechQueue();
         }
 
         function techRowHtml(t, withCheckbox) {
@@ -5377,7 +5466,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
 
             tbody.innerHTML = '';
             if (!filtered.length) {
-                tbody.innerHTML = emptyRow(8, ticketsList.length ? 'Nenhum chamado corresponde aos filtros.' : 'Nenhum chamado registrado ainda. Quando alguém abrir um chamado, ele aparece aqui sozinho.');
+                tbody.innerHTML = queueEmptyHtml(ticketsList.length > 0);
                 return;
             }
             filtered.forEach((t) => {
