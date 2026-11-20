@@ -36,8 +36,12 @@
     return w.location.pathname + w.location.search + w.location.hash;
   }
 
+  /* Endereços curtos: o painel do administrador vira /login.html?next=admin (o login entende o mesmo apelido) */
+  var ATALHOS = { '/admin-assinaturas-glpi': 'admin', '/admin-assinaturas-glpi.html': 'admin' };
+
   function urlLogin(destino) {
-    return '/login.html' + (destino ? '?next=' + encodeURIComponent(destino) : '');
+    if (!destino) return '/login.html';
+    return '/login.html?next=' + (ATALHOS[destino] || encodeURIComponent(destino));
   }
 
   /* destino: texto = volta para essa tela depois do login; null/'' = login simples; omitido = a tela atual */

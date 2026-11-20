@@ -670,8 +670,14 @@ h3 { font-size: 18px !important; }
   /* Sessão única: a administração, o GLPI e o Nexus mandam para cá com ?next=<tela de origem> e a pessoa volta
      para ela depois de entrar. Só valem telas do próprio site (lista fechada), nunca outro endereço. */
   var DESTINOS_OK=['/','/admin-site.html','/admin-assinaturas-glpi','/admin-assinaturas-glpi.html','/glpi.html','/glpi','/suporte'];
+  var ATALHOS_NEXT={admin:'/admin-assinaturas-glpi'};
   function destinoPosLogin(){
     try{
+      /* ?next=admin é o endereço curto do painel do administrador. "%admin" também vale: o navegador leria "%ad"
+         como código de caractere e estragaria a palavra, por isso o valor é lido sem decodificar. */
+      var bruto=(/[?&]next=([^&#]*)/.exec(location.search)||[])[1]||'';
+      var curto=ATALHOS_NEXT[bruto.replace(/^%/,'').toLowerCase()];
+      if(curto)return curto;
       var n=new URLSearchParams(location.search).get('next');
       if(!n||n.charAt(0)!=='/'||n.charAt(1)==='/'||n.charAt(1)==='\\')return '/';
       var u=new URL(n,location.origin);
