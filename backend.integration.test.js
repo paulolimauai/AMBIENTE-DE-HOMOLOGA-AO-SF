@@ -723,6 +723,20 @@ test('visitas: abrir página grava o IP completo na pasta visitas/; só o admini
   assert.ok(r.json.visitas >= 1);
   assert.ok(r.json.recentes.some(v => v.ip === '189.45.xxx.xxx' && v.pagina === '/inicio'), 'IP mascarado deveria aparecer');
   assert.ok(!r.texto.includes(ip), 'o IP completo não pode sair pela API');
+
+  // Localização: o servidor de teste roda "atrás de proxy" (TRUST_PROXY=1), como no Render + Cloudflare.
+  // "São Paulo" em UTF-8 chega lido como latin1 ("SÃ£o Paulo") e deve ser gravado já corrigido.
+  const ipSp = '201.17.3.88';
+  await api('GET', '/inicio', { ip: ipSp, headers: { 'User-Agent': UA, 'CF-IPCountry': 'BR', 'CF-Region-Code': 'SP', 'CF-IPCity': 'SÃ£o Paulo' } });
+  const gravadas = [];
+  fs.readdirSync(pastaVisitas).filter(n => /\.jsonl$/.test(n)).forEach(n => fs.readFileSync(path.join(pastaVisitas, n), 'utf8').split('\n').filter(Boolean).forEach(l => gravadas.push(JSON.parse(l))));
+  const sp = gravadas.find(l => l.ip === ipSp);
+  assert.deepEqual([sp.pais, sp.regiao, sp.cidade], ['BR', 'SP', 'São Paulo']);
+  const r2 = await api('GET', '/api/admin/visitas?dias=7', { token: admin });
+  assert.ok(r2.json.paises.some(p => p.nome === 'Brasil'), 'país no resumo');
+  assert.ok(r2.json.cidades.some(c => c.nome === 'São Paulo/SP'), 'cidade no resumo');
+  assert.ok(r2.json.recentes.some(v => v.ip === '201.17.xxx.xxx' && v.local === 'São Paulo/SP · Brasil'), 'local no acesso recente');
+  assert.ok(!r2.texto.includes(ipSp), 'o IP completo não pode sair pela API');
 });
 
 test('site inicial profissional: endereço canônico no domínio próprio, imagem de compartilhamento, dados estruturados, ícones, manifest, links legais e cache versionado', async () => {

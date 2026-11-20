@@ -841,8 +841,9 @@ function safeEqual(a, b) {
 }
 
 // IP do cliente. Cabeçalho X-Forwarded-For só é confiável atrás de proxy (Render / TRUST_PROXY=1); fora disso é forjável.
+const confiaNoProxy = () => Boolean(process.env.RENDER) || process.env.TRUST_PROXY === '1';
 function getClientIp(req) {
-  const trustProxy = Boolean(process.env.RENDER) || process.env.TRUST_PROXY === '1';
+  const trustProxy = confiaNoProxy();
   const forwarded = trustProxy ? String(req.headers['x-forwarded-for'] || '').split(',')[0].trim() : '';
   return forwarded || (req.socket && req.socket.remoteAddress) || 'desconhecido';
 }
@@ -33973,7 +33974,8 @@ async function handleNexusRequest(req, res) {
 
   // Visita ao site: só a abertura de páginas (nunca CSS/JS/imagens/API). Falha de disco não afeta a resposta.
   if (req.method === 'GET') {
-    Visitas.registrarVisita(VISITAS_DIR, { ip: getClientIp(req), pathname: parsedUrl.pathname, ua: req.headers['user-agent'], referer: req.headers.referer, host: req.headers.host });
+    // País/estado/cidade vêm dos cabeçalhos da Cloudflare (CF-IPCountry...); só valem atrás de proxy, senão qualquer cliente poderia forjá-los
+    Visitas.registrarVisita(VISITAS_DIR, { ip: getClientIp(req), pathname: parsedUrl.pathname, ua: req.headers['user-agent'], referer: req.headers.referer, host: req.headers.host, local: confiaNoProxy() ? Visitas.localizacaoDe(req.headers) : undefined });
   }
 
   // Cabeçalhos globais de CORS e Segurança HTTP

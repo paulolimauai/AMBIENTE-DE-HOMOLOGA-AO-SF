@@ -60,6 +60,40 @@ function dispositivoDe(ua) {
   return { tipo, navegador, so };
 }
 
+// Localização aproximada (país, estado, cidade) vinda dos cabeçalhos da Cloudflare (CF-IPCountry, CF-Region-Code, CF-IPCity):
+// nenhum IP é enviado a terceiros e não se guarda latitude, longitude nem CEP. Estimativa pelo IP: aponta a região do provedor, não a casa da pessoa.
+function textoLocal(v) {
+  let t = String(v == null ? '' : v);
+  // O Node lê o cabeçalho como latin1: "São Paulo" em UTF-8 chega como "SÃ£o Paulo". Desfaz só se o resultado for UTF-8 válido.
+  if (/[ÂÃ]/.test(t)) { const d = Buffer.from(t, 'latin1').toString('utf8'); if (!d.includes('�')) t = d; }
+  return t.replace(/[\u0000-\u001f\u007f<>"'`\\]/g, '').trim().slice(0, 60);
+}
+function normalizarLocal(l) {
+  const o = l || {};
+  let pais = String(o.pais || '').trim().toUpperCase();
+  if (pais === 'T1') pais = 'TOR';                         // Cloudflare marca a rede Tor com T1
+  else if (!/^[A-Z]{2}$/.test(pais) || pais === 'XX') pais = ''; // XX = país desconhecido
+  return { pais, regiao: textoLocal(o.regiao), cidade: textoLocal(o.cidade) };
+}
+function localizacaoDe(headers) {
+  const h = headers || {};
+  const v = (n) => (Array.isArray(h[n]) ? h[n][0] : h[n]);
+  return normalizarLocal({ pais: v('cf-ipcountry'), regiao: v('cf-region-code') || v('cf-region'), cidade: v('cf-ipcity') });
+}
+let nomesDePaises = null;
+function nomePais(codigo) {
+  if (!codigo) return 'Não informado';
+  if (codigo === 'TOR') return 'Rede Tor (anônimo)';
+  try { nomesDePaises = nomesDePaises || new Intl.DisplayNames(['pt-BR'], { type: 'region' }); return nomesDePaises.of(codigo) || codigo; } catch (e) { return codigo; }
+}
+const rotuloCidade = (r) => (r.cidade ? (r.regiao ? r.cidade + '/' + r.regiao : r.cidade) : (r.regiao || ''));
+function rotuloLocal(r) {
+  const partes = [];
+  if (rotuloCidade(r)) partes.push(rotuloCidade(r));
+  if (r.pais) partes.push(nomePais(r.pais));
+  return partes.length ? partes.join(' · ') : 'Não informado';
+}
+
 // Só o domínio de onde a pessoa veio (nunca a URL inteira, que pode trazer dados na query)
 function origemDe(referer, hostProprio) {
   try {
@@ -85,8 +119,10 @@ function montarRegistro(entrada, agora) {
   const ip = normalizarIp(entrada.ip);
   const disp = dispositivoDe(entrada.ua);
   const { dia, hora } = diaEHora(data);
+  const loc = normalizarLocal(entrada.local);
   return {
     ts: data.toISOString(), dia, hora, ip, pagina,
+    pais: loc.pais, regiao: loc.regiao, cidade: loc.cidade,
     origem: origemDe(entrada.referer, entrada.host),
     tipo: disp.tipo, navegador: disp.navegador, so: disp.so, robo: disp.tipo === 'Robô',
     // Mesmo IP + mesmo navegador = mesmo visitante (aproximação: o IP identifica a conexão, não o aparelho)
@@ -172,8 +208,10 @@ function resumir(dir, opcoes) {
     dispositivos: contar(pessoas, 'tipo'),
     navegadores: contar(pessoas, 'navegador'),
     origens: contar(pessoas, 'origem'),
-    recentes: pessoas.slice(-50).reverse().map(r => ({ dia: r.dia, hora: r.hora, ip: mascararIp(r.ip), pagina: r.pagina, origem: r.origem, tipo: r.tipo, navegador: r.navegador, so: r.so }))
+    paises: contar(pessoas.map(r => ({ pais: nomePais(r.pais) })), 'pais').slice(0, 10),
+    cidades: contar(pessoas.filter(r => r.cidade).map(r => ({ cidade: rotuloCidade(r) })), 'cidade').slice(0, 10),
+    recentes: pessoas.slice(-50).reverse().map(r => ({ dia: r.dia, hora: r.hora, ip: mascararIp(r.ip), local: rotuloLocal(r), pagina: r.pagina, origem: r.origem, tipo: r.tipo, navegador: r.navegador, so: r.so }))
   };
 }
 
-module.exports = { RETENCAO_DIAS, INTERVALO_REPETIDO_MS, MAX_LINHAS_POR_DIA, paginaDe, normalizarIp, mascararIp, dispositivoDe, origemDe, diaEHora, montarRegistro, registrarVisita, limparAntigos, resumir, _resetar };
+module.exports = { RETENCAO_DIAS, INTERVALO_REPETIDO_MS, MAX_LINHAS_POR_DIA, paginaDe, normalizarIp, mascararIp, dispositivoDe, localizacaoDe, normalizarLocal, nomePais, origemDe, diaEHora, montarRegistro, registrarVisita, limparAntigos, resumir, _resetar };

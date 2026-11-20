@@ -50,6 +50,45 @@ test('dispositivoDe separa celular, computador, tablet e robô', () => {
   assert.strictEqual(V.dispositivoDe('').tipo, 'Robô');
 });
 
+test('localizacaoDe lê os cabeçalhos da Cloudflare e conserta acento, país desconhecido, Tor e texto perigoso', () => {
+  // "São Paulo" em UTF-8 chega ao Node lido como latin1: "SÃ£o Paulo"
+  assert.deepStrictEqual(V.localizacaoDe({ 'cf-ipcountry': 'br', 'cf-region-code': 'SP', 'cf-ipcity': 'SÃ£o Paulo' }), { pais: 'BR', regiao: 'SP', cidade: 'São Paulo' });
+  assert.deepStrictEqual(V.localizacaoDe({ 'cf-ipcountry': 'BR', 'cf-region': 'Bahia', 'cf-ipcity': 'Salvador' }), { pais: 'BR', regiao: 'Bahia', cidade: 'Salvador' }, 'sem código de região usa o nome');
+  assert.strictEqual(V.localizacaoDe({ 'cf-ipcountry': 'XX' }).pais, '');
+  assert.strictEqual(V.localizacaoDe({ 'cf-ipcountry': 'T1' }).pais, 'TOR');
+  assert.strictEqual(V.localizacaoDe({ 'cf-ipcountry': 'Brasil' }).pais, '', 'só código de 2 letras');
+  assert.deepStrictEqual(V.localizacaoDe({}), { pais: '', regiao: '', cidade: '' });
+  assert.deepStrictEqual(V.localizacaoDe(undefined), { pais: '', regiao: '', cidade: '' });
+  const sujo = V.localizacaoDe({ 'cf-ipcountry': 'BR', 'cf-ipcity': '<script>alert("x")</script>' + 'a'.repeat(200) });
+  assert.ok(!/[<>"]/.test(sujo.cidade) && sujo.cidade.length <= 60, 'cidade sem tag e limitada a 60 caracteres');
+  assert.strictEqual(V.localizacaoDe({ 'cf-ipcity': 'ÃGUAS' }).cidade, 'ÃGUAS', 'nome com Ã legítimo não é estragado');
+});
+
+test('nomePais traduz o código; Tor e vazio têm rótulo próprio', () => {
+  assert.strictEqual(V.nomePais('BR'), 'Brasil');
+  assert.strictEqual(V.nomePais('PT'), 'Portugal');
+  assert.strictEqual(V.nomePais('TOR'), 'Rede Tor (anônimo)');
+  assert.strictEqual(V.nomePais(''), 'Não informado');
+});
+
+test('a localização é gravada, resumida por país e cidade e aparece nos acessos recentes (com o IP mascarado)', () => {
+  V._resetar();
+  const dir = pasta();
+  const loc = (pais, regiao, cidade) => ({ pais, regiao, cidade });
+  const g = (ip, iso, local) => V.registrarVisita(dir, { ip, pathname: '/inicio', ua: CHROME_WIN, host: 'x.com', local }, em(iso));
+  g('189.45.10.7', '2026-11-20T13:00:00Z', loc('BR', 'SP', 'São Paulo'));
+  g('201.17.3.99', '2026-11-20T14:00:00Z', loc('BR', 'SP', 'São Paulo'));
+  g('177.10.2.5', '2026-11-20T15:00:00Z', loc('PT', '', 'Lisboa'));
+  g('45.9.9.9', '2026-11-20T16:00:00Z', undefined); // sem cabeçalho (acesso local ou fora do proxy)
+  const linha = JSON.parse(fs.readFileSync(path.join(dir, '2026-11-20.jsonl'), 'utf8').split('\n')[0]);
+  assert.deepStrictEqual([linha.pais, linha.regiao, linha.cidade], ['BR', 'SP', 'São Paulo']);
+  const r = V.resumir(dir, { dias: 1, agora: em('2026-11-20T18:00:00Z').getTime() });
+  assert.deepStrictEqual(r.paises.map(p => [p.nome, p.visitas]), [['Brasil', 2], ['Não informado', 1], ['Portugal', 1]]);
+  assert.deepStrictEqual(r.cidades.map(c => [c.nome, c.visitas]), [['São Paulo/SP', 2], ['Lisboa', 1]]);
+  assert.deepStrictEqual(r.recentes.map(a => a.local), ['Não informado', 'Lisboa · Portugal', 'São Paulo/SP · Brasil', 'São Paulo/SP · Brasil']);
+  assert.ok(!JSON.stringify(r).includes('189.45.10.7'), 'IP completo vazou');
+});
+
 test('origemDe guarda só o domínio e distingue direto, interno e externo', () => {
   assert.strictEqual(V.origemDe('https://www.google.com/search?q=nexus+financeiro&token=abc', 'nexusfinanceirohub.com.br'), 'google.com');
   assert.strictEqual(V.origemDe('https://nexusfinanceirohub.com.br/inicio', 'nexusfinanceirohub.com.br'), 'Interno');
