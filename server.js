@@ -38545,7 +38545,7 @@ async function handleNexusRequest(req, res) {
   // node_modules, cópias em /images/...) e qualquer arquivo sob /images/ (inclusive .env) eram baixáveis por qualquer visitante.
   const STATIC_IMAGE_TYPES = {
     '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.gif': 'image/gif',
-    '.svg': 'image/svg+xml', '.ico': 'image/x-icon', '.webp': 'image/webp', '.avif': 'image/avif'
+    '.svg': 'image/svg+xml', '.ico': 'image/x-icon', '.webp': 'image/webp', '.avif': 'image/avif', '.woff2': 'font/woff2'
   };
   const STATIC_EXACT_FILES = {
     '/frontend-polish.css': 'text/css',
@@ -38570,6 +38570,7 @@ async function handleNexusRequest(req, res) {
     '/nexus-sso.js': 'application/javascript; charset=utf-8',
     '/admin-liberacao.js': 'application/javascript; charset=utf-8',
     '/favicon.svg': 'image/svg+xml',
+    '/fonts.css': 'text/css',
     '/termos.html': 'text/html; charset=utf-8',
     '/privacidade.html': 'text/html; charset=utf-8'
   };

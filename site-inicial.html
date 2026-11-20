@@ -21,7 +21,7 @@
 <meta name="twitter:image" content="https://ambiente-de-homologa-ao-sf.onrender.com/images/FINAN.jpg">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@graph":[
-{"@type":"Organization","name":"Nexus Financeiro","url":"https://ambiente-de-homologa-ao-sf.onrender.com/inicio","logo":"https://ambiente-de-homologa-ao-sf.onrender.com/favicon.svg"},
+{"@type":"Organization","name":"Nexus Financeiro","url":"https://ambiente-de-homologa-ao-sf.onrender.com/inicio","logo":"https://ambiente-de-homologa-ao-sf.onrender.com/favicon.svg","contactPoint":{"@type":"ContactPoint","telephone":"+55-62-99234-5372","contactType":"customer support","availableLanguage":"pt-BR"}},
 {"@type":"WebSite","name":"Nexus Financeiro","url":"https://ambiente-de-homologa-ao-sf.onrender.com/inicio","inLanguage":"pt-BR"},
 {"@type":"SoftwareApplication","name":"Nexus Financeiro","applicationCategory":"FinanceApplication","operatingSystem":"Web","inLanguage":"pt-BR","description":"Painel financeiro com lançamentos, contas e cartões, orçamentos, metas e relatórios, além de Central de Serviços para chamados.","offers":{"@type":"Offer","priceCurrency":"BRL","description":"Assinatura mensal com 1 dia grátis"}}
 ]}
@@ -127,9 +127,9 @@
   setFundo(g('nexus-site-fundo')||'padrao',false); /* fundo do site é chave própria: o login regrava nexus-fundo a cada visita e mudaria o site sem o visitante pedir */
 })();
 </script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="preload" href="/images/fonts/jakarta-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/images/fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/fonts.css">
 <link rel="stylesheet" href="/site-inicial.css?v=%%V_CSS%%">
 </head>
 <body>
@@ -438,6 +438,7 @@
             <li>Acesso pelo celular, tablet e computador</li>
           </ul>
           <a class="btn pri lg" data-cta="criar" href="/login.html#criar" ><span class="t">Começar com 1 dia grátis</span></a>
+          <p class="preco-n" style="margin-top:.9rem;text-align:center">Cancele quando quiser. Dúvidas antes de assinar? <a href="https://wa.me/5562992345372?text=Ol%C3%A1!%20Vim%20pelo%20site%20do%20Nexus%20Financeiro." target="_blank" rel="noopener">Fale no WhatsApp</a>.</p>
         </div>
         <div class="pagar card rv" id="pagamento" style="--d:.08s">
           <h3>Como o pagamento funciona</h3>
@@ -485,7 +486,7 @@
     <div class="rod-in">
       <div><h3>O sistema</h3><ul><li><a href="#recursos">Recursos</a></li><li><a href="#como-funciona">Como funciona</a></li><li><a href="#planos">Planos</a></li><li><a href="#seguranca">Segurança</a></li><li data-pers><a href="#personalizar">Personalizar</a></li></ul></div>
       <div><h3>Sua conta</h3><ul><li><a href="/login.html#criar" >Criar conta grátis</a></li><li><a href="/login.html" target="_blank" rel="noopener" >Entrar</a></li><li><a href="#perfis">Sua conta no sistema</a></li><li><a href="#planos">Assinatura e pagamento</a></li><li><a href="/admin-assinaturas-glpi">Área do Administrador</a></li></ul></div>
-      <div><h3>Ajuda e suporte</h3><ul><li><a href="#duvidas">O que mais perguntam</a></li><li><a href="#atendimento">Central de Serviços</a></li><li><a href="/suporte?entry=login" target="_blank" rel="noopener" >Abrir um chamado</a></li><li><a href="#como-funciona">Como funciona</a></li></ul></div>
+      <div><h3>Ajuda e suporte</h3><ul><li><a href="#duvidas">O que mais perguntam</a></li><li><a href="#atendimento">Central de Serviços</a></li><li><a href="/suporte?entry=login" target="_blank" rel="noopener" >Abrir um chamado</a></li><li><a href="#como-funciona">Como funciona</a></li><li><a href="https://wa.me/5562992345372?text=Ol%C3%A1!%20Vim%20pelo%20site%20do%20Nexus%20Financeiro." target="_blank" rel="noopener">WhatsApp (62) 99234-5372</a></li></ul></div>
     </div>
     <p class="copy" id="ano">© Nexus Financeiro. Todos os direitos reservados.</p>
   </div>
