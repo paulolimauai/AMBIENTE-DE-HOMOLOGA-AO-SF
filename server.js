@@ -39,7 +39,13 @@ const RUNTIME_DATA_DIR = process.env.NEXUS_DATA_DIR || __dirname;
 let SupabaseSync;
 try {
   SupabaseSync = require('./supabase-sync');
-  SupabaseSync.init({ dataDir: RUNTIME_DATA_DIR });
+  // Na nuvem (Render) ou com o banco desligado não há SQL Server interno alcançável: o espelho durável sobe direto no
+  // Supabase, para que restoreMissingFiles() aja antes de o servidor aceitar conexões (disco novo/vazio no redeploy).
+  // No PC o init fica para depois da conexão com o SQL Server: o destino passa a ser o banco interno nexus_app
+  // (mssql-sync-client.js), e tudo que iria ao Supabase é gravado lá. Ver initInternalMirrorSync/attemptConnectDatabase.
+  if (DB_DISABLED || process.env.RENDER || process.env.IS_RENDER === 'true') {
+    SupabaseSync.init({ dataDir: RUNTIME_DATA_DIR });
+  }
 } catch (e) {
   SupabaseSync = { noteWrite() {}, restoreMissingFiles: async () => ({ restored: [] }), flushAndStop: async () => ({}), flushNow: async () => ({}), fetchUserRecord: async () => null, status: () => ({ enabled: false, disabledReason: 'módulo indisponível' }) };
 }
@@ -1563,6 +1569,41 @@ function scheduleDatabaseReconnect(delay = 5000) {
   }, delay).unref();
 }
 
+// Espelho durável de todos os arquivos de estado (supabase-sync.js). No PC o destino é o SQL Server interno
+// (banco nexus_app, via mssql-sync-client.js — o mesmo "formato PostgREST" que o motor já fala); sem banco,
+// cai no Supabase como antes. Chamar init de novo com um cliente troca o destino sem perder pendências.
+let supabaseSyncFallbackInit = false;
+let mirrorSyncClient = null;
+let mirrorSyncClientPool = null;
+function getMirrorSyncClient() {
+  if (mirrorSyncClient && mirrorSyncClientPool === pool) return mirrorSyncClient;
+  mirrorSyncClient = require('./mssql-sync-client').createClient(pool);
+  mirrorSyncClientPool = pool;
+  return mirrorSyncClient;
+}
+function initInternalMirrorSync() {
+  if (!SupabaseSync || typeof SupabaseSync.init !== 'function') return;
+  if (pool) {
+    try {
+      SupabaseSync.init({
+        dataDir: RUNTIME_DATA_DIR,
+        client: getMirrorSyncClient(),
+        projectRef: process.env.MSSQL_DATABASE || 'nexus_app',
+        role: 'mssql'
+      });
+      return;
+    } catch (e) {
+      console.warn('[SYNC] Cliente MSSQL do espelho indisponível (' + e.message + '); usando Supabase.');
+    }
+  }
+  SupabaseSync.init({ dataDir: RUNTIME_DATA_DIR });
+}
+function ensureSupabaseSyncFallback() {
+  if (supabaseSyncFallbackInit) return;
+  supabaseSyncFallbackInit = true;
+  if (SupabaseSync && typeof SupabaseSync.init === 'function') SupabaseSync.init({ dataDir: RUNTIME_DATA_DIR });
+}
+
 async function attemptConnectDatabase() {
   if (DB_DISABLED || pool || isConnectingDatabase) return;
   isConnectingDatabase = true;
@@ -1633,6 +1674,7 @@ async function attemptConnectDatabase() {
 
     if (!pool) {
       console.warn('[BANCO LOCAL] Servidor Microsoft SQL Server temporariamente inacessível. Operando no modo de alta resiliência com arquivos JSON locais e auto-reconexão contínua ativa.');
+      ensureSupabaseSyncFallback(); // sem banco interno, o espelho durável segue no Supabase (se configurado)
       scheduleDatabaseReconnect(5000);
       return;
     }
@@ -1645,6 +1687,7 @@ async function attemptConnectDatabase() {
     });
 
     await setupDatabaseTablesAndSync();
+    initInternalMirrorSync(); // espelho durável de todos os dados agora aponta para o banco interno (nexus_app)
     if (!process.env.RENDER && process.env.IS_RENDER !== 'true') {
       startRenderCloudSyncWorker();
       syncWithRenderCloud().catch(() => {});
@@ -2182,6 +2225,21 @@ async function setupDatabaseTablesAndSync() {
         specialty NVARCHAR(100) NOT NULL DEFAULT 'Suporte Geral',
         active BIT NOT NULL DEFAULT 1,
         created_at DATETIME2 NOT NULL DEFAULT GETDATE()
+      );
+    END;
+  `);
+
+  // Tabela do espelho durável (supabase-sync.js): documentos JSON dos arquivos de estado que não têm visão relacional
+  // (filas, pagamentos, boletos, avatares, permissões, config financeira, contas excluídas…). Antes ficava só no Supabase;
+  // agora o destino é o banco interno (nexus_app) — é o que substitui o que ia para o Supabase.
+  await pool.query(`
+    IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'nexus_dados_financeiros')
+    BEGIN
+      CREATE TABLE nexus_dados_financeiros (
+        id INT IDENTITY(1,1) PRIMARY KEY,
+        email NVARCHAR(900) NOT NULL,
+        dados NVARCHAR(MAX) NOT NULL DEFAULT '{}',
+        updated_at DATETIME2 NOT NULL DEFAULT GETDATE()
       );
     END;
   `);

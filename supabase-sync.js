@@ -1091,13 +1091,25 @@ function createSync() {
 
   function init(opts) {
     opts = opts || {};
-    if (started) return api;
+    if (started) {
+      // Já existe um espelho ativo, mas chegou um cliente novo (ex.: o SQL Server interno substituindo o Supabase):
+      // troca o destino. O projeto mudou, então loadState() zera o ack e TUDO é reenviado ao novo backend (nada fica para trás).
+      if (opts.client && opts.client !== sb) {
+        sb = opts.client;
+        if (opts.projectRef) projectRef = opts.projectRef;
+        if (opts.role) role = opts.role;
+        loadState();
+        markAllDirty(0);
+        log.log('[SUPABASE] Espelho redirecionado para "' + projectRef + '" (' + role + '): todo o conteúdo confirmado será reenviado ao novo destino.');
+      }
+      return api;
+    }
     dataDir = opts.dataDir || __dirname;
     log = opts.log || console;
     timersOn = opts.timers !== false;
     if (opts.disabled || process.env.NEXUS_DISABLE_DB === '1' || process.env.NEXUS_DISABLE_SUPABASE === '1') { disabledReason = 'desligado por variável de ambiente'; return api; }
     let url = ''; let key = '';
-    if (opts.client) { sb = opts.client; projectRef = opts.projectRef || 'teste'; role = 'service_role'; }
+    if (opts.client) { sb = opts.client; projectRef = opts.projectRef || 'teste'; role = opts.role || 'service_role'; }
     else {
       const committed = loadCommittedCredentials(__dirname);
       url = String(process.env.SUPABASE_URL || committed.SUPABASE_URL || '').trim();
@@ -1111,7 +1123,7 @@ function createSync() {
     }
     enabled = true; started = true; disabledReason = null;
     loadState();
-    if (role !== 'service_role') log.warn('[SUPABASE] A chave configurada é "' + role + '", não "service_role": com RLS ligado o Supabase vai recusar as gravações. Use SUPABASE_SERVICE_ROLE_KEY.');
+    if (role !== 'service_role' && role !== 'mssql') log.warn('[SUPABASE] A chave configurada é "' + role + '", não "service_role": com RLS ligado o Supabase vai recusar as gravações. Use SUPABASE_SERVICE_ROLE_KEY.');
     log.log('[SUPABASE] Gravação direta ativa → projeto ' + projectRef + ' (chave ' + role + '). Confirmados: ' + Object.keys(state.acked).length + ' registro(s).');
     markAllDirty(opts.firstSyncDelayMs === undefined ? 1500 : opts.firstSyncDelayMs);   // reconciliação inicial: o que não está confirmado é enviado
     lastHeartbeat = Date.now();   // (lastVerify fica em 0: o 1º conferimento do que o Supabase ainda tem roda logo após o primeiro envio)
