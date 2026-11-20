@@ -502,7 +502,7 @@
         @container (min-width: 56rem) { .charts { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
         .chart-box { position: relative; height: 17rem; }
 
-        /* ---------- Dashboard Executivo: saúde do atendimento, severidade em aberto e carga da equipe ---------- */
+        /* ---------- Dashboard Executivo: saúde do atendimento, prioridade em aberto e carga da equipe ---------- */
         .dx-saude { display: grid; gap: 1rem; grid-template-columns: 1fr; }
         @container (min-width: 36rem) { .dx-saude { grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); } }
         .dx-grade { display: grid; gap: 1.5rem; grid-template-columns: 1fr; }
@@ -1429,7 +1429,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         .team-h small { font-size: 1rem; font-weight: 500; color: var(--muted); }
         /* "Atendimento atribuído" é um nome longo: o selo de status quebra em duas linhas nos cartões e o rótulo do indicador também */
         .kpi-label { white-space: normal; overflow-wrap: anywhere; }
-        /* Cartões (quadro estreito): severidade e status na mesma linha e o prazo (SLA) numa linha só dele, sem espremer ninguém */
+        /* Cartões (quadro estreito): prioridade e status na mesma linha e o prazo (SLA) numa linha só dele, sem espremer ninguém */
         @container (max-width: 54rem) {
             .tbl.cards tbody tr { grid-template-columns: 5.6rem minmax(0, 1fr) auto; grid-template-areas: "id id act" "title title title" "urg status status" "sla sla sla"; }
             .tbl.cards tbody tr:has(td.c-chk) { grid-template-columns: 1.6rem 5.6rem minmax(0, 1fr) auto; grid-template-areas: "chk id id act" "chk title title title" "chk urg status status" "chk sla sla sla"; }
@@ -1896,13 +1896,16 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         #tech-subview-queue .toolbar-l { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem; flex: none; }
         #tech-subview-queue .toolbar-l .input-icon { grid-column: 1 / -1; min-width: 0; }
         #tech-subview-queue .toolbar-l .select { width: 100%; min-width: 0; }
+        #tech-subview-queue .toolbar-l .select[hidden] { display: none; }
+        #tech-subview-queue #tech-sort { grid-column: 1 / -1; }   /* 3 filtros visíveis: o último ocupa a linha inteira no quadro estreito */
         #tech-subview-queue .toolbar-r { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; }
         #tech-subview-queue .toolbar-r .view-mode-toggle { margin-right: auto; }
         @container (min-width: 52rem) {
-            #tech-subview-queue .toolbar-l { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+            #tech-subview-queue .toolbar-l { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+            #tech-subview-queue #tech-sort { grid-column: auto; }
         }
         @container (min-width: 84rem) {
-            #tech-subview-queue .toolbar-l { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+            #tech-subview-queue .toolbar-l { grid-template-columns: repeat(5, minmax(0, 1fr)); }
             #tech-subview-queue .toolbar-l .input-icon { grid-column: span 2; }
         }
         @container (max-width: 40rem) {
@@ -2025,7 +2028,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
 
                 <ul class="lg-feat">
                     <li><i class="fa-solid fa-ticket" aria-hidden="true"></i><span>Protocolo e histórico completos</span></li>
-                    <li><i class="fa-solid fa-stopwatch" aria-hidden="true"></i><span>Prazos (SLA) por severidade</span></li>
+                    <li><i class="fa-solid fa-stopwatch" aria-hidden="true"></i><span>Prazo de atendimento de até 5 dias úteis</span></li>
                 </ul>
             </section>
 
@@ -2228,12 +2231,9 @@ html[data-bg="vidro"] .l-glass{opacity:1}
 
                         <!-- Prazos de atendimento (a mesma regra gravada no chamado) -->
                         <div class="glass sla-strip">
-                            <div class="ss-t"><i class="fa-solid fa-stopwatch"></i><div><b>Prazos de atendimento</b><small>O prazo começa a contar quando o chamado é aberto</small></div></div>
+                            <div class="ss-t"><i class="fa-solid fa-stopwatch"></i><div><b>Prazo de atendimento</b><small>O prazo começa a contar quando o chamado é aberto</small></div></div>
                             <ul class="ss-list">
-                                <li style="--s: var(--rose-rgb);">Crítica <b>4 horas</b></li>
-                                <li style="--s: var(--orange-rgb);">Alta <b>8 horas</b></li>
-                                <li style="--s: var(--sky-rgb);">Média <b>24 horas</b></li>
-                                <li style="--s: var(--slate-rgb);">Baixa <b>5 dias úteis</b></li>
+                                <li style="--s: var(--slate-rgb);">Prioridade Baixa <b>5 dias úteis</b></li>
                             </ul>
                         </div>
 
@@ -2256,7 +2256,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                                             <th>Protocolo</th>
                                             <th>Solicitação / Categoria</th>
                                             <th class="c-date">Data Abertura</th>
-                                            <th>Severidade</th>
+                                            <th>Prioridade</th>
                                             <th>SLA / Prazo</th>
                                             <th>Status</th>
                                             <th class="ta-r">Ação</th>
@@ -2304,7 +2304,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                                             <th>Protocolo</th>
                                             <th>Solicitação / Categoria</th>
                                             <th class="c-date">Data Abertura</th>
-                                            <th>Severidade</th>
+                                            <th>Prioridade</th>
                                             <th>SLA / Prazo</th>
                                             <th>Status</th>
                                             <th class="ta-r">Ação</th>
@@ -2363,7 +2363,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                             <div>
                                 <div class="crumbs"><i class="fa-solid fa-house"></i> ITSM Operations <i class="fa-solid fa-chevron-right"></i> <span class="here">Dashboard Executivo</span></div>
                                 <h2>Dashboard Executivo</h2>
-                                <p>Visão consolidada da Central de Chamados: volume de atendimentos, severidades e prazos de SLA em tempo real.</p>
+                                <p>Visão consolidada da Central de Chamados: volume de atendimentos, prioridade e prazos de SLA em tempo real.</p>
                             </div>
                             <div class="ph-actions">
                                 <button type="button" onclick="navTech('queue')" class="btn btn-amber">
@@ -2426,7 +2426,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                             <div class="glass panel">
                                 <div class="panel-head">
                                     <div>
-                                        <h3><i class="fa-solid fa-gauge-high c-amber"></i> Severidade em aberto</h3>
+                                        <h3><i class="fa-solid fa-gauge-high c-amber"></i> Prioridade em aberto</h3>
                                         <p id="dx-sev-sub">Chamados abertos por nível de SLA</p>
                                     </div>
                                 </div>
@@ -2474,7 +2474,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                                         <tr>
                                             <th>Protocolo</th>
                                             <th>Solicitação / Solicitante</th>
-                                            <th>Severidade</th>
+                                            <th>Prioridade</th>
                                             <th>SLA / Prazo</th>
                                             <th>Status</th>
                                             <th class="ta-r">Ação</th>
@@ -2511,11 +2511,9 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                                         <input type="text" id="tech-queue-search" oninput="renderTechQueue()" placeholder="Buscar chamado..." title="Busca por protocolo, solicitante, e-mail, título, técnico ou fila" aria-label="Buscar chamado por protocolo, solicitante, e-mail, título, técnico ou fila" class="input">
                                     </div>
 
-                                    <select id="tech-filter-urgency" onchange="renderTechQueue()" class="select select-sm" aria-label="Filtrar por severidade">
-                                        <option value="ALL">Todas as severidades</option>
-                                        <option value="Crítica">Crítica · 4 horas</option>
-                                        <option value="Alta">Alta · 8 horas</option>
-                                        <option value="Média">Média · 24 horas</option>
+                                    <!-- só existe a prioridade Baixa: o filtro fica escondido (o valor continua valendo "todas") -->
+                                    <select id="tech-filter-urgency" onchange="renderTechQueue()" class="select select-sm" aria-label="Filtrar por prioridade" hidden>
+                                        <option value="ALL">Todas as prioridades</option>
                                         <option value="Baixa">Baixa · 5 dias úteis</option>
                                     </select>
 
@@ -2586,7 +2584,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                                             </th>
                                             <th>Protocolo</th>
                                             <th>Solicitação / Solicitante</th>
-                                            <th>Severidade</th>
+                                            <th>Prioridade</th>
                                             <th>SLA / Prazo</th>
                                             <th class="col-tech">Técnico Atribuído</th>
                                             <th>Status</th>
@@ -2769,18 +2767,12 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                     </section>
 
                     <section class="fs-step">
-                        <h4 class="fs-h"><span class="n">3</span> Qual a severidade?</h4>
-                        <div class="picks urg" role="radiogroup" aria-label="Severidade do chamado">
-                            <button type="button" class="pick u-baixa" role="radio" data-urg="Baixa" onclick="pickUrgency(this.dataset.urg)"><b>Baixa</b><small>Dúvida ou operação normal</small><em>5 dias úteis</em></button>
-                            <button type="button" class="pick u-media" role="radio" data-urg="Média" onclick="pickUrgency(this.dataset.urg)"><b>Média</b><small>Impacto parcial, dá para contornar</small><em>24 horas</em></button>
-                            <button type="button" class="pick u-alta" role="radio" data-urg="Alta" onclick="pickUrgency(this.dataset.urg)"><b>Alta</b><small>Impacto relevante no seu trabalho</small><em>8 horas</em></button>
-                            <button type="button" class="pick u-critica" role="radio" data-urg="Crítica" onclick="pickUrgency(this.dataset.urg)"><b>Crítica</b><small>Parada total, sem alternativa</small><em>4 horas</em></button>
+                        <h4 class="fs-h"><span class="n">3</span> Prioridade do chamado</h4>
+                        <div class="picks urg" role="radiogroup" aria-label="Prioridade do chamado">
+                            <button type="button" class="pick u-baixa" role="radio" data-urg="Baixa" onclick="pickUrgency(this.dataset.urg)"><b>Baixa</b><small>Atendimento em ordem de chegada</small><em>5 dias úteis</em></button>
                         </div>
                         <select id="form-urgency" onchange="calculateSLA()" class="sr-only" tabindex="-1" aria-hidden="true">
-                            <option value="Baixa">Baixa · dúvida ou operação normal</option>
-                            <option value="Média" selected>Média · impacto parcial, dá para contornar</option>
-                            <option value="Alta">Alta · impacto relevante no seu trabalho</option>
-                            <option value="Crítica">Crítica · parada total, sem alternativa</option>
+                            <option value="Baixa" selected>Baixa · 5 dias úteis</option>
                         </select>
                     </section>
 
@@ -2822,7 +2814,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                                 <small id="form-sla-due"></small>
                             </div>
                         </div>
-                        <b id="form-sla-preview">24 Horas</b>
+                        <b id="form-sla-preview">5 Dias Úteis</b>
                     </div>
 
                     <div id="form-tips" class="cat-tips"></div>
@@ -2852,7 +2844,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                     <div class="success-grid">
                         <div><small>Tipo</small><span id="success-type">—</span></div>
                         <div><small>Categoria</small><span id="success-cat">—</span></div>
-                        <div><small>Severidade</small><span id="success-urg">—</span></div>
+                        <div><small>Prioridade</small><span id="success-urg">—</span></div>
                         <div><small>Previsão de atendimento</small><span id="success-sla">—</span></div>
                     </div>
                     <div class="success-next">
@@ -3069,12 +3061,9 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                                 </select>
                             </div>
                             <div class="field">
-                                <label for="prop-urgency">Severidade <small>(muda o SLA)</small></label>
+                                <label for="prop-urgency">Prioridade <small>(prazo de 5 dias úteis)</small></label>
                                 <select id="prop-urgency" onchange="onPropChange('urgency')" class="select">
                                     <option value="Baixa">Baixa · 5 dias úteis</option>
-                                    <option value="Média">Média · 24 horas</option>
-                                    <option value="Alta">Alta · 8 horas</option>
-                                    <option value="Crítica">Crítica · 4 horas</option>
                                 </select>
                             </div>
                         </div>
@@ -3634,15 +3623,15 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 summary: 'Manual completo de todas as funcionalidades: login, catálogo de serviços, abertura e acompanhamento de chamados, base de ajuda e área do administrador.',
                 steps: [
                     'ACESSO E LOGIN → Acesse a página inicial e informe seu e-mail e senha cadastrados. Em caso de esquecimento, use "Esqueci minha senha" na tela de login para receber o link de recuperação por e-mail (verifique também o Spam). Após 5 tentativas erradas, a conta bloqueia por 15 minutos por segurança.',
-                    'TELA INICIAL / CATÁLOGO DE SERVIÇOS → Ao entrar, você vê a Central de Suporte com atalhos "Abrir Requisição" (pedir algo: acesso, segunda via, cadastro) e "Reportar Incidente" (algo parou ou está errado), o resumo dos seus chamados e o catálogo de serviços com busca e filtros por tipo. Abaixo ficam os prazos de SLA: Crítica 4h, Alta 8h, Média 24h e Baixa 5 dias úteis.',
-                    'ABRIR UM CHAMADO → Clique em "Novo Chamado" no topo ou em qualquer cartão do catálogo. O formulário guiado tem 4 passos: (1) Tipo — Requisição ou Incidente; (2) Categoria — o assunto do chamado; (3) Severidade — Baixa, Média, Alta ou Crítica, que define o prazo de SLA; (4) Assunto e Descrição detalhada com o que aconteceu, mensagens de erro e passos para reproduzir. O telefone para contato é opcional. Envie com o botão "Registrar Chamado" ou com Ctrl+Enter. O sistema pode sugerir uma dica de autoatendimento da Base de Conhecimento enquanto você escreve.',
+                    'TELA INICIAL / CATÁLOGO DE SERVIÇOS → Ao entrar, você vê a Central de Suporte com atalhos "Abrir Requisição" (pedir algo: acesso, segunda via, cadastro) e "Reportar Incidente" (algo parou ou está errado), o resumo dos seus chamados e o catálogo de serviços com busca e filtros por tipo. Abaixo fica o prazo de atendimento (SLA): 5 dias úteis.',
+                    'ABRIR UM CHAMADO → Clique em "Novo Chamado" no topo ou em qualquer cartão do catálogo. O formulário guiado tem 4 passos: (1) Tipo — Requisição ou Incidente; (2) Categoria — o assunto do chamado; (3) Prioridade — hoje só existe a Baixa, com prazo de SLA de 5 dias úteis; (4) Assunto e Descrição detalhada com o que aconteceu, mensagens de erro e passos para reproduzir. O telefone para contato é opcional. Envie com o botão "Registrar Chamado" ou com Ctrl+Enter. O sistema pode sugerir uma dica de autoatendimento da Base de Conhecimento enquanto você escreve.',
                     'PROTOCOLO E CONFIRMAÇÃO → Após o envio, o sistema exibe uma tela de confirmação com o número do protocolo do chamado. Guarde esse número para acompanhar o atendimento.',
                     'MEUS CHAMADOS → No menu lateral, "Meus Chamados" lista todos os seus chamados com status (aberto, em atendimento, resolvido, fechado), prazo de SLA e histórico de mensagens com a equipe. Você pode responder a um chamado em andamento e, ao finalizar, avaliar o atendimento com estrelas (CSAT).',
                     'BASE DE AJUDA → A seção "Base de Ajuda" reúne artigos de autoatendimento organizados por categoria (Acessos & Senhas, Financeiro & Pagamentos, Suporte & Cadastros), com busca por palavra-chave e passo a passo de cada solução. Use-a antes de abrir um chamado.',
                     'MENU DO USUÁRIO → No canto superior direito ficam seu nome, e-mail e avatar. O menu da conta permite sair do sistema. Administradores veem também o seletor "Modo" para alternar entre abrir chamados (visão de usuário) e tratar chamados (visão de atendimento).',
                     'ÁREA DO ADMINISTRADOR → No modo "Tratar Chamados", o menu mostra: Dashboard (visão geral dos atendimentos), Fila de Chamados (lista com filtros, kanban por status e painel de detalhes para responder, transferir e concluir) e Técnicos e Filas (cadastro e organização dos analistas por área de atendimento).',
                     'FINANCEIRO E ASSINATURA → Faturas, boletos e PIX ficam disponíveis na área financeira do portal. Pagamentos via PIX compensam em até 10 minutos; boletos em 1 a 3 dias úteis. A degustação gratuita dá 24h de acesso completo a todos os recursos.',
-                    'DICAS PARA RESOLVER MAIS RÁPIDO → Escolha a categoria mais específica, informe o e-mail e o telefone cadastrados, descreva o erro com mensagens exatas e passos reproduzíveis, e selecione a severidade correta — isso direciona o chamado à fila certa e dentro do prazo adequado.'
+                    'DICAS PARA RESOLVER MAIS RÁPIDO → Escolha a categoria mais específica, informe o e-mail e o telefone cadastrados, descreva o erro com mensagens exatas e passos reproduzíveis, e confira o tipo e a categoria — isso direciona o chamado à fila certa, dentro do prazo de 5 dias úteis.'
                 ],
                 keywords: 'manual sistema completo guia como usar tutorial ajuda documentacao navegador passos'
             }
@@ -3932,7 +3921,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         function mapOrdem(o, own) {
             const protocol = String(o.protocol || o.id || '').trim().replace(/^#/, '');
             const status = normStatus(o.status);
-            const urgency = o.priority === 'Urgente' ? 'Crítica' : (o.priority === 'Normal' ? 'Média' : (o.priority || 'Média'));
+            const urgency = 'Baixa';   // única prioridade: o servidor já converte Crítica/Alta/Média/Normal/Urgente para Baixa
             const name = own ? ((currentUser && currentUser.name) || 'Você') : (decodeEntities(o.client_name) || 'Solicitante');
             const email = own ? ((currentUser && currentUser.email) || '') : String(o.client_email || '');
             const timeline = (Array.isArray(o.timeline) ? o.timeline : []).map((i) => mapTimelineItem(i, name));
@@ -4746,7 +4735,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             $('form-subject').value = initialSubject || (draft && draft.subject ? draft.subject : '');
             $('form-desc').value = draft && draft.desc ? draft.desc : '';
             $('form-req-phone').value = draft && draft.phone ? draft.phone : formatPhoneDigits(((currentUser && currentUser.phone) || '').replace(/\D/g, '').replace(/^55(?=\d{10,11}$)/, ''));
-            if (draft && draft.urgency) $('form-urgency').value = draft.urgency;
+            $('form-urgency').value = 'Baixa';   // única prioridade: rascunhos antigos com Média/Alta/Crítica não valem mais
             if (draft && draft.category && CATEGORY_TYPE[draft.category]) $('form-category').value = draft.category;
             formTypeTouched = Boolean(draft && draft.typeTouched);
             $('form-type').value = draft && draft.type ? draft.type : CATEGORY_TYPE[$('form-category').value] || 'Requisição';
@@ -5170,7 +5159,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             $('my-summary').innerHTML =
                 row('Status', getStatusBadge(t.status, true)) +
                 row('Tipo', typePill(t.type)) +
-                row('Severidade', getUrgencyBadge(t.urgency)) +
+                row('Prioridade', getUrgencyBadge(t.urgency)) +
                 row('Categoria', escapeHtml(t.category)) +
                 (t.queue ? row('Equipe responsável', escapeHtml(t.queue)) : '') +
                 row('Prazo (SLA)', escapeHtml(s.label) + (s.text ? '<br><span class="c-muted" style="font-weight:500;">' + escapeHtml(s.text) + '</span>' : '')) +
@@ -5601,7 +5590,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             const list = queueOrder.map(p => getTicket(p)).filter(Boolean);
             if (!list.length) { showToast('Não há chamados na fila atual para exportar.', 'warning'); return; }
 
-            const headers = ['Protocolo', 'Solicitante', 'Email', 'Telefone', 'Categoria', 'Tipo', 'Severidade', 'Status', 'Fila', 'Tecnico Responsavel', 'SLA', 'Data Abertura', 'Encerrado Em', 'Avaliacao CSAT', 'Assunto', 'Solucao'];
+            const headers = ['Protocolo', 'Solicitante', 'Email', 'Telefone', 'Categoria', 'Tipo', 'Prioridade', 'Status', 'Fila', 'Tecnico Responsavel', 'SLA', 'Data Abertura', 'Encerrado Em', 'Avaliacao CSAT', 'Assunto', 'Solucao'];
             const rows = list.map(t => {
                 const escapeCsv = (v) => '"' + String(v || '').replace(/"/g, '""').replace(/\r?\n/g, ' ') + '"';
                 const csatVal = t.csat && t.csat.rating ? `${t.csat.rating}/5${t.csat.comment ? ' - ' + t.csat.comment : ''}` : '';
@@ -6859,8 +6848,8 @@ html[data-bg="vidro"] .l-glass{opacity:1}
 
         // CHARTS & UTILS
         // ---- Indicadores do Dashboard Executivo (calculados sobre a lista de chamados em memória) ----
-        // Nível, prazo de SLA e cor (a mesma de URGENCY_COLORS)
-        const DX_NIVEIS = [['Crítica', '4 horas', '244, 63, 94'], ['Alta', '8 horas', '251, 146, 60'], ['Média', '24 horas', '56, 189, 248'], ['Baixa', '5 dias úteis', '148, 163, 184']];
+        // Prioridade, prazo de SLA e cor (a mesma de URGENCY_COLORS): só existe a Baixa
+        const DX_NIVEIS = [['Baixa', '5 dias úteis', '148, 163, 184']];
 
         function dxDiaChave(d) {
             return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
@@ -6939,7 +6928,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 cartao('', 'Chamados em 7 dias', String(dx.semana), vs) +
                 cartao(csatTom, '⭐ Satisfação (CSAT)', csatMedio == null ? '—' : csatMedio.toFixed(1) + ' / 5.0', csatRotulo);
 
-            // Severidade em aberto (sempre os 4 níveis, na ordem da política de SLA)
+            // Prioridade em aberto (os níveis da política de SLA; hoje só a Baixa)
             $('dx-sev-sub').textContent = open.length ? open.length + ' em aberto · ' + late.length + ' fora do prazo' : 'Nenhum chamado em aberto';
             const maxSev = Math.max(1, ...DX_NIVEIS.map(([n]) => open.filter((t) => t.urgency === n).length));
             sev.innerHTML = DX_NIVEIS.map(([nome, prazo, rgb]) => {
@@ -7166,14 +7155,14 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             'Outros': { short: 'Outros', rgb: '148, 163, 184' }
         };
 
-        // ---- Política de SLA: prazo de atendimento por urgência ----
-        // Crítica 4 horas e Alta 8 horas; Média 24 horas corridas; Baixa 5 dias úteis (sábado e domingo não contam).
-        // É a mesma regra que o servidor grava no chamado (atendimento.js).
-        const SLA_POLICY = { 'Crítica': '4 Horas', 'Alta': '8 Horas', 'Média': '24 Horas', 'Baixa': '5 Dias Úteis' };
+        // ---- Política de SLA: prazo de atendimento por prioridade ----
+        // Só existe a prioridade Baixa, com 5 dias úteis (sábado e domingo não contam).
+        // É a mesma regra que o servidor grava no chamado (atendimento.js); qualquer outro nome vale Baixa.
+        const SLA_POLICY = { 'Baixa': '5 Dias Úteis' };
         const SLA_WEEKDAYS = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'];
 
         function slaForUrgency(urgency) {
-            return SLA_POLICY[urgency] || SLA_POLICY['Média'];
+            return SLA_POLICY[urgency] || SLA_POLICY['Baixa'];
         }
 
         function addBusinessDays(start, days) {

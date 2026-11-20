@@ -38048,7 +38048,7 @@ async function handleNexusRequest(req, res) {
     saveLocalOrdens(achada.todas);
 
     recordSystemLog(ator.nome, ator.email, 'Atualização de O.S.', 'Ordem de Serviço',
-      'Atualizou O.S. #' + ordem.protocol + ' para status: ' + ordem.status + ' (Severidade: ' + ordem.priority + ')' +
+      'Atualizou O.S. #' + ordem.protocol + ' para status: ' + ordem.status + ' (Prioridade: ' + ordem.priority + ')' +
       (ordem.tecnico_responsavel ? ' (Técnico: ' + ordem.tecnico_responsavel + ')' : '') +
       (ordem.fila ? ' (Fila: ' + ordem.fila + ')' : '') +
       (resultado.mudancas.length ? ' — ' + resultado.mudancas.join('; ') : ''));

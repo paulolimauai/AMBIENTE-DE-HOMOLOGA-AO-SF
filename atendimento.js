@@ -11,7 +11,7 @@
 // ---------- Catálogos ----------
 // Fila de chamados: Novo -> Atendimento atribuído (-> Pendente, quando espera retorno) -> Resolvido -> Fechado
 const STATUS = Object.freeze(['Novo', 'Pendente', 'Atendimento atribuído', 'Resolvido', 'Fechado']);
-// Severidade (antes "prioridade"): só existe "Baixa" (prazo de 5 dias úteis). Crítica, Alta e Média foram retiradas; quem ainda envia
+// Prioridade (antes chamada "severidade"): só existe "Baixa" (prazo de 5 dias úteis). Crítica, Alta e Média foram retiradas; quem ainda envia
 // um desses nomes (aba antiga aberta, "Normal"/"Urgente" de antes) é aceito e vale "Baixa", e os chamados antigos seguem o mesmo prazo.
 const PRIORIDADES = Object.freeze(['Baixa']);
 const PRIORIDADES_ANTIGAS = Object.freeze({ 'critica': 'Baixa', 'alta': 'Baixa', 'media': 'Baixa', 'normal': 'Baixa', 'urgente': 'Baixa' });
@@ -303,7 +303,7 @@ function validarAbertura(payload, { admin = false, isEmail, filas } = {}) {
   let prioridade = PRIORIDADE_PADRAO;
   if (prioridadeBruta) {
     prioridade = prioridadeCanonica(prioridadeBruta);
-    if (!prioridade) erros.priority = 'Severidade inválida. Use: ' + PRIORIDADES.join(', ') + '.';
+    if (!prioridade) erros.priority = 'Prioridade inválida. Use: ' + PRIORIDADES.join(', ') + '.';
   }
 
   // Requisição (pedir algo) ou incidente (algo que parou): sem escolha, vale o tipo sugerido pela categoria
@@ -548,8 +548,8 @@ function eventoDeSistema(texto, { agoraIso, autor, interno = false }) {
 /**
  * Aplica as mudanças do administrador sobre um chamado existente.
  * Só altera o que veio no pedido (antes, enviar apenas as notas devolvia o chamado para o início da fila).
- * Cada mudança relevante (status, técnico, severidade, tipo, fila) vira uma linha automática no histórico; categoria, ativo e
- * horas viram linhas internas. Se a severidade mudar e o pedido não trouxer o SLA, o prazo é recalculado pela política.
+ * Cada mudança relevante (status, técnico, prioridade, tipo, fila) vira uma linha automática no histórico; categoria, ativo e
+ * horas viram linhas internas. Se a prioridade mudar e o pedido não trouxer o SLA, o prazo é recalculado pela política.
  * Coerência do status: ao atribuir um técnico a um chamado "Novo" ele passa a "Atendimento atribuído"; ao tirar o técnico de
  * um chamado "Atendimento atribuído" ele volta a "Novo" (a menos que o pedido já traga o status).
  * `filas` (opcional) é o catálogo de filas: com ele, só se aceita uma fila cadastrada.
@@ -584,10 +584,10 @@ function aplicarAtualizacao(ordemBruta, payload, { agoraIso, ator, filas } = {})
   let prioridadeMudou = false;
   if (veio(p.priority)) {
     const prioridade = prioridadeCanonica(p.priority);
-    if (!prioridade) return { ok: false, mensagem: 'Severidade inválida. Use: ' + PRIORIDADES.join(', ') + '.' };
+    if (!prioridade) return { ok: false, mensagem: 'Prioridade inválida. Use: ' + PRIORIDADES.join(', ') + '.' };
     // Chamado antigo gravado como Crítica/Alta/Média já vale Baixa: mandar "Baixa" não é mudança (nem linha na timeline)
     if (prioridade !== (prioridadeCanonica(ordem.priority) || PRIORIDADE_PADRAO)) {
-      mudancas.push('severidade: ' + (ordem.priority || '—') + ' → ' + prioridade);
+      mudancas.push('prioridade: ' + (ordem.priority || '—') + ' → ' + prioridade);
       prioridadeMudou = true;
     }
     novo.priority = prioridade;
@@ -669,12 +669,12 @@ function aplicarAtualizacao(ordemBruta, payload, { agoraIso, ator, filas } = {})
     }
   }
 
-  // O prazo acompanha a severidade, a menos que o pedido já traga um SLA próprio
+  // O prazo acompanha a prioridade, a menos que o pedido já traga um SLA próprio
   if (prioridadeMudou && !veio(p.sla)) {
     novo.sla = calcularSlaPorPrioridade(novo.priority);
   }
   if (prioridadeMudou) {
-    publico('Severidade alterada de "' + (ordem.priority || '—') + '" para "' + novo.priority + '". Prazo de atendimento (SLA): ' + (veio(p.sla) ? limparTexto(p.sla, LIMITES.sla) : novo.sla) + '.');
+    publico('Prioridade alterada de "' + (ordem.priority || '—') + '" para "' + novo.priority + '". Prazo de atendimento (SLA): ' + (veio(p.sla) ? limparTexto(p.sla, LIMITES.sla) : novo.sla) + '.');
   }
 
   if (veio(p.sla)) {
@@ -896,7 +896,7 @@ function aplicarAcaoSolicitante(ordemBruta, payload, { agoraIso, agora = Date.no
 
 // ---------- Leitura ----------
 // Padroniza o que vem do SQL Server e do arquivo local: textos nunca nulos, datas sempre em ISO 8601 e os nomes de status,
-// severidade e tipo sempre os atuais. Chamado gravado antes de existir o "tipo" (ticket_type vazio) é do modelo antigo, em que
+// prioridade e tipo sempre os atuais. Chamado gravado antes de existir o "tipo" (ticket_type vazio) é do modelo antigo, em que
 // "Pendente" era o chamado recém-aberto: vira "Novo" (ou "Atendimento atribuído", se já tinha técnico).
 function normalizarOrdem(linha) {
   if (!linha || typeof linha !== 'object') return null;

@@ -335,7 +335,7 @@ test('fila de chamados: filas e técnicos, requisição/incidente, SLA 5 dias ú
   assert.equal((await api('POST', '/api/filas', { token: admin, body: { nome: 'Fila Boba', categorias: ['Inventada'] } })).status, 400);
   assert.equal((await api('POST', '/api/filas', { token: ana, body: { nome: 'Fila da Ana' } })).status, 401);
 
-  // o usuário abre um INCIDENTE crítico de falha: cai na fila N2, SLA de 4 horas, status "Novo"
+  // o usuário abre um INCIDENTE de falha (mesmo pedindo "Crítica", só existe a prioridade Baixa): cai na fila N2, SLA de 5 dias úteis, status "Novo"
   const aberto = await api('POST', '/api/ordens', { token: ana, body: {
     service_type: 'Falhas/Bugs/Correções', ticket_type: 'Incidente', priority: 'Crítica',
     title: 'Erro ao gerar boleto', description: 'O sistema mostra tela branca ao gerar o boleto do mês.', canal_atendimento: 'Central GLPI'
@@ -343,7 +343,8 @@ test('fila de chamados: filas e técnicos, requisição/incidente, SLA 5 dias ú
   assert.equal(aberto.status, 200, aberto.texto);
   const protocolo = aberto.json.protocol;
   assert.equal(aberto.json.ordem.status, 'Novo');
-  assert.equal(aberto.json.ordem.sla, '4 Horas');
+  assert.equal(aberto.json.ordem.sla, '5 Dias Úteis');
+  assert.equal(aberto.json.ordem.priority, 'Baixa');
   assert.equal(aberto.json.ordem.ticket_type, 'Incidente');
   assert.equal(aberto.json.ordem.fila, 'Suporte Técnico N2');
   // uma requisição comum (2ª via) cai na outra fila e sem escolha de tipo vale o sugerido
@@ -352,7 +353,7 @@ test('fila de chamados: filas e técnicos, requisição/incidente, SLA 5 dias ú
   assert.equal(segunda.json.ordem.ticket_type, 'Requisição');
   assert.equal(segunda.json.ordem.fila, 'Financeiro N1');
   assert.equal(segunda.json.ordem.sla, '5 Dias Úteis');
-  // tipo e severidade inválidos
+  // tipo e prioridade inválidos
   assert.equal((await api('POST', '/api/ordens', { token: ana, body: { ticket_type: 'Reclamação', title: 'Teste', description: 'Descrição longa o bastante.' } })).status, 400);
   assert.equal((await api('POST', '/api/ordens', { token: ana, body: { priority: 'Imediata', title: 'Teste', description: 'Descrição longa o bastante.' } })).status, 400);
 

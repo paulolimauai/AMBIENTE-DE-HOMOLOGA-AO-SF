@@ -103,7 +103,7 @@ test('validarAbertura recusa pedido incompleto com mensagem específica', () => 
     [{ client_email: '<img onerror=x>@x.com' }, 'Informe um e-mail válido.'],
     [{ client_phone: '123' }, 'Informe o telefone com DDD (ex.: (62) 99999-9999).'],
     [{ service_type: 'Hackear o sistema' }, 'Selecione uma categoria válida.'],
-    [{ priority: 'Crítica máxima' }, 'Severidade inválida. Use: Baixa.'],
+    [{ priority: 'Crítica máxima' }, 'Prioridade inválida. Use: Baixa.'],
     [{ ticket_type: 'Reclamação' }, 'Escolha o tipo do chamado: Requisição ou Incidente.'],
     [{ title: 'ab' }, 'Informe o assunto do chamado.'],
     [{ description: 'curta' }, 'Descreva o que você precisa com um pouco mais de detalhes (mínimo de 10 caracteres).']
@@ -393,7 +393,7 @@ test('aplicarAtualizacao registra no histórico quem assumiu e o status; severid
   assert.deepEqual(eventos.map((e) => e.sender), ['Sistema', 'Sistema']);
   assert.ok(eventos.some((e) => /de "Novo" para "Atendimento atribuído"/.test(e.text)));
   assert.ok(eventos.some((e) => /assumido por Carlos/.test(e.text)));
-  assert.ok(!eventos.some((e) => /Severidade alterada/.test(e.text)));
+  assert.ok(!eventos.some((e) => /Prioridade alterada/.test(e.text)));
   assert.ok(eventos.every((e) => e.author === 'Admin Paulo' && e.internal === false));
 });
 
