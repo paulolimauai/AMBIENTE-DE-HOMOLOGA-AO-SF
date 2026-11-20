@@ -255,14 +255,21 @@ button,a,label{touch-action:manipulation}
 
 /* ---------- cadastro: aceites obrigatórios e dica da senha ---------- */
 .aceites{display:grid;gap:.5rem}
-.aceite{display:flex;align-items:center;gap:.7rem;padding:.55rem .75rem;border-radius:.75rem;background:var(--field);border:1px solid var(--al,var(--field-line));
-  font-size:14px;line-height:1.4;font-weight:600;color:var(--text);cursor:pointer;transition:border-color .2s,box-shadow .2s,background .2s}
+/* texto centralizado no quadro (o recuo é igual dos dois lados) e a caixinha fixa à esquerda, na mesma coluna nos dois aceites */
+.aceite{position:relative;display:flex;align-items:center;justify-content:center;min-height:2.6rem;padding:.5rem 2.4rem;border-radius:.85rem;background:var(--field);border:1px solid var(--al,var(--field-line));
+  font-size:14px;line-height:1.4;font-weight:600;text-align:center;color:var(--text);cursor:pointer;transition:border-color .2s,box-shadow .2s,background .2s}
 .aceite:hover{border-color:rgba(255,255,255,.22)}
-.aceite input{flex:none;width:1.25rem;height:1.25rem;margin:0;accent-color:var(--brand)}
+.aceite input{-webkit-appearance:none;appearance:none;position:absolute;left:.75rem;top:50%;transform:translateY(-50%);display:grid;place-content:center;width:1.25rem;height:1.25rem;margin:0;border-radius:.4rem;
+  border:1.5px solid var(--ck-line,rgba(255,255,255,.5));background:var(--ck-fundo,rgba(255,255,255,.06));cursor:pointer;transition:background .15s,border-color .15s,box-shadow .15s}
+.aceite input::after{content:"";width:.7rem;height:.7rem;background:var(--ck-marca,#0b1020);clip-path:polygon(0 56%,14% 42%,40% 68%,86% 18%,100% 32%,40% 96%);transform:scale(0);transition:transform .15s}
+.aceite input:checked{background:var(--ck-bg,var(--brand));border-color:var(--ck-bg,var(--brand))}
+.aceite input:checked::after{transform:scale(1)}
+.aceite input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.aceite.err input{border-color:var(--danger)}
+.aceite span{text-wrap:balance}
 .aceite a{font-weight:800;text-decoration:underline;text-decoration-thickness:.09em;text-underline-offset:.18em}
-:root[data-mode="light"] .aceite{--al:rgba(15,23,60,.26)}
+:root[data-mode="light"] .aceite{--al:rgba(15,23,60,.26);--ck-line:rgba(15,23,60,.5);--ck-fundo:#fff;--ck-bg:color-mix(in srgb,var(--brand-d) 45%,#0e1530);--ck-marca:#fff}
 :root[data-mode="light"] .aceite a{color:color-mix(in srgb,var(--brand-d) 45%,#0e1530)}
-:root[data-mode="light"] .aceite input{accent-color:color-mix(in srgb,var(--brand-d) 45%,#0e1530)}
 .aceite:has(input:checked){border-color:color-mix(in srgb,var(--brand) 55%,transparent);background:color-mix(in srgb,var(--brand) 10%,transparent);color:var(--text)}
 .aceite.err{border-color:var(--danger);box-shadow:0 0 0 .25rem rgba(255,138,147,.15)}
 .dica{margin-top:-.4rem;font-size:14px;line-height:1.4;color:var(--muted)}
