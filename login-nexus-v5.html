@@ -255,10 +255,14 @@ button,a,label{touch-action:manipulation}
 
 /* ---------- cadastro: aceites obrigatórios e dica da senha ---------- */
 .aceites{display:grid;gap:.5rem}
-.aceite{display:flex;align-items:flex-start;gap:.7rem;padding:.65rem .8rem;border-radius:.75rem;background:var(--field);border:1px solid var(--field-line);
-  font-size:14px;line-height:1.4;color:var(--soft);cursor:pointer;transition:border-color .2s,box-shadow .2s,background .2s}
+.aceite{display:flex;align-items:center;gap:.7rem;padding:.55rem .75rem;border-radius:.75rem;background:var(--field);border:1px solid var(--al,var(--field-line));
+  font-size:14px;line-height:1.4;font-weight:600;color:var(--text);cursor:pointer;transition:border-color .2s,box-shadow .2s,background .2s}
 .aceite:hover{border-color:rgba(255,255,255,.22)}
-.aceite input{flex:none;width:1.25rem;height:1.25rem;margin-top:.05rem;accent-color:var(--brand)}
+.aceite input{flex:none;width:1.25rem;height:1.25rem;margin:0;accent-color:var(--brand)}
+.aceite a{font-weight:800;text-decoration:underline;text-decoration-thickness:.09em;text-underline-offset:.18em}
+:root[data-mode="light"] .aceite{--al:rgba(15,23,60,.26)}
+:root[data-mode="light"] .aceite a{color:color-mix(in srgb,var(--brand-d) 45%,#0e1530)}
+:root[data-mode="light"] .aceite input{accent-color:color-mix(in srgb,var(--brand-d) 45%,#0e1530)}
 .aceite:has(input:checked){border-color:color-mix(in srgb,var(--brand) 55%,transparent);background:color-mix(in srgb,var(--brand) 10%,transparent);color:var(--text)}
 .aceite.err{border-color:var(--danger);box-shadow:0 0 0 .25rem rgba(255,138,147,.15)}
 .dica{margin-top:-.4rem;font-size:14px;line-height:1.4;color:var(--muted)}
@@ -447,8 +451,8 @@ h3 { font-size: 18px !important; }
       <p class="dica" id="dica" hidden>Sua senha precisa ter no mínimo 8 caracteres, com letra maiúscula, letra minúscula, número e um símbolo (@ # $ % ! ? * &amp; . _ -).</p>
 
       <div class="aceites" id="aceites" hidden>
-        <label class="aceite"><input type="checkbox" id="ac-termos"><span>Aceito os <a href="/termos.html" target="_blank" rel="noopener">termos de abertura da conta</a> e a <a href="/privacidade.html" target="_blank" rel="noopener">política de privacidade</a>.</span></label>
-        <label class="aceite"><input type="checkbox" id="ac-verdade"><span>Declaro que os dados informados são verdadeiros e pertencem a mim.</span></label>
+        <label class="aceite"><input type="checkbox" id="ac-termos"><span>Aceito os <a href="/termos.html" target="_blank" rel="noopener" aria-label="termos de abertura de conta">termos</a> e a <a href="/privacidade.html" target="_blank" rel="noopener">política de privacidade</a>.</span></label>
+        <label class="aceite"><input type="checkbox" id="ac-verdade"><span>Declaro que os dados são verdadeiros e meus.</span></label>
       </div>
 
       <div class="opts" id="opts">
