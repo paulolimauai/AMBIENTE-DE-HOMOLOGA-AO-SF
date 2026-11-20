@@ -325,7 +325,16 @@ td.emp{text-align:center;padding:44px 18px}
 #mod{position:fixed;inset:0;z-index:60;background:rgba(2,8,16,.6);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:18px}
 #mod .glass{position:relative;width:100%;max-width:540px;max-height:92vh;overflow:auto;padding:26px 26px 22px;background:var(--pop);border-radius:20px;box-shadow:var(--shadow);animation:pop .18s ease}
 @keyframes pop{from{opacity:0;transform:translateY(10px) scale(.985)}}
-#mc>h3:first-of-type{padding-right:40px;font-size:18px!important;letter-spacing:-.01em}
+#mc .ask-h{display:flex;align-items:center;gap:14px;margin-bottom:12px;padding-right:36px}
+#mc .ask-h h3{font-size:18px!important;letter-spacing:-.01em;margin:0}
+.ask-ic{flex:none;width:46px;height:46px;border-radius:15px;display:grid;place-items:center;border:1px solid}
+.ask-ic svg{width:23px;height:23px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.ask-ic.d{color:var(--r);background:color-mix(in srgb,var(--r) 13%,transparent);border-color:color-mix(in srgb,var(--r) 38%,transparent)}
+.ask-ic.s{color:var(--e);background:color-mix(in srgb,var(--e) 13%,transparent);border-color:color-mix(in srgb,var(--e) 38%,transparent)}
+.ask-ic.n{color:var(--a);background:color-mix(in srgb,var(--a) 13%,transparent);border-color:color-mix(in srgb,var(--a) 38%,transparent)}
+#mc .ask-m{font-size:14px;line-height:1.6;margin:0 0 18px}
+#mc .ask-ft{justify-content:flex-end;gap:10px;margin-top:2px;padding-top:16px;border-top:1px solid var(--b)}
+#mc .ask-ft .btn{min-width:104px}
 #mc .x{position:absolute;top:14px;right:14px;width:36px;height:36px;border-radius:10px;border:1px solid transparent;background:none;color:var(--m);cursor:pointer;display:grid;place-items:center}
 #mc .x:hover{background:var(--hov);color:var(--t)}
 #mc .x svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
@@ -477,7 +486,7 @@ function toast(m,c){const e=document.createElement('div');e.className='toast';if
 function modal(h){$('mc').innerHTML='<button type="button" class="x" aria-label="Fechar" onclick="closeM()">'+I('x')+'</button>'+h;$('mod').style.display='flex';setTimeout(()=>{const f=$('mc').querySelector('input:not([type=checkbox]):not([readonly]),select:not([disabled]),textarea');if(f)f.focus()},30)}
 /* Confirmação no estilo da tela (no lugar do confirm() do navegador): devolve uma Promise true/false; fechar, Esc ou clicar fora = false */
 let pendAsk=null;
-function ask(msg,o){o=o||{};if(pendAsk){const r=pendAsk;pendAsk=null;r(false)}return new Promise(res=>{modal(`<h3 style="font-size:18px;margin-bottom:8px">${esc(o.t||'Confirmar')}</h3><p class="sub" style="font-size:14px;line-height:1.55;margin:0 0 22px">${esc(msg)}</p><div class="row" style="justify-content:flex-end"><button type="button" class="btn" id="ask-n">Cancelar</button><button type="button" class="btn ${o.d?'dz':'p'}" id="ask-s">${esc(o.ok||'Confirmar')}</button></div>`);pendAsk=res;$('ask-n').onclick=closeM;$('ask-s').onclick=()=>{pendAsk=null;closeM();res(true)};(o.d?$('ask-n'):$('ask-s')).focus()})}
+function ask(msg,o){o=o||{};if(pendAsk){const r=pendAsk;pendAsk=null;r(false)}const tone=o.tone||(o.d?'d':'n'),ic=o.ic||(o.d?'alert':'info'),cls=o.d?'dz':(tone==='s'?'s':'p');return new Promise(res=>{modal(`<div class="ask-h"><span class="ask-ic ${tone}" aria-hidden="true">${I(ic)}</span><h3>${esc(o.t||'Confirmar')}</h3></div><p class="sub ask-m">${esc(msg)}</p><div class="row ask-ft"><button type="button" class="btn" id="ask-n">Cancelar</button><button type="button" class="btn ${cls}" id="ask-s">${esc(o.ok||'Confirmar')}</button></div>`);pendAsk=res;$('ask-n').onclick=closeM;$('ask-s').onclick=()=>{pendAsk=null;closeM();res(true)};(o.d?$('ask-n'):$('ask-s')).focus()})}
 function closeM(){$('mod').style.display='none';if(pendAsk){const r=pendAsk;pendAsk=null;r(false)}}
 $('mod').onclick=e=>{if(e.target.id==='mod')closeM()};
 addEventListener('keydown',e=>{if(e.key==='Escape'&&$('mod').style.display==='flex')closeM()});
@@ -500,6 +509,7 @@ const IC={subs:'<path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 11a4 4 0 100-
 plus:'<path d="M12 5v14M5 12h14"/>',edit:'<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4 12.5-12.5z"/>',ban:'<circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/>',ok:'<circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.7 2.7L16 9.5"/>',
 trash:'<path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 11v6M14 11v6"/>',doc:'<path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/>',search:'<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>',
 x:'<path d="M18 6L6 18M6 6l12 12"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',alert:'<path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/>',
+lock:'<rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 018 0v3"/>',unlock:'<rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 017.7-1.5"/>',
 money:'<path d="M12 2v20M17 6H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>',info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>',undo:'<path d="M3 7v6h6"/><path d="M3 13a9 9 0 103-7.7L3 8"/>'};
 const MODS=[['subs','Assinaturas'],['pay','Pagamentos'],['acc','Acessos GLPI']];
 const cur=()=>{const h=location.hash.slice(1);return MODS.some(m=>m[0]===h)?h:'subs'};
@@ -702,7 +712,7 @@ async function salvarUsuario(u){
   await carregarReais();
 }
 function blk(id){var s=sub(id);if(!s)return;var alvo=(s.s==='Bloqueado');
-  ask(alvo?'Liberar o acesso de '+s.n+'? A pessoa volta a entrar no Nexus e no GLPI.':'Bloquear o acesso de '+s.n+'? A pessoa deixa de entrar no Nexus e no GLPI até ser liberada de novo.',{t:alvo?'Liberar acesso':'Bloquear acesso',ok:alvo?'Liberar':'Bloquear',d:!alvo}).then(function(ok){if(!ok)return;
+  ask(alvo?'Liberar o acesso de '+s.n+'? A pessoa volta a entrar no Nexus e no GLPI.':'Bloquear o acesso de '+s.n+'? A pessoa deixa de entrar no Nexus e no GLPI até ser liberada de novo.',{t:alvo?'Liberar acesso':'Bloquear acesso',ok:alvo?'Liberar':'Bloquear',d:!alvo,ic:alvo?'unlock':'lock',tone:alvo?'s':'d'}).then(function(ok){if(!ok)return;
     return api('/api/users','POST',[{email:s.e,name:s.n,active:alvo}]).then(function(){toast('Acesso de '+s.n+' '+(alvo?'liberado':'bloqueado')+'.');return carregarReais()})}).catch(function(e){toast(e.message,'var(--r)')})}
 function del(id){var s=sub(id);if(!s)return;
   ask('Excluir o cadastro de '+s.n+'? Todos os dados da conta serão removidos e isso não pode ser desfeito.',{t:'Excluir cadastro',ok:'Excluir',d:true}).then(function(ok){if(!ok)return;
@@ -722,7 +732,7 @@ $('f').onsubmit=function(e){e.preventDefault();var em=$('e').value.trim().toLowe
     return api('/api/subscription/admin-grant-time','POST',{admin_email:adminEmail(),target_email:em,duration_minutes:1440}).catch(function(){}).then(function(){return carregarReais()});
   }).then(function(){closeM();toast('Conta criada para '+u.n+' — o acesso inicial foi liberado')}).catch(function(er){toast(er.message,'var(--r)')})}}
 function utog(id){var u=S.users.find(function(x){return x.id===id});if(!u)return;var on=!u.on;
-  (on?Promise.resolve(true):ask('Bloquear o acesso de '+u.n+'? A pessoa deixa de entrar no Nexus e no GLPI até ser ativada de novo.',{t:'Bloquear acesso',ok:'Bloquear',d:true})).then(function(ok){if(!ok)return;
+  (on?Promise.resolve(true):ask('Bloquear o acesso de '+u.n+'? A pessoa deixa de entrar no Nexus e no GLPI até ser ativada de novo.',{t:'Bloquear acesso',ok:'Bloquear',d:true,ic:'lock'})).then(function(ok){if(!ok)return;
     return api('/api/users','POST',[{email:u.e,name:u.n,active:on}]).then(function(){toast('Acesso de '+u.n+' '+(on?'liberado':'bloqueado')+'.');return carregarReais()})}).catch(function(e){toast(e.message,'var(--r)')})}
 function udel(id){var u=S.users.find(function(x){return x.id===id});if(!u)return;
   ask('Remover '+u.n+' do Nexus? A conta e todos os dados associados serão excluídos e isso não pode ser desfeito.',{t:'Remover usuário',ok:'Remover',d:true}).then(function(ok){if(!ok)return;
