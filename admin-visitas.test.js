@@ -14,7 +14,7 @@ const ui = {
 };
 const dia = (d, v, u) => ({ dia: '2026-11-' + String(d).padStart(2, '0'), visitas: v, visitantes: u });
 const resumo = (extra) => Object.assign({
-  success: true, retencaoDias: 180, dias: 7, visitas: 10, visitantes: 6, robos: 2,
+  success: true, historico: { desde: '2026-11-01', arquivos: 20, bytes: 150000 }, dias: 7, visitas: 10, visitantes: 6, robos: 2,
   porDia: [dia(14, 0, 0), dia(15, 2, 2), dia(16, 0, 0), dia(17, 3, 2), dia(18, 1, 1), dia(19, 0, 0), dia(20, 4, 3)],
   paginas: [{ nome: '/inicio', visitas: 7 }, { nome: '/login', visitas: 3 }],
   dispositivos: [{ nome: 'Celular', visitas: 6 }, { nome: 'Computador', visitas: 4 }],
@@ -66,7 +66,7 @@ test('graficoDias: uma coluna por dia, altura pelo maior dia, zero como traço e
   assert.strictEqual(g.pico, '20/11 · 4 visitas');
   const longo = Array.from({ length: 30 }, (_, i) => dia(i + 1, i % 3, 1));
   assert.ok(!/<span class="vd-v">\d/.test(A.graficoDias(longo).html), 'com 30 dias não há número sobre a barra');
-  assert.deepStrictEqual(A.graficoDias([]), { html: '', pico: '' });
+  assert.deepStrictEqual(A.graficoDias([]), { html: '', pico: '', porMes: false });
   const zeros = A.graficoDias([dia(1, 0, 0), dia(2, 0, 0)]);
   assert.strictEqual(zeros.pico, '');
   assert.ok(!zeros.html.includes('NaN'));
@@ -103,8 +103,46 @@ test('tela completa: abas de período, 4 indicadores, gráfico, rankings, tabela
   for (const s of ['Celular · Android', 'Computador · Windows', 'Celular · iOS', 'Computador · macOS']) assert.ok(h.includes(s), s);
   assert.ok(h.includes('<th>Aparelho e sistema</th>'));
   assert.ok(h.includes('<th>IP (mascarado)</th>') && h.includes('189.45.xxx.xxx'));
-  assert.ok(h.includes('180 dias no servidor'));
+  assert.ok(h.includes('Nada é apagado: o histórico fica guardado sem prazo.') && !h.includes('180 dias') && !h.includes('depois são apagados'));
+  assert.ok(h.includes('desde 01/11/2026 (20 dias com acessos, ocupando 146 KB no disco do servidor)'));
   assert.ok(!h.includes('NaN') && !h.includes('undefined'));
+});
+
+test('períodos: 7, 30, 90 dias, último ano e todo o histórico (que chama visDias com o texto "tudo")', () => {
+  const h = A.tela(resumo(), ui, 'tudo');
+  assert.strictEqual((h.match(/role="tab"/g) || []).length, 5);
+  for (const r of ['Últimos 7 dias', 'Últimos 30 dias', 'Últimos 90 dias', 'Último ano', 'Todo o histórico']) assert.ok(h.includes('>' + r + '</button>'), r);
+  assert.ok(h.includes('aria-selected="true" onclick="visDias(\'tudo\')">Todo o histórico'));
+  assert.ok(h.includes('aria-selected="false" onclick="visDias(365)">Último ano'));
+  assert.ok(A.tela(resumo(), ui, 365).includes('aria-selected="true" onclick="visDias(365)"'));
+});
+
+test('ajudantes: mês, data, tamanho, agrupamento e texto do histórico', () => {
+  assert.strictEqual(A.rotuloMes('2026-11'), 'nov/26');
+  assert.strictEqual(A.rotuloMes('2027-01'), 'jan/27');
+  assert.strictEqual(A.rotuloMes('2026-13'), '');
+  assert.strictEqual(A.dataBR('2026-11-01'), '01/11/2026');
+  assert.strictEqual(A.dataBR(''), '');
+  assert.deepStrictEqual([0, 900, 2048, 150000, 5 * 1048576, 1.5 * 1073741824].map(A.tamanho), ['0 bytes', '900 bytes', '2 KB', '146 KB', '5,0 MB', '1,50 GB']);
+  assert.deepStrictEqual(A.agruparPorMes([dia(5, 2, 2), dia(6, 3, 1), { dia: '2026-12-01', visitas: 4, visitantes: 4 }]), [{ dia: '2026-11', mes: true, visitas: 5 }, { dia: '2026-12', mes: true, visitas: 4 }]);
+  assert.strictEqual(A.textoHistorico(null), 'Nada é apagado: o histórico fica guardado sem prazo.');
+  assert.ok(A.textoHistorico({ desde: '2026-11-20', arquivos: 1, bytes: 300 }).includes('(1 dia com acessos, ocupando 300 bytes'));
+});
+
+test('período longo (mais de 120 dias): o gráfico vira uma coluna por mês, sem somar "visitantes"', () => {
+  const ano = [];
+  for (let i = 0; i < 200; i++) { const d = new Date(Date.UTC(2026, 0, 1) + i * 86400000); ano.push({ dia: d.toISOString().slice(0, 10), visitas: 1, visitantes: 1 }); }
+  const g = A.graficoDias(ano);
+  assert.strictEqual(g.porMes, true);
+  assert.strictEqual((g.html.match(/class="vd-c"/g) || []).length, 7, 'jan a jul = 7 meses');
+  assert.ok(g.html.includes('title="jan/26: 31 visitas"') && !g.html.includes('visitante'), 'mês sem visitantes');
+  assert.match(g.html, /aria-label="Visitas por mês, de jan\/26 a jul\/26\. Total: 200\. Maior mês: jan\/26, com 31\."/);
+  assert.ok(g.html.includes('>31<'), 'até 14 colunas mostra o número sobre a barra');
+  const h = A.tela(resumo({ porDia: ano, dias: 200 }), ui, 'tudo');
+  assert.ok(h.includes('<h3>Visitas por mês</h3>') && h.includes('Maior mês: jan/26 · 31 visitas'));
+  const curto = A.graficoDias(resumo().porDia);
+  assert.strictEqual(curto.porMes, false);
+  assert.ok(A.tela(resumo(), ui, 7).includes('<h3>Visitas por dia</h3>'));
 });
 
 test('acessos recentes: 15 mais novos por padrão, botão para ver todos e para voltar', () => {

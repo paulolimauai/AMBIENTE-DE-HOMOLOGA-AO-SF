@@ -11,7 +11,9 @@
   if (typeof module === 'object' && module.exports) module.exports = A;   // testes (node --test)
   if (raiz && raiz.document) A.montar(raiz);
 })(typeof window !== 'undefined' ? window : null, function () {
-  var PERIODOS = [{ dias: 7, rotulo: '7 dias' }, { dias: 30, rotulo: '30 dias' }, { dias: 90, rotulo: '90 dias' }];
+  // 'tudo' = todo o histórico guardado (o servidor nunca apaga nada)
+  var PERIODOS = [{ dias: 7, rotulo: 'Últimos 7 dias' }, { dias: 30, rotulo: 'Últimos 30 dias' }, { dias: 90, rotulo: 'Últimos 90 dias' }, { dias: 365, rotulo: 'Último ano' }, { dias: 'tudo', rotulo: 'Todo o histórico' }];
+  var DIAS_POR_MES = 120;   // acima disso o gráfico passa a uma coluna por mês (365 colunas diárias ficam ilegíveis)
   var PADRAO = 7;
   var ALTURA_BARRA = 132;   // px da barra do dia mais movimentado
   var ICONE = '<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>';
@@ -56,6 +58,31 @@
     return p < 1 ? '<1%' : p + '%';
   }
 
+  var MESES = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
+  function rotuloMes(mes) { var m = String(mes || '').match(/^(\d{4})-(\d{2})$/); return m && MESES[Number(m[2]) - 1] ? MESES[Number(m[2]) - 1] + '/' + m[1].slice(2) : ''; }
+  function dataBR(iso) { var m = String(iso || '').match(/^(\d{4})-(\d{2})-(\d{2})$/); return m ? m[3] + '/' + m[2] + '/' + m[1] : ''; }
+  function tamanho(b) {
+    b = Number(b) || 0;
+    if (b < 1024) return b + ' bytes';
+    if (b < 1048576) return Math.round(b / 1024) + ' KB';
+    if (b < 1073741824) return (b / 1048576).toFixed(1).replace('.', ',') + ' MB';
+    return (b / 1073741824).toFixed(2).replace('.', ',') + ' GB';
+  }
+  // Soma os dias de cada mês (mesma pessoa em dois dias contaria duas vezes: por isso o mês não mostra "visitantes")
+  function agruparPorMes(lista) {
+    var meses = [], idx = {};
+    (lista || []).forEach(function (x) {
+      var m = String(x.dia).slice(0, 7);
+      if (!(m in idx)) { idx[m] = meses.length; meses.push({ dia: m, mes: true, visitas: 0 }); }
+      meses[idx[m]].visitas += x.visitas || 0;
+    });
+    return meses;
+  }
+  function textoHistorico(h) {
+    if (!h || !h.arquivos) return 'Nada é apagado: o histórico fica guardado sem prazo.';
+    return 'Nada é apagado: o histórico fica guardado sem prazo. Há registros desde ' + dataBR(h.desde) + ' (' + inteiro(h.arquivos) + ' ' + plural(h.arquivos, 'dia', 'dias') + ' com acessos, ocupando ' + tamanho(h.bytes) + ' no disco do servidor).';
+  }
+
   // Lista com barras: nome, quantidade, % do total de visitas. Mostra no máximo 8 itens.
   function ranking(titulo, lista, total, vazio) {
     var itens = (lista || []).slice(0, 8);
@@ -70,10 +97,14 @@
     return '<div class="glass pad vr"><h3>' + esc(titulo) + '</h3>' + corpo + '</div>';
   }
 
-  // Uma coluna por dia. Com até 14 dias o número aparece sobre a barra; com mais, só no tooltip e no texto de apoio.
+  // Uma coluna por dia (ou por mês, quando o período passa de 120 dias). Com até 14 colunas o número aparece sobre a barra;
+  // com mais, só no tooltip e no texto de apoio.
   function graficoDias(porDia) {
-    var lista = porDia || [];
-    if (!lista.length) return { html: '', pico: '' };
+    var dias = porDia || [];
+    if (!dias.length) return { html: '', pico: '', porMes: false };
+    var porMes = dias.length > DIAS_POR_MES;
+    var lista = porMes ? agruparPorMes(dias) : dias;
+    var rotulo = function (x) { return x.mes ? rotuloMes(x.dia) : rotuloDia(x.dia); };
     var max = lista.reduce(function (m, x) { return Math.max(m, x.visitas || 0); }, 0);
     var total = lista.reduce(function (s, x) { return s + (x.visitas || 0); }, 0);
     var mostrar = lista.length <= 14;
@@ -81,13 +112,13 @@
     var colunas = lista.map(function (x) {
       var n = x.visitas || 0;
       var px = n ? Math.max(4, Math.round(n * ALTURA_BARRA / max)) : 2;
-      var dica = rotuloDia(x.dia) + ': ' + inteiro(n) + ' ' + plural(n, 'visita', 'visitas') + ' · ' + inteiro(x.visitantes) + ' ' + plural(x.visitantes, 'visitante', 'visitantes');
+      var dica = rotulo(x) + ': ' + inteiro(n) + ' ' + plural(n, 'visita', 'visitas') + (x.mes ? '' : ' · ' + inteiro(x.visitantes) + ' ' + plural(x.visitantes, 'visitante', 'visitantes'));
       return '<div class="vd-c" title="' + esc(dica) + '"><span class="vd-v">' + (mostrar && n ? inteiro(n) : '') + '</span><i' + (n ? '' : ' class="z"') + ' style="height:' + px + 'px"></i></div>';
     }).join('');
     var meio = lista[Math.floor((lista.length - 1) / 2)];
-    var eixo = '<span>' + rotuloDia(lista[0].dia) + '</span>' + (lista.length > 2 ? '<span>' + rotuloDia(meio.dia) + '</span>' : '') + (lista.length > 1 ? '<span>' + rotuloDia(lista[lista.length - 1].dia) + '</span>' : '');
-    var resumo = 'Visitas por dia, de ' + rotuloDia(lista[0].dia) + ' a ' + rotuloDia(lista[lista.length - 1].dia) + '. Total: ' + inteiro(total) + (max ? '. Maior dia: ' + rotuloDia(pico.dia) + ', com ' + inteiro(max) : '') + '.';
-    return { html: '<div class="vd" role="img" aria-label="' + esc(resumo) + '">' + colunas + '</div><div class="vd-eixo" aria-hidden="true">' + eixo + '</div>', pico: max ? rotuloDia(pico.dia) + ' · ' + inteiro(max) + ' ' + plural(max, 'visita', 'visitas') : '' };
+    var eixo = '<span>' + rotulo(lista[0]) + '</span>' + (lista.length > 2 ? '<span>' + rotulo(meio) + '</span>' : '') + (lista.length > 1 ? '<span>' + rotulo(lista[lista.length - 1]) + '</span>' : '');
+    var resumo = (porMes ? 'Visitas por mês, de ' : 'Visitas por dia, de ') + rotulo(lista[0]) + ' a ' + rotulo(lista[lista.length - 1]) + '. Total: ' + inteiro(total) + (max ? (porMes ? '. Maior mês: ' : '. Maior dia: ') + rotulo(pico) + ', com ' + inteiro(max) : '') + '.';
+    return { html: '<div class="vd" role="img" aria-label="' + esc(resumo) + '">' + colunas + '</div><div class="vd-eixo" aria-hidden="true">' + eixo + '</div>', pico: max ? rotulo(pico) + ' · ' + inteiro(max) + ' ' + plural(max, 'visita', 'visitas') : '', porMes: porMes };
   }
 
   function linhasRecentes(lista) {
@@ -124,7 +155,7 @@
     var topo = ui.head('vis', 'Visitas', 'Quem abriu o site, de onde veio e em qual aparelho. O IP aparece mascarado; o completo fica só nos arquivos do servidor.',
       '<button type="button" class="btn p" onclick="visRecarregar()">' + ui.I('undo') + ' Atualizar visitas</button>');
     var abas = '<div class="tabs" role="tablist" aria-label="Período">' + PERIODOS.map(function (p) {
-      return '<button type="button" class="tab" role="tab" aria-selected="' + (p.dias === dias) + '" onclick="visDias(' + p.dias + ')">Últimos ' + p.rotulo + '</button>';
+      return '<button type="button" class="tab" role="tab" aria-selected="' + (p.dias === dias) + '" onclick="visDias(' + (typeof p.dias === 'string' ? "'" + p.dias + "'" : p.dias) + ')">' + p.rotulo + '</button>';
     }).join('') + '</div>';
     var kpis = '<div class="grid g4">'
       + ui.kpi('vis', 'Visitas', inteiro(d.visitas), 'Abertas por pessoas')
@@ -142,7 +173,7 @@
       var g = graficoDias(d.porDia);
       var todos = d.recentes || [];
       var mostrados = todas ? todos : todos.slice(0, LINHAS_INICIAIS);
-      meio = '<div class="glass pad vg"><div class="vg-top"><h3>Visitas por dia</h3>' + (g.pico ? '<span class="sub" style="margin:0">Maior dia: ' + esc(g.pico) + '</span>' : '') + '</div>' + g.html + '</div>'
+      meio = '<div class="glass pad vg"><div class="vg-top"><h3>' + (g.porMes ? 'Visitas por mês' : 'Visitas por dia') + '</h3>' + (g.pico ? '<span class="sub" style="margin:0">' + (g.porMes ? 'Maior mês: ' : 'Maior dia: ') + esc(g.pico) + '</span>' : '') + '</div>' + g.html + '</div>'
         + '<div class="vgrid">'
         + ranking('Países', d.paises, d.visitas, 'Ainda sem localização.')
         + ranking('Cidades', d.cidades, d.visitas, 'Nenhuma cidade identificada.')
@@ -157,7 +188,7 @@
         + (todos.length > LINHAS_INICIAIS ? '<div class="vmais"><button type="button" class="btn sm" onclick="visTodos()">' + (todas ? 'Mostrar só os ' + LINHAS_INICIAIS + ' mais novos' : 'Mostrar todos os ' + inteiro(todos.length) + ' acessos') + '</button></div>' : '')
         + '</div>';
     }
-    var rodape = nota(ui, 'Os registros ficam ' + (d.retencaoDias || 180) + ' dias no servidor e depois são apagados. “Visitante” é a soma de IP e navegador: a mesma pessoa em dois aparelhos conta duas vezes. A localização é uma estimativa pelo IP: indica a região do provedor, não o endereço da pessoa.');
+    var rodape = nota(ui, esc(textoHistorico(d.historico)) + ' “Visitante” é a soma de IP e navegador: a mesma pessoa em dois aparelhos conta duas vezes. A localização é uma estimativa pelo IP: indica a região do provedor, não o endereço da pessoa.');
     return '<section>' + topo + abas + kpis + (aviso ? nota(ui, aviso) : '') + meio + rodape + '</section>';
   }
 
@@ -195,7 +226,7 @@
     function carregar() {
       var dias = VIS.dias;
       VIS.estado = 'carregando';
-      w.fetch('/api/admin/visitas?dias=' + dias, { headers: { 'Authorization': 'Bearer ' + token() } })
+      w.fetch('/api/admin/visitas?dias=' + encodeURIComponent(dias), { headers: { 'Authorization': 'Bearer ' + token() } })
         .then(function (r) {
           return r.json().catch(function () { return {}; }).then(function (j) {
             if (r.status === 401 && w.NexusSSO) w.NexusSSO.verificar().then(function (v) { if (v.estado === 'sem-sessao') w.NexusSSO.irParaLogin(); });
@@ -225,5 +256,5 @@
     w.visTodos = function () { VIS.todas = !VIS.todas; w.rend(); };   // só redesenha: os 50 já vieram do servidor
   }
 
-  return { PERIODOS: PERIODOS, esc: esc, inteiro: inteiro, rotuloDia: rotuloDia, porcento: porcento, ranking: ranking, graficoDias: graficoDias, linhasRecentes: linhasRecentes, avisoLocal: avisoLocal, tela: tela, telaErro: telaErro, montar: montar };
+  return { PERIODOS: PERIODOS, esc: esc, inteiro: inteiro, rotuloDia: rotuloDia, rotuloMes: rotuloMes, dataBR: dataBR, tamanho: tamanho, agruparPorMes: agruparPorMes, textoHistorico: textoHistorico, porcento: porcento, ranking: ranking, graficoDias: graficoDias, linhasRecentes: linhasRecentes, avisoLocal: avisoLocal, tela: tela, telaErro: telaErro, montar: montar };
 });

@@ -171,13 +171,61 @@ test('falha de disco nunca derruba quem chama', () => {
   assert.doesNotThrow(() => V.registrarVisita(path.join(arquivoNoLugarDaPasta, 'visitas'), { ip: '1.2.3.4', pathname: '/inicio', ua: CHROME_WIN }, em('2026-11-20T15:00:00Z')));
 });
 
-test('limparAntigos apaga só arquivo diário com mais de 180 dias e preserva o resto', () => {
+test('HISTÓRICO PERMANENTE: o código-fonte não tem nenhuma chamada que apague, esvazie ou reescreva arquivo', () => {
+  const fonte = fs.readFileSync(path.join(__dirname, 'visitas.js'), 'utf8');
+  const perigosas = fonte.match(/\.(unlink|unlinkSync|rm|rmSync|rmdir|rmdirSync|truncate|truncateSync|writeFile|writeFileSync|rename|renameSync|copyFileSync)\(/g);
+  assert.strictEqual(perigosas, null, 'visitas.js só pode ler e acrescentar (appendFileSync): achou ' + JSON.stringify(perigosas));
+  assert.strictEqual(V.limparAntigos, undefined, 'a limpeza por idade foi removida de vez');
+  assert.strictEqual(V.RETENCAO_DIAS, undefined, 'não existe mais prazo de retenção');
+});
+
+test('HISTÓRICO PERMANENTE: registros de anos atrás continuam intactos depois de novas visitas (só acrescenta)', () => {
+  V._resetar();
   const dir = pasta();
-  for (const n of ['2026-05-01.jsonl', '2026-05-24.jsonl', '2026-05-25.jsonl', '2026-11-20.jsonl', 'leia-me.txt']) fs.writeFileSync(path.join(dir, n), '');
-  // hoje 20/11/2026 - 180 dias = 24/05/2026: o arquivo de 24/05 ainda fica; o de 01/05 sai
-  const apagados = V.limparAntigos(dir, '2026-11-20', 180);
-  assert.strictEqual(apagados, 1);
-  assert.deepStrictEqual(fs.readdirSync(dir).sort(), ['2026-05-24.jsonl', '2026-05-25.jsonl', '2026-11-20.jsonl', 'leia-me.txt']);
+  const antigo = JSON.stringify({ ts: '2016-03-01T12:00:00.000Z', dia: '2016-03-01', hora: '09:00:00', ip: '1.2.3.4', pagina: '/inicio', robo: false, visitante: 'abc' }) + '\n';
+  const arquivoAntigo = path.join(dir, '2016-03-01.jsonl');
+  fs.writeFileSync(arquivoAntigo, antigo);
+  const ontem = path.join(dir, '2026-11-19.jsonl'); fs.writeFileSync(ontem, '{"x":1}\n');
+  for (let i = 0; i < 5; i++) V.registrarVisita(dir, { ip: '189.45.10.' + (10 + i), pathname: '/inicio', ua: CHROME_WIN }, em('2026-11-20T1' + i + ':00:00Z'));   // dia novo: dispara o que antes limpava
+  assert.strictEqual(fs.readFileSync(arquivoAntigo, 'utf8'), antigo, 'arquivo de 10 anos atrás idêntico');
+  assert.strictEqual(fs.readFileSync(ontem, 'utf8'), '{"x":1}\n');
+  assert.deepStrictEqual(fs.readdirSync(dir).sort(), ['2016-03-01.jsonl', '2026-11-19.jsonl', '2026-11-20.jsonl']);
+  // acrescentar no mesmo dia mantém as linhas anteriores
+  const hoje = path.join(dir, '2026-11-20.jsonl');
+  const antes = fs.readFileSync(hoje, 'utf8');
+  V.registrarVisita(dir, { ip: '201.17.3.99', pathname: '/login.html', ua: CHROME_WIN }, em('2026-11-20T20:00:00Z'));
+  assert.ok(fs.readFileSync(hoje, 'utf8').startsWith(antes), 'as linhas já gravadas não mudam');
+});
+
+test('resumir olha além de 180 dias: 1 ano e "tudo" enxergam o histórico antigo, e ler não apaga nada', () => {
+  V._resetar();
+  const dir = pasta();
+  const g = (ip, iso) => V.registrarVisita(dir, { ip, pathname: '/inicio', ua: CHROME_WIN, host: 'x.com' }, em(iso));
+  g('189.45.10.1', '2026-01-10T15:00:00Z');   // ~314 dias antes de 20/11
+  g('189.45.10.2', '2026-11-19T15:00:00Z');
+  g('189.45.10.3', '2026-11-20T15:00:00Z');
+  const agora = em('2026-11-20T18:00:00Z').getTime();
+  assert.strictEqual(V.resumir(dir, { dias: 90, agora }).visitas, 2);
+  assert.strictEqual(V.resumir(dir, { dias: 365, agora }).visitas, 3, 'um ano alcança a visita de janeiro (antes o teto era 180 dias)');
+  const tudo = V.resumir(dir, { dias: 'tudo', agora });
+  assert.strictEqual(tudo.visitas, 3);
+  assert.strictEqual(tudo.dias, 315, 'de 10/01 a 20/11, contando os dois dias');
+  assert.deepStrictEqual({ desde: tudo.historico.desde, arquivos: tudo.historico.arquivos }, { desde: '2026-01-10', arquivos: 3 });
+  assert.ok(tudo.historico.bytes > 0);
+  assert.deepStrictEqual(fs.readdirSync(dir).sort(), ['2026-01-10.jsonl', '2026-11-19.jsonl', '2026-11-20.jsonl'], 'consultar não mexe em nada');
+  assert.strictEqual(V.resumir(dir, { dias: 'TUDO', agora }).dias, 315, 'maiúsculas também valem');
+});
+
+test('"tudo" sem nenhum histórico e o teto de leitura de 10 anos', () => {
+  const vazio = V.resumir(path.join(pasta(), 'nao-existe'), { dias: 'tudo', agora: em('2026-11-20T18:00:00Z').getTime() });
+  assert.strictEqual(vazio.dias, 1);
+  assert.deepStrictEqual(vazio.historico, { desde: '', arquivos: 0, bytes: 0 });
+  const dir = pasta();
+  fs.writeFileSync(path.join(dir, '2000-01-01.jsonl'), '{"dia":"2000-01-01","robo":false,"visitante":"a","pagina":"/inicio"}\n');
+  const longo = V.resumir(dir, { dias: 'tudo', agora: em('2026-11-20T18:00:00Z').getTime() });
+  assert.strictEqual(longo.dias, V.MAX_DIAS_CONSULTA, 'só limita quanto se lê de uma vez');
+  assert.strictEqual(longo.historico.arquivos, 1, 'o arquivo antigo continua contado e no disco');
+  assert.ok(fs.existsSync(path.join(dir, '2000-01-01.jsonl')));
 });
 
 test('resumir conta pessoas, separa robôs e NUNCA devolve o IP completo', () => {

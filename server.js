@@ -35,7 +35,7 @@ const Visitas = require('./visitas'); // registro de visitas ao site (pasta visi
 const PORT = process.env.PORT || 3000;
 const SERVER_START_TIME = Date.now();
 const RUNTIME_DATA_DIR = process.env.NEXUS_DATA_DIR || __dirname;
-const VISITAS_DIR = path.join(RUNTIME_DATA_DIR, 'visitas'); // um arquivo por dia (AAAA-MM-DD.jsonl), guardado por 180 dias; fora do Git
+const VISITAS_DIR = path.join(RUNTIME_DATA_DIR, 'visitas'); // um arquivo por dia (AAAA-MM-DD.jsonl), histórico permanente (nada é apagado); fora do Git
 // Gravação direta e durável de todos os dados no Supabase (supabase-sync.js): cada gravação de arquivo de estado é enviada em ~0,4 s,
 // e o que o Supabase ainda não confirmou é guardado em disco e reenviado até entrar. Sem o módulo/pacote (cópia de teste) vira no-op.
 let SupabaseSync;
@@ -36136,7 +36136,7 @@ async function handleNexusRequest(req, res) {
     if (!getAuthenticatedAdmin(req)) {
       return sendJson(res, corsHeaders, 401, { success: false, error: 'Autenticação de administrador obrigatória.' });
     }
-    return sendJson(res, corsHeaders, 200, { success: true, retencaoDias: Visitas.RETENCAO_DIAS, ...Visitas.resumir(VISITAS_DIR, { dias: parsedUrl.query.dias }) });
+    return sendJson(res, corsHeaders, 200, { success: true, ...Visitas.resumir(VISITAS_DIR, { dias: parsedUrl.query.dias }) });
   }
 
   // Uso real de cada conta para a tela Cadastros & Contas do administrador: só contagens (nunca valores, descrições nem saldos)

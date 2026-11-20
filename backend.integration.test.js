@@ -630,7 +630,14 @@ test('o arquivo de usuários continua íntegro (JSON válido e sem arquivos temp
   const usuarios = lerArquivo('local_users.json');
   assert.ok(Array.isArray(usuarios) && usuarios.length >= 3);
   assert.ok(usuarios.every((u) => u.password && String(u.password).startsWith('scrypt:')), 'algum usuário ficou sem senha');
-  assert.deepEqual(fs.readdirSync(pasta).filter((f) => f.endsWith('.tmp')), []);
+  // O servidor grava em "arquivo.tmp" e renomeia: um .tmp visto no meio da gravação é normal. Só um que NÃO some em ~2 s é sobra de verdade.
+  let temporarios = [];
+  for (let i = 0; i < 20; i++) {
+    temporarios = fs.readdirSync(pasta).filter((f) => f.endsWith('.tmp'));
+    if (!temporarios.length) break;
+    await dorme(100);
+  }
+  assert.deepEqual(temporarios, []);
 });
 
 test('sem NEXUS_SYNC_TOKEN o token é derivado do segredo; o próprio segredo só vale na transição e lixo nunca vale', async () => {
@@ -725,7 +732,11 @@ test('visitas: abrir página grava o IP completo na pasta visitas/; só o admini
   const r = await api('GET', '/api/admin/visitas?dias=7', { token: admin });
   assert.equal(r.status, 200);
   assert.equal(r.json.success, true);
-  assert.equal(r.json.retencaoDias, 180);
+  assert.equal(r.json.retencaoDias, undefined, 'não existe mais prazo de apagar');
+  assert.ok(r.json.historico && r.json.historico.arquivos >= 1 && r.json.historico.bytes > 0 && /^\d{4}-\d{2}-\d{2}$/.test(r.json.historico.desde), 'resumo do histórico guardado');
+  const tudoApi = await api('GET', '/api/admin/visitas?dias=tudo', { token: admin });
+  assert.equal(tudoApi.status, 200);
+  assert.ok(tudoApi.json.dias >= 1 && tudoApi.json.visitas >= 1, 'dias=tudo funciona pela API');
   assert.ok(r.json.visitas >= 1);
   assert.ok(r.json.sistemas.some(s => s.nome === 'Celular · iOS'), 'aparelho e sistema operacional no resumo');
   assert.ok(r.json.recentes.some(v => v.ip === '189.45.xxx.xxx' && v.pagina === '/inicio'), 'IP mascarado deveria aparecer');

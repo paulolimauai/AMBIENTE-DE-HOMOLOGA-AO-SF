@@ -7,8 +7,9 @@ const path = require('path');
 const crypto = require('crypto');
 const net = require('net');
 
-// Marco Civil da Internet, art. 15: quem opera aplicação de internet como empresa guarda os registros de acesso por 6 meses.
-const RETENCAO_DIAS = 180;
+// HISTÓRICO PERMANENTE (decisão do dono do sistema): este módulo NUNCA apaga nada. Não há limpeza por idade, rotação nem descarte.
+// visitas.test.js vigia isso: o código-fonte não pode conter chamada de exclusão de arquivo e um registro de anos atrás tem de continuar no disco.
+const MAX_DIAS_CONSULTA = 3650;            // só limita quanto se LÊ de uma vez (10 anos); os arquivos continuam todos no disco
 const INTERVALO_REPETIDO_MS = 10 * 1000;   // F5 em sequência na mesma página conta uma vez só
 const MAX_LINHAS_POR_DIA = 100000;         // trava contra inundação: o arquivo nunca cresce sem limite
 
@@ -21,8 +22,8 @@ const PAGINAS = {
   '/termos.html': '/termos', '/privacidade.html': '/privacidade'
 };
 
-const estado = { dia: '', linhas: 0, recentes: new Map(), ultimaLimpeza: '' };
-function _resetar() { estado.dia = ''; estado.linhas = 0; estado.recentes.clear(); estado.ultimaLimpeza = ''; }
+const estado = { dia: '', linhas: 0, recentes: new Map() };
+function _resetar() { estado.dia = ''; estado.linhas = 0; estado.recentes.clear(); }
 
 function paginaDe(pathname) {
   return Object.prototype.hasOwnProperty.call(PAGINAS, pathname) ? PAGINAS[pathname] : null;
@@ -137,21 +138,6 @@ function montarRegistro(entrada, agora) {
   };
 }
 
-function limparAntigos(dir, hoje, retencaoDias) {
-  const dias = retencaoDias || RETENCAO_DIAS;
-  const corte = new Date(hoje + 'T00:00:00Z'); corte.setUTCDate(corte.getUTCDate() - dias);
-  const limite = corte.toISOString().slice(0, 10);
-  let apagados = 0;
-  try {
-    fs.readdirSync(dir).forEach(nome => {
-      if (/^\d{4}-\d{2}-\d{2}\.jsonl$/.test(nome) && nome.slice(0, 10) < limite) {
-        try { fs.unlinkSync(path.join(dir, nome)); apagados++; } catch (e) {}
-      }
-    });
-  } catch (e) {}
-  return apagados;
-}
-
 // Grava a visita se for página de pessoa. Nunca derruba a requisição: qualquer falha de disco é engolida.
 function registrarVisita(dir, entrada, agora) {
   try {
@@ -167,7 +153,6 @@ function registrarVisita(dir, entrada, agora) {
     if (estado.dia !== reg.dia) { estado.dia = reg.dia; estado.linhas = 0; }
     if (estado.linhas >= MAX_LINHAS_POR_DIA) return null;
     fs.mkdirSync(dir, { recursive: true });
-    if (estado.ultimaLimpeza !== reg.dia) { estado.ultimaLimpeza = reg.dia; limparAntigos(dir, reg.dia); }
     fs.appendFileSync(path.join(dir, reg.dia + '.jsonl'), JSON.stringify(reg) + '\n', 'utf8');
     estado.linhas++;
     return reg;
@@ -188,17 +173,39 @@ const contar = (lista, campo) => {
   return Array.from(m, ([nome, visitas]) => ({ nome, visitas })).sort((a, b) => b.visitas - a.visitas || String(a.nome).localeCompare(String(b.nome)));
 };
 
-// Resumo dos últimos N dias (inclui hoje). Robôs ficam fora das contagens de pessoas e aparecem à parte.
-// O IP sai SEMPRE mascarado: o completo só existe no arquivo.
+// Arquivos diários que existem na pasta, em ordem (AAAA-MM-DD.jsonl)
+function arquivosDeDias(dir) {
+  const nomes = [];
+  try { fs.readdirSync(dir).forEach(n => { if (/^\d{4}-\d{2}-\d{2}\.jsonl$/.test(n)) nomes.push(n); }); } catch (e) {}
+  return nomes.sort();
+}
+
+// Quanto histórico existe: desde quando, quantos dias com registro e quanto ocupa em disco
+function historico(dir, arquivos) {
+  let bytes = 0;
+  arquivos.forEach(n => { try { bytes += fs.statSync(path.join(dir, n)).size; } catch (e) {} });
+  return { desde: arquivos.length ? arquivos[0].slice(0, 10) : '', arquivos: arquivos.length, bytes };
+}
+
+// Resumo dos últimos N dias (inclui hoje) ou de TODO o histórico (dias = 'tudo'). Robôs ficam fora das contagens de pessoas e aparecem à parte.
+// O IP sai SEMPRE mascarado: o completo só existe no arquivo. Ler nunca altera nem apaga nada.
 function resumir(dir, opcoes) {
   const o = opcoes || {};
-  const dias = Math.min(Math.max(parseInt(o.dias, 10) || 7, 1), RETENCAO_DIAS);
+  const arquivos = arquivosDeDias(dir);
   const fim = new Date(o.agora || Date.now());
+  let dias;
+  if (String(o.dias).toLowerCase() === 'tudo') {
+    const hoje = diaEHora(fim).dia;
+    const primeiro = arquivos.length ? arquivos[0].slice(0, 10) : hoje;
+    dias = Math.round((Date.parse(hoje + 'T00:00:00Z') - Date.parse(primeiro + 'T00:00:00Z')) / 86400000) + 1;
+  } else dias = parseInt(o.dias, 10) || 7;
+  dias = Math.min(Math.max(dias, 1), MAX_DIAS_CONSULTA);
+  const existentes = new Set(arquivos.map(n => n.slice(0, 10)));
   const lista = [];
   const porDia = [];
   for (let i = dias - 1; i >= 0; i--) {
     const { dia } = diaEHora(new Date(fim.getTime() - i * 86400000));
-    const regs = lerDia(dir, dia);
+    const regs = existentes.has(dia) ? lerDia(dir, dia) : [];
     const pessoas = regs.filter(r => !r.robo);
     porDia.push({ dia, visitas: pessoas.length, visitantes: new Set(pessoas.map(r => r.visitante)).size });
     regs.forEach(r => lista.push(r));
@@ -206,6 +213,7 @@ function resumir(dir, opcoes) {
   const pessoas = lista.filter(r => !r.robo);
   return {
     dias,
+    historico: historico(dir, arquivos),
     visitas: pessoas.length,
     visitantes: new Set(pessoas.map(r => r.visitante)).size,
     robos: lista.length - pessoas.length,
@@ -221,4 +229,4 @@ function resumir(dir, opcoes) {
   };
 }
 
-module.exports = { RETENCAO_DIAS, INTERVALO_REPETIDO_MS, MAX_LINHAS_POR_DIA, paginaDe, normalizarIp, mascararIp, dispositivoDe, rotuloSistema, localizacaoDe, normalizarLocal, nomePais, origemDe, diaEHora, montarRegistro, registrarVisita, limparAntigos, resumir, _resetar };
+module.exports = { MAX_DIAS_CONSULTA, INTERVALO_REPETIDO_MS, MAX_LINHAS_POR_DIA, paginaDe, normalizarIp, mascararIp, dispositivoDe, rotuloSistema, localizacaoDe, normalizarLocal, nomePais, origemDe, diaEHora, montarRegistro, registrarVisita, resumir, _resetar };
