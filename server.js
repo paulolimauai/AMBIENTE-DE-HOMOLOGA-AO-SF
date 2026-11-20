@@ -618,6 +618,12 @@ function acknowledgePendingLogins(emailsOrIds) {
 
 // Sincronizador Nuvem Render
 const RENDER_CLOUD_URL = process.env.RENDER_CLOUD_URL || 'https://ambiente-de-homologa-ao-sf.onrender.com';
+// Endereço público do site (canonical, Open Graph, sitemap, dados estruturados): o domínio próprio do Nexus, não o *.onrender.com.
+// APP_BASE_URL (quando definida e que não seja localhost) tem prioridade; sem ela vale o domínio oficial.
+const SITE_PUBLIC_URL = (() => {
+  const configurada = String(process.env.APP_BASE_URL || '').trim().replace(/\/$/, '');
+  return configurada && !/^https?:\/\/(localhost|127\.|0\.0\.0\.0)/i.test(configurada) ? configurada : 'https://nexusfinanceirohub.com.br';
+})();
 const https = require('https');
 const CLOUD_MAX_RESPONSE_BYTES = 120 * 1024 * 1024; // teto da resposta da nuvem (a sincronização inteira cabe com folga)
 const fetchCloudOnce = (pathname, options = {}) => {
@@ -38454,7 +38460,7 @@ async function handleNexusRequest(req, res) {
   }
 
   // SEO: robots.txt e sitemap.xml apontam os robôs do Google para as páginas públicas do site
-  const SITE_BASE_URL = String(process.env.APP_BASE_URL || RENDER_CLOUD_URL || '').replace(/\/$/, '');
+  const SITE_BASE_URL = SITE_PUBLIC_URL;
   if (pathname === '/robots.txt') {
     const robots = 'User-agent: *\nAllow: /\nDisallow: /api/\nDisallow: /admin-site.html\nDisallow: /admin-assinaturas-glpi\nDisallow: /admin-assinaturas-glpi.html\nSitemap: ' + SITE_BASE_URL + '/sitemap.xml\n';
     return sendTextResponse(res, 200, robots, 'text/plain; charset=utf-8', { ...corsHeaders, 'Cache-Control': 'public, max-age=3600' });
@@ -38470,6 +38476,21 @@ async function handleNexusRequest(req, res) {
       urls.map(function (u) { return '  <url><loc>' + SITE_BASE_URL + u[0] + '</loc><changefreq>' + u[2] + '</changefreq><priority>' + u[1] + '</priority></url>'; }).join('\n') +
       '\n</urlset>\n';
     return sendTextResponse(res, 200, xml, 'application/xml; charset=utf-8', { ...corsHeaders, 'Cache-Control': 'public, max-age=3600' });
+  }
+  // Manifesto do aplicativo: nome, cor e ícones quando o site é adicionado à tela inicial do celular
+  if (pathname === '/manifest.webmanifest') {
+    const manifesto = {
+      name: 'Nexus Financeiro', short_name: 'Nexus', lang: 'pt-BR', dir: 'ltr',
+      description: 'Gestão financeira pessoal e Central de Serviços em um só lugar.',
+      start_url: '/', scope: '/', display: 'standalone', orientation: 'portrait',
+      background_color: '#060a1f', theme_color: '#060a1f', categories: ['finance', 'productivity'],
+      icons: [
+        { src: '/images/icons/icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
+        { src: '/images/icons/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
+        { src: '/images/icons/maskable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' }
+      ]
+    };
+    return sendTextResponse(res, 200, JSON.stringify(manifesto), 'application/manifest+json; charset=utf-8', { ...corsHeaders, 'Cache-Control': 'public, max-age=86400' });
   }
 
   if (pathname === '/login' || pathname === '/login.html' || pathname === '/login-nexus-v5.html') {
@@ -38504,6 +38525,7 @@ async function handleNexusRequest(req, res) {
           .replace(/%%V_CSS%%/g, vCss)
           .replace(/%%V_JS%%/g, vJs)
           .replace(/%%GSV_TAG%%/g, gsv ? '<meta name="google-site-verification" content="' + gsv + '">' : '')
+          .replace(/%%SITE_URL%%/g, SITE_BASE_URL)
           .replace(/%%PRECO_LABEL%%/g, SUBSCRIPTION_MONTHLY_LABEL)
           .replace(/%%PRECO_INT%%/g, SUBSCRIPTION_MONTHLY_INT)
           .replace(/%%PRECO_CENTS%%/g, SUBSCRIPTION_MONTHLY_CENTS), 'utf8');
@@ -38572,7 +38594,8 @@ async function handleNexusRequest(req, res) {
     '/favicon.svg': 'image/svg+xml',
     '/fonts.css': 'text/css',
     '/termos.html': 'text/html; charset=utf-8',
-    '/privacidade.html': 'text/html; charset=utf-8'
+    '/privacidade.html': 'text/html; charset=utf-8',
+    '/legal.css': 'text/css'
   };
   let staticFile = null;
   // /admin-assinaturas-glpi (sem .html) é o endereço público do painel do administrador: serve o mesmo arquivo
@@ -38602,7 +38625,9 @@ async function handleNexusRequest(req, res) {
     }
     // CSS/JS: no-cache (o navegador revalida a cada carga e recebe 304 quando nada mudou).
     // Antes era max-age=86400: uma correção de estilo podia ficar até 24h "invisível" no celular.
-    const cacheControl = staticFile.isImage ? 'public, max-age=31536000, immutable' : 'no-cache';
+    // Exceção: o CSS e o JS do site inicial chamados com ?v=<data do arquivo> (o /inicio troca o ?v= a cada edição) valem 1 ano.
+    const versionadoDoSite = (staticPathname === '/site-inicial.css' || staticPathname === '/site-inicial.js') && Boolean(parsedUrl.query && parsedUrl.query.v);
+    const cacheControl = (staticFile.isImage || versionadoDoSite) ? 'public, max-age=31536000, immutable' : 'no-cache';
     if (!staticFile.isImage) {
       const stat = fs.statSync(staticFile.filePath);
       const cached = fileCache.get(staticFile.filePath);

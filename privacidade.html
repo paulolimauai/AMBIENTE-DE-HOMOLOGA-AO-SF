@@ -1,57 +1,111 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-mode="dark">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#060a1f">
+<meta name="color-scheme" content="dark light">
 <title>Política de Privacidade | Nexus Financeiro</title>
 <meta name="description" content="Política de privacidade do Nexus Financeiro: dados coletados, uso, armazenamento e seus direitos.">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<style>
-  *{box-sizing:border-box;margin:0}
-  body{font-family:'Segoe UI',system-ui,sans-serif;background:#0a0f24;color:#e8ecf8;line-height:1.7;padding:2rem 1rem}
-  main{max-width:46rem;margin:0 auto}
-  h1{font-size:1.7rem;margin-bottom:.4rem}
-  h2{font-size:14px;margin:1.6rem 0 .5rem;color:#8fb4ff}
-  p,li{color:#c3cbe4;font-size:14px}
-  ul{padding-left:1.3rem}
-  .voltar{display:inline-block;margin-top:2rem;color:#8fb4ff;text-decoration:none;font-weight:600}
-  .voltar:hover{text-decoration:underline}
-  .atualizado{color:#8a93b8;font-size:14px;margin-bottom:1.5rem}
-</style>
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="preload" href="/images/fonts/jakarta-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/fonts.css">
+<link rel="stylesheet" href="/legal.css">
+<script>
+/* Mesma aparência do site: modo (nexus-modo) e cor da paleta (nexus:cores) escolhidos pelo visitante */
+(function(){
+  var r=document.documentElement;
+  function g(k){try{return localStorage.getItem(k)}catch(e){return null}}
+  var H={multicolor:265,aurora:250,oceano:224,'por-do-sol':18,esmeralda:155,rose:335,ouro:42,turquesa:176,carmesim:352,neon:85},h=224;
+  try{
+    var c=JSON.parse(g('nexus:cores')||'null');
+    if(c&&c.id==='custom'&&/^#[0-9a-f]{6}$/i.test(c.hex||'')){
+      var n=parseInt(c.hex.slice(1),16),R=(n>>16&255)/255,G=(n>>8&255)/255,B=(n&255)/255,mx=Math.max(R,G,B),mn=Math.min(R,G,B),d=mx-mn,x=0;
+      if(d){if(mx===R)x=((G-B)/d)%6;else if(mx===G)x=(B-R)/d+2;else x=(R-G)/d+4;x=Math.round(x*60+360)%360}
+      h=x;
+    }else if(c&&H[c.id]!=null)h=H[c.id];
+  }catch(e){}
+  r.style.setProperty('--h',String(h));
+  var m=g('nexus-modo'),hr=new Date().getHours();
+  r.setAttribute('data-mode',m==='claro'||(m!=='escuro'&&hr>=7&&hr<18)?'light':'dark');
+})();
+</script>
 </head>
 <body>
-<main>
+<a class="skip" href="#conteudo">Ir para o conteúdo</a>
+<header class="lg-top">
+  <div class="lg-top-in">
+    <a class="lg-logo" href="/inicio" aria-label="Nexus Financeiro, página inicial">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4f7cff"/><stop offset="1" stop-color="#7c5cff"/></linearGradient></defs><rect width="64" height="64" rx="14" fill="url(#lg)"/><path d="M22 44V20M42 44V20M22 20l20 24" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Nexus <small>Financeiro</small></span>
+    </a>
+    <a class="lg-btn" href="/inicio"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg><span>Voltar ao site</span></a>
+  </div>
+</header>
+
+<main id="conteudo">
+  <span class="lg-kicker">Documento legal</span>
   <h1>Política de Privacidade</h1>
-  <p class="atualizado">Última atualização: novembro de 2026</p>
+  <p class="lg-meta">Última atualização: novembro de 2026</p>
+  <p class="lg-intro">Aqui explicamos quais dados o Nexus Financeiro coleta, para que os usa, como os protege e quais são os seus direitos.</p>
 
-  <h2>1. Dados que coletamos</h2>
-  <ul>
-    <li><strong>Cadastro:</strong> nome, e-mail, senha e CPF.</li>
-    <li><strong>Financeiros:</strong> lançamentos, contas, cartões, orçamentos, metas, documentos e comprovantes que você registrar.</li>
-    <li><strong>Atendimento:</strong> chamados abertos na Central de Serviços e seu histórico.</li>
-  </ul>
+  <nav class="lg-toc" aria-label="Neste documento">
+    <b>Neste documento</b>
+    <ol>
+      <li><a href="#s1">1. Dados que coletamos</a></li>
+      <li><a href="#s2">2. Como usamos</a></li>
+      <li><a href="#s3">3. Armazenamento e segurança</a></li>
+      <li><a href="#s4">4. Compartilhamento</a></li>
+      <li><a href="#s5">5. Seus direitos</a></li>
+      <li><a href="#s6">6. Cookies e armazenamento local</a></li>
+    </ol>
+  </nav>
 
-  <h2>2. Como usamos</h2>
-  <p>Os dados servem exclusivamente para operar o serviço: autenticar sua conta, gerar relatórios e dashboards, processar o pagamento via Pix e prestar o suporte. Não vendemos dados pessoais.</p>
+  <article class="lg-doc">
+    <h2 id="s1">1. Dados que coletamos</h2>
+    <ul>
+      <li><strong>Cadastro:</strong> nome, e-mail, senha e CPF.</li>
+      <li><strong>Financeiros:</strong> lançamentos, contas, cartões, orçamentos, metas, documentos e comprovantes que você registrar.</li>
+      <li><strong>Atendimento:</strong> chamados abertos na Central de Serviços e seu histórico.</li>
+    </ul>
 
-  <h2>3. Armazenamento e segurança</h2>
-  <ul>
-    <li>Seus dados ficam na nuvem, vinculados à sua conta, acessíveis de qualquer dispositivo com o mesmo login.</li>
-    <li>Senhas são gravadas com criptografia avançada e salt exclusivo, nunca em texto puro.</li>
-    <li>Cada conta acessa somente os próprios dados, e o servidor confere o acesso a cada requisição.</li>
-    <li>A sessão expira sozinha após um período sem uso, e operações importantes ficam registradas em trilha de auditoria.</li>
-  </ul>
+    <h2 id="s2">2. Como usamos</h2>
+    <p>Os dados servem exclusivamente para operar o serviço: autenticar sua conta, gerar relatórios e dashboards, processar o pagamento via Pix e prestar o suporte. Não vendemos dados pessoais.</p>
 
-  <h2>4. Compartilhamento</h2>
-  <p>Não compartilhamos seus dados com terceiros, exceto quando necessário para processar o pagamento Pix ou cumprir obrigação legal.</p>
+    <h2 id="s3">3. Armazenamento e segurança</h2>
+    <ul>
+      <li>Seus dados ficam na nuvem, vinculados à sua conta, acessíveis de qualquer dispositivo com o mesmo login.</li>
+      <li>Senhas são gravadas com criptografia avançada e salt exclusivo, nunca em texto puro.</li>
+      <li>Cada conta acessa somente os próprios dados, e o servidor confere o acesso a cada requisição.</li>
+      <li>A sessão expira sozinha após um período sem uso, e operações importantes ficam registradas em trilha de auditoria.</li>
+    </ul>
 
-  <h2>5. Seus direitos</h2>
-  <p>Você pode acessar, corrigir ou solicitar a exclusão dos seus dados a qualquer momento, pelo chamado na Central de Serviços ou em Minha Conta, dentro do sistema.</p>
+    <h2 id="s4">4. Compartilhamento</h2>
+    <p>Não compartilhamos seus dados com terceiros, exceto quando necessário para processar o pagamento Pix ou cumprir obrigação legal.</p>
 
-  <h2>6. Cookies e armazenamento local</h2>
-  <p>O site usa armazenamento local do navegador apenas para lembrar suas preferências (tema, cores e sessão), sem finalidade publicitária.</p>
+    <h2 id="s5">5. Seus direitos</h2>
+    <p>Você pode acessar, corrigir ou solicitar a exclusão dos seus dados a qualquer momento, pelo chamado na Central de Serviços ou em Minha Conta, dentro do sistema.</p>
 
-  <a class="voltar" href="/login.html">← Voltar para o login</a>
+    <h2 id="s6">6. Cookies e armazenamento local</h2>
+    <p>O site usa armazenamento local do navegador apenas para lembrar suas preferências (tema, cores e sessão), sem finalidade publicitária.</p>
+  </article>
+
+  <a class="lg-back" href="/login.html">← Voltar para o login</a>
 </main>
+
+<footer class="lg-foot">
+  <div class="lg-foot-in">
+    <p id="ano">© Nexus Financeiro. Todos os direitos reservados.</p>
+    <nav aria-label="Documentos e atalhos">
+      <a href="/termos.html">Termos de abertura de conta</a>
+      <a href="/privacidade.html" aria-current="page">Política de privacidade</a>
+      <a href="/suporte">Central de Suporte</a>
+    </nav>
+  </div>
+</footer>
+<script>(function(){var a=document.getElementById('ano');if(a)a.textContent='© '+new Date().getFullYear()+' Nexus Financeiro. Todos os direitos reservados.'})();</script>
 </body>
 </html>

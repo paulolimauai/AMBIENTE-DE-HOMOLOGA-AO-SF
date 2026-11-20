@@ -1,59 +1,114 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-mode="dark">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#060a1f">
+<meta name="color-scheme" content="dark light">
 <title>Termos de Abertura de Conta | Nexus Financeiro</title>
 <meta name="description" content="Termos de abertura de conta do Nexus Financeiro: teste gratuito, plano mensal via Pix e condições de uso.">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<style>
-  *{box-sizing:border-box;margin:0}
-  body{font-family:'Segoe UI',system-ui,sans-serif;background:#0a0f24;color:#e8ecf8;line-height:1.7;padding:2rem 1rem}
-  main{max-width:46rem;margin:0 auto}
-  h1{font-size:1.7rem;margin-bottom:.4rem}
-  h2{font-size:14px;margin:1.6rem 0 .5rem;color:#8fb4ff}
-  p,li{color:#c3cbe4;font-size:14px}
-  ul{padding-left:1.3rem}
-  .voltar{display:inline-block;margin-top:2rem;color:#8fb4ff;text-decoration:none;font-weight:600}
-  .voltar:hover{text-decoration:underline}
-  .atualizado{color:#8a93b8;font-size:14px;margin-bottom:1.5rem}
-</style>
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="preload" href="/images/fonts/jakarta-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/fonts.css">
+<link rel="stylesheet" href="/legal.css">
+<script>
+/* Mesma aparência do site: modo (nexus-modo) e cor da paleta (nexus:cores) escolhidos pelo visitante */
+(function(){
+  var r=document.documentElement;
+  function g(k){try{return localStorage.getItem(k)}catch(e){return null}}
+  var H={multicolor:265,aurora:250,oceano:224,'por-do-sol':18,esmeralda:155,rose:335,ouro:42,turquesa:176,carmesim:352,neon:85},h=224;
+  try{
+    var c=JSON.parse(g('nexus:cores')||'null');
+    if(c&&c.id==='custom'&&/^#[0-9a-f]{6}$/i.test(c.hex||'')){
+      var n=parseInt(c.hex.slice(1),16),R=(n>>16&255)/255,G=(n>>8&255)/255,B=(n&255)/255,mx=Math.max(R,G,B),mn=Math.min(R,G,B),d=mx-mn,x=0;
+      if(d){if(mx===R)x=((G-B)/d)%6;else if(mx===G)x=(B-R)/d+2;else x=(R-G)/d+4;x=Math.round(x*60+360)%360}
+      h=x;
+    }else if(c&&H[c.id]!=null)h=H[c.id];
+  }catch(e){}
+  r.style.setProperty('--h',String(h));
+  var m=g('nexus-modo'),hr=new Date().getHours();
+  r.setAttribute('data-mode',m==='claro'||(m!=='escuro'&&hr>=7&&hr<18)?'light':'dark');
+})();
+</script>
 </head>
 <body>
-<main>
+<a class="skip" href="#conteudo">Ir para o conteúdo</a>
+<header class="lg-top">
+  <div class="lg-top-in">
+    <a class="lg-logo" href="/inicio" aria-label="Nexus Financeiro, página inicial">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4f7cff"/><stop offset="1" stop-color="#7c5cff"/></linearGradient></defs><rect width="64" height="64" rx="14" fill="url(#lg)"/><path d="M22 44V20M42 44V20M22 20l20 24" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Nexus <small>Financeiro</small></span>
+    </a>
+    <a class="lg-btn" href="/inicio"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg><span>Voltar ao site</span></a>
+  </div>
+</header>
+
+<main id="conteudo">
+  <span class="lg-kicker">Documento legal</span>
   <h1>Termos de Abertura de Conta</h1>
-  <p class="atualizado">Última atualização: novembro de 2026</p>
+  <p class="lg-meta">Última atualização: novembro de 2026</p>
+  <p class="lg-intro">Estas são as condições para criar e usar uma conta no Nexus Financeiro. Leia com atenção antes de concluir o cadastro.</p>
 
-  <h2>1. O serviço</h2>
-  <p>O Nexus Financeiro é uma plataforma web de gestão financeira pessoal que reúne lançamentos, contas e cartões, orçamentos, metas, relatórios e uma Central de Serviços para atendimento. O acesso é feito pelo navegador, sem instalação.</p>
+  <nav class="lg-toc" aria-label="Neste documento">
+    <b>Neste documento</b>
+    <ol>
+      <li><a href="#s1">1. O serviço</a></li>
+      <li><a href="#s2">2. Teste gratuito</a></li>
+      <li><a href="#s3">3. Plano mensal e pagamento</a></li>
+      <li><a href="#s4">4. Cadastro e veracidade dos dados</a></li>
+      <li><a href="#s5">5. Uso aceitável</a></li>
+      <li><a href="#s6">6. Suporte</a></li>
+      <li><a href="#s7">7. Alterações</a></li>
+    </ol>
+  </nav>
 
-  <h2>2. Teste gratuito</h2>
-  <p>Ao criar a conta, você tem direito a <strong>1 dia de teste gratuito</strong> com acesso a todos os módulos. O teste começa no momento do cadastro e não exige cartão de crédito.</p>
+  <article class="lg-doc">
+    <h2 id="s1">1. O serviço</h2>
+    <p>O Nexus Financeiro é uma plataforma web de gestão financeira pessoal que reúne lançamentos, contas e cartões, orçamentos, metas, relatórios e uma Central de Serviços para atendimento. O acesso é feito pelo navegador, sem instalação.</p>
 
-  <h2>3. Plano mensal e pagamento</h2>
-  <ul>
-    <li>Após o período de teste, o uso continuado exige a assinatura do <strong>plano mensal</strong>, pago <strong>somente via Pix</strong>, dentro da própria plataforma.</li>
-    <li>Todo mês uma nova fatura Pix é gerada no painel — <strong>nada é debitado sem a sua autorização</strong>.</li>
-    <li>O recibo de cada pagamento fica disponível na sua conta.</li>
-  </ul>
+    <h2 id="s2">2. Teste gratuito</h2>
+    <p>Ao criar a conta, você tem direito a <strong>1 dia de teste gratuito</strong> com acesso a todos os módulos. O teste começa no momento do cadastro e não exige cartão de crédito.</p>
 
-  <h2>4. Cadastro e veracidade dos dados</h2>
-  <ul>
-    <li>É obrigatório informar nome, e-mail, senha e CPF. O CPF é solicitado para evitar múltiplos testes gratuitos e para emissão do recibo.</li>
-    <li>Você declara que os dados informados são verdadeiros e pertencem a você.</li>
-    <li>Cada conta acessa somente os próprios dados.</li>
-  </ul>
+    <h2 id="s3">3. Plano mensal e pagamento</h2>
+    <ul>
+      <li>Após o período de teste, o uso continuado exige a assinatura do <strong>plano mensal</strong>, pago <strong>somente via Pix</strong>, dentro da própria plataforma.</li>
+      <li>Todo mês uma nova fatura Pix é gerada no painel — <strong>nada é debitado sem a sua autorização</strong>.</li>
+      <li>O recibo de cada pagamento fica disponível na sua conta.</li>
+    </ul>
 
-  <h2>5. Uso aceitável</h2>
-  <p>É proibido usar a plataforma para atividades ilícitas, tentar acessar dados de outras contas ou sobrecarregar o sistema. O descumprimento pode levar à suspensão da conta.</p>
+    <h2 id="s4">4. Cadastro e veracidade dos dados</h2>
+    <ul>
+      <li>É obrigatório informar nome, e-mail, senha e CPF. O CPF é solicitado para evitar múltiplos testes gratuitos e para emissão do recibo.</li>
+      <li>Você declara que os dados informados são verdadeiros e pertencem a você.</li>
+      <li>Cada conta acessa somente os próprios dados.</li>
+    </ul>
 
-  <h2>6. Suporte</h2>
-  <p>Dúvidas e problemas são atendidos pela Central de Serviços, por chamado com protocolo, com prazo máximo de até 5 dias úteis, sem contar fins de semana.</p>
+    <h2 id="s5">5. Uso aceitável</h2>
+    <p>É proibido usar a plataforma para atividades ilícitas, tentar acessar dados de outras contas ou sobrecarregar o sistema. O descumprimento pode levar à suspensão da conta.</p>
 
-  <h2>7. Alterações</h2>
-  <p>Estes termos podem ser atualizados. Alterações relevantes serão comunicadas na plataforma com antecedência razoável.</p>
+    <h2 id="s6">6. Suporte</h2>
+    <p>Dúvidas e problemas são atendidos pela Central de Serviços, por chamado com protocolo, com prazo máximo de até 5 dias úteis, sem contar fins de semana.</p>
 
-  <a class="voltar" href="/login.html">← Voltar para o login</a>
+    <h2 id="s7">7. Alterações</h2>
+    <p>Estes termos podem ser atualizados. Alterações relevantes serão comunicadas na plataforma com antecedência razoável.</p>
+  </article>
+
+  <a class="lg-back" href="/login.html">← Voltar para o login</a>
 </main>
+
+<footer class="lg-foot">
+  <div class="lg-foot-in">
+    <p id="ano">© Nexus Financeiro. Todos os direitos reservados.</p>
+    <nav aria-label="Documentos e atalhos">
+      <a href="/termos.html" aria-current="page">Termos de abertura de conta</a>
+      <a href="/privacidade.html">Política de privacidade</a>
+      <a href="/suporte">Central de Suporte</a>
+    </nav>
+  </div>
+</footer>
+<script>(function(){var a=document.getElementById('ano');if(a)a.textContent='© '+new Date().getFullYear()+' Nexus Financeiro. Todos os direitos reservados.'})();</script>
 </body>
 </html>

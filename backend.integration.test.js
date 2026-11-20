@@ -691,6 +691,62 @@ test('site inicial: "/" sem sessão abre o /inicio antes do login; o /inicio mos
   assert.match(js.headers.get('content-type'), /javascript/);
 });
 
+test('site inicial profissional: endereço canônico no domínio próprio, imagem de compartilhamento, dados estruturados, ícones, manifest, links legais e cache versionado', async () => {
+  const site = (await api('GET', '/inicio')).texto;
+  const DOMINIO = 'https://nexusfinanceirohub.com.br';
+  assert.ok(site.includes('<link rel="canonical" href="' + DOMINIO + '/inicio">'), 'canonical no domínio próprio');
+  assert.ok(site.includes('<meta property="og:url" content="' + DOMINIO + '/inicio">'));
+  assert.ok(site.includes('og:image" content="' + DOMINIO + '/images/og-nexus-v1.png"'), 'imagem de compartilhamento da marca');
+  assert.ok(/og:image:width" content="1200"/.test(site) && /og:image:height" content="630"/.test(site), 'proporção 1200x630 declarada');
+  assert.ok(!/onrender\.com/.test(site), 'o site público não deve citar o endereço do Render');
+  assert.ok(site.includes('rel="manifest" href="/manifest.webmanifest"') && site.includes('rel="apple-touch-icon"'), 'manifest e ícone do iPhone');
+
+  // dados estruturados: válidos, com o preço do servidor e o FAQ igual ao que está escrito na página
+  const bruto = /<script type="application\/ld\+json">\s*(\{[\s\S]*?\})\s*<\/script>/.exec(site);
+  assert.ok(bruto, 'JSON-LD presente');
+  const ld = JSON.parse(bruto[1]);
+  const tipos = ld['@graph'].map((n) => n['@type']);
+  assert.deepEqual(tipos, ['Organization', 'WebSite', 'SoftwareApplication', 'FAQPage']);
+  assert.equal(ld['@graph'][2].offers.price, '18.00');
+  const perguntasLd = ld['@graph'][3].mainEntity.map((q) => q.name);
+  const perguntasPagina = [...site.matchAll(/<details name="faq"[^>]*><summary>([\s\S]*?)<\/summary>/g)].map((m) => m[1].replace(/<[^>]+>/g, '').trim());
+  assert.ok(perguntasPagina.length >= 10 && JSON.stringify(perguntasLd) === JSON.stringify(perguntasPagina), 'o FAQ do JSON-LD precisa acompanhar as perguntas da página');
+
+  // rodapé com os documentos legais (e as páginas existem e usam o estilo compartilhado)
+  assert.ok(site.includes('href="/termos.html">Termos de abertura de conta') && site.includes('href="/privacidade.html">Política de privacidade'), 'rodapé com Termos e Privacidade');
+  for (const rota of ['/termos.html', '/privacidade.html']) {
+    const pg = await api('GET', rota);
+    assert.equal(pg.status, 200, rota);
+    assert.ok(pg.texto.includes('/legal.css') && pg.texto.includes('class="lg-doc"'), rota + ' no padrão novo');
+  }
+  assert.equal((await api('GET', '/legal.css')).status, 200);
+
+  // manifest, ícones, favicon.ico, sitemap e robots
+  const manifest = await api('GET', '/manifest.webmanifest');
+  assert.equal(manifest.status, 200);
+  assert.match(manifest.headers.get('content-type'), /manifest\+json/);
+  const m = JSON.parse(manifest.texto);
+  assert.equal(m.name, 'Nexus Financeiro');
+  assert.ok(m.icons.some((i) => i.sizes === '512x512' && i.purpose === 'maskable') && m.icons.length === 3);
+  for (const icone of m.icons) assert.equal((await api('GET', icone.src)).status, 200, icone.src);
+  for (const arq of ['/images/og-nexus-v1.png', '/images/icons/apple-touch-icon.png']) {
+    const r = await fetch('http://127.0.0.1:' + porta + arq);
+    assert.equal(r.status, 200, arq);
+    assert.match(r.headers.get('content-type'), /image\/png/);
+  }
+  const ico = await fetch('http://127.0.0.1:' + porta + '/favicon.ico');
+  assert.equal(ico.status, 200);
+  assert.equal(ico.headers.get('content-type'), 'image/x-icon');
+  const sitemap = (await api('GET', '/sitemap.xml')).texto;
+  assert.ok(sitemap.includes('<loc>' + DOMINIO + '/inicio</loc>') && !/onrender\.com/.test(sitemap), 'sitemap no domínio próprio');
+  assert.ok((await api('GET', '/robots.txt')).texto.includes('Sitemap: ' + DOMINIO + '/sitemap.xml'));
+
+  // CSS/JS chamados com ?v= valem 1 ano (a página troca o ?v= quando o arquivo muda); sem ?v= continuam revalidando
+  const versionado = await api('GET', '/site-inicial.css?v=123');
+  assert.match(versionado.headers.get('cache-control'), /max-age=31536000.*immutable/);
+  assert.equal((await api('GET', '/site-inicial.css')).headers.get('cache-control'), 'no-cache');
+});
+
 test('arquivo de dados ilegível vai para a quarentena e o backup é usado: as outras contas não são apagadas', async () => {
   const ana = (await login('ana@teste.nexus', 'Ana@12345')).token;
   const dadosBia = { categories: [], accounts: [], transactions: [{ id: 1, desc: 'Compra da Bia', val: 10, type: 'out', date: '2026-11-08', cat: 'X', acc: 'Y', status: 'Pago' }], updated_at: '2026-11-08T10:00:00.000Z' };

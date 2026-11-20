@@ -528,6 +528,15 @@ h1 em{font-style:normal;background:linear-gradient(100deg,var(--accent),var(--br
 .rodape ul a{display:inline-block;padding:.4rem 0;font-size:1rem;font-weight:600;color:var(--soft);text-decoration:none;transition:color .2s,transform .2s}
 .rodape ul a:hover{color:var(--white);text-decoration:none;transform:translateX(3px)}
 .rodape .copy{max-width:none;margin-top:1.4rem;padding-top:1.2rem;border-top:1px solid var(--card-line);font-size:1rem;color:var(--muted);text-align:center}
+/* base do rodapé: direitos reservados e documentos legais na mesma linha (empilha e centraliza no celular) */
+.rod-base{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.5rem 1.6rem;margin-top:1.4rem;padding-top:1.2rem;border-top:1px solid var(--card-line)}
+.rodape .rod-base .copy{margin:0;padding:0;border:0;text-align:left}
+.rod-leg{display:flex;flex-wrap:wrap;gap:.1rem 1.5rem}
+.rod-leg a{display:inline-block;padding:.45rem 0;font-size:1rem;font-weight:600;color:var(--soft);text-decoration:none;transition:color .2s}
+.rod-leg a:hover{color:var(--white);text-decoration:underline;text-underline-offset:.2em}
+@media (max-width:700px){.rod-base{flex-direction:column;align-items:center;text-align:center}.rodape .rod-base .copy{text-align:center}.rod-leg{justify-content:center}}
+/* celular e telas de toque: alvos de pelo menos 44 px (categorias da Central, logotipo, links do rodapé) */
+@media (pointer:coarse),(max-width:700px){.cat{min-height:44px}.logo{min-height:44px}.rodape ul a,.rod-leg a{padding-block:.7rem}.sw{width:44px}.sws,.pers .sws{grid-template-columns:repeat(auto-fill,44px);gap:.5rem .6rem;justify-content:start}}
 
 /* telas grandes e baixas */
 @media (max-width:480px){
