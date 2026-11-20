@@ -285,14 +285,33 @@ test('saldo negativo previsto gera aviso com o primeiro dia', () => {
   assert.ok(m.insights.some((i) => i.titulo === 'Saldo negativo previsto' && /12\/11/.test(i.texto)));
 });
 
-test('sem movimentações: modelo vazio exibe painel completo e sem exceções', () => {
+test('sem movimentações: modelo vazio mostra o passo a passo (sem cartões e gráficos zerados) e sem exceções', () => {
   const m = D.calcular(ctx({ transacoes: [], contas: [] }));
   assert.equal(m.vazio, true);
   assert.equal(m.contas.saldoAtual, 0);
   assert.equal(m.agenda.itens.length, 0);
   const html = D.pagina({ ...ctx({ transacoes: [], contas: [] }), util: {} });
-  assert.match(html, /Saldo em contas hoje/);
-  assert.match(html, /Fluxo de caixa/);
+  assert.match(html, /Comece em 3 passos/);
+  assert.match(html, /data-fd-ir="cartoes"/);
+  assert.match(html, /data-fd-ir="importar"/);
+  assert.ok(!html.includes('fd-kpis') && !html.includes('Fluxo de caixa'), 'conta vazia não mostra cartões nem gráficos em R$ 0,00');
+});
+
+test('conta vazia com uma conta cadastrada: o passo 1 aparece como concluído e as contas continuam visíveis', () => {
+  const html = D.pagina({ ...ctx({ transacoes: [] }), util: {} });
+  const m = D.calcular(ctx({ transacoes: [] }));
+  if (m.contas.bancarias.length + m.contas.cartoes.itens.length > 0) {
+    assert.match(html, /fd-passo-ok/);
+    assert.match(html, /Contas e cartões/);
+  } else {
+    assert.match(html, /Comece em 3 passos/);
+  }
+});
+
+test('eixo do gráfico: valor perto de zero nunca vira "R$ -0"', () => {
+  assert.equal(D.util.fmtEixo(-0.2), 'R$ 0');
+  assert.equal(D.util.fmtEixo(0.3), 'R$ 0');
+  assert.equal(D.util.fmtEixo(-1), 'R$ -1');
 });
 
 test('dados sujos: valor em texto, data em DD/MM/AAAA, tipo inválido e data ausente', () => {
@@ -360,16 +379,17 @@ test('pagina(): atalhos de navegação, ações rápidas e escape dos atributos'
     'data-fd-ir="mov" data-fd-tipo="in" data-fd-status="Pendente"', // A receber (30 dias)
     'data-fd-ir="mov" data-fd-tipo="out" data-fd-cat="Supermercado"', // categoria do ranking
     'data-fd-acao="nova-receita"', 'data-fd-acao="nova-despesa"', 'data-fd-acao="atualizar"',
-    'fd-spark-ponto', 'fd-spark-eixo'
+    'fd-detalhes', 'Resultado do período', 'Disponível p/ gastar' // 4 cartões iguais + detalhes recolhidos do saldo
   ]) assert.ok(html.includes(trecho), 'faltou: ' + trecho);
+  assert.equal((html.match(/class="fd-tile /g) || []).length, 4, 'a primeira linha tem exatamente 4 cartões');
   // categoria com aspas e sinais de maior/menor não escapa do atributo
   assert.ok(html.includes('data-fd-cat="A&quot;B&lt;c&gt;"'));
   assert.ok(!html.includes('data-fd-cat="A"B'));
 });
 
-test('pagina() vazia: exibe todas as faixas do painel completo e mantém o cabeçalho com as ações rápidas', () => {
+test('pagina() vazia: mantém o cabeçalho com as ações rápidas e mostra o passo a passo', () => {
   const html = D.pagina({ ...ctx({ transacoes: [], contas: [] }), util: {} });
   assert.match(html, /data-fd-acao="nova-despesa"/);
   assert.match(html, /data-fd-acao="nova-receita"/);
-  assert.ok(html.includes('fd-linha-a'), 'sem dados exibe as faixas completas do painel');
+  assert.ok(html.includes('fd-passos'), 'sem dados exibe o passo a passo');
 });
