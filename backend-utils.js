@@ -16,6 +16,7 @@
 const fs = require('fs');
 const crypto = require('crypto');
 const Assinatura = require('./assinatura');
+const Acesso = require('./acesso');
 const { StringDecoder } = require('string_decoder');
 
 // ---------------------------------------------------------------- corpo da requisição
@@ -66,8 +67,8 @@ function deriveSyncToken(secret) {
 
 // ---------------------------------------------------------------- usuários
 const lower = (v) => String(v == null ? '' : v).toLowerCase().trim();
-// Campos que só existem no espelho local (não há coluna no SQL Server): o relógio da senha e o relógio da assinatura
-const LOCAL_ONLY_USER_FIELDS = ['password_changed_at', Assinatura.RELOGIO];
+// Campos que só existem no espelho local (não há coluna no SQL Server): o relógio da senha, o da assinatura e o do bloqueio da conta
+const LOCAL_ONLY_USER_FIELDS = ['password_changed_at', Assinatura.RELOGIO, Acesso.RELOGIO];
 
 // Carimbos de data do cadastro. O SQL Server (DATETIME2) devolve a hora LOCAL marcada como UTC; todo carimbo precisa passar pela conversão
 // para horário de Brasília antes de sair daqui, senão quem recebe (a nuvem e, por ela, o Supabase) recua 3 h.
@@ -86,6 +87,12 @@ function userForCloud(row, toBrasiliaIso, passwordClock, mirror) {
   if (mirror && Number.isFinite(Assinatura.relogioMs(mirror))) {
     Assinatura.CAMPOS.forEach((f) => { if (mirror[f] !== undefined) copy[f] = mirror[f]; });
     copy[Assinatura.RELOGIO] = mirror[Assinatura.RELOGIO];
+  }
+  // Bloqueio da conta: mesma ideia. Um bloqueio/ativação CARIMBADO no espelho é o mais recente que o PC conhece (o UPDATE no SQL pode não ter
+  // chegado); sem isto o PC mandava active = 1 do SQL e a nuvem não tinha como saber que o administrador bloqueou depois (acesso.js).
+  if (mirror && Number.isFinite(Acesso.relogioMs(mirror))) {
+    if (mirror.active !== undefined) copy.active = mirror.active;
+    copy[Acesso.RELOGIO] = mirror[Acesso.RELOGIO];
   }
   USER_DATE_FIELDS.forEach((f) => { if (copy[f]) copy[f] = toBrasiliaIso(copy[f]); });
   return copy;
@@ -110,6 +117,11 @@ function mergeUsersMirror(existing, incoming) {
     // (UPDATE ainda em andamento ou que falhou). Os campos do espelho ficam, e o passo D do ciclo reconcilia o SQL a partir deles.
     if (!Number.isFinite(Assinatura.relogioMs(row)) && Number.isFinite(Assinatura.relogioMs(prev))) {
       Assinatura.CAMPOS.forEach((f) => { if (prev[f] !== undefined) merged[f] = prev[f]; });
+    }
+    // Bloqueio: idem. Se o espelho tem um bloqueio/ativação carimbado e a linha do SQL não tem carimbo, o SQL ainda não recebeu essa mudança:
+    // vale o espelho (senão a leitura periódica do SQL, com active = 1, desfazia o bloqueio no PC).
+    if (!Number.isFinite(Acesso.relogioMs(row)) && Number.isFinite(Acesso.relogioMs(prev)) && prev.active !== undefined) {
+      merged.active = prev.active;
     }
     return merged;
   });

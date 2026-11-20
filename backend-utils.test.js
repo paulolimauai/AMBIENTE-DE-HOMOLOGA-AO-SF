@@ -216,3 +216,32 @@ test('mergeUsersMirror: o carimbo da assinatura sobrevive e uma mudança carimba
   const comCarimbo = U.mergeUsersMirror(espelho, [{ email: 'a@a.com', subscription_status: 'expired', subscription_updated_at: '2026-11-16T06:00:00.000Z' }])[0];
   assert.equal(comCarimbo.subscription_status, 'expired'); assert.equal(comCarimbo.subscription_updated_at, '2026-11-16T06:00:00.000Z');
 });
+
+test('userForCloud: bloqueio CARIMBADO no espelho vai à nuvem (com o carimbo), mesmo que o SQL ainda diga ativo', () => {
+  const conv = (v) => v;
+  const sql = { email: 'a@a.com', active: true };
+  const espelho = { email: 'a@a.com', active: false, active_updated_at: '2026-11-20T12:00:00.000Z' };
+  const r = U.userForCloud(sql, conv, undefined, espelho);
+  assert.equal(r.active, false, 'o PC manda o bloqueio que o administrador fez, não o active = 1 atrasado do SQL');
+  assert.equal(r.active_updated_at, '2026-11-20T12:00:00.000Z');
+  // espelho SEM carimbo: vale o SQL, como sempre, e nenhum carimbo é inventado
+  const s = U.userForCloud(sql, conv, undefined, { email: 'a@a.com', active: false });
+  assert.equal(s.active, true); assert.equal(s.active_updated_at, undefined);
+  // o bloqueio e a assinatura têm relógios independentes: um não leva o outro
+  const so = U.userForCloud({ email: 'a@a.com', active: true, subscription_status: 'expired' }, conv, undefined, { email: 'a@a.com', active: false, active_updated_at: '2026-11-20T12:00:00.000Z' });
+  assert.equal(so.subscription_status, 'expired'); assert.equal(so.subscription_updated_at, undefined);
+});
+
+test('mergeUsersMirror: o carimbo do bloqueio sobrevive e o bloqueio não é desfeito por uma linha atrasada do SQL', () => {
+  const espelho = [{ email: 'a@a.com', password: 'scrypt:x', active: false, active_updated_at: '2026-11-20T12:00:00.000Z' }];
+  const linhaAtrasada = [{ email: 'a@a.com', active: true }];
+  const r = U.mergeUsersMirror(espelho, linhaAtrasada)[0];
+  assert.equal(r.active, false, 'o SQL ainda não recebeu o UPDATE: o bloqueio carimbado fica');
+  assert.equal(r.active_updated_at, '2026-11-20T12:00:00.000Z'); assert.equal(r.password, 'scrypt:x');
+  // sem carimbo no espelho: o SQL vence (fonte soberana), como sempre
+  assert.equal(U.mergeUsersMirror([{ email: 'a@a.com', password: 'scrypt:x', active: false }], linhaAtrasada)[0].active, true);
+  // linha que já traz carimbo (veio da nuvem): vale o que ela trouxe
+  const comCarimbo = U.mergeUsersMirror(espelho, [{ email: 'a@a.com', active: true, active_updated_at: '2026-11-20T13:00:00.000Z' }])[0];
+  assert.equal(comCarimbo.active, true); assert.equal(comCarimbo.active_updated_at, '2026-11-20T13:00:00.000Z');
+  assert.ok(U.LOCAL_ONLY_USER_FIELDS.includes('active_updated_at'));
+});

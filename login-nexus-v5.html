@@ -1124,6 +1124,19 @@ h3 { font-size: 18px !important; }
   setModo('entrar',true);
   /* vindo do site inicial (/inicio): "Criar conta" já abre na aba de cadastro (/login.html#criar) */
   if(/^#criar$/i.test(location.hash)||/[?&]aba=criar(&|$)/.test(location.search))setModo('criar');
+  /* Sessão encerrada por outro motivo que não o "Sair" (conta bloqueada, senha redefinida, conta excluída, sessão vencida): o app deixa o
+     motivo na aba e esta tela explica, em vez de só aparecer o formulário vazio. */
+  var MOTIVOS_SESSAO={
+    blocked:'Seu usuário foi desativado pelo administrador. Entre em contato para mais informações.',
+    password:'A senha desta conta foi alterada. Entre com a nova senha.',
+    deleted:'Esta conta não existe mais.',
+    invalid:'Sua sessão expirou. Entre novamente.',
+    timeout:'Sua sessão expirou por inatividade. Entre novamente.'
+  };
+  try{
+    var motivoSessao=sessionStorage.getItem('nexus_session_expired_reason');
+    if(motivoSessao&&MOTIVOS_SESSAO[motivoSessao]){aviso(MOTIVOS_SESSAO[motivoSessao]);sessionStorage.removeItem('nexus_session_expired_reason')}
+  }catch(e){}
   if(matchMedia('(hover:hover) and (pointer:fine)').matches)(us?$('senha'):$('email')).focus();
 })();
 </script>

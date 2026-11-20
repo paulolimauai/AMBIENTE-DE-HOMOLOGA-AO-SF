@@ -168,6 +168,9 @@ test('sessão única: telas e script compartilhado são servidos e o login só d
   const painel = (await api('GET', '/admin-assinaturas-glpi.html')).texto;
   assert.ok(!/id="lf"|id="demo"|paulolp0101@gmail\.com"\s*>|type="password"/.test(painel), 'painel do admin não tem login próprio');
   assert.ok(painel.includes('/nexus-sso.js') && painel.includes('NexusSSO.exigirAdmin'), 'painel usa o porteiro compartilhado');
+  // Os botões do painel usam onclick="blk(..)" etc. (escopo global): se as funções reais não forem expostas em window, valem as de demonstração,
+  // que só mexem no cache do navegador — "Bloquear" parecia funcionar na tela e o servidor nunca era avisado.
+  assert.ok(/Object\.assign\(window,\{[^}]*\bblk:blk\b[^}]*\bgrant:grant\b/.test(painel), 'o painel precisa expor blk/grant/... reais em window');
   assert.ok((await api('GET', '/admin-site.html')).texto.includes('/nexus-sso.js'));
   // O painel do administrador tem endereço limpo (/admin-assinaturas-glpi) e é ele que o site e o login oferecem;
   // o editor de arquivos do site (/admin-site.html) não tem mais link público.
@@ -823,6 +826,131 @@ test('redefinir senha pelo administrador: senha provisória única, troca obriga
   assert.ok(!logs.includes(provisoria) && !logs.includes(r2.json.tempPassword), 'a senha provisória nunca pode ir para o log');
   assert.ok(!JSON.stringify(lerArquivo('local_users.json')).includes(r2.json.tempPassword), 'a senha só pode ficar guardada como hash');
   assert.equal((await api('DELETE', '/api/users?email=' + email, { token: admin })).status, 200);
+});
+
+// Abre o canal de eventos (SSE) de uma conta e acumula o que chega; fechou resolve quando o servidor encerra a conexão
+function abrirEventos(token) {
+  return new Promise((resolve, reject) => {
+    const req = http.get({ host: '127.0.0.1', port: porta, path: '/api/events?token=' + encodeURIComponent(token), headers: { 'X-Forwarded-For': ipNovo() } }, (res) => {
+      let texto = '';
+      res.setEncoding('utf8');
+      const canal = { status: res.statusCode, texto: () => texto, fechou: new Promise((r) => res.on('close', r)), fechar: () => req.destroy() };
+      res.on('data', (d) => { texto += d; });
+      resolve(canal);
+    });
+    req.on('error', reject);
+  });
+}
+const esperarAte = async (fn, ms) => { const fim = Date.now() + ms; while (Date.now() < fim) { if (await fn()) return true; await dorme(40); } return false; };
+const listaDeUsuarios = async (admin) => { const r = await api('GET', '/api/users', { token: admin }); return Array.isArray(r.json) ? r.json : (r.json.users || []); };
+
+test('bloqueio: a sessão aberta cai na hora, o token morre com o motivo "blocked" e desbloquear devolve o acesso', async () => {
+  const admin = (await login('admin@teste.nexus', 'Admin@12345')).token;
+  const email = 'bloqueio.teste@teste.nexus';
+  await criarContaDeTeste(admin, email, 'Bloqueio@12345');
+  const sessao = (await login(email, 'Bloqueio@12345')).token;
+  assert.equal((await api('GET', '/api/auth/session', { token: sessao })).status, 200);
+  const canal = await abrirEventos(sessao);
+  assert.equal(canal.status, 200, 'o canal de eventos da conta abre');
+  await dorme(1100);   // o token vale por segundo; só para o teste não depender de empate de relógio
+
+  const bloquear = await api('POST', '/api/users', { token: admin, body: [{ email, name: 'Conta bloqueio', active: false }] });
+  assert.equal(bloquear.status, 200, bloquear.texto);
+  assert.ok(await esperarAte(() => canal.texto().includes('event: session_ended'), 3000), 'o app aberto recebe session_ended: ' + canal.texto());
+  assert.match(canal.texto(), /data: \{"reason":"blocked"\}/);
+  await Promise.race([canal.fechou, dorme(3000)]);
+  const fechouLogo = await esperarAte(async () => (await abrirEventos(sessao)).status === 401, 1500);
+  assert.ok(fechouLogo, 'nova conexão de eventos com o token antigo é recusada');
+
+  const velha = await api('GET', '/api/auth/session', { token: sessao });
+  assert.equal(velha.status, 401);
+  assert.equal(velha.json.reason, 'blocked', 'o app sabe que foi bloqueio e avisa a pessoa');
+  const novoLogin = await api('POST', '/api/login', { body: { email, password: 'Bloqueio@12345' } });
+  assert.ok([401, 403].includes(novoLogin.status) && !(novoLogin.json && novoLogin.json.success), 'login recusado: ' + novoLogin.status + ' ' + novoLogin.texto);
+  assert.equal((await api('GET', '/api/data?email=' + email, { token: sessao })).status, 401, 'a sessão antiga não lê mais os dados');
+  const conta = (await listaDeUsuarios(admin)).find((u) => u.email === email);
+  assert.equal(conta.active, false);
+  assert.ok(conta.active_updated_at, 'o bloqueio fica carimbado (relógio do bloqueio)');
+
+  // desbloquear devolve o acesso (e o carimbo avança)
+  assert.equal((await api('POST', '/api/users', { token: admin, body: [{ email, name: 'Conta bloqueio', active: true }] })).status, 200);
+  assert.equal((await login(email, 'Bloqueio@12345')).success, true, 'depois de desbloqueada a conta entra de novo');
+  assert.ok(new Date((await listaDeUsuarios(admin)).find((u) => u.email === email).active_updated_at) >= new Date(conta.active_updated_at));
+  assert.equal((await api('DELETE', '/api/users?email=' + email, { token: admin })).status, 200);
+});
+
+test('bloqueio feito na nuvem NÃO é desfeito pela linha antiga que o PC reenvia a cada 10 s (relógio do bloqueio)', async () => {
+  const admin = (await login('admin@teste.nexus', 'Admin@12345')).token;
+  const email = 'sync.bloqueio@teste.nexus';
+  await criarContaDeTeste(admin, email, 'Sync@12345');
+  const doPc = (corpo) => api('POST', '/api/users?overwrite=true', { headers: { 'X-Nexus-Sync-Token': SYNC_TOKEN }, body: [{ email, name: 'Conta sync', ...corpo }] });
+  const estado = async () => (await listaDeUsuarios(admin)).find((u) => u.email === email);
+
+  // o administrador bloqueia no site (nuvem)
+  assert.equal((await api('POST', '/api/users', { token: admin, body: [{ email, name: 'Conta sync', active: false }] })).status, 200);
+  const bloqueada = await estado();
+  assert.equal(bloqueada.active, false);
+  const carimboBloqueio = bloqueada.active_updated_at;
+  assert.ok(carimboBloqueio);
+
+  // o PC (SQL Server ainda com active = 1, SEM carimbo) reenvia a mesma linha em vários ciclos: o bloqueio fica
+  for (let i = 0; i < 3; i++) {
+    assert.equal((await doPc({ active: true })).status, 200);
+    assert.equal((await estado()).active, false, 'ciclo ' + i + ': o PC desfez o bloqueio');
+  }
+  assert.ok(!(await login(email, 'Sync@12345')).success, 'a conta bloqueada não entra');
+  // linha do PC com carimbo ANTERIOR ao do bloqueio: também não vale
+  assert.equal((await doPc({ active: true, active_updated_at: new Date(new Date(carimboBloqueio).getTime() - 60000).toISOString() })).status, 200);
+  assert.equal((await estado()).active, false, 'carimbo mais velho não desfaz o bloqueio');
+  assert.equal((await estado()).active_updated_at, carimboBloqueio, 'o carimbo do bloqueio não recua');
+
+  // ativação feita DEPOIS no PC (carimbo mais novo): vale
+  const ativacaoNoPc = new Date(new Date(carimboBloqueio).getTime() + 60000).toISOString();
+  assert.equal((await doPc({ active: true, active_updated_at: ativacaoNoPc })).status, 200);
+  assert.equal((await estado()).active, true, 'o desbloqueio mais novo vindo do PC vale');
+  assert.equal((await login(email, 'Sync@12345')).success, true);
+
+  // novo bloqueio na nuvem (carimbo agora, mais novo que o do PC): a linha do passo anterior não o desfaz
+  assert.equal((await api('POST', '/api/users', { token: admin, body: [{ email, name: 'Conta sync', active: false }] })).status, 200);
+  const novo = await estado();
+  assert.equal(novo.active, false);
+  assert.ok(novo.active_updated_at, 'o novo bloqueio também fica carimbado');
+  assert.equal((await doPc({ active: true, active_updated_at: ativacaoNoPc })).status, 200);
+  assert.equal((await estado()).active, false, 'o PC com carimbo mais velho não reativa');
+
+  // o navegador do administrador não forja carimbo: o dele é ignorado e a mudança recebe o carimbo do servidor
+  const forjado = await api('POST', '/api/users', { token: admin, body: [{ email, name: 'Conta sync', active: true, active_updated_at: '2000-01-01T00:00:00.000Z' }] });
+  assert.equal(forjado.status, 200);
+  const depois = await estado();
+  assert.equal(depois.active, true);
+  assert.ok(new Date(depois.active_updated_at).getFullYear() >= 2026, 'carimbo vindo do cliente é ignorado: ' + depois.active_updated_at);
+  assert.equal((await api('DELETE', '/api/users?email=' + email, { token: admin })).status, 200);
+});
+
+test('sessões abertas também caem ao redefinir a senha ou excluir a conta, cada uma com o seu motivo', async () => {
+  const admin = (await login('admin@teste.nexus', 'Admin@12345')).token;
+  const emailA = 'cai.senha@teste.nexus', emailB = 'cai.exclusao@teste.nexus';
+  await criarContaDeTeste(admin, emailA, 'Cai@12345');
+  await criarContaDeTeste(admin, emailB, 'Cai@12345');
+  const tokenA = (await login(emailA, 'Cai@12345')).token;
+  const tokenB = (await login(emailB, 'Cai@12345')).token;
+  const canalA = await abrirEventos(tokenA);
+  const canalB = await abrirEventos(tokenB);
+  const canalOutro = await abrirEventos((await login('ana@teste.nexus', 'Ana@12345')).token);   // outra conta: não pode ser derrubada
+  await dorme(1100);
+  assert.equal((await api('POST', '/api/admin/users/reset-password', { token: admin, body: { email: emailA } })).status, 200);
+  assert.ok(await esperarAte(() => canalA.texto().includes('session_ended'), 3000));
+  assert.match(canalA.texto(), /"reason":"password"/);
+  assert.equal((await api('GET', '/api/auth/session', { token: tokenA })).json.reason, 'password');
+  assert.equal((await api('DELETE', '/api/users?email=' + emailB, { token: admin })).status, 200);
+  assert.ok(await esperarAte(() => canalB.texto().includes('session_ended'), 3000));
+  assert.match(canalB.texto(), /"reason":"deleted"/);
+  assert.equal((await api('GET', '/api/auth/session', { token: tokenB })).json.reason, 'deleted');
+  await dorme(300);
+  assert.ok(!canalOutro.texto().includes('session_ended'), 'só a conta atingida é derrubada');
+  assert.equal((await api('GET', '/api/auth/session', { token: 'lixo.lixo.lixo' })).json.reason, 'invalid', 'token que não é de ninguém não ganha motivo específico');
+  canalOutro.fechar();
+  assert.equal((await api('DELETE', '/api/users?email=' + emailA, { token: admin })).status, 200);
 });
 
 // Por último de propósito: se a proteção regredir, este teste apaga os dados de teste e só ele falha (os demais já rodaram)

@@ -28,6 +28,7 @@ const BackendUtils = require('./backend-utils'); // utilitários puros e testado
 const Pagamentos = require('./pagamentos'); // livro de pagamentos, prazo da assinatura, Pix, resumo financeiro e conciliação de extrato (regras puras e testadas)
 const { qrSvg } = require('./qr-svg'); // QR Code do Pix gerado aqui (antes vinha do site api.qrserver.com)
 const Assinatura = require('./assinatura'); // relógio da assinatura: qual versão vale entre a nuvem e o PC (liberar/bloquear/pagar não pode ser desfeito pelo outro servidor)
+const Acesso = require('./acesso'); // relógio do bloqueio da conta (active): o bloqueio feito na nuvem não pode ser desfeito pela linha antiga do SQL Server do PC
 const Credenciais = require('./credenciais'); // qual senha vale quando a conta existe na nuvem, no SQL Server do PC e no Supabase (vale a trocada por último)
 
 const PORT = process.env.PORT || 3000;
@@ -916,6 +917,20 @@ function getAuthenticatedUser(req) {
   return user && (isOwnerEmail(user.email) || (user.active !== false && user.active !== 0)) && !isAccountDeleted(email) ? user : null;
 }
 
+// Por que um token ASSINADO (portanto da própria pessoa) deixou de valer: 'blocked' (conta bloqueada), 'password' (senha trocada/redefinida),
+// 'deleted' (conta excluída) ou 'invalid' (vencido ou lixo). Só dá motivo específico a quem apresenta um token válido; o resto recebe 'invalid'.
+function motivoSessaoInvalida(req) {
+  const authorization = String(req.headers.authorization || '');
+  const claims = authorization.startsWith('Bearer ') ? verifySecureToken(authorization.slice(7)) : null;
+  if (!claims || !claims.email) return 'invalid';
+  const email = String(claims.email).toLowerCase().trim();
+  const user = getLocalUsers().find(u => u && String(u.email || '').toLowerCase().trim() === email);
+  if (!user || isAccountDeleted(email)) return 'deleted';
+  if (tokenPredatesPasswordChange(claims, user)) return 'password';
+  if (!isOwnerEmail(user.email) && !Acesso.ativo(user.active)) return 'blocked';
+  return 'invalid';
+}
+
 function getAuthenticatedAdmin(req) {
   const user = getAuthenticatedUser(req);
   // O proprietário sempre tem acesso administrativo, mesmo que o cadastro esteja dessincronizado
@@ -1281,6 +1296,22 @@ function broadcastEvent(eventType, eventData) {
       sseClients.delete(client);
     }
   }
+}
+
+// Encerra na hora as conexões de eventos abertas por UMA conta (bloqueada, senha redefinida, excluída): o app aberto recebe "session_ended",
+// volta ao login com o motivo e o canal é fechado. Sem isto quem já estava logado continuava vendo o app com os dados do cache depois do bloqueio.
+function encerrarSessoesDaConta(email, motivo) {
+  const alvo = String(email || '').toLowerCase().trim();
+  if (!alvo) return 0;
+  let encerradas = 0;
+  for (const client of Array.from(sseClients)) {
+    const viewer = client.nexusUser;
+    if (!viewer || String(viewer.email || '').toLowerCase().trim() !== alvo) continue;
+    try { client.write(`event: session_ended\ndata: ${JSON.stringify({ reason: motivo })}\n\n`); client.end(); } catch (e) {}
+    sseClients.delete(client);
+    encerradas++;
+  }
+  return encerradas;
 }
 
 // ==================== Camada de Conexão com o Banco de Dados (Microsoft SQL Server Interno) ====================
@@ -2601,7 +2632,45 @@ function buildHtmlContent() { return `<!DOCTYPE html>
             init.headers = headers;
           }
         } catch (e) {}
-        return nativeFetch.call(this, input, init);
+        var resposta = nativeFetch.call(this, input, init);
+        // 401 numa chamada autenticada do app: quem decide se a sessão acabou (conta bloqueada, senha redefinida, conta excluída) é o SERVIDOR,
+        // consultado abaixo com nova tentativa. O app nunca se desconecta por conta própria só porque uma chamada deu 401.
+        try {
+          if (token && isOwnApi) {
+            var semRevisao = ['/api/login', '/api/register', '/api/auth/', '/api/events', '/api/user/login-ping'];
+            if (semRevisao.every(function(p) { return target.indexOf(p) === -1; })) {
+              resposta.then(function(r) { if (r && r.status === 401 && window.__nxRevisarSessao) window.__nxRevisarSessao(); }, function() {});
+            }
+          }
+        } catch (e) {}
+        return resposta;
+      };
+      // Sessão revogada pelo servidor: apaga o login deste navegador e volta à tela de login com o motivo (a tela mostra o aviso)
+      window.__nxSessaoRevogada = function(motivo) {
+        if (window.__nxSaindo) return;
+        window.__nxSaindo = true;
+        try { sessionStorage.setItem('nexus_session_expired_reason', motivo || 'invalid'); } catch (e) {}
+        try {
+          ['nexus_session', 'nexus_cached_user', 'nexus_token', 'nexus_auth_token', 'nexus_viewing_user', 'nexus_login_v5', 'glpi_10_session'].forEach(function(k) { localStorage.removeItem(k); });
+          sessionStorage.removeItem('nexus_session_active');
+          sessionStorage.removeItem('nexus_last_activity');
+        } catch (e) {}
+        window.__goToLogin();
+      };
+      var revisandoSessao = false;
+      window.__nxRevisarSessao = function() {
+        if (revisandoSessao || window.__nxSaindo) return;
+        revisandoSessao = true;
+        var confirmar = function(tentativa) {
+          return nativeFetch('/api/auth/session', { headers: { 'Authorization': 'Bearer ' + window.__nxGetToken() }, cache: 'no-store' }).then(function(r) {
+            if (r.status !== 401) return null;   // a sessão segue valendo: aquele 401 foi de outra coisa
+            return r.json().then(function(j) { return j || {}; }, function() { return {}; }).then(function(j) {
+              if (tentativa < 1) return new Promise(function(ok) { setTimeout(ok, 1500); }).then(function() { return confirmar(tentativa + 1); });
+              return j;
+            });
+          });
+        };
+        confirmar(0).then(function(j) { revisandoSessao = false; if (j) window.__nxSessaoRevogada(j.reason); }, function() { revisandoSessao = false; });   // sem rede: não desconecta
       };
     })();
     // Validação estrita: se a página de internet foi fechada e reaberta (sessionStorage vazio), invalida a sessão antiga
@@ -19514,6 +19583,13 @@ if (!window.__subSseInitialized && typeof EventSource !== 'undefined') {
         }
       } catch(err){}
     });
+    // Conta bloqueada, senha redefinida ou conta excluída pelo administrador: o servidor avisa só esta conta e o app volta ao login na hora
+    subEvtSource.addEventListener('session_ended', function(e) {
+      var d = {};
+      try { d = JSON.parse(e.data) || {}; } catch (err) {}
+      try { subEvtSource.close(); } catch (err) {}
+      if (window.__nxSessaoRevogada) window.__nxSessaoRevogada(d.reason || 'blocked');
+    });
     // Bloqueio/estorno e aviso de pagamento: consulta na hora (em vez de esperar o próximo ciclo de 4 s) e atualiza data, hora e rótulos
     ['subscription_revoked', 'subscription_payment_pending'].forEach(function(nomeEvento) {
       subEvtSource.addEventListener(nomeEvento, function(e) {
@@ -35597,7 +35673,7 @@ async function handleNexusRequest(req, res) {
   if (req.method === 'GET' && parsedUrl.pathname === '/api/auth/session') {
     const sessaoUser = getAuthenticatedUser(req);
     if (!sessaoUser) {
-      return sendJson(res, corsHeaders, 401, { success: false, error: 'Sessão inválida ou expirada.' });
+      return sendJson(res, corsHeaders, 401, { success: false, error: 'Sessão inválida ou expirada.', reason: motivoSessaoInvalida(req) });
     }
     const sessaoAdmin = sessaoUser.role === 'Administrador' || isOwnerEmail(sessaoUser.email);
     return sendJson(res, { ...corsHeaders, 'Cache-Control': 'no-store' }, 200, {
@@ -35652,6 +35728,7 @@ async function handleNexusRequest(req, res) {
     recordSystemLog(resetAdmin.name || 'Administrador', resetAdmin.email, 'Redefinição de senha', 'Administração',
       `Administrador redefiniu a senha de ${resetAlvo.name || resetEmail} (${resetEmail})${resetExigirTroca ? ' com troca obrigatória no próximo login' : ' sem exigir troca'}`);
     broadcastEvent('users_updated', { email: resetEmail });
+    encerrarSessoesDaConta(resetEmail, 'password');   // o app aberto com a senha antiga volta ao login agora
     return sendJson(res, { ...corsHeaders, 'Cache-Control': 'no-store' }, 200, {
       success: true,
       email: resetEmail,
@@ -35887,8 +35964,11 @@ async function handleNexusRequest(req, res) {
         listaAtivo.filter(u => u && u.role === 'Administrador' && u.active !== false && u.active !== 0).length <= 1) {
       return sendJson(res, corsHeaders, 403, { success: false, error: 'É necessário manter ao menos um administrador ativo.' });
     }
+    const estavaAtivo = Acesso.ativo(alvoAtivo.active);
     alvoAtivo.active = leituraAtivo.dados.active;
+    if (estavaAtivo !== alvoAtivo.active) Acesso.stamp(alvoAtivo);   // mudança intencional: o carimbo faz o bloqueio valer também no outro servidor (acesso.js)
     saveLocalUsers(listaAtivo);
+    if (!alvoAtivo.active) encerrarSessoesDaConta(ativoEmail, 'blocked');   // quem estava com o app aberto sai agora, não só no próximo F5
     if (pool) {
       try {
         await pool.query('UPDATE usuarios SET active = $1 WHERE LOWER(email) = LOWER($2)', [alvoAtivo.active ? 1 : 0, ativoEmail]);
@@ -35968,6 +36048,7 @@ async function handleNexusRequest(req, res) {
         }
 
         let acceptedUsers = 0;
+        const contasBloqueadasAgora = [];   // contas que passaram de ativas a bloqueadas neste envio: as sessões abertas delas caem ao salvar
         const requestIsInternalSync = hasInternalSyncAccess(req, parsedUrl);
         users.forEach(u => {
           // Cadastro NOVO digitado pelo administrador: se o e-mail era de uma conta excluída, libera-o (a sincronização interna nunca ressuscita contas)
@@ -36033,6 +36114,26 @@ async function handleNexusRequest(req, res) {
               subClock = requestIsInternalSync ? u.subscription_updated_at : undefined;
             }
 
+            // BLOQUEIO DA CONTA (acesso.js), mesma regra da assinatura: cada bloqueio/ativação INTENCIONAL do administrador carimba active_updated_at e entre
+            // duas versões vale o carimbo mais novo. Sem isto o PC reenviava a linha antiga do SQL (active = 1) a cada 10 s e desfazia o bloqueio feito na nuvem.
+            // O navegador do administrador nunca define o carimbo (reenvia a lista que leu): só a sincronização interna traz o dela.
+            let activeFinal; let activeClock;
+            if (existing && requestIsInternalSync) {
+              const pickAct = Acesso.pickActive(existing, u, { noClock: 'incoming' });
+              activeFinal = pickAct.active; activeClock = pickAct.active_updated_at;
+            } else if (existing) {
+              activeFinal = u.active !== undefined ? Acesso.ativo(u.active) : Acesso.ativo(existing.active);
+              activeClock = existing.active_updated_at;
+              if (activeFinal !== Acesso.ativo(existing.active)) {
+                activeClock = Acesso.stamp({ active_updated_at: existing.active_updated_at }).active_updated_at;
+                if (!activeFinal) contasBloqueadasAgora.push(emailKey);
+              }
+            } else {
+              activeFinal = u.active !== undefined ? Acesso.ativo(u.active) : true;
+              activeClock = requestIsInternalSync ? u.active_updated_at : undefined;
+            }
+            if (existing && requestIsInternalSync && Acesso.ativo(existing.active) && !activeFinal) contasBloqueadasAgora.push(emailKey);
+
             const ownerAccount = isOwnerEmail(emailKey);
             userMap.set(emailKey, {
               id: u.id || (existing ? existing.id : Date.now()),
@@ -36041,11 +36142,10 @@ async function handleNexusRequest(req, res) {
               password: finalPassword,
               role: ownerAccount ? 'Administrador' : (u.role || (existing ? existing.role : 'Usuário')),
               // Conta bloqueada é active false/0/'0': tratar só "!== false" reativava bloqueios (0 e '0' viravam true) e
-              // um payload sem o campo zerava o bloqueio. Sem o campo no envio, vale o que já estava gravado.
+              // um payload sem o campo zerava o bloqueio. Sem o campo no envio, vale o que já estava gravado (acima, com o relógio).
               // A conta proprietária nunca pode ficar bloqueada.
-              active: ownerAccount ? true : (u.active !== undefined
-                ? !(u.active === false || u.active === 0 || u.active === '0')
-                : (existing ? !(existing.active === false || existing.active === 0 || existing.active === '0') : true)),
+              active: ownerAccount ? true : activeFinal,
+              active_updated_at: activeClock,
               cpf: u.cpf !== undefined ? u.cpf : (existing ? existing.cpf : null),
               phone: u.phone !== undefined ? u.phone : (existing ? existing.phone : null),
               birth_date: (u.birth_date || u.birthDate) !== undefined ? (u.birth_date || u.birthDate) : (existing ? (existing.birth_date || existing.birthDate) : null),
@@ -36091,6 +36191,7 @@ async function handleNexusRequest(req, res) {
           }
         }
         saveLocalUsers(finalUsers, isOverwrite);
+        contasBloqueadasAgora.forEach(email => { if (!isOwnerEmail(email)) encerrarSessoesDaConta(email, 'blocked'); });   // o app aberto da pessoa bloqueada volta ao login na hora
         if (!requestIsInternalSync) await confirmCredentialsInSupabase(); // cadastro/senha definidos pelo administrador (a sincronização interna não espera)
 
         recordSystemLog('Sistema', 'cadastro@nexusfinanceiro.com', 'Sincronização', 'Usuários', 'Sincronização de usuários salva com sucesso');
@@ -36208,6 +36309,7 @@ async function handleNexusRequest(req, res) {
       removeLocalUser(emailToDelete);
       recordSystemLog(adminUser.name || 'Administrador', adminUser.email, 'Exclusão completa', 'Usuários', 'Cadastro e dados associados removidos permanentemente.');
       broadcastEvent('users_updated', { deleted: true });
+      encerrarSessoesDaConta(emailToDelete, 'deleted');   // quem estava com o app aberto sai agora
       res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
       return res.end(JSON.stringify({ success: true }));
     } catch (err) {
@@ -38634,7 +38736,7 @@ async function syncWithRenderCloud() {
       for (const cu of cloudUsers) {
         if (!cu || !cu.email) continue;
         const cleanEmail = cu.email.toLowerCase().trim();
-        const localCheck = await pool.query('SELECT id, name, cpf, phone, birth_date, last_login, password, trial_started_at, subscription_plan, subscription_status, subscription_expires_at, subscription_method, subscription_payment_id FROM usuarios WHERE LOWER(email) = LOWER($1)', [cleanEmail]);
+        const localCheck = await pool.query('SELECT id, name, cpf, phone, birth_date, last_login, password, active, trial_started_at, subscription_plan, subscription_status, subscription_expires_at, subscription_method, subscription_payment_id FROM usuarios WHERE LOWER(email) = LOWER($1)', [cleanEmail]);
         if (!localCheck.rows || localCheck.rows.length === 0) {
           // Se o usuário foi cadastrado pela web/nuvem (Render), grava diretamente no SQL Server
           const isRealUser = cu.name && cu.name.trim() !== '' && cleanEmail.includes('@');
@@ -38745,6 +38847,32 @@ async function syncWithRenderCloud() {
             }
           } catch (subErr) {
             console.warn('[SYNC ASSINATURA] Falha ao importar a assinatura da nuvem (tenta de novo no próximo ciclo):', subErr.message);
+          }
+
+          // Bloqueio/ativação da conta feitos NA NUVEM (acesso.js): vale o carimbo mais novo. Antes o PC nunca importava o `active` da nuvem e, no passo D,
+          // reenviava o dele (active = 1) com overwrite: o bloqueio feito no site era desfeito em até 10 s e a pessoa voltava a entrar.
+          try {
+            const acLista = getLocalUsers();
+            const acIdx = acLista.findIndex(m => m && String(m.email || '').toLowerCase().trim() === cleanEmail);
+            const acEspelho = acIdx >= 0 ? acLista[acIdx] : null;
+            const noPcAc = (acEspelho && Number.isFinite(Acesso.relogioMs(acEspelho)))
+              ? { active: acEspelho.active, active_updated_at: acEspelho.active_updated_at }
+              : { active: currentU.active };
+            const escAc = Acesso.pickActive(noPcAc, cu, { noClock: 'existing' });
+            if (escAc.source === 'incoming') {
+              const mudouNoSql = Acesso.ativo(currentU.active) !== escAc.active;
+              if (mudouNoSql) {
+                await pool.query('UPDATE usuarios SET active = $1 WHERE LOWER(email) = LOWER($2)', [escAc.active ? 1 : 0, cleanEmail]);
+                console.log(`⚡ [SYNC RENDER -> SQL SERVER] Acesso de ${cleanEmail} ${escAc.active ? 'liberado' : 'BLOQUEADO'} pela nuvem`);
+                if (!escAc.active) encerrarSessoesDaConta(cleanEmail, 'blocked');
+              }
+              if (acEspelho && (mudouNoSql || acEspelho.active_updated_at !== escAc.active_updated_at || Acesso.ativo(acEspelho.active) !== escAc.active)) {
+                Acesso.aplicar(acEspelho, escAc);
+                saveLocalUsers(acLista);
+              }
+            }
+          } catch (acErr) {
+            console.warn('[SYNC ACESSO] Falha ao importar o bloqueio da nuvem (tenta de novo no próximo ciclo):', acErr.message);
           }
 
           // Sincronização automática e contínua do last_login do Render para o SQL Server local (Fuso de Brasília)
@@ -38867,6 +38995,11 @@ async function syncWithRenderCloud() {
         const chave = String(u.email || '').toLowerCase().trim();
         const espelho = subEspelhoPorEmail.get(chave);
         usersToSync.push(BackendUtils.userForCloud(u, getBrasiliaIsoString, passwordClockByEmail.get(chave), espelho));
+        // Bloqueio carimbado no espelho que o SQL ainda não recebeu (o UPDATE falhou ou ainda não chegou): o SQL é reconciliado com o espelho
+        if (espelho && Number.isFinite(Acesso.relogioMs(espelho)) && espelho.active !== undefined && Acesso.ativo(u.active) !== Acesso.ativo(espelho.active)) {
+          await pool.query('UPDATE usuarios SET active = $1 WHERE LOWER(email) = LOWER($2)', [Acesso.ativo(espelho.active) ? 1 : 0, chave])
+            .catch((e) => { console.warn('[SYNC ACESSO] Não foi possível reconciliar o SQL Server com o bloqueio carimbado:', e.message); });
+        }
         // O UPDATE de uma liberação no SQL pode ter falhado ou ainda não ter chegado: o SQL é reconciliado com a mudança carimbada do espelho
         if (espelho && Number.isFinite(Assinatura.relogioMs(espelho))) {
           const noSql = { subscription_status: u.subscription_status, subscription_plan: u.subscription_plan, subscription_expires_at: u.subscription_expires_at ? getBrasiliaIsoString(u.subscription_expires_at) : null, subscription_method: u.subscription_method, subscription_payment_id: u.subscription_payment_id, trial_started_at: u.trial_started_at ? getBrasiliaIsoString(u.trial_started_at) : null };
