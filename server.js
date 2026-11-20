@@ -38435,6 +38435,25 @@ async function handleNexusRequest(req, res) {
     return res.end();
   }
 
+  // SEO: robots.txt e sitemap.xml apontam os robôs do Google para as páginas públicas do site
+  const SITE_BASE_URL = String(process.env.APP_BASE_URL || RENDER_CLOUD_URL || '').replace(/\/$/, '');
+  if (pathname === '/robots.txt') {
+    const robots = 'User-agent: *\nAllow: /\nDisallow: /api/\nDisallow: /admin-site.html\nDisallow: /admin-assinaturas-glpi\nDisallow: /admin-assinaturas-glpi.html\nSitemap: ' + SITE_BASE_URL + '/sitemap.xml\n';
+    return sendTextResponse(res, 200, robots, 'text/plain; charset=utf-8', { ...corsHeaders, 'Cache-Control': 'public, max-age=3600' });
+  }
+  if (pathname === '/sitemap.xml') {
+    const urls = [
+      ['/inicio', '1.0', 'weekly'],
+      ['/login.html', '0.6', 'monthly'],
+      ['/termos.html', '0.3', 'yearly'],
+      ['/privacidade.html', '0.3', 'yearly']
+    ];
+    const xml = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
+      urls.map(function (u) { return '  <url><loc>' + SITE_BASE_URL + u[0] + '</loc><changefreq>' + u[2] + '</changefreq><priority>' + u[1] + '</priority></url>'; }).join('\n') +
+      '\n</urlset>\n';
+    return sendTextResponse(res, 200, xml, 'application/xml; charset=utf-8', { ...corsHeaders, 'Cache-Control': 'public, max-age=3600' });
+  }
+
   if (pathname === '/login' || pathname === '/login.html' || pathname === '/login-nexus-v5.html') {
     const loginPath = path.join(__dirname, 'login-nexus-v5.html');
     if (fs.existsSync(loginPath)) {
