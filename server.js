@@ -36254,15 +36254,16 @@ async function handleNexusRequest(req, res) {
                        subscription_status = COALESCE($11, subscription_status),
                        subscription_plan = COALESCE($12, subscription_plan),
                        subscription_expires_at = COALESCE($13, subscription_expires_at),
-                       trial_started_at = COALESCE($14, trial_started_at)
+                       trial_started_at = COALESCE($14, trial_started_at),
+                       must_change_password = $16
                      WHERE LOWER(email) = LOWER($1);
                    END
                    ELSE
                    BEGIN
-                     INSERT INTO usuarios (name, email, password, role, active, last_login, cpf, phone, birth_date, terms_accepted, device_type, subscription_status, subscription_plan, subscription_expires_at, trial_started_at)
-                     VALUES ($2, $1, $3, $4, $15, $5, $6, $7, $8, $9, $10, COALESCE($11, 'trial'), $12, $13, $14);
+                     INSERT INTO usuarios (name, email, password, role, active, last_login, cpf, phone, birth_date, terms_accepted, device_type, subscription_status, subscription_plan, subscription_expires_at, trial_started_at, must_change_password)
+                     VALUES ($2, $1, $3, $4, $15, $5, $6, $7, $8, $9, $10, COALESCE($11, 'trial'), $12, $13, $14, $16);
                    END;`,
-                  [uEmail, u.name.trim(), u.password || '', u.role || 'Usuário', sqlLastLogin, u.cpf || null, u.phone || null, u.birth_date || null, u.terms_accepted !== false ? 1 : 0, u.device_type || 'Computador', u.subscription_status || null, u.subscription_plan || null, sqlSubExpires, sqlTrialStarted, u.active === false ? 0 : 1]
+                  [uEmail, u.name.trim(), u.password || '', u.role || 'Usuário', sqlLastLogin, u.cpf || null, u.phone || null, u.birth_date || null, u.terms_accepted !== false ? 1 : 0, u.device_type || 'Computador', u.subscription_status || null, u.subscription_plan || null, sqlSubExpires, sqlTrialStarted, u.active === false ? 0 : 1, (u.must_change_password === 1 || u.must_change_password === true || u.must_change_password === '1') ? 1 : 0]
                 );
 
                 // Garante que todo novo usuário cadastrado tenha dados financeiros 100% zerados
