@@ -38274,8 +38274,10 @@ async function handleNexusRequest(req, res) {
     '/privacidade.html': 'text/html; charset=utf-8'
   };
   let staticFile = null;
-  if (STATIC_EXACT_FILES[pathname]) {
-    staticFile = { filePath: path.join(__dirname, pathname.slice(1)), contentType: STATIC_EXACT_FILES[pathname], isImage: false };
+  // /admin-assinaturas-glpi (sem .html) é o endereço público do painel do administrador: serve o mesmo arquivo
+  const staticPathname = pathname === '/admin-assinaturas-glpi' ? '/admin-assinaturas-glpi.html' : pathname;
+  if (STATIC_EXACT_FILES[staticPathname]) {
+    staticFile = { filePath: path.join(__dirname, staticPathname.slice(1)), contentType: STATIC_EXACT_FILES[staticPathname], isImage: false };
   } else if (pathname.startsWith('/images/')) {
     let relativePath = null;
     try { relativePath = decodeURIComponent(pathname.slice(1)); } catch (e) {}

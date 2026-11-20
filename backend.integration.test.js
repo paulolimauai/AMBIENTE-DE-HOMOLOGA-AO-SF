@@ -169,6 +169,19 @@ test('sessão única: telas e script compartilhado são servidos e o login só d
   assert.ok(!/id="lf"|id="demo"|paulolp0101@gmail\.com"\s*>|type="password"/.test(painel), 'painel do admin não tem login próprio');
   assert.ok(painel.includes('/nexus-sso.js') && painel.includes('NexusSSO.exigirAdmin'), 'painel usa o porteiro compartilhado');
   assert.ok((await api('GET', '/admin-site.html')).texto.includes('/nexus-sso.js'));
+  // O painel do administrador tem endereço limpo (/admin-assinaturas-glpi) e é ele que o site e o login oferecem;
+  // o editor de arquivos do site (/admin-site.html) não tem mais link público.
+  const limpo = await api('GET', '/admin-assinaturas-glpi');
+  assert.equal(limpo.status, 200, 'endereço sem .html');
+  assert.ok((limpo.headers.get('content-type') || '').includes('html'));
+  assert.equal(limpo.texto, painel, 'o endereço limpo serve o mesmo painel');
+  assert.notEqual((await api('GET', '/admin-assinaturas-glpi/outra-coisa')).texto, painel, 'o alias não vale para subcaminhos');
+  const inicio = (await api('GET', '/inicio')).texto;
+  assert.ok(/<a href="\/admin-assinaturas-glpi">Área do Administrador<\/a>/.test(inicio), 'rodapé do /inicio aponta para o painel do administrador');
+  assert.ok(!/admin-site\.html/.test(inicio), '/inicio não aponta mais para o editor do site');
+  const loginPagina = (await api('GET', '/login.html')).texto;
+  assert.ok(/href="\/admin-assinaturas-glpi">Área do administrador</.test(loginPagina), 'rodapé do login aponta para o painel');
+  assert.ok(!/class="voltar" href="\/admin-site\.html"/.test(loginPagina));
   // o login só aceita voltar para uma lista fechada de telas (nada de redirecionamento aberto)
   const loginHtml = (await api('GET', '/login.html')).texto;
   assert.ok(loginHtml.includes('DESTINOS_OK'), 'login tem a lista fechada de destinos');
