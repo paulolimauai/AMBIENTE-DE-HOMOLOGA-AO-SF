@@ -72,7 +72,7 @@ test.before(async () => {
   const seed = { 'local_users.json': usuarios, 'local_users.backup.json': usuarios, 'deleted_accounts.json': [], 'local_database_data.json': {}, 'local_database_data.backup.json': {}, 'cpf_registry.json': {}, 'cpf_registry.backup.json': {}, 'local_ordens_servico.json': [], 'local_tecnicos.json': [], 'local_filas.json': require('./atendimento').filasIniciais(), 'pending_logins.json': [], 'system_logs.json': [] };
   for (const [nome, conteudo] of Object.entries(seed)) fs.writeFileSync(path.join(pasta, nome), JSON.stringify(conteudo, null, 2));
   porta = await portaLivre();
-  const env = { ...process.env, PORT: String(porta), NEXUS_DATA_DIR: pasta, NEXUS_DISABLE_DB: '1', NEXUS_COBRANCA_AUTO: '0', JWT_SECRET, NEXUS_SYNC_TOKEN: SYNC_TOKEN, RENDER_CLOUD_URL: 'https://127.0.0.1:9', TRUST_PROXY: '1' };
+  const env = { ...process.env, PORT: String(porta), NEXUS_DATA_DIR: pasta, NEXUS_DEPOIMENTOS_FILE: path.join(pasta, 'depoimentos.json'), NEXUS_DISABLE_DB: '1', NEXUS_COBRANCA_AUTO: '0', JWT_SECRET, NEXUS_SYNC_TOKEN: SYNC_TOKEN, RENDER_CLOUD_URL: 'https://127.0.0.1:9', TRUST_PROXY: '1' };
   delete env.RENDER; delete env.IS_RENDER; delete env.NEXUS_ALLOW_DB_RESET;
   proc = spawn(process.execPath, ['server.js'], { cwd: __dirname, env, stdio: ['ignore', 'pipe', 'pipe'] });
   proc.stdout.on('data', (d) => { logSaida += d.toString(); });
@@ -745,6 +745,38 @@ test('site inicial profissional: endereço canônico no domínio próprio, image
   const versionado = await api('GET', '/site-inicial.css?v=123');
   assert.match(versionado.headers.get('cache-control'), /max-age=31536000.*immutable/);
   assert.equal((await api('GET', '/site-inicial.css')).headers.get('cache-control'), 'no-cache');
+});
+
+test('depoimentos do site: só relatos reais e autorizados aparecem; sem nenhum, a seção não existe; nada é inventado', async () => {
+  // o arquivo que vai para o ar nunca traz item sem autorização (e hoje nenhum é de mentira: só entra o que o usuário passar)
+  const doProjeto = JSON.parse(fs.readFileSync(path.join(__dirname, 'depoimentos.json'), 'utf8'));
+  assert.ok(Array.isArray(doProjeto.depoimentos));
+  for (const d of doProjeto.depoimentos) assert.equal(d.autorizado, true, 'depoimento sem autorização no arquivo do projeto: ' + JSON.stringify(d).slice(0, 80));
+
+  const arquivo = path.join(pasta, 'depoimentos.json');
+  try { fs.unlinkSync(arquivo); } catch (e) { /* ainda não existe */ }
+  const vazio = (await api('GET', '/inicio')).texto;
+  assert.ok(!vazio.includes('id="depoimentos"') && !vazio.includes('%%'), 'sem depoimentos a seção não existe');
+
+  fs.writeFileSync(arquivo, JSON.stringify({ depoimentos: [
+    { nome: 'Ana Teste', perfil: 'Perfil de teste', texto: 'Texto de teste do layout <script>alert(1)</script> custa R$ 18 e $& fica literal.', nota: 5, autorizado: true },
+    { nome: 'Sem Autorizacao', texto: 'Este texto tem tamanho suficiente, mas não foi autorizado.', autorizado: false },
+    { nome: 'Sem Campo', texto: 'Este texto tem tamanho suficiente, mas falta o campo autorizado.' },
+    { nome: 'Curto', texto: 'curto demais', autorizado: true },
+    { nome: 'Bia Teste', texto: 'Segundo texto de teste do layout, sem nota e sem perfil informado.', autorizado: true }
+  ] }));
+  const cheio = (await api('GET', '/inicio')).texto;
+  assert.ok(cheio.includes('id="depoimentos"'), 'com depoimentos autorizados a seção aparece');
+  assert.equal((cheio.match(/class="card dep rv"/g) || []).length, 2, 'só os 2 válidos e autorizados');
+  assert.ok(!cheio.includes('Sem Autorizacao') && !cheio.includes('Sem Campo') && !cheio.includes('>Curto<'));
+  assert.ok(!cheio.includes('<script>alert(1)</script>') && cheio.includes('&lt;script&gt;alert(1)&lt;/script&gt;'), 'texto escapado');
+  assert.ok(cheio.includes('custa R$ 18 e $&amp; fica literal'), '"$&" não pode ser interpretado na troca');
+  assert.equal((cheio.match(/aria-label="Nota 5 de 5"/g) || []).length, 1, 'estrelas só para quem tem nota');
+  assert.ok(!/AggregateRating|"@type":"Review"/.test(cheio), 'sem marcação de avaliação para o Google');
+  assert.ok(!cheio.includes('%%'));
+
+  fs.unlinkSync(arquivo);
+  assert.ok(!(await api('GET', '/inicio')).texto.includes('id="depoimentos"'), 'apagando o arquivo, a seção some de novo');
 });
 
 test('arquivo de dados ilegível vai para a quarentena e o backup é usado: as outras contas não são apagadas', async () => {

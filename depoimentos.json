@@ -1,0 +1,4 @@
+{
+  "_regras": "Publique SOMENTE depoimentos reais, de pessoas que usam o Nexus e autorizaram a publicação do texto e do nome. Nunca invente nem mude o sentido do que a pessoa escreveu. Cada item precisa de: nome (ex.: Maria S.), texto (de 20 a 400 caracteres) e autorizado: true. Opcionais: perfil (ex.: Autônoma, Goiânia) e nota (1 a 5, só se a própria pessoa deu essa nota). Itens sem autorizado: true são ignorados. Máximo de 6 no site. Enquanto a lista estiver vazia, a seção Depoimentos não aparece.",
+  "depoimentos": []
+}

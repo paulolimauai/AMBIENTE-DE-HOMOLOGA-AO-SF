@@ -535,6 +535,17 @@ h1 em{font-style:normal;background:linear-gradient(100deg,var(--accent),var(--br
 .rod-leg a{display:inline-block;padding:.45rem 0;font-size:1rem;font-weight:600;color:var(--soft);text-decoration:none;transition:color .2s}
 .rod-leg a:hover{color:var(--white);text-decoration:underline;text-underline-offset:.2em}
 @media (max-width:700px){.rod-base{flex-direction:column;align-items:center;text-align:center}.rodape .rod-base .copy{text-align:center}.rod-leg{justify-content:center}}
+/* ---------- depoimentos: a seção só existe quando há relatos reais e autorizados em depoimentos.json ---------- */
+.dep-g{display:grid;grid-template-columns:minmax(0,1fr);gap:1rem}
+@media (min-width:760px){.dep-g{grid-template-columns:repeat(auto-fit,minmax(19rem,1fr))}}
+.dep-g.dep-1{max-width:44rem;margin-inline:auto}
+.dep{display:flex;flex-direction:column;gap:.85rem;padding:1.4rem 1.5rem}
+.dep-st{font-size:1.15rem;letter-spacing:.12em;line-height:1;color:var(--warn)}
+.dep-st span{opacity:.45}
+.dep blockquote p{font-size:1.05rem;line-height:1.65;color:var(--text);text-wrap:pretty}
+.dep footer{margin-top:auto;display:flex;flex-direction:column;gap:.1rem;padding-top:.9rem;border-top:1px solid var(--card-line)}
+.dep footer b{color:var(--white);font-size:1rem}
+.dep footer span{color:var(--muted);font-size:1rem}
 /* celular e telas de toque: alvos de pelo menos 44 px (categorias da Central, logotipo, links do rodapé) */
 @media (pointer:coarse),(max-width:700px){.cat{min-height:44px}.logo{min-height:44px}.rodape ul a,.rod-leg a{padding-block:.7rem}.sw{width:44px}.sws,.pers .sws{grid-template-columns:repeat(auto-fill,44px);gap:.5rem .6rem;justify-content:start}}
 

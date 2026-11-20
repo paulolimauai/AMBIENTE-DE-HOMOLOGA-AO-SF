@@ -773,6 +773,36 @@ function escapeHtmlText(value) {
   return String(value == null ? '' : value).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
 }
 
+// Depoimentos do site inicial: SÓ entram relatos reais e autorizados, lidos de depoimentos.json (autorizado: true).
+// Sem nenhum, a seção inteira some da página. Nada é inventado nem preenchido por padrão.
+function depoimentosArquivo() { return process.env.NEXUS_DEPOIMENTOS_FILE || path.join(__dirname, 'depoimentos.json'); }
+function lerDepoimentos() {
+  let bruto;
+  try { bruto = JSON.parse(fs.readFileSync(depoimentosArquivo(), 'utf8')); } catch (e) { return []; }
+  const lista = Array.isArray(bruto) ? bruto : (bruto && Array.isArray(bruto.depoimentos) ? bruto.depoimentos : []);
+  return lista
+    .filter((d) => d && d.autorizado === true && typeof d.nome === 'string' && d.nome.trim() && typeof d.texto === 'string')
+    .map((d) => ({
+      nome: d.nome.trim().replace(/%%/g, '%').slice(0, 60),
+      perfil: String(d.perfil || '').trim().replace(/%%/g, '%').slice(0, 80),
+      texto: d.texto.trim().replace(/%%/g, '%'),
+      nota: Number.isInteger(d.nota) && d.nota >= 1 && d.nota <= 5 ? d.nota : 0
+    }))
+    .filter((d) => d.texto.length >= 20 && d.texto.length <= 400)
+    .slice(0, 6);
+}
+function montarDepoimentosHtml() {
+  const itens = lerDepoimentos();
+  if (!itens.length) return '';
+  const cartoes = itens.map((d, i) => '<li class="card dep rv" style="--d:' + (i * 0.06).toFixed(2) + 's">' +
+    (d.nota ? '<div class="dep-st" role="img" aria-label="Nota ' + d.nota + ' de 5">' + '★'.repeat(d.nota) + '<span aria-hidden="true">' + '☆'.repeat(5 - d.nota) + '</span></div>' : '') +
+    '<blockquote><p>“' + escapeHtmlText(d.texto) + '”</p></blockquote>' +
+    '<footer><b>' + escapeHtmlText(d.nome) + '</b>' + (d.perfil ? '<span>' + escapeHtmlText(d.perfil) + '</span>' : '') + '</footer></li>').join('');
+  return '<!-- ===== Depoimentos (reais e autorizados) ===== -->\n  <section class="sec" id="depoimentos" aria-labelledby="h-dep">\n    <div class="wrap">\n' +
+    '      <div class="sec-head rv"><span class="kicker">Depoimentos</span><h2 id="h-dep">O que os clientes dizem</h2><p class="lead">Relatos de pessoas que usam o Nexus e autorizaram a publicação.</p></div>\n' +
+    '      <ul class="dep-g' + (itens.length === 1 ? ' dep-1' : '') + '">' + cartoes + '</ul>\n    </div>\n  </section>\n\n  ';
+}
+
 // Os textos dos dados financeiros (descrições, nomes de conta/categoria/meta...) são exibidos como HTML pelo app.
 // Sem isto, quem gravasse "<img src=x onerror=...>" em qualquer um desses campos executava script no navegador de
 // quem abrisse os dados (inclusive o administrador no Modo Espelho). Troca < > " por caracteres tipográficos equivalentes.
@@ -38516,7 +38546,9 @@ async function handleNexusRequest(req, res) {
       const versaoDe = (nome) => { try { return String(Math.floor(fs.statSync(path.join(__dirname, nome)).mtimeMs)); } catch (e) { return '0'; } };
       const vCss = versaoDe('site-inicial.css');
       const vJs = versaoDe('site-inicial.js');
-      const siteKey = sitePath + '|' + SUBSCRIPTION_MONTHLY_LABEL + '|' + vCss + '|' + vJs;
+      let vDep = '0';
+      try { vDep = String(Math.floor(fs.statSync(depoimentosArquivo()).mtimeMs)); } catch (e) {}
+      const siteKey = sitePath + '|' + SUBSCRIPTION_MONTHLY_LABEL + '|' + vCss + '|' + vJs + '|' + vDep;
       const cached = fileCache.get(siteKey);
       let siteHtml = cached && cached.mtimeMs === stat.mtimeMs ? cached.body : null;
       if (!siteHtml) {
@@ -38528,7 +38560,9 @@ async function handleNexusRequest(req, res) {
           .replace(/%%SITE_URL%%/g, SITE_BASE_URL)
           .replace(/%%PRECO_LABEL%%/g, SUBSCRIPTION_MONTHLY_LABEL)
           .replace(/%%PRECO_INT%%/g, SUBSCRIPTION_MONTHLY_INT)
-          .replace(/%%PRECO_CENTS%%/g, SUBSCRIPTION_MONTHLY_CENTS), 'utf8');
+          .replace(/%%PRECO_CENTS%%/g, SUBSCRIPTION_MONTHLY_CENTS)
+          // por último e com função: o texto do depoimento nunca passa por outra troca nem interpreta "$&" ou "$1"
+          .replace(/%%DEPOIMENTOS%%/g, () => montarDepoimentosHtml()), 'utf8');
         fileCache.set(siteKey, { mtimeMs: stat.mtimeMs, body: siteHtml });
       }
       return sendTextResponse(res, 200, siteHtml, 'text/html; charset=utf-8', { ...corsHeaders, 'Cache-Control': 'no-cache, must-revalidate' });
