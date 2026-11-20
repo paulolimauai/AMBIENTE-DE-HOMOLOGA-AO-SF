@@ -6755,15 +6755,10 @@ body:has(#authPage) {
    ajustadas à largura disponível — sem quebras abruptas entre breakpoints.
    ========================================================================== */
 
-/* 1) Menu lateral proporcional: em notebooks (861-1279px) fica um pouco mais
-   estreito que o piso antigo de 280px, devolvendo ~40-50px de área útil ao
-   conteúdo. Em monitores grandes continua no teto de 344px (inalterado). */
-@media (min-width: 861px) {
-  html.user-logged-in { --nx-sidebar-w: clamp(236px, 20vw, 344px) !important; }
-}
-@media (min-width: 861px) and (max-width: 1279px) {
-  html.user-logged-in { --nx-sidebar-w: 236px !important; }
-}
+/* 1) Menu lateral proporcional: ver o bloco @layer nx-shell no fim do arquivo
+   (a variável --nx-sidebar-w vive dentro de @layer, então o override precisa
+   entrar na mesma layer para vencer). Em notebooks (861-1279px) o menu fica
+   com 236px fixos; acima disso usa clamp(236px, 20vw, 344px). */
 
 /* 2) Indicadores (KPIs) do painel: entre 1181px e 1450px (faixa dos notebooks)
    passam a usar auto-fit — cabem 4-5 cartões por fileira conforme o espaço,
@@ -6776,4 +6771,19 @@ body:has(#authPage) {
    nas bordas quando o menu está aberto. */
 @media (min-width: 1181px) and (max-width: 1450px) {
   #pageContent { padding-inline: clamp(18px, 2vw, 32px) !important; }
+}
+
+/* A variável --nx-sidebar-w e as regras de largura do menu vivem dentro de
+   @layer nx-shell (nexus-shell.css). Para sobrescrever é preciso entrar na
+   MESMA layer: regras posteriores na mesma layer vencem as anteriores. */
+@layer nx-shell {
+  @media (min-width: 861px) {
+    html.user-logged-in { --nx-sidebar-w: clamp(236px, 20vw, 344px) !important; }
+    html.user-logged-in:not(.sidebar-collapsed) body:not(.sidebar-collapsed) nav.menu.sidebar-menu,
+    html.user-logged-in:not(.sidebar-collapsed) body:not(.sidebar-collapsed) aside.menu.sidebar-menu { width: var(--nx-sidebar-w) !important; }
+    html.user-logged-in:not(.sidebar-collapsed) body:not(.sidebar-collapsed) .main { margin-left: var(--nx-sidebar-w) !important; width: calc(100% - var(--nx-sidebar-w)) !important; }
+  }
+  @media (min-width: 861px) and (max-width: 1279px) {
+    html.user-logged-in { --nx-sidebar-w: 236px !important; }
+  }
 }
