@@ -279,7 +279,7 @@ html.user-logged-in #mobileDrawer .mobile-drawer-avatar {
 }
 html.user-logged-in #mobileDrawer .mobile-drawer-avatar img { width: 100% !important; height: 100% !important; object-fit: cover !important; display: block !important; }
 html.user-logged-in #mobileDrawer .mobile-drawer-user-copy { display: flex !important; flex-direction: column !important; align-items: center !important; flex: 1 1 auto !important; min-width: 0 !important; gap: 1px !important; text-align: center !important; }
-html.user-logged-in #mobileDrawer .mobile-drawer-user-copy strong { max-width: 100% !important; font-size: 15px !important; font-weight: 700 !important; color: #fff !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; }
+html.user-logged-in #mobileDrawer .mobile-drawer-user-copy strong { max-width: 100% !important; font-size: 14px !important; font-weight: 700 !important; color: #fff !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; }
 /* Plano em badge discreta (igual à do menu lateral); sem texto (antes do syncDrawerAccount) a badge some, sem "pílula vazia" */
 html.user-logged-in #mobileDrawer .mobile-drawer-user-copy small {
   display: inline-flex !important;
@@ -361,7 +361,7 @@ html.user-logged-in #mobileDrawer .mobile-drawer-nav button.menu-btn-admin {
   box-shadow: none !important;
   color: var(--nx-sh-ink-2) !important;
   text-align: center !important;
-  font-size: 15px !important;
+  font-size: 14px !important;
   font-weight: 600 !important;
   letter-spacing: 0 !important;
   transition: background-color .16s ease, border-color .16s ease !important;
@@ -425,7 +425,7 @@ html.user-logged-in #mobileDrawer #mobileDrawerLogoutBtn {
   background: rgba(239, 68, 68, .14) !important;
   border: 1px solid rgba(248, 113, 113, .38) !important;
   color: #FECACA !important;
-  font-size: 14.5px !important;
+  font-size: 14px !important;
   font-weight: 700 !important;
   box-shadow: none !important;
 }
@@ -756,10 +756,10 @@ html.nexus-farewell #authPage { display: none !important; }
    Só vale para o administrador (html.is-admin); o usuário comum mantém a barra de antes.
    ===================================================================================== */
 html.user-logged-in.is-admin { --nx-tb: 48px; --nx-tb-ic: 22px; --nx-tb-fs: 14px; }
-html.user-logged-in.is-admin[data-top-ic="normal"] { --nx-tb: 40px; --nx-tb-ic: 18px; --nx-tb-fs: 13px; }
-html.user-logged-in.is-admin[data-top-ic="extra"] { --nx-tb: 56px; --nx-tb-ic: 26px; --nx-tb-fs: 15px; }
+html.user-logged-in.is-admin[data-top-ic="normal"] { --nx-tb: 40px; --nx-tb-ic: 18px; --nx-tb-fs: 14px; }
+html.user-logged-in.is-admin[data-top-ic="extra"] { --nx-tb: 56px; --nx-tb-ic: 26px; --nx-tb-fs: 14px; }
 @media (max-width: 860px) {
-  html.user-logged-in.is-admin[data-top-ic] { --nx-tb: 44px; --nx-tb-ic: 20px; --nx-tb-fs: 13px; }
+  html.user-logged-in.is-admin[data-top-ic] { --nx-tb: 44px; --nx-tb-ic: 20px; --nx-tb-fs: 14px; }
 }
 @media (min-width: 481px) and (max-width: 860px) {
   html.user-logged-in.is-admin[data-top-ic="extra"] { --nx-tb: 48px; --nx-tb-ic: 22px; }

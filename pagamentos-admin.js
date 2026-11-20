@@ -493,7 +493,7 @@
   /* ---- documentos para imprimir ---- */
   function docBase(titulo, corpo) {
     return '<!doctype html><html lang="pt-BR"><meta charset="utf-8"><title>' + esc(titulo) + '</title>' +
-      '<style>body{font:15px Arial,sans-serif;color:#172033;max-width:760px;margin:32px auto;padding:24px}header{border-bottom:2px solid #059669;padding-bottom:14px}h1{font-size:24px;margin:0 0 6px}small{color:#64748b}.box{border:1px solid #cbd5e1;border-radius:12px;padding:18px;margin:18px 0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.qr{width:220px;height:220px}.code{font:12px monospace;word-break:break-all;background:#f1f5f9;padding:12px;border-radius:8px}.note{color:#92400e;background:#fffbeb;border:1px solid #fcd34d;padding:12px;border-radius:8px}button{font:inherit;padding:8px 14px;cursor:pointer}@media print{button{display:none}body{margin:0 auto}}</style>' +
+      '<style>body{font:14px Arial,sans-serif;color:#172033;max-width:760px;margin:32px auto;padding:24px}header{border-bottom:2px solid #059669;padding-bottom:14px}h1{font-size:24px;margin:0 0 6px}small{color:#64748b}.box{border:1px solid #cbd5e1;border-radius:12px;padding:18px;margin:18px 0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.qr{width:220px;height:220px}.code{font:14px monospace;word-break:break-all;background:#f1f5f9;padding:12px;border-radius:8px}.note{color:#92400e;background:#fffbeb;border:1px solid #fcd34d;padding:12px;border-radius:8px}button{font:inherit;padding:8px 14px;cursor:pointer}@media print{button{display:none}body{margin:0 auto}}</style>' +
       '<body>' + corpo + '<p><button onclick="window.print()">Imprimir / salvar em PDF</button></p></body></html>';
   }
   function cobrancaDocumento(res, origem) {

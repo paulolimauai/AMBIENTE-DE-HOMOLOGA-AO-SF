@@ -43,7 +43,7 @@
 .adm-tab {
   display: inline-flex !important; align-items: center !important; gap: 10px !important; flex: 0 0 auto !important;
   height: 44px !important; padding: 0 16px !important; border-radius: 13px !important; border: 1px solid transparent !important;
-  background: transparent !important; color: var(--adm-ink2) !important; font: inherit !important; font-size: 14.5px !important; font-weight: 650 !important; letter-spacing: .005em !important;
+  background: transparent !important; color: var(--adm-ink2) !important; font: inherit !important; font-size: 14px !important; font-weight: 650 !important; letter-spacing: .005em !important;
   cursor: pointer !important; white-space: nowrap !important; transition: background-color .15s ease, color .15s ease, border-color .15s ease !important;
 }
 .adm-tab:hover { background: var(--adm-wash) !important; color: #fff !important; }
@@ -171,7 +171,7 @@
 /* ---------- telas Pagamentos e Auditoria dentro do painel: painéis, tabelas, filtros e botões com a mesma cara ---------- */
 .adm-corpo .table-panel { margin: 0 0 14px !important; padding: 14px 16px !important; border-radius: 16px !important; border: 1px solid var(--adm-line) !important; background: var(--adm-panel) !important; overflow: auto !important; }
 .adm-corpo .table-panel .panel-head { display: flex !important; align-items: center !important; justify-content: space-between !important; gap: 10px !important; flex-wrap: wrap !important; margin: 0 0 12px !important; }
-.adm-corpo .table-panel .panel-head h3 { margin: 0 !important; font-size: 16px !important; font-weight: 800 !important; color: #fff !important; }
+.adm-corpo .table-panel .panel-head h3 { margin: 0 !important; font-size: 14px !important; font-weight: 800 !important; color: #fff !important; }
 .adm-corpo .table-panel .tag { display: inline-flex !important; align-items: center !important; height: 26px !important; padding: 0 11px !important; border-radius: 999px !important; border: 1px solid rgba(var(--adm-acc), .5) !important; background: rgba(var(--adm-acc), .14) !important; color: #FDE68A !important; font-size: 14px !important; font-weight: 800 !important; cursor: default !important; }
 .adm-corpo .table-panel p { color: var(--adm-ink2) !important; }
 .adm-corpo .admin-toolbar-panel { display: flex !important; align-items: center !important; gap: 10px !important; flex-wrap: wrap !important; margin: 0 0 14px !important; padding: 12px !important; border-radius: 16px !important; border: 1px solid var(--adm-line) !important; background: var(--adm-panel) !important; }
@@ -208,7 +208,7 @@
 }
 .adm-busca:focus-within { border-color: rgba(var(--adm-acc), .8) !important; box-shadow: 0 0 0 3px rgba(var(--adm-acc), .18) !important; }
 .adm-busca svg { width: 18px !important; height: 18px !important; flex: 0 0 auto !important; }
-.adm-busca input { flex: 1 1 auto !important; min-width: 0 !important; height: 100% !important; padding: 0 !important; border: 0 !important; background: transparent !important; color: var(--adm-ink) !important; font: inherit !important; font-size: 14.5px !important; outline: 0 !important; box-shadow: none !important; }
+.adm-busca input { flex: 1 1 auto !important; min-width: 0 !important; height: 100% !important; padding: 0 !important; border: 0 !important; background: transparent !important; color: var(--adm-ink) !important; font: inherit !important; font-size: 14px !important; outline: 0 !important; box-shadow: none !important; }
 .adm-busca input::placeholder { color: var(--adm-mut) !important; opacity: 1 !important; }
 .adm-busca kbd { padding: 1px 7px !important; border-radius: 6px !important; border: 1px solid var(--adm-line) !important; background: var(--adm-wash) !important; color: var(--adm-mut) !important; font: inherit !important; font-size: 14px !important; }
 /* "x" que limpa só a busca (aparece com texto; o atalho "/" some enquanto ele está lá) */
@@ -309,7 +309,7 @@
 .adm-tabela thead .adm-c-sel { padding: 0 0 0 14px !important; }
 .adm-tit { display: flex !important; align-items: center !important; gap: 12px !important; min-width: 0 !important; }
 .adm-tit-t { min-width: 0 !important; flex: 1 1 auto !important; }
-.adm-nome { display: block !important; max-width: 100% !important; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; font-size: 14.5px !important; font-weight: 750 !important; color: #fff !important; }
+.adm-nome { display: block !important; max-width: 100% !important; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; font-size: 14px !important; font-weight: 750 !important; color: #fff !important; }
 .adm-mail { display: block !important; max-width: 100% !important; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; font-size: 14px !important; color: var(--adm-ink) !important; }
 .adm-c-acc b { display: block !important; font-size: 14px !important; font-weight: 700 !important; color: var(--adm-ink) !important; }
 .adm-acoes { display: inline-flex !important; align-items: center !important; justify-content: flex-end !important; gap: 6px !important; }

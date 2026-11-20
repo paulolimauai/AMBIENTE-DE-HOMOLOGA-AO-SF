@@ -1524,7 +1524,7 @@ function sendPasswordEmail(toEmail, userName, userPassword) {
               '  <div style="text-align: center; margin: 25px 0;">',
               `    <span style="font-size: 24px; font-weight: bold; color: #e8b04b; background: #141821; padding: 10px 20px; border-radius: 8px; border: 1px solid #1f2530;">${userPassword}</span>`,
               '  </div>',
-              '  <p style="font-size: 12px; color: #8a93a3;">Se você não solicitou este e-mail, recomendamos alterar sua senha após realizar o login.</p>',
+              '  <p style="font-size: 14px; color: #8a93a3;">Se você não solicitou este e-mail, recomendamos alterar sua senha após realizar o login.</p>',
               '</div>',
               '.'
             ].join('\r\n');
@@ -2989,7 +2989,7 @@ html:not(.is-admin) aside.menu.sidebar-menu .sidebar-action-wrap {
   display: flex;
   align-items: center;
   gap: 5px;
-  font-size: 10.5px;
+  font-size: 14px;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -3000,7 +3000,7 @@ html:not(.is-admin) aside.menu.sidebar-menu .sidebar-action-wrap {
 .reception-form-grid select {
   height: 36px !important;
   border-radius: 9px !important;
-  font-size: 12.5px !important;
+  font-size: 14px !important;
   border: 1px solid var(--card-border) !important;
   background: var(--input-bg) !important;
   color: var(--text) !important;
@@ -3011,7 +3011,7 @@ html:not(.is-admin) aside.menu.sidebar-menu .sidebar-action-wrap {
 }
 .reception-form-grid textarea {
   border-radius: 9px !important;
-  font-size: 12.5px !important;
+  font-size: 14px !important;
   border: 1px solid var(--card-border) !important;
   background: var(--input-bg) !important;
   color: var(--text) !important;
@@ -3047,7 +3047,7 @@ html:not(.is-admin) aside.menu.sidebar-menu .sidebar-action-wrap {
   justify-content: center;
   padding: 1px 6px;
   border-radius: 999px;
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 900;
   background: #EF4444;
   color: #FFFFFF;
@@ -3083,7 +3083,7 @@ html.is-admin .menu-section-admin {
   margin-bottom: 2px !important;
 }
 html.is-admin .menu-section-admin .menu-section-title {
-  font-size: 10px !important;
+  font-size: 14px !important;
   font-weight: 800 !important;
   letter-spacing: 0.09em !important;
   color: #FBBF24 !important;
@@ -3182,7 +3182,7 @@ html.is-admin #mobileDrawerLogsBtn .ic {
   gap: 2px !important;
 }
 .admin-menu-field-body .label {
-  font-size: 12.5px !important;
+  font-size: 14px !important;
   font-weight: 700 !important;
   line-height: 1.15 !important;
   color: #F8FAFC !important;
@@ -3191,7 +3191,7 @@ html.is-admin #mobileDrawerLogsBtn .ic {
   text-overflow: ellipsis !important;
 }
 .admin-menu-field-body .sub-label {
-  font-size: 10px !important;
+  font-size: 14px !important;
   font-weight: 500 !important;
   line-height: 1.1 !important;
   color: #94A3B8 !important;
@@ -3207,7 +3207,7 @@ html.is-admin #mobileDrawerLogsBtn .ic {
   height: 19px !important;
   line-height: 19px !important;
   border-radius: 6px !important;
-  font-size: 10px !important;
+  font-size: 14px !important;
   font-weight: 800 !important;
   background: rgba(255, 255, 255, 0.08) !important;
   color: #E2E8F0 !important;
@@ -3235,7 +3235,7 @@ html.is-admin .menu button.menu-btn-admin.active .admin-menu-count-pill {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
 }
 .admin-sidebar-summary-title {
-  font-size: 9.5px !important;
+  font-size: 14px !important;
   font-weight: 800 !important;
   text-transform: uppercase !important;
   letter-spacing: 0.07em !important;
@@ -3248,7 +3248,7 @@ html.is-admin .menu button.menu-btn-admin.active .admin-menu-count-pill {
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
-  font-size: 11px !important;
+  font-size: 14px !important;
   color: #CBD5E1 !important;
   padding: 4px 7px !important;
   border-radius: 7px !important;
@@ -3336,7 +3336,7 @@ html.is-admin #menuOrdensBtn #osBadgeCount,
   height: 19px !important;
   line-height: 19px !important;
   border-radius: 6px !important;
-  font-size: 10px !important;
+  font-size: 14px !important;
   font-weight: 900 !important;
   background: #EF4444 !important;
   color: #FFFFFF !important;
@@ -3607,7 +3607,7 @@ button, input, select, textarea {
   font-family: inherit;
   color: inherit;
 }
-code{background:var(--hover); padding:1px 6px; border-radius:5px; font-size:11.5px;}
+code{background:var(--hover); padding:1px 6px; border-radius:5px; font-size:14px;}
 
 /* ==================== Estabilidade de Renderização para Screenshot & Print ==================== */
 * {
@@ -4021,7 +4021,7 @@ body.light .auth-grid {
   background: linear-gradient(135deg, rgba(3, 8, 20, 0.88) 0%, rgba(37, 99, 235, 0.28) 100%);
   border: 1px solid rgba(56, 189, 248, 0.55);
   color: #FFFFFF !important;
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 800;
   letter-spacing: 0.08em;
   width: fit-content;
@@ -4063,7 +4063,7 @@ body.light .auth-grid {
 }
 
 .auth-showcase-desc {
-  font-size: clamp(13.5px, 1.25vw, 15px);
+  font-size: 14px;
   color: #F1F5F9 !important;
   line-height: 1.6;
   max-width: 520px;
@@ -4128,7 +4128,7 @@ body.light .auth-grid {
 }
 
 .metric-card-label {
-  font-size: 10.5px;
+  font-size: 14px;
   font-weight: 800;
   color: #CBD5E1 !important;
   text-transform: uppercase;
@@ -4148,7 +4148,7 @@ body.light .auth-grid {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-size: 10.5px;
+  font-size: 14px;
   font-weight: 700;
   padding: 2px 8px;
   border-radius: 6px;
@@ -4170,7 +4170,7 @@ body.light .auth-grid {
   align-items: center;
   flex-wrap: wrap;
   gap: clamp(10px, 1.8vw, 18px);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   color: #FFFFFF !important;
   margin-top: 6px;
@@ -4330,7 +4330,7 @@ body.light .auth-card-nexus {
   border-radius: 9px;
   background: transparent;
   color: #94A3B8;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   cursor: pointer;
   transition: background 0.15s ease, color 0.15s ease;
@@ -4343,7 +4343,7 @@ body.light .auth-card-nexus {
 }
 .forgot-birth-hint {
   margin: 6px 2px 0;
-  font-size: 11px;
+  font-size: 14px;
   line-height: 1.4;
   color: #94A3B8;
 }
@@ -4408,13 +4408,13 @@ body.light .auth-logo-badge {
   background: linear-gradient(135deg, #60A5FA 0%, #38BDF8 50%, #FFFFFF 100%) !important;
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 900;
   letter-spacing: 0.10em;
 }
 
 .auth-subtitle {
-  font-size: 12.5px;
+  font-size: 14px;
   color: #CBD5E1 !important;
   margin-top: 4px;
   font-weight: 600;
@@ -4459,7 +4459,7 @@ body.light .auth-tabs-nav {
   border: 1px solid transparent;
   background: transparent;
   color: #CBD5E1 !important;
-  font-size: 13.5px;
+  font-size: 14px;
   font-weight: 700;
   cursor: pointer;
   display: flex;
@@ -4505,7 +4505,7 @@ body.light .auth-tab-btn.active {
 }
 .auth-field label {
   display: block;
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 800;
   color: #FFFFFF !important;
   margin-bottom: 6px;
@@ -4654,7 +4654,7 @@ body.light .auth-pass-toggle-btn:hover {
   border: 1px solid rgba(255, 255, 255, 0.45) !important;
   border-radius: 12px !important;
   font-weight: 850 !important;
-  font-size: 15px !important;
+  font-size: 14px !important;
   letter-spacing: -0.01em;
   cursor: pointer;
   margin-top: 10px;
@@ -4692,7 +4692,7 @@ body.light .btn-auth-primary:hover {
 }
 
 .auth-forgot-link {
-  font-size: 12px;
+  font-size: 14px;
   color: #38BDF8 !important;
   font-weight: 700;
   cursor: pointer;
@@ -4714,7 +4714,7 @@ body.light .auth-forgot-link {
   margin: 12px 0;
   padding: 10px 14px;
   border-radius: 12px;
-  font-size: 12.5px;
+  font-size: 14px;
   line-height: 1.45;
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
@@ -4751,7 +4751,7 @@ body.light .auth-forgot-link {
   border: 1px solid rgba(56, 189, 248, 0.42) !important;
   border-radius: 12px !important;
   color: #FFFFFF !important;
-  font-size: 12.5px !important;
+  font-size: 14px !important;
   font-weight: 700 !important;
   letter-spacing: 0.015em;
   cursor: pointer;
@@ -4794,7 +4794,7 @@ body.light .btn-open-os:hover {
   align-items: center;
   justify-content: center;
   gap: 7px;
-  font-size: 12px;
+  font-size: 14px;
   color: #CBD5E1 !important;
   margin-top: 12px;
   padding: 4px 8px;
@@ -4850,12 +4850,12 @@ body.light .auth-support-link {
 #serverAuthNexusCard #registerForm > div[style*="background:rgba(37,99,235"],
 #serverAuthNexusCard #registerForm > div[id="registerFeedbackBanner"],
 #serverAuthNexusCard #registerForm > button { grid-column: 1 / -1; }
-#serverAuthNexusCard .auth-field label { text-transform: none; letter-spacing: 0; font-size: 12px; font-weight: 700; color: #D8E1EA !important; }
+#serverAuthNexusCard .auth-field label { text-transform: none; letter-spacing: 0; font-size: 14px; font-weight: 700; color: #D8E1EA !important; }
 #serverAuthNexusCard .auth-input-wrapper { min-height: 46px; }
-.auth-register-consent { display: flex; flex-direction: column; gap: 10px; padding: 2px 2px 0; color: #CBD5E1; font-size: 11px; line-height: 1.5; }
+.auth-register-consent { display: flex; flex-direction: column; gap: 10px; padding: 2px 2px 0; color: #CBD5E1; font-size: 14px; line-height: 1.5; }
 .auth-register-consent label { display: flex; align-items: flex-start; gap: 8px; cursor: pointer; }
 .auth-register-consent input { flex: 0 0 auto; margin-top: 2px; accent-color: #10B981; }
-.auth-register-security { display: flex; align-items: center; gap: 9px; padding: 10px 12px; border: 1px solid rgba(52, 211, 153, 0.24); border-radius: 12px; background: rgba(16, 185, 129, 0.08); color: #D1FAE5; font-size: 10.5px; line-height: 1.4; }
+.auth-register-security { display: flex; align-items: center; gap: 9px; padding: 10px 12px; border: 1px solid rgba(52, 211, 153, 0.24); border-radius: 12px; background: rgba(16, 185, 129, 0.08); color: #D1FAE5; font-size: 14px; line-height: 1.4; }
 .auth-register-security-icon { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto; width: 28px; height: 28px; border-radius: 9px; background: rgba(16, 185, 129, 0.14); color: #6EE7B7; }
 #serverAuthNexusCard #regSubmitBtn { width: 100%; min-height: 50px; margin-top: 2px; }
 body.light #serverAuthNexusCard .auth-field label { color: #1F2937 !important; }
@@ -4903,7 +4903,7 @@ body.light .auth-register-security { background: #ECFDF5; border-color: #A7F3D0;
     border-radius: 20px !important;
   }
   .auth-input-wrapper input {
-    font-size: 16px !important; /* Evita zoom automático no iOS Safari */
+    font-size: 14px !important; /* Evita zoom automático no iOS Safari */
   }
 }
 
@@ -4921,7 +4921,7 @@ body.light .auth-register-security { background: #ECFDF5; border-color: #A7F3D0;
   border: 1.5px solid rgba(255, 255, 255, 0.14);
   border-radius: 14px;
   color: #E2E8F0;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.02em;
   cursor: pointer;
@@ -4959,7 +4959,7 @@ body.light .auth-register-security { background: #ECFDF5; border-color: #A7F3D0;
   border: 1px solid rgba(255, 255, 255, 0.12);
   background: rgba(255, 255, 255, 0.04);
   color: #94A3B8;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 800;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -5352,7 +5352,7 @@ body.light .topheader{
   width:38px !important; height:38px !important; border-radius:50% !important;
   background:linear-gradient(135deg, #059669 0%, #059669 100%) !important;
   display:flex !important; align-items:center !important; justify-content:center !important;
-  color:#FFFFFF !important; font-size:13px !important; font-weight:800 !important;
+  color:#FFFFFF !important; font-size:14px !important; font-weight:800 !important;
   border:2px solid rgba(255, 255, 255, 0.3) !important;
   box-shadow:0 0 16px rgba(5, 150, 105, 0.45) !important;
 }
@@ -5366,10 +5366,10 @@ body.light .topheader{
   display:flex !important; flex-direction:column !important; justify-content:center !important; text-align:left !important; line-height:1.2 !important;
 }
 .aether-user-title{
-  font-size:15px !important; font-weight:800 !important; color:#FFFFFF !important; letter-spacing:-0.01em !important; white-space:nowrap !important;
+  font-size:14px !important; font-weight:800 !important; color:#FFFFFF !important; letter-spacing:-0.01em !important; white-space:nowrap !important;
 }
 .aether-user-sub{
-  font-size:11px !important; font-weight:500 !important; color:#94A3B8 !important; letter-spacing:0.01em !important; white-space:nowrap !important; display:flex !important; align-items:center !important; gap:4px !important;
+  font-size:14px !important; font-weight:500 !important; color:#94A3B8 !important; letter-spacing:0.01em !important; white-space:nowrap !important; display:flex !important; align-items:center !important; gap:4px !important;
 }
 .aether-user-sub svg{ width:10px; height:10px; color:#059669; }
 
@@ -5380,21 +5380,21 @@ body.light .topheader{
   display:inline-flex !important; align-items:center !important; gap:7px !important;
   padding:5px 13px !important; border-radius:999px !important;
   background:rgba(255,255,255,0.04) !important; border:1px solid rgba(255,255,255,0.09) !important;
-  font-size:12px !important; color:#94A3B8 !important; backdrop-filter:blur(12px) !important; user-select:none !important;
+  font-size:14px !important; color:#94A3B8 !important; backdrop-filter:blur(12px) !important; user-select:none !important;
 }
 .aether-credit-pill .credit-lbl{ color:#94A3B8 !important; font-weight:500 !important; }
 .aether-credit-pill .credit-val{ color:#FFFFFF !important; font-weight:700 !important; letter-spacing:0.02em !important; }
 .aether-credit-pill .credit-badge{
   padding:2px 7px !important; border-radius:999px !important;
   background:linear-gradient(135deg, #059669 0%, #059669 100%) !important;
-  color:#060B18 !important; font-size:10px !important; font-weight:900 !important;
+  color:#060B18 !important; font-size:14px !important; font-weight:900 !important;
   letter-spacing:0.04em !important; box-shadow:0 0 10px rgba(5, 150, 105, 0.5) !important;
 }
 .aether-settings-btn{
   display:inline-flex !important; align-items:center !important; gap:6px !important;
   padding:6px 13px !important; border-radius:10px !important;
   background:rgba(255, 255, 255, 0.05) !important; border:1px solid rgba(255, 255, 255, 0.1) !important;
-  color:#E2E8F0 !important; font-size:12px !important; font-weight:600 !important;
+  color:#E2E8F0 !important; font-size:14px !important; font-weight:600 !important;
   cursor:pointer !important; transition:all 0.2s ease !important; user-select:none !important;
 }
 .aether-settings-btn:hover{
@@ -5488,7 +5488,7 @@ html.light .aether-settings-btn:hover svg {
 .header-user-badge .avatar {
   width: 30px !important;
   height: 30px !important;
-  font-size: 11.5px !important;
+  font-size: 14px !important;
   font-weight: 850 !important;
   border-radius: 50% !important;
   background: linear-gradient(135deg, #10B981 0%, #059669 60%, #047857 100%) !important;
@@ -5503,7 +5503,7 @@ html.light .aether-settings-btn:hover svg {
 .header-user-badge .header-user-name {
   font-weight: 700 !important;
   color: #ECFDF5 !important;
-  font-size: 13.5px !important;
+  font-size: 14px !important;
   max-width: 220px !important;
   white-space: nowrap !important;
   overflow: hidden !important;
@@ -5521,7 +5521,7 @@ html.light .header-user-badge .header-user-name {
   display:inline-flex; align-items:center; gap:7px; padding:5px 12px;
   border-radius:999px; background:rgba(255,255,255,0.04);
   border:1px solid rgba(255,255,255,0.08); color:#94A3B8;
-  font-size:12px; font-weight:600; letter-spacing:0.02em;
+  font-size:14px; font-weight:600; letter-spacing:0.02em;
   backdrop-filter:blur(12px); user-select:none;
 }
 .header-live-time .time-dot {
@@ -5643,14 +5643,14 @@ body.light .header-live-time {
   white-space: nowrap !important;
 }
 .brand .name .brand-title {
-  font-size: 15.5px !important;
+  font-size: 14px !important;
   font-weight: 900 !important;
   letter-spacing: 0.07em !important;
   color: #FFFFFF !important;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5) !important;
 }
 .brand .name .brand-sub {
-  font-size: 8.5px !important;
+  font-size: 14px !important;
   font-weight: 800 !important;
   letter-spacing: 0.16em !important;
   text-transform: uppercase !important;
@@ -5660,8 +5660,8 @@ body.light .header-live-time {
 @media (max-width: 900px) {
   .brand { padding: 4px 10px 4px 6px !important; gap: 8px !important; }
   .brand .logo { width: 32px !important; height: 32px !important; min-width: 32px !important; min-height: 32px !important; }
-  .brand .name .brand-title { font-size: 13.5px !important; }
-  .brand .name .brand-sub { font-size: 8px !important; }
+  .brand .name .brand-title { font-size: 14px !important; }
+  .brand .name .brand-sub { font-size: 14px !important; }
 }
 
 .icon-btn,
@@ -5724,7 +5724,7 @@ body.light .header-live-time {
   align-items: center !important;
   justify-content: center !important;
   font-weight: 900 !important;
-  font-size: 13.5px !important;
+  font-size: 14px !important;
   color: #FFFFFF !important;
   flex-shrink: 0 !important;
   border: 2px solid rgba(253, 230, 138, 0.75) !important;
@@ -5732,7 +5732,7 @@ body.light .header-live-time {
 }
 
 .user .uname {
-  font-size: 13.5px !important;
+  font-size: 14px !important;
   font-weight: 800 !important;
   color: #F8FAFC !important;
   white-space: nowrap !important;
@@ -5750,7 +5750,7 @@ body.light .header-live-time {
   border: 1px solid rgba(147, 197, 253, 0.4) !important;
   color: #6EE7B7 !important;
   font-weight: 800 !important;
-  font-size: 9.5px !important;
+  font-size: 14px !important;
   text-transform: uppercase !important;
   letter-spacing: 0.06em !important;
   box-shadow: 0 2px 8px rgba(5, 150, 105, 0.25) !important;
@@ -5767,7 +5767,7 @@ body.light .header-live-time {
   border: 1px solid rgba(248, 113, 113, 0.38) !important;
   color: #FCA5A5 !important;
   font-weight: 800 !important;
-  font-size: 13px !important;
+  font-size: 14px !important;
   border-radius: 13px !important;
   padding: 7px 15px !important;
   box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.25), 0 4px 16px rgba(239, 68, 68, 0.22) !important;
@@ -5878,7 +5878,7 @@ nav.menu, aside.menu, .sidebar-menu {
 }
 .sidebar-workspace-header .workspace-avatar-text {
   font-family: var(--font-sans) !important;
-  font-size: 12px !important;
+  font-size: 14px !important;
   font-weight: 800 !important;
   letter-spacing: 0.04em !important;
   color: #34D399 !important;
@@ -5910,7 +5910,7 @@ nav.menu, aside.menu, .sidebar-menu {
 }
 .sidebar-workspace-header .workspace-name {
   font-family: var(--font-sans) !important;
-  font-size: 13px !important;
+  font-size: 14px !important;
   font-weight: 800 !important;
   letter-spacing: -0.015em !important;
   color: #F8FAFC !important;
@@ -5919,7 +5919,7 @@ nav.menu, aside.menu, .sidebar-menu {
   text-overflow: ellipsis !important;
 }
 .sidebar-workspace-header .workspace-subtitle {
-  font-size: 10.5px !important;
+  font-size: 14px !important;
   color: #94A3B8 !important;
   font-weight: 500 !important;
   letter-spacing: 0.01em !important;
@@ -5989,7 +5989,7 @@ aside.menu .sidebar-quick-action-btn:hover,
 }
 .sidebar-quick-action-btn .label {
   font-family: var(--font-sans) !important;
-  font-size: 12.5px !important;
+  font-size: 14px !important;
   font-weight: 700 !important;
   letter-spacing: -0.01em !important;
   color: #FFFFFF !important;
@@ -5999,7 +5999,7 @@ aside.menu .sidebar-quick-action-btn:hover,
   text-overflow: ellipsis !important;
 }
 .sidebar-quick-action-btn .quick-action-badge {
-  font-size: 11px !important;
+  font-size: 14px !important;
   font-weight: 800 !important;
   background: rgba(0, 0, 0, 0.18) !important;
   border: 1px solid rgba(255, 255, 255, 0.22) !important;
@@ -6019,7 +6019,7 @@ aside.menu .sidebar-quick-action-btn:hover,
   flex-shrink: 0 !important;
 }
 .menu-section-title {
-  font-size: 10px !important;
+  font-size: 14px !important;
   font-weight: 700 !important;
   text-transform: uppercase !important;
   letter-spacing: 0.08em !important;
@@ -6054,7 +6054,7 @@ aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn),
   background: transparent !important;
   border: 1px solid transparent !important;
   color: #94A3B8 !important;
-  font-size: 13px !important;
+  font-size: 14px !important;
   white-space: nowrap !important;
   cursor: pointer !important;
   transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease !important;
@@ -6114,7 +6114,7 @@ aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) .ic sv
 aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) span.label,
 .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) span.label {
   font-family: var(--font-sans) !important;
-  font-size: 13px !important;
+  font-size: 14px !important;
   font-weight: 500 !important;
   letter-spacing: -0.01em !important;
   line-height: 1.2 !important;
@@ -6259,7 +6259,7 @@ html[data-theme="light"] aside.menu button.menu-btn-admin.active {
   height: 20px !important;
   line-height: 20px !important;
   border-radius: 6px !important;
-  font-size: 10px !important;
+  font-size: 14px !important;
   font-weight: 800 !important;
   background: rgba(255, 255, 255, 0.08) !important;
   color: #E2E8F0 !important;
@@ -6282,7 +6282,7 @@ html[data-theme="light"] aside.menu .admin-menu-count-pill {
   height: 20px !important;
   line-height: 20px !important;
   border-radius: 6px !important;
-  font-size: 10px !important;
+  font-size: 14px !important;
   font-weight: 800 !important;
   background: #EF4444 !important;
   color: #FFFFFF !important;
@@ -6397,7 +6397,7 @@ aside.menu .sidebar-footer #sidebarCollapseBtn:hover,
 
 .sidebar-footer .toggle-label {
   font-family: var(--font-sans) !important;
-  font-size: 12px !important;
+  font-size: 14px !important;
   font-weight: 600 !important;
   letter-spacing: -0.01em !important;
   color: inherit !important;
@@ -6731,7 +6731,7 @@ body.sidebar-collapsed .fintech-market-ticker-banner {
   will-change: transform !important;
 }
 .fintech-ticker-content span {
-  font-size: 11px !important;
+  font-size: 14px !important;
   font-weight: 600 !important;
   color: #94A3B8 !important;
   display: inline-flex !important;
@@ -7669,7 +7669,7 @@ html.light .notif-desc {
 /* Suporte de Alto Contraste para Tema Claro */
 
 .cfg-divider{display:flex; align-items:center; gap:10px; margin:22px 0 14px;}
-.cfg-divider span{font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--text-faint); white-space:nowrap;}
+.cfg-divider span{font-size:14px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--text-faint); white-space:nowrap;}
 .cfg-divider::before, .cfg-divider::after{content:''; flex:1; height:1px; background:var(--card-border);}
 
 /* Centralização e Posicionamento do Conteúdo Principal com Menu Lateral (Sidebar) */
@@ -7699,7 +7699,7 @@ body.sidebar-collapsed .main {
   border:1px solid rgba(255, 255, 255, 0.12) !important;
   box-shadow:0 4px 16px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.22) !important;
   color:#E2E8F0 !important; display:flex; align-items:center; justify-content:center;
-  cursor:pointer; position:relative; font-size:16px; flex-shrink:0;
+  cursor:pointer; position:relative; font-size:14px; flex-shrink:0;
   transition:all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 .icon-btn:hover{
@@ -7732,16 +7732,16 @@ body.sidebar-collapsed .main {
   border-radius:50% !important;
   background:linear-gradient(135deg, #F59E0B 0%, #D97706 50%, #B45309 100%) !important;
   display:flex !important; align-items:center !important; justify-content:center !important;
-  font-weight:800 !important; font-size:12px !important; color:#FFFFFF !important;
+  font-weight:800 !important; font-size:14px !important; color:#FFFFFF !important;
   border:1.5px solid rgba(255, 255, 255, 0.5) !important;
   box-shadow:0 0 14px rgba(245, 158, 11, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.6) !important;
   flex-shrink:0 !important;
 }
-.user .uname{font-size:13px !important; font-weight:700 !important; color:#F8FAFC !important; white-space:nowrap !important; letter-spacing:-0.01em !important;}
+.user .uname{font-size:14px !important; font-weight:700 !important; color:#F8FAFC !important; white-space:nowrap !important; letter-spacing:-0.01em !important;}
 .user .urole{
   display:inline-block !important; padding:2px 8px !important; border-radius:999px !important;
   background:rgba(5, 150, 105, 0.16) !important; border:1px solid rgba(96, 165, 250, 0.35) !important;
-  color:#6EE7B7 !important; font-weight:700 !important; font-size:9.5px !important;
+  color:#6EE7B7 !important; font-weight:700 !important; font-size:14px !important;
   letter-spacing:0.06em !important; text-transform:uppercase !important;
   backdrop-filter:blur(8px) !important; min-height:unset;
 }
@@ -7752,7 +7752,7 @@ body.sidebar-collapsed .main {
   backdrop-filter:blur(16px) saturate(180%) !important;
   -webkit-backdrop-filter:blur(16px) saturate(180%) !important;
   border:1px solid rgba(248, 113, 113, 0.35) !important;
-  color:#FCA5A5 !important; font-weight:700 !important; font-size:12.5px !important;
+  color:#FCA5A5 !important; font-weight:700 !important; font-size:14px !important;
   box-shadow:inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 4px 14px rgba(239, 68, 68, 0.15) !important;
   display:inline-flex !important; align-items:center !important; justify-content:center !important;
   cursor:pointer !important; flex-shrink:0 !important;
@@ -7790,7 +7790,7 @@ body.sidebar-collapsed .main {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  font-size: 13px !important;
+  font-size: 14px !important;
   font-weight: 700 !important;
   cursor: pointer !important;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
@@ -7871,7 +7871,7 @@ body.sidebar-collapsed .main {
   height: 32px !important;
   padding: 0 12px !important;
   border-radius: 9999px !important;
-  font-size: 11.5px !important;
+  font-size: 14px !important;
   font-weight: 700 !important;
   white-space: nowrap !important;
   display: inline-flex !important;
@@ -7910,7 +7910,7 @@ body.sidebar-collapsed .main {
   min-height: 27px !important;
   max-height: 27px !important;
   padding: 0 8px !important;
-  font-size: 10.5px !important;
+  font-size: 14px !important;
   font-weight: 700 !important;
   border-radius: 7px !important;
   display: inline-flex !important;
@@ -8122,7 +8122,7 @@ body.light .due-bill-row {
 }
 
 .executive-4k-message {
-  font-size: 14.5px !important;
+  font-size: 14px !important;
   color: #CBD5E1 !important;
   line-height: 1.6 !important;
   margin-bottom: 28px !important;
@@ -8133,7 +8133,7 @@ body.light .due-bill-row {
   width: 100% !important;
   padding: 15px 24px !important;
   border-radius: 16px !important;
-  font-size: 15px !important;
+  font-size: 14px !important;
   font-weight: 800 !important;
   color: #FFFFFF !important;
   border: 1px solid rgba(255, 255, 255, 0.25) !important;
@@ -8225,14 +8225,14 @@ body.light .executive-4k-message {
   line-height: 1.2;
 }
 .trial-dock-title {
-  font-size: 10.5px;
+  font-size: 14px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: #94A3B8;
   font-weight: 800;
 }
 .trial-dock-time {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 900;
   color: #34D399;
   letter-spacing: 0.02em;
@@ -8245,7 +8245,7 @@ body.light .executive-4k-message {
   border-radius: 999px;
   background: linear-gradient(135deg, #10B981 0%, #059669 100%);
   color: #FFFFFF !important;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 800;
   border: none;
   cursor: pointer;
@@ -8468,7 +8468,7 @@ body.light .sub-paywall-overlay {
 .pw-eyebrow {
   display: block;
   margin-bottom: 5px;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   line-height: 1.3;
   letter-spacing: 0.12em;
@@ -8488,7 +8488,7 @@ body.light .sub-paywall-overlay {
 .pw-titles p {
   max-width: 74ch;
   margin: 7px 0 0;
-  font-size: 14.5px;
+  font-size: 14px;
   line-height: 1.5;
   color: var(--pw-text-2);
 }
@@ -8514,7 +8514,7 @@ body.light .sub-paywall-overlay {
   border-radius: 12px;
   background: var(--pw-card-solid);
   border: 1px solid var(--pw-line);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   line-height: 1.3;
   color: var(--pw-text);
@@ -8536,7 +8536,7 @@ body.light .sub-paywall-overlay {
   background: var(--pw-card-solid);
   color: var(--pw-text);
   font-family: inherit;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   line-height: 1.25;
   text-align: center;
@@ -8549,7 +8549,7 @@ body.light .sub-paywall-overlay {
 .pw-btn:active { transform: none; }
 .pw-btn:focus-visible, .pw-code:focus-visible { outline: 2px solid var(--pw-sky); outline-offset: 2px; }
 .pw-btn:disabled { opacity: 0.7; cursor: progress; transform: none; }
-.pw-btn-sm { min-height: 34px; padding: 5px 12px; font-size: 12.5px; border-radius: 10px; }
+.pw-btn-sm { min-height: 34px; padding: 5px 12px; font-size: 14px; border-radius: 10px; }
 .pw-btn-danger { color: var(--pw-danger); background: var(--pw-danger-soft); border-color: var(--pw-danger-line); }
 .pw-btn-amber { color: var(--pw-amber); background: var(--pw-amber-soft); border-color: var(--pw-amber-line); }
 .pw-btn-sky { color: var(--pw-sky); background: var(--pw-sky-soft); border-color: var(--pw-sky-line); }
@@ -8560,7 +8560,7 @@ body.light .sub-paywall-overlay {
   width: 100%;
   min-height: 56px;
   padding: 13px 24px;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 800;
   color: #FFFFFF;
   border: 1px solid rgba(255, 255, 255, 0.30);
@@ -8575,7 +8575,7 @@ body.light .sub-paywall-overlay {
 /* ---------- Controle do administrador ---------- */
 .pw-admin { margin-bottom: 18px; border-radius: 16px; background: linear-gradient(135deg, var(--pw-amber-soft), var(--pw-accent-soft)); border: 1px solid var(--pw-amber-line); }
 .pw-admin-inner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 14px; padding: 12px 14px; }
-.pw-admin-title { display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; line-height: 1.35; color: var(--pw-amber); }
+.pw-admin-title { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; line-height: 1.35; color: var(--pw-amber); }
 .pw-admin-actions { display: flex; flex-wrap: wrap; gap: 6px; }
 
 /* ---------- Grade e cartoes (vidro dentro do vidro) ---------- */
@@ -8591,7 +8591,7 @@ body.light .sub-paywall-overlay {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.10), 0 18px 40px -26px rgba(0, 0, 0, 0.55);
 }
 .pw-card-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; padding-bottom: 13px; margin-bottom: 16px; border-bottom: 1px solid var(--pw-line); }
-.pw-card-head h3 { margin: 0; font-size: 16px; font-weight: 800; line-height: 1.3; color: var(--pw-text); }
+.pw-card-head h3 { margin: 0; font-size: 14px; font-weight: 800; line-height: 1.3; color: var(--pw-text); }
 .pw-card-head .pw-chip { margin-left: auto; }
 .pw-step {
   display: inline-flex;
@@ -8601,7 +8601,7 @@ body.light .sub-paywall-overlay {
   width: 26px;
   height: 26px;
   border-radius: 50%;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 800;
   color: var(--pw-accent-2);
   background: var(--pw-accent-soft);
@@ -8613,7 +8613,7 @@ body.light .sub-paywall-overlay {
   gap: 6px;
   padding: 4px 11px;
   border-radius: 999px;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   line-height: 1.25;
   color: var(--pw-accent-2);
@@ -8625,7 +8625,7 @@ body.light .sub-paywall-overlay {
 
 /* ---------- Oferta: 1 dia gratis e depois o plano mensal ---------- */
 .pw-offer-chips { display: flex; flex-wrap: wrap; gap: 8px; }
-.pw-offer-name { margin: 14px 0 0; font-size: 16px; font-weight: 800; line-height: 1.3; letter-spacing: 0.01em; color: var(--pw-text-2); }
+.pw-offer-name { margin: 14px 0 0; font-size: 14px; font-weight: 800; line-height: 1.3; letter-spacing: 0.01em; color: var(--pw-text-2); }
 .pw-price { display: flex; align-items: baseline; gap: 6px; margin-top: 4px; font-variant-numeric: tabular-nums; }
 .pw-price-cur { font-size: 24px; font-weight: 700; color: var(--pw-muted); }
 .pw-price-int {
@@ -8642,7 +8642,7 @@ body.light .sub-paywall-overlay {
 }
 .pw-price-dec { font-size: 30px; font-weight: 800; line-height: 1; color: var(--pw-accent-2); }
 .pw-price-per { margin-left: 2px; font-size: 17px; font-weight: 600; color: var(--pw-muted); }
-.pw-price-sub { margin: 8px 0 0; font-size: 13.5px; line-height: 1.5; color: var(--pw-text-2); }
+.pw-price-sub { margin: 8px 0 0; font-size: 14px; line-height: 1.5; color: var(--pw-text-2); }
 
 .pw-journey { position: relative; display: flex; flex-direction: column; margin: 20px 0 6px; padding: 0; list-style: none; }
 .pw-j { position: relative; display: flex; align-items: flex-start; gap: 13px; padding-bottom: 15px; }
@@ -8659,7 +8659,7 @@ body.light .sub-paywall-overlay {
   height: 28px;
   box-sizing: border-box;
   border-radius: 50%;
-  font-size: 12.5px;
+  font-size: 14px;
   font-weight: 800;
   color: var(--pw-muted);
   background: var(--pw-card-solid);
@@ -8669,28 +8669,28 @@ body.light .sub-paywall-overlay {
 .pw-j.is-now .pw-j-node { color: var(--pw-accent-2); background: var(--pw-accent-soft); border-color: var(--pw-accent); box-shadow: 0 0 0 4px var(--pw-accent-soft); }
 .pw-j.is-trial .pw-j-node { color: var(--pw-sky); background: var(--pw-sky-soft); border-color: var(--pw-sky); box-shadow: 0 0 0 4px var(--pw-sky-soft); }
 .pw-j-body { min-width: 0; padding-top: 3px; }
-.pw-j-body strong { display: block; font-size: 14.5px; font-weight: 800; line-height: 1.3; color: var(--pw-text); }
-.pw-j-body span { display: block; margin-top: 2px; font-size: 13px; line-height: 1.4; color: var(--pw-muted); }
+.pw-j-body strong { display: block; font-size: 14px; font-weight: 800; line-height: 1.3; color: var(--pw-text); }
+.pw-j-body span { display: block; margin-top: 2px; font-size: 14px; line-height: 1.4; color: var(--pw-muted); }
 
 .pw-benefits { display: grid; grid-template-columns: 1fr 1fr; gap: 9px 14px; margin: 18px 0 16px; padding: 16px 0 0; list-style: none; border-top: 1px solid var(--pw-line); }
-.pw-benefits li { display: flex; align-items: flex-start; gap: 9px; font-size: 13.5px; line-height: 1.4; color: var(--pw-text-2); }
+.pw-benefits li { display: flex; align-items: flex-start; gap: 9px; font-size: 14px; line-height: 1.4; color: var(--pw-text-2); }
 .pw-check { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 18px; width: 18px; height: 18px; margin-top: 1px; border-radius: 50%; color: var(--pw-accent-2); background: var(--pw-accent-soft); }
-.pw-guarantee { display: flex; align-items: flex-start; gap: 11px; margin-top: auto; padding: 13px 15px; border-radius: 15px; font-size: 13px; line-height: 1.45; color: var(--pw-text-2); background: var(--pw-accent-soft); border: 1px solid var(--pw-accent-line); }
+.pw-guarantee { display: flex; align-items: flex-start; gap: 11px; margin-top: auto; padding: 13px 15px; border-radius: 15px; font-size: 14px; line-height: 1.45; color: var(--pw-text-2); background: var(--pw-accent-soft); border: 1px solid var(--pw-accent-line); }
 .pw-guarantee svg { flex: 0 0 auto; margin-top: 1px; color: var(--pw-accent-2); }
-.pw-guarantee strong { display: block; font-size: 13.5px; color: var(--pw-accent-2); }
+.pw-guarantee strong { display: block; font-size: 14px; color: var(--pw-accent-2); }
 
 /* ---------- Status do pagamento ---------- */
 .pw-status { margin-bottom: 16px; padding: 13px 16px; border-radius: 16px; background: linear-gradient(135deg, var(--pw-accent-soft), var(--pw-sky-soft)); border: 1px solid var(--pw-accent-line); transition: background 0.3s ease, border-color 0.3s ease; }
 .pw-status.radar-detecting { background: linear-gradient(135deg, var(--pw-sky-soft), var(--pw-accent-soft)); border-color: var(--pw-sky); }
 .pw-status-main { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 8px 12px; }
 .pw-status-text { flex: 1 1 220px; min-width: 0; }
-.pw-status-text > strong { display: block; font-size: 15px; font-weight: 800; line-height: 1.3; color: var(--pw-text); }
-.pw-status-text > span { display: block; margin-top: 3px; font-size: 13px; line-height: 1.45; color: var(--pw-text-2); }
+.pw-status-text > strong { display: block; font-size: 14px; font-weight: 800; line-height: 1.3; color: var(--pw-text); }
+.pw-status-text > span { display: block; margin-top: 3px; font-size: 14px; line-height: 1.45; color: var(--pw-text-2); }
 .pw-pulse { position: relative; flex: 0 0 10px; width: 10px; height: 10px; margin-top: 5px; border-radius: 50%; background: #10B981; box-shadow: 0 0 10px #10B981; }
 .pw-pulse::after { content: ''; position: absolute; inset: -4px; border-radius: 50%; border: 2px solid currentColor; color: #10B981; animation: pwPulseRing 1.8s cubic-bezier(0.16, 1, 0.3, 1) infinite; }
 @keyframes pwPulseRing { 0% { transform: scale(0.8); opacity: 0.9; } 100% { transform: scale(2.1); opacity: 0; } }
-.pw-protocol { display: flex; flex: 0 0 auto; align-items: center; gap: 7px; font-size: 12.5px; color: var(--pw-muted); }
-.pw-protocol strong { padding: 2px 9px; border-radius: 7px; font-family: ui-monospace, Consolas, 'Courier New', monospace; font-size: 12.5px; font-weight: 700; color: var(--pw-sky); background: var(--pw-sky-soft); border: 1px solid var(--pw-sky-line); overflow-wrap: anywhere; }
+.pw-protocol { display: flex; flex: 0 0 auto; align-items: center; gap: 7px; font-size: 14px; color: var(--pw-muted); }
+.pw-protocol strong { padding: 2px 9px; border-radius: 7px; font-family: ui-monospace, Consolas, 'Courier New', monospace; font-size: 14px; font-weight: 700; color: var(--pw-sky); background: var(--pw-sky-soft); border: 1px solid var(--pw-sky-line); overflow-wrap: anywhere; }
 .pw-track { height: 4px; margin-top: 11px; border-radius: 999px; background: var(--pw-line); overflow: hidden; }
 .pw-track-bar { height: 100%; width: 35%; border-radius: inherit; background: linear-gradient(90deg, #10B981, #38BDF8, #34D399); animation: pwTrackSlide 1.7s ease-in-out infinite alternate; }
 .pw-track-bar.recognizing-active { animation: none; margin-left: 0; transition: width 0.45s cubic-bezier(0.16, 1, 0.3, 1); }
@@ -8699,40 +8699,40 @@ body.light .sub-paywall-overlay {
 /* ---------- Pix: QR e chave lado a lado, copia e cola ao lado da chave ---------- */
 .pw-pix { display: grid; grid-template-columns: 218px minmax(0, 1fr); gap: 16px; align-items: stretch; }
 .pw-qr { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 9px; box-sizing: border-box; padding: 14px 14px 12px; border-radius: 20px; background: rgba(255, 255, 255, 0.97); border: 1px solid rgba(255, 255, 255, 0.85); box-shadow: 0 20px 44px -18px rgba(0, 0, 0, 0.65), inset 0 0 0 1px rgba(15, 23, 42, 0.04); }
-.pw-qr-label { font-size: 12px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: #047857; }
+.pw-qr-label { font-size: 14px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: #047857; }
 .pw-qr-frame { position: relative; display: flex; align-items: center; justify-content: center; width: 100%; aspect-ratio: 1 / 1; }
 .pw-qr img { display: block; width: 100%; height: auto; aspect-ratio: 1 / 1; border-radius: 10px; background: #FFFFFF; image-rendering: pixelated; }
-.pw-qr-fail { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 10px; font-size: 13px; line-height: 1.4; text-align: center; color: #334155; }
+.pw-qr-fail { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 10px; font-size: 14px; line-height: 1.4; text-align: center; color: #334155; }
 .pw-qr-fail[hidden] { display: none; }
-.pw-qr-note { font-size: 12.5px; line-height: 1.35; text-align: center; color: #334155; }
+.pw-qr-note { font-size: 14px; line-height: 1.35; text-align: center; color: #334155; }
 .pw-pay-col { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
 .pw-key { box-sizing: border-box; padding: 13px 15px; border-radius: 16px; background: var(--pw-field); border: 1px solid var(--pw-line); }
-.pw-field-label { display: block; margin-bottom: 6px; font-size: 12px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--pw-muted); }
+.pw-field-label { display: block; margin-bottom: 6px; font-size: 14px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--pw-muted); }
 .pw-key-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 10px; }
 .pw-key-value { font-size: 23px; font-weight: 800; line-height: 1.25; letter-spacing: 0.01em; white-space: nowrap; font-variant-numeric: tabular-nums; color: var(--pw-text); }
-.pw-key-meta { margin-top: 5px; font-size: 13px; line-height: 1.4; color: var(--pw-muted); }
+.pw-key-meta { margin-top: 5px; font-size: 14px; line-height: 1.4; color: var(--pw-muted); }
 .pw-key-meta strong { color: var(--pw-text-2); }
 .pw-code-block { display: flex; flex: 1 1 auto; flex-direction: column; min-width: 0; }
 .pw-code-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 10px; margin-bottom: 7px; }
 .pw-code-head .pw-field-label { margin: 0; }
-.pw-code { display: block; width: 100%; min-height: 64px; box-sizing: border-box; padding: 10px 12px; border-radius: 12px; resize: none; overflow-y: auto; background: var(--pw-field); border: 1px solid var(--pw-line-strong); color: var(--pw-text); font-family: ui-monospace, Consolas, 'Courier New', monospace; font-size: 12.5px; line-height: 1.5; white-space: pre-wrap; word-break: break-all; }
+.pw-code { display: block; width: 100%; min-height: 64px; box-sizing: border-box; padding: 10px 12px; border-radius: 12px; resize: none; overflow-y: auto; background: var(--pw-field); border: 1px solid var(--pw-line-strong); color: var(--pw-text); font-family: ui-monospace, Consolas, 'Courier New', monospace; font-size: 14px; line-height: 1.5; white-space: pre-wrap; word-break: break-all; }
 
 /* ---------- Como pagar (3 passos) ---------- */
 .pw-how { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 16px 0 0; padding: 0; list-style: none; }
-.pw-how li { display: flex; align-items: flex-start; gap: 9px; padding: 11px 12px; border-radius: 14px; font-size: 12.5px; line-height: 1.4; color: var(--pw-text-2); background: var(--pw-field); border: 1px solid var(--pw-line); }
+.pw-how li { display: flex; align-items: flex-start; gap: 9px; padding: 11px 12px; border-radius: 14px; font-size: 14px; line-height: 1.4; color: var(--pw-text-2); background: var(--pw-field); border: 1px solid var(--pw-line); }
 .pw-how strong { color: var(--pw-text); }
-.pw-how-n { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 22px; width: 22px; height: 22px; border-radius: 50%; font-size: 12px; font-weight: 800; color: var(--pw-accent-2); background: var(--pw-accent-soft); border: 1px solid var(--pw-accent-line); }
+.pw-how-n { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 22px; width: 22px; height: 22px; border-radius: 50%; font-size: 14px; font-weight: 800; color: var(--pw-accent-2); background: var(--pw-accent-soft); border: 1px solid var(--pw-accent-line); }
 
 /* ---------- Aviso de pedido registrado ---------- */
 .pw-banner { margin: 16px 0 0; padding: 14px 16px; border-radius: 16px; background: var(--pw-amber-soft); border: 1px solid var(--pw-amber-line); }
 .pw-banner.is-error { background: var(--pw-danger-soft); border-color: var(--pw-danger-line); }
 .pw-banner-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 10px; margin-bottom: 6px; }
-.pw-banner-head strong { font-size: 15px; font-weight: 800; line-height: 1.35; color: var(--pw-text); }
-.pw-banner p { margin: 0 0 12px; font-size: 13.5px; line-height: 1.5; color: var(--pw-text-2); }
+.pw-banner-head strong { font-size: 14px; font-weight: 800; line-height: 1.35; color: var(--pw-text); }
+.pw-banner p { margin: 0 0 12px; font-size: 14px; line-height: 1.5; color: var(--pw-text-2); }
 .pw-banner .pw-btn { width: 100%; }
 
 /* ---------- Rodape do cartao ---------- */
-.pw-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px 16px; margin-top: auto; padding-top: 14px; border-top: 1px solid var(--pw-line); font-size: 12.5px; line-height: 1.4; color: var(--pw-muted); }
+.pw-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px 16px; margin-top: auto; padding-top: 14px; border-top: 1px solid var(--pw-line); font-size: 14px; line-height: 1.4; color: var(--pw-muted); }
 .pw-card-pay #subFormPix { margin-bottom: 16px; }
 .pw-foot span { display: inline-flex; align-items: center; gap: 7px; }
 .pw-foot strong { color: var(--pw-text-2); font-variant-numeric: tabular-nums; }
@@ -8757,7 +8757,7 @@ body.light .sub-paywall-overlay {
   backdrop-filter: blur(26px) saturate(170%);
 }
 .pw-paybar-amount { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
-.pw-paybar-amount span { font-size: 12px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; line-height: 1.3; color: var(--pw-muted); }
+.pw-paybar-amount span { font-size: 14px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; line-height: 1.3; color: var(--pw-muted); }
 .pw-paybar-amount strong { font-size: 30px; font-weight: 800; line-height: 1.15; letter-spacing: -0.02em; white-space: nowrap; font-variant-numeric: tabular-nums; color: var(--pw-accent-2); }
 .pw-paybar .pw-btn-primary { flex: 1 1 320px; width: auto; max-width: 560px; margin-left: auto; }
 
@@ -8765,19 +8765,19 @@ body.light .sub-paywall-overlay {
 .pw-success { padding: 6px 0 2px; text-align: center; }
 .pw-success-icon { display: flex; align-items: center; justify-content: center; width: 76px; height: 76px; margin: 4px auto 16px; border-radius: 50%; color: #FFFFFF; background: linear-gradient(135deg, #10B981, #059669); box-shadow: 0 0 0 8px rgba(16, 185, 129, 0.16), 0 18px 40px -10px rgba(16, 185, 129, 0.7); }
 .pw-success h3 { margin: 12px 0 8px; font-size: clamp(21px, 3vw, 27px); font-weight: 800; line-height: 1.25; text-wrap: balance; color: var(--pw-text); }
-.pw-success > p { max-width: 540px; margin: 0 auto 22px; font-size: 14.5px; line-height: 1.55; color: var(--pw-text-2); }
+.pw-success > p { max-width: 540px; margin: 0 auto 22px; font-size: 14px; line-height: 1.55; color: var(--pw-text-2); }
 .pw-receipt { box-sizing: border-box; max-width: 540px; margin: 0 auto 22px; padding: 20px 22px; border-radius: 20px; text-align: left; background: var(--pw-card); border: 1px solid var(--pw-accent-line); }
 .pw-receipt-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px; padding-bottom: 14px; margin-bottom: 10px; border-bottom: 1px dashed var(--pw-line-strong); }
-.pw-receipt-head strong { display: block; font-size: 15px; font-weight: 800; color: var(--pw-text); }
-.pw-receipt-head small { display: block; margin-top: 2px; font-size: 12.5px; color: var(--pw-muted); }
-.pw-row { display: flex; align-items: baseline; justify-content: space-between; gap: 6px 12px; font-size: 13.5px; line-height: 1.4; color: var(--pw-text-2); }
+.pw-receipt-head strong { display: block; font-size: 14px; font-weight: 800; color: var(--pw-text); }
+.pw-receipt-head small { display: block; margin-top: 2px; font-size: 14px; color: var(--pw-muted); }
+.pw-row { display: flex; align-items: baseline; justify-content: space-between; gap: 6px 12px; font-size: 14px; line-height: 1.4; color: var(--pw-text-2); }
 .pw-row strong { font-weight: 700; text-align: right; color: var(--pw-text); }
 .pw-receipt .pw-row { flex-wrap: wrap; padding: 6px 0; }
 .pw-receipt .pw-row strong { overflow-wrap: anywhere; }
 .pw-receipt .pw-row-end { margin-top: 6px; padding-top: 12px; border-top: 1px dashed var(--pw-line-strong); }
-.pw-receipt .pw-row-end strong { font-size: 15.5px; color: var(--pw-accent-2); }
+.pw-receipt .pw-row-end strong { font-size: 14px; color: var(--pw-accent-2); }
 .pw-success-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; max-width: 560px; margin: 0 auto; }
-.pw-success-actions .pw-btn { flex: 1 1 210px; width: auto; min-height: 48px; font-size: 14.5px; }
+.pw-success-actions .pw-btn { flex: 1 1 210px; width: auto; min-height: 48px; font-size: 14px; }
 
 /* ---------- Telas grandes (2K/4K): o app aplica zoom pela largura da janela; o painel cresce junto para nao ficar pequeno no meio da tela ---------- */
 @media (min-width: 2400px) {
@@ -8813,7 +8813,7 @@ body.light .sub-paywall-overlay {
   .pw-paybar { gap: 8px; padding: 12px; }
   .pw-paybar-amount { flex-direction: row; align-items: baseline; justify-content: space-between; width: 100%; padding: 0 4px; }
   .pw-paybar-amount strong { font-size: 26px; }
-  .pw-paybar .pw-btn-primary { flex: 1 1 100%; max-width: none; margin-left: 0; min-height: 52px; font-size: 14.5px; }
+  .pw-paybar .pw-btn-primary { flex: 1 1 100%; max-width: none; margin-left: 0; min-height: 52px; font-size: 14px; }
   .pw-success-actions .pw-btn { flex-basis: 100%; }
 }
 @media (max-width: 420px) {
@@ -8891,14 +8891,14 @@ body.light .sub-paywall-overlay {
   flex-direction: column;
 }
 .trial-dock-title {
-  font-size: 10.5px;
+  font-size: 14px;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: #94A3B8;
 }
 .trial-dock-time {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 900;
   font-family: monospace;
   color: #34D399;
@@ -8909,7 +8909,7 @@ body.light .sub-paywall-overlay {
   border-radius: 999px;
   background: linear-gradient(135deg, #10B981 0%, #059669 100%);
   color: #FFFFFF !important;
-  font-size: 11.5px;
+  font-size: 14px;
   font-weight: 800;
   border: none;
   cursor: pointer;
@@ -8961,7 +8961,7 @@ body.light .trial-dock-widget.trial-dock-locked .trial-dock-time {
   letter-spacing:-0.02em; color:var(--text); padding-top:2px;
 }
 .page-head p{
-  color:var(--text-dim); font-size:13px; margin-top:4px; line-height:1.45;
+  color:var(--text-dim); font-size:14px; margin-top:4px; line-height:1.45;
 }
 .head-actions{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
 .period-wrap{position:relative; z-index:100;}
@@ -8976,7 +8976,7 @@ body.light .trial-dock-widget.trial-dock-locked .trial-dock-time {
   border:1px solid rgba(255, 255, 255, 0.12) !important;
   padding:0 14px 0 6px !important;
   border-radius:12px !important;
-  font-size:13px !important;
+  font-size:14px !important;
   cursor:pointer !important;
   white-space:nowrap !important;
   box-shadow:0 4px 14px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
@@ -9006,7 +9006,7 @@ body.light .trial-dock-widget.trial-dock-locked .trial-dock-time {
 }
 .period:hover .period-ic{transform:scale(1.06) !important;}
 .period-ic svg{width:16px !important; height:16px !important;}
-.period-text{display:flex; align-items:baseline; gap:5px; font-weight:700; font-size:13px; color:#F1F5F9; letter-spacing:0.01em;}
+.period-text{display:flex; align-items:baseline; gap:5px; font-weight:700; font-size:14px; color:#F1F5F9; letter-spacing:0.01em;}
 .period-text .period-year{font-weight:600; color:#94A3B8;}
 .period-chevron{width:11px; height:11px; color:#94A3B8; flex-shrink:0; transition:transform .25s ease;}
 .period.open .period-chevron{transform:rotate(180deg); color:#34D399;}
@@ -9034,7 +9034,7 @@ body.light .trial-dock-widget.trial-dock-locked .trial-dock-time {
 }
 .period-panel-title{
   display:inline-flex; align-items:center; gap:8px;
-  font-size:12px; font-weight:800; color:#F8FAFC;
+  font-size:14px; font-weight:800; color:#F8FAFC;
   letter-spacing:0.04em; text-transform:uppercase;
 }
 .period-panel-title svg{color:#10B981;}
@@ -9047,7 +9047,7 @@ body.light .trial-dock-widget.trial-dock-locked .trial-dock-time {
   background:rgba(255, 255, 255, 0.05);
   border:1px solid rgba(255, 255, 255, 0.10);
   color:#E2E8F0;
-  padding:8px 10px; border-radius:10px; font-size:12px; font-weight:700;
+  padding:8px 10px; border-radius:10px; font-size:14px; font-weight:700;
   cursor:pointer; transition:all .2s ease;
   user-select:none; white-space:nowrap;
 }
@@ -9079,7 +9079,7 @@ body.light .trial-dock-widget.trial-dock-locked .trial-dock-time {
   display:flex; flex-direction:column; gap:5px;
 }
 .period-select-box label{
-  font-size:11px; font-weight:700; color:#94A3B8;
+  font-size:14px; font-weight:700; color:#94A3B8;
   letter-spacing:0.04em; text-transform:uppercase;
 }
 .period-custom-select-wrap{
@@ -9091,7 +9091,7 @@ body.light .trial-dock-widget.trial-dock-locked .trial-dock-time {
   border:1px solid rgba(255, 255, 255, 0.14) !important;
   border-radius:10px !important;
   color:#F8FAFC !important;
-  font-size:13px !important;
+  font-size:14px !important;
   font-weight:700 !important;
   padding:0 30px 0 11px !important;
   appearance:none; -webkit-appearance:none;
@@ -9121,7 +9121,7 @@ body.light .trial-dock-widget.trial-dock-locked .trial-dock-time {
   border:1px solid rgba(255, 255, 255, 0.28) !important;
   border-radius:11px !important;
   color:#FFFFFF !important;
-  font-size:13px !important;
+  font-size:14px !important;
   font-weight:800 !important;
   letter-spacing:0.02em;
   cursor:pointer;
@@ -9256,26 +9256,26 @@ html.light .period-submit-btn:hover {
 }
 .notif-panel.show{display:block;}
 .notif-panel-head{display:flex; align-items:center; justify-content:space-between; gap:10px; padding:14px 16px; border-bottom:1px solid var(--card-border);}
-.notif-panel-head h4{font-size:13.5px; font-weight:700;}
-.notif-markall{background:none; border:none; color:var(--green); font-size:11.5px; font-weight:600; cursor:pointer; white-space:nowrap;}
+.notif-panel-head h4{font-size:14px; font-weight:700;}
+.notif-markall{background:none; border:none; color:var(--green); font-size:14px; font-weight:600; cursor:pointer; white-space:nowrap;}
 .notif-markall:hover{text-decoration:underline;}
 .notif-list{max-height:360px; overflow-y:auto; padding:6px;}
 .notif-item{display:flex; align-items:flex-start; gap:11px; padding:10px 10px; border-radius:10px; cursor:default;}
 .notif-item:hover{background:var(--hover);}
 .notif-item .ic{
   width:34px; height:34px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center;
-  font-size:15px; background:var(--green-soft);
+  font-size:14px; background:var(--green-soft);
 }
 .notif-item .body{flex:1; min-width:0;}
-.notif-item .txt{font-size:12.5px; color:var(--text); line-height:1.4;}
-.notif-item .time{font-size:11px; color:var(--text-faint); margin-top:2px;}
+.notif-item .txt{font-size:14px; color:var(--text); line-height:1.4;}
+.notif-item .time{font-size:14px; color:var(--text-faint); margin-top:2px;}
 .notif-item.unread{background:var(--green-soft);}
 .notif-item .unread-dot{width:8px; height:8px; border-radius:50%; background:var(--green); flex-shrink:0; margin-top:5px;}
-.notif-empty{padding:32px 16px; text-align:center; color:var(--text-faint); font-size:12.5px;}
+.notif-empty{padding:32px 16px; text-align:center; color:var(--text-faint); font-size:14px;}
 .btn-primary{
   position:relative; overflow:hidden;
   background:linear-gradient(135deg, #059669 0%, #10B981 50%, #059669 100%); color:#060B18; border:1px solid rgba(255,255,255,0.45); padding:10px 18px; border-radius:12px;
-  font-weight:800; font-size:13px; cursor:pointer; display:flex; align-items:center; gap:7px;
+  font-weight:800; font-size:14px; cursor:pointer; display:flex; align-items:center; gap:7px;
   box-shadow:0 6px 20px rgba(5, 150, 105, 0.40), inset 0 1px 1.5px rgba(255,255,255,0.7);
   transition:all .22s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -9289,7 +9289,7 @@ html.light .period-submit-btn:hover {
 .btn-primary:active{transform:translateY(0) scale(.98);}
 .btn-ghost{
   background:rgba(255,255,255,0.05); color:#F8FAFC; border:1px solid rgba(255,255,255,0.10); padding:9px 16px;
-  border-radius:11px; font-size:13px; font-weight:600; cursor:pointer; transition:all 0.2s ease;
+  border-radius:11px; font-size:14px; font-weight:600; cursor:pointer; transition:all 0.2s ease;
 }
 .btn-ghost:hover{background:rgba(255,255,255,0.12); border-color:rgba(255,255,255,0.22); color:#FFFFFF; transform:translateY(-1px);}
 
@@ -9350,7 +9350,7 @@ body.light #logoutBtn:hover {
 
 .kpi .row1{
   display:flex; align-items:center; justify-content:space-between;
-  color:#94A3B8; font-size:11px; font-weight:700; margin-bottom:12px;
+  color:#94A3B8; font-size:14px; font-weight:700; margin-bottom:12px;
   letter-spacing:0.05em; text-transform:uppercase;
 }
 .kpi .ic{
@@ -9368,11 +9368,11 @@ body.light #logoutBtn:hover {
 .kpi .sub{
   display:flex; align-items:center; justify-content:space-between; gap:6px;
   padding-top:10px; border-top:1px solid rgba(255, 255, 255, 0.06);
-  font-size:11px; color:#94A3B8; font-weight:600;
+  font-size:14px; color:#94A3B8; font-weight:600;
 }
 
 .kpi-tag {
-  font-size:9.5px !important;
+  font-size:14px !important;
   font-weight:700 !important;
   letter-spacing:0.04em !important;
   padding:2.5px 8px !important;
@@ -9432,7 +9432,7 @@ body.light .kpi .val { color:#0f172a !important; text-shadow:none; }
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(15, 23, 42, 0.85) 100%) !important;
   border: 1px solid rgba(255, 255, 255, 0.12) !important;
   color: #F1F5F9 !important;
-  font-size: 13px !important;
+  font-size: 14px !important;
   font-weight: 700 !important;
   letter-spacing: 0.01em !important;
   cursor: pointer !important;
@@ -9534,8 +9534,8 @@ body.hide-sensitive-balances .account-balance-num {
   box-shadow:0 24px 60px rgba(0,0,0,0.85), inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 0 28px rgba(5, 150, 105, 0.18) !important;
 }
 .panel-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; gap:10px; flex-wrap:wrap;}
-.panel-head h3{font-size:15px; font-weight:800; color:#ffffff; letter-spacing:-0.01em; display:flex; align-items:center; gap:8px;}
-.panel-head .tag{font-size:12px; font-weight:600; color:var(--text-dim); background:rgba(255,255,255,0.06); padding:6px 12px; border-radius:10px; cursor:pointer; border:1px solid rgba(255,255,255,0.10); transition:all 0.2s ease;}
+.panel-head h3{font-size:14px; font-weight:800; color:#ffffff; letter-spacing:-0.01em; display:flex; align-items:center; gap:8px;}
+.panel-head .tag{font-size:14px; font-weight:600; color:var(--text-dim); background:rgba(255,255,255,0.06); padding:6px 12px; border-radius:10px; cursor:pointer; border:1px solid rgba(255,255,255,0.10); transition:all 0.2s ease;}
 .panel-head .tag:hover{background:rgba(5, 150, 105, 0.15); color:#059669; border-color:rgba(5, 150, 105, 0.45);}
 
 body.light .panel {
@@ -9547,7 +9547,7 @@ body.light .panel-head h3 { color:#0f172a !important; }
 
 .cfg-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start; margin-bottom:20px;}
 .cfg-grid .panel{height:100%;}
-.cfg-hint{color:var(--text-faint); font-size:12px; margin:-6px 0 14px; line-height:1.4;}
+.cfg-hint{color:var(--text-faint); font-size:14px; margin:-6px 0 14px; line-height:1.4;}
 .cfg-save-bar{display:flex; justify-content:flex-end; margin-bottom:24px;}
 .pass-field{position:relative;}
 .pass-field input{width:100%; padding-right:42px;}
@@ -9564,20 +9564,20 @@ body.light .panel-head h3 { color:#0f172a !important; }
 }
 
 .donut-wrap{display:flex; align-items:center; justify-content:center; gap:20px;}
-.donut-side{font-size:12px; color:var(--text-dim);}
-.donut-side b{display:block; font-size:15px; margin-top:2px;}
+.donut-side{font-size:14px; color:var(--text-dim);}
+.donut-side b{display:block; font-size:14px; margin-top:2px;}
 .donut-side.r{text-align:right;}
 .donut-canvas{position:relative; width:150px; height:150px; margin: 0 auto;}
 .donut-center{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;}
-.donut-center span{font-size:11px; color:var(--text-faint);}
-.donut-center b{font-size:14.5px; margin-top:2px;}
+.donut-center span{font-size:14px; color:var(--text-faint);}
+.donut-center b{font-size:14px; margin-top:2px;}
 .bar-split{height:8px; border-radius:5px; background:var(--red); overflow:hidden; margin-top:16px; display:flex;}
 .bar-split .g{background:var(--green); height:100%;}
-.split-labels{display:flex; justify-content:space-between; font-size:11.5px; margin-top:6px; color:var(--text-dim);}
+.split-labels{display:flex; justify-content:space-between; font-size:14px; margin-top:6px; color:var(--text-dim);}
 
 .cat-wrap{display:flex; gap:16px; align-items:center; justify-content:center;}
 .cat-legend{flex:1; display:flex; flex-direction:column; gap:9px;}
-.cat-row{display:flex; align-items:center; justify-content:space-between; font-size:12px;}
+.cat-row{display:flex; align-items:center; justify-content:space-between; font-size:14px;}
 .cat-row .lbl{display:flex; align-items:center; gap:7px; color:var(--text-dim);}
 .cat-row .dot{width:8px; height:8px; border-radius:50%; flex-shrink:0;}
 .cat-row .amt{color:var(--text); font-weight:600; margin-right:6px;}
@@ -9596,11 +9596,11 @@ body.light .panel-head h3 { color:#0f172a !important; }
 .acc-row:hover .acc-edit{opacity:1;}
 .acc-ic{width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:14px; flex-shrink:0; color:#fff; box-shadow:0 4px 12px rgba(0,0,0,.4);}
 .acc-info{flex:1; min-width:0;}
-.acc-info .n{font-size:13px; font-weight:700; color:#ffffff;}
-.acc-info .t{font-size:11px; color:var(--text-faint);}
-.acc-val{font-size:13px; font-weight:800; white-space:nowrap; color:#10B981;}
+.acc-info .n{font-size:14px; font-weight:700; color:#ffffff;}
+.acc-info .t{font-size:14px; color:var(--text-faint);}
+.acc-val{font-size:14px; font-weight:800; white-space:nowrap; color:#10B981;}
 .acc-val.neg{color:var(--red);}
-.acc-edit{opacity:0; transition:opacity .15s; background:none; border:none; color:var(--text-faint); cursor:pointer; font-size:12px; padding:4px;}
+.acc-edit{opacity:0; transition:opacity .15s; background:none; border:none; color:var(--text-faint); cursor:pointer; font-size:14px; padding:4px;}
 
 body.light .acc-row { background:#f8fafc !important; border-color:#e2e8f0 !important; }
 body.light .acc-info .n { color:#0f172a !important; }
@@ -9613,8 +9613,8 @@ body.light .acc-info .n { color:#0f172a !important; }
   backdrop-filter:blur(28px) saturate(200%); -webkit-backdrop-filter:blur(28px) saturate(200%);
 }
 table{width:100%; border-collapse:collapse;}
-th{text-align:left; font-size:11px; color:#10B981; font-weight:800; padding:0 12px 14px; text-transform:uppercase; letter-spacing:.08em;}
-td{padding:13px 12px; font-size:13px; border-top:1px solid rgba(255,255,255,0.06); font-variant-numeric:tabular-nums;}
+th{text-align:left; font-size:14px; color:#10B981; font-weight:800; padding:0 12px 14px; text-transform:uppercase; letter-spacing:.08em;}
+td{padding:13px 12px; font-size:14px; border-top:1px solid rgba(255,255,255,0.06); font-variant-numeric:tabular-nums;}
 tr.trow:hover td{background:rgba(5, 150, 105, 0.04);}
 
 body.light .table-panel {
@@ -9663,12 +9663,12 @@ body.light .status-pendente {
   border-color: rgba(217, 119, 6, 0.35) !important;
 }
 
-.tx-date-badge{font-weight:700; color:var(--text); font-size:12.5px; letter-spacing:0.02em;}
-.tx-desc{color:var(--text); font-weight:700; font-size:13.5px;}
-.pill{padding:5px 12px; border-radius:999px; font-size:11.5px; font-weight:700; display:inline-flex; align-items:center; gap:5px; letter-spacing:0.01em; transition:all 0.2s ease;}
-.cat-pill{font-size:11.5px; font-weight:700;}
-.acc-pill{font-size:11.5px; background:rgba(255,255,255,0.05); color:var(--text-dim); border:1px solid rgba(255,255,255,0.08); font-weight:600;}
-.type-pill{display:inline-flex; align-items:center; gap:4px; padding:4px 10px; border-radius:8px; font-size:11.5px; font-weight:800;}
+.tx-date-badge{font-weight:700; color:var(--text); font-size:14px; letter-spacing:0.02em;}
+.tx-desc{color:var(--text); font-weight:700; font-size:14px;}
+.pill{padding:5px 12px; border-radius:999px; font-size:14px; font-weight:700; display:inline-flex; align-items:center; gap:5px; letter-spacing:0.01em; transition:all 0.2s ease;}
+.cat-pill{font-size:14px; font-weight:700;}
+.acc-pill{font-size:14px; background:rgba(255,255,255,0.05); color:var(--text-dim); border:1px solid rgba(255,255,255,0.08); font-weight:600;}
+.type-pill{display:inline-flex; align-items:center; gap:4px; padding:4px 10px; border-radius:8px; font-size:14px; font-weight:800;}
 .type-pill.in{background:rgba(5, 150, 105,0.14); color:#059669; border:1px solid rgba(5, 150, 105,0.30);}
 .type-pill.out{background:rgba(244,63,94,0.14); color:#F43F5E; border:1px solid rgba(244,63,94,0.30);}
 
@@ -9677,13 +9677,13 @@ body.light .status-pendente {
 .status-pago, .status-recebido{background:rgba(5, 150, 105,0.16) !important; color:#059669 !important; border:1px solid rgba(5, 150, 105,0.35) !important; box-shadow:0 2px 8px rgba(5, 150, 105,0.15);}
 .status-pendente{background:rgba(245,158,11,0.16) !important; color:#F59E0B !important; border:1px solid rgba(245,158,11,0.35) !important; box-shadow:0 2px 8px rgba(245,158,11,0.15);}
 
-.val-in{color:#059669; font-weight:800; font-variant-numeric:tabular-nums; font-size:13.5px;}
-.val-out{color:#F43F5E; font-weight:800; font-variant-numeric:tabular-nums; font-size:13.5px;}
+.val-in{color:#059669; font-weight:800; font-variant-numeric:tabular-nums; font-size:14px;}
+.val-out{color:#F43F5E; font-weight:800; font-variant-numeric:tabular-nums; font-size:14px;}
 .row-actions{display:flex; gap:6px;}
 
 .tfoot-row{background:rgba(255,255,255,0.02); font-weight:700; border-top:2px solid var(--card-border);}
-.tfoot-label{text-align:right; font-size:12.5px; color:var(--text-dim); letter-spacing:0.03em; padding:14px 12px;}
-.tfoot-value{color:#F43F5E; font-size:15px; font-weight:800; padding:14px 12px; font-variant-numeric:tabular-nums;}
+.tfoot-label{text-align:right; font-size:14px; color:var(--text-dim); letter-spacing:0.03em; padding:14px 12px;}
+.tfoot-value{color:#F43F5E; font-size:14px; font-weight:800; padding:14px 12px; font-variant-numeric:tabular-nums;}
 
 /* Executive KPI Footer Cards */
 .tx-footer-summary{margin-top:22px; display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:16px;}
@@ -9698,27 +9698,27 @@ body.light .status-pendente {
 .tx-summary-icon.income{background:rgba(5, 150, 105,0.14); color:#059669; border:1px solid rgba(5, 150, 105,0.3); box-shadow:0 4px 14px rgba(5, 150, 105,0.20);}
 .tx-summary-icon.balance{background:rgba(5, 150, 105, 0.14); color:#059669; border:1px solid rgba(5, 150, 105, 0.35); box-shadow:0 0 16px rgba(5, 150, 105, 0.25);}
 
-.tx-summary-label{font-size:11px; color:var(--text-faint); text-transform:uppercase; letter-spacing:0.06em; font-weight:700;}
+.tx-summary-label{font-size:14px; color:var(--text-faint); text-transform:uppercase; letter-spacing:0.06em; font-weight:700;}
 .tx-summary-val{font-size:21px; font-weight:800; margin-top:2px; font-variant-numeric:tabular-nums;}
 .tx-summary-val.expense{color:#F43F5E;}
 .tx-summary-val.income{color:#059669;}
-.tx-summary-sub{font-size:11.5px; color:var(--text-dim); margin-top:2px;}
+.tx-summary-sub{font-size:14px; color:var(--text-dim); margin-top:2px;}
 
 .icon-picker{display:flex; gap:6px; flex-wrap:wrap;}
-.icon-picker button{width:34px; height:34px; border-radius:9px; border:1px solid var(--card-border); background:var(--bg); font-size:15px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:border-color .15s, background .15s;}
+.icon-picker button{width:34px; height:34px; border-radius:9px; border:1px solid var(--card-border); background:var(--bg); font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:border-color .15s, background .15s;}
 .icon-picker button:hover{border-color:var(--primary); background:var(--hover);}
 .icon-picker button.sel{border-color:var(--primary); background:var(--hover);}
 .cat-manage-tabs{display:flex; gap:8px;}
-.cat-manage-tabs .cat-tab{flex:1; padding:9.5px; border-radius:10px; border:1px solid var(--card-border); background:var(--bg); color:var(--text-dim); font-size:12.5px; font-weight:700; cursor:pointer; font-family:inherit; transition:all 0.2s ease;}
+.cat-manage-tabs .cat-tab{flex:1; padding:9.5px; border-radius:10px; border:1px solid var(--card-border); background:var(--bg); color:var(--text-dim); font-size:14px; font-weight:700; cursor:pointer; font-family:inherit; transition:all 0.2s ease;}
 .cat-manage-tabs .cat-tab.active{background:linear-gradient(135deg, rgba(5, 150, 105, 0.22), rgba(14, 165, 233, 0.16)); color:#059669; border-color:rgba(5, 150, 105, 0.6);}
 .cat-manage-row{display:flex; align-items:center; gap:10px;}
-.cat-manage-row .cat-badge{font-size:16px;}
+.cat-manage-row .cat-badge{font-size:14px;}
 .cat-manage-row .info{min-width:0; flex:1;}
-.cat-manage-row .n{font-size:13px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-.cat-manage-row .u{font-size:11px; color:var(--text-faint);}
+.cat-manage-row .n{font-size:14px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.cat-manage-row .u{font-size:14px; color:var(--text-faint);}
 .filters{display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap;}
 .filters input, .filters select{
-  background:rgba(9, 14, 26, 0.85); border:1px solid rgba(5, 150, 105, 0.18); border-radius:10px; padding:9px 14px; font-size:12.5px; outline:none; transition:all 0.2s ease; color:#F8FAFC;
+  background:rgba(9, 14, 26, 0.85); border:1px solid rgba(5, 150, 105, 0.18); border-radius:10px; padding:9px 14px; font-size:14px; outline:none; transition:all 0.2s ease; color:#F8FAFC;
 }
 .filters input:focus, .filters select:focus{border-color:#059669; box-shadow:0 0 15px rgba(5, 150, 105, 0.35);}
 .filters input{flex:1; min-width:180px;}
@@ -9832,16 +9832,16 @@ body.light .status-pendente {
 .cat-card .row-actions{flex-shrink:0;}
 .cat-badge{
   width:36px; height:36px; border-radius:11px; flex-shrink:0; display:flex; align-items:center; justify-content:center;
-  font-size:13px; font-weight:800;
+  font-size:14px; font-weight:800;
 }
 .cat-card-stats{display:flex; align-items:baseline; justify-content:space-between; gap:8px; margin-top:auto;}
 .cat-card-stats .amt{font-size:18px; font-weight:800;}
-.cat-count{color:var(--text-faint); font-size:11.5px; white-space:nowrap;}
+.cat-count{color:var(--text-faint); font-size:14px; white-space:nowrap;}
 .cat-card-add{
   border:1.5px dashed rgba(200,155,60,0.4); background:rgba(229,169,60,0.04); cursor:pointer;
   border-radius:16px; padding:18px;
   display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
-  color:var(--text-dim); font-size:13px; font-weight:700; min-height:100px; font-family:inherit;
+  color:var(--text-dim); font-size:14px; font-weight:700; min-height:100px; font-family:inherit;
   transition:all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .cat-card-add:hover{border-color:#E5A93C; color:#E5A93C; background:rgba(229,169,60,0.12); transform:translateY(-2px);}
@@ -9892,7 +9892,7 @@ body.light .rec-progress-bar {
   border: 1px solid rgba(255,255,255,0.12);
   border-radius: 8px;
   padding: 5px 10px;
-  font-size: 11.5px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--text-dim);
   cursor: pointer;
@@ -9963,7 +9963,7 @@ body.light .rec-progress-bar {
   background: rgba(15, 23, 42, 0.7);
   border: 1px solid rgba(255, 255, 255, 0.08);
   color: #94A3B8;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.01em;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
@@ -10020,7 +10020,7 @@ body.light .rec-progress-bar {
   letter-spacing: -0.01em;
 }
 .hero-sub {
-  font-size: 13px !important;
+  font-size: 14px !important;
   color: #94A3B8 !important;
   margin: 0 !important;
   font-weight: 500 !important;
@@ -10046,7 +10046,7 @@ body.light .rec-progress-bar {
   background: linear-gradient(135deg, #059669 0%, #10B981 55%, #059669 100%) !important;
   border: 1px solid rgba(255, 255, 255, 0.45) !important;
   color: #060B18 !important;
-  font-size: 13px !important;
+  font-size: 14px !important;
   font-weight: 800 !important;
   letter-spacing: 0.01em !important;
   cursor: pointer !important;
@@ -10088,7 +10088,7 @@ body.light .rec-progress-bar {
   border-radius: 12px;
   padding: 10px 16px;
   font-weight: 700;
-  font-size: 13px;
+  font-size: 14px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -10167,7 +10167,7 @@ body.light .btn-hero-ghost:hover {
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.04) !important;
   border: 1px solid rgba(255, 255, 255, 0.09) !important;
-  font-size: 11.5px;
+  font-size: 14px;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   transition: all 0.2s ease;
@@ -10217,7 +10217,7 @@ body.light .pulse-chip-label { color: #000000 !important; }
   gap: 8px;
   padding: 8px 16px;
   border-radius: 12px;
-  font-size: 12.5px;
+  font-size: 14px;
   font-weight: 700;
   cursor: pointer;
   border: 1px solid transparent;
@@ -10435,7 +10435,7 @@ body.light .dash-quick-btn.q-sync { background: #F0F9FF !important; border-color
   margin-bottom: 6px !important;
 }
 .kpis-grid-6 .kpi .row1 span:first-child {
-  font-size: 11.5px !important;
+  font-size: 14px !important;
   font-weight: 700 !important;
   text-transform: uppercase !important;
   letter-spacing: 0.08em !important;
@@ -10494,7 +10494,7 @@ body.light .dash-quick-btn.q-sync { background: #F0F9FF !important; border-color
   align-items: center !important;
   justify-content: space-between !important;
   gap: 8px !important;
-  font-size: 11px !important;
+  font-size: 14px !important;
   margin-top: auto !important;
 }
 
@@ -10504,7 +10504,7 @@ body.light .dash-quick-btn.q-sync { background: #F0F9FF !important; border-color
   align-items: center !important;
   padding: 2.5px 8px !important;
   border-radius: 6px !important;
-  font-size: 9.5px !important;
+  font-size: 14px !important;
   font-weight: 800 !important;
   letter-spacing: 0.04em !important;
   text-transform: uppercase !important;
@@ -10594,7 +10594,7 @@ body.light .kpi-mini-bar {
   align-items: center;
   gap: 10px;
   margin: 0;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 800;
   color: #FFFFFF;
   letter-spacing: -0.015em;
@@ -10633,14 +10633,14 @@ body.light .kpi-mini-bar {
   gap: 2px;
 }
 .dash-metric-label {
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: #94A3B8;
 }
 .dash-metric-val {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 800;
   color: #FFFFFF;
   font-variant-numeric: tabular-nums;
@@ -10660,7 +10660,7 @@ body.light .kpi-mini-bar {
 }
 .dash-filter-pill {
   padding: 4px 10px;
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   border-radius: 7px;
   border: none;
@@ -10676,7 +10676,7 @@ body.light .kpi-mini-bar {
 }
 
 .due-bill-badge {
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 800;
   padding: 2px 7px;
   border-radius: 6px;
@@ -10711,7 +10711,7 @@ body.light .kpi-mini-bar {
 }
 .dash-chart-mode-btn {
   padding: 4px 10px;
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   border-radius: 7px;
   border: none;
@@ -10759,7 +10759,7 @@ body.light .kpi-mini-bar {
   letter-spacing: -0.02em;
 }
 .dash-wheel-label {
-  font-size: 9.5px;
+  font-size: 14px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   font-weight: 800;
@@ -10789,7 +10789,7 @@ body.light .kpi-mini-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 11px;
+  font-size: 14px;
 }
 .dash-pillar-bar {
   width: 100%;
@@ -10860,7 +10860,7 @@ body.light .kpi-mini-bar {
   align-items: center;
   gap: 5px;
   padding: 5px 10px;
-  font-size: 11.5px;
+  font-size: 14px;
   font-weight: 700;
   border-radius: 7px;
   border: 1px solid transparent;
@@ -11015,7 +11015,7 @@ body.light .dash-overview-card {
   background: rgba(245, 158, 11, 0.16);
   border: 1px solid rgba(245, 158, 11, 0.35);
   color: #FBBF24;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.01em;
   backdrop-filter: blur(8px);
@@ -11030,7 +11030,7 @@ body.light .dash-overview-card {
   background: rgba(245, 158, 11, 0.16);
   border: 1px solid rgba(245, 158, 11, 0.35);
   color: #FBBF24;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.01em;
   backdrop-filter: blur(8px);
@@ -11061,7 +11061,7 @@ body.light .dash-overview-card {
   line-height: 1.2 !important;
 }
 .admin-page-head p {
-  font-size: 12px !important;
+  font-size: 14px !important;
   color: var(--text-dim) !important;
   margin: 2px 0 0 0 !important;
   font-weight: 500 !important;
@@ -11075,7 +11075,7 @@ body.light .dash-overview-card {
   border-radius: 9px !important;
   background: linear-gradient(135deg, rgba(16, 185, 129, 0.24), rgba(5, 150, 105, 0.12)) !important;
   border: 1px solid rgba(16, 185, 129, 0.4) !important;
-  font-size: 15px !important;
+  font-size: 14px !important;
   flex-shrink: 0 !important;
 }
 .admin-head-actions {
@@ -11089,7 +11089,7 @@ body.light .dash-overview-card {
   min-height: 34px !important;
   padding: 0 13px !important;
   border-radius: 9px !important;
-  font-size: 12px !important;
+  font-size: 14px !important;
   font-weight: 800 !important;
   display: inline-flex !important;
   align-items: center !important;
@@ -11133,7 +11133,7 @@ body.light .dash-overview-card {
   margin: 0 !important;
 }
 .admin-kpis-row .kpi .sub {
-  font-size: 11px !important;
+  font-size: 14px !important;
   margin-top: 2px !important;
 }
 
@@ -11172,7 +11172,7 @@ body.light .dash-overview-card {
   border-radius: 8px !important;
   padding: 0 12px 0 36px !important;
   color: #FFFFFF;
-  font-size: 12.5px !important;
+  font-size: 14px !important;
   font-weight: 500;
   outline: none;
   transition: all 0.2s ease;
@@ -11197,7 +11197,7 @@ body.light .dash-overview-card {
   border: 1px solid var(--card-border);
   background: rgba(255, 255, 255, 0.04);
   color: #94A3B8;
-  font-size: 11.5px !important;
+  font-size: 14px !important;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.18s ease;
@@ -11238,7 +11238,7 @@ body.light .admin-filter-btn.active {
   border-radius: 9px !important;
   background: rgba(255, 255, 255, 0.035) !important;
   border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  font-size: 10px !important;
+  font-size: 14px !important;
   font-weight: 800 !important;
   text-transform: uppercase !important;
   letter-spacing: 0.07em !important;
@@ -11323,7 +11323,7 @@ body.light .admin-filter-btn.active {
   width: auto !important;
   max-width: max-content !important;
   margin: 0 !important;
-  font-size: 11.5px !important;
+  font-size: 14px !important;
   font-weight: 600 !important;
   color: var(--text-dim) !important;
   cursor: pointer !important;
@@ -11380,7 +11380,7 @@ body.light .admin-filter-btn.active {
   align-items: center;
   justify-content: center;
   font-weight: 900;
-  font-size: 12px;
+  font-size: 14px;
   color: #FFFFFF;
   position: relative;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255,255,255,0.35);
@@ -11422,7 +11422,7 @@ body.light .admin-filter-btn.active {
   min-width: 0 !important;
 }
 .user-card-name {
-  font-size: 13px !important;
+  font-size: 14px !important;
   font-weight: 700 !important;
   color: #FFFFFF !important;
   white-space: nowrap !important;
@@ -11443,7 +11443,7 @@ body.light .admin-filter-btn.active {
 }
 .user-card-email,
 .user-email-line {
-  font-size: 11.5px !important;
+  font-size: 14px !important;
   color: #E2E8F0 !important;
   font-weight: 600 !important;
   white-space: nowrap !important;
@@ -11460,7 +11460,7 @@ body.light .admin-filter-btn.active {
   min-width: 0 !important;
 }
 .doc-pill {
-  font-size: 10.5px !important;
+  font-size: 14px !important;
   font-weight: 600 !important;
   padding: 1.5px 6px !important;
   border-radius: 5px !important;
@@ -11480,7 +11480,7 @@ body.light .admin-filter-btn.active {
   flex-wrap: wrap;
 }
 .user-stat-chip {
-  font-size: 10.5px;
+  font-size: 14px;
   font-weight: 600;
   padding: 1.5px 6px;
   border-radius: 5px;
@@ -11499,7 +11499,7 @@ body.light .admin-filter-btn.active {
 }
 
 .role-badge {
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 800;
   padding: 2px 7px;
   border-radius: 6px;
@@ -11571,7 +11571,7 @@ body.light .user-stat-chip strong { color: #000000 !important; }
   border-bottom: 2px solid #FDE68A !important;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 25px rgba(245, 158, 11, 0.4) !important;
   color: #060B18 !important;
-  font-size: 13.5px !important;
+  font-size: 14px !important;
   font-weight: 700 !important;
   backdrop-filter: blur(20px) !important;
   -webkit-backdrop-filter: blur(20px) !important;
@@ -11602,7 +11602,7 @@ body.light .user-stat-chip strong { color: #000000 !important; }
   color: #FFFFFF !important;
   border: 1.5px solid #FDE68A !important;
   font-weight: 800 !important;
-  font-size: 13px !important;
+  font-size: 14px !important;
   padding: 8px 18px !important;
   border-radius: 10px !important;
   cursor: pointer !important;
@@ -11733,7 +11733,7 @@ html.light .acc-card:hover {
   justify-content: center !important;
   font-weight: 900 !important;
   color: #FFFFFF !important;
-  font-size: 15px !important;
+  font-size: 14px !important;
   flex-shrink: 0 !important;
   border: 1.5px solid rgba(255, 255, 255, 0.45) !important;
   box-shadow: 0 8px 20px -4px rgba(0, 0, 0, 0.45), inset 0 1.5px 2px rgba(255, 255, 255, 0.6) !important;
@@ -11746,7 +11746,7 @@ html.light .acc-card:hover {
   display: inline-flex !important;
   align-items: center !important;
   gap: 5px !important;
-  font-size: 11px !important;
+  font-size: 14px !important;
   font-weight: 700 !important;
   padding: 3px 9px !important;
   border-radius: 7px !important;
@@ -11797,7 +11797,7 @@ html.light .acc-card-metrics {
 }
 
 .acc-metric-hero-label {
-  font-size: 11px !important;
+  font-size: 14px !important;
   font-weight: 700 !important;
   text-transform: uppercase !important;
   letter-spacing: 0.06em !important;
@@ -11842,7 +11842,7 @@ html.light .acc-subgrid {
 }
 
 .acc-subgrid-label {
-  font-size: 11px !important;
+  font-size: 14px !important;
   font-weight: 600 !important;
   color: var(--text-faint) !important;
 }
@@ -11864,7 +11864,7 @@ html.light .acc-subgrid-label {
   width: 100% !important;
   padding: 10px 14px !important;
   border-radius: 12px !important;
-  font-size: 12.5px !important;
+  font-size: 14px !important;
   font-weight: 700 !important;
   display: flex !important;
   align-items: center !important;
@@ -11883,7 +11883,7 @@ html.light .acc-subgrid-label {
 }
 
 .acc-view-tx-btn .btn-count-pill {
-  font-size: 11px !important;
+  font-size: 14px !important;
   font-weight: 800 !important;
   padding: 2px 7px !important;
   border-radius: 6px !important;
@@ -11940,9 +11940,9 @@ html.light .acc-view-tx-btn:hover {
 .modal{background:var(--card); border:1px solid var(--card-border); border-radius:16px; padding:24px; width:100%; max-width:440px; box-shadow:var(--shadow); position:relative; max-height:88vh; overflow-y:auto;}
 .modal h2{font-size:17px; margin-bottom:18px;}
 .field{margin-bottom:14px;}
-.field label{display:block; font-size:12px; color:var(--text-dim); margin-bottom:6px;}
+.field label{display:block; font-size:14px; color:var(--text-dim); margin-bottom:6px;}
 .field input, .field select{
-  width:100%; background:var(--bg); border:1px solid var(--card-border); border-radius:9px; padding:10px 12px; font-size:13.5px; outline:none;
+  width:100%; background:var(--bg); border:1px solid var(--card-border); border-radius:9px; padding:10px 12px; font-size:14px; outline:none;
 }
 .field input[type=color]{padding:3px; height:38px; cursor:pointer;}
 .field input[type=file]{padding:8px;}
@@ -11950,12 +11950,12 @@ html.light .acc-view-tx-btn:hover {
 .field-row .field{flex:1;}
 .toggle-type{display:flex; gap:8px; margin-bottom:14px;}
 .toggle-type button{
-  flex:1; padding:10px; border-radius:9px; border:1px solid var(--card-border); background:var(--bg); cursor:pointer; font-size:13px; font-weight:600; color:var(--text-dim);
+  flex:1; padding:10px; border-radius:9px; border:1px solid var(--card-border); background:var(--bg); cursor:pointer; font-size:14px; font-weight:600; color:var(--text-dim);
 }
 .toggle-type button.sel-in{background:var(--green-soft); color:var(--green); border-color:var(--green);}
 .toggle-type button.sel-out{background:var(--red-soft); color:var(--red); border-color:var(--red);}
 .modal-actions{display:flex; gap:10px; margin-top:18px;}
-.modal-actions button{flex:1; padding:11px; border-radius:10px; font-size:13.5px; cursor:pointer; border:1px solid var(--card-border); background:var(--bg); color:var(--text);}
+.modal-actions button{flex:1; padding:11px; border-radius:10px; font-size:14px; cursor:pointer; border:1px solid var(--card-border); background:var(--bg); color:var(--text);}
 .modal-actions .save{background:var(--green); border:none; color:#08130c; font-weight:700;}
 .close-x{position:absolute; top:16px; right:18px; background:none; border:none; color:var(--text-dim); font-size:18px; cursor:pointer;}
 
@@ -11985,7 +11985,7 @@ html.light .acc-view-tx-btn:hover {
   box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.65), 0 0 1px 1px rgba(255, 255, 255, 0.08) !important;
   
   color: #F8FAFC !important;
-  font-size: 13.5px !important;
+  font-size: 14px !important;
   font-weight: 600 !important;
   line-height: 1.4 !important;
   letter-spacing: -0.01em !important;
@@ -12031,7 +12031,7 @@ html.light .acc-view-tx-btn:hover {
   color: rgba(255, 255, 255, 0.45);
   cursor: pointer;
   padding: 3px 6px;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   border-radius: 6px;
   display: inline-flex;
@@ -12174,7 +12174,7 @@ body.light .toast-close:hover {
   gap: 7px;
   padding: 5px 14px;
   border-radius: 999px;
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -12286,7 +12286,7 @@ body.light .toast-close:hover {
 }
 .login-success-box p {
   color: #94A3B8 !important;
-  font-size: 13.8px !important;
+  font-size: 14px !important;
   line-height: 1.6 !important;
   font-weight: 500 !important;
   margin: 0 auto 24px !important;
@@ -12301,7 +12301,7 @@ body.light .toast-close:hover {
   padding: 15px 24px !important;
   border-radius: 16px !important;
   font-weight: 800 !important;
-  font-size: 14.5px !important;
+  font-size: 14px !important;
   letter-spacing: 0.01em !important;
   background: linear-gradient(135deg, #059669 0%, #047857 50%, #065F46 100%) !important;
   color: #FFFFFF !important;
@@ -12408,7 +12408,7 @@ body.light .toast-close:hover {
   color: #fff;
   border: 1px solid rgba(255, 255, 255, 0.25) !important;
   font-weight: 800;
-  font-size: 14.5px;
+  font-size: 14px;
   padding: 14px;
   border-radius: 16px;
   cursor: pointer;
@@ -12590,7 +12590,7 @@ body.light .login-success-box.warning-box p {
   }
 
   .login-success-box h3 { font-size: 20px !important; }
-  .login-success-box p { font-size: 13px !important; }
+  .login-success-box p { font-size: 14px !important; }
   .logout-btn-action { min-height: 52px; }
 }
 
@@ -12616,17 +12616,17 @@ body.light .login-success-box.warning-box p {
   .kpis { grid-template-columns: repeat(5, 1fr) !important; gap: 20px !important; }
   .kpis-grid-6 { grid-template-columns: repeat(6, 1fr) !important; gap: 20px !important; margin-bottom: 26px !important; }
   .kpi .val { font-size: 28px !important; }
-  .kpi .sub { font-size: 13px !important; }
+  .kpi .sub { font-size: 14px !important; }
   .dashboard-main-grid { gap: 26px !important; margin-bottom: 28px !important; }
   .dash-card { padding: 26px 28px !important; border-radius: 24px !important; }
   .dashboard-welcome-hero { padding: 32px 36px !important; border-radius: 24px !important; }
   .hero-greeting { font-size: 26px !important; }
   .dashboard-quick-actions-bar { padding: 14px 22px !important; border-radius: 18px !important; gap: 12px !important; }
-  .dash-quick-btn { padding: 10px 20px !important; font-size: 13.5px !important; border-radius: 13px !important; }
+  .dash-quick-btn { padding: 10px 20px !important; font-size: 14px !important; border-radius: 13px !important; }
   .table-panel { padding: 26px !important; border-radius: 22px !important; }
-  th { font-size: 11.5px !important; letter-spacing: .07em !important; }
-  td { font-size: 13.5px !important; padding: 15px 14px !important; }
-  .pill { font-size: 12px !important; padding: 4px 12px !important; }
+  th { font-size: 14px !important; letter-spacing: .07em !important; }
+  td { font-size: 14px !important; padding: 15px 14px !important; }
+  .pill { font-size: 14px !important; padding: 4px 12px !important; }
   .btn-action-edit, .btn-action-del { width: 34px !important; height: 34px !important; }
 }
 
@@ -12746,7 +12746,7 @@ body.light .mobile-drawer-logout-btn .ic svg {
   background: transparent;
   border: none;
   color: #94A3B8;
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   border-radius: 10px;
@@ -12835,7 +12835,7 @@ body.light .mobile-bottom-btn.active .ic svg {
     border: 1.5px solid rgba(239, 68, 68, 0.6) !important;
     color: #FFFFFF !important;
     font-weight: 800 !important;
-    font-size: 12px !important;
+    font-size: 14px !important;
     flex-shrink: 0 !important;
     visibility: visible !important;
     opacity: 1 !important;
@@ -12910,11 +12910,11 @@ body.light .mobile-bottom-btn.active .ic svg {
   .main { margin-top: 70px !important; padding: 12px 10px 60px !important; }
   .kpis { grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; }
   .kpi { padding: 14px 10px !important; }
-  .kpi .val { font-size: 16px !important; }
+  .kpi .val { font-size: 14px !important; }
   .page-head h1 { font-size: 17px !important; }
   .brand .name span { display: none !important; }
   .user .uname, .user .urole { display: none !important; }
-  .topheader-row .btn-ghost { padding: 8px 10px; font-size: 12px; }
+  .topheader-row .btn-ghost { padding: 8px 10px; font-size: 14px; }
 
   /* Modais deslizantes no celular */
   .overlay { align-items: flex-end; padding: 0; }
@@ -12922,9 +12922,9 @@ body.light .mobile-bottom-btn.active .ic svg {
   .field-row { flex-direction: column; gap: 0; }
   .field-row .field { margin-bottom: 14px; }
   .field { margin-bottom: 16px; }
-  .field label { font-size: 12.5px; margin-bottom: 7px; }
-  .field input, .field select { font-size: 16px; padding: 12px 13px; }
-  .toggle-type button { padding: 12px; font-size: 13.5px; }
+  .field label { font-size: 14px; margin-bottom: 7px; }
+  .field input, .field select { font-size: 14px; padding: 12px 13px; }
+  .toggle-type button { padding: 12px; font-size: 14px; }
   .modal-actions { position: sticky; bottom: 0; background: var(--card); padding-top: 10px; margin-top: 14px; border-top: 1px solid var(--card-border); }
   .modal-actions button { padding: 13px; font-size: 14px; }
   .close-x { top: 14px; right: 14px; font-size: 20px; padding: 6px; }
@@ -12933,7 +12933,7 @@ body.light .mobile-bottom-btn.active .ic svg {
   .table-panel { padding: 12px 10px; }
   table { min-width: 580px; }
   .filters { flex-direction: column; }
-  .filters input, .filters select { width: 100%; font-size: 16px; padding: 10px 12px; }
+  .filters input, .filters select { width: 100%; font-size: 14px; padding: 10px 12px; }
   .cat-cards { grid-template-columns: 1fr 1fr; gap: 10px; }
 }
 @media(max-width:360px){
@@ -12969,7 +12969,7 @@ body.light .mobile-bottom-btn.active .ic svg {
   background: transparent;
   color: var(--text, #F8FAFC);
   border-radius: 8px;
-  font-size: 12.5px;
+  font-size: 14px;
   cursor: pointer;
   display: flex;
   justify-content: space-between;
@@ -13038,7 +13038,7 @@ html.light .scale-dropdown .scale-opt-btn:hover {
   .user .avatar {
     width: 30px !important;
     height: 30px !important;
-    font-size: 11px !important;
+    font-size: 14px !important;
   }
   .user .uname, .user .urole {
     display: none !important;
@@ -13052,7 +13052,7 @@ html.light .scale-dropdown .scale-opt-btn:hover {
   gap: 4px;
   padding: 3px 8px;
   border-radius: 6px;
-  font-size: 10.5px;
+  font-size: 14px;
   font-weight: 700;
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -13835,7 +13835,7 @@ table {
 
 table th {
   padding: 12px 14px !important;
-  font-size: 11.5px !important;
+  font-size: 14px !important;
   font-weight: 700 !important;
   text-transform: uppercase !important;
   letter-spacing: 0.05em !important;
@@ -13851,7 +13851,7 @@ body.light table th {
 
 table td {
   padding: 14px 12px !important;
-  font-size: 13.5px !important;
+  font-size: 14px !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
   vertical-align: middle !important;
 }
@@ -13873,7 +13873,7 @@ body.light tr.trow:hover td {
 .btn-primary {
   border-radius: 12px !important;
   padding: 10px 18px !important;
-  font-size: 13px !important;
+  font-size: 14px !important;
   font-weight: 700 !important;
   letter-spacing: -0.01em !important;
   background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
@@ -13896,7 +13896,7 @@ body.light tr.trow:hover td {
 .btn-ghost {
   border-radius: 12px !important;
   padding: 9px 16px !important;
-  font-size: 13px !important;
+  font-size: 14px !important;
   font-weight: 600 !important;
   background: rgba(255, 255, 255, 0.06) !important;
   color: var(--text) !important;
@@ -13930,7 +13930,7 @@ input[type="password"],
 select, textarea {
   border-radius: 12px !important;
   padding: 10px 14px !important;
-  font-size: 13.5px !important;
+  font-size: 14px !important;
   letter-spacing: -0.01em !important;
   background: rgba(14, 20, 34, 0.8) !important;
   border: 1px solid rgba(255, 255, 255, 0.14) !important;
@@ -13957,7 +13957,7 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
 
 /* 9. Pílulas e Badges de Status (.pill, .cat-pill, .status-pago, etc.) */
 .pill, .cat-pill, .acc-pill, .type-pill, .kpi-tag, .status-pago, .status-recebido, .status-pendente {
-  font-size: 11.5px !important;
+  font-size: 14px !important;
   font-weight: 600 !important;
   padding: 4px 10px !important;
   border-radius: 8px !important;
@@ -14064,7 +14064,7 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
 
 /* Títulos e Rótulos de KPIs */
 .kpi .kpi-label, .dash-card-title, .kpi-title {
-  font-size: 11px !important;
+  font-size: 14px !important;
   font-weight: 750 !important;
   text-transform: uppercase !important;
   letter-spacing: 0.06em !important;
@@ -14085,7 +14085,7 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
 .due-bill-badge {
   padding: 3px 9px !important;
   border-radius: 999px !important;
-  font-size: 10.5px !important;
+  font-size: 14px !important;
   font-weight: 800 !important;
   letter-spacing: 0.03em !important;
   text-transform: uppercase !important;
@@ -14119,7 +14119,7 @@ table {
 
 table th {
   padding: 12px 16px !important;
-  font-size: 11px !important;
+  font-size: 14px !important;
   font-weight: 750 !important;
   text-transform: uppercase !important;
   letter-spacing: 0.06em !important;
@@ -14130,7 +14130,7 @@ table th {
 
 table td {
   padding: 13px 16px !important;
-  font-size: 13.5px !important;
+  font-size: 14px !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.04) !important;
   vertical-align: middle !important;
   transition: background 0.15s ease !important;
@@ -14152,7 +14152,7 @@ td:last-child, th:last-child, td.val, td.amount, td.tx-val, th.th-val {
   border: 1px solid rgba(5, 150, 105, 0.32) !important;
   padding: 3px 9px !important;
   border-radius: 999px !important;
-  font-size: 11px !important;
+  font-size: 14px !important;
   font-weight: 700 !important;
   display: inline-flex !important;
   align-items: center !important;
@@ -14165,7 +14165,7 @@ td:last-child, th:last-child, td.val, td.amount, td.tx-val, th.th-val {
   border: 1px solid rgba(245, 158, 11, 0.32) !important;
   padding: 3px 9px !important;
   border-radius: 999px !important;
-  font-size: 11px !important;
+  font-size: 14px !important;
   font-weight: 700 !important;
   display: inline-flex !important;
   align-items: center !important;
@@ -14191,7 +14191,7 @@ td:last-child, th:last-child, td.val, td.amount, td.tx-val, th.th-val {
 input[type="text"], input[type="number"], input[type="date"], input[type="email"], input[type="password"], select, textarea {
   border-radius: 12px !important;
   padding: 11px 15px !important;
-  font-size: 13.5px !important;
+  font-size: 14px !important;
   background: rgba(12, 18, 32, 0.85) !important;
   border: 1px solid rgba(255, 255, 255, 0.14) !important;
   color: #F8FAFC !important;
@@ -14569,7 +14569,7 @@ body.light .period button.active {
 }
 #authPage .auth-showcase-panel { max-width: 650px; gap: clamp(13px, 1.8vh, 20px); }
 #authPage .auth-showcase-title { max-width: 590px; font-size: clamp(32px, 3.05vw, 44px); line-height: 1.13; }
-#authPage .auth-showcase-desc { max-width: 540px; font-size: 15px; line-height: 1.65; }
+#authPage .auth-showcase-desc { max-width: 540px; font-size: 14px; line-height: 1.65; }
 #authPage .auth-showcase-metrics { gap: 10px; }
 #authPage .metric-val { font-size: clamp(16px, 1.45vw, 19px); }
 #monthlyRealMetrics {
@@ -14582,7 +14582,7 @@ body.light .period button.active {
   content: "Resumo financeiro deste mês";
   grid-column: 1 / -1;
   color: var(--text, #F8FAFC);
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 800;
 }
 .monthly-real-card {
@@ -14595,7 +14595,7 @@ body.light .period button.active {
 }
 .monthly-real-card .metric-heading {
   color: var(--text-dim, #94A3B8);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 800;
   letter-spacing: 0.045em;
   text-transform: uppercase;
@@ -14612,7 +14612,7 @@ body.light .period button.active {
 .monthly-real-card .metric-description {
   margin-top: 6px;
   color: var(--text-dim, #94A3B8);
-  font-size: 11px;
+  font-size: 14px;
   line-height: 1.45;
 }
 .monthly-real-card .metric-track {
@@ -14639,7 +14639,7 @@ body.light .monthly-real-card .metric-percentage { color: #0F172A; }
   display: block;
   margin-top: 8px;
   color: #A7B4AA;
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   line-height: 1.35;
 }
@@ -14786,7 +14786,7 @@ body.light #authPage .auth-trust-item {
 
 /* Refinamento de hierarquia, foco e legibilidade do menu lateral */
 nav.menu.sidebar-menu .menu-section-header { gap: 9px !important; padding: 14px 9px 6px !important; }
-nav.menu.sidebar-menu .menu-section-title { color: #94A3B8 !important; font-size: 9px !important; letter-spacing: 0.12em !important; }
+nav.menu.sidebar-menu .menu-section-title { color: #94A3B8 !important; font-size: 14px !important; letter-spacing: 0.12em !important; }
 nav.menu.sidebar-menu .menu-section-line { background: linear-gradient(90deg, rgba(148, 163, 184, .26), transparent) !important; }
 nav.menu.sidebar-menu .menu-btn-user:not(.active) { color: #CBD5E1 !important; }
 nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic { background: rgba(148, 163, 184, .06) !important; border-color: rgba(148, 163, 184, .12) !important; }
@@ -14803,7 +14803,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 #authPage .auth-showcase-title { font-size: clamp(32px, 3.05vw, 44px) !important; line-height: 1.14 !important; text-align: left !important; margin-left: 0 !important; margin-right: 0 !important; color: #F8FAFC !important; text-shadow: none !important; }
 #authPage .auth-showcase-title span { background: none !important; -webkit-text-fill-color: #34D399 !important; color: #34D399 !important; text-shadow: none !important; }
 #authPage .auth-showcase-title::after, #authPage .auth-showcase-desc::after { content: none !important; }
-#authPage .auth-showcase-desc { font-size: 15px !important; line-height: 1.65 !important; color: #CBD5E1 !important; }
+#authPage .auth-showcase-desc { font-size: 14px !important; line-height: 1.65 !important; color: #CBD5E1 !important; }
 #authPage .auth-metric-card, #authPage .auth-trust-item { background: #131F33 !important; border: 1px solid #24354F !important; color: #E2E8F0 !important; box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28) !important; }
 #authPage .auth-card-nexus, #authPage #serverAuthNexusCard { background: #131F33 !important; border: 1px solid #283B57 !important; border-top: 3px solid #10B981 !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55) !important; }
 #authPage .auth-logo-badge { background: #059669 !important; border: 1px solid #34D399 !important; box-shadow: 0 8px 20px rgba(5, 150, 105, 0.28) !important; }
@@ -14984,7 +14984,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
           </div>
 
           <!-- Lembrar de Mim -->
-          <div style="display:flex; justify-content:flex-start; align-items:center; margin-bottom:12px; font-size:12px; color:#CBD5E1;">
+          <div style="display:flex; justify-content:flex-start; align-items:center; margin-bottom:12px; font-size:14px; color:#CBD5E1;">
             <label style="display:flex; align-items:center; gap:8px; cursor:pointer; user-select:none; color:#FFFFFF; font-weight:600;">
               <input type="checkbox" id="rememberMe" style="accent-color:#2563EB; width:15px; height:15px; cursor:pointer;">
               <span>Manter conectado</span>
@@ -14998,7 +14998,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
           </button>
         </form>
 
-        <p class="auth-bottom-text" style="margin-top:16px; text-align:center; font-size:12.5px; color:#CBD5E1;">
+        <p class="auth-bottom-text" style="margin-top:16px; text-align:center; font-size:14px; color:#CBD5E1;">
           Não possui uma conta? <a onclick="window.switchAuthTab('register')" style="color:#38BDF8; font-weight:800; cursor:pointer; text-decoration:underline;">Cadastre-se gratuitamente</a>
         </p>
       </div>
@@ -15007,7 +15007,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
       <div id="registerBox" style="display:none;">
 
         <form id="registerForm" onsubmit="window.handleRegisterSubmit(event); return false;">
-          <div class="auth-register-section auth-register-step-1" style="font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#38BDF8; margin-bottom:8px; border-bottom:1px solid rgba(56,189,248,0.35); padding-bottom:4px;">
+          <div class="auth-register-section auth-register-step-1" style="font-size:14px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#38BDF8; margin-bottom:8px; border-bottom:1px solid rgba(56,189,248,0.35); padding-bottom:4px;">
             <span>1. Dados pessoais</span>
           </div>
 
@@ -15020,7 +15020,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
               </span>
               <input type="text" id="regCpf" placeholder="00000000000" maxlength="11" required autocomplete="off" oninput="window.handleServerCpfInput(this)" onchange="window.handleServerCpfInput(this)" onblur="window.handleServerCpfInput(this)" onpaste="setTimeout(() => window.handleServerCpfInput(this), 60)">
             </div>
-            <div id="regCpfFeedbackMsg" style="display:none; font-size:11px; font-weight:600; margin-top:4px;"></div>
+            <div id="regCpfFeedbackMsg" style="display:none; font-size:14px; font-weight:600; margin-top:4px;"></div>
           </div>
 
           <div class="auth-field" id="registerNameField">
@@ -15041,11 +15041,11 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
               </span>
               <input type="text" id="regBirthDate" placeholder="DD/MM/AAAA" maxlength="10" required autocomplete="bday" oninput="window.handleServerBirthInput(this)">
             </div>
-            <div id="regBirthFeedbackMsg" style="display:none; font-size:10px; font-weight:600; margin-top:3px;"></div>
+            <div id="regBirthFeedbackMsg" style="display:none; font-size:14px; font-weight:600; margin-top:3px;"></div>
           </div>
           </div>
 
-          <div class="auth-register-section auth-register-step-2" style="font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#38BDF8; margin:12px 0 8px; border-bottom:1px solid rgba(56,189,248,0.35); padding-bottom:4px;">
+          <div class="auth-register-section auth-register-step-2" style="font-size:14px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#38BDF8; margin:12px 0 8px; border-bottom:1px solid rgba(56,189,248,0.35); padding-bottom:4px;">
             <span>2. Contato</span>
           </div>
 
@@ -15071,7 +15071,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
             </div>
           </div>
 
-          <div class="auth-register-section auth-register-step-3" style="font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#38BDF8; margin:12px 0 8px; border-bottom:1px solid rgba(56,189,248,0.35); padding-bottom:4px;">
+          <div class="auth-register-section auth-register-step-3" style="font-size:14px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#38BDF8; margin:12px 0 8px; border-bottom:1px solid rgba(56,189,248,0.35); padding-bottom:4px;">
             <span>3. Segurança da conta</span>
           </div>
 
@@ -15099,9 +15099,9 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
               </div>
             </div>
           </div>
-          <div id="regPwdMatchMsg" style="display:none; font-size:10.5px; font-weight:600; margin-top:4px;"></div>
+          <div id="regPwdMatchMsg" style="display:none; font-size:14px; font-weight:600; margin-top:4px;"></div>
 
-          <div class="auth-register-consents" style="margin:12px 0 6px; font-size:11px; color:#CBD5E1; display:flex; flex-direction:column; gap:6px;">
+          <div class="auth-register-consents" style="margin:12px 0 6px; font-size:14px; color:#CBD5E1; display:flex; flex-direction:column; gap:6px;">
             <label style="display:flex; align-items:flex-start; gap:8px; cursor:pointer; color:#FFFFFF;">
               <input type="checkbox" id="regTerms" required style="margin-top:2px; accent-color:#2563EB; cursor:pointer;">
               <span>Li e concordo com os Termos de Abertura de Conta e a Política de Privacidade.</span>
@@ -15112,7 +15112,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
             </label>
           </div>
 
-          <div class="auth-register-security-note" style="margin:10px 0; padding:8px 10px; border-radius:10px; background:rgba(37,99,235,0.16); border:1px solid rgba(56,189,248,0.40); display:flex; align-items:center; gap:8px; font-size:10.5px; color:#FFFFFF;">
+          <div class="auth-register-security-note" style="margin:10px 0; padding:8px 10px; border-radius:10px; background:rgba(37,99,235,0.16); border:1px solid rgba(56,189,248,0.40); display:flex; align-items:center; gap:8px; font-size:14px; color:#FFFFFF;">
             <span style="color:#38BDF8; font-weight:800; font-size:14px;">🔒</span>
             <span>Seus dados são protegidos para manter suas finanças seguras.</span>
           </div>
@@ -15124,17 +15124,17 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
           </button>
         </form>
 
-        <p style="margin-top:16px; text-align:center; font-size:12.5px; color:#CBD5E1;">
+        <p style="margin-top:16px; text-align:center; font-size:14px; color:#CBD5E1;">
           Já possui cadastro? <a onclick="window.switchAuthTab('login')" style="color:#38BDF8; font-weight:800; cursor:pointer; text-decoration:underline;">Fazer Logon</a>
         </p>
       </div>
 
       <!-- Box 3: Recuperação de Senha com Confirmação Cadastral -->
       <div id="forgotBox" style="display:none;">
-        <div style="font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#38BDF8; margin-bottom:8px; border-bottom:1px solid rgba(56,189,248,0.35); padding-bottom:4px;">
+        <div style="font-size:14px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#38BDF8; margin-bottom:8px; border-bottom:1px solid rgba(56,189,248,0.35); padding-bottom:4px;">
           <span>Confirmação Cadastral para Recuperação</span>
         </div>
-        <p style="font-size:12.5px; color:#CBD5E1; margin-bottom:16px; line-height:1.5;">
+        <p style="font-size:14px; color:#CBD5E1; margin-bottom:16px; line-height:1.5;">
           Para gerar uma nova senha provisória, escolha como deseja se identificar (e-mail ou CPF) e confirme sua data de nascimento:
         </p>
 
@@ -15190,8 +15190,8 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 
       <!-- Ação Visual GLPI 10 Service Desk na Tela de Login -->
       <div style="margin-top:14px; width:100%; display:flex; flex-direction:column; align-items:center; gap:8px;">
-        <button type="button" class="btn-open-os" onclick="openNovaOrdemModal()" style="width:100%; justify-content:center; padding:11px 16px; border-radius:14px; background:linear-gradient(135deg, rgba(245,158,11,0.22), rgba(16,185,129,0.16)); border:1.5px solid rgba(245,158,11,0.5); color:#FDE68A; font-weight:800; font-size:12.5px; box-shadow:0 8px 20px rgba(0,0,0,0.35);">
-          <span style="display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; border-radius:6px; background:linear-gradient(135deg,#f59e0b,#ea580c); color:#fff; font-weight:900; font-size:12px;">G</span>
+        <button type="button" class="btn-open-os" onclick="openNovaOrdemModal()" style="width:100%; justify-content:center; padding:11px 16px; border-radius:14px; background:linear-gradient(135deg, rgba(245,158,11,0.22), rgba(16,185,129,0.16)); border:1.5px solid rgba(245,158,11,0.5); color:#FDE68A; font-weight:800; font-size:14px; box-shadow:0 8px 20px rgba(0,0,0,0.35);">
+          <span style="display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; border-radius:6px; background:linear-gradient(135deg,#f59e0b,#ea580c); color:#fff; font-weight:900; font-size:14px;">G</span>
           <span>🎫 Central GLPI — Abrir Chamado / Consultar Protocolo</span>
         </button>
         <!-- Canais de suporte abaixo da abertura de O.S. -->
@@ -15370,12 +15370,12 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         </div>
 
         <div class="scale-selector-wrap">
-          <button class="icon-btn" id="scaleMenuBtn" title="Tamanho de Visualização & Resolução de Tela" style="gap:6px; width:auto; padding:0 10px; font-size:12px; font-weight:700;">
+          <button class="icon-btn" id="scaleMenuBtn" title="Tamanho de Visualização & Resolução de Tela" style="gap:6px; width:auto; padding:0 10px; font-size:14px; font-weight:700;">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
             <span id="currentScaleLabel">Auto</span>
           </button>
           <div class="scale-dropdown" id="scaleDropdown" style="display:none;">
-            <div style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--text-muted); padding:6px 10px 4px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.08); margin-bottom:4px;">
+            <div style="font-size:14px; font-weight:800; text-transform:uppercase; color:var(--text-muted); padding:6px 10px 4px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.08); margin-bottom:4px;">
               <span>Tamanho / Resolução</span>
               <span id="scaleDropdownDevBadge" title="Dispositivo Ativo">🖥️</span>
             </div>
@@ -15401,7 +15401,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         </div>
 
 
-        <button type="button" class="btn-primary" id="headerMirrorExitBtn" onclick="exitViewMode()" style="display:none; background:linear-gradient(135deg, #F59E0B 0%, #D97706 100%) !important; color:#060B18 !important; font-weight:800 !important; font-size:12px !important; padding:6px 14px !important; border-radius:10px !important; border:1.5px solid #FDE68A !important; box-shadow:0 0 16px rgba(245,158,11,0.5) !important; cursor:pointer !important; align-items:center; gap:6px;">
+        <button type="button" class="btn-primary" id="headerMirrorExitBtn" onclick="exitViewMode()" style="display:none; background:linear-gradient(135deg, #F59E0B 0%, #D97706 100%) !important; color:#060B18 !important; font-weight:800 !important; font-size:14px !important; padding:6px 14px !important; border-radius:10px !important; border:1.5px solid #FDE68A !important; box-shadow:0 0 16px rgba(245,158,11,0.5) !important; cursor:pointer !important; align-items:center; gap:6px;">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>
           <span>Voltar ao Admin</span>
         </button>
@@ -15714,15 +15714,15 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
     <div class="field"><label>Categoria</label>
       <div style="display:flex; gap:6px;">
         <select id="fCategoria" style="flex:1;"></select>
-        <button type="button" id="fCategoriaAddBtn" title="Nova categoria" style="flex-shrink:0; width:40px; border:1px solid var(--card-border); background:var(--card); border-radius:10px; font-size:16px; font-weight:700; cursor:pointer; color:var(--text);">+</button>
+        <button type="button" id="fCategoriaAddBtn" title="Nova categoria" style="flex-shrink:0; width:40px; border:1px solid var(--card-border); background:var(--card); border-radius:10px; font-size:14px; font-weight:700; cursor:pointer; color:var(--text);">+</button>
       </div>
     </div>
     <div class="field"><label id="fContaLabel">Conta / Cartão</label>
       <div style="display:flex; gap:6px;">
         <select id="fConta" style="flex:1;"></select>
-        <button type="button" id="fContaAddBtn" title="Nova Conta ou Cartão de Débito" style="flex-shrink:0; width:40px; border:1px solid var(--card-border); background:var(--card); border-radius:10px; font-size:16px; font-weight:700; cursor:pointer; color:var(--text);">+</button>
+        <button type="button" id="fContaAddBtn" title="Nova Conta ou Cartão de Débito" style="flex-shrink:0; width:40px; border:1px solid var(--card-border); background:var(--card); border-radius:10px; font-size:14px; font-weight:700; cursor:pointer; color:var(--text);">+</button>
       </div>
-      <div id="cardLimitHint" style="display:none;margin-top:6px;font-size:12px;padding:8px 12px;border-radius:8px;background:var(--green-soft);color:var(--green);font-weight:600;align-items:center;gap:6px;"></div>
+      <div id="cardLimitHint" style="display:none;margin-top:6px;font-size:14px;padding:8px 12px;border-radius:8px;background:var(--green-soft);color:var(--green);font-weight:600;align-items:center;gap:6px;"></div>
     </div>
     <div class="field"><label>Status</label>
       <select id="fStatus"><option>Pago</option><option>Recebido</option><option>Pendente</option></select>
@@ -15842,7 +15842,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
     <div class="field">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
         <label style="margin:0;">Descrição</label>
-        <span id="recTypeBadge" style="font-size:11px; font-weight:800; padding:2px 8px; border-radius:6px; display:none; letter-spacing:0.02em;"></span>
+        <span id="recTypeBadge" style="font-size:14px; font-weight:800; padding:2px 8px; border-radius:6px; display:none; letter-spacing:0.02em;"></span>
       </div>
       <input id="recDesc" placeholder="Ex: Nubank, Boleto Aluguel, Internet Fibra, Energia" oninput="handleRecDescInput()">
     </div>
@@ -15869,7 +15869,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
       <div class="field" style="margin-bottom:8px;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
           <label style="margin:0; font-weight:700; color:var(--text);">Para quantos meses cadastrar?</label>
-          <span id="recMonthsCountPreview" style="font-size:11.5px; color:var(--green); font-weight:700;">12 meses</span>
+          <span id="recMonthsCountPreview" style="font-size:14px; color:var(--green); font-weight:700;">12 meses</span>
         </div>
         <input id="recTotalMonths" type="number" min="1" max="360" value="12" placeholder="Digite quantos meses for necessário (ex: 12)">
       </div>
@@ -15884,16 +15884,16 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
       </div>
       <div class="field-row" style="margin-bottom:0;">
         <div class="field" style="margin-bottom:0;">
-          <label style="font-size:11.5px;">Mês Inicial</label>
-          <select id="recStartMonth" style="font-size:12.5px; padding:8px 10px;"></select>
+          <label style="font-size:14px;">Mês Inicial</label>
+          <select id="recStartMonth" style="font-size:14px; padding:8px 10px;"></select>
         </div>
         <div class="field" style="margin-bottom:0;">
-          <label style="font-size:11.5px;">Ano Inicial</label>
-          <input id="recStartYear" type="number" min="2020" max="2050" style="font-size:12.5px; padding:8px 10px;">
+          <label style="font-size:14px;">Ano Inicial</label>
+          <input id="recStartYear" type="number" min="2020" max="2050" style="font-size:14px; padding:8px 10px;">
         </div>
         <div class="field" id="recAppliedField" style="margin-bottom:0; display:none;">
-          <label style="font-size:11.5px;">Meses já Lançados</label>
-          <input id="recAppliedMonths" type="number" min="0" max="360" value="0" style="font-size:12.5px; padding:8px 10px;">
+          <label style="font-size:14px;">Meses já Lançados</label>
+          <input id="recAppliedMonths" type="number" min="0" max="360" value="0" style="font-size:14px; padding:8px 10px;">
         </div>
       </div>
     </div>
@@ -15913,7 +15913,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
       <span style="font-size:22px; background:rgba(5, 150, 105,0.15); width:42px; height:42px; display:flex; align-items:center; justify-content:center; border-radius:12px; color:var(--brand-bright); flex-shrink:0;">⚡</span>
       <div>
         <h2 style="margin:0; font-size:17px; font-weight:800; color:var(--text);">Aplicar Lançamento Recorrente</h2>
-        <p style="margin:2px 0 0 0; font-size:12px; color:var(--text-dim);" id="launchRecSubtitle">Selecione como deseja lançar esta conta no sistema</p>
+        <p style="margin:2px 0 0 0; font-size:14px; color:var(--text-dim);" id="launchRecSubtitle">Selecione como deseja lançar esta conta no sistema</p>
       </div>
     </div>
 
@@ -15922,21 +15922,21 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
     </div>
 
     <div style="display:flex; flex-direction:column; gap:10px;">
-      <button class="btn-primary" id="btnLaunchNextMonth" style="padding:12px 16px; font-size:13px; font-weight:700; display:flex; align-items:center; justify-content:space-between; width:100%; border-radius:10px;">
+      <button class="btn-primary" id="btnLaunchNextMonth" style="padding:12px 16px; font-size:14px; font-weight:700; display:flex; align-items:center; justify-content:space-between; width:100%; border-radius:10px;">
         <span style="display:flex; align-items:center; gap:8px;">▶ <span id="btnLaunchNextMonthLabel">Lançar Próximo Mês</span></span>
-        <span class="pill" id="launchNextMonthPill" style="background:rgba(0,0,0,0.25); color:#fff; font-size:11px;">Mês 1 de 12</span>
+        <span class="pill" id="launchNextMonthPill" style="background:rgba(0,0,0,0.25); color:#fff; font-size:14px;">Mês 1 de 12</span>
       </button>
 
-      <button class="btn-ghost" id="btnLaunchAllMonths" style="padding:12px 16px; font-size:13px; font-weight:700; display:flex; align-items:center; justify-content:space-between; width:100%; border-radius:10px; border:1px solid rgba(5, 150, 105,0.35); background:rgba(5, 150, 105,0.08); color:var(--blue);">
+      <button class="btn-ghost" id="btnLaunchAllMonths" style="padding:12px 16px; font-size:14px; font-weight:700; display:flex; align-items:center; justify-content:space-between; width:100%; border-radius:10px; border:1px solid rgba(5, 150, 105,0.35); background:rgba(5, 150, 105,0.08); color:var(--blue);">
         <span style="display:flex; align-items:center; gap:8px;">⚡ <span id="btnLaunchAllMonthsLabel">Lançar Todos os Meses Restantes em Lote</span></span>
-        <span class="pill" id="launchAllMonthsPill" style="background:rgba(5, 150, 105,0.2); color:var(--blue); font-size:11px;">Restam 11 meses</span>
+        <span class="pill" id="launchAllMonthsPill" style="background:rgba(5, 150, 105,0.2); color:var(--blue); font-size:14px;">Restam 11 meses</span>
       </button>
 
-      <button class="btn-ghost" id="btnLaunchSelectedPeriod" style="padding:10px 14px; font-size:12px; display:flex; align-items:center; justify-content:center; gap:6px; width:100%; border-radius:10px;">
+      <button class="btn-ghost" id="btnLaunchSelectedPeriod" style="padding:10px 14px; font-size:14px; display:flex; align-items:center; justify-content:center; gap:6px; width:100%; border-radius:10px;">
         📅 Lançar no Período Selecionado (<span id="launchSelectedPeriodLabel">Mês Atual</span>)
       </button>
 
-      <button class="btn-ghost" id="btnResetRecCount" style="padding:8px 12px; font-size:11.5px; color:var(--text-dim); display:none; align-items:center; justify-content:center; gap:6px; width:100%;">
+      <button class="btn-ghost" id="btnResetRecCount" style="padding:8px 12px; font-size:14px; color:var(--text-dim); display:none; align-items:center; justify-content:center; gap:6px; width:100%;">
         🔄 Reiniciar Contagem de Meses Lançados
       </button>
     </div>
@@ -15965,79 +15965,79 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 <div class="overlay" id="overlayUserAdmin" onclick="if(event.target===this) closeUserAdminModal()">
   <div class="modal" style="max-width:760px; border-radius:20px; border:1px solid rgba(255,255,255,0.18); border-top:1.5px solid rgba(255,255,255,0.45); background:linear-gradient(145deg, rgba(20,28,48,0.96) 0%, rgba(10,15,30,0.99) 100%); backdrop-filter:blur(36px); -webkit-backdrop-filter:blur(36px); box-shadow:0 24px 60px rgba(0,0,0,0.9), 0 0 32px rgba(5, 150, 105,0.16); padding:18px 20px;">
     <button class="close-x" id="closeUserAdminModal" type="button" onclick="closeUserAdminModal()">✕</button>
-    <div style="display:inline-flex; align-items:center; gap:5px; padding:2px 8px; border-radius:999px; background:rgba(245,158,11,0.14); border:1px solid rgba(245,158,11,0.35); color:#FBBF24; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px;">
+    <div style="display:inline-flex; align-items:center; gap:5px; padding:2px 8px; border-radius:999px; background:rgba(245,158,11,0.14); border:1px solid rgba(245,158,11,0.35); color:#FBBF24; font-size:14px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px;">
       <span>🛠️ Gestão & Correção Cadastral</span>
     </div>
     <h2 style="font-size:17px; font-weight:900; margin:0 0 3px 0; color:var(--text);">Cadastro do Usuário</h2>
-    <p style="font-size:11.5px; color:var(--text-dim); margin:0 0 12px 0; line-height:1.35;">
+    <p style="font-size:14px; color:var(--text-dim); margin:0 0 12px 0; line-height:1.35;">
       Cadastre uma nova conta ou corrija dados cadastrais, restaure acessos e gerencie privilégios.
     </p>
 
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:9px; margin-bottom:10px;">
       <div class="field" style="grid-column:1 / -1; margin-bottom:0;">
-        <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Nome Completo *</label>
-        <input id="userAdminName" placeholder="Ex: Paulo Lima" style="height:35px; border-radius:9px; font-size:12.5px; padding:0 10px;">
+        <label style="font-size:14px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Nome Completo *</label>
+        <input id="userAdminName" placeholder="Ex: Paulo Lima" style="height:35px; border-radius:9px; font-size:14px; padding:0 10px;">
       </div>
 
       <div class="field" style="margin-bottom:0;">
-        <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">CPF (Titular)</label>
-        <input id="userAdminCpf" placeholder="00000000000" maxlength="11" oninput="maskCpfInput(this)" style="height:35px; border-radius:9px; font-size:12.5px; padding:0 10px;">
+        <label style="font-size:14px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">CPF (Titular)</label>
+        <input id="userAdminCpf" placeholder="00000000000" maxlength="11" oninput="maskCpfInput(this)" style="height:35px; border-radius:9px; font-size:14px; padding:0 10px;">
       </div>
 
       <div class="field" style="margin-bottom:0;">
-        <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Telefone / WhatsApp</label>
-        <input id="userAdminPhone" placeholder="(00) 00000-0000" maxlength="15" oninput="maskPhoneInput(this)" style="height:35px; border-radius:9px; font-size:12.5px; padding:0 10px;">
+        <label style="font-size:14px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Telefone / WhatsApp</label>
+        <input id="userAdminPhone" placeholder="(00) 00000-0000" maxlength="15" oninput="maskPhoneInput(this)" style="height:35px; border-radius:9px; font-size:14px; padding:0 10px;">
       </div>
 
       <div class="field" style="margin-bottom:0;">
-        <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Data de nascimento</label>
-        <input id="userAdminBirth" type="date" max="2100-12-31" style="height:35px; border-radius:9px; font-size:12.5px; padding:0 10px; color-scheme:dark;">
+        <label style="font-size:14px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Data de nascimento</label>
+        <input id="userAdminBirth" type="date" max="2100-12-31" style="height:35px; border-radius:9px; font-size:14px; padding:0 10px; color-scheme:dark;">
       </div>
-      <div style="margin-bottom:0; align-self:end; font-size:10.5px; line-height:1.35; color:var(--text-dim);">Com e-mail ou CPF, o nascimento confirma a identidade na recuperação de senha.</div>
+      <div style="margin-bottom:0; align-self:end; font-size:14px; line-height:1.35; color:var(--text-dim);">Com e-mail ou CPF, o nascimento confirma a identidade na recuperação de senha.</div>
 
       <div class="field" style="grid-column:1 / -1; margin-bottom:0;">
-        <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:flex; justify-content:space-between; align-items:center;">
+        <label style="font-size:14px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:flex; justify-content:space-between; align-items:center;">
           <span>E-mail de Acesso *</span>
-          <span style="font-size:10px; color:#34D399; font-weight:600;">Login oficial da conta</span>
+          <span style="font-size:14px; color:#34D399; font-weight:600;">Login oficial da conta</span>
         </label>
-        <input id="userAdminEmail" placeholder="email@exemplo.com" style="height:35px; border-radius:9px; font-size:12.5px; padding:0 10px;">
+        <input id="userAdminEmail" placeholder="email@exemplo.com" style="height:35px; border-radius:9px; font-size:14px; padding:0 10px;">
       </div>
 
       <div class="field" style="margin-bottom:0;">
-        <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Perfil / Nível</label>
-        <select id="userAdminRole" onchange="updateUserAdminRoleHint()" style="height:35px; border-radius:9px; font-size:12px; font-weight:700; padding:0 8px;">
+        <label style="font-size:14px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Perfil / Nível</label>
+        <select id="userAdminRole" onchange="updateUserAdminRoleHint()" style="height:35px; border-radius:9px; font-size:14px; font-weight:700; padding:0 8px;">
           <option value="Usuário">Usuário (Padrão)</option>
           <option value="Administrador">Administrador (Nexus + GLPI)</option>
         </select>
       </div>
 
       <div class="field" style="margin-bottom:0;">
-        <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Status da Conta</label>
-        <select id="userAdminActive" style="height:35px; border-radius:9px; font-size:12px; font-weight:700; padding:0 8px;">
+        <label style="font-size:14px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Status da Conta</label>
+        <select id="userAdminActive" style="height:35px; border-radius:9px; font-size:14px; font-weight:700; padding:0 8px;">
           <option value="true">✅ Ativa (Liberada)</option>
           <option value="false">🚫 Desativada (Bloqueada)</option>
         </select>
       </div>
 
       <!-- Explica o que cada perfil libera: o administrador cadastrado aqui entra no Nexus (painel administrativo) e no GLPI (atendimento) com o mesmo e-mail e senha -->
-      <div id="userAdminRoleHint" style="grid-column:1 / -1; margin:0; padding:7px 10px; border-radius:9px; font-size:11px; line-height:1.4; color:var(--text-dim); background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1);"></div>
+      <div id="userAdminRoleHint" style="grid-column:1 / -1; margin:0; padding:7px 10px; border-radius:9px; font-size:14px; line-height:1.4; color:var(--text-dim); background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1);"></div>
     </div>
 
     <div class="field" style="margin-bottom:12px; border-top:1px solid rgba(255,255,255,0.08); padding-top:9px;">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
-        <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin:0;">Senha de Acesso</label>
-        <span class="cfg-hint" id="userAdminPasswordHint" style="margin:0; font-size:10px;">Em branco mantém a atual</span>
+        <label style="font-size:14px; font-weight:700; color:var(--text-dim); margin:0;">Senha de Acesso</label>
+        <span class="cfg-hint" id="userAdminPasswordHint" style="margin:0; font-size:14px;">Em branco mantém a atual</span>
       </div>
       <div class="pass-field">
-        <input id="userAdminPassword" type="password" placeholder="Mín. 8, com maiúscula e símbolo" style="height:35px; border-radius:9px; font-size:12.5px; padding:0 10px;">
+        <input id="userAdminPassword" type="password" placeholder="Mín. 8, com maiúscula e símbolo" style="height:35px; border-radius:9px; font-size:14px; padding:0 10px;">
         <button type="button" class="pass-toggle" id="userAdminPasswordToggle" tabindex="-1" aria-label="Mostrar senha"></button>
       </div>
-      <button type="button" class="btn-ghost" onclick="admGerarSenhaNoModal()" title="Preenche o campo com uma senha forte e a mostra para você anotar" style="margin-top:6px; height:30px; padding:0 10px; border-radius:8px; font-size:11px; font-weight:700;">🔑 Gerar senha forte</button>
+      <button type="button" class="btn-ghost" onclick="admGerarSenhaNoModal()" title="Preenche o campo com uma senha forte e a mostra para você anotar" style="margin-top:6px; height:30px; padding:0 10px; border-radius:8px; font-size:14px; font-weight:700;">🔑 Gerar senha forte</button>
     </div>
 
     <div class="modal-actions" style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-top:10px;">
-      <button id="userAdminCancelBtn" type="button" onclick="closeUserAdminModal()" style="height:34px; padding:0 14px; border-radius:9px; font-size:12px;">Cancelar</button>
-      <button class="save" id="userAdminSaveBtn" type="button" onclick="saveUserAdmin()" style="height:34px; padding:0 18px; border-radius:9px; background:linear-gradient(135deg, #059669, #059669); font-weight:800; font-size:12px;">
+      <button id="userAdminCancelBtn" type="button" onclick="closeUserAdminModal()" style="height:34px; padding:0 14px; border-radius:9px; font-size:14px;">Cancelar</button>
+      <button class="save" id="userAdminSaveBtn" type="button" onclick="saveUserAdmin()" style="height:34px; padding:0 18px; border-radius:9px; background:linear-gradient(135deg, #059669, #059669); font-weight:800; font-size:14px;">
         Atualizar Cadastro ✓
       </button>
     </div>
@@ -16061,36 +16061,36 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 
     <div id="boxNovaOrdemForm">
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
-        <div style="display:inline-flex; align-items:center; gap:7px; padding:4px 12px; border-radius:999px; background:rgba(245, 158, 11, 0.16); border:1px solid rgba(245, 158, 11, 0.45); color:#FDE68A; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em;">
-          <span style="display:inline-flex; align-items:center; justify-content:center; width:16px; height:16px; border-radius:4px; background:linear-gradient(135deg,#f59e0b,#ea580c); color:#fff; font-weight:900; font-size:10px;">G</span>
+        <div style="display:inline-flex; align-items:center; gap:7px; padding:4px 12px; border-radius:999px; background:rgba(245, 158, 11, 0.16); border:1px solid rgba(245, 158, 11, 0.45); color:#FDE68A; font-size:14px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em;">
+          <span style="display:inline-flex; align-items:center; justify-content:center; width:16px; height:16px; border-radius:4px; background:linear-gradient(135deg,#f59e0b,#ea580c); color:#fff; font-weight:900; font-size:14px;">G</span>
           <span>GLPI 10 Enterprise ITSM — Recepção Direta no Perfil Admin</span>
         </div>
-        <span style="font-size:11px; color:#94A3B8; font-weight:700;">📡 Sincronizado em Tempo Real</span>
+        <span style="font-size:14px; color:#94A3B8; font-weight:700;">📡 Sincronizado em Tempo Real</span>
       </div>
       <h2 style="font-size:18.5px; font-weight:900; margin-bottom:4px; display:flex; align-items:center; gap:8px;">
         Central de Serviços &amp; Autoatendimento GLPI
       </h2>
-      <p style="font-size:12px; color:var(--text-dim); margin:0 0 11px 0; line-height:1.4;">
+      <p style="font-size:14px; color:var(--text-dim); margin:0 0 11px 0; line-height:1.4;">
         Selecione um item do <strong>Catálogo de Serviços GLPI</strong> abaixo ou preencha os campos. O chamado cai imediatamente no <strong>Console GLPI do Administrador</strong>.
       </p>
 
       <!-- Catálogo de Serviços GLPI 10 -->
       <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(135px, 1fr)); gap:7px; margin-bottom:12px;">
-        <button type="button" class="os-quick-cat-btn" data-oscat="Sistema Financeiro" onclick="window.selecionarCategoriaRapidaOs('Sistema Financeiro & ERP', 'Alta', 'Incidente no Sistema Financeiro / ERP', 'Relato de erro em lançamentos financeiros, conciliação bancária, boletos ou relatórios contábeis.')" style="padding:8px 10px; border-radius:12px; background:rgba(16,185,129,0.14); border:1px solid rgba(16,185,129,0.4); color:#A7F3D0; font-size:11px; font-weight:800; cursor:pointer; text-align:left; display:flex; flex-direction:column; gap:2px; transition:all 0.2s;">
+        <button type="button" class="os-quick-cat-btn" data-oscat="Sistema Financeiro" onclick="window.selecionarCategoriaRapidaOs('Sistema Financeiro & ERP', 'Alta', 'Incidente no Sistema Financeiro / ERP', 'Relato de erro em lançamentos financeiros, conciliação bancária, boletos ou relatórios contábeis.')" style="padding:8px 10px; border-radius:12px; background:rgba(16,185,129,0.14); border:1px solid rgba(16,185,129,0.4); color:#A7F3D0; font-size:14px; font-weight:800; cursor:pointer; text-align:left; display:flex; flex-direction:column; gap:2px; transition:all 0.2s;">
           <span>💰 Financeiro &amp; ERP</span>
-          <span style="font-size:10px; color:#34D399; font-weight:600;">Lançamentos, PIX e Boletos</span>
+          <span style="font-size:14px; color:#34D399; font-weight:600;">Lançamentos, PIX e Boletos</span>
         </button>
-        <button type="button" class="os-quick-cat-btn" data-oscat="Gestão de Acessos" onclick="window.selecionarCategoriaRapidaOs('Gestão de Acessos & Senha', 'Alta', 'Gestão de Acessos / Reset de Senha', 'Solicito recuperação de acesso, reset de senha, desbloqueio de MFA ou liberação de perfil.')" style="padding:8px 10px; border-radius:12px; background:rgba(245,158,11,0.14); border:1px solid rgba(245,158,11,0.4); color:#FDE68A; font-size:11px; font-weight:800; cursor:pointer; text-align:left; display:flex; flex-direction:column; gap:2px; transition:all 0.2s;">
+        <button type="button" class="os-quick-cat-btn" data-oscat="Gestão de Acessos" onclick="window.selecionarCategoriaRapidaOs('Gestão de Acessos & Senha', 'Alta', 'Gestão de Acessos / Reset de Senha', 'Solicito recuperação de acesso, reset de senha, desbloqueio de MFA ou liberação de perfil.')" style="padding:8px 10px; border-radius:12px; background:rgba(245,158,11,0.14); border:1px solid rgba(245,158,11,0.4); color:#FDE68A; font-size:14px; font-weight:800; cursor:pointer; text-align:left; display:flex; flex-direction:column; gap:2px; transition:all 0.2s;">
           <span>🔐 Acessos &amp; Senha</span>
-          <span style="font-size:10px; color:#FBBF24; font-weight:600;">Reset, Login e MFA</span>
+          <span style="font-size:14px; color:#FBBF24; font-weight:600;">Reset, Login e MFA</span>
         </button>
-        <button type="button" class="os-quick-cat-btn" data-oscat="Suporte Técnico" onclick="window.selecionarCategoriaRapidaOs('Suporte Técnico & Infra', 'Média', 'Suporte Técnico & Infraestrutura', 'Solicito apoio técnico para lentidão, falha de conexão, banco de dados ou estação de trabalho.')" style="padding:8px 10px; border-radius:12px; background:rgba(14,165,233,0.14); border:1px solid rgba(14,165,233,0.4); color:#BAE6FD; font-size:11px; font-weight:800; cursor:pointer; text-align:left; display:flex; flex-direction:column; gap:2px; transition:all 0.2s;">
+        <button type="button" class="os-quick-cat-btn" data-oscat="Suporte Técnico" onclick="window.selecionarCategoriaRapidaOs('Suporte Técnico & Infra', 'Média', 'Suporte Técnico & Infraestrutura', 'Solicito apoio técnico para lentidão, falha de conexão, banco de dados ou estação de trabalho.')" style="padding:8px 10px; border-radius:12px; background:rgba(14,165,233,0.14); border:1px solid rgba(14,165,233,0.4); color:#BAE6FD; font-size:14px; font-weight:800; cursor:pointer; text-align:left; display:flex; flex-direction:column; gap:2px; transition:all 0.2s;">
           <span>💻 Suporte &amp; Infra</span>
-          <span style="font-size:10px; color:#38BDF8; font-weight:600;">Erros, Rede e Estação</span>
+          <span style="font-size:14px; color:#38BDF8; font-weight:600;">Erros, Rede e Estação</span>
         </button>
-        <button type="button" class="os-quick-cat-btn" data-oscat="Projetos" onclick="window.selecionarCategoriaRapidaOs('Projetos & Melhorias', 'Baixa', 'Solicitação de Projeto / Melhoria', 'Solicito avaliação de melhoria, automação de processo ou novo relatório gerencial.')" style="padding:8px 10px; border-radius:12px; background:rgba(168,85,247,0.14); border:1px solid rgba(168,85,247,0.4); color:#E9D5FF; font-size:11px; font-weight:800; cursor:pointer; text-align:left; display:flex; flex-direction:column; gap:2px; transition:all 0.2s;">
+        <button type="button" class="os-quick-cat-btn" data-oscat="Projetos" onclick="window.selecionarCategoriaRapidaOs('Projetos & Melhorias', 'Baixa', 'Solicitação de Projeto / Melhoria', 'Solicito avaliação de melhoria, automação de processo ou novo relatório gerencial.')" style="padding:8px 10px; border-radius:12px; background:rgba(168,85,247,0.14); border:1px solid rgba(168,85,247,0.4); color:#E9D5FF; font-size:14px; font-weight:800; cursor:pointer; text-align:left; display:flex; flex-direction:column; gap:2px; transition:all 0.2s;">
           <span>🚀 Projetos &amp; Melhorias</span>
-          <span style="font-size:10px; color:#C084FC; font-weight:600;">Novas Funções e Relatórios</span>
+          <span style="font-size:14px; color:#C084FC; font-weight:600;">Novas Funções e Relatórios</span>
         </button>
       </div>
 
@@ -16146,8 +16146,8 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 
         <!-- Banner Dinâmico de SLA GLPI -->
         <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px; border-radius:10px; background:rgba(245,158,11,0.10); border:1px solid rgba(245,158,11,0.32); margin-bottom:10px;">
-          <span style="font-size:11.5px; color:#FDE68A; font-weight:700;">⏱️ Compromisso de SLA GLPI Estimado:</span>
-          <strong id="osSlaPreviewBadge" style="font-size:12.5px; color:#FBBF24; font-family:monospace;">24 Horas</strong>
+          <span style="font-size:14px; color:#FDE68A; font-weight:700;">⏱️ Compromisso de SLA GLPI Estimado:</span>
+          <strong id="osSlaPreviewBadge" style="font-size:14px; color:#FBBF24; font-family:monospace;">24 Horas</strong>
         </div>
 
         <div class="field">
@@ -16157,10 +16157,10 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 
         <div class="field">
           <label>Descrição Detalhada da Solicitação *</label>
-          <textarea id="osDescription" rows="3" required style="width:100%; border-radius:12px; padding:10px 12px; background:var(--input-bg, rgba(0,0,0,0.3)); border:1px solid var(--card-border); color:var(--text); font-family:inherit; font-size:13px; resize:vertical;" placeholder="Descreva o que ocorreu, código de erro ou informações para o atendimento técnico..."></textarea>
+          <textarea id="osDescription" rows="3" required style="width:100%; border-radius:12px; padding:10px 12px; background:var(--input-bg, rgba(0,0,0,0.3)); border:1px solid var(--card-border); color:var(--text); font-family:inherit; font-size:14px; resize:vertical;" placeholder="Descreva o que ocorreu, código de erro ou informações para o atendimento técnico..."></textarea>
         </div>
 
-        <div id="osFormFeedback" style="display:none; padding:10px 14px; border-radius:10px; font-size:12px; font-weight:700; margin-bottom:14px;"></div>
+        <div id="osFormFeedback" style="display:none; padding:10px 14px; border-radius:10px; font-size:14px; font-weight:700; margin-bottom:14px;"></div>
 
         <div class="modal-actions" style="margin-top:14px;">
           <button type="button" onclick="closeNovaOrdemModal()">Cancelar</button>
@@ -16177,20 +16177,20 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         ✓
       </div>
       <h3 style="font-size:20px; font-weight:900; margin-bottom:6px;">Chamado Registrado no GLPI Service Desk!</h3>
-      <p style="font-size:13px; color:var(--text-dim); margin-bottom:18px;">
+      <p style="font-size:14px; color:var(--text-dim); margin-bottom:18px;">
         Seu chamado já foi entregue diretamente na fila do <strong>Console GLPI do Administrador</strong> para tratamento técnico.
       </p>
 
       <div style="background:rgba(255,255,255,0.05); border:1px solid rgba(16, 185, 129, 0.35); border-radius:16px; padding:16px; margin-bottom:20px;">
-        <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#94A3B8; letter-spacing:0.06em; display:block; margin-bottom:4px;">Protocolo Oficial GLPI</span>
+        <span style="font-size:14px; font-weight:800; text-transform:uppercase; color:#94A3B8; letter-spacing:0.06em; display:block; margin-bottom:4px;">Protocolo Oficial GLPI</span>
         <div style="font-size:22px; font-weight:900; color:#34D399; letter-spacing:0.04em;" id="osSuccessProtocol">OS-0000</div>
         <div style="display:flex; justify-content:center; gap:8px; margin-top:10px; flex-wrap:wrap;">
-          <button type="button" onclick="copyOsProtocol()" style="background:rgba(16, 185, 129, 0.2); border:1px solid rgba(52,211,153,0.4); color:#A7F3D0; font-size:12px; font-weight:700; border-radius:8px; padding:6px 14px; cursor:pointer;">📋 Copiar Protocolo</button>
-          <button type="button" onclick="consultarProtocoloRecente()" style="background:rgba(14, 165, 233, 0.2); border:1px solid rgba(56, 189, 248, 0.4); color:#BAE6FD; font-size:12px; font-weight:700; border-radius:8px; padding:6px 14px; cursor:pointer;">🔍 Acompanhar Andamento</button>
+          <button type="button" onclick="copyOsProtocol()" style="background:rgba(16, 185, 129, 0.2); border:1px solid rgba(52,211,153,0.4); color:#A7F3D0; font-size:14px; font-weight:700; border-radius:8px; padding:6px 14px; cursor:pointer;">📋 Copiar Protocolo</button>
+          <button type="button" onclick="consultarProtocoloRecente()" style="background:rgba(14, 165, 233, 0.2); border:1px solid rgba(56, 189, 248, 0.4); color:#BAE6FD; font-size:14px; font-weight:700; border-radius:8px; padding:6px 14px; cursor:pointer;">🔍 Acompanhar Andamento</button>
         </div>
       </div>
 
-      <button type="button" onclick="openNovaOrdemModal('abrir')" style="width:100%; height:42px; margin-bottom:10px; border-radius:12px; background:rgba(16, 185, 129, 0.16); border:1px solid rgba(52,211,153,0.45); color:#A7F3D0; font-size:13px; font-weight:800; cursor:pointer;">
+      <button type="button" onclick="openNovaOrdemModal('abrir')" style="width:100%; height:42px; margin-bottom:10px; border-radius:12px; background:rgba(16, 185, 129, 0.16); border:1px solid rgba(52,211,153,0.45); color:#A7F3D0; font-size:14px; font-weight:800; cursor:pointer;">
         ＋ Abrir outro chamado GLPI
       </button>
       <button type="button" class="btn-auth-primary" onclick="closeNovaOrdemModal()" style="width:100%; height:42px;">
@@ -16200,32 +16200,32 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 
     <!-- Aba de Consulta de Chamado GLPI -->
     <div id="boxConsultarOrdem" style="display:none;">
-      <div style="display:inline-flex; align-items:center; gap:6px; padding:4px 12px; border-radius:999px; background:rgba(14, 165, 233, 0.15); border:1px solid rgba(14, 165, 233, 0.35); color:#38BDF8; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:12px;">
+      <div style="display:inline-flex; align-items:center; gap:6px; padding:4px 12px; border-radius:999px; background:rgba(14, 165, 233, 0.15); border:1px solid rgba(14, 165, 233, 0.35); color:#38BDF8; font-size:14px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:12px;">
         <span style="width:6px; height:6px; border-radius:50%; background:#38BDF8; box-shadow:0 0 8px #38BDF8;"></span>
         <span>Acompanhamento de Chamados GLPI</span>
       </div>
       <h2 style="font-size:20px; font-weight:900; margin-bottom:6px; display:flex; align-items:center; gap:8px;">
         Consultar Protocolo GLPI
       </h2>
-      <p style="font-size:13px; color:var(--text-dim); margin:0 0 16px 0; line-height:1.45;">
+      <p style="font-size:14px; color:var(--text-dim); margin:0 0 16px 0; line-height:1.45;">
         Consulte o status, técnico atribuído, SLA e respostas técnicas informando seu <strong>Protocolo GLPI</strong>, <strong>E-mail</strong> ou <strong>Telefone/CPF</strong>.
       </p>
 
       <form id="formConsultarOrdem" onsubmit="executarConsultaOrdens(event)" style="margin-bottom:16px;">
         <div style="display:flex; gap:10px; flex-wrap:wrap;">
           <div style="flex:1; min-width:240px; position:relative;">
-            <input id="osConsultarQuery" required placeholder="Digite seu Protocolo (ex: OS-0001) ou E-mail..." style="width:100%; height:44px; border-radius:12px; padding:0 14px; background:var(--input-bg, rgba(0,0,0,0.3)); border:1px solid var(--card-border); color:var(--text); font-size:13px; font-weight:600;">
+            <input id="osConsultarQuery" required placeholder="Digite seu Protocolo (ex: OS-0001) ou E-mail..." style="width:100%; height:44px; border-radius:12px; padding:0 14px; background:var(--input-bg, rgba(0,0,0,0.3)); border:1px solid var(--card-border); color:var(--text); font-size:14px; font-weight:600;">
           </div>
-          <button type="submit" id="btnExecutarConsultaOs" style="height:44px; padding:0 18px; border-radius:12px; background:linear-gradient(135deg, #0284C7, #0369A1); color:#FFFFFF; font-size:13px; font-weight:800; border:1px solid rgba(255,255,255,0.2); cursor:pointer; display:flex; align-items:center; gap:6px; box-shadow:0 4px 14px rgba(14, 165, 233, 0.35);">
+          <button type="submit" id="btnExecutarConsultaOs" style="height:44px; padding:0 18px; border-radius:12px; background:linear-gradient(135deg, #0284C7, #0369A1); color:#FFFFFF; font-size:14px; font-weight:800; border:1px solid rgba(255,255,255,0.2); cursor:pointer; display:flex; align-items:center; gap:6px; box-shadow:0 4px 14px rgba(14, 165, 233, 0.35);">
             🔍 Buscar no GLPI
           </button>
         </div>
       </form>
 
-      <div id="osConsultarFeedback" style="display:none; padding:12px 14px; border-radius:12px; font-size:12.5px; font-weight:700; margin-bottom:14px;"></div>
+      <div id="osConsultarFeedback" style="display:none; padding:12px 14px; border-radius:12px; font-size:14px; font-weight:700; margin-bottom:14px;"></div>
 
       <div id="osConsultarResultados" style="max-height:360px; overflow-y:auto; padding-right:4px;">
-        <div style="text-align:center; padding:30px 14px; color:var(--text-dim); font-size:12.5px;">
+        <div style="text-align:center; padding:30px 14px; color:var(--text-dim); font-size:14px;">
           <div style="font-size:32px; margin-bottom:8px;">🔎</div>
           Informe seu Protocolo GLPI ou E-mail acima para consultar o andamento e a solução técnica em tempo real.
         </div>
@@ -16246,22 +16246,22 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         <span style="display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:10px; background:linear-gradient(135deg,#f59e0b,#ea580c); color:#fff; font-weight:900; font-size:18px; box-shadow:0 4px 14px rgba(245,158,11,0.35);">G</span>
         <div>
           <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:3px;">
-            <span id="osAdminProtocolBadge" style="padding:2px 10px; border-radius:999px; background:rgba(245,158,11,0.18); border:1px solid rgba(245,158,11,0.4); color:#FBBF24; font-size:11.5px; font-weight:900; font-family:monospace;">#OS-000000</span>
-            <span id="osAdminSlaBadge" style="padding:2px 9px; border-radius:999px; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.35); color:#6EE7B7; font-size:11px; font-weight:800;">⏱️ SLA: 24 Horas</span>
-            <span id="osAdminDate" style="font-size:11.5px; color:var(--text-dim);">Aberta em: --/--/----</span>
+            <span id="osAdminProtocolBadge" style="padding:2px 10px; border-radius:999px; background:rgba(245,158,11,0.18); border:1px solid rgba(245,158,11,0.4); color:#FBBF24; font-size:14px; font-weight:900; font-family:monospace;">#OS-000000</span>
+            <span id="osAdminSlaBadge" style="padding:2px 9px; border-radius:999px; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.35); color:#6EE7B7; font-size:14px; font-weight:800;">⏱️ SLA: 24 Horas</span>
+            <span id="osAdminDate" style="font-size:14px; color:var(--text-dim);">Aberta em: --/--/----</span>
           </div>
           <h2 style="font-size:18px; font-weight:900; margin:0; color:#F8FAFC;" id="osAdminTitle">Título da Solicitação</h2>
         </div>
       </div>
 
       <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-        <button type="button" onclick="assumirOrdemDiretoNoModal()" style="height:34px; padding:0 13px; border-radius:9px; background:linear-gradient(135deg, #F59E0B, #D97706); color:#060B18; font-size:11.5px; font-weight:900; border:none; cursor:pointer; box-shadow:0 4px 12px rgba(245,158,11,0.3);">
+        <button type="button" onclick="assumirOrdemDiretoNoModal()" style="height:34px; padding:0 13px; border-radius:9px; background:linear-gradient(135deg, #F59E0B, #D97706); color:#060B18; font-size:14px; font-weight:900; border:none; cursor:pointer; box-shadow:0 4px 12px rgba(245,158,11,0.3);">
           🤝 Assumir para Mim
         </button>
-        <button type="button" class="btn-ghost" onclick="imprimirFichaOrdem(document.getElementById('osAdminCurrentId').value)" style="height:34px; padding:0 12px; border-radius:9px; color:#10B981; border-color:rgba(16, 185, 129,0.35); font-size:11.5px; font-weight:800;">
+        <button type="button" class="btn-ghost" onclick="imprimirFichaOrdem(document.getElementById('osAdminCurrentId').value)" style="height:34px; padding:0 12px; border-radius:9px; color:#10B981; border-color:rgba(16, 185, 129,0.35); font-size:14px; font-weight:800;">
           🖨️ Ficha GLPI
         </button>
-        <button type="button" class="btn-ghost" onclick="excluirOrdemAdmin()" style="height:34px; padding:0 12px; border-radius:9px; color:#F87171; border-color:rgba(239,68,68,0.3); font-size:11.5px; font-weight:800;">
+        <button type="button" class="btn-ghost" onclick="excluirOrdemAdmin()" style="height:34px; padding:0 12px; border-radius:9px; color:#F87171; border-color:rgba(239,68,68,0.3); font-size:14px; font-weight:800;">
           🗑️ Excluir
         </button>
       </div>
@@ -16276,42 +16276,42 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         <div style="background:rgba(255,255,255,0.03); border:1px solid var(--card-border); border-radius:14px; padding:12px 14px;">
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:10px;">
             <div>
-              <span style="font-size:10px; color:var(--text-dim); display:block; text-transform:uppercase; font-weight:800;">Solicitante</span>
-              <strong style="font-size:13px; color:var(--text);" id="osAdminClientName">Nome</strong>
+              <span style="font-size:14px; color:var(--text-dim); display:block; text-transform:uppercase; font-weight:800;">Solicitante</span>
+              <strong style="font-size:14px; color:var(--text);" id="osAdminClientName">Nome</strong>
             </div>
             <div>
-              <span style="font-size:10px; color:var(--text-dim); display:block; text-transform:uppercase; font-weight:800;">E-mail</span>
-              <a href="#" id="osAdminClientEmail" style="font-size:12px; color:#34D399; text-decoration:none; font-weight:600; word-break:break-all;">email@exemplo.com</a>
+              <span style="font-size:14px; color:var(--text-dim); display:block; text-transform:uppercase; font-weight:800;">E-mail</span>
+              <a href="#" id="osAdminClientEmail" style="font-size:14px; color:#34D399; text-decoration:none; font-weight:600; word-break:break-all;">email@exemplo.com</a>
             </div>
             <div>
-              <span style="font-size:10px; color:var(--text-dim); display:block; text-transform:uppercase; font-weight:800;">WhatsApp / Telefone</span>
-              <span style="font-size:12px; color:#E2E8F0; font-weight:600;" id="osAdminClientPhone">Não informado</span>
+              <span style="font-size:14px; color:var(--text-dim); display:block; text-transform:uppercase; font-weight:800;">WhatsApp / Telefone</span>
+              <span style="font-size:14px; color:#E2E8F0; font-weight:600;" id="osAdminClientPhone">Não informado</span>
             </div>
             <div>
-              <span style="font-size:10px; color:var(--text-dim); display:block; text-transform:uppercase; font-weight:800;">CPF / Canal</span>
-              <span style="font-size:12px; color:#E2E8F0; font-weight:600;"><span id="osAdminClientCpf">--</span> • <strong style="color:#FBBF24;" id="osAdminCanal">GLPI</strong></span>
+              <span style="font-size:14px; color:var(--text-dim); display:block; text-transform:uppercase; font-weight:800;">CPF / Canal</span>
+              <span style="font-size:14px; color:#E2E8F0; font-weight:600;"><span id="osAdminClientCpf">--</span> • <strong style="color:#FBBF24;" id="osAdminCanal">GLPI</strong></span>
             </div>
           </div>
 
           <div style="display:flex; gap:6px; border-top:1px solid rgba(255,255,255,0.06); padding-top:8px; flex-wrap:wrap;">
-            <a id="osAdminWhatsappBtn" href="#" target="_blank" style="display:inline-flex; align-items:center; gap:5px; padding:5px 10px; border-radius:8px; background:rgba(5, 150, 105,0.15); border:1px solid rgba(5, 150, 105,0.35); color:#10B981; font-size:11px; font-weight:800; text-decoration:none;">💬 WhatsApp</a>
-            <a id="osAdminEmailBtn" href="#" style="display:inline-flex; align-items:center; gap:5px; padding:5px 10px; border-radius:8px; background:rgba(5, 150, 105,0.15); border:1px solid rgba(5, 150, 105,0.35); color:#34D399; font-size:11px; font-weight:800; text-decoration:none;">✉️ E-mail</a>
-            <button type="button" onclick="window.liberarPagamentoPelaOsModal()" style="display:inline-flex; align-items:center; gap:4px; padding:5px 10px; border-radius:8px; background:linear-gradient(135deg, #F59E0B, #D97706); color:#060B18; font-size:11px; font-weight:900; border:none; cursor:pointer;">🔓 Liberar Pagamento</button>
-            <button type="button" onclick="window.abrirSegundaViaBoletoPelaOsModal()" style="display:inline-flex; align-items:center; gap:4px; padding:5px 10px; border-radius:8px; background:rgba(56,189,248,0.18); border:1px solid rgba(56,189,248,0.45); color:#BAE6FD; font-size:11px; font-weight:800; cursor:pointer;">📄 2ª Via Boleto</button>
+            <a id="osAdminWhatsappBtn" href="#" target="_blank" style="display:inline-flex; align-items:center; gap:5px; padding:5px 10px; border-radius:8px; background:rgba(5, 150, 105,0.15); border:1px solid rgba(5, 150, 105,0.35); color:#10B981; font-size:14px; font-weight:800; text-decoration:none;">💬 WhatsApp</a>
+            <a id="osAdminEmailBtn" href="#" style="display:inline-flex; align-items:center; gap:5px; padding:5px 10px; border-radius:8px; background:rgba(5, 150, 105,0.15); border:1px solid rgba(5, 150, 105,0.35); color:#34D399; font-size:14px; font-weight:800; text-decoration:none;">✉️ E-mail</a>
+            <button type="button" onclick="window.liberarPagamentoPelaOsModal()" style="display:inline-flex; align-items:center; gap:4px; padding:5px 10px; border-radius:8px; background:linear-gradient(135deg, #F59E0B, #D97706); color:#060B18; font-size:14px; font-weight:900; border:none; cursor:pointer;">🔓 Liberar Pagamento</button>
+            <button type="button" onclick="window.abrirSegundaViaBoletoPelaOsModal()" style="display:inline-flex; align-items:center; gap:4px; padding:5px 10px; border-radius:8px; background:rgba(56,189,248,0.18); border:1px solid rgba(56,189,248,0.45); color:#BAE6FD; font-size:14px; font-weight:800; cursor:pointer;">📄 2ª Via Boleto</button>
           </div>
         </div>
 
         <!-- Descrição Original do Chamado -->
         <div style="background:rgba(0,0,0,0.28); border:1px solid var(--card-border); border-radius:12px; padding:10px 12px;">
-          <span style="display:block; font-size:10.5px; font-weight:800; text-transform:uppercase; color:#94A3B8; margin-bottom:4px;">📋 Relato Inicial do Solicitante:</span>
-          <div id="osAdminDescription" style="font-size:12.5px; line-height:1.45; color:#F8FAFC; white-space:pre-wrap; max-height:105px; overflow-y:auto;"></div>
+          <span style="display:block; font-size:14px; font-weight:800; text-transform:uppercase; color:#94A3B8; margin-bottom:4px;">📋 Relato Inicial do Solicitante:</span>
+          <div id="osAdminDescription" style="font-size:14px; line-height:1.45; color:#F8FAFC; white-space:pre-wrap; max-height:105px; overflow-y:auto;"></div>
         </div>
 
         <!-- Timeline / Histórico de Interações GLPI -->
         <div style="background:rgba(15,23,42,0.65); border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:12px;">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-            <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#FBBF24; letter-spacing:0.05em;">💬 Histórico de Acompanhamento GLPI (Timeline)</span>
-            <span style="font-size:10.5px; color:#94A3B8;" id="osAdminTimelineCount">0 interações</span>
+            <span style="font-size:14px; font-weight:800; text-transform:uppercase; color:#FBBF24; letter-spacing:0.05em;">💬 Histórico de Acompanhamento GLPI (Timeline)</span>
+            <span style="font-size:14px; color:#94A3B8;" id="osAdminTimelineCount">0 interações</span>
           </div>
           <div id="osAdminTimelineContainer" style="max-height:185px; overflow-y:auto; display:flex; flex-direction:column; gap:8px; padding-right:4px;"></div>
         </div>
@@ -16320,14 +16320,14 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(245,158,11,0.3); border-radius:14px; padding:12px;">
           <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:8px;">
             <div style="display:flex; gap:6px;">
-              <button type="button" id="btnGlpiModePublic" onclick="window.setGlpiReplyMode('public')" style="padding:4px 10px; border-radius:7px; font-size:11px; font-weight:800; cursor:pointer; background:rgba(56,189,248,0.2); border:1px solid rgba(56,189,248,0.5); color:#7DD3FC;">
+              <button type="button" id="btnGlpiModePublic" onclick="window.setGlpiReplyMode('public')" style="padding:4px 10px; border-radius:7px; font-size:14px; font-weight:800; cursor:pointer; background:rgba(56,189,248,0.2); border:1px solid rgba(56,189,248,0.5); color:#7DD3FC;">
                 💬 Resposta Pública (Cliente)
               </button>
-              <button type="button" id="btnGlpiModePrivate" onclick="window.setGlpiReplyMode('private')" style="padding:4px 10px; border-radius:7px; font-size:11px; font-weight:800; cursor:pointer; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.12); color:#94A3B8;">
+              <button type="button" id="btnGlpiModePrivate" onclick="window.setGlpiReplyMode('private')" style="padding:4px 10px; border-radius:7px; font-size:14px; font-weight:800; cursor:pointer; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.12); color:#94A3B8;">
                 🔒 Nota Interna (Privada TI)
               </button>
             </div>
-            <select id="osAdminCannedSelect" onchange="window.inserirRespostaProntaGlpi(this)" style="height:28px; padding:0 8px; border-radius:7px; font-size:11px; font-weight:700; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.15); color:#CBD5E1;">
+            <select id="osAdminCannedSelect" onchange="window.inserirRespostaProntaGlpi(this)" style="height:28px; padding:0 8px; border-radius:7px; font-size:14px; font-weight:700; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.15); color:#CBD5E1;">
               <option value="">⚡ Respostas Prontas TI...</option>
               <option value="SOLICITAR_PRINTS">Solicitar evidências / prints</option>
               <option value="RESET_EFETUADO">Confirmar reset de senha / MFA</option>
@@ -16336,9 +16336,9 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
               <option value="RESOLVIDO">Confirmar normalização do serviço</option>
             </select>
           </div>
-          <textarea id="osAdminReplyInput" rows="2" placeholder="Digite uma resposta para o solicitante ou nota técnica interna..." style="width:100%; border-radius:10px; padding:8px 10px; background:rgba(0,0,0,0.35); border:1px solid var(--card-border); color:var(--text); font-family:inherit; font-size:12.5px; resize:vertical; margin-bottom:8px;"></textarea>
+          <textarea id="osAdminReplyInput" rows="2" placeholder="Digite uma resposta para o solicitante ou nota técnica interna..." style="width:100%; border-radius:10px; padding:8px 10px; background:rgba(0,0,0,0.35); border:1px solid var(--card-border); color:var(--text); font-family:inherit; font-size:14px; resize:vertical; margin-bottom:8px;"></textarea>
           <div style="display:flex; justify-content:flex-end;">
-            <button type="button" onclick="window.adicionarInteracaoGlpiAdmin()" style="height:32px; padding:0 14px; border-radius:8px; background:linear-gradient(135deg, #0284C7, #0369A1); color:#fff; font-size:11.5px; font-weight:800; border:none; cursor:pointer; box-shadow:0 4px 12px rgba(2,132,199,0.3);">
+            <button type="button" onclick="window.adicionarInteracaoGlpiAdmin()" style="height:32px; padding:0 14px; border-radius:8px; background:linear-gradient(135deg, #0284C7, #0369A1); color:#fff; font-size:14px; font-weight:800; border:none; cursor:pointer; box-shadow:0 4px 12px rgba(2,132,199,0.3);">
               📤 Registrar Interação no Histórico
             </button>
           </div>
@@ -16349,14 +16349,14 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
       <div style="display:flex; flex-direction:column; gap:12px;">
         <div style="background:rgba(255,255,255,0.03); border:1px solid var(--card-border); border-radius:14px; padding:14px;">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-            <span style="font-size:11.5px; font-weight:900; text-transform:uppercase; color:#FBBF24; letter-spacing:0.05em;">⚙️ Propriedades do Chamado GLPI</span>
-            <button type="button" onclick="openGerenciarTecnicosModal()" style="height:26px; padding:0 9px; border-radius:7px; background:rgba(255,255,255,0.06); border:1px solid var(--card-border); color:var(--text); font-size:11px; font-weight:700; cursor:pointer;">👷 Gerenciar Técnicos</button>
+            <span style="font-size:14px; font-weight:900; text-transform:uppercase; color:#FBBF24; letter-spacing:0.05em;">⚙️ Propriedades do Chamado GLPI</span>
+            <button type="button" onclick="openGerenciarTecnicosModal()" style="height:26px; padding:0 9px; border-radius:7px; background:rgba(255,255,255,0.06); border:1px solid var(--card-border); color:var(--text); font-size:14px; font-weight:700; cursor:pointer;">👷 Gerenciar Técnicos</button>
           </div>
 
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px;">
             <div>
-              <label style="font-size:10.5px; font-weight:800; color:var(--text-dim); display:block; margin-bottom:3px; text-transform:uppercase;">Status GLPI</label>
-              <select id="osAdminStatusSelect" style="height:36px; padding:0 10px; border-radius:9px; font-size:12px; font-weight:800; width:100%; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text);">
+              <label style="font-size:14px; font-weight:800; color:var(--text-dim); display:block; margin-bottom:3px; text-transform:uppercase;">Status GLPI</label>
+              <select id="osAdminStatusSelect" style="height:36px; padding:0 10px; border-radius:9px; font-size:14px; font-weight:800; width:100%; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text);">
                 <option value="Novo">🔵 Novo (Fila de Entrada)</option>
                 <option value="Pendente">⏳ Pendente (Triagem)</option>
                 <option value="Em Atendimento">🟡 Em Atendimento (GLPI)</option>
@@ -16368,8 +16368,8 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
               </select>
             </div>
             <div>
-              <label style="font-size:10.5px; font-weight:800; color:var(--text-dim); display:block; margin-bottom:3px; text-transform:uppercase;">Urgência / Prioridade</label>
-              <select id="osAdminPrioritySelect" onchange="atualizarEstiloPrioridadeAdmin(this.value)" style="height:36px; padding:0 10px; border-radius:9px; font-size:12px; font-weight:800; width:100%; background:rgba(15,23,42,0.85); border:1.5px solid rgba(245,158,11,0.5); color:#FBBF24;">
+              <label style="font-size:14px; font-weight:800; color:var(--text-dim); display:block; margin-bottom:3px; text-transform:uppercase;">Urgência / Prioridade</label>
+              <select id="osAdminPrioritySelect" onchange="atualizarEstiloPrioridadeAdmin(this.value)" style="height:36px; padding:0 10px; border-radius:9px; font-size:14px; font-weight:800; width:100%; background:rgba(15,23,42,0.85); border:1.5px solid rgba(245,158,11,0.5); color:#FBBF24;">
                 <option value="Baixa">🟢 Baixa (SLA 8h)</option>
                 <option value="Normal">🟢 Normal (SLA 2h)</option>
                 <option value="Média">🔵 Média (SLA 2h)</option>
@@ -16382,14 +16382,14 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px;">
             <div>
-              <label style="font-size:10.5px; font-weight:800; color:var(--text-dim); display:block; margin-bottom:3px; text-transform:uppercase;">Técnico Responsável (N1/N2/N3)</label>
-              <select id="osAdminTecnicoSelect" style="height:36px; padding:0 10px; border-radius:9px; font-size:12px; font-weight:700; width:100%; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text);">
+              <label style="font-size:14px; font-weight:800; color:var(--text-dim); display:block; margin-bottom:3px; text-transform:uppercase;">Técnico Responsável (N1/N2/N3)</label>
+              <select id="osAdminTecnicoSelect" style="height:36px; padding:0 10px; border-radius:9px; font-size:14px; font-weight:700; width:100%; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text);">
                 <option value="">(Nenhum técnico atribuído)</option>
               </select>
             </div>
             <div>
-              <label style="font-size:10.5px; font-weight:800; color:var(--text-dim); display:block; margin-bottom:3px; text-transform:uppercase;">Categoria ITSM</label>
-              <select id="osAdminServiceTypeSelect" style="height:36px; padding:0 10px; border-radius:9px; font-size:12px; font-weight:700; width:100%; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text);">
+              <label style="font-size:14px; font-weight:800; color:var(--text-dim); display:block; margin-bottom:3px; text-transform:uppercase;">Categoria ITSM</label>
+              <select id="osAdminServiceTypeSelect" style="height:36px; padding:0 10px; border-radius:9px; font-size:14px; font-weight:700; width:100%; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text);">
                 <option value="Sistema Financeiro & ERP">💰 Sistema Financeiro &amp; ERP</option>
                 <option value="Gestão de Acessos & Senha">🔐 Gestão de Acessos &amp; Senha</option>
                 <option value="Suporte Técnico & Infra">💻 Suporte Técnico &amp; Infra</option>
@@ -16407,8 +16407,8 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:8px;">
             <div>
-              <label style="font-size:10.5px; font-weight:800; color:var(--text-dim); display:block; margin-bottom:3px; text-transform:uppercase;">Ativo CMDB Vinculado</label>
-              <select id="osAdminAssetSelect" style="height:36px; padding:0 10px; border-radius:9px; font-size:12px; font-weight:700; width:100%; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text);">
+              <label style="font-size:14px; font-weight:800; color:var(--text-dim); display:block; margin-bottom:3px; text-transform:uppercase;">Ativo CMDB Vinculado</label>
+              <select id="osAdminAssetSelect" style="height:36px; padding:0 10px; border-radius:9px; font-size:14px; font-weight:700; width:100%; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text);">
                 <option value="Nenhum">Nenhum ativo específico</option>
                 <option value="SRV-ERP-01 (Cluster Produção)">SRV-ERP-01 (Cluster Produção)</option>
                 <option value="SRV-DB-FINANCE (MSSQL/PostgreSQL)">SRV-DB-FINANCE (MSSQL/PostgreSQL)</option>
@@ -16418,29 +16418,29 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
               </select>
             </div>
             <div>
-              <label style="font-size:10.5px; font-weight:800; color:var(--text-dim); display:block; margin-bottom:3px; text-transform:uppercase;">Horas Trabalhadas (Time Spent)</label>
-              <input id="osAdminTimeSpent" type="number" step="0.5" min="0" value="0" style="height:36px; padding:0 10px; border-radius:9px; font-size:12.5px; font-weight:800; width:100%; background:var(--input-bg); border:1px solid var(--card-border); color:#FBBF24; font-family:monospace;">
+              <label style="font-size:14px; font-weight:800; color:var(--text-dim); display:block; margin-bottom:3px; text-transform:uppercase;">Horas Trabalhadas (Time Spent)</label>
+              <input id="osAdminTimeSpent" type="number" step="0.5" min="0" value="0" style="height:36px; padding:0 10px; border-radius:9px; font-size:14px; font-weight:800; width:100%; background:var(--input-bg); border:1px solid var(--card-border); color:#FBBF24; font-family:monospace;">
             </div>
           </div>
 
-          <div id="osAdminAssumidoBanner" style="display:none; margin-top:6px; padding:6px 10px; border-radius:8px; background:rgba(5, 150, 105,0.12); border:1px solid rgba(5, 150, 105,0.3); font-size:11px; color:#10B981; font-weight:700; align-items:center; gap:6px;">
+          <div id="osAdminAssumidoBanner" style="display:none; margin-top:6px; padding:6px 10px; border-radius:8px; background:rgba(5, 150, 105,0.12); border:1px solid rgba(5, 150, 105,0.3); font-size:14px; color:#10B981; font-weight:700; align-items:center; gap:6px;">
             <span>✓ Atribuído a:</span>
             <strong id="osAdminAssumidoNome" style="color:#10B981;"></strong>
-            <span id="osAdminAssumidoData" style="font-size:10px; color:#7DD3FC; margin-left:auto;"></span>
+            <span id="osAdminAssumidoData" style="font-size:14px; color:#7DD3FC; margin-left:auto;"></span>
           </div>
         </div>
 
         <!-- Parecer / Observações Administrativas -->
         <div style="background:rgba(255,255,255,0.02); border:1px solid var(--card-border); border-radius:14px; padding:12px;">
-          <label style="font-size:11px; font-weight:800; color:var(--text-dim); display:block; margin-bottom:4px; text-transform:uppercase;">📝 Parecer Técnico Geral (Visível na Consulta):</label>
-          <textarea id="osAdminNotes" rows="2" placeholder="Observações gerais do atendimento..." style="width:100%; border-radius:10px; padding:8px 10px; background:rgba(0,0,0,0.3); border:1px solid var(--card-border); color:var(--text); font-family:inherit; font-size:12px; resize:vertical;"></textarea>
+          <label style="font-size:14px; font-weight:800; color:var(--text-dim); display:block; margin-bottom:4px; text-transform:uppercase;">📝 Parecer Técnico Geral (Visível na Consulta):</label>
+          <textarea id="osAdminNotes" rows="2" placeholder="Observações gerais do atendimento..." style="width:100%; border-radius:10px; padding:8px 10px; background:rgba(0,0,0,0.3); border:1px solid var(--card-border); color:var(--text); font-family:inherit; font-size:14px; resize:vertical;"></textarea>
         </div>
 
         <!-- Solução Definitiva GLPI (Encerramento Oficial) -->
         <div style="background:linear-gradient(135deg, rgba(16,185,129,0.10), rgba(5,150,105,0.06)); border:1.5px solid rgba(16,185,129,0.38); border-radius:14px; padding:12px;">
-          <label style="font-size:11px; font-weight:900; color:#34D399; display:block; margin-bottom:4px; text-transform:uppercase;">✅ Solução Definitiva GLPI (Encerramento Técnico):</label>
-          <textarea id="osAdminSolution" rows="2" placeholder="Descreva a causa raiz e a solução definitiva aplicada para encerrar o chamado..." style="width:100%; border-radius:10px; padding:8px 10px; background:rgba(0,0,0,0.35); border:1px solid rgba(16,185,129,0.35); color:#F8FAFC; font-family:inherit; font-size:12px; resize:vertical; margin-bottom:8px;"></textarea>
-          <button type="button" onclick="window.resolverChamadoGlpiComSolucao()" style="width:100%; height:36px; border-radius:9px; background:linear-gradient(135deg, #10B981, #059669); color:#FFFFFF; font-size:12px; font-weight:900; border:none; cursor:pointer; box-shadow:0 4px 14px rgba(16,185,129,0.35);">
+          <label style="font-size:14px; font-weight:900; color:#34D399; display:block; margin-bottom:4px; text-transform:uppercase;">✅ Solução Definitiva GLPI (Encerramento Técnico):</label>
+          <textarea id="osAdminSolution" rows="2" placeholder="Descreva a causa raiz e a solução definitiva aplicada para encerrar o chamado..." style="width:100%; border-radius:10px; padding:8px 10px; background:rgba(0,0,0,0.35); border:1px solid rgba(16,185,129,0.35); color:#F8FAFC; font-family:inherit; font-size:14px; resize:vertical; margin-bottom:8px;"></textarea>
+          <button type="button" onclick="window.resolverChamadoGlpiComSolucao()" style="width:100%; height:36px; border-radius:9px; background:linear-gradient(135deg, #10B981, #059669); color:#FFFFFF; font-size:14px; font-weight:900; border:none; cursor:pointer; box-shadow:0 4px 14px rgba(16,185,129,0.35);">
             ✅ Encerrar Chamado como RESOLVIDO
           </button>
         </div>
@@ -16463,39 +16463,39 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
   <div class="modal" style="max-width:500px; border-radius:20px; border:1px solid rgba(255,255,255,0.18); border-top:1.5px solid rgba(255,255,255,0.45); background:linear-gradient(145deg, rgba(20,28,48,0.96) 0%, rgba(10,15,30,0.99) 100%); backdrop-filter:blur(36px); -webkit-backdrop-filter:blur(36px); box-shadow:0 24px 60px rgba(0,0,0,0.9), 0 0 32px rgba(5, 150, 105,0.16); padding:18px 20px;">
     <button class="close-x" type="button" onclick="closeSuporteNovaOrdemModal()">✕</button>
 
-    <div style="display:inline-flex; align-items:center; gap:5px; padding:2px 8px; border-radius:999px; background:rgba(5, 150, 105,0.15); border:1px solid rgba(5, 150, 105,0.35); color:#10B981; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px;">
+    <div style="display:inline-flex; align-items:center; gap:5px; padding:2px 8px; border-radius:999px; background:rgba(5, 150, 105,0.15); border:1px solid rgba(5, 150, 105,0.35); color:#10B981; font-size:14px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px;">
       <span>🎧 Atendimento de Suporte</span>
     </div>
     <h2 style="font-size:17px; font-weight:900; margin:0 0 3px 0; color:var(--text);">Registrar Ordem de Serviço (O.S.)</h2>
-    <p style="font-size:11.5px; color:var(--text-dim); margin:0 0 12px 0; line-height:1.35;">
+    <p style="font-size:14px; color:var(--text-dim); margin:0 0 12px 0; line-height:1.35;">
       Cadastre uma solicitação recebida por telefone, WhatsApp ou suporte direto para triagem.
     </p>
 
     <form id="formSuporteNovaOrdem" onsubmit="enviarSuporteNovaOrdem(event)">
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:9px; margin-bottom:10px;">
         <div class="field" style="grid-column:1 / -1; margin-bottom:0;">
-          <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Nome do Solicitante / Cliente *</label>
-          <input id="suporteOsClientName" required placeholder="Ex: Paulo Lima" style="height:35px; border-radius:9px; font-size:12.5px; padding:0 10px;">
+          <label style="font-size:14px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Nome do Solicitante / Cliente *</label>
+          <input id="suporteOsClientName" required placeholder="Ex: Paulo Lima" style="height:35px; border-radius:9px; font-size:14px; padding:0 10px;">
         </div>
 
         <div class="field" style="margin-bottom:0;">
-          <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">E-mail do Solicitante *</label>
-          <input id="suporteOsClientEmail" type="email" required placeholder="email@exemplo.com" style="height:35px; border-radius:9px; font-size:12.5px; padding:0 10px;">
+          <label style="font-size:14px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">E-mail do Solicitante *</label>
+          <input id="suporteOsClientEmail" type="email" required placeholder="email@exemplo.com" style="height:35px; border-radius:9px; font-size:14px; padding:0 10px;">
         </div>
 
         <div class="field" style="margin-bottom:0;">
-          <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Telefone / WhatsApp</label>
-          <input id="suporteOsClientPhone" placeholder="(00) 00000-0000" maxlength="15" oninput="maskPhoneInput(this)" style="height:35px; border-radius:9px; font-size:12.5px; padding:0 10px;">
+          <label style="font-size:14px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Telefone / WhatsApp</label>
+          <input id="suporteOsClientPhone" placeholder="(00) 00000-0000" maxlength="15" oninput="maskPhoneInput(this)" style="height:35px; border-radius:9px; font-size:14px; padding:0 10px;">
         </div>
 
         <div class="field" style="margin-bottom:0;">
-          <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">CPF do Solicitante</label>
-          <input id="suporteOsClientCpf" placeholder="00000000000" maxlength="11" oninput="maskCpfInput(this)" style="height:35px; border-radius:9px; font-size:12.5px; padding:0 10px;">
+          <label style="font-size:14px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">CPF do Solicitante</label>
+          <input id="suporteOsClientCpf" placeholder="00000000000" maxlength="11" oninput="maskCpfInput(this)" style="height:35px; border-radius:9px; font-size:14px; padding:0 10px;">
         </div>
 
         <div class="field" style="margin-bottom:0;">
-          <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Canal de Recepção *</label>
-          <select id="suporteOsCanal" style="height:35px; border-radius:9px; font-size:12px; font-weight:700; padding:0 8px;">
+          <label style="font-size:14px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Canal de Recepção *</label>
+          <select id="suporteOsCanal" style="height:35px; border-radius:9px; font-size:14px; font-weight:700; padding:0 8px;">
             <option value="WhatsApp Suporte">💬 WhatsApp Suporte Oficial</option>
             <option value="Telefone Direto / 0800">📞 Telefone / Voz</option>
             <option value="Portal Web / Chamado">🌐 Portal Web / Chamado</option>
@@ -16506,8 +16506,8 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         </div>
 
         <div class="field" style="margin-bottom:0;">
-          <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Tipo de Demanda *</label>
-          <select id="suporteOsServiceType" style="height:35px; border-radius:9px; font-size:12px; font-weight:700; padding:0 8px;">
+          <label style="font-size:14px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Tipo de Demanda *</label>
+          <select id="suporteOsServiceType" style="height:35px; border-radius:9px; font-size:14px; font-weight:700; padding:0 8px;">
             <option value="Correção de Dados">Correção de Dados Cadastrais</option>
             <option value="Reset de Senha">Reset de Senha / Recuperação</option>
             <option value="Atendimento Geral">Atendimento Operacional</option>
@@ -16517,8 +16517,8 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         </div>
 
         <div class="field" style="margin-bottom:0;">
-          <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Prioridade</label>
-          <select id="suporteOsPriority" style="height:35px; border-radius:9px; font-size:12px; font-weight:700; padding:0 8px;">
+          <label style="font-size:14px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Prioridade</label>
+          <select id="suporteOsPriority" style="height:35px; border-radius:9px; font-size:14px; font-weight:700; padding:0 8px;">
             <option value="Normal">🟢 Normal</option>
             <option value="Alta">🟡 Alta</option>
             <option value="Urgente">🔴 Urgente / Crítica</option>
@@ -16526,26 +16526,26 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         </div>
 
         <div class="field" style="grid-column:1 / -1; margin-bottom:0;">
-          <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Atribuir Técnico Inicial (Opcional)</label>
-          <select id="suporteOsTecnico" style="height:35px; border-radius:9px; font-size:12px; font-weight:700; padding:0 8px;">
+          <label style="font-size:14px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Atribuir Técnico Inicial (Opcional)</label>
+          <select id="suporteOsTecnico" style="height:35px; border-radius:9px; font-size:14px; font-weight:700; padding:0 8px;">
             <option value="">(Deixar na fila de triagem / Sem atribuição inicial)</option>
           </select>
         </div>
 
         <div class="field" style="grid-column:1 / -1; margin-bottom:0;">
-          <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Assunto / Título Resumido *</label>
-          <input id="suporteOsTitle" required placeholder="Ex: Correção de CPF na conta de João" style="height:35px; border-radius:9px; font-size:12.5px; padding:0 10px;">
+          <label style="font-size:14px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Assunto / Título Resumido *</label>
+          <input id="suporteOsTitle" required placeholder="Ex: Correção de CPF na conta de João" style="height:35px; border-radius:9px; font-size:14px; padding:0 10px;">
         </div>
 
         <div class="field" style="grid-column:1 / -1; margin-bottom:0;">
-          <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Descrição do Chamado *</label>
-          <textarea id="suporteOsDescription" required rows="2" placeholder="Descreva os detalhes da demanda relatada..." style="border-radius:9px; padding:8px 10px; background:var(--input-bg, rgba(0,0,0,0.3)); border:1px solid var(--card-border); color:var(--text); font-family:inherit; font-size:12px; resize:vertical;"></textarea>
+          <label style="font-size:14px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Descrição do Chamado *</label>
+          <textarea id="suporteOsDescription" required rows="2" placeholder="Descreva os detalhes da demanda relatada..." style="border-radius:9px; padding:8px 10px; background:var(--input-bg, rgba(0,0,0,0.3)); border:1px solid var(--card-border); color:var(--text); font-family:inherit; font-size:14px; resize:vertical;"></textarea>
         </div>
       </div>
 
       <div class="modal-actions" style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-top:10px;">
-        <button type="button" onclick="closeSuporteNovaOrdemModal()" style="height:34px; padding:0 14px; border-radius:9px; font-size:12px;">Cancelar</button>
-        <button class="save" type="submit" id="btnSalvarSuporteOrdem" style="height:34px; padding:0 18px; border-radius:9px; background:linear-gradient(135deg, #059669, #059669); font-weight:800; font-size:12px;">
+        <button type="button" onclick="closeSuporteNovaOrdemModal()" style="height:34px; padding:0 14px; border-radius:9px; font-size:14px;">Cancelar</button>
+        <button class="save" type="submit" id="btnSalvarSuporteOrdem" style="height:34px; padding:0 18px; border-radius:9px; background:linear-gradient(135deg, #059669, #059669); font-weight:800; font-size:14px;">
           Criar Chamado 🚀
         </button>
       </div>
@@ -16560,41 +16560,41 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; gap:10px; flex-wrap:wrap;">
       <div>
-        <div style="display:inline-flex; align-items:center; gap:5px; padding:2px 8px; border-radius:999px; background:rgba(245,158,11,0.15); border:1px solid rgba(245,158,11,0.4); color:#FBBF24; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px;">
+        <div style="display:inline-flex; align-items:center; gap:5px; padding:2px 8px; border-radius:999px; background:rgba(245,158,11,0.15); border:1px solid rgba(245,158,11,0.4); color:#FBBF24; font-size:14px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px;">
           <span>👷 Equipe Técnica & Especialistas</span>
         </div>
         <h2 style="font-size:17px; font-weight:900; margin:0; color:var(--text);">Credenciamento de Técnicos</h2>
-        <p style="font-size:11.5px; color:var(--text-dim); margin:2px 0 0 0;">
+        <p style="font-size:14px; color:var(--text-dim); margin:2px 0 0 0;">
           Cadastre e alinhe os especialistas habilitados para assumir Ordens de Serviço.
         </p>
       </div>
 
-      <button type="button" onclick="toggleFormTecnico()" style="display:inline-flex; align-items:center; gap:5px; height:32px; padding:0 12px; border-radius:9px; background:linear-gradient(135deg, #F59E0B, #D97706); color:#060B18; font-size:11.5px; font-weight:900; border:none; cursor:pointer; box-shadow:0 3px 10px rgba(245,158,11,0.3);">
+      <button type="button" onclick="toggleFormTecnico()" style="display:inline-flex; align-items:center; gap:5px; height:32px; padding:0 12px; border-radius:9px; background:linear-gradient(135deg, #F59E0B, #D97706); color:#060B18; font-size:14px; font-weight:900; border:none; cursor:pointer; box-shadow:0 3px 10px rgba(245,158,11,0.3);">
         <span>➕ Novo Técnico</span>
       </button>
     </div>
 
     <!-- Formulário Cadastro / Edição de Técnico (Alternável) -->
     <div id="boxFormTecnico" style="display:none; background:rgba(255,255,255,0.03); border:1px solid rgba(245,158,11,0.3); border-radius:14px; padding:12px 14px; margin-bottom:12px;">
-      <h3 id="formTecnicoTitle" style="font-size:13px; font-weight:800; color:#FBBF24; margin:0 0 9px 0;">➕ Novo Cadastro de Técnico</h3>
+      <h3 id="formTecnicoTitle" style="font-size:14px; font-weight:800; color:#FBBF24; margin:0 0 9px 0;">➕ Novo Cadastro de Técnico</h3>
       <form id="formTecnico" onsubmit="salvarTecnico(event)">
         <input type="hidden" id="tecnicoEditId">
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:9px;">
           <div class="field" style="margin-bottom:0;">
-            <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Nome Completo *</label>
-            <input id="tecnicoNome" required placeholder="Nome do técnico" style="height:34px; border-radius:8px; font-size:12px; padding:0 10px;">
+            <label style="font-size:14px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Nome Completo *</label>
+            <input id="tecnicoNome" required placeholder="Nome do técnico" style="height:34px; border-radius:8px; font-size:14px; padding:0 10px;">
           </div>
           <div class="field" style="margin-bottom:0;">
-            <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">E-mail Corporativo *</label>
-            <input id="tecnicoEmail" type="email" required placeholder="tecnico@nexus.com" style="height:34px; border-radius:8px; font-size:12px; padding:0 10px;">
+            <label style="font-size:14px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">E-mail Corporativo *</label>
+            <input id="tecnicoEmail" type="email" required placeholder="tecnico@nexus.com" style="height:34px; border-radius:8px; font-size:14px; padding:0 10px;">
           </div>
           <div class="field" style="margin-bottom:0;">
-            <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Telefone / WhatsApp</label>
-            <input id="tecnicoPhone" placeholder="(62) 99999-9999" maxlength="15" oninput="maskPhoneInput(this)" style="height:34px; border-radius:8px; font-size:12px; padding:0 10px;">
+            <label style="font-size:14px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Telefone / WhatsApp</label>
+            <input id="tecnicoPhone" placeholder="(62) 99999-9999" maxlength="15" oninput="maskPhoneInput(this)" style="height:34px; border-radius:8px; font-size:14px; padding:0 10px;">
           </div>
           <div class="field" style="margin-bottom:0;">
-            <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Especialidade / Nível *</label>
-            <select id="tecnicoEspecialidade" style="height:34px; border-radius:8px; font-size:11.5px; font-weight:700; padding:0 8px;">
+            <label style="font-size:14px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Especialidade / Nível *</label>
+            <select id="tecnicoEspecialidade" style="height:34px; border-radius:8px; font-size:14px; font-weight:700; padding:0 8px;">
               <option value="Suporte Técnico N1">Suporte Técnico N1 (Triagem)</option>
               <option value="Suporte Técnico N2" selected>Suporte Técnico N2 (Avançado)</option>
               <option value="Infraestrutura & Redes">Infraestrutura & Redes</option>
@@ -16604,8 +16604,8 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
             </select>
           </div>
           <div class="field" style="grid-column:1 / -1; margin-bottom:0;">
-            <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Status Operacional</label>
-            <select id="tecnicoAtivo" style="height:34px; border-radius:8px; font-size:11.5px; font-weight:700; padding:0 8px;">
+            <label style="font-size:14px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Status Operacional</label>
+            <select id="tecnicoAtivo" style="height:34px; border-radius:8px; font-size:14px; font-weight:700; padding:0 8px;">
               <option value="true">🟢 Ativo (Habilitado para Chamados)</option>
               <option value="false">⚪ Inativo (Suspenso)</option>
             </select>
@@ -16613,22 +16613,22 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         </div>
 
         <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:8px;">
-          <button type="button" onclick="cancelarEdicaoTecnico()" style="height:32px; padding:0 12px; border-radius:8px; font-size:11.5px;">Cancelar</button>
-          <button type="submit" id="btnSalvarTecnico" class="save" style="height:32px; padding:0 16px; border-radius:8px; background:linear-gradient(135deg, #059669, #059669); font-weight:800; font-size:11.5px;">Salvar Técnico ✓</button>
+          <button type="button" onclick="cancelarEdicaoTecnico()" style="height:32px; padding:0 12px; border-radius:8px; font-size:14px;">Cancelar</button>
+          <button type="submit" id="btnSalvarTecnico" class="save" style="height:32px; padding:0 16px; border-radius:8px; background:linear-gradient(135deg, #059669, #059669); font-weight:800; font-size:14px;">Salvar Técnico ✓</button>
         </div>
       </form>
     </div>
 
     <!-- Lista dos Técnicos Credenciados -->
     <div style="margin-top:4px;">
-      <h4 style="font-size:11px; font-weight:800; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.05em; margin:0 0 8px 0;">Técnicos Habilitados</h4>
+      <h4 style="font-size:14px; font-weight:800; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.05em; margin:0 0 8px 0;">Técnicos Habilitados</h4>
       <div id="listaTecnicosContent" style="max-height:300px; overflow-y:auto; padding-right:4px;">
         <!-- Preenchido via renderListaTecnicosModal() -->
       </div>
     </div>
 
     <div class="modal-actions" style="margin-top:12px; display:flex; justify-content:flex-end;">
-      <button type="button" onclick="closeGerenciarTecnicosModal()" style="height:32px; padding:0 18px; border-radius:8px; font-weight:700; font-size:12px;">Fechar</button>
+      <button type="button" onclick="closeGerenciarTecnicosModal()" style="height:32px; padding:0 18px; border-radius:8px; font-weight:700; font-size:14px;">Fechar</button>
     </div>
   </div>
 </div>
@@ -16658,13 +16658,13 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
     </div>
 
     <h3 id="loginSuccessTitle" style="font-size:23px; font-weight:900; color:#ffffff; margin:0 0 8px; letter-spacing:-0.025em; text-shadow:0 2px 10px rgba(0,0,0,0.5);">Login efetuado com sucesso!</h3>
-    <p id="loginSuccessMsg" style="font-size:13.5px; color:#94a3b8; margin:0 0 22px; line-height:1.55; font-weight:500;">Redirecionando com segurança para o seu sistema...</p>
+    <p id="loginSuccessMsg" style="font-size:14px; color:#94a3b8; margin:0 0 22px; line-height:1.55; font-weight:500;">Redirecionando com segurança para o seu sistema...</p>
 
     <!-- Barra de Progresso Suave com Glow Dinâmico -->
     <div class="login-success-progress-bar" style="height:5px; background:rgba(255,255,255,0.08); border-radius:999px; overflow:hidden; box-shadow:inset 0 1px 2px rgba(0,0,0,0.6);">
       <div class="login-success-progress-fill" style="height:100%; border-radius:999px; background:linear-gradient(90deg, #F59E0B 0%, #FBBF24 45%, #D97706 80%, #F59E0B 100%); box-shadow:0 0 16px rgba(245, 158, 11, 0.9);"></div>
     </div>
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px; font-size:10.5px; color:#64748b; font-weight:600; letter-spacing:0.02em;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px; font-size:14px; color:#64748b; font-weight:600; letter-spacing:0.02em;">
       <span style="display:inline-flex; align-items:center; gap:5px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Conexão Criptografada</span>
       <span style="color:#F59E0B;">Carregando dados...</span>
     </div>
@@ -16754,12 +16754,12 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
       <span>Aviso de Inatividade</span>
     </div>
     <h3 style="font-size:20px;">Sua sessão vai expirar</h3>
-    <p style="margin-bottom:18px;">Você está sem mexer há mais de 4 minutos. Sua conta será desconectada automaticamente em <span id="inactivityCountdownSecs" style="font-weight:900; font-size:16px; color:#F59E0B; text-decoration:underline;">30</span> segundos por segurança.</p>
+    <p style="margin-bottom:18px;">Você está sem mexer há mais de 4 minutos. Sua conta será desconectada automaticamente em <span id="inactivityCountdownSecs" style="font-weight:900; font-size:14px; color:#F59E0B; text-decoration:underline;">30</span> segundos por segurança.</p>
     <div style="display:flex; gap:10px; width:100%; position:relative; z-index:2;">
-      <button type="button" class="logout-btn-action" onclick="window.keepSessionAlive()" style="flex:1; padding:13px 18px !important; font-size:13.5px !important; background:linear-gradient(135deg, #059669 0%, #047857 100%) !important; box-shadow:0 8px 20px -3px rgba(5, 150, 105,0.5) !important;">
+      <button type="button" class="logout-btn-action" onclick="window.keepSessionAlive()" style="flex:1; padding:13px 18px !important; font-size:14px !important; background:linear-gradient(135deg, #059669 0%, #047857 100%) !important; box-shadow:0 8px 20px -3px rgba(5, 150, 105,0.5) !important;">
         <span>Continuar Conectado</span>
       </button>
-      <button type="button" onclick="window.handleAppLogout()" style="padding:13px 18px; border-radius:16px; font-weight:700; font-size:13.5px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.18); color:#cbd5e1; cursor:pointer; transition:all 0.2s ease;">
+      <button type="button" onclick="window.handleAppLogout()" style="padding:13px 18px; border-radius:16px; font-weight:700; font-size:14px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.18); color:#cbd5e1; cursor:pointer; transition:all 0.2s ease;">
         <span>Sair Agora</span>
       </button>
     </div>
@@ -17000,27 +17000,27 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
     <div style="width:64px; height:64px; margin:0 auto 12px; border-radius:50%; background:radial-gradient(circle, rgba(245,158,11,0.25) 0%, rgba(15,23,42,0.6) 80%); border:2px solid rgba(245,158,11,0.5); display:flex; align-items:center; justify-content:center; box-shadow:0 0 25px rgba(245,158,11,0.35);">
       <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1"/></svg>
     </div>
-    <div style="display:inline-flex; align-items:center; gap:6px; padding:3px 12px; border-radius:999px; background:rgba(5, 150, 105,0.15); border:1px solid rgba(5, 150, 105,0.35); color:#10B981; font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:8px;">
+    <div style="display:inline-flex; align-items:center; gap:6px; padding:3px 12px; border-radius:999px; background:rgba(5, 150, 105,0.15); border:1px solid rgba(5, 150, 105,0.35); color:#10B981; font-size:14px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:8px;">
       <span>✓ Dados Confirmados com Sucesso</span>
     </div>
     <h3 style="font-size:20px; font-weight:900; margin:0 0 6px 0;">Senha Temporária Gerada</h3>
-    <p style="font-size:12.5px; color:var(--text-dim, #94A3B8); margin:0 0 16px 0; line-height:1.45;">
+    <p style="font-size:14px; color:var(--text-dim, #94A3B8); margin:0 0 16px 0; line-height:1.45;">
       Seus dados foram validados. Utilize a credencial provisória abaixo para realizar seu login no sistema:
     </p>
 
     <div class="temp-pass-display-card" style="padding:14px 18px; border-radius:16px; background:rgba(0,0,0,0.4); border:1.5px solid rgba(245,158,11,0.45); display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:16px;">
       <div style="text-align:left;">
-        <span style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#F59E0B; display:block;">Sua Senha Temporária</span>
+        <span style="font-size:14px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#F59E0B; display:block;">Sua Senha Temporária</span>
         <span id="tempPasswordValServer" style="font-size:22px; font-weight:900; letter-spacing:0.06em; color:#FBBF24; user-select:all;"></span>
       </div>
-      <button type="button" id="btnCopyTempServer" onclick="window.copyTempPasswordToClipboard()" style="padding:8px 14px; border-radius:10px; background:rgba(245,158,11,0.2); border:1px solid rgba(245,158,11,0.4); color:#FBBF24; font-weight:800; font-size:12px; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+      <button type="button" id="btnCopyTempServer" onclick="window.copyTempPasswordToClipboard()" style="padding:8px 14px; border-radius:10px; background:rgba(245,158,11,0.2); border:1px solid rgba(245,158,11,0.4); color:#FBBF24; font-weight:800; font-size:14px; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
         <span id="btnCopyTempTextServer">Copiar</span>
       </button>
     </div>
 
-    <div style="padding:10px 14px; border-radius:12px; background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.25); text-align:left; font-size:11px; color:#FDE68A; margin-bottom:18px; display:flex; gap:8px;">
-      <span style="font-size:13px; color:#F59E0B;">⚠️</span>
+    <div style="padding:10px 14px; border-radius:12px; background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.25); text-align:left; font-size:14px; color:#FDE68A; margin-bottom:18px; display:flex; gap:8px;">
+      <span style="font-size:14px; color:#F59E0B;">⚠️</span>
       <span><strong>Aviso Obrigatório:</strong> No primeiro login com esta senha temporária, será <strong>obrigatório</strong> definir sua nova senha definitiva dentro dos critérios de segurança.</span>
     </div>
 
@@ -17039,14 +17039,14 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1"/></svg>
       </div>
       <div>
-        <div style="display:inline-flex; align-items:center; gap:6px; padding:2px 10px; border-radius:999px; background:rgba(245,158,11,0.15); border:1px solid rgba(245,158,11,0.35); color:#FBBF24; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px;">
+        <div style="display:inline-flex; align-items:center; gap:6px; padding:2px 10px; border-radius:999px; background:rgba(245,158,11,0.15); border:1px solid rgba(245,158,11,0.35); color:#FBBF24; font-size:14px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px;">
           <span>Primeiro Acesso • Troca Obrigatória</span>
         </div>
         <h3 style="font-size:18px; font-weight:900; margin:0; color:var(--text, #FFF);">Definir Nova Senha Pessoal</h3>
       </div>
     </div>
 
-    <p style="font-size:12px; color:var(--text-dim, #94A3B8); margin:0 0 14px 0; line-height:1.45;">
+    <p style="font-size:14px; color:var(--text-dim, #94A3B8); margin:0 0 14px 0; line-height:1.45;">
       Você realizou o login utilizando uma senha temporária. Para sua segurança e continuidade no sistema, defina agora sua nova senha definitiva cumprindo todos os critérios abaixo:
     </p>
 
@@ -17068,7 +17068,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 
       <!-- Checklist de Critérios de Segurança Estabelecidos -->
       <div class="mand-criteria-card" style="padding:12px 14px; border-radius:14px; background:rgba(0,0,0,0.35); border:1px solid rgba(255,255,255,0.08); margin-bottom:12px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; font-size:11px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; font-size:14px;">
           <span style="color:var(--text-dim, #94A3B8); font-weight:600;">Força da Senha:</span>
           <span id="mandStrengthTextServer" style="color:#f87171; font-weight:800;">Muito Fraca</span>
         </div>
@@ -17097,7 +17097,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
           </button>
         </div>
-        <div id="mandMatchMsgServer" style="display:none; font-size:11px; font-weight:700; margin-top:4px;"></div>
+        <div id="mandMatchMsgServer" style="display:none; font-size:14px; font-weight:700; margin-top:4px;"></div>
       </div>
 
       <div id="mandFeedbackBannerServer" class="auth-feedback-banner error" style="display:none; margin-bottom:12px;"></div>
@@ -17248,7 +17248,7 @@ window.carregarUsuariosLogonServer = async function() {
   const container = document.getElementById('usersListLogonContainerServer');
   const badgeCount = document.getElementById('registeredUsersBadgeCountServer');
   if (container) {
-    container.innerHTML = '<div style="text-align:center; padding:20px; color:var(--auth-text-dim); font-size:12px;">Carregando usuários cadastrados...</div>';
+    container.innerHTML = '<div style="text-align:center; padding:20px; color:var(--auth-text-dim); font-size:14px;">Carregando usuários cadastrados...</div>';
   }
 
   try {
@@ -17281,7 +17281,7 @@ window.renderUsuariosLogonServer = function(users) {
   if (!container) return;
 
   if (!users || users.length === 0) {
-    container.innerHTML = '<div style="text-align:center; padding:20px; color:var(--auth-text-dim); font-size:12px;">Nenhum usuário cadastrado encontrado.</div>';
+    container.innerHTML = '<div style="text-align:center; padding:20px; color:var(--auth-text-dim); font-size:14px;">Nenhum usuário cadastrado encontrado.</div>';
     return;
   }
 
@@ -17298,23 +17298,23 @@ window.renderUsuariosLogonServer = function(users) {
     html += \`
       <div style="padding:10px 12px; border-radius:12px; background:var(--card-bg, rgba(255,255,255,0.04)); border:1px solid var(--auth-border); display:flex; align-items:center; justify-content:space-between; gap:10px;">
         <div style="display:flex; align-items:center; gap:10px; min-width:0;">
-          <div style="width:34px; height:34px; border-radius:50%; background:\${isAdmin ? 'linear-gradient(135deg, #F59E0B, #B45309)' : 'linear-gradient(135deg, #0284C7, #0369A1)'}; color:#fff; font-weight:800; font-size:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+          <div style="width:34px; height:34px; border-radius:50%; background:\${isAdmin ? 'linear-gradient(135deg, #F59E0B, #B45309)' : 'linear-gradient(135deg, #0284C7, #0369A1)'}; color:#fff; font-weight:800; font-size:14px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
             \${initials}
           </div>
           <div style="min-width:0;">
             <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-              <strong style="font-size:13px; color:var(--auth-text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">\${name}</strong>
-              <span style="font-size:9.5px; font-weight:800; padding:1px 6px; border-radius:4px; background:rgba(255,255,255,0.1); color:var(--text, #fff); border:1px solid rgba(255,255,255,0.15);">ID #\${u.id || '-'}</span>
-              <span style="font-size:9.5px; font-weight:800; padding:1px 5px; border-radius:4px; text-transform:uppercase; background:\${isAdmin ? 'rgba(245,158,11,0.2)' : 'rgba(14, 165, 233, 0.2)'}; color:\${isAdmin ? '#FBBF24' : '#38BDF8'};">\${role}</span>
-              <span style="font-size:9.5px; font-weight:700; padding:1px 5px; border-radius:4px; background:rgba(14, 165, 233, 0.15); color:#38BDF8; border:1px solid rgba(14, 165, 233, 0.3);">\${u.device_type === 'Mobile' ? '📱 Celular' : '💻 Computador'}</span>
+              <strong style="font-size:14px; color:var(--auth-text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">\${name}</strong>
+              <span style="font-size:14px; font-weight:800; padding:1px 6px; border-radius:4px; background:rgba(255,255,255,0.1); color:var(--text, #fff); border:1px solid rgba(255,255,255,0.15);">ID #\${u.id || '-'}</span>
+              <span style="font-size:14px; font-weight:800; padding:1px 5px; border-radius:4px; text-transform:uppercase; background:\${isAdmin ? 'rgba(245,158,11,0.2)' : 'rgba(14, 165, 233, 0.2)'}; color:\${isAdmin ? '#FBBF24' : '#38BDF8'};">\${role}</span>
+              <span style="font-size:14px; font-weight:700; padding:1px 5px; border-radius:4px; background:rgba(14, 165, 233, 0.15); color:#38BDF8; border:1px solid rgba(14, 165, 233, 0.3);">\${u.device_type === 'Mobile' ? '📱 Celular' : '💻 Computador'}</span>
             </div>
-            <div style="font-size:11.5px; color:var(--auth-text-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">\${email}</div>
-            <div style="font-size:10.5px; color:#38BDF8; margin-top:3px; display:flex; align-items:center; gap:4px;">
+            <div style="font-size:14px; color:var(--auth-text-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">\${email}</div>
+            <div style="font-size:14px; color:#38BDF8; margin-top:3px; display:flex; align-items:center; gap:4px;">
               <span>🕒 Último login:</span> <strong style="color:var(--text, #E2E8F0);">\${lastLoginFormatted}</strong>
             </div>
           </div>
         </div>
-        <button type="button" onclick="selecionarUsuarioParaLogonServer('\${email}', '\${passSafe}', '\${name.replace(/'/g, "\\\\'")}')" style="padding:6px 10px; border-radius:8px; font-size:11px; font-weight:800; background:rgba(245,158,11,0.15); color:var(--auth-gold); border:1px solid rgba(245,158,11,0.4); cursor:pointer; flex-shrink:0;">
+        <button type="button" onclick="selecionarUsuarioParaLogonServer('\${email}', '\${passSafe}', '\${name.replace(/'/g, "\\\\'")}')" style="padding:6px 10px; border-radius:8px; font-size:14px; font-weight:800; background:rgba(245,158,11,0.15); color:var(--auth-gold); border:1px solid rgba(245,158,11,0.4); cursor:pointer; flex-shrink:0;">
           ⚡ Logon
         </button>
       </div>
@@ -17362,8 +17362,8 @@ window.showAuthFeedback = function(box, type, title, message, actionHtml) {
   banner.innerHTML = \`
     <span style="font-size:18px; line-height:1; flex-shrink:0; margin-top:2px;">\${icon}</span>
     <div style="flex:1;">
-      <strong style="display:block; font-size:13.5px; font-weight:800; margin-bottom:2px; letter-spacing:-0.01em;">\${title}</strong>
-      <span style="font-size:12.5px; opacity:0.95; line-height:1.4;">\${message}</span>
+      <strong style="display:block; font-size:14px; font-weight:800; margin-bottom:2px; letter-spacing:-0.01em;">\${title}</strong>
+      <span style="font-size:14px; opacity:0.95; line-height:1.4;">\${message}</span>
       \${actionHtml ? \`<div style="margin-top:8px;">\${actionHtml}</div>\` : ''}
     </div>
   \`;
@@ -22920,13 +22920,13 @@ function pageDashboardLegado(){
         '<div style="display:flex; align-items:center; gap:10px; min-width:180px;">' +
           '<span class="due-bill-badge ' + item.statusType + '">' + item.statusText + '</span>' +
           '<div>' +
-            '<strong style="font-size:13px; color:var(--text);">' + item.desc + '</strong>' +
-            '<div style="font-size:11px; color:var(--text-dim); margin-top:2px;">Vencimento: ' + item.formattedDate + ' • ' + item.cat + '</div>' +
+            '<strong style="font-size:14px; color:var(--text);">' + item.desc + '</strong>' +
+            '<div style="font-size:14px; color:var(--text-dim); margin-top:2px;">Vencimento: ' + item.formattedDate + ' • ' + item.cat + '</div>' +
           '</div>' +
         '</div>' +
         '<div style="display:flex; align-items:center; gap:12px;">' +
           '<span style="font-size:14px; font-weight:800; color:#F87171; font-variant-numeric:tabular-nums;">' + fmt(item.val) + '</span>' +
-          '<button type="button" class="btn-primary" data-paytx="' + item.id + '" title="Marcar como Paga Agora" style="padding:5px 12px; font-size:11.5px; font-weight:700; border-radius:8px; cursor:pointer; background:linear-gradient(135deg, #059669, #059669); color:#FFFFFF; border:none; display:inline-flex; align-items:center; gap:5px;">' +
+          '<button type="button" class="btn-primary" data-paytx="' + item.id + '" title="Marcar como Paga Agora" style="padding:5px 12px; font-size:14px; font-weight:700; border-radius:8px; cursor:pointer; background:linear-gradient(135deg, #059669, #059669); color:#FFFFFF; border:none; display:inline-flex; align-items:center; gap:5px;">' +
             '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>' +
             '<span>Dar Baixa</span>' +
           '</button>' +
@@ -22941,8 +22941,8 @@ function pageDashboardLegado(){
             '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>' +
           '</div>' +
           '<div>' +
-            '<div style="font-size:15px; font-weight:800; color:#FFFFFF;">Radar de Contas a Pagar (' + pendingSummary.items.length + ')</div>' +
-            '<div style="font-size:11px; color:var(--text-dim); margin-top:2px;">' +
+            '<div style="font-size:14px; font-weight:800; color:#FFFFFF;">Radar de Contas a Pagar (' + pendingSummary.items.length + ')</div>' +
+            '<div style="font-size:14px; color:var(--text-dim); margin-top:2px;">' +
               'Total a quitar: <strong style="color:' + (pendingSummary.overdueCount > 0 ? '#F87171' : '#FBBF24') + ';">' + fmt(pendingSummary.totalValue) + '</strong>' +
             '</div>' +
           '</div>' +
@@ -22961,8 +22961,8 @@ function pageDashboardLegado(){
             '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>' +
           '</div>' +
           '<div>' +
-            '<strong style="font-size:12.5px; color:#059669;">Contas e Vencimentos em Dia</strong>' +
-            '<div style="font-size:11px; color:var(--text-dim); margin-top:1px;">Nenhuma fatura ou boleto pendente para os próximos 3 dias.</div>' +
+            '<strong style="font-size:14px; color:#059669;">Contas e Vencimentos em Dia</strong>' +
+            '<div style="font-size:14px; color:var(--text-dim); margin-top:1px;">Nenhuma fatura ou boleto pendente para os próximos 3 dias.</div>' +
           '</div>' +
         '</div>' +
         '<span class="kpi-tag kpi-tag-success">100% Regular</span>' +
@@ -22980,12 +22980,12 @@ function pageDashboardLegado(){
       catListHtml += '<div style="display:flex; flex-direction:column; gap:5px; padding:8px 10px; border-radius:10px; background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.06); border-left:3.5px solid ' + c.color + ';">' +
         '<div style="display:flex; align-items:center; justify-content:space-between; width:100%;">' +
           '<div style="display:flex; align-items:center; gap:8px; min-width:0;">' +
-            '<span style="font-size:13px;">' + icon + '</span>' +
-            '<span style="font-size:12px; font-weight:700; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + c.name + '</span>' +
+            '<span style="font-size:14px;">' + icon + '</span>' +
+            '<span style="font-size:14px; font-weight:700; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + c.name + '</span>' +
           '</div>' +
           '<div style="text-align:right; flex-shrink:0;">' +
-            '<strong style="font-size:12px; color:var(--text); font-variant-numeric:tabular-nums;">' + fmt(c.val) + '</strong>' +
-            '<span style="font-size:10px; font-weight:700; color:' + c.color + '; margin-left:5px;">' + pct + '%</span>' +
+            '<strong style="font-size:14px; color:var(--text); font-variant-numeric:tabular-nums;">' + fmt(c.val) + '</strong>' +
+            '<span style="font-size:14px; font-weight:700; color:' + c.color + '; margin-left:5px;">' + pct + '%</span>' +
           '</div>' +
         '</div>' +
         '<div style="width:100%; height:4px; background:rgba(255,255,255,0.06); border-radius:2px; overflow:hidden;">' +
@@ -22996,15 +22996,15 @@ function pageDashboardLegado(){
 
     const topCatPct = Math.round((cats[0].val / totalDesp) * 100);
     const topCatInsight = '<div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:8px 10px; margin-top:10px; display:flex; align-items:center; gap:8px;">' +
-      '<span style="font-size:13px;">💡</span>' +
-      '<span style="font-size:11px; color:var(--text-dim); line-height:1.3;">Maior impacto: <strong style="color:var(--text);">' + cats[0].name + '</strong> (' + topCatPct + '% das saídas).</span>' +
+      '<span style="font-size:14px;">💡</span>' +
+      '<span style="font-size:14px; color:var(--text-dim); line-height:1.3;">Maior impacto: <strong style="color:var(--text);">' + cats[0].name + '</strong> (' + topCatPct + '% das saídas).</span>' +
     '</div>';
 
     categoriesSectionHtml = '<div style="display:flex; flex-direction:column; gap:8px; width:100%;">' + catListHtml + '</div>' + topCatInsight;
   } else {
     categoriesSectionHtml = '<div style="text-align:center; padding:24px 12px; color:var(--text-dim);">' +
       '<div style="font-size:28px; margin-bottom:6px;">📊</div>' +
-      '<p style="font-size:12px; margin:0;">Nenhum gasto categorizado no período.</p>' +
+      '<p style="font-size:14px; margin:0;">Nenhum gasto categorizado no período.</p>' +
     '</div>';
   }
 
@@ -23016,14 +23016,14 @@ function pageDashboardLegado(){
       const stats = getCardStats(a);
       items += '<div style="display:flex; align-items:center; justify-content:space-between; padding:8px 10px; border-radius:10px; background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.06);">' +
         '<div style="display:flex; align-items:center; gap:8px;">' +
-          '<span style="font-size:13px;">' + getAccountIcon(a.name) + '</span>' +
-          '<span style="font-size:12px; font-weight:700; color:var(--text);">' + a.name + '</span>' +
+          '<span style="font-size:14px;">' + getAccountIcon(a.name) + '</span>' +
+          '<span style="font-size:14px; font-weight:700; color:var(--text);">' + a.name + '</span>' +
         '</div>' +
-        '<strong style="font-size:12.5px; color:' + (stats.currentBalance < 0 ? '#F87171' : '#059669') + '; font-variant-numeric:tabular-nums;">' + fmt(stats.currentBalance) + '</strong>' +
+        '<strong style="font-size:14px; color:' + (stats.currentBalance < 0 ? '#F87171' : '#059669') + '; font-variant-numeric:tabular-nums;">' + fmt(stats.currentBalance) + '</strong>' +
       '</div>';
     });
     bankAccountsHtml = '<div style="margin-bottom:12px;">' +
-      '<div style="font-size:10px; text-transform:uppercase; letter-spacing:0.06em; font-weight:700; color:var(--text-dim); margin-bottom:6px;">Contas Bancárias (' + bankAccounts.length + ')</div>' +
+      '<div style="font-size:14px; text-transform:uppercase; letter-spacing:0.06em; font-weight:700; color:var(--text-dim); margin-bottom:6px;">Contas Bancárias (' + bankAccounts.length + ')</div>' +
       '<div style="display:flex; flex-direction:column; gap:6px;">' + items + '</div>' +
     '</div>';
   }
@@ -23036,22 +23036,22 @@ function pageDashboardLegado(){
       items += '<div style="padding:10px; border-radius:10px; background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.06); display:flex; flex-direction:column; gap:6px;">' +
         '<div style="display:flex; align-items:center; justify-content:space-between;">' +
           '<div style="display:flex; align-items:center; gap:8px;">' +
-            '<span style="font-size:13px;">💳</span>' +
-            '<span style="font-size:12px; font-weight:700; color:var(--text);">' + c.name + '</span>' +
+            '<span style="font-size:14px;">💳</span>' +
+            '<span style="font-size:14px; font-weight:700; color:var(--text);">' + c.name + '</span>' +
           '</div>' +
-          '<span style="font-size:11px; font-weight:700; color:' + (stats.usagePct >= 85 ? '#F87171' : '#10B981') + ';">' + stats.usagePct + '% uso</span>' +
+          '<span style="font-size:14px; font-weight:700; color:' + (stats.usagePct >= 85 ? '#F87171' : '#10B981') + ';">' + stats.usagePct + '% uso</span>' +
         '</div>' +
         '<div style="width:100%; height:4.5px; background:rgba(255,255,255,0.06); border-radius:2.5px; overflow:hidden;">' +
           '<div style="width:' + Math.max(stats.usagePct, 0) + '%; height:100%; background:' + (stats.usagePct >= 90 ? '#F87171' : stats.usagePct >= 70 ? '#F59E0B' : '#059669') + '; border-radius:2.5px; transition:width 0.4s ease;"></div>' +
         '</div>' +
-        '<div style="display:flex; justify-content:space-between; font-size:10.5px; color:var(--text-dim);">' +
+        '<div style="display:flex; justify-content:space-between; font-size:14px; color:var(--text-dim);">' +
           '<span>Fatura: <strong style="color:' + (stats.spentTotal > 0 ? '#FBBF24' : 'var(--text-dim)') + ';">' + fmt(stats.spentTotal) + '</strong></span>' +
           '<span>Disp: <strong style="color:#059669;">' + fmt(stats.availableLimit) + '</strong></span>' +
         '</div>' +
       '</div>';
     });
     creditCardsHtml = '<div>' +
-      '<div style="font-size:10px; text-transform:uppercase; letter-spacing:0.06em; font-weight:700; color:var(--text-dim); margin-bottom:6px;">Cartões de Crédito (' + creditCardsList.length + ')</div>' +
+      '<div style="font-size:14px; text-transform:uppercase; letter-spacing:0.06em; font-weight:700; color:var(--text-dim); margin-bottom:6px;">Cartões de Crédito (' + creditCardsList.length + ')</div>' +
       '<div style="display:flex; flex-direction:column; gap:8px;">' + items + '</div>' +
     '</div>';
   }
@@ -23060,7 +23060,7 @@ function pageDashboardLegado(){
   if (bankAccounts.length === 0 && creditCardsList.length === 0) {
     emptyMeiosHtml = '<div style="text-align:center; padding:20px 10px; color:var(--text-dim);">' +
       '<div style="font-size:26px; margin-bottom:6px;">💳</div>' +
-      '<p style="font-size:12px; margin:0;">Nenhum meio de pagamento registrado.</p>' +
+      '<p style="font-size:14px; margin:0;">Nenhum meio de pagamento registrado.</p>' +
     '</div>';
   }
 
@@ -23075,15 +23075,15 @@ function pageDashboardLegado(){
     '<div class="dash-overview-card">' +
       '<div style="display:flex; align-items:center; justify-content:space-between;">' +
         '<div style="display:flex; align-items:center; gap:8px;">' +
-          '<span style="font-size:15px;">🏷️</span>' +
+          '<span style="font-size:14px;">🏷️</span>' +
           '<div>' +
-            '<strong style="font-size:12.5px; color:var(--text);">Despesas por Categoria</strong>' +
-            '<div style="font-size:10.5px; color:var(--text-dim);">' + cats.length + ' categorias ativas no período</div>' +
+            '<strong style="font-size:14px; color:var(--text);">Despesas por Categoria</strong>' +
+            '<div style="font-size:14px; color:var(--text-dim);">' + cats.length + ' categorias ativas no período</div>' +
           '</div>' +
         '</div>' +
         '<span class="kpi-tag kpi-tag-cyan" style="font-variant-numeric:tabular-nums;">' + fmt(actualTotalDesp) + '</span>' +
       '</div>' +
-      '<div style="font-size:11.5px; color:var(--text-dim); display:flex; justify-content:space-between; margin-top:2px;">' +
+      '<div style="font-size:14px; color:var(--text-dim); display:flex; justify-content:space-between; margin-top:2px;">' +
         '<span>Maior Categoria: <strong style="color:var(--text);">' + topCatName + '</strong></span>' +
         '<strong style="color:#FBBF24;">' + topCatPct + '% do total</strong>' +
       '</div>' +
@@ -23095,15 +23095,15 @@ function pageDashboardLegado(){
     '<div class="dash-overview-card">' +
       '<div style="display:flex; align-items:center; justify-content:space-between;">' +
         '<div style="display:flex; align-items:center; gap:8px;">' +
-          '<span style="font-size:15px;">💳</span>' +
+          '<span style="font-size:14px;">💳</span>' +
           '<div>' +
-            '<strong style="font-size:12.5px; color:var(--text);">Cartões de Crédito</strong>' +
-            '<div style="font-size:10.5px; color:var(--text-dim);">' + creditCardsList.length + ' cartão(ões) registrado(s)</div>' +
+            '<strong style="font-size:14px; color:var(--text);">Cartões de Crédito</strong>' +
+            '<div style="font-size:14px; color:var(--text-dim);">' + creditCardsList.length + ' cartão(ões) registrado(s)</div>' +
           '</div>' +
         '</div>' +
         '<span class="kpi-tag ' + (cardSummary.usagePctGeral >= 85 ? 'kpi-tag-danger' : 'kpi-tag-cyan') + '">' + cardSummary.usagePctGeral + '% Uso</span>' +
       '</div>' +
-      '<div style="display:flex; justify-content:space-between; font-size:11.5px; color:var(--text-dim); margin-top:2px;">' +
+      '<div style="display:flex; justify-content:space-between; font-size:14px; color:var(--text-dim); margin-top:2px;">' +
         '<span>Fatura: <strong style="color:#FBBF24; font-variant-numeric:tabular-nums;">' + fmt(cardSummary.spentTotalGeral) + '</strong></span>' +
         '<span>Disponível: <strong style="color:#059669; font-variant-numeric:tabular-nums;">' + fmt(cardSummary.availableLimitGeral) + '</strong></span>' +
       '</div>' +
@@ -23115,15 +23115,15 @@ function pageDashboardLegado(){
     '<div class="dash-overview-card">' +
       '<div style="display:flex; align-items:center; justify-content:space-between;">' +
         '<div style="display:flex; align-items:center; gap:8px;">' +
-          '<span style="font-size:15px;">🎯</span>' +
+          '<span style="font-size:14px;">🎯</span>' +
           '<div>' +
-            '<strong style="font-size:12.5px; color:var(--text);">Orçamento do Período</strong>' +
-            '<div style="font-size:10.5px; color:var(--text-dim);">Teto: ' + fmt(totalBudgetLimit) + '</div>' +
+            '<strong style="font-size:14px; color:var(--text);">Orçamento do Período</strong>' +
+            '<div style="font-size:14px; color:var(--text-dim);">Teto: ' + fmt(totalBudgetLimit) + '</div>' +
           '</div>' +
         '</div>' +
         '<span class="kpi-tag" style="background:' + paceBadgeBg + '; border:1px solid ' + paceBadgeBorder + '; color:' + paceColor + ';">' + paceStatus + '</span>' +
       '</div>' +
-      '<div style="display:flex; justify-content:space-between; font-size:11.5px; color:var(--text-dim); margin-top:2px;">' +
+      '<div style="display:flex; justify-content:space-between; font-size:14px; color:var(--text-dim); margin-top:2px;">' +
         '<span>Consumido: <strong style="color:' + paceColor + ';">' + budgetPct + '%</strong></span>' +
         '<span>Dia ' + daysInPeriod + ' de ' + daysInMonthTotal + ' (' + monthTimePct + '%)</span>' +
       '</div>' +
@@ -23135,15 +23135,15 @@ function pageDashboardLegado(){
     '<div class="dash-overview-card">' +
       '<div style="display:flex; align-items:center; justify-content:space-between;">' +
         '<div style="display:flex; align-items:center; gap:8px;">' +
-          '<span style="font-size:15px;">🏦</span>' +
+          '<span style="font-size:14px;">🏦</span>' +
           '<div>' +
-            '<strong style="font-size:12.5px; color:var(--text);">Contas & Liquidez</strong>' +
-            '<div style="font-size:10.5px; color:var(--text-dim);">' + bankAccounts.length + ' conta(s) bancária(s)</div>' +
+            '<strong style="font-size:14px; color:var(--text);">Contas & Liquidez</strong>' +
+            '<div style="font-size:14px; color:var(--text-dim);">' + bankAccounts.length + ' conta(s) bancária(s)</div>' +
           '</div>' +
         '</div>' +
         '<span class="kpi-tag ' + (saldo >= 0 ? 'kpi-tag-success' : 'kpi-tag-danger') + '" style="font-variant-numeric:tabular-nums;">' + fmt(saldo) + '</span>' +
       '</div>' +
-      '<div style="font-size:11px; color:var(--text-dim); line-height:1.4; margin-top:2px;">' +
+      '<div style="font-size:14px; color:var(--text-dim); line-height:1.4; margin-top:2px;">' +
         'Autonomia estimada de <strong style="color:' + (runwayDays >= 60 ? '#10B981' : '#059669') + ';">' + (runwayDays > 0 ? runwayDays + ' dias' : 'Alerta') + '</strong> com base no consumo diário de ' + fmt(dailyAvg) + '.' +
       '</div>' +
     '</div>' +
@@ -23195,7 +23195,7 @@ function pageDashboardLegado(){
         <div class="row1">
           <div style="display:flex; align-items:center; gap:6px;">
             <span>Saldo Consolidado</span>
-            <button type="button" onclick="window.toggleSensitiveBalances()" title="Ocultar ou Exibir Saldos" style="background:none; border:none; color:var(--text-dim); cursor:pointer; font-size:12px; padding:0; display:inline-flex; align-items:center; opacity:0.8;">
+            <button type="button" onclick="window.toggleSensitiveBalances()" title="Ocultar ou Exibir Saldos" style="background:none; border:none; color:var(--text-dim); cursor:pointer; font-size:14px; padding:0; display:inline-flex; align-items:center; opacity:0.8;">
               <span class="btnEyeIconCard"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></span>
             </button>
           </div>
@@ -23336,8 +23336,8 @@ function pageDashboardLegado(){
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
               </div>
               <div>
-                <div style="font-size:15px; font-weight:800; color:#FFFFFF; letter-spacing:-0.015em;">Evolução do Fluxo de Caixa</div>
-                <div style="font-size:11px; color:var(--text-dim); margin-top:2px;">Entradas vs Saídas registradas ao longo do período</div>
+                <div style="font-size:14px; font-weight:800; color:#FFFFFF; letter-spacing:-0.015em;">Evolução do Fluxo de Caixa</div>
+                <div style="font-size:14px; color:var(--text-dim); margin-top:2px;">Entradas vs Saídas registradas ao longo do período</div>
               </div>
             </div>
             <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
@@ -23364,7 +23364,7 @@ function pageDashboardLegado(){
                   <span>Bolinha</span>
                 </button>
               </div>
-              <span class="tag" style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:var(--text); font-size:11.5px; padding:4px 10px; border-radius:8px;">\${periodLabel()}</span>
+              <span class="tag" style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:var(--text); font-size:14px; padding:4px 10px; border-radius:8px;">\${periodLabel()}</span>
             </div>
           </div>
 
@@ -23409,8 +23409,8 @@ function pageDashboardLegado(){
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
               </div>
               <div>
-                <div style="font-size:15px; font-weight:800; color:#FFFFFF;">Últimas Transações</div>
-                <div style="font-size:11px; color:var(--text-dim); margin-top:2px;">Atividades recentes no período selecionado</div>
+                <div style="font-size:14px; font-weight:800; color:#FFFFFF;">Últimas Transações</div>
+                <div style="font-size:14px; color:var(--text-dim); margin-top:2px;">Atividades recentes no período selecionado</div>
               </div>
             </div>
 
@@ -23420,7 +23420,7 @@ function pageDashboardLegado(){
                 <button type="button" class="dash-filter-pill" onclick="filterDashboardTx('in', this)">Receitas</button>
                 <button type="button" class="dash-filter-pill" onclick="filterDashboardTx('out', this)">Despesas</button>
               </div>
-              <span class="tag" data-nav="transacoes" onclick="navigate('transacoes')" style="cursor:pointer; font-size:11.5px; padding:5px 12px; border-radius:8px; background:rgba(16, 185, 129,0.12); color:#10B981; border:1px solid rgba(16, 185, 129,0.25);">
+              <span class="tag" data-nav="transacoes" onclick="navigate('transacoes')" style="cursor:pointer; font-size:14px; padding:5px 12px; border-radius:8px; background:rgba(16, 185, 129,0.12); color:#10B981; border:1px solid rgba(16, 185, 129,0.25);">
                 Ver Extrato
               </span>
             </div>
@@ -23444,8 +23444,8 @@ function pageDashboardLegado(){
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
               </div>
               <div>
-                <div style="font-size:15px; font-weight:800; color:#FFFFFF;">Roda de Saúde Financeira</div>
-                <div style="font-size:11px; color:var(--text-dim); margin-top:2px;">Score de performance & 4 pilares</div>
+                <div style="font-size:14px; font-weight:800; color:#FFFFFF;">Roda de Saúde Financeira</div>
+                <div style="font-size:14px; color:var(--text-dim); margin-top:2px;">Score de performance & 4 pilares</div>
               </div>
             </div>
             <span class="kpi-tag" style="background:\${healthBadgeBg}; border:1px solid \${healthBadgeBorder}; color:\${healthColor};">\${healthStatus}</span>
@@ -23458,9 +23458,9 @@ function pageDashboardLegado(){
               <circle cx="50" cy="50" r="40" fill="none" stroke="\${healthColor}" stroke-width="9" stroke-linecap="round" stroke-dasharray="251.32" stroke-dashoffset="\${251.32 * (1 - healthScore / 100)}" style="transition: stroke-dashoffset 0.9s cubic-bezier(0.16, 1, 0.3, 1);"/>
             </svg>
             <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;">
-              <span style="font-size:9px; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-dim); font-weight:800;">Score 360°</span>
+              <span style="font-size:14px; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-dim); font-weight:800;">Score 360°</span>
               <b style="font-size:24px; font-weight:900; color:\${healthColor}; line-height:1; margin:2px 0;">\${healthScore}</b>
-              <span style="font-size:10px; font-weight:700; color:var(--text-dim);">de 100</span>
+              <span style="font-size:14px; font-weight:700; color:var(--text-dim);">de 100</span>
             </div>
           </div>
 
@@ -23507,7 +23507,7 @@ function pageDashboardLegado(){
           <!-- Diagnóstico com IA Financeira -->
           <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:9px 12px; margin-top:12px; display:flex; align-items:flex-start; gap:8px;">
             <span style="font-size:14px; flex-shrink:0;">💡</span>
-            <span style="font-size:11.5px; color:var(--text-dim); line-height:1.4;">\${aiHealthInsight}</span>
+            <span style="font-size:14px; color:var(--text-dim); line-height:1.4;">\${aiHealthInsight}</span>
           </div>
         </div>
 
@@ -23519,8 +23519,8 @@ function pageDashboardLegado(){
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
               </div>
               <div>
-                <div style="font-size:15px; font-weight:800; color:#FFFFFF;">Visão Analítica 360°</div>
-                <div style="font-size:11px; color:var(--text-dim); margin-top:2px;">Rodas de categorias, cartões e metas</div>
+                <div style="font-size:14px; font-weight:800; color:#FFFFFF;">Visão Analítica 360°</div>
+                <div style="font-size:14px; color:var(--text-dim); margin-top:2px;">Rodas de categorias, cartões e metas</div>
               </div>
             </div>
 
@@ -23544,16 +23544,16 @@ function pageDashboardLegado(){
           <!-- ABA 1: Despesas por Categoria -->
           <div class="dash-wheel-pane \${activeDashTab === 'categorias' ? 'active' : ''}" data-pane="categorias">
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
-              <span style="font-size:12px; color:var(--text-dim); font-weight:600;">\${cats.length} categoria\${cats.length === 1 ? '' : 's'} ativa\${cats.length === 1 ? '' : 's'} no período</span>
-              <span class="tag" data-nav="transacoes" onclick="navigate('transacoes')" style="cursor:pointer; font-size:11px; padding:3px 8px;">Detalhes</span>
+              <span style="font-size:14px; color:var(--text-dim); font-weight:600;">\${cats.length} categoria\${cats.length === 1 ? '' : 's'} ativa\${cats.length === 1 ? '' : 's'} no período</span>
+              <span class="tag" data-nav="transacoes" onclick="navigate('transacoes')" style="cursor:pointer; font-size:14px; padding:3px 8px;">Detalhes</span>
             </div>
 
             <!-- Doughnut Canvas Categorias -->
             <div style="position:relative; width:100%; height:180px; margin-bottom:14px;">
               <canvas id="chartCategorias"></canvas>
               <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; pointer-events:none;">
-                <span style="font-size:9.5px; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-dim); font-weight:700;">Total</span>
-                <b style="font-size:14.5px; font-weight:900; color:#FFFFFF; font-variant-numeric:tabular-nums; margin-top:1px;">\${fmt(actualTotalDesp)}</b>
+                <span style="font-size:14px; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-dim); font-weight:700;">Total</span>
+                <b style="font-size:14px; font-weight:900; color:#FFFFFF; font-variant-numeric:tabular-nums; margin-top:1px;">\${fmt(actualTotalDesp)}</b>
               </div>
             </div>
 
@@ -23564,8 +23564,8 @@ function pageDashboardLegado(){
           <!-- ABA 2: Limites & Cartões de Crédito -->
           <div class="dash-wheel-pane \${activeDashTab === 'cartoes' ? 'active' : ''}" data-pane="cartoes">
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
-              <span style="font-size:12px; color:var(--text-dim); font-weight:600;">Consumo consolidado de crédito</span>
-              <span class="tag" data-nav="cartoes" onclick="navigate('cartoes')" style="cursor:pointer; font-size:11px; padding:3px 8px;">Gerenciar</span>
+              <span style="font-size:14px; color:var(--text-dim); font-weight:600;">Consumo consolidado de crédito</span>
+              <span class="tag" data-nav="cartoes" onclick="navigate('cartoes')" style="cursor:pointer; font-size:14px; padding:3px 8px;">Gerenciar</span>
             </div>
 
             \${creditCardsList.length > 0 ? \`
@@ -23573,12 +23573,12 @@ function pageDashboardLegado(){
             <div style="position:relative; width:100%; height:180px; margin-bottom:12px;">
               <canvas id="chartCartoesWheel"></canvas>
               <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; pointer-events:none;">
-                <span style="font-size:9.5px; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-dim); font-weight:700;">Uso Global</span>
+                <span style="font-size:14px; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-dim); font-weight:700;">Uso Global</span>
                 <b style="font-size:18px; font-weight:900; color:\${cardSummary.usagePctGeral >= 85 ? '#F87171' : '#FBBF24'}; line-height:1; margin-top:1px;">\${cardSummary.usagePctGeral}%</b>
               </div>
             </div>
 
-            <div style="display:flex; justify-content:space-between; font-size:11.5px; padding:6px 10px; border-radius:8px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); margin-bottom:10px;">
+            <div style="display:flex; justify-content:space-between; font-size:14px; padding:6px 10px; border-radius:8px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); margin-bottom:10px;">
               <span>Fatura: <strong style="color:#FBBF24;">\${fmt(cardSummary.spentTotalGeral)}</strong></span>
               <span>Disp: <strong style="color:#059669;">\${fmt(cardSummary.availableLimitGeral)}</strong></span>
             </div>
@@ -23587,8 +23587,8 @@ function pageDashboardLegado(){
             \` : \`
             <div style="text-align:center; padding:28px 12px; color:var(--text-dim);">
               <div style="font-size:32px; margin-bottom:8px;">💳</div>
-              <p style="font-size:12.5px; margin:0 0 10px;">Nenhum cartão de crédito cadastrado.</p>
-              <button type="button" class="btn-primary" data-nav="cartoes" onclick="navigate('cartoes')" style="font-size:11.5px; padding:6px 14px; border-radius:8px; cursor:pointer;">+ Cadastrar Cartão</button>
+              <p style="font-size:14px; margin:0 0 10px;">Nenhum cartão de crédito cadastrado.</p>
+              <button type="button" class="btn-primary" data-nav="cartoes" onclick="navigate('cartoes')" style="font-size:14px; padding:6px 14px; border-radius:8px; cursor:pointer;">+ Cadastrar Cartão</button>
             </div>
             \`}
           </div>
@@ -23596,7 +23596,7 @@ function pageDashboardLegado(){
           <!-- ABA 3: Orçamento & Ritmo Mensal -->
           <div class="dash-wheel-pane \${activeDashTab === 'orcamento' ? 'active' : ''}" data-pane="orcamento">
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
-              <span style="font-size:12px; color:var(--text-dim); font-weight:600;">Velocidade de consumo do período</span>
+              <span style="font-size:14px; color:var(--text-dim); font-weight:600;">Velocidade de consumo do período</span>
               <span class="kpi-tag" style="background:\${paceBadgeBg}; border:1px solid \${paceBadgeBorder}; color:\${paceColor};">\${paceStatus}</span>
             </div>
 
@@ -23604,7 +23604,7 @@ function pageDashboardLegado(){
             <div style="position:relative; width:100%; height:180px; margin-bottom:12px;">
               <canvas id="chartBudgetWheel"></canvas>
               <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; pointer-events:none;">
-                <span style="font-size:9.5px; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-dim); font-weight:700;">Executado</span>
+                <span style="font-size:14px; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-dim); font-weight:700;">Executado</span>
                 <b style="font-size:18px; font-weight:900; color:\${paceColor}; line-height:1; margin-top:1px;">\${budgetPct}%</b>
               </div>
             </div>
@@ -23612,14 +23612,14 @@ function pageDashboardLegado(){
             <!-- Comparador de Ritmo Temporal vs Orçamentário -->
             <div class="dash-pace-box" style="margin-top:0; margin-bottom:12px;">
               <div class="dash-pace-header">
-                <span style="font-size:11px; color:var(--text-dim); font-weight:600;">Dia \${daysInPeriod} de \${daysInMonthTotal} (\${monthTimePct}% do mês decorrido)</span>
-                <strong style="font-size:11.5px; color:\${paceColor};">\${budgetPct}% Gasto</strong>
+                <span style="font-size:14px; color:var(--text-dim); font-weight:600;">Dia \${daysInPeriod} de \${daysInMonthTotal} (\${monthTimePct}% do mês decorrido)</span>
+                <strong style="font-size:14px; color:\${paceColor};">\${budgetPct}% Gasto</strong>
               </div>
               <div class="dash-pace-meter">
                 <div class="dash-pace-fill" style="width:\${Math.min(100, budgetPct)}%; background:\${paceColor};"></div>
                 <div class="dash-pace-marker" style="left:\${monthTimePct}%;" title="Tempo decorrido no mês"></div>
               </div>
-              <div style="font-size:11px; color:var(--text-dim); line-height:1.3; margin-top:2px;">
+              <div style="font-size:14px; color:var(--text-dim); line-height:1.3; margin-top:2px;">
                 \${paceDesc}
               </div>
             </div>
@@ -23634,8 +23634,8 @@ function pageDashboardLegado(){
           <!-- ABA 4: Visão Geral / Todos os Pilares -->
           <div class="dash-wheel-pane \${activeDashTab === 'todos' ? 'active' : ''}" data-pane="todos">
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
-              <span style="font-size:12px; color:var(--text-dim); font-weight:600;">Sumário executivo de todos os pilares</span>
-              <span class="tag" style="font-size:11px; padding:3px 8px; background:rgba(16, 185, 129,0.12); color:#10B981; border:1px solid rgba(16, 185, 129,0.25);">Consolidado</span>
+              <span style="font-size:14px; color:var(--text-dim); font-weight:600;">Sumário executivo de todos os pilares</span>
+              <span class="tag" style="font-size:14px; padding:3px 8px; background:rgba(16, 185, 129,0.12); color:#10B981; border:1px solid rgba(16, 185, 129,0.25);">Consolidado</span>
             </div>
             \${overviewSectionHtml}
           </div>
@@ -23814,7 +23814,7 @@ function pageContas(){
       <h1 style="font-size:22px; font-weight:800; letter-spacing:-0.02em; margin:0; display:flex; align-items:center; gap:8px;">
         Cartões e Contas Bancárias
       </h1>
-      <p style="font-size:12.5px; color:var(--text-dim); margin:4px 0 0 0; font-weight:500;">
+      <p style="font-size:14px; color:var(--text-dim); margin:4px 0 0 0; font-weight:500;">
         Acompanhe o limite disponível dos cartões de crédito e os saldos consolidados de suas contas
       </p>
     </div>
@@ -23839,28 +23839,28 @@ function pageContas(){
     </div>
     <div class="kpi-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:14px;">
       <div class="kpi" style="background:rgba(255,255,255,0.03); padding:14px; border-radius:14px; border:1px solid var(--card-border);">
-        <div class="row1" style="color:var(--text-dim); font-size:12px; font-weight:600;">Limite Disponível Total</div>
+        <div class="row1" style="color:var(--text-dim); font-size:14px; font-weight:600;">Limite Disponível Total</div>
         <div class="val" style="font-size:22px; font-weight:800; color:var(--green); margin-top:4px;">\${fmt(summary.availableLimitGeral)}</div>
-        <div class="sub" style="font-size:11px; color:var(--text-faint); margin-top:2px;">Disponível para compras</div>
+        <div class="sub" style="font-size:14px; color:var(--text-faint); margin-top:2px;">Disponível para compras</div>
       </div>
       <div class="kpi" style="background:rgba(255,255,255,0.03); padding:14px; border-radius:14px; border:1px solid var(--card-border);">
-        <div class="row1" style="color:var(--text-dim); font-size:12px; font-weight:600;">Fatura do Mês (\${periodLabel()})</div>
+        <div class="row1" style="color:var(--text-dim); font-size:14px; font-weight:600;">Fatura do Mês (\${periodLabel()})</div>
         <div class="val" style="font-size:22px; font-weight:800; color:var(--orange); margin-top:4px;">\${fmt(summary.spentPeriodGeral)}</div>
-        <div class="sub" style="font-size:11px; color:var(--text-faint); margin-top:2px;">Gastos no mês selecionado</div>
+        <div class="sub" style="font-size:14px; color:var(--text-faint); margin-top:2px;">Gastos no mês selecionado</div>
       </div>
       <div class="kpi" style="background:rgba(255,255,255,0.03); padding:14px; border-radius:14px; border:1px solid var(--card-border);">
-        <div class="row1" style="color:var(--text-dim); font-size:12px; font-weight:600;">Fatura Acumulada em Aberto</div>
+        <div class="row1" style="color:var(--text-dim); font-size:14px; font-weight:600;">Fatura Acumulada em Aberto</div>
         <div class="val" style="font-size:22px; font-weight:800; color:var(--red); margin-top:4px;">\${fmt(summary.spentTotalGeral)}</div>
-        <div class="sub" style="font-size:11px; color:var(--text-faint); margin-top:2px;">Compras menos pagamentos</div>
+        <div class="sub" style="font-size:14px; color:var(--text-faint); margin-top:2px;">Compras menos pagamentos</div>
       </div>
       <div class="kpi" style="background:rgba(255,255,255,0.03); padding:14px; border-radius:14px; border:1px solid var(--card-border);">
-        <div class="row1" style="color:var(--text-dim); font-size:12px; font-weight:600;">Limite Total Aprovado</div>
+        <div class="row1" style="color:var(--text-dim); font-size:14px; font-weight:600;">Limite Total Aprovado</div>
         <div class="val" style="font-size:22px; font-weight:800; color:var(--blue); margin-top:4px;">\${fmt(summary.totalLimitGeral)}</div>
-        <div class="sub" style="font-size:11px; color:var(--text-faint); margin-top:2px;">Soma de todos os cartões</div>
+        <div class="sub" style="font-size:14px; color:var(--text-faint); margin-top:2px;">Soma de todos os cartões</div>
       </div>
     </div>
     <div style="margin-top:14px;">
-      <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--text-dim); margin-bottom:6px;">
+      <div style="display:flex; justify-content:space-between; font-size:14px; color:var(--text-dim); margin-bottom:6px;">
         <span>Comprometimento global do limite de crédito</span>
         <span style="font-weight:700; color:\${summary.usagePctGeral>=90?'var(--red)':summary.usagePctGeral>=70?'var(--orange)':'var(--green)'};">\${summary.usagePctGeral}% comprometido</span>
       </div>
@@ -23890,7 +23890,7 @@ function pageContas(){
                 \${initialName}
               </span>
               <div style="min-width:0;">
-                <h3 style="font-size:16.5px; font-weight:800; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin:0 0 4px 0; color:var(--text); letter-spacing:-0.02em;">\${a.name}</h3>
+                <h3 style="font-size:14px; font-weight:800; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin:0 0 4px 0; color:var(--text); letter-spacing:-0.02em;">\${a.name}</h3>
                 <span class="acc-card-chip \${isCard ? 'credit' : 'bank'}">
                   \${isCard ? '💳 Cartão de Crédito' : '🏦 ' + (a.type || 'Conta Bancária')}
                 </span>
@@ -23905,7 +23905,7 @@ function pageContas(){
           <div class="acc-card-metrics">
             <div class="acc-metric-hero-label">
               <span>\${isCard ? 'Limite Disponível' : 'Saldo Disponível em Conta'}</span>
-              <span style="display:inline-flex; align-items:center; gap:5px; font-size:10.5px; color:inherit; text-transform:none;">
+              <span style="display:inline-flex; align-items:center; gap:5px; font-size:14px; color:inherit; text-transform:none;">
                 <span style="width:6px; height:6px; border-radius:50%; background:\${statusColor}; display:inline-block;"></span>
                 \${isCard ? (stats.availableLimit < 200 ? 'Limite Baixo' : 'Disponível') : (stats.currentBalance < 0 ? 'Negativo' : 'Positivo')}
               </span>
@@ -23929,7 +23929,7 @@ function pageContas(){
                 <div class="bar-split" style="height:7px; background:rgba(0,0,0,0.08); border-radius:5px; overflow:hidden; border:1px solid rgba(255,255,255,0.06);">
                   <div class="g" style="width:\${stats.usagePct}%; height:100%; background:\${stats.usagePct >= 90 ? 'linear-gradient(90deg, #EF4444, #DC2626)' : stats.usagePct >= 70 ? 'linear-gradient(90deg, #F59E0B, #D97706)' : 'linear-gradient(90deg, #059669, #059669)'}; border-radius:5px; transition:width .4s ease;"></div>
                 </div>
-                <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; margin-top:5px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; font-size:14px; margin-top:5px;">
                   <span style="color:var(--text-faint); font-weight:600;">Uso do Cartão</span>
                   <span style="font-weight:800; color:\${stats.usagePct >= 90 ? 'var(--red)' : stats.usagePct >= 70 ? 'var(--orange)' : 'var(--green)'};">\${stats.usagePct}% utilizado</span>
                 </div>
@@ -23945,7 +23945,7 @@ function pageContas(){
                   <span class="acc-subgrid-val" style="color:var(--red);">-\${fmt(stats.spentPeriod)}</span>
                 </div>
               </div>
-              <div style="margin-top:10px; display:flex; justify-content:space-between; align-items:center; font-size:11px; color:var(--text-faint);">
+              <div style="margin-top:10px; display:flex; justify-content:space-between; align-items:center; font-size:14px; color:var(--text-faint);">
                 <span>Saldo Inicial:</span>
                 <strong style="color:var(--text); font-variant-numeric:tabular-nums;">\${fmt(stats.initialBalance)}</strong>
               </div>
@@ -24059,7 +24059,7 @@ function pageOrcamentos(){
       <h1 style="font-size:22px; font-weight:800; letter-spacing:-0.02em; margin:0; display:flex; align-items:center; gap:8px;">
         Orçamentos por Categoria
       </h1>
-      <p style="font-size:12.5px; color:var(--text-dim); margin:4px 0 0 0; font-weight:500;">
+      <p style="font-size:14px; color:var(--text-dim); margin:4px 0 0 0; font-weight:500;">
         Defina e acompanhe limites de gastos para manter seu planejamento sob controle — <strong style="color:var(--green);">\${periodLabel()}</strong>
       </p>
     </div>
@@ -24082,12 +24082,12 @@ function pageOrcamentos(){
         <div>
           <div class="top" style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; gap:10px;">
             <div class="id-group" style="display:flex; align-items:center; gap:10px; min-width:0;">
-              <span class="dot" style="background:\${catColor(b.category)}; width:34px; height:34px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:16px; box-shadow:0 2px 8px \${catColor(b.category)}35;">
+              <span class="dot" style="background:\${catColor(b.category)}; width:34px; height:34px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:14px; box-shadow:0 2px 8px \${catColor(b.category)}35;">
                 \${catIcon(b.category)}
               </span>
               <div style="min-width:0;">
-                <h4 style="font-size:15px; font-weight:800; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">\${b.category}</h4>
-                <span class="pill" style="font-size:10.5px; padding:2px 8px; border-radius:6px; background:\${b.pct>=100?'rgba(239,68,68,0.14)':b.pct>=80?'rgba(245,158,11,0.14)':'rgba(5, 150, 105,0.14)'}; color:\${color}; font-weight:700; border:1px solid \${b.pct>=100?'rgba(239,68,68,0.3)':b.pct>=80?'rgba(245,158,11,0.3)':'rgba(5, 150, 105,0.3)'};">
+                <h4 style="font-size:14px; font-weight:800; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">\${b.category}</h4>
+                <span class="pill" style="font-size:14px; padding:2px 8px; border-radius:6px; background:\${b.pct>=100?'rgba(239,68,68,0.14)':b.pct>=80?'rgba(245,158,11,0.14)':'rgba(5, 150, 105,0.14)'}; color:\${color}; font-weight:700; border:1px solid \${b.pct>=100?'rgba(239,68,68,0.3)':b.pct>=80?'rgba(245,158,11,0.3)':'rgba(5, 150, 105,0.3)'};">
                   \${b.pct>=100 ? '🚨 Excedido' : b.pct>=80 ? '⚠️ Alerta' : '✓ Normal'} (\${b.pct}%)
                 </span>
               </div>
@@ -24101,7 +24101,7 @@ function pageOrcamentos(){
           <div style="margin:14px 0 10px;">
             <div style="display:flex; justify-content:space-between; align-items:baseline;">
               <span style="font-size:22px; font-weight:800; color:\${color}; font-variant-numeric:tabular-nums;">\${fmt(b.spent)}</span>
-              <span style="font-size:13px; color:var(--text-faint); font-weight:600;">Limite: \${fmt(b.limit)}</span>
+              <span style="font-size:14px; color:var(--text-faint); font-weight:600;">Limite: \${fmt(b.limit)}</span>
             </div>
             <div class="bar-split" style="height:7px; background:rgba(255,255,255,0.08); border-radius:5px; overflow:hidden; margin-top:8px;">
               <div class="g" style="width:\${Math.min(b.pct, 100)}%; background:\${color}; border-radius:5px; transition:width .4s ease;"></div>
@@ -24109,7 +24109,7 @@ function pageOrcamentos(){
           </div>
         </div>
 
-        <div style="margin-top:10px; padding-top:10px; border-top:1px solid rgba(255,255,255,0.06); display:flex; justify-content:space-between; align-items:center; font-size:11.5px;">
+        <div style="margin-top:10px; padding-top:10px; border-top:1px solid rgba(255,255,255,0.06); display:flex; justify-content:space-between; align-items:center; font-size:14px;">
           <span style="color:var(--text-dim); font-weight:500;">
             \${isOver ? 'Excedido em:' : 'Restante disponível:'}
           </span>
@@ -24130,7 +24130,7 @@ function pageMetas(){
       <h1 style="font-size:22px; font-weight:800; letter-spacing:-0.02em; margin:0; display:flex; align-items:center; gap:8px;">
         Metas e Objetivos Financeiros
       </h1>
-      <p style="font-size:12.5px; color:var(--text-dim); margin:4px 0 0 0; font-weight:500;">
+      <p style="font-size:14px; color:var(--text-dim); margin:4px 0 0 0; font-weight:500;">
         Planeje e alcance seus sonhos com metas estruturadas e controle de progresso
       </p>
     </div>
@@ -24151,10 +24151,10 @@ function pageMetas(){
         <div>
           <div class="top" style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; gap:10px;">
             <div style="min-width:0;">
-              <h3 style="font-size:16px; font-weight:800; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--text); letter-spacing:-0.01em;">
+              <h3 style="font-size:14px; font-weight:800; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--text); letter-spacing:-0.01em;">
                 🎯 \${g.name}
               </h3>
-              <div style="font-size:11.5px; color:var(--text-faint); margin-top:2px; font-weight:600;">
+              <div style="font-size:14px; color:var(--text-faint); margin-top:2px; font-weight:600;">
                 📅 Prazo: \${formatDateBR(g.deadline)}
               </div>
             </div>
@@ -24167,15 +24167,15 @@ function pageMetas(){
           <div style="margin:14px 0 10px;">
             <div style="display:flex; justify-content:space-between; align-items:baseline;">
               <span style="font-size:22px; font-weight:800; color:var(--green); font-variant-numeric:tabular-nums;">\${fmt(g.current)}</span>
-              <span style="font-size:13px; color:var(--text-faint); font-weight:600;">Alvo: \${fmt(g.target)}</span>
+              <span style="font-size:14px; color:var(--text-faint); font-weight:600;">Alvo: \${fmt(g.target)}</span>
             </div>
             <div class="bar-split" style="height:7px; background:rgba(255,255,255,0.08); border-radius:5px; overflow:hidden; margin-top:8px;">
               <div class="g" style="width:\${pct}%; background:\${isCompleted ? 'linear-gradient(90deg, #059669, #059669)' : 'linear-gradient(90deg, #10B981, #34D399)'}; border-radius:5px; transition:width .4s ease;"></div>
             </div>
           </div>
 
-          <div style="display:flex; justify-content:space-between; align-items:center; font-size:11.5px; margin-bottom:12px;">
-            <span class="pill" style="font-size:11px; padding:2px 8px; border-radius:6px; background:\${isCompleted ? 'rgba(5, 150, 105,0.16)' : 'rgba(5, 150, 105,0.16)'}; color:\${isCompleted ? 'var(--brand-bright)' : 'var(--blue)'}; font-weight:700;">
+          <div style="display:flex; justify-content:space-between; align-items:center; font-size:14px; margin-bottom:12px;">
+            <span class="pill" style="font-size:14px; padding:2px 8px; border-radius:6px; background:\${isCompleted ? 'rgba(5, 150, 105,0.16)' : 'rgba(5, 150, 105,0.16)'}; color:\${isCompleted ? 'var(--brand-bright)' : 'var(--blue)'}; font-weight:700;">
               \${isCompleted ? '🎉 Concluída (100%)' : pct + '% concluído'}
             </span>
             <span style="color:var(--text-faint); font-weight:600;">
@@ -24184,7 +24184,7 @@ function pageMetas(){
           </div>
         </div>
 
-        <button class="btn-ghost" style="width:100%; padding:10px; font-weight:700; border-radius:10px; font-size:13px; display:flex; align-items:center; justify-content:center; gap:6px;" data-addcontrib="\${g.id}">
+        <button class="btn-ghost" style="width:100%; padding:10px; font-weight:700; border-radius:10px; font-size:14px; display:flex; align-items:center; justify-content:center; gap:6px;" data-addcontrib="\${g.id}">
           💰 Adicionar valor à meta
         </button>
       </div>\`;
@@ -24212,7 +24212,7 @@ function pageRelatorios(){
       <h1 style="font-size:22px; font-weight:800; letter-spacing:-0.02em; margin:0; display:flex; align-items:center; gap:8px;">
         Relatórios e Análises Financeiras
       </h1>
-      <p style="font-size:12.5px; color:var(--text-dim); margin:4px 0 0 0; font-weight:500;">
+      <p style="font-size:14px; color:var(--text-dim); margin:4px 0 0 0; font-weight:500;">
         Análise consolidada de receitas, despesas e distribuição percentual — <strong style="color:var(--green);">\${periodLabel()}</strong>
       </p>
     </div>
@@ -24246,10 +24246,10 @@ function pageRelatorios(){
 
   \${!isAllDates ? \`
   <div class="panel" style="margin-bottom:20px; padding:16px 20px; background:rgba(255,255,255,0.025); border:1px solid var(--card-border); border-radius:14px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px;">
-    <div style="font-size:13px; color:var(--text-dim); line-height:1.5;">
+    <div style="font-size:14px; color:var(--text-dim); line-height:1.5;">
       💡 <strong>Comparativo Geral Histórico (Todas as Datas):</strong> Receitas: <strong style="color:var(--green);">\${fmt(totalReceitasGeral)}</strong> | Despesas: <strong style="color:var(--red);">\${fmt(totalDespesasGeral)}</strong> | Saldo Acumulado: <strong style="color:\${resultadoGeral<0?'var(--red)':'var(--green)'};">\${fmt(resultadoGeral)}</strong>
     </div>
-    <button class="btn-ghost" onclick="currentPeriod={year:new Date().getFullYear(), month:0}; try{localStorage.setItem('fin_current_period', JSON.stringify(currentPeriod));}catch(e){} render();" style="font-size:12px; font-weight:700; padding:6px 14px; border-radius:8px; cursor:pointer;">
+    <button class="btn-ghost" onclick="currentPeriod={year:new Date().getFullYear(), month:0}; try{localStorage.setItem('fin_current_period', JSON.stringify(currentPeriod));}catch(e){} render();" style="font-size:14px; font-weight:700; padding:6px 14px; border-radius:8px; cursor:pointer;">
       🌐 Ver Histórico Completo
     </button>
   </div>
@@ -24283,7 +24283,7 @@ function pageRelatorios(){
                 <div class="bar-split" style="flex:1; max-width:180px; height:8px; background:rgba(255,255,255,0.08); border-radius:4px; overflow:hidden;">
                   <div class="g" style="width:\${Math.round(c.val/(totalDespesas||1)*100)}%; height:100%; background:\${c.color}; border-radius:4px;"></div>
                 </div>
-                <span style="font-weight:800; font-size:12.5px; color:var(--text); min-width:40px;">\${Math.round(c.val/(totalDespesas||1)*100)}%</span>
+                <span style="font-weight:800; font-size:14px; color:var(--text); min-width:40px;">\${Math.round(c.val/(totalDespesas||1)*100)}%</span>
               </div>
             </td>
           </tr>
@@ -24358,7 +24358,7 @@ function pageRecorrentes(){
       <h1 style="font-size:22px; font-weight:800; letter-spacing:-0.02em; margin:0; display:flex; align-items:center; gap:8px;">
         Lançamentos Recorrentes & Assinaturas
       </h1>
-      <p style="font-size:12.5px; color:var(--text-dim); margin:4px 0 0 0; font-weight:500;">
+      <p style="font-size:14px; color:var(--text-dim); margin:4px 0 0 0; font-weight:500;">
         Controle automático de parcelas em todos os meses cadastrados com sincronização imediata no extrato
       </p>
     </div>
@@ -24378,7 +24378,7 @@ function pageRecorrentes(){
         <span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(239,68,68,0.14); color:var(--red); display:inline-flex; align-items:center; justify-content:center; border-radius:10px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg></span>
       </div>
       <div class="val" style="font-size:20px; color:var(--red); margin-bottom:2px;">\${fmt(totalDespRec)}</div>
-      <div class="sub" style="font-size:11px;">\${isAllDates ? 'Total mensal de saídas programadas' : ('Contas ativas para ' + curMonthName + '/' + curY)}</div>
+      <div class="sub" style="font-size:14px;">\${isAllDates ? 'Total mensal de saídas programadas' : ('Contas ativas para ' + curMonthName + '/' + curY)}</div>
     </div>
     <div class="kpi" style="padding:14px 16px;">
       <div class="row1" style="margin-bottom:6px;">
@@ -24386,7 +24386,7 @@ function pageRecorrentes(){
         <span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(5, 150, 105,0.14); color:var(--brand-bright); display:inline-flex; align-items:center; justify-content:center; border-radius:10px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span>
       </div>
       <div class="val" style="font-size:20px; color:var(--green); margin-bottom:2px;">\${fmt(totalRecRec)}</div>
-      <div class="sub" style="font-size:11px;">\${isAllDates ? 'Total mensal de entradas programadas' : ('Recebimentos em ' + curMonthName + '/' + curY)}</div>
+      <div class="sub" style="font-size:14px;">\${isAllDates ? 'Total mensal de entradas programadas' : ('Recebimentos em ' + curMonthName + '/' + curY)}</div>
     </div>
     <div class="kpi" style="padding:14px 16px;">
       <div class="row1" style="margin-bottom:6px;">
@@ -24394,7 +24394,7 @@ function pageRecorrentes(){
         <span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(5, 150, 105, 0.14); color:var(--purple); display:inline-flex; align-items:center; justify-content:center; border-radius:10px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg></span>
       </div>
       <div class="val" style="font-size:20px; margin-bottom:2px;">\${isAllDates ? totalLctos : (activeInMonthCount + ' / ' + totalLctos)}</div>
-      <div class="sub" style="font-size:11px;">\${isAllDates ? (totalComPrazo + ' com prazo · ' + totalContinuos + ' contínuos') : (activeInMonthCount + ' contas em ' + curMonthName + '/' + curY)}</div>
+      <div class="sub" style="font-size:14px;">\${isAllDates ? (totalComPrazo + ' com prazo · ' + totalContinuos + ' contínuos') : (activeInMonthCount + ' contas em ' + curMonthName + '/' + curY)}</div>
     </div>
     <div class="kpi" style="padding:14px 16px;">
       <div class="row1" style="margin-bottom:6px;">
@@ -24402,7 +24402,7 @@ function pageRecorrentes(){
         <span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(5, 150, 105,0.14); color:var(--blue); display:inline-flex; align-items:center; justify-content:center; border-radius:10px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
       </div>
       <div class="val" style="font-size:20px; color:var(--blue); margin-bottom:2px;">\${totalConcluidos} / \${totalComPrazo || totalLctos}</div>
-      <div class="sub" style="font-size:11px;">\${totalConcluidos} contratos 100% quitados</div>
+      <div class="sub" style="font-size:14px;">\${totalConcluidos} contratos 100% quitados</div>
     </div>
   </div>
 
@@ -24454,14 +24454,14 @@ function pageRecorrentes(){
                 <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
                   <span style="font-weight:700;">\${r.desc}</span>
                   \${method ? \`
-                    <span class="pill" style="padding:2px 8px; font-size:10px; font-weight:700; border-radius:6px; background:\${method === 'Cartão de Crédito' ? 'rgba(5, 150, 105, 0.18)' : 'rgba(245,158,11,0.18)'}; color:\${method === 'Cartão de Crédito' ? '#10B981' : '#FBBF24'}; border:1px solid \${method === 'Cartão de Crédito' ? 'rgba(5, 150, 105, 0.4)' : 'rgba(245,158,11,0.4)'};">
+                    <span class="pill" style="padding:2px 8px; font-size:14px; font-weight:700; border-radius:6px; background:\${method === 'Cartão de Crédito' ? 'rgba(5, 150, 105, 0.18)' : 'rgba(245,158,11,0.18)'}; color:\${method === 'Cartão de Crédito' ? '#10B981' : '#FBBF24'}; border:1px solid \${method === 'Cartão de Crédito' ? 'rgba(5, 150, 105, 0.4)' : 'rgba(245,158,11,0.4)'};">
                       \${method === 'Cartão de Crédito' ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:3px;"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>Cartão de Crédito' : '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:3px;"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>Boleto'}
                     </span>
                   \` : ''}
-                  \${isFixed ? \`<span class="pill" style="padding:2px 8px; font-size:10px; font-weight:700; border-radius:6px; background:\${isFullyPaid ? 'rgba(5, 150, 105,0.14)' : 'rgba(245,158,11,0.14)'}; color:\${isFullyPaid ? 'var(--brand-bright)' : '#F59E0B'}; border:1px solid \${isFullyPaid ? 'rgba(5, 150, 105,0.25)' : 'rgba(245,158,11,0.25)'};">\${paidCount}/\${totalM} \${isFullyPaid ? '✓ Concluído' : paidWordPlural}</span>\` : ''}
+                  \${isFixed ? \`<span class="pill" style="padding:2px 8px; font-size:14px; font-weight:700; border-radius:6px; background:\${isFullyPaid ? 'rgba(5, 150, 105,0.14)' : 'rgba(245,158,11,0.14)'}; color:\${isFullyPaid ? 'var(--brand-bright)' : '#F59E0B'}; border:1px solid \${isFullyPaid ? 'rgba(5, 150, 105,0.25)' : 'rgba(245,158,11,0.25)'};">\${paidCount}/\${totalM} \${isFullyPaid ? '✓ Concluído' : paidWordPlural}</span>\` : ''}
                 </div>
                 \${isFixed ? \`
-                  <details style="font-size:10.5px; margin-top:4px;">
+                  <details style="font-size:14px; margin-top:4px;">
                     <summary style="cursor:pointer; color:var(--blue); font-weight:700; user-select:none; display:inline-flex; align-items:center; gap:5px;">
                       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
                       Cronograma completo (\${totalM} meses cadastrados)
@@ -24486,8 +24486,8 @@ function pageRecorrentes(){
 
                           items.push(
                             \`<div style="padding:4px 8px; border-radius:6px; background:\${isSelectedPeriod ? 'rgba(5, 150, 105,0.18)' : (isPaid ? 'rgba(5, 150, 105,0.12)' : 'rgba(245,158,11,0.10)')}; border:1px solid \${isSelectedPeriod ? 'var(--blue)' : (isPaid ? 'rgba(5, 150, 105,0.25)' : 'rgba(245,158,11,0.25)')}; display:flex; justify-content:space-between; align-items:center; gap:4px;">\` +
-                              \`<span style="font-size:10px;">\${k}ª: <strong style="color:var(--text);">\${mName}/\${y}</strong></span>\` +
-                              (targetTx ? \`<button data-togglestatus="\${targetTx.id}" title="Clique para alternar status" style="border:none; cursor:pointer; background:transparent; font-weight:800; font-size:9.5px; color:\${isPaid ? 'var(--green)' : '#F59E0B'}; padding:2px 4px; border-radius:4px;">\${isPaid ? (isIncome ? '✓ Recebido' : '✓ Pago') : '⏳ Pendente'}</button>\` : \`<span style="font-weight:700; font-size:9.5px; color:#F59E0B;">⏳ Pendente</span>\`) +
+                              \`<span style="font-size:14px;">\${k}ª: <strong style="color:var(--text);">\${mName}/\${y}</strong></span>\` +
+                              (targetTx ? \`<button data-togglestatus="\${targetTx.id}" title="Clique para alternar status" style="border:none; cursor:pointer; background:transparent; font-weight:800; font-size:14px; color:\${isPaid ? 'var(--green)' : '#F59E0B'}; padding:2px 4px; border-radius:4px;">\${isPaid ? (isIncome ? '✓ Recebido' : '✓ Pago') : '⏳ Pendente'}</button>\` : \`<span style="font-weight:700; font-size:14px; color:#F59E0B;">⏳ Pendente</span>\`) +
                             \`</div>\`
                           );
                         }
@@ -24504,13 +24504,13 @@ function pageRecorrentes(){
             <td>
               \${isFixed ? \`
                 <div style="display:flex; flex-direction:column; gap:2px;">
-                  <span class="pill" style="background:rgba(5, 150, 105,0.12); color:var(--blue); font-weight:700; font-size:11px;">
+                  <span class="pill" style="background:rgba(5, 150, 105,0.12); color:var(--blue); font-weight:700; font-size:14px;">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:3px;"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>\${totalM} \${totalM === 1 ? 'mês' : 'meses'}
                   </span>
-                  \${r.startMonth && r.startYear ? \`<span style="font-size:10px; color:var(--text-dim);">Início: \${MONTHS[r.startMonth-1] ? MONTHS[r.startMonth-1].substring(0,3) : r.startMonth}/\${r.startYear}</span>\` : ''}
+                  \${r.startMonth && r.startYear ? \`<span style="font-size:14px; color:var(--text-dim);">Início: \${MONTHS[r.startMonth-1] ? MONTHS[r.startMonth-1].substring(0,3) : r.startMonth}/\${r.startYear}</span>\` : ''}
                 </div>
               \` : \`
-                <span class="pill" style="background:rgba(255,255,255,0.06); color:var(--text-dim); font-weight:600; font-size:11px;">
+                <span class="pill" style="background:rgba(255,255,255,0.06); color:var(--text-dim); font-weight:600; font-size:14px;">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:3px;"><path d="M18.178 8c5.096 0 5.096 8 0 8-5.095 0-7.133-8-12.739-8-4.585 0-4.585 8 0 8 5.606 0 7.644-8 12.74-8z"/></svg>Contínuo
                 </span>
               \`}
@@ -24519,25 +24519,25 @@ function pageRecorrentes(){
               \${!isAllDates ? (
                 monthTx ? \`
                   <div style="display:flex; flex-direction:column; gap:4px;">
-                    \${monthTx.installment ? \`<span style="font-size:10px; font-weight:700; color:var(--text-dim);">\${monthTx.installment}</span>\` : ''}
-                    <button data-togglestatus="\${monthTx.id}" title="Clique para alternar o status deste mês" class="pill" style="cursor:pointer; border:1px solid \${monthTx.status === 'Pago' || monthTx.status === 'Recebido' ? 'rgba(5, 150, 105,0.3)' : 'rgba(245,158,11,0.3)'}; background:\${monthTx.status === 'Pago' || monthTx.status === 'Recebido' ? 'rgba(5, 150, 105,0.14)' : 'rgba(245,158,11,0.14)'}; color:\${monthTx.status === 'Pago' || monthTx.status === 'Recebido' ? 'var(--brand-bright)' : '#F59E0B'}; font-weight:800; font-size:11px; padding:3px 8px; border-radius:6px; display:inline-flex; align-items:center; gap:4px; width:fit-content;">
+                    \${monthTx.installment ? \`<span style="font-size:14px; font-weight:700; color:var(--text-dim);">\${monthTx.installment}</span>\` : ''}
+                    <button data-togglestatus="\${monthTx.id}" title="Clique para alternar o status deste mês" class="pill" style="cursor:pointer; border:1px solid \${monthTx.status === 'Pago' || monthTx.status === 'Recebido' ? 'rgba(5, 150, 105,0.3)' : 'rgba(245,158,11,0.3)'}; background:\${monthTx.status === 'Pago' || monthTx.status === 'Recebido' ? 'rgba(5, 150, 105,0.14)' : 'rgba(245,158,11,0.14)'}; color:\${monthTx.status === 'Pago' || monthTx.status === 'Recebido' ? 'var(--brand-bright)' : '#F59E0B'}; font-weight:800; font-size:14px; padding:3px 8px; border-radius:6px; display:inline-flex; align-items:center; gap:4px; width:fit-content;">
                       \${monthTx.status === 'Pago' || monthTx.status === 'Recebido' ? ('✓ ' + (r.type === 'in' ? 'Recebido' : 'Pago')) : '⏳ Pendente'}
                     </button>
                   </div>
                 \` : \`
-                  <span class="pill" style="background:rgba(255,255,255,0.05); color:var(--text-dim); font-size:10px; border:1px solid rgba(255,255,255,0.08);">Fora deste mês</span>
+                  <span class="pill" style="background:rgba(255,255,255,0.05); color:var(--text-dim); font-size:14px; border:1px solid rgba(255,255,255,0.08);">Fora deste mês</span>
                 \`
               ) : \`
                 <div style="display:flex; flex-direction:column; gap:2px;">
-                  <span class="pill" style="background:rgba(5, 150, 105,0.12); color:var(--brand-bright); font-size:10.5px; font-weight:700;">✓ \${paidCount} \${paidWordPlural}</span>
-                  \${remainingToPay > 0 ? \`<span style="font-size:10px; color:#F59E0B; font-weight:600;">⏳ \${remainingToPay} a \${isIncome ? 'receber' : 'pagar'}</span>\` : ''}
+                  <span class="pill" style="background:rgba(5, 150, 105,0.12); color:var(--brand-bright); font-size:14px; font-weight:700;">✓ \${paidCount} \${paidWordPlural}</span>
+                  \${remainingToPay > 0 ? \`<span style="font-size:14px; color:#F59E0B; font-weight:600;">⏳ \${remainingToPay} a \${isIncome ? 'receber' : 'pagar'}</span>\` : ''}
                 </div>
               \`}
             </td>
             <td>
               \${isFixed ? \`
                 <div style="min-width:145px; display:flex; flex-direction:column; gap:4px;">
-                  <div style="display:flex; justify-content:space-between; align-items:center; font-size:10.5px; font-weight:800;">
+                  <div style="display:flex; justify-content:space-between; align-items:center; font-size:14px; font-weight:800;">
                     <span style="display:inline-flex; align-items:center; gap:4px; color:\${isFullyPaid ? 'var(--green)' : (paidCount > 0 ? 'var(--green)' : 'var(--text-dim)')};">
                       \${isFullyPaid ? '✓ 100% Concluído' : (paidCount > 0 ? (\`✓ \${paidCount}/\${totalM}\`) : (\`0/\${totalM}\`))}
                     </span>
@@ -24551,10 +24551,10 @@ function pageRecorrentes(){
                 </div>
               \` : \`
                 <div style="display:flex; flex-direction:column; gap:2px;">
-                  <span class="pill" style="background:rgba(5, 150, 105,0.12); color:var(--brand-bright); font-size:11px; font-weight:700;">
+                  <span class="pill" style="background:rgba(5, 150, 105,0.12); color:var(--brand-bright); font-size:14px; font-weight:700;">
                     ✓ \${paidCount} \${paidCount === 1 ? paidWord : paidWordPlural}
                   </span>
-                  \${pendingCount > 0 ? \`<span style="font-size:10px; color:#F59E0B; font-weight:600;">\${pendingCount} pendente\${pendingCount === 1 ? '' : 's'}</span>\` : ''}
+                  \${pendingCount > 0 ? \`<span style="font-size:14px; color:#F59E0B; font-weight:600;">\${pendingCount} pendente\${pendingCount === 1 ? '' : 's'}</span>\` : ''}
                 </div>
               \`}
             </td>
@@ -24582,7 +24582,7 @@ function pageImportar(){
       <h1 style="font-size:22px; font-weight:800; letter-spacing:-0.02em; margin:0; display:flex; align-items:center; gap:8px;">
         Importar Extratos (OFX / CSV)
       </h1>
-      <p style="font-size:12.5px; color:var(--text-dim); margin:4px 0 0 0; font-weight:500;">
+      <p style="font-size:14px; color:var(--text-dim); margin:4px 0 0 0; font-weight:500;">
         Importe extratos do seu banco de forma rápida e segura para conciliação automática
       </p>
     </div>
@@ -24591,21 +24591,21 @@ function pageImportar(){
   <div class="panel" style="margin-bottom:22px; padding:22px;">
     <div style="display:flex; align-items:center; gap:10px; margin-bottom:18px; padding:12px 16px; background:rgba(5, 150, 105,0.08); border:1px solid rgba(5, 150, 105,0.2); border-radius:12px;">
       <span style="font-size:20px;">💡</span>
-      <div style="font-size:12.5px; color:var(--text); line-height:1.4;">
-        Formato CSV esperado: <code style="background:rgba(255,255,255,0.08); padding:3px 8px; border-radius:6px; font-size:12px; font-weight:700; color:var(--green);">data,descricao,valor</code>. Arquivos padrão bancário <strong>.OFX</strong> e <strong>.TXT</strong> também são aceitos automaticamente.
+      <div style="font-size:14px; color:var(--text); line-height:1.4;">
+        Formato CSV esperado: <code style="background:rgba(255,255,255,0.08); padding:3px 8px; border-radius:6px; font-size:14px; font-weight:700; color:var(--green);">data,descricao,valor</code>. Arquivos padrão bancário <strong>.OFX</strong> e <strong>.TXT</strong> também são aceitos automaticamente.
       </div>
     </div>
 
     <div class="field-row" style="margin-bottom:18px; display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:16px;">
       <div class="field" style="margin:0;">
-        <label style="font-size:13px; font-weight:700; margin-bottom:8px; display:block; color:var(--text);">Conta / Cartão de Destino</label>
-        <select id="impConta" style="width:100%; font-size:13.5px; padding:10px 14px; height:46px; border-radius:10px; background:var(--bg); border:1px solid var(--card-border); color:var(--text); font-weight:600;">
+        <label style="font-size:14px; font-weight:700; margin-bottom:8px; display:block; color:var(--text);">Conta / Cartão de Destino</label>
+        <select id="impConta" style="width:100%; font-size:14px; padding:10px 14px; height:46px; border-radius:10px; background:var(--bg); border:1px solid var(--card-border); color:var(--text); font-weight:600;">
           \${accounts.map(a=>\`<option>\${a.name} — \${a.type}</option>\`).join('')}
         </select>
       </div>
       <div class="field" style="margin:0;">
-        <label style="font-size:13px; font-weight:700; margin-bottom:8px; display:block; color:var(--text);">Categoria Padrão</label>
-        <select id="impCategoria" style="width:100%; font-size:13.5px; padding:10px 14px; height:46px; border-radius:10px; background:var(--bg); border:1px solid var(--card-border); color:var(--text); font-weight:600;">
+        <label style="font-size:14px; font-weight:700; margin-bottom:8px; display:block; color:var(--text);">Categoria Padrão</label>
+        <select id="impCategoria" style="width:100%; font-size:14px; padding:10px 14px; height:46px; border-radius:10px; background:var(--bg); border:1px solid var(--card-border); color:var(--text); font-weight:600;">
           \${categories.map(c=>\`<option>\${c.name}</option>\`).join('')}
         </select>
       </div>
@@ -24614,11 +24614,11 @@ function pageImportar(){
     <div id="importDropZone" onclick="document.getElementById('importFile').click()" style="border: 2px dashed rgba(5, 150, 105, 0.4); border-radius: 18px; padding: 36px 20px; text-align: center; cursor: pointer; background: rgba(5, 150, 105, 0.03); transition: all 0.25s ease; position: relative;">
       <input type="file" id="importFile" accept=".csv,.ofx,.txt" style="display:none;">
       <span style="font-size: 42px; display: block; margin-bottom: 12px; filter: drop-shadow(0 4px 12px rgba(5, 150, 105,0.3));">☁️</span>
-      <p style="margin:0; font-weight:800; font-size:16px; color:var(--text);">Arraste seus arquivos bancários para cá ou <span style="color:var(--green); text-decoration:underline;">clique para navegar</span></p>
+      <p style="margin:0; font-weight:800; font-size:14px; color:var(--text);">Arraste seus arquivos bancários para cá ou <span style="color:var(--green); text-decoration:underline;">clique para navegar</span></p>
       <div style="display:flex; justify-content:center; gap:8px; margin-top:10px;">
-        <span class="pill" style="background:rgba(255,255,255,0.06); font-size:11px; font-weight:700;">.OFX</span>
-        <span class="pill" style="background:rgba(255,255,255,0.06); font-size:11px; font-weight:700;">.CSV</span>
-        <span class="pill" style="background:rgba(255,255,255,0.06); font-size:11px; font-weight:700;">.TXT</span>
+        <span class="pill" style="background:rgba(255,255,255,0.06); font-size:14px; font-weight:700;">.OFX</span>
+        <span class="pill" style="background:rgba(255,255,255,0.06); font-size:14px; font-weight:700;">.CSV</span>
+        <span class="pill" style="background:rgba(255,255,255,0.06); font-size:14px; font-weight:700;">.TXT</span>
       </div>
     </div>
 
@@ -24645,7 +24645,7 @@ function getAttachmentCoverHtml(a, t){
     bSub = 'Fatura Telefonia / GSM';
     bBg = 'linear-gradient(135deg, #021b3b 0%, #004691 100%)';
     accentColor = '#34D399';
-    logoBadge = \`<div style="width:44px; height:40px; border-radius:10px; background:#0056b3; border:1px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:900; color:#fff; font-family:sans-serif; letter-spacing:1px; box-shadow:0 4px 10px rgba(0,0,0,0.3);">TIM</div>\`;
+    logoBadge = \`<div style="width:44px; height:40px; border-radius:10px; background:#0056b3; border:1px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:900; color:#fff; font-family:sans-serif; letter-spacing:1px; box-shadow:0 4px 10px rgba(0,0,0,0.3);">TIM</div>\`;
   } else if (nameSearch.includes('claro')) {
     bName = 'Claro Telecom';
     bSub = 'Fatura Fixo / Móvel';
@@ -24669,7 +24669,7 @@ function getAttachmentCoverHtml(a, t){
     bSub = 'Fatura / Extrato Conta';
     bBg = 'linear-gradient(135deg, #381005 0%, #ea580c 100%)';
     accentColor = '#ffedd5';
-    logoBadge = \`<div style="width:44px; height:40px; border-radius:10px; background:#f97316; border:1px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:900; color:#fff; font-family:sans-serif; box-shadow:0 4px 10px rgba(0,0,0,0.3);">inter</div>\`;
+    logoBadge = \`<div style="width:44px; height:40px; border-radius:10px; background:#f97316; border:1px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:900; color:#fff; font-family:sans-serif; box-shadow:0 4px 10px rgba(0,0,0,0.3);">inter</div>\`;
   } else if (nameSearch.includes('itau') || nameSearch.includes('itaú')) {
     bName = 'Itaú Unibanco';
     bSub = 'Fatura Cartão / Comprovante';
@@ -24681,25 +24681,25 @@ function getAttachmentCoverHtml(a, t){
     bSub = 'Fatura Cartão / Extrato';
     bBg = 'linear-gradient(135deg, #3f0415 0%, #cc092f 100%)';
     accentColor = '#fecdd3';
-    logoBadge = \`<div style="width:46px; height:40px; border-radius:10px; background:#dc2626; border:1px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:900; color:#fff; font-family:sans-serif; box-shadow:0 4px 10px rgba(0,0,0,0.3);">Brad</div>\`;
+    logoBadge = \`<div style="width:46px; height:40px; border-radius:10px; background:#dc2626; border:1px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:900; color:#fff; font-family:sans-serif; box-shadow:0 4px 10px rgba(0,0,0,0.3);">Brad</div>\`;
   } else if (nameSearch.includes('santander')) {
     bName = 'Santander';
     bSub = 'Fatura Cartão / Extrato';
     bBg = 'linear-gradient(135deg, #380707 0%, #dc2626 100%)';
     accentColor = '#fecdd3';
-    logoBadge = \`<div style="width:42px; height:40px; border-radius:10px; background:#ec0000; border:1px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:900; color:#fff; font-family:sans-serif; box-shadow:0 4px 10px rgba(0,0,0,0.3);">S</div>\`;
+    logoBadge = \`<div style="width:42px; height:40px; border-radius:10px; background:#ec0000; border:1px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:900; color:#fff; font-family:sans-serif; box-shadow:0 4px 10px rgba(0,0,0,0.3);">S</div>\`;
   } else if (nameSearch.includes('bb') || nameSearch.includes('banco do brasil')) {
     bName = 'Banco do Brasil';
     bSub = 'Comprovante / Extrato';
     bBg = 'linear-gradient(135deg, #101c42 0%, #047857 100%)';
     accentColor = '#fef08a';
-    logoBadge = \`<div style="width:40px; height:40px; border-radius:10px; background:#1e3a8a; border:1px solid #facc15; display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:900; color:#facc15; font-family:sans-serif; box-shadow:0 4px 10px rgba(0,0,0,0.3);">BB</div>\`;
+    logoBadge = \`<div style="width:40px; height:40px; border-radius:10px; background:#1e3a8a; border:1px solid #facc15; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:900; color:#facc15; font-family:sans-serif; box-shadow:0 4px 10px rgba(0,0,0,0.3);">BB</div>\`;
   } else if (nameSearch.includes('caixa') || nameSearch.includes('cef')) {
     bName = 'CAIXA Econômica';
     bSub = 'Comprovante de Pagamento';
     bBg = 'linear-gradient(135deg, #093752 0%, #059669 100%)';
     accentColor = '#A7F3D0';
-    logoBadge = \`<div style="width:44px; height:40px; border-radius:10px; background:#005ca9; border:1px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:900; color:#fff; font-family:sans-serif; box-shadow:0 4px 10px rgba(0,0,0,0.3);">CAIXA</div>\`;
+    logoBadge = \`<div style="width:44px; height:40px; border-radius:10px; background:#005ca9; border:1px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:900; color:#fff; font-family:sans-serif; box-shadow:0 4px 10px rgba(0,0,0,0.3);">CAIXA</div>\`;
   } else if (nameSearch.includes('enel') || nameSearch.includes('cemig') || nameSearch.includes('copel') || nameSearch.includes('cpfl') || nameSearch.includes('light') || nameSearch.includes('luz') || nameSearch.includes('energia')) {
     bName = 'Energia Elétrica';
     bSub = 'Conta de Luz';
@@ -24729,25 +24729,25 @@ function getAttachmentCoverHtml(a, t){
       <div style="display:flex; align-items:center; gap:12px; max-width:80%;">
         \${logoBadge}
         <div style="text-align:left;">
-          <div style="font-size:15px; font-weight:900; color:#ffffff; line-height:1.2; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+          <div style="font-size:14px; font-weight:900; color:#ffffff; line-height:1.2; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
             \${bName}
           </div>
-          <div style="font-size:11.5px; font-weight:600; color:rgba(255,255,255,0.75); margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+          <div style="font-size:14px; font-weight:600; color:rgba(255,255,255,0.75); margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
             \${bSub}
           </div>
         </div>
       </div>
-      <div style="background:rgba(0,0,0,0.4); backdrop-filter:blur(6px); border:1px solid rgba(255,255,255,0.18); padding:3px 8px; border-radius:6px; font-size:10.5px; font-weight:800; color:#ffffff; display:flex; align-items:center; gap:4px;">
-        <span style="color:#ef4444; font-size:12px;">📄</span> PDF
+      <div style="background:rgba(0,0,0,0.4); backdrop-filter:blur(6px); border:1px solid rgba(255,255,255,0.18); padding:3px 8px; border-radius:6px; font-size:14px; font-weight:800; color:#ffffff; display:flex; align-items:center; gap:4px;">
+        <span style="color:#ef4444; font-size:14px;">📄</span> PDF
       </div>
     </div>
 
     <div style="background:rgba(0,0,0,0.22); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:8px 12px; z-index:2; backdrop-filter:blur(4px);">
       <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:5px;">
-        <span style="font-size:11px; color:rgba(255,255,255,0.8); font-weight:700; display:flex; align-items:center; gap:4px;">
+        <span style="font-size:14px; color:rgba(255,255,255,0.8); font-weight:700; display:flex; align-items:center; gap:4px;">
           <span>🧾</span> Recibo / Fatura Digital
         </span>
-        <span style="font-size:10px; color:#10B981; font-weight:800; background:rgba(16, 185, 129,0.15); padding:2px 6px; border-radius:4px;">VERIFICADO</span>
+        <span style="font-size:14px; color:#10B981; font-weight:800; background:rgba(16, 185, 129,0.15); padding:2px 6px; border-radius:4px;">VERIFICADO</span>
       </div>
       <div style="height:3px; background:rgba(255,255,255,0.2); border-radius:2px; width:65%; margin-bottom:4px;"></div>
       <div style="height:3px; background:rgba(255,255,255,0.12); border-radius:2px; width:40%;"></div>
@@ -24763,7 +24763,7 @@ function pageAnexos(){
       <h1 style="font-size:22px; font-weight:800; letter-spacing:-0.02em; margin:0; display:flex; align-items:center; gap:8px;">
         Anexos & Comprovantes Digitais
       </h1>
-      <p style="font-size:12.5px; color:var(--text-dim); margin:4px 0 0 0; font-weight:500;">
+      <p style="font-size:14px; color:var(--text-dim); margin:4px 0 0 0; font-weight:500;">
         Cadastre comprovantes, faturas em PDF e recibos vinculados aos seus lançamentos
       </p>
     </div>
@@ -24771,17 +24771,17 @@ function pageAnexos(){
 
   <div class="panel" style="margin-bottom:22px; padding:26px;">
     <div style="margin-bottom:18px;">
-      <h3 style="font-size:16.5px; font-weight:800; display:flex; align-items:center; gap:8px; margin:0; color:#FFFFFF;">
+      <h3 style="font-size:14px; font-weight:800; display:flex; align-items:center; gap:8px; margin:0; color:#FFFFFF;">
         <span>📎</span> Vincular & Enviar Novo Comprovante
       </h3>
-      <p style="font-size:12.5px; color:var(--text-dim); margin-top:4px;">
+      <p style="font-size:14px; color:var(--text-dim); margin-top:4px;">
         Selecione uma transação existente ou envie um anexo avulso para guarda segura.
       </p>
     </div>
 
     <div style="margin-bottom:18px;">
-      <label style="font-size:13px; font-weight:700; margin-bottom:8px; display:block; color:var(--text);">Vincular a uma Transação (Opcional)</label>
-      <select id="attTx" style="width:100%; font-size:13.5px; padding:11px 16px; height:48px; border-radius:14px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.14); color:var(--text); font-weight:600; backdrop-filter:blur(16px); box-shadow:inset 0 1px 1px rgba(255,255,255,0.15);">
+      <label style="font-size:14px; font-weight:700; margin-bottom:8px; display:block; color:var(--text);">Vincular a uma Transação (Opcional)</label>
+      <select id="attTx" style="width:100%; font-size:14px; padding:11px 16px; height:48px; border-radius:14px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.14); color:var(--text); font-weight:600; backdrop-filter:blur(16px); box-shadow:inset 0 1px 1px rgba(255,255,255,0.15);">
         <option value="0">Nenhuma (Anexo Avulso / Recibo Padrão)</option>
         \${sortedTx.map(t=>\`<option value="\${t.id}">\${formatDateBR(t.date)} — \${t.desc} (\${fmt(t.val)})</option>\`).join('')}
       </select>
@@ -24792,11 +24792,11 @@ function pageAnexos(){
       <div style="display:inline-flex; align-items:center; justify-content:center; width:64px; height:64px; border-radius:50%; background:linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(5, 150, 105,0.25) 100%); border:1px solid rgba(255,255,255,0.35); box-shadow:0 8px 24px rgba(5, 150, 105,0.35); margin-bottom:14px;">
         <span style="font-size: 32px; display: block; filter: drop-shadow(0 2px 8px rgba(255,255,255,0.5));">☁️</span>
       </div>
-      <p style="margin:0; font-weight:800; font-size:16px; color:#FFFFFF; letter-spacing:-0.01em;">Arraste comprovantes para cá ou <span style="color:#34D399; text-decoration:underline;">clique para anexar</span></p>
+      <p style="margin:0; font-weight:800; font-size:14px; color:#FFFFFF; letter-spacing:-0.01em;">Arraste comprovantes para cá ou <span style="color:#34D399; text-decoration:underline;">clique para anexar</span></p>
       <div style="display:flex; justify-content:center; gap:8px; margin-top:12px;">
-        <span class="pill" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#E2E8F0; padding:4px 12px; border-radius:999px; font-size:11px; font-weight:700; backdrop-filter:blur(10px);">PNG / JPG / WEBP</span>
-        <span class="pill" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#E2E8F0; padding:4px 12px; border-radius:999px; font-size:11px; font-weight:700; backdrop-filter:blur(10px);">PDF</span>
-        <span class="pill" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#E2E8F0; padding:4px 12px; border-radius:999px; font-size:11px; font-weight:700; backdrop-filter:blur(10px);">DOCX / TXT</span>
+        <span class="pill" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#E2E8F0; padding:4px 12px; border-radius:999px; font-size:14px; font-weight:700; backdrop-filter:blur(10px);">PNG / JPG / WEBP</span>
+        <span class="pill" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#E2E8F0; padding:4px 12px; border-radius:999px; font-size:14px; font-weight:700; backdrop-filter:blur(10px);">PDF</span>
+        <span class="pill" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#E2E8F0; padding:4px 12px; border-radius:999px; font-size:14px; font-weight:700; backdrop-filter:blur(10px);">DOCX / TXT</span>
       </div>
     </div>
   </div>
@@ -24815,7 +24815,7 @@ function pageAnexos(){
       <div class="budget-card" style="min-height:260px;">
         <div>
           <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
-            <span class="pill" style="font-size:11px; padding:3px 9px; border-radius:8px; background:\${isPdf ? 'rgba(239,68,68,0.14)' : isImage ? 'rgba(5, 150, 105,0.14)' : 'rgba(5, 150, 105, 0.14)'}; color:\${isPdf ? 'var(--red)' : isImage ? 'var(--blue)' : 'var(--purple)'}; font-weight:700;">
+            <span class="pill" style="font-size:14px; padding:3px 9px; border-radius:8px; background:\${isPdf ? 'rgba(239,68,68,0.14)' : isImage ? 'rgba(5, 150, 105,0.14)' : 'rgba(5, 150, 105, 0.14)'}; color:\${isPdf ? 'var(--red)' : isImage ? 'var(--blue)' : 'var(--purple)'}; font-weight:700;">
               \${isPdf ? '📄 Fatura PDF' : isImage ? '🖼️ Imagem Anexa' : '📎 Documento'}
             </span>
             <button data-delatt="\${a.id}" title="Excluir Anexo" class="btn-action-del">🗑</button>
@@ -24825,11 +24825,11 @@ function pageAnexos(){
             \${getAttachmentCoverHtml(a, t)}
           </div>
 
-          <h4 style="font-size:14.5px; font-weight:800; margin-bottom:8px; word-break:break-word; color:var(--text); line-height:1.3;">\${a.name}</h4>
+          <h4 style="font-size:14px; font-weight:800; margin-bottom:8px; word-break:break-word; color:var(--text); line-height:1.3;">\${a.name}</h4>
           
           <div style="margin-top:10px;">
-            <label style="display:block; font-size:11.5px; color:var(--text-faint); margin-bottom:4px; font-weight:700;">Transação Vinculada:</label>
-            <select data-relinkatt="\${a.id}" style="width:100%; font-size:12.5px; padding:6px 10px; border-radius:8px; background:var(--bg); border:1px solid var(--card-border); color:var(--text); font-weight:600;">
+            <label style="display:block; font-size:14px; color:var(--text-faint); margin-bottom:4px; font-weight:700;">Transação Vinculada:</label>
+            <select data-relinkatt="\${a.id}" style="width:100%; font-size:14px; padding:6px 10px; border-radius:8px; background:var(--bg); border:1px solid var(--card-border); color:var(--text); font-weight:600;">
               <option value="0" \${!a.txId ? 'selected' : ''}>Sem vincular (Anexo Avulso)</option>
               \${sortedTx.map(tx => \`<option value="\${tx.id}" \${tx.id === a.txId ? 'selected' : ''}>\${formatDateBR(tx.date)} — \${tx.desc}</option>\`).join('')}
             </select>
@@ -24838,14 +24838,14 @@ function pageAnexos(){
 
         <div style="display:flex; align-items:center; gap:8px; margin-top:14px; padding-top:12px; border-top:1px solid rgba(255,255,255,0.06);">
           \${a.dataUrl ? \`
-            <a href="\${a.dataUrl}" download="\${a.name || 'comprovante'}" class="btn-primary" style="flex:1.2; padding:8px 12px; font-size:12.5px; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:6px; border-radius:8px;" title="Baixar Arquivo">
+            <a href="\${a.dataUrl}" download="\${a.name || 'comprovante'}" class="btn-primary" style="flex:1.2; padding:8px 12px; font-size:14px; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:6px; border-radius:8px;" title="Baixar Arquivo">
               📥 Baixar
             </a>
-            <button data-previewatt="\${a.id}" class="btn-ghost" style="flex:1; padding:8px 12px; font-size:12.5px; font-weight:700; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; gap:6px;" title="Visualizar">
+            <button data-previewatt="\${a.id}" class="btn-ghost" style="flex:1; padding:8px 12px; font-size:14px; font-weight:700; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; gap:6px;" title="Visualizar">
               👁️ Ver
             </button>
           \` : \`
-            <span style="font-size:12px; color:var(--text-faint);">Sem arquivo salvo</span>
+            <span style="font-size:14px; color:var(--text-faint);">Sem arquivo salvo</span>
           \`}
         </div>
       </div>
@@ -24868,7 +24868,7 @@ function pageAlertas(){
       <h1 style="font-size:22px; font-weight:800; letter-spacing:-0.02em; margin:0; display:flex; align-items:center; gap:8px;">
         Alertas de Orçamento
       </h1>
-      <p style="font-size:12.5px; color:var(--text-dim); margin:4px 0 0 0; font-weight:500;">
+      <p style="font-size:14px; color:var(--text-dim); margin:4px 0 0 0; font-weight:500;">
         Avisos inteligentes acionados automaticamente quando o gasto se aproxima do limite — <strong style="color:var(--green);">\${periodLabel()}</strong>
       </p>
     </div>
@@ -24889,12 +24889,12 @@ function pageAlertas(){
         <div>
           <div class="top" style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; gap:10px;">
             <div class="id-group" style="display:flex; align-items:center; gap:10px; min-width:0;">
-              <span class="dot" style="background:\${triggered ? 'var(--red)' : 'var(--green)'}; width:34px; height:34px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:16px;">
+              <span class="dot" style="background:\${triggered ? 'var(--red)' : 'var(--green)'}; width:34px; height:34px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:14px;">
                 \${triggered ? '⚠️' : '🔔'}
               </span>
               <div style="min-width:0;">
-                <h4 style="font-size:15px; font-weight:800; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">\${al.category}</h4>
-                <span class="pill" style="font-size:10.5px; padding:2px 8px; border-radius:6px; background:\${triggered ? 'rgba(239,68,68,0.16)' : 'rgba(5, 150, 105,0.16)'}; color:\${triggered ? 'var(--red)' : 'var(--brand-bright)'}; font-weight:700; border:1px solid \${triggered ? 'rgba(239,68,68,0.3)' : 'rgba(5, 150, 105,0.3)'};">
+                <h4 style="font-size:14px; font-weight:800; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">\${al.category}</h4>
+                <span class="pill" style="font-size:14px; padding:2px 8px; border-radius:6px; background:\${triggered ? 'rgba(239,68,68,0.16)' : 'rgba(5, 150, 105,0.16)'}; color:\${triggered ? 'var(--red)' : 'var(--brand-bright)'}; font-weight:700; border:1px solid \${triggered ? 'rgba(239,68,68,0.3)' : 'rgba(5, 150, 105,0.3)'};">
                   \${triggered ? '🚨 Gatilho Acionado' : '✓ Monitoramento OK'}
                 </span>
               </div>
@@ -24906,22 +24906,22 @@ function pageAlertas(){
           </div>
 
           <div style="margin:14px 0 10px;">
-            <div style="font-size:12px; color:var(--text-dim); margin-bottom:4px;">
+            <div style="font-size:14px; color:var(--text-dim); margin-bottom:4px;">
               Gatilho: Dispara ao atingir <strong style="color:var(--text);">\${al.threshold}%</strong> do orçamento
             </div>
             \${b ? \`
               <div style="display:flex; justify-content:space-between; align-items:baseline; margin-top:8px;">
                 <span style="font-size:20px; font-weight:800; color:\${triggered ? 'var(--red)' : 'var(--green)'}; font-variant-numeric:tabular-nums;">\${fmt(b.spent)}</span>
-                <span style="font-size:12.5px; color:var(--text-faint); font-weight:600;">Limite: \${fmt(b.limit)}</span>
+                <span style="font-size:14px; color:var(--text-faint); font-weight:600;">Limite: \${fmt(b.limit)}</span>
               </div>
               <div class="bar-split" style="height:7px; background:rgba(255,255,255,0.08); border-radius:5px; overflow:hidden; margin-top:8px;">
                 <div class="g" style="width:\${Math.min(pct, 100)}%; background:\${triggered ? 'var(--red)' : 'var(--green)'}; border-radius:5px; transition:width .4s ease;"></div>
               </div>
-              <div style="text-align:right; font-size:11px; color:\${triggered ? 'var(--red)' : 'var(--text-faint)'}; font-weight:700; margin-top:4px;">
+              <div style="text-align:right; font-size:14px; color:\${triggered ? 'var(--red)' : 'var(--text-faint)'}; font-weight:700; margin-top:4px;">
                 \${pct}% consumido
               </div>
             \` : \`
-              <div style="font-size:12px; color:var(--text-faint); margin-top:10px; padding:8px 10px; background:rgba(255,255,255,0.03); border-radius:8px;">
+              <div style="font-size:14px; color:var(--text-faint); margin-top:10px; padding:8px 10px; background:rgba(255,255,255,0.03); border-radius:8px;">
                 Sem orçamento ativo cadastrado para esta categoria
               </div>
             \`}
@@ -24965,7 +24965,7 @@ function pageConfig(){
       <h1 style="font-size:22px; font-weight:800; letter-spacing:-0.02em; margin:0; display:flex; align-items:center; gap:8px;">
         Configurações da Conta
       </h1>
-      <p style="font-size:12.5px; color:var(--text-dim); margin:4px 0 0 0; font-weight:500;">
+      <p style="font-size:14px; color:var(--text-dim); margin:4px 0 0 0; font-weight:500;">
         Personalize seu perfil, parâmetros de segurança, preferências e dados de acesso
       </p>
     </div>
@@ -24973,7 +24973,7 @@ function pageConfig(){
 
   \${isViewingOtherUser ? \`
   <div class="panel" style="margin-bottom:18px; padding:16px 20px; background:rgba(5, 150, 105,0.08); border:1px solid rgba(5, 150, 105,0.25);">
-    <p class="cfg-hint" style="margin:0; font-size:13px; color:var(--text);">
+    <p class="cfg-hint" style="margin:0; font-size:14px; color:var(--text);">
       👁️ Você está em modo de visualização dos dados de <strong style="color:var(--green);">\${currentUser ? currentUser.name : ''}</strong>. As configurações da conta só podem ser editadas pelo próprio titular.
     </p>
   </div>\` : \`
@@ -24990,17 +24990,17 @@ function pageConfig(){
             ? '<span class="role-badge" style="background:#10B981; color:#fff; font-weight:800;">✓ Assinatura Ativa (' + nexusPlanLabel(currentUser.subscription_plan) + ')</span>'
             : '<span class="role-badge" style="background:#F59E0B; color:#fff; font-weight:800;">⏱️ Período Gratuito (1 Dia)</span>'}
         </div>
-        <p id="nxSubValidade" style="font-size:13px; color:var(--text-dim); margin:4px 0 0 0;">
+        <p id="nxSubValidade" style="font-size:14px; color:var(--text-dim); margin:4px 0 0 0;">
           \${nexusTextoValidade(currentUser)}
         </p>
       </div>
     </div>
     <div style="display:flex; gap:10px; align-items:center;">
-      <button type="button" onclick="window.openSubscriptionPaywall(false)" style="padding:10px 20px; border-radius:12px; background:linear-gradient(135deg, #10B981, #059669); color:#fff; font-weight:800; font-size:13px; border:none; cursor:pointer; box-shadow:0 6px 18px rgba(16,185,129,0.35);">
+      <button type="button" onclick="window.openSubscriptionPaywall(false)" style="padding:10px 20px; border-radius:12px; background:linear-gradient(135deg, #10B981, #059669); color:#fff; font-weight:800; font-size:14px; border:none; cursor:pointer; box-shadow:0 6px 18px rgba(16,185,129,0.35);">
         Gerenciar / Trocar Plano
       </button>
       \${(currentUser && currentUser.role === 'Administrador') ? \`
-        <button type="button" onclick="window.resetTrialForTesting()" style="padding:10px 14px; border-radius:12px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:var(--text); font-weight:700; font-size:12px; cursor:pointer;">
+        <button type="button" onclick="window.resetTrialForTesting()" style="padding:10px 14px; border-radius:12px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:var(--text); font-weight:700; font-size:14px; cursor:pointer;">
           ⏱️ Resetar 1d (Teste)
         </button>
       \` : ''}
@@ -25012,7 +25012,7 @@ function pageConfig(){
     <!-- 1. DADOS CADASTRAIS & TITULARIDADE (Coluna Principal - Ampla e Proporcional ao Volume de Dados) -->
     <div class="panel" style="padding:22px; display:flex; flex-direction:column; gap:16px;">
       <div class="panel-head" style="margin-bottom:0; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-        <h3 style="display:flex; align-items:center; gap:8px; font-size:16px; font-weight:800; margin:0;">
+        <h3 style="display:flex; align-items:center; gap:8px; font-size:14px; font-weight:800; margin:0;">
           <span style="font-size:18px;">👤</span> Dados Cadastrais & Titularidade
         </h3>
       </div>
@@ -25031,61 +25031,61 @@ function pageConfig(){
 
       <!-- Nome Completo (Largura Total) -->
       <div class="field" style="margin-bottom:0;">
-        <label style="font-size:12px; font-weight:700; margin-bottom:6px; display:block; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.04em;">Nome Completo do Titular</label>
-        <input id="cfgName" value="\${txEsc(currentName)}" placeholder="Seu nome completo" autocomplete="name" style="width:100%; height:44px; font-size:13.5px; font-weight:700;">
+        <label style="font-size:14px; font-weight:700; margin-bottom:6px; display:block; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.04em;">Nome Completo do Titular</label>
+        <input id="cfgName" value="\${txEsc(currentName)}" placeholder="Seu nome completo" autocomplete="name" style="width:100%; height:44px; font-size:14px; font-weight:700;">
       </div>
 
       <!-- Grid de 2 Colunas para Dados do Titular -->
       <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:14px;">
         <!-- CPF -->
         <div class="field" style="margin-bottom:0;">
-          <label style="font-size:12px; font-weight:700; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.04em;">
+          <label style="font-size:14px; font-weight:700; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.04em;">
             <span>CPF (Receita Federal)</span>
-            \${cleanCpf.length === 11 ? '<span style="font-size:10.5px; color:#059669; font-weight:800; text-transform:none;">✓ Autenticado</span>' : '<span style="font-size:10.5px; color:#F59E0B; font-weight:800; text-transform:none;">Pendente</span>'}
+            \${cleanCpf.length === 11 ? '<span style="font-size:14px; color:#059669; font-weight:800; text-transform:none;">✓ Autenticado</span>' : '<span style="font-size:14px; color:#F59E0B; font-weight:800; text-transform:none;">Pendente</span>'}
           </label>
-          <input id="cfgCpf" value="\${txEsc(formattedCpf)}" placeholder="00000000000" maxlength="11" inputmode="numeric" \${cleanCpf.length === 11 ? 'readonly title="CPF autenticado: não pode ser alterado por aqui. Fale com o suporte."' : ''} style="width:100%; height:44px; font-size:13.5px; font-weight:700;\${cleanCpf.length === 11 ? ' opacity:.78; cursor:not-allowed;' : ''}">
+          <input id="cfgCpf" value="\${txEsc(formattedCpf)}" placeholder="00000000000" maxlength="11" inputmode="numeric" \${cleanCpf.length === 11 ? 'readonly title="CPF autenticado: não pode ser alterado por aqui. Fale com o suporte."' : ''} style="width:100%; height:44px; font-size:14px; font-weight:700;\${cleanCpf.length === 11 ? ' opacity:.78; cursor:not-allowed;' : ''}">
         </div>
 
         <!-- Data de Nascimento -->
         <div class="field" style="margin-bottom:0;">
-          <label style="font-size:12px; font-weight:700; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.04em;">
+          <label style="font-size:14px; font-weight:700; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.04em;">
             <span>Data de Nascimento</span>
-            <span style="font-size:10.5px; color:var(--text-dim); text-transform:none;">Maioridade Legal</span>
+            <span style="font-size:14px; color:var(--text-dim); text-transform:none;">Maioridade Legal</span>
           </label>
-          <input id="cfgBirthDate" type="date" value="\${currentBirthDate}" style="width:100%; height:44px; font-size:13.5px; font-weight:600;">
+          <input id="cfgBirthDate" type="date" value="\${currentBirthDate}" style="width:100%; height:44px; font-size:14px; font-weight:600;">
         </div>
 
         <!-- Celular / WhatsApp 2FA -->
         <div class="field" style="margin-bottom:0;">
-          <label style="font-size:12px; font-weight:700; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.04em;">
+          <label style="font-size:14px; font-weight:700; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.04em;">
             <span>Celular com DDD (2FA)</span>
-            <span style="font-size:10.5px; color:var(--text-dim); text-transform:none;">Segurança</span>
+            <span style="font-size:14px; color:var(--text-dim); text-transform:none;">Segurança</span>
           </label>
-          <input id="cfgPhone" value="\${txEsc(formattedPhone)}" inputmode="tel" placeholder="(00) 00000-0000" maxlength="15" style="width:100%; height:44px; font-size:13.5px; font-weight:700;">
+          <input id="cfgPhone" value="\${txEsc(formattedPhone)}" inputmode="tel" placeholder="(00) 00000-0000" maxlength="15" style="width:100%; height:44px; font-size:14px; font-weight:700;">
         </div>
 
         <!-- E-mail Cadastrado -->
         <div class="field" style="margin-bottom:0;">
-          <label style="font-size:12px; font-weight:700; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.04em;"><span>E-mail Cadastrado</span><span style="font-size:10.5px; color:var(--text-dim); text-transform:none;">Login da conta</span></label>
-          <input id="cfgEmail" type="text" value="\${txEsc(currentEmail)}" readonly title="O e-mail é o login da conta e não pode ser alterado por aqui. Fale com o suporte." autocomplete="email" style="width:100%; height:44px; font-size:13.5px; font-weight:600; opacity:.78; cursor:not-allowed;">
+          <label style="font-size:14px; font-weight:700; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.04em;"><span>E-mail Cadastrado</span><span style="font-size:14px; color:var(--text-dim); text-transform:none;">Login da conta</span></label>
+          <input id="cfgEmail" type="text" value="\${txEsc(currentEmail)}" readonly title="O e-mail é o login da conta e não pode ser alterado por aqui. Fale com o suporte." autocomplete="email" style="width:100%; height:44px; font-size:14px; font-weight:600; opacity:.78; cursor:not-allowed;">
         </div>
       </div>
 
       <!-- Registro de Conformidade LGPD & Abertura da Conta -->
-      <div style="background:rgba(0,0,0,0.32); border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:12px 16px; font-size:12px; display:grid; grid-template-columns:repeat(auto-fit, minmax(160px, 1fr)); gap:10px;">
+      <div style="background:rgba(0,0,0,0.32); border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:12px 16px; font-size:14px; display:grid; grid-template-columns:repeat(auto-fit, minmax(160px, 1fr)); gap:10px;">
         <div style="display:flex; flex-direction:column; gap:2px;">
-          <span style="color:var(--text-dim); font-size:11px;">Termos & Proteção LGPD</span>
+          <span style="color:var(--text-dim); font-size:14px;">Termos & Proteção LGPD</span>
           <span style="color:#059669; font-weight:800; display:inline-flex; align-items:center; gap:5px;">
             <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#059669;"></span>
             Aceito & Registrado
           </span>
         </div>
         <div style="display:flex; flex-direction:column; gap:2px;">
-          <span style="color:var(--text-dim); font-size:11px;">Perfil de Acesso</span>
+          <span style="color:var(--text-dim); font-size:14px;">Perfil de Acesso</span>
           <span style="color:#34D399; font-weight:800;">\${roleName}</span>
         </div>
         <div style="display:flex; flex-direction:column; gap:2px;">
-          <span style="color:var(--text-dim); font-size:11px;">Data de Abertura</span>
+          <span style="color:var(--text-dim); font-size:14px;">Data de Abertura</span>
           <span style="color:var(--text); font-weight:700;">\${formattedCreated}</span>
         </div>
       </div>
@@ -25096,25 +25096,25 @@ function pageConfig(){
       <!-- 2. Alterar Senha -->
       <div class="panel" style="padding:22px;">
         <div class="panel-head" style="margin-bottom:10px;">
-          <h3 style="display:flex; align-items:center; gap:8px; font-size:16px; font-weight:800; margin:0;">
+          <h3 style="display:flex; align-items:center; gap:8px; font-size:14px; font-weight:800; margin:0;">
             <span>🔒</span> Segurança & Senha
           </h3>
         </div>
-        <p class="cfg-hint" style="font-size:12px; margin-bottom:14px; color:var(--text-dim);">
+        <p class="cfg-hint" style="font-size:14px; margin-bottom:14px; color:var(--text-dim);">
           Sessão ativa: para trocar a senha basta informar a nova senha e a confirmação — não é preciso digitar a senha atual. Use 8+ caracteres, maiúscula, minúscula, número e símbolo.
         </p>
         <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
           <div class="field" style="margin-bottom:0;">
-            <label style="font-size:12px; font-weight:700; margin-bottom:6px; display:block; color:var(--text-dim);">Nova Senha</label>
+            <label style="font-size:14px; font-weight:700; margin-bottom:6px; display:block; color:var(--text-dim);">Nova Senha</label>
             <div class="pass-field">
-              <input id="cfgPassword" type="password" placeholder="••••••••" minlength="8" autocomplete="new-password" style="width:100%; height:44px; font-size:13.5px;">
+              <input id="cfgPassword" type="password" placeholder="••••••••" minlength="8" autocomplete="new-password" style="width:100%; height:44px; font-size:14px;">
               <button type="button" class="pass-toggle" id="cfgPasswordToggle" tabindex="-1" aria-label="Mostrar senha">\${EYE_ICON}</button>
             </div>
           </div>
           <div class="field" style="margin-bottom:0;">
-            <label style="font-size:12px; font-weight:700; margin-bottom:6px; display:block; color:var(--text-dim);">Confirmar Senha</label>
+            <label style="font-size:14px; font-weight:700; margin-bottom:6px; display:block; color:var(--text-dim);">Confirmar Senha</label>
             <div class="pass-field">
-              <input id="cfgPasswordConfirm" type="password" placeholder="••••••••" minlength="8" autocomplete="new-password" style="width:100%; height:44px; font-size:13.5px;">
+              <input id="cfgPasswordConfirm" type="password" placeholder="••••••••" minlength="8" autocomplete="new-password" style="width:100%; height:44px; font-size:14px;">
               <button type="button" class="pass-toggle" id="cfgPasswordConfirmToggle" tabindex="-1" aria-label="Mostrar senha">\${EYE_ICON}</button>
             </div>
           </div>
@@ -25124,14 +25124,14 @@ function pageConfig(){
       <!-- 3. Aparência & Escala da Tela -->
       <div class="panel" style="padding:22px;">
         <div class="panel-head" style="margin-bottom:12px;">
-          <h3 style="display:flex; align-items:center; gap:8px; font-size:16px; font-weight:800; margin:0;">
+          <h3 style="display:flex; align-items:center; gap:8px; font-size:14px; font-weight:800; margin:0;">
             <span>🎨</span> Aparência & Escala da Tela
           </h3>
         </div>
         <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-bottom:12px;">
           <div class="field" style="margin-bottom:0;">
-            <label style="font-size:12px; font-weight:700; margin-bottom:6px; display:block; color:var(--text-dim);">Tamanho de Visualização</label>
-            <select id="cfgScale" style="width:100%; height:44px; font-size:13px; font-weight:600;">
+            <label style="font-size:14px; font-weight:700; margin-bottom:6px; display:block; color:var(--text-dim);">Tamanho de Visualização</label>
+            <select id="cfgScale" style="width:100%; height:44px; font-size:14px; font-weight:600;">
               <option value="auto">⚡ Auto (Adequar ao Dispositivo)</option>
               <option value="80%">🔍 80% (Compacto)</option>
               <option value="90%">🔍 90% (Reduzido)</option>
@@ -25243,13 +25243,13 @@ function pageFuncoes(){
         <span style="display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:10px; background:linear-gradient(135deg, rgba(232,176,75,0.25), rgba(201,134,42,0.15)); border:1px solid rgba(232,176,75,0.4); color:#fbbf24; font-size:18px;">🛡️</span>
         Central de Funções & Permissões
       </h1>
-      <p style="font-size:13.5px; color:var(--text-dim); margin:4px 0 0 0;">Gerencie papéis de usuários, atribuição rápida de funções, matriz de controle de acessos e permissões do sistema em tempo real.</p>
+      <p style="font-size:14px; color:var(--text-dim); margin:4px 0 0 0;">Gerencie papéis de usuários, atribuição rápida de funções, matriz de controle de acessos e permissões do sistema em tempo real.</p>
     </div>
     <div style="display:flex; gap:10px; align-items:center;">
-      <span class="tag" style="background:rgba(232,176,75,0.15); color:#fbbf24; border:1px solid rgba(232,176,75,0.3); font-weight:700; padding:6px 14px; border-radius:20px; font-size:12px;">
+      <span class="tag" style="background:rgba(232,176,75,0.15); color:#fbbf24; border:1px solid rgba(232,176,75,0.3); font-weight:700; padding:6px 14px; border-radius:20px; font-size:14px;">
         👑 Modo Administrador (Acesso Irrestrito)
       </span>
-      <button onclick="exportPermissionsMatrixCSV()" class="btn-ghost" style="height:36px; padding:0 14px; border-radius:10px; border-color:rgba(232,176,75,0.3); color:#fbbf24; font-size:12.5px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+      <button onclick="exportPermissionsMatrixCSV()" class="btn-ghost" style="height:36px; padding:0 14px; border-radius:10px; border-color:rgba(232,176,75,0.3); color:#fbbf24; font-size:14px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         <span>Exportar CSV</span>
       </button>
@@ -25279,7 +25279,7 @@ function pageFuncoes(){
   <div class="panel" style="margin-bottom:20px; border:1px solid rgba(232,176,75,0.25); background:var(--card);">
     <div class="panel-head" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
       <div>
-        <h3 style="font-size:16px; font-weight:700; color:var(--text);">⚡ Atribuição Direta de Funções aos Usuários</h3>
+        <h3 style="font-size:14px; font-weight:700; color:var(--text);">⚡ Atribuição Direta de Funções aos Usuários</h3>
         <p class="cfg-hint" style="margin-top:4px;">Altere o perfil e nível de acesso de qualquer usuário cadastrado instantaneamente.</p>
       </div>
       <span class="tag" style="background:rgba(5, 150, 105,0.15); color:#059669; border-color:rgba(5, 150, 105,0.3); font-weight:700;">\${totalUsers} Conta(s) no Sistema</span>
@@ -25289,10 +25289,10 @@ function pageFuncoes(){
       <table style="width:100%; border-collapse:collapse; text-align:left;">
         <thead>
           <tr style="border-bottom:1px solid var(--card-border); background:rgba(0,0,0,0.3);">
-            <th style="padding:14px 16px; color:var(--text-dim); font-size:12px; text-transform:uppercase;">Usuário</th>
-            <th style="padding:14px 16px; color:var(--text-dim); font-size:12px; text-transform:uppercase;">E-mail</th>
-            <th style="padding:14px 16px; color:var(--text-dim); font-size:12px; text-transform:uppercase;">Função Atual</th>
-            <th style="padding:14px 16px; color:#fbbf24; font-size:12px; text-transform:uppercase;">Alterar Função do Usuário</th>
+            <th style="padding:14px 16px; color:var(--text-dim); font-size:14px; text-transform:uppercase;">Usuário</th>
+            <th style="padding:14px 16px; color:var(--text-dim); font-size:14px; text-transform:uppercase;">E-mail</th>
+            <th style="padding:14px 16px; color:var(--text-dim); font-size:14px; text-transform:uppercase;">Função Atual</th>
+            <th style="padding:14px 16px; color:#fbbf24; font-size:14px; text-transform:uppercase;">Alterar Função do Usuário</th>
           </tr>
         </thead>
         <tbody>
@@ -25302,21 +25302,21 @@ function pageFuncoes(){
             <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
               <td style="padding:14px 16px; font-weight:600; color:var(--text);">
                 <div style="display:flex; align-items:center; gap:10px;">
-                  <div style="width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg, #10B981, #047857); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:12px;">
+                  <div style="width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg, #10B981, #047857); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:14px;">
                     \${u.name.slice(0,2).toUpperCase()}
                   </div>
                   <div>
                     <span>\${txEsc(u.name)}</span>
-                    \${isMe ? ' <span style="font-size:10px; color:#fbbf24; background:rgba(232,176,75,0.15); padding:1px 6px; border-radius:6px; font-weight:700;">Você</span>' : ''}
+                    \${isMe ? ' <span style="font-size:14px; color:#fbbf24; background:rgba(232,176,75,0.15); padding:1px 6px; border-radius:6px; font-weight:700;">Você</span>' : ''}
                   </div>
                 </div>
               </td>
-              <td style="padding:14px 16px; color:var(--text-dim); font-size:13px;">\${txEsc(u.email)}</td>
+              <td style="padding:14px 16px; color:var(--text-dim); font-size:14px;">\${txEsc(u.email)}</td>
               <td style="padding:14px 16px;">
-                <span class="role-badge \${u.role==='Administrador'?'admin':'user'}" style="font-size:12px; padding:4px 10px;">\${u.role}</span>
+                <span class="role-badge \${u.role==='Administrador'?'admin':'user'}" style="font-size:14px; padding:4px 10px;">\${u.role}</span>
               </td>
               <td style="padding:14px 16px;">
-                <select onchange="changeUserRoleFromFuncoes('\${u.email}', this.value)" style="height:36px; padding:0 12px; border-radius:10px; background:var(--input-bg, rgba(0,0,0,0.4)); border:1px solid rgba(232,176,75,0.3); color:#fbbf24; font-weight:700; font-size:13px; cursor:pointer;">
+                <select onchange="changeUserRoleFromFuncoes('\${u.email}', this.value)" style="height:36px; padding:0 12px; border-radius:10px; background:var(--input-bg, rgba(0,0,0,0.4)); border:1px solid rgba(232,176,75,0.3); color:#fbbf24; font-weight:700; font-size:14px; cursor:pointer;">
                   <option value="Administrador" \${u.role==='Administrador'?'selected':''}>👑 Administrador (Acesso Irrestrito)</option>
                   <option value="Gerente Financeiro" \${u.role==='Gerente Financeiro'?'selected':''}>💼 Gerente Financeiro</option>
                   <option value="Usuário" \${u.role==='Usuário'?'selected':''}>👤 Usuário / Operador Padrão</option>
@@ -25334,15 +25334,15 @@ function pageFuncoes(){
   <div class="panel" style="margin-bottom:20px; border:1px solid rgba(232,176,75,0.25); background:var(--card);">
     <div class="panel-head" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
       <div>
-        <h3 style="font-size:16px; font-weight:700; color:var(--text);">Matriz de Permissões e Capacidades do Sistema</h3>
+        <h3 style="font-size:14px; font-weight:700; color:var(--text);">Matriz de Permissões e Capacidades do Sistema</h3>
         <p class="cfg-hint" style="margin-top:4px;">Tabela detalhada de acessos, privilégios de edição e permissões ativas para cada nível de usuário.</p>
       </div>
       <div style="display:flex; gap:6px; flex-wrap:wrap;">
-        <button onclick="setFuncoesRoleFilter('all', this)" class="funcoes-filter-btn active" style="padding:4px 10px; border-radius:8px; font-size:11.5px; font-weight:700; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#fff; cursor:pointer;">Todas</button>
-        <button onclick="setFuncoesRoleFilter('admin', this)" class="funcoes-filter-btn" style="padding:4px 10px; border-radius:8px; font-size:11.5px; font-weight:700; background:rgba(232,176,75,0.12); border:1px solid rgba(232,176,75,0.3); color:#fbbf24; cursor:pointer;">👑 Administrador</button>
-        <button onclick="setFuncoesRoleFilter('gerente', this)" class="funcoes-filter-btn" style="padding:4px 10px; border-radius:8px; font-size:11.5px; font-weight:700; background:rgba(5, 150, 105,0.12); border:1px solid rgba(5, 150, 105,0.3); color:#10B981; cursor:pointer;">💼 Gerente</button>
-        <button onclick="setFuncoesRoleFilter('usuario', this)" class="funcoes-filter-btn" style="padding:4px 10px; border-radius:8px; font-size:11.5px; font-weight:700; background:rgba(5, 150, 105,0.12); border:1px solid rgba(5, 150, 105,0.3); color:#34D399; cursor:pointer;">👤 Usuário</button>
-        <button onclick="setFuncoesRoleFilter('auditor', this)" class="funcoes-filter-btn" style="padding:4px 10px; border-radius:8px; font-size:11.5px; font-weight:700; background:rgba(5, 150, 105, 0.12); border:1px solid rgba(5, 150, 105, 0.3); color:#059669; cursor:pointer;">🔍 Auditor</button>
+        <button onclick="setFuncoesRoleFilter('all', this)" class="funcoes-filter-btn active" style="padding:4px 10px; border-radius:8px; font-size:14px; font-weight:700; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#fff; cursor:pointer;">Todas</button>
+        <button onclick="setFuncoesRoleFilter('admin', this)" class="funcoes-filter-btn" style="padding:4px 10px; border-radius:8px; font-size:14px; font-weight:700; background:rgba(232,176,75,0.12); border:1px solid rgba(232,176,75,0.3); color:#fbbf24; cursor:pointer;">👑 Administrador</button>
+        <button onclick="setFuncoesRoleFilter('gerente', this)" class="funcoes-filter-btn" style="padding:4px 10px; border-radius:8px; font-size:14px; font-weight:700; background:rgba(5, 150, 105,0.12); border:1px solid rgba(5, 150, 105,0.3); color:#10B981; cursor:pointer;">💼 Gerente</button>
+        <button onclick="setFuncoesRoleFilter('usuario', this)" class="funcoes-filter-btn" style="padding:4px 10px; border-radius:8px; font-size:14px; font-weight:700; background:rgba(5, 150, 105,0.12); border:1px solid rgba(5, 150, 105,0.3); color:#34D399; cursor:pointer;">👤 Usuário</button>
+        <button onclick="setFuncoesRoleFilter('auditor', this)" class="funcoes-filter-btn" style="padding:4px 10px; border-radius:8px; font-size:14px; font-weight:700; background:rgba(5, 150, 105, 0.12); border:1px solid rgba(5, 150, 105, 0.3); color:#059669; cursor:pointer;">🔍 Auditor</button>
       </div>
     </div>
     
@@ -25350,11 +25350,11 @@ function pageFuncoes(){
       <table style="width:100%; border-collapse:collapse; text-align:left;">
         <thead>
           <tr style="border-bottom:1px solid var(--card-border); background:rgba(0,0,0,0.25);">
-            <th style="padding:14px 16px; color:var(--text-dim); font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Módulo do Sistema</th>
-            <th class="perm-matrix-th" data-perm-role="admin" style="padding:14px 16px; color:#fbbf24; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">👑 Administrador</th>
-            <th class="perm-matrix-th" data-perm-role="gerente" style="padding:14px 16px; color:#10B981; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">💼 Gerente Financeiro</th>
-            <th class="perm-matrix-th" data-perm-role="usuario" style="padding:14px 16px; color:#34D399; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">👤 Usuário / Operador</th>
-            <th class="perm-matrix-th" data-perm-role="auditor" style="padding:14px 16px; color:#059669; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">🔍 Auditor (Leitura)</th>
+            <th style="padding:14px 16px; color:var(--text-dim); font-size:14px; text-transform:uppercase; letter-spacing:0.05em;">Módulo do Sistema</th>
+            <th class="perm-matrix-th" data-perm-role="admin" style="padding:14px 16px; color:#fbbf24; font-size:14px; text-transform:uppercase; letter-spacing:0.05em;">👑 Administrador</th>
+            <th class="perm-matrix-th" data-perm-role="gerente" style="padding:14px 16px; color:#10B981; font-size:14px; text-transform:uppercase; letter-spacing:0.05em;">💼 Gerente Financeiro</th>
+            <th class="perm-matrix-th" data-perm-role="usuario" style="padding:14px 16px; color:#34D399; font-size:14px; text-transform:uppercase; letter-spacing:0.05em;">👤 Usuário / Operador</th>
+            <th class="perm-matrix-th" data-perm-role="auditor" style="padding:14px 16px; color:#059669; font-size:14px; text-transform:uppercase; letter-spacing:0.05em;">🔍 Auditor (Leitura)</th>
           </tr>
         </thead>
         <tbody>
@@ -25413,23 +25413,23 @@ function pageFuncoes(){
         <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; background:rgba(0,0,0,0.25); border-radius:10px; border:1px solid var(--card-border);">
           <div style="display:flex; align-items:center; gap:10px;">
             <span style="width:10px; height:10px; border-radius:50%; background:#059669; box-shadow:0 0 10px #059669;"></span>
-            <div><strong style="font-size:13.5px; color:var(--text);">Persistência SQL Server / JSON</strong><div style="font-size:11px; color:var(--text-faint);">Sincronização em tempo real</div></div>
+            <div><strong style="font-size:14px; color:var(--text);">Persistência SQL Server / JSON</strong><div style="font-size:14px; color:var(--text-faint);">Sincronização em tempo real</div></div>
           </div>
-          <span style="font-size:11px; font-weight:700; color:#059669; background:rgba(5, 150, 105,0.15); padding:3px 8px; border-radius:6px;">Online</span>
+          <span style="font-size:14px; font-weight:700; color:#059669; background:rgba(5, 150, 105,0.15); padding:3px 8px; border-radius:6px;">Online</span>
         </div>
         <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; background:rgba(0,0,0,0.25); border-radius:10px; border:1px solid var(--card-border);">
           <div style="display:flex; align-items:center; gap:10px;">
             <span style="width:10px; height:10px; border-radius:50%; background:#10B981; box-shadow:0 0 10px #10B981;"></span>
-            <div><strong style="font-size:13.5px; color:var(--text);">Engine de Funções & Permissões</strong><div style="font-size:11px; color:var(--text-faint);">Validação de Acesso JWT / Sessão</div></div>
+            <div><strong style="font-size:14px; color:var(--text);">Engine de Funções & Permissões</strong><div style="font-size:14px; color:var(--text-faint);">Validação de Acesso JWT / Sessão</div></div>
           </div>
-          <span style="font-size:11px; font-weight:700; color:#10B981; background:rgba(5, 150, 105,0.15); padding:3px 8px; border-radius:6px;">Ativo</span>
+          <span style="font-size:14px; font-weight:700; color:#10B981; background:rgba(5, 150, 105,0.15); padding:3px 8px; border-radius:6px;">Ativo</span>
         </div>
         <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; background:rgba(0,0,0,0.25); border-radius:10px; border:1px solid var(--card-border);">
           <div style="display:flex; align-items:center; gap:10px;">
             <span style="width:10px; height:10px; border-radius:50%; background:#f59e0b; box-shadow:0 0 10px #f59e0b;"></span>
-            <div><strong style="font-size:13.5px; color:var(--text);">Auditoria beacon & API Logs</strong><div style="font-size:11px; color:var(--text-faint);">Rastreamento de ações do sistema</div></div>
+            <div><strong style="font-size:14px; color:var(--text);">Auditoria beacon & API Logs</strong><div style="font-size:14px; color:var(--text-faint);">Rastreamento de ações do sistema</div></div>
           </div>
-          <span style="font-size:11px; font-weight:700; color:#f59e0b; background:rgba(245,158,11,0.15); padding:3px 8px; border-radius:6px;">Gravando</span>
+          <span style="font-size:14px; font-weight:700; color:#f59e0b; background:rgba(245,158,11,0.15); padding:3px 8px; border-radius:6px;">Gravando</span>
         </div>
       </div>
     </div>
@@ -26021,7 +26021,7 @@ function pageUsuariosLegado(){
 
   <div class="panel" style="margin-bottom:0; padding:14px 16px; border-radius:14px;">
     <div class="panel-head" style="margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-      <h3 style="font-size:13.5px; font-weight:800; color:var(--text); display:flex; align-items:center; gap:6px; margin:0; width:auto;">
+      <h3 style="font-size:14px; font-weight:800; color:var(--text); display:flex; align-items:center; gap:6px; margin:0; width:auto;">
         <span>📋</span> Grade Alinhada de Cadastros
       </h3>
       <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:flex-end; margin-left:auto;">
@@ -26029,9 +26029,9 @@ function pageUsuariosLegado(){
           <input type="checkbox" onchange="selectAllAdminUsers(this.checked)" \${selectedAdminUserEmails.size === users.filter(u => !(currentUser && String(u.email || '').toLowerCase() === String(currentUser.email || '').toLowerCase())).length && users.length > 0 ? 'checked' : ''}>
           <span>Selecionar todos</span>
         </label>
-        <span style="font-size:11px; color:var(--text-dim); white-space:nowrap;"><strong id="selectedAdminUsersCount">\${selectedAdminUserEmails.size}</strong> selecionado(s)</span>
-        <button id="bulkDeleteUsersButton" type="button" onclick="deleteSelectedAdminUsers()" \${selectedAdminUserEmails.size ? '' : 'disabled'} style="padding:6px 10px; border-radius:8px; background:rgba(239,68,68,0.16); border:1px solid rgba(239,68,68,0.4); color:#FCA5A5; font-size:11px; font-weight:800; cursor:pointer; white-space:nowrap; opacity:\${selectedAdminUserEmails.size ? '1' : '0.5'};">🗑 Excluir selecionados</button>
-        <span class="tag" style="cursor:default; font-weight:800; font-size:10.5px; padding:3px 10px; border-radius:999px; background:rgba(5, 150, 105,0.14); border:1px solid rgba(5, 150, 105,0.32); color:#34D399; white-space:nowrap;">\${totalUsers} registro(s)</span>
+        <span style="font-size:14px; color:var(--text-dim); white-space:nowrap;"><strong id="selectedAdminUsersCount">\${selectedAdminUserEmails.size}</strong> selecionado(s)</span>
+        <button id="bulkDeleteUsersButton" type="button" onclick="deleteSelectedAdminUsers()" \${selectedAdminUserEmails.size ? '' : 'disabled'} style="padding:6px 10px; border-radius:8px; background:rgba(239,68,68,0.16); border:1px solid rgba(239,68,68,0.4); color:#FCA5A5; font-size:14px; font-weight:800; cursor:pointer; white-space:nowrap; opacity:\${selectedAdminUserEmails.size ? '1' : '0.5'};">🗑 Excluir selecionados</button>
+        <span class="tag" style="cursor:default; font-weight:800; font-size:14px; padding:3px 10px; border-radius:999px; background:rgba(5, 150, 105,0.14); border:1px solid rgba(5, 150, 105,0.32); color:#34D399; white-space:nowrap;">\${totalUsers} registro(s)</span>
       </div>
     </div>
 
@@ -26284,7 +26284,7 @@ function renderLogsTable(list) {
           const oldV = arrowIdx !== -1 ? valsStr.substring(0, arrowIdx).trim() : '';
           const newV = arrowIdx !== -1 ? valsStr.substring(arrowIdx + 1).trim() : '';
 
-          return '<span style="display:inline-flex; align-items:center; margin:2px 4px 2px 0; padding:4px 9px; background:rgba(255,255,255,0.04); border-radius:8px; border:1px solid rgba(255,255,255,0.08); font-size:12px;">'
+          return '<span style="display:inline-flex; align-items:center; margin:2px 4px 2px 0; padding:4px 9px; background:rgba(255,255,255,0.04); border-radius:8px; border:1px solid rgba(255,255,255,0.08); font-size:14px;">'
             + (fieldName ? '<strong style="color:var(--text-dim); margin-right:5px;">' + txEsc(fieldName) + ':</strong> ' : '')
             + '<span style="color:#ef5a5a; text-decoration:line-through; margin-right:4px; opacity:0.85;">' + txEsc(oldV) + '</span>'
             + '<span style="color:#e8b04b; font-weight:bold; margin:0 5px;">➔</span>'
@@ -26296,11 +26296,11 @@ function renderLogsTable(list) {
     }
 
     return '<tr class="trow">'
-      + '<td style="font-size:12px; color:var(--text-dim); white-space:nowrap;">' + dateStr + '</td>'
-      + '<td><div style="display:flex; flex-direction:column;"><strong style="font-size:12.5px;">' + txEsc(l.user_name || 'Usuário') + '</strong><span style="font-size:11px; color:var(--text-faint);">' + txEsc(l.user_email || '—') + '</span></div></td>'
+      + '<td style="font-size:14px; color:var(--text-dim); white-space:nowrap;">' + dateStr + '</td>'
+      + '<td><div style="display:flex; flex-direction:column;"><strong style="font-size:14px;">' + txEsc(l.user_name || 'Usuário') + '</strong><span style="font-size:14px; color:var(--text-faint);">' + txEsc(l.user_email || '—') + '</span></div></td>'
       + '<td><span class="pill" style="background:' + actionBg + '; color:' + actionBadgeClass + '; font-weight:700;">' + txEsc(l.action) + '</span></td>'
       + '<td><span class="pill" style="background:rgba(255,255,255,0.05); color:var(--text-dim); font-weight:600;">' + txEsc(l.entity) + '</span></td>'
-      + '<td style="font-size:12.5px; line-height:1.5;">' + formattedDetails + '</td>'
+      + '<td style="font-size:14px; line-height:1.5;">' + formattedDetails + '</td>'
       + '</tr>';
   }).join('');
 
@@ -26383,14 +26383,14 @@ function pageLogsCorpo(){
       <input id="logSearch" class="admin-search-input" placeholder="Buscar por usuário, e-mail, ação ou detalhe..." onkeyup="filterLogsTable()">
     </div>
     <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
-      <select id="logFilterAction" onchange="filterLogsTable()" style="height:34px; min-width:135px; border-radius:9px; font-size:12px; font-weight:700; padding:0 10px;">
+      <select id="logFilterAction" onchange="filterLogsTable()" style="height:34px; min-width:135px; border-radius:9px; font-size:14px; font-weight:700; padding:0 10px;">
         <option value="">Ação: Todas</option>
         <option value="cria">Criação</option>
         <option value="ediç">Edição</option>
         <option value="excl">Exclusão</option>
         <option value="login">Login / Acesso</option>
       </select>
-      <select id="logFilterEntity" onchange="filterLogsTable()" style="height:34px; min-width:145px; border-radius:9px; font-size:12px; font-weight:700; padding:0 10px;">
+      <select id="logFilterEntity" onchange="filterLogsTable()" style="height:34px; min-width:145px; border-radius:9px; font-size:14px; font-weight:700; padding:0 10px;">
         <option value="">Módulo: Todos</option>
         <option value="transa">Transação</option>
         <option value="conta">Conta / Cartão</option>
@@ -26404,8 +26404,8 @@ function pageLogsCorpo(){
 
   <div class="table-panel" style="padding:14px 16px; border-radius:14px;">
     <div class="panel-head" style="margin-bottom:10px;">
-      <h3 style="font-size:13.5px; font-weight:800; margin:0; display:flex; align-items:center; gap:6px;"><span>🛡️</span> Trilha de Auditoria Detalhada</h3>
-      <span class="tag" style="font-weight:800; font-size:10.5px; padding:3px 10px;">\${logs.length} evento(s)</span>
+      <h3 style="font-size:14px; font-weight:800; margin:0; display:flex; align-items:center; gap:6px;"><span>🛡️</span> Trilha de Auditoria Detalhada</h3>
+      <span class="tag" style="font-weight:800; font-size:14px; padding:3px 10px;">\${logs.length} evento(s)</span>
     </div>
 
     <div id="logTableWrap">
@@ -26583,21 +26583,21 @@ function pageLiberacoes(){
   const chips = (currentUser.permissions || []).map(function(id){ return '<span class="lib-chip">' + txEsc(LIB_ROTULOS[id] || id) + '</span>'; }).join('');
   let html = '<style>' +
     '.lib-wrap{display:grid;gap:16px}.lib-chips{display:flex;flex-wrap:wrap;gap:8px}' +
-    '.lib-chip{padding:5px 12px;border-radius:999px;font-size:12px;font-weight:700;background:rgba(52,211,153,.12);color:#6ee7b7;border:1px solid rgba(52,211,153,.32)}' +
-    '.lib-barra{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}.lib-barra input,.lib-barra select{height:38px;border-radius:10px;padding:0 12px;font-size:13px}' +
+    '.lib-chip{padding:5px 12px;border-radius:999px;font-size:14px;font-weight:700;background:rgba(52,211,153,.12);color:#6ee7b7;border:1px solid rgba(52,211,153,.32)}' +
+    '.lib-barra{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}.lib-barra input,.lib-barra select{height:38px;border-radius:10px;padding:0 12px;font-size:14px}' +
     /* O app força width:100% !important em todo campo dentro de #pageContent: estas regras têm mais especificidade para a busca e o filtro ficarem lado a lado */
     '#pageContent .lib-barra input.lib-campo{flex:1 1 240px !important;width:auto !important;min-width:0 !important}' +
     '#pageContent .lib-barra select.lib-campo{flex:0 0 auto !important;width:auto !important;min-width:230px !important}' +
     '#pageContent .lib-grupo select.lib-sel{flex:0 0 auto !important;width:auto !important;min-width:112px !important}' +
     '.lib-lista{display:grid;gap:10px}.lib-linha{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:12px;padding:12px 14px;border-radius:14px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04)}' +
-    '.lib-off{border-color:rgba(248,113,113,.4)}.lib-quem strong{display:block;font-size:14px;color:#fff;overflow-wrap:anywhere}.lib-quem small{display:block;color:#94a3b8;font-size:12px;margin-top:3px;overflow-wrap:anywhere}' +
-    '.lib-pills{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}.lib-pill{padding:3px 10px;border-radius:999px;font-size:11.5px;font-weight:800;border:1px solid transparent}' +
+    '.lib-off{border-color:rgba(248,113,113,.4)}.lib-quem strong{display:block;font-size:14px;color:#fff;overflow-wrap:anywhere}.lib-quem small{display:block;color:#94a3b8;font-size:14px;margin-top:3px;overflow-wrap:anywhere}' +
+    '.lib-pills{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}.lib-pill{padding:3px 10px;border-radius:999px;font-size:14px;font-weight:800;border:1px solid transparent}' +
     '.lib-pill.lib-ok{background:rgba(52,211,153,.14);color:#6ee7b7;border-color:rgba(52,211,153,.35)}.lib-pill.lib-info{background:rgba(56,189,248,.14);color:#7dd3fc;border-color:rgba(56,189,248,.35)}' +
     '.lib-pill.lib-warn{background:rgba(251,191,36,.14);color:#fcd34d;border-color:rgba(251,191,36,.35)}.lib-pill.lib-bad{background:rgba(248,113,113,.14);color:#fca5a5;border-color:rgba(248,113,113,.38)}' +
-    '.lib-acoes{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:flex-end}.lib-grupo{display:flex;gap:6px;align-items:center}.lib-sel{height:36px;border-radius:10px;padding:0 8px;font-size:12.5px}' +
-    '.lib-btn{min-height:36px;padding:0 12px;border-radius:10px;font-size:12.5px;font-weight:700;cursor:pointer;color:#fff;white-space:nowrap;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.07)}' +
+    '.lib-acoes{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:flex-end}.lib-grupo{display:flex;gap:6px;align-items:center}.lib-sel{height:36px;border-radius:10px;padding:0 8px;font-size:14px}' +
+    '.lib-btn{min-height:36px;padding:0 12px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;color:#fff;white-space:nowrap;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.07)}' +
     '.lib-btn:hover{background:rgba(255,255,255,.14)}.lib-btn:disabled{opacity:.5;cursor:wait}.lib-btn.lib-ok{border-color:rgba(52,211,153,.5);background:rgba(5,150,105,.28)}.lib-btn.lib-ruim{border-color:rgba(248,113,113,.5);background:rgba(220,38,38,.22)}' +
-    '.lib-vazio{padding:22px;text-align:center;color:#94a3b8;font-size:13.5px}' +
+    '.lib-vazio{padding:22px;text-align:center;color:#94a3b8;font-size:14px}' +
     '@media(max-width:760px){.lib-linha{grid-template-columns:minmax(0,1fr)}.lib-acoes{justify-content:flex-start}#pageContent .lib-barra select.lib-campo{flex:1 1 100% !important}}' +
     '</style>';
   html += '<div class="page-head"><div><h1>Liberações</h1><p>Ações que o administrador liberou para a sua conta. Cada uma é conferida de novo pelo servidor e fica registrada na auditoria.</p></div>' +
@@ -26867,15 +26867,15 @@ window.executarConsultaOrdens = async function(e) {
         resultsWrap.innerHTML = \`
           <div style="text-align:center; padding:30px 14px; color:#94A3B8; background:rgba(255,255,255,0.02); border-radius:14px; border:1px dashed rgba(255,255,255,0.12);">
             <div style="font-size:32px; margin-bottom:6px;">📭</div>
-            <h4 style="font-size:15px; color:var(--text); margin:0 0 4px 0; font-weight:800;">Nenhum chamado encontrado</h4>
-            <p style="font-size:12px; margin:0; line-height:1.4;">Não encontramos nenhuma O.S. aberta para "<strong>\${escapeOsHtml(query)}</strong>". Verifique se digitou o mesmo protocolo, nome ou e-mail cadastrado.</p>
+            <h4 style="font-size:14px; color:var(--text); margin:0 0 4px 0; font-weight:800;">Nenhum chamado encontrado</h4>
+            <p style="font-size:14px; margin:0; line-height:1.4;">Não encontramos nenhuma O.S. aberta para "<strong>\${escapeOsHtml(query)}</strong>". Verifique se digitou o mesmo protocolo, nome ou e-mail cadastrado.</p>
           </div>
         \`;
       } else {
         let cardsHtml = \`
-          <div style="font-size:12px; font-weight:800; color:#6EE7B7; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
+          <div style="font-size:14px; font-weight:800; color:#6EE7B7; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
             <span>\${list.length} chamado(s) encontrado(s):</span>
-            <span style="font-size:11px; color:#94A3B8;">Atualizado em tempo real</span>
+            <span style="font-size:14px; color:#94A3B8;">Atualizado em tempo real</span>
           </div>
         \`;
 
@@ -26896,43 +26896,43 @@ window.executarConsultaOrdens = async function(e) {
             <div class="os-consult-card">
               <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px; gap:8px; flex-wrap:wrap;">
                 <div style="display:flex; align-items:center; gap:8px;">
-                  <span style="font-weight:900; font-size:12.5px; padding:3px 9px; border-radius:6px; background:rgba(5, 150, 105,0.18); color:#6EE7B7; border:1px solid rgba(5, 150, 105,0.35);">
+                  <span style="font-weight:900; font-size:14px; padding:3px 9px; border-radius:6px; background:rgba(5, 150, 105,0.18); color:#6EE7B7; border:1px solid rgba(5, 150, 105,0.35);">
                     #\${o.protocol || o.id}
                   </span>
-                  <span style="font-size:11.5px; color:#94A3B8;">\${dateFormatted}</span>
+                  <span style="font-size:14px; color:#94A3B8;">\${dateFormatted}</span>
                 </div>
-                <span style="display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:999px; font-size:11.5px; font-weight:800; background:\${statusBg}; color:\${statusColor}; border:1px solid \${statusBorder};">
+                <span style="display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:999px; font-size:14px; font-weight:800; background:\${statusBg}; color:\${statusColor}; border:1px solid \${statusBorder};">
                   \${statusLabel}
                 </span>
               </div>
 
-              <h4 style="font-size:14.5px; font-weight:800; color:#FFFFFF; margin:0 0 6px 0;">
+              <h4 style="font-size:14px; font-weight:800; color:#FFFFFF; margin:0 0 6px 0;">
                 \${escapeOsHtml(o.title || 'Solicitação sem assunto')}
               </h4>
 
-              <div style="display:flex; gap:12px; font-size:12px; color:#CBD5E1; margin-bottom:10px; flex-wrap:wrap; align-items:center;">
+              <div style="display:flex; gap:12px; font-size:14px; color:#CBD5E1; margin-bottom:10px; flex-wrap:wrap; align-items:center;">
                 <span><strong>Solicitante:</strong> \${escapeOsHtml(o.client_name || 'Anônimo')}</span>
                 <span><strong>Tipo:</strong> \${escapeOsHtml(o.service_type || 'Geral')}</span>
                 <span><strong>Prioridade:</strong> \${escapeOsHtml(o.priority || 'Normal')}</span>
                 \${o.tecnico_responsavel ? \`<span style="color:#10B981; font-weight:700;"><strong>👷 Técnico Responsável:</strong> \${escapeOsHtml(o.tecnico_responsavel)}</span>\` : '<span style="color:#94A3B8; font-style:italic;">(Na Caixa de Recepção do Administrador)</span>'}
               </div>
 
-              <div style="background:rgba(0,0,0,0.25); border-radius:10px; padding:10px 12px; font-size:12px; color:#E2E8F0; margin-bottom:10px; line-height:1.45; border:1px solid rgba(255,255,255,0.06);">
-                <span style="display:block; font-size:10.5px; font-weight:800; color:#94A3B8; text-transform:uppercase; margin-bottom:3px;">Descrição do seu pedido:</span>
+              <div style="background:rgba(0,0,0,0.25); border-radius:10px; padding:10px 12px; font-size:14px; color:#E2E8F0; margin-bottom:10px; line-height:1.45; border:1px solid rgba(255,255,255,0.06);">
+                <span style="display:block; font-size:14px; font-weight:800; color:#94A3B8; text-transform:uppercase; margin-bottom:3px;">Descrição do seu pedido:</span>
                 \${escapeOsHtml(o.description || 'Sem descrição informada.')}
               </div>
 
               \${o.admin_notes ? \`
                 <div style="background:linear-gradient(135deg, rgba(5, 150, 105,0.12), rgba(5, 150, 105,0.08)); border:1.5px solid rgba(16, 185, 129,0.35); border-radius:12px; padding:12px; margin-top:10px;">
-                  <div style="display:flex; align-items:center; gap:6px; font-size:11.5px; font-weight:800; color:#059669; margin-bottom:4px; text-transform:uppercase;">
+                  <div style="display:flex; align-items:center; gap:6px; font-size:14px; font-weight:800; color:#059669; margin-bottom:4px; text-transform:uppercase;">
                     <span>💬 Parecer / Resposta da Administração:</span>
                   </div>
-                  <div style="font-size:12.5px; color:#F1F5F9; font-weight:600; line-height:1.45;">
+                  <div style="font-size:14px; color:#F1F5F9; font-weight:600; line-height:1.45;">
                     \${escapeOsHtml(o.admin_notes)}
                   </div>
                 </div>
               \` : \`
-                <div style="font-size:11.5px; color:#94A3B8; font-style:italic; margin-top:6px;">
+                <div style="font-size:14px; color:#94A3B8; font-style:italic; margin-top:6px;">
                   ℹ️ Sua O.S. já foi recebida na Caixa de Entrada da Administração. Aguarde o retorno técnico nesta mesma tela.
                 </div>
               \`}
@@ -27237,7 +27237,7 @@ function renderDashboardExecutivoGlpi(ordens) {
   // Card 1: Volume por Categoria ITSM
   h += '<div class="table-panel" style="background:var(--card); border:1px solid var(--card-border); border-radius:14px; padding:16px;">';
   h += '<h3 style="font-size:14px; font-weight:900; margin:0 0 4px 0; color:var(--text);">📊 Volume de Chamados por Categoria GLPI</h3>';
-  h += '<p style="font-size:11.5px; color:var(--text-dim); margin:0 0 14px 0;">Distribuição consolidada do catálogo de serviços ITSM.</p>';
+  h += '<p style="font-size:14px; color:var(--text-dim); margin:0 0 14px 0;">Distribuição consolidada do catálogo de serviços ITSM.</p>';
   cats.forEach(c => {
     const cnt = lista.filter(o => {
       const st = (o.service_type || '').toLowerCase();
@@ -27245,7 +27245,7 @@ function renderDashboardExecutivoGlpi(ordens) {
     }).length;
     const pct = Math.round((cnt / total) * 100);
     h += '<div style="margin-bottom:12px;">';
-    h += '<div style="display:flex; justify-content:space-between; font-size:12px; font-weight:700; margin-bottom:4px;"><span>' + c.label + '</span><span style="color:' + c.color + ';">' + cnt + ' (' + pct + '%)</span></div>';
+    h += '<div style="display:flex; justify-content:space-between; font-size:14px; font-weight:700; margin-bottom:4px;"><span>' + c.label + '</span><span style="color:' + c.color + ';">' + cnt + ' (' + pct + '%)</span></div>';
     h += '<div style="height:8px; width:100%; border-radius:99px; background:rgba(255,255,255,0.06); overflow:hidden;">';
     h += '<div style="height:100%; width:' + Math.max(pct, cnt > 0 ? 6 : 0) + '%; background:' + c.color + '; border-radius:99px;"></div>';
     h += '</div></div>';
@@ -27255,14 +27255,14 @@ function renderDashboardExecutivoGlpi(ordens) {
   // Card 2: Matriz de Urgência / SLA & Esforço Técnico
   h += '<div class="table-panel" style="background:var(--card); border:1px solid var(--card-border); border-radius:14px; padding:16px;">';
   h += '<h3 style="font-size:14px; font-weight:900; margin:0 0 4px 0; color:var(--text);">⏱️ Matriz de Criticidade, SLA &amp; Horas Técnicas</h3>';
-  h += '<p style="font-size:11.5px; color:var(--text-dim); margin:0 0 14px 0;">Indicadores operacionais da fila GLPI em tempo real.</p>';
+  h += '<p style="font-size:14px; color:var(--text-dim); margin:0 0 14px 0;">Indicadores operacionais da fila GLPI em tempo real.</p>';
   h += '<div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">';
-  h += '<div style="padding:10px 12px; border-radius:10px; background:rgba(239,68,68,0.12); border:1px solid rgba(239,68,68,0.3);"><span style="font-size:10.5px; color:#FCA5A5; font-weight:800; text-transform:uppercase;">🔴 Crítica / Urgente (30m)</span><div style="font-size:20px; font-weight:900; color:#F87171; margin-top:2px;">' + countCrit + '</div></div>';
-  h += '<div style="padding:10px 12px; border-radius:10px; background:rgba(245,158,11,0.12); border:1px solid rgba(245,158,11,0.3);"><span style="font-size:10.5px; color:#FDE68A; font-weight:800; text-transform:uppercase;">🟠 Alta (SLA 1h)</span><div style="font-size:20px; font-weight:900; color:#FBBF24; margin-top:2px;">' + countAlta + '</div></div>';
-  h += '<div style="padding:10px 12px; border-radius:10px; background:rgba(56,189,248,0.12); border:1px solid rgba(56,189,248,0.3);"><span style="font-size:10.5px; color:#BAE6FD; font-weight:800; text-transform:uppercase;">🔵 Média / Normal (2h)</span><div style="font-size:20px; font-weight:900; color:#38BDF8; margin-top:2px;">' + countMed + '</div></div>';
-  h += '<div style="padding:10px 12px; border-radius:10px; background:rgba(16,185,129,0.12); border:1px solid rgba(16,185,129,0.3);"><span style="font-size:10.5px; color:#A7F3D0; font-weight:800; text-transform:uppercase;">🟢 Baixa (SLA 8h)</span><div style="font-size:20px; font-weight:900; color:#34D399; margin-top:2px;">' + countBaixa + '</div></div>';
+  h += '<div style="padding:10px 12px; border-radius:10px; background:rgba(239,68,68,0.12); border:1px solid rgba(239,68,68,0.3);"><span style="font-size:14px; color:#FCA5A5; font-weight:800; text-transform:uppercase;">🔴 Crítica / Urgente (30m)</span><div style="font-size:20px; font-weight:900; color:#F87171; margin-top:2px;">' + countCrit + '</div></div>';
+  h += '<div style="padding:10px 12px; border-radius:10px; background:rgba(245,158,11,0.12); border:1px solid rgba(245,158,11,0.3);"><span style="font-size:14px; color:#FDE68A; font-weight:800; text-transform:uppercase;">🟠 Alta (SLA 1h)</span><div style="font-size:20px; font-weight:900; color:#FBBF24; margin-top:2px;">' + countAlta + '</div></div>';
+  h += '<div style="padding:10px 12px; border-radius:10px; background:rgba(56,189,248,0.12); border:1px solid rgba(56,189,248,0.3);"><span style="font-size:14px; color:#BAE6FD; font-weight:800; text-transform:uppercase;">🔵 Média / Normal (2h)</span><div style="font-size:20px; font-weight:900; color:#38BDF8; margin-top:2px;">' + countMed + '</div></div>';
+  h += '<div style="padding:10px 12px; border-radius:10px; background:rgba(16,185,129,0.12); border:1px solid rgba(16,185,129,0.3);"><span style="font-size:14px; color:#A7F3D0; font-weight:800; text-transform:uppercase;">🟢 Baixa (SLA 8h)</span><div style="font-size:20px; font-weight:900; color:#34D399; margin-top:2px;">' + countBaixa + '</div></div>';
   h += '</div>';
-  h += '<div style="display:flex; justify-content:space-between; align-items:center; padding:10px 12px; border-radius:10px; background:rgba(255,255,255,0.03); border:1px solid var(--card-border); font-size:12px;">';
+  h += '<div style="display:flex; justify-content:space-between; align-items:center; padding:10px 12px; border-radius:10px; background:rgba(255,255,255,0.03); border:1px solid var(--card-border); font-size:14px;">';
   h += '<span>⏱️ Esforço Técnico Acumulado: <strong style="color:#FBBF24;">' + totalHoras.toFixed(1) + 'h</strong></span>';
   h += '<span>✅ Taxa de Resolução GLPI: <strong style="color:#34D399;">' + taxaResolucao + '%</strong></span>';
   h += '</div>';
@@ -27281,14 +27281,14 @@ function renderOrdensTable(list) {
   html += '<table style="width:100%; border-collapse:collapse; text-align:left;">';
   html += '<thead><tr style="border-bottom:1px solid var(--card-border); text-align:left;">';
   html += '<th style="padding:12px 10px; width:32px;"><input type="checkbox" id="glpiSelectAllCheck" onchange="window.toggleSelectAllGlpiChecks(this)" title="Selecionar todos da fila"></th>';
-  html += '<th style="padding:12px 12px; font-size:11px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Protocolo GLPI</th>';
-  html += '<th style="padding:12px 12px; font-size:11px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Data &amp; Canal</th>';
-  html += '<th style="padding:12px 12px; font-size:11px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Solicitante</th>';
-  html += '<th style="padding:12px 12px; font-size:11px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Categoria / Assunto / Ativo CMDB</th>';
-  html += '<th style="padding:12px 12px; font-size:11px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Técnico Atribuído</th>';
-  html += '<th style="padding:12px 12px; font-size:11px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Urgência &amp; SLA</th>';
-  html += '<th style="padding:12px 12px; font-size:11px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Status GLPI</th>';
-  html += '<th style="padding:12px 12px; font-size:11px; text-transform:uppercase; color:var(--text-dim); font-weight:800; text-align:right;">Ações</th>';
+  html += '<th style="padding:12px 12px; font-size:14px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Protocolo GLPI</th>';
+  html += '<th style="padding:12px 12px; font-size:14px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Data &amp; Canal</th>';
+  html += '<th style="padding:12px 12px; font-size:14px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Solicitante</th>';
+  html += '<th style="padding:12px 12px; font-size:14px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Categoria / Assunto / Ativo CMDB</th>';
+  html += '<th style="padding:12px 12px; font-size:14px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Técnico Atribuído</th>';
+  html += '<th style="padding:12px 12px; font-size:14px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Urgência &amp; SLA</th>';
+  html += '<th style="padding:12px 12px; font-size:14px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Status GLPI</th>';
+  html += '<th style="padding:12px 12px; font-size:14px; text-transform:uppercase; color:var(--text-dim); font-weight:800; text-align:right;">Ações</th>';
   html += '</tr></thead><tbody>';
 
   list.forEach(o => {
@@ -27326,66 +27326,66 @@ function renderOrdensTable(list) {
 
     html += '<td style="padding:12px 12px; white-space:nowrap;">';
     html += '<div style="display:inline-flex; align-items:center; gap:5px;">';
-    html += '<span style="font-weight:900; font-size:12px; padding:3px 8px; border-radius:6px; background:rgba(245, 158, 11,0.14); color:#FBBF24; border:1px solid rgba(245, 158, 11,0.35); font-family:monospace;">#' + protoClean + '</span>';
-    html += '<button type="button" onclick="copyProtocolText(&quot;' + protoClean + '&quot;)" style="background:none; border:none; cursor:pointer; font-size:13px; padding:2px; color:var(--text-dim);" title="Copiar Protocolo">📋</button>';
+    html += '<span style="font-weight:900; font-size:14px; padding:3px 8px; border-radius:6px; background:rgba(245, 158, 11,0.14); color:#FBBF24; border:1px solid rgba(245, 158, 11,0.35); font-family:monospace;">#' + protoClean + '</span>';
+    html += '<button type="button" onclick="copyProtocolText(&quot;' + protoClean + '&quot;)" style="background:none; border:none; cursor:pointer; font-size:14px; padding:2px; color:var(--text-dim);" title="Copiar Protocolo">📋</button>';
     html += '</div></td>';
 
-    html += '<td style="padding:12px 12px; font-size:12px; color:var(--text-dim); white-space:nowrap;">';
+    html += '<td style="padding:12px 12px; font-size:14px; color:var(--text-dim); white-space:nowrap;">';
     html += '<div>' + dateFormatted + '</div>';
-    html += '<span style="display:inline-block; margin-top:3px; font-size:10px; font-weight:800; color:#FDE68A; padding:1px 6px; border-radius:4px; background:rgba(245, 158, 11,0.14); border:1px solid rgba(245, 158, 11,0.3);">' + escapeOsHtml(o.canal_atendimento || 'GLPI Login') + '</span>';
+    html += '<span style="display:inline-block; margin-top:3px; font-size:14px; font-weight:800; color:#FDE68A; padding:1px 6px; border-radius:4px; background:rgba(245, 158, 11,0.14); border:1px solid rgba(245, 158, 11,0.3);">' + escapeOsHtml(o.canal_atendimento || 'GLPI Login') + '</span>';
     html += '</td>';
 
     html += '<td style="padding:12px 12px;">';
-    html += '<div style="font-weight:700; color:var(--text); font-size:13px;">' + escapeOsHtml(o.client_name || 'Anônimo') + '</div>';
-    html += '<div style="font-size:11.5px; color:var(--text-dim); margin-top:1px;"><a href="mailto:' + escapeOsHtml(o.client_email || '') + '" style="color:var(--text-dim); text-decoration:none;">' + escapeOsHtml(o.client_email || '') + '</a></div>';
+    html += '<div style="font-weight:700; color:var(--text); font-size:14px;">' + escapeOsHtml(o.client_name || 'Anônimo') + '</div>';
+    html += '<div style="font-size:14px; color:var(--text-dim); margin-top:1px;"><a href="mailto:' + escapeOsHtml(o.client_email || '') + '" style="color:var(--text-dim); text-decoration:none;">' + escapeOsHtml(o.client_email || '') + '</a></div>';
     if (cleanPhone) {
-      html += '<div style="font-size:11px; margin-top:2px;"><a href="https://wa.me/55' + cleanPhone + '" target="_blank" style="color:#059669; font-weight:700; text-decoration:none;">📱 ' + escapeOsHtml(o.client_phone) + '</a></div>';
+      html += '<div style="font-size:14px; margin-top:2px;"><a href="https://wa.me/55' + cleanPhone + '" target="_blank" style="color:#059669; font-weight:700; text-decoration:none;">📱 ' + escapeOsHtml(o.client_phone) + '</a></div>';
     }
     html += '</td>';
 
     html += '<td style="padding:12px 12px; max-width:270px;">';
     html += '<div style="display:flex; gap:5px; align-items:center; flex-wrap:wrap; margin-bottom:3px;">';
-    html += '<span style="padding:2px 7px; border-radius:4px; font-size:10px; font-weight:800; background:rgba(5, 150, 105,0.14); color:#6EE7B7;">' + escapeOsHtml(o.service_type || 'Geral') + '</span>';
+    html += '<span style="padding:2px 7px; border-radius:4px; font-size:14px; font-weight:800; background:rgba(5, 150, 105,0.14); color:#6EE7B7;">' + escapeOsHtml(o.service_type || 'Geral') + '</span>';
     if (o.asset && o.asset !== 'Nenhum') {
-      html += '<span style="padding:2px 6px; border-radius:4px; font-size:9.5px; font-weight:800; background:rgba(56,189,248,0.14); color:#7DD3FC; font-family:monospace;">🖥️ ' + escapeOsHtml(o.asset) + '</span>';
+      html += '<span style="padding:2px 6px; border-radius:4px; font-size:14px; font-weight:800; background:rgba(56,189,248,0.14); color:#7DD3FC; font-family:monospace;">🖥️ ' + escapeOsHtml(o.asset) + '</span>';
     }
     html += '</div>';
-    html += '<div style="font-weight:700; color:var(--text); font-size:12.5px;">' + escapeOsHtml(o.title || 'Sem título') + '</div>';
+    html += '<div style="font-weight:700; color:var(--text); font-size:14px;">' + escapeOsHtml(o.title || 'Sem título') + '</div>';
     if (o.description) {
-      html += '<div style="font-size:11px; color:var(--text-dim); margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="' + escapeOsHtml(o.description) + '">' + escapeOsHtml(o.description) + '</div>';
+      html += '<div style="font-size:14px; color:var(--text-dim); margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="' + escapeOsHtml(o.description) + '">' + escapeOsHtml(o.description) + '</div>';
     }
     html += '</td>';
 
     html += '<td style="padding:12px 12px; white-space:nowrap;">';
     if (o.tecnico_responsavel) {
-      html += '<div style="font-weight:800; color:#10B981; font-size:12px; display:inline-flex; align-items:center; gap:4px;">👷 ' + escapeOsHtml(o.tecnico_responsavel) + '</div>';
-      html += '<div style="font-size:10px; color:var(--text-dim); margin-top:2px;">' + (o.time_spent ? ('⏱️ ' + o.time_spent + 'h registradas') : 'Em atendimento') + '</div>';
+      html += '<div style="font-weight:800; color:#10B981; font-size:14px; display:inline-flex; align-items:center; gap:4px;">👷 ' + escapeOsHtml(o.tecnico_responsavel) + '</div>';
+      html += '<div style="font-size:14px; color:var(--text-dim); margin-top:2px;">' + (o.time_spent ? ('⏱️ ' + o.time_spent + 'h registradas') : 'Em atendimento') + '</div>';
     } else {
-      html += '<button type="button" onclick="quickAssumirOrdemPrompt(&quot;' + o.id + '&quot;)" style="display:inline-flex; align-items:center; gap:4px; padding:5px 10px; border-radius:8px; background:rgba(245,158,11,0.16); color:#FBBF24; border:1px solid rgba(245,158,11,0.45); font-size:11px; font-weight:800; cursor:pointer;" title="Assumir este chamado GLPI">';
+      html += '<button type="button" onclick="quickAssumirOrdemPrompt(&quot;' + o.id + '&quot;)" style="display:inline-flex; align-items:center; gap:4px; padding:5px 10px; border-radius:8px; background:rgba(245,158,11,0.16); color:#FBBF24; border:1px solid rgba(245,158,11,0.45); font-size:14px; font-weight:800; cursor:pointer;" title="Assumir este chamado GLPI">';
       html += '<span>🤝 Assumir</span></button>';
     }
     html += '</td>';
 
     html += '<td style="padding:12px 12px; white-space:nowrap;">';
-    html += '<span style="display:inline-block; padding:2px 9px; border-radius:999px; font-size:11px; font-weight:800; background:' + prioBg + '; color:' + prioColor + '; border:1px solid ' + prioBorder + ';">' + escapeOsHtml(o.priority || 'Normal') + '</span>';
-    html += '<div style="font-size:10.5px; color:#94A3B8; font-family:monospace; margin-top:3px;">⏱️ ' + slaText + '</div>';
+    html += '<span style="display:inline-block; padding:2px 9px; border-radius:999px; font-size:14px; font-weight:800; background:' + prioBg + '; color:' + prioColor + '; border:1px solid ' + prioBorder + ';">' + escapeOsHtml(o.priority || 'Normal') + '</span>';
+    html += '<div style="font-size:14px; color:#94A3B8; font-family:monospace; margin-top:3px;">⏱️ ' + slaText + '</div>';
     html += '</td>';
 
     html += '<td style="padding:12px 12px; white-space:nowrap;">';
-    html += '<span style="display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:999px; font-size:11px; font-weight:800; background:' + statusBg + '; color:' + statusColor + '; border:1px solid ' + statusBorder + ';">' + escapeOsHtml(statusLabel) + '</span>';
+    html += '<span style="display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:999px; font-size:14px; font-weight:800; background:' + statusBg + '; color:' + statusColor + '; border:1px solid ' + statusBorder + ';">' + escapeOsHtml(statusLabel) + '</span>';
     if (o.concluido_em) {
-      html += '<div style="font-size:10px; color:#34D399; margin-top:2px;">Resolvido ' + new Date(o.concluido_em).toLocaleDateString('pt-BR') + '</div>';
+      html += '<div style="font-size:14px; color:#34D399; margin-top:2px;">Resolvido ' + new Date(o.concluido_em).toLocaleDateString('pt-BR') + '</div>';
     }
     html += '</td>';
 
     html += '<td style="padding:12px 12px; text-align:right; white-space:nowrap;">';
     html += '<div style="display:flex; gap:5px; justify-content:flex-end; align-items:center;">';
-    html += '<button type="button" onclick="openOrdemAdminModal(&quot;' + o.id + '&quot;)" style="padding:6px 11px; border-radius:8px; background:linear-gradient(135deg, #F59E0B, #EA580C); color:#ffffff; font-size:11px; font-weight:800; border:none; cursor:pointer; box-shadow:0 2px 8px rgba(245, 158, 11,0.3);" title="Abrir Workspace Técnico GLPI">🛠️ Tratar GLPI</button>';
+    html += '<button type="button" onclick="openOrdemAdminModal(&quot;' + o.id + '&quot;)" style="padding:6px 11px; border-radius:8px; background:linear-gradient(135deg, #F59E0B, #EA580C); color:#ffffff; font-size:14px; font-weight:800; border:none; cursor:pointer; box-shadow:0 2px 8px rgba(245, 158, 11,0.3);" title="Abrir Workspace Técnico GLPI">🛠️ Tratar GLPI</button>';
     if (!st.includes('concl') && !st.includes('resolv') && !st.includes('canc')) {
-      html += '<button type="button" onclick="quickConcluirOrdem(&quot;' + o.id + '&quot;)" style="padding:6px 9px; border-radius:8px; background:rgba(16, 185, 129,0.18); color:#34D399; border:1px solid rgba(16, 185, 129,0.35); font-size:11px; font-weight:800; cursor:pointer;" title="Concluir/Resolver Agora">✓</button>';
+      html += '<button type="button" onclick="quickConcluirOrdem(&quot;' + o.id + '&quot;)" style="padding:6px 9px; border-radius:8px; background:rgba(16, 185, 129,0.18); color:#34D399; border:1px solid rgba(16, 185, 129,0.35); font-size:14px; font-weight:800; cursor:pointer;" title="Concluir/Resolver Agora">✓</button>';
     }
-    html += '<button type="button" onclick="imprimirFichaOrdem(&quot;' + o.id + '&quot;)" style="padding:6px 8px; border-radius:8px; background:rgba(16, 185, 129,0.12); color:#10B981; border:1px solid rgba(16, 185, 129,0.3); font-size:11px; cursor:pointer;" title="Imprimir Ficha GLPI">🖨️</button>';
-    html += '<button type="button" onclick="excluirOrdemAdmin(&quot;' + o.id + '&quot;)" style="padding:6px 8px; border-radius:8px; background:rgba(239,68,68,0.12); color:#F87171; border:1px solid rgba(239,68,68,0.25); font-size:11px; cursor:pointer;" title="Excluir">🗑️</button>';
+    html += '<button type="button" onclick="imprimirFichaOrdem(&quot;' + o.id + '&quot;)" style="padding:6px 8px; border-radius:8px; background:rgba(16, 185, 129,0.12); color:#10B981; border:1px solid rgba(16, 185, 129,0.3); font-size:14px; cursor:pointer;" title="Imprimir Ficha GLPI">🖨️</button>';
+    html += '<button type="button" onclick="excluirOrdemAdmin(&quot;' + o.id + '&quot;)" style="padding:6px 8px; border-radius:8px; background:rgba(239,68,68,0.12); color:#F87171; border:1px solid rgba(239,68,68,0.25); font-size:14px; cursor:pointer;" title="Excluir">🗑️</button>';
     html += '</div></td>';
 
     html += '</tr>';
@@ -27444,16 +27444,16 @@ function pageOrdens(){
     userHtml += '<div><h1 style="font-size:23px; font-weight:900; letter-spacing:-0.02em; margin:0; display:flex; align-items:center; gap:10px; color:var(--text);">';
     userHtml += '<span style="display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:12px; background:linear-gradient(135deg, rgba(5, 150, 105,0.25), rgba(4, 120, 87,0.12)); border:1px solid rgba(96,165,250,0.35);">🎧</span>';
     userHtml += 'Central de Atendimento & Meus Chamados</h1>';
-    userHtml += '<p style="font-size:13.5px; color:var(--text-dim); margin:5px 0 0 0; font-weight:500;">Acompanhe o status e as respostas técnicas das suas solicitações em tempo real.</p></div>';
+    userHtml += '<p style="font-size:14px; color:var(--text-dim); margin:5px 0 0 0; font-weight:500;">Acompanhe o status e as respostas técnicas das suas solicitações em tempo real.</p></div>';
     userHtml += '<div class="head-actions" style="display:flex; gap:10px; align-items:center;">';
-    userHtml += '<button onclick="openNovaOrdemModal(&quot;abrir&quot;)" style="display:inline-flex; align-items:center; gap:8px; height:42px; padding:0 18px; border-radius:14px; background:linear-gradient(135deg, #059669, #059669); color:#060B18; font-size:13px; font-weight:800; border:none; cursor:pointer; box-shadow:0 8px 24px -4px rgba(5, 150, 105,0.5);">';
+    userHtml += '<button onclick="openNovaOrdemModal(&quot;abrir&quot;)" style="display:inline-flex; align-items:center; gap:8px; height:42px; padding:0 18px; border-radius:14px; background:linear-gradient(135deg, #059669, #059669); color:#060B18; font-size:14px; font-weight:800; border:none; cursor:pointer; box-shadow:0 8px 24px -4px rgba(5, 150, 105,0.5);">';
     userHtml += '<span>➕ Abrir Nova Solicitação</span></button>';
     userHtml += '<button class="btn-ghost" onclick="syncOrdensWithServer().then(render)" style="display:inline-flex; align-items:center; gap:6px; font-weight:700; height:42px; border-radius:14px;">🔄 Atualizar</button>';
     userHtml += '</div></div>';
 
     userHtml += '<div class="table-panel" style="background:var(--card); border:1px solid var(--card-border); border-radius:20px; padding:22px; box-shadow:0 20px 50px rgba(0,0,0,0.5);">';
     userHtml += '<div class="panel-head" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">';
-    userHtml += '<h3 style="font-size:16px; font-weight:800; margin:0;">Meus Chamados Registrados</h3>';
+    userHtml += '<h3 style="font-size:14px; font-weight:800; margin:0;">Meus Chamados Registrados</h3>';
     userHtml += '<span class="tag" style="font-weight:700;">' + myOrdens.length + ' chamado(s)</span></div>';
 
     if (myOrdens.length === 0) {
@@ -27474,22 +27474,22 @@ function pageOrdens(){
         userHtml += '<div style="border:1px solid var(--card-border); border-radius:14px; padding:16px 18px; background:rgba(255,255,255,0.02);">';
         userHtml += '<div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px; gap:8px; flex-wrap:wrap;">';
         userHtml += '<div style="display:flex; align-items:center; gap:8px;">';
-        userHtml += '<span style="font-weight:900; font-size:13px; padding:3px 8px; border-radius:6px; background:rgba(5, 150, 105,0.14); color:#6EE7B7; border:1px solid rgba(5, 150, 105,0.3);">#' + escapeOsHtml(o.protocol || o.id) + '</span>';
-        userHtml += '<span style="font-size:12px; color:var(--text-dim);">' + (o.created_at ? new Date(o.created_at).toLocaleString('pt-BR') : '') + '</span>';
+        userHtml += '<span style="font-weight:900; font-size:14px; padding:3px 8px; border-radius:6px; background:rgba(5, 150, 105,0.14); color:#6EE7B7; border:1px solid rgba(5, 150, 105,0.3);">#' + escapeOsHtml(o.protocol || o.id) + '</span>';
+        userHtml += '<span style="font-size:14px; color:var(--text-dim);">' + (o.created_at ? new Date(o.created_at).toLocaleString('pt-BR') : '') + '</span>';
         userHtml += '</div>';
         userHtml += '<div style="display:flex; gap:8px; align-items:center;">';
-        userHtml += '<span style="display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:999px; font-size:11.5px; font-weight:800; background:' + statusBg + '; color:' + statusColor + '; border:1px solid ' + statusBorder + ';">' + statusLabel + '</span>';
-        userHtml += '<button type="button" onclick="imprimirFichaOrdem(&quot;' + o.id + '&quot;)" style="padding:4px 9px; border-radius:8px; background:rgba(16, 185, 129,0.12); color:#10B981; border:1px solid rgba(16, 185, 129,0.3); font-size:11px; cursor:pointer;" title="Imprimir Comprovante">🖨️ Imprimir</button>';
+        userHtml += '<span style="display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:999px; font-size:14px; font-weight:800; background:' + statusBg + '; color:' + statusColor + '; border:1px solid ' + statusBorder + ';">' + statusLabel + '</span>';
+        userHtml += '<button type="button" onclick="imprimirFichaOrdem(&quot;' + o.id + '&quot;)" style="padding:4px 9px; border-radius:8px; background:rgba(16, 185, 129,0.12); color:#10B981; border:1px solid rgba(16, 185, 129,0.3); font-size:14px; cursor:pointer;" title="Imprimir Comprovante">🖨️ Imprimir</button>';
         userHtml += '</div></div>';
 
-        userHtml += '<h4 style="font-size:15px; font-weight:800; color:var(--text); margin:0 0 6px 0;">' + escapeOsHtml(o.title || '') + '</h4>';
-        userHtml += '<div style="font-size:12px; color:var(--text-dim); margin-bottom:8px;"><strong>Tipo:</strong> ' + escapeOsHtml(o.service_type || 'Melhoria') + (o.tecnico_responsavel ? (' | <strong>Técnico:</strong> 👷 ' + escapeOsHtml(o.tecnico_responsavel)) : '') + '</div>';
-        userHtml += '<div style="background:rgba(0,0,0,0.22); border-radius:10px; padding:10px 12px; font-size:12.5px; color:var(--text); line-height:1.45; border:1px solid var(--card-border); margin-bottom:10px;">' + escapeOsHtml(o.description || '') + '</div>';
+        userHtml += '<h4 style="font-size:14px; font-weight:800; color:var(--text); margin:0 0 6px 0;">' + escapeOsHtml(o.title || '') + '</h4>';
+        userHtml += '<div style="font-size:14px; color:var(--text-dim); margin-bottom:8px;"><strong>Tipo:</strong> ' + escapeOsHtml(o.service_type || 'Melhoria') + (o.tecnico_responsavel ? (' | <strong>Técnico:</strong> 👷 ' + escapeOsHtml(o.tecnico_responsavel)) : '') + '</div>';
+        userHtml += '<div style="background:rgba(0,0,0,0.22); border-radius:10px; padding:10px 12px; font-size:14px; color:var(--text); line-height:1.45; border:1px solid var(--card-border); margin-bottom:10px;">' + escapeOsHtml(o.description || '') + '</div>';
 
         if (o.admin_notes) {
           userHtml += '<div style="background:linear-gradient(135deg, rgba(5, 150, 105,0.12), rgba(5, 150, 105,0.08)); border:1.5px solid rgba(16, 185, 129,0.35); border-radius:12px; padding:12px;">';
-          userHtml += '<div style="font-size:11.5px; font-weight:800; color:#059669; margin-bottom:4px; text-transform:uppercase;">💬 Resposta da Equipe Técnica:</div>';
-          userHtml += '<div style="font-size:12.5px; color:var(--text); font-weight:600; line-height:1.45;">' + escapeOsHtml(o.admin_notes) + '</div>';
+          userHtml += '<div style="font-size:14px; font-weight:800; color:#059669; margin-bottom:4px; text-transform:uppercase;">💬 Resposta da Equipe Técnica:</div>';
+          userHtml += '<div style="font-size:14px; color:var(--text); font-weight:600; line-height:1.45;">' + escapeOsHtml(o.admin_notes) + '</div>';
           userHtml += '</div>';
         }
         userHtml += '</div>';
@@ -27511,12 +27511,12 @@ function renderBalcaoRecepcaoOs(ordens, tecOpts) {
   h += '<div class="reception-card">';
   h += '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; gap:8px; flex-wrap:wrap;">';
   h += '  <div>';
-  h += '    <div style="display:inline-flex; align-items:center; gap:5px; padding:2px 8px; border-radius:999px; background:rgba(16, 185, 129,0.14); border:1px solid rgba(16, 185, 129,0.35); color:#10B981; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px;">';
+  h += '    <div style="display:inline-flex; align-items:center; gap:5px; padding:2px 8px; border-radius:999px; background:rgba(16, 185, 129,0.14); border:1px solid rgba(16, 185, 129,0.35); color:#10B981; font-size:14px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px;">';
   h += '      <span>📥 BALCÃO DE RECEPÇÃO</span>';
   h += '    </div>';
-  h += '    <h2 style="font-size:15px; font-weight:900; margin:0; color:var(--text);">Cadastro Rápido de Ordem de Serviço</h2>';
+  h += '    <h2 style="font-size:14px; font-weight:900; margin:0; color:var(--text);">Cadastro Rápido de Ordem de Serviço</h2>';
   h += '  </div>';
-  h += '  <span style="font-size:10.5px; font-weight:700; padding:3px 8px; border-radius:6px; background:rgba(255,255,255,0.05); border:1px solid var(--card-border); color:var(--text-dim);">(*) Obrigatórios</span>';
+  h += '  <span style="font-size:14px; font-weight:700; padding:3px 8px; border-radius:6px; background:rgba(255,255,255,0.05); border:1px solid var(--card-border); color:var(--text-dim);">(*) Obrigatórios</span>';
   h += '</div>';
 
   h += '<form id="formRecepcaoOs" onsubmit="event.preventDefault(); submeterRecepcaoOrdem(false);">';
@@ -27606,10 +27606,10 @@ function renderBalcaoRecepcaoOs(ordens, tecOpts) {
 
   // Barra de ações compacta e alinhada
   h += '  <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-top:12px; flex-wrap:wrap;">';
-  h += '    <button type="button" onclick="limparFormularioRecepcaoOs()" class="btn-ghost" style="height:34px; padding:0 12px; border-radius:9px; font-weight:700; font-size:11.5px;">🧹 Limpar</button>';
+  h += '    <button type="button" onclick="limparFormularioRecepcaoOs()" class="btn-ghost" style="height:34px; padding:0 12px; border-radius:9px; font-weight:700; font-size:14px;">🧹 Limpar</button>';
   h += '    <div style="display:flex; gap:8px; flex-wrap:wrap;">';
-  h += '      <button type="button" onclick="submeterRecepcaoOrdem(true)" style="height:34px; padding:0 13px; border-radius:9px; font-size:11.5px; font-weight:800; background:linear-gradient(135deg, rgba(245,158,11,0.22), rgba(217,119,6,0.14)); border:1px solid rgba(245,158,11,0.5); color:#FBBF24; cursor:pointer;">⚡ Receber & Atender</button>';
-  h += '      <button type="submit" id="btnSubmitRecepcaoOs" style="height:34px; padding:0 16px; border-radius:9px; font-size:12px; font-weight:800; background:linear-gradient(135deg, #10B981, #059669); color:#FFFFFF; border:none; cursor:pointer; box-shadow:0 4px 14px rgba(16, 185, 129,0.35); display:inline-flex; align-items:center; gap:6px;">📥 Protocolar O.S.</button>';
+  h += '      <button type="button" onclick="submeterRecepcaoOrdem(true)" style="height:34px; padding:0 13px; border-radius:9px; font-size:14px; font-weight:800; background:linear-gradient(135deg, rgba(245,158,11,0.22), rgba(217,119,6,0.14)); border:1px solid rgba(245,158,11,0.5); color:#FBBF24; cursor:pointer;">⚡ Receber & Atender</button>';
+  h += '      <button type="submit" id="btnSubmitRecepcaoOs" style="height:34px; padding:0 16px; border-radius:9px; font-size:14px; font-weight:800; background:linear-gradient(135deg, #10B981, #059669); color:#FFFFFF; border:none; cursor:pointer; box-shadow:0 4px 14px rgba(16, 185, 129,0.35); display:inline-flex; align-items:center; gap:6px;">📥 Protocolar O.S.</button>';
   h += '    </div>';
   h += '  </div>';
   h += '</form>';
@@ -27619,23 +27619,23 @@ function renderBalcaoRecepcaoOs(ordens, tecOpts) {
   h += '<div class="reception-card">';
   h += '  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;">';
   h += '    <div>';
-  h += '      <div style="display:inline-flex; align-items:center; gap:5px; padding:2px 8px; border-radius:999px; background:rgba(245,158,11,0.14); border:1px solid rgba(245,158,11,0.35); color:#FBBF24; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px;">';
+  h += '      <div style="display:inline-flex; align-items:center; gap:5px; padding:2px 8px; border-radius:999px; background:rgba(245,158,11,0.14); border:1px solid rgba(245,158,11,0.35); color:#FBBF24; font-size:14px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px;">';
   h += '        <span>⏳ FILA DE TRIAGEM</span>';
   h += '      </div>';
-  h += '      <h3 style="font-size:15px; font-weight:900; margin:0; color:var(--text);">Aguardando Atendimento</h3>';
+  h += '      <h3 style="font-size:14px; font-weight:900; margin:0; color:var(--text);">Aguardando Atendimento</h3>';
   h += '    </div>';
-  h += '    <span class="os-tab-pill-badge" style="font-size:11px; padding:3px 9px;">' + countPend + ' pendente(s)</span>';
+  h += '    <span class="os-tab-pill-badge" style="font-size:14px; padding:3px 9px;">' + countPend + ' pendente(s)</span>';
   h += '  </div>';
 
   h += '  <div style="margin-bottom:10px;">';
-  h += '    <input id="receptionSearchQueue" onkeyup="filterReceptionQueue()" placeholder="🔍 Filtrar fila por protocolo, cliente ou telefone..." style="width:100%; height:34px; border-radius:9px; font-size:12px; padding:0 11px; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text);">';
+  h += '    <input id="receptionSearchQueue" onkeyup="filterReceptionQueue()" placeholder="🔍 Filtrar fila por protocolo, cliente ou telefone..." style="width:100%; height:34px; border-radius:9px; font-size:14px; padding:0 11px; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text);">';
   h += '  </div>';
 
   if (countPend === 0) {
     h += '  <div class="placeholder" style="padding:28px 14px; text-align:center;">';
     h += '    <div style="font-size:28px; margin-bottom:6px;">🎉</div>';
     h += '    <h4 style="font-size:14px; font-weight:800; color:var(--text); margin:0 0 3px 0;">Fila em Dia!</h4>';
-    h += '    <p style="font-size:11.5px; color:var(--text-dim); margin:0;">Nenhum chamado pendente de triagem no momento.</p>';
+    h += '    <p style="font-size:14px; color:var(--text-dim); margin:0;">Nenhum chamado pendente de triagem no momento.</p>';
     h += '  </div>';
   } else {
     h += '  <div id="receptionQueueList" style="max-height:430px; overflow-y:auto; padding-right:4px;">';
@@ -27652,30 +27652,30 @@ function renderBalcaoRecepcaoOs(ordens, tecOpts) {
       h += '  <div class="reception-queue-item" data-search="' + escapeOsHtml(searchData) + '">';
       h += '    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px; gap:6px; flex-wrap:wrap;">';
       h += '      <div style="display:flex; align-items:center; gap:6px;">';
-      h += '        <span style="font-weight:900; font-size:11px; padding:1px 6px; border-radius:5px; background:rgba(5, 150, 105, 0.14); color:#6EE7B7; border:1px solid rgba(5, 150, 105, 0.3);">#' + proto + '</span>';
-      h += '        <span style="font-size:10.5px; color:var(--text-dim);">' + (o.created_at ? new Date(o.created_at).toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' }) : '') + '</span>';
+      h += '        <span style="font-weight:900; font-size:14px; padding:1px 6px; border-radius:5px; background:rgba(5, 150, 105, 0.14); color:#6EE7B7; border:1px solid rgba(5, 150, 105, 0.3);">#' + proto + '</span>';
+      h += '        <span style="font-size:14px; color:var(--text-dim);">' + (o.created_at ? new Date(o.created_at).toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' }) : '') + '</span>';
       h += '      </div>';
       h += '      <div style="display:flex; align-items:center; gap:5px;">';
-      h += '        <span style="font-size:10px; font-weight:800; padding:1px 7px; border-radius:999px; background:' + pBg + '; color:' + pCol + ';">' + pLabel + '</span>';
-      h += '        <span style="font-size:10px; font-weight:700; color:var(--text-dim); padding:1px 6px; border-radius:4px; background:rgba(255,255,255,0.05);">' + escapeOsHtml(o.canal_atendimento || 'Balcão') + '</span>';
+      h += '        <span style="font-size:14px; font-weight:800; padding:1px 7px; border-radius:999px; background:' + pBg + '; color:' + pCol + ';">' + pLabel + '</span>';
+      h += '        <span style="font-size:14px; font-weight:700; color:var(--text-dim); padding:1px 6px; border-radius:4px; background:rgba(255,255,255,0.05);">' + escapeOsHtml(o.canal_atendimento || 'Balcão') + '</span>';
       h += '      </div>';
       h += '    </div>';
 
-      h += '    <div style="font-size:12.5px; font-weight:800; color:var(--text); margin-bottom:2px;">' + escapeOsHtml(o.title || 'Sem título') + '</div>';
-      h += '    <div style="font-size:11px; color:var(--text-dim); margin-bottom:6px;">';
+      h += '    <div style="font-size:14px; font-weight:800; color:var(--text); margin-bottom:2px;">' + escapeOsHtml(o.title || 'Sem título') + '</div>';
+      h += '    <div style="font-size:14px; color:var(--text-dim); margin-bottom:6px;">';
       h += '      <strong>' + escapeOsHtml(o.client_name || 'Cliente') + '</strong>';
       if (o.client_phone) h += ' • 📱 ' + escapeOsHtml(o.client_phone);
       h += '    </div>';
 
       h += '    <div style="display:flex; gap:5px; flex-wrap:wrap; align-items:center; border-top:1px solid rgba(255,255,255,0.06); padding-top:6px;">';
-      h += '      <button type="button" onclick="openOrdemAdminModal(&quot;' + o.id + '&quot;)" style="height:26px; padding:0 9px; border-radius:6px; font-size:10.5px; font-weight:800; background:linear-gradient(135deg, #10B981, #059669); color:#FFFFFF; border:none; cursor:pointer;">🎧 Atender</button>';
+      h += '      <button type="button" onclick="openOrdemAdminModal(&quot;' + o.id + '&quot;)" style="height:26px; padding:0 9px; border-radius:6px; font-size:14px; font-weight:800; background:linear-gradient(135deg, #10B981, #059669); color:#FFFFFF; border:none; cursor:pointer;">🎧 Atender</button>';
       if (cleanPhone) {
         const msg = encodeURIComponent('Olá ' + (o.client_name || '') + ', tudo bem? Aqui é do Suporte do Nexus Hub sobre o seu protocolo #' + proto + '.');
-        h += '    <a href="https://wa.me/55' + cleanPhone + '?text=' + msg + '" target="_blank" style="height:26px; padding:0 8px; border-radius:6px; font-size:10.5px; font-weight:700; background:rgba(5, 150, 105, 0.14); color:#34D399; border:1px solid rgba(5, 150, 105, 0.3); text-decoration:none; display:inline-flex; align-items:center;">💬 WhatsApp</a>';
+        h += '    <a href="https://wa.me/55' + cleanPhone + '?text=' + msg + '" target="_blank" style="height:26px; padding:0 8px; border-radius:6px; font-size:14px; font-weight:700; background:rgba(5, 150, 105, 0.14); color:#34D399; border:1px solid rgba(5, 150, 105, 0.3); text-decoration:none; display:inline-flex; align-items:center;">💬 WhatsApp</a>';
       }
-      h += '      <button type="button" onclick="quickAssumirOrdemPrompt(&quot;' + o.id + '&quot;)" style="height:26px; padding:0 8px; border-radius:6px; font-size:10.5px; font-weight:700; background:rgba(245,158,11,0.14); color:#FBBF24; border:1px solid rgba(245,158,11,0.3); cursor:pointer;">⚡ Assumir</button>';
-      h += '      <button type="button" onclick="imprimirFichaOrdem(&quot;' + o.id + '&quot;)" style="height:26px; padding:0 7px; border-radius:6px; font-size:10.5px; font-weight:700; background:rgba(255,255,255,0.05); color:var(--text); border:1px solid var(--card-border); cursor:pointer;">🖨️</button>';
-      h += '      <button type="button" onclick="quickConcluirOrdem(&quot;' + o.id + '&quot;)" style="height:26px; padding:0 8px; border-radius:6px; font-size:10.5px; font-weight:700; background:rgba(16, 185, 129, 0.12); color:#10B981; border:1px solid rgba(16, 185, 129, 0.3); cursor:pointer; margin-left:auto;">✓ Baixa</button>';
+      h += '      <button type="button" onclick="quickAssumirOrdemPrompt(&quot;' + o.id + '&quot;)" style="height:26px; padding:0 8px; border-radius:6px; font-size:14px; font-weight:700; background:rgba(245,158,11,0.14); color:#FBBF24; border:1px solid rgba(245,158,11,0.3); cursor:pointer;">⚡ Assumir</button>';
+      h += '      <button type="button" onclick="imprimirFichaOrdem(&quot;' + o.id + '&quot;)" style="height:26px; padding:0 7px; border-radius:6px; font-size:14px; font-weight:700; background:rgba(255,255,255,0.05); color:var(--text); border:1px solid var(--card-border); cursor:pointer;">🖨️</button>';
+      h += '      <button type="button" onclick="quickConcluirOrdem(&quot;' + o.id + '&quot;)" style="height:26px; padding:0 8px; border-radius:6px; font-size:14px; font-weight:700; background:rgba(16, 185, 129, 0.12); color:#10B981; border:1px solid rgba(16, 185, 129, 0.3); cursor:pointer; margin-left:auto;">✓ Baixa</button>';
       h += '    </div>';
 
       h += '  </div>'; // fim reception-queue-item
@@ -27695,9 +27695,9 @@ function renderEquipeTecnicaOs() {
   h += '  <div class="panel-head" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">';
   h += '    <div>';
   h += '      <h3 style="font-size:14px; font-weight:900; margin:0 0 2px 0; color:var(--text);">👷 Equipe Técnica & Especialistas Credenciados</h3>';
-  h += '      <p style="font-size:11.5px; color:var(--text-dim); margin:0;">Cadastros compactos e alinhados da equipe técnica de suporte.</p>';
+  h += '      <p style="font-size:14px; color:var(--text-dim); margin:0;">Cadastros compactos e alinhados da equipe técnica de suporte.</p>';
   h += '    </div>';
-  h += '    <button onclick="openGerenciarTecnicosModal()" style="display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 14px; border-radius:9px; background:linear-gradient(135deg, #10B981, #059669); color:#FFFFFF; font-size:11.5px; font-weight:800; border:none; cursor:pointer;">➕ Novo Técnico</button>';
+  h += '    <button onclick="openGerenciarTecnicosModal()" style="display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 14px; border-radius:9px; background:linear-gradient(135deg, #10B981, #059669); color:#FFFFFF; font-size:14px; font-weight:800; border:none; cursor:pointer;">➕ Novo Técnico</button>';
   h += '  </div>';
 
   if (tecnicos.length === 0) {
@@ -27709,16 +27709,16 @@ function renderEquipeTecnicaOs() {
       h += '    <div style="border:1px solid var(--card-border); border-radius:12px; padding:11px 13px; background:rgba(255,255,255,0.02); display:flex; flex-direction:column; justify-content:space-between; gap:8px;">';
       h += '      <div>';
       h += '        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px; gap:6px;">';
-      h += '          <span style="font-weight:800; font-size:12.5px; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">👷 ' + escapeOsHtml(t.name) + '</span>';
-      h += '          <span style="font-size:10px; font-weight:800; padding:1px 7px; border-radius:999px; background:' + (active ? 'rgba(16, 185, 129, 0.14)' : 'rgba(239, 68, 68, 0.14)') + '; color:' + (active ? '#10B981' : '#F87171') + ';">' + (active ? 'Ativo' : 'Inativo') + '</span>';
+      h += '          <span style="font-weight:800; font-size:14px; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">👷 ' + escapeOsHtml(t.name) + '</span>';
+      h += '          <span style="font-size:14px; font-weight:800; padding:1px 7px; border-radius:999px; background:' + (active ? 'rgba(16, 185, 129, 0.14)' : 'rgba(239, 68, 68, 0.14)') + '; color:' + (active ? '#10B981' : '#F87171') + ';">' + (active ? 'Ativo' : 'Inativo') + '</span>';
       h += '        </div>';
-      h += '        <div style="font-size:11px; color:#34D399; font-weight:700; margin-bottom:2px;">🔧 ' + escapeOsHtml(t.specialty || 'Suporte Geral') + '</div>';
-      h += '        <div style="font-size:11px; color:var(--text-dim); margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">✉️ ' + escapeOsHtml(t.email || 'Não informado') + '</div>';
-      h += '        <div style="font-size:11px; color:var(--text-dim);">📱 ' + escapeOsHtml(t.phone || 'Não informado') + '</div>';
+      h += '        <div style="font-size:14px; color:#34D399; font-weight:700; margin-bottom:2px;">🔧 ' + escapeOsHtml(t.specialty || 'Suporte Geral') + '</div>';
+      h += '        <div style="font-size:14px; color:var(--text-dim); margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">✉️ ' + escapeOsHtml(t.email || 'Não informado') + '</div>';
+      h += '        <div style="font-size:14px; color:var(--text-dim);">📱 ' + escapeOsHtml(t.phone || 'Não informado') + '</div>';
       h += '      </div>';
       h += '      <div style="display:flex; gap:6px; border-top:1px solid rgba(255,255,255,0.05); padding-top:7px;">';
-      h += '        <button type="button" onclick="openGerenciarTecnicosModal()" class="btn-ghost" style="flex:1; height:28px; border-radius:7px; font-size:11px; font-weight:700; padding:0 8px;">✏️ Editar</button>';
-      h += '        <button type="button" onclick="excluirTecnico(&quot;' + escapeOsHtml(t.id) + '&quot;)" style="height:28px; padding:0 10px; border-radius:7px; font-size:11px; font-weight:700; background:rgba(239, 68, 68, 0.12); color:#F87171; border:1px solid rgba(239, 68, 68, 0.28); cursor:pointer;">🗑️</button>';
+      h += '        <button type="button" onclick="openGerenciarTecnicosModal()" class="btn-ghost" style="flex:1; height:28px; border-radius:7px; font-size:14px; font-weight:700; padding:0 8px;">✏️ Editar</button>';
+      h += '        <button type="button" onclick="excluirTecnico(&quot;' + escapeOsHtml(t.id) + '&quot;)" style="height:28px; padding:0 10px; border-radius:7px; font-size:14px; font-weight:700; background:rgba(239, 68, 68, 0.12); color:#F87171; border:1px solid rgba(239, 68, 68, 0.28); cursor:pointer;">🗑️</button>';
       h += '      </div>';
       h += '    </div>';
     });
@@ -27766,7 +27766,7 @@ function renderEquipeTecnicaOs() {
   
   h += '<button onclick="openGerenciarTecnicosModal()" style="display:inline-flex; align-items:center; gap:6px; padding:0 13px; background:linear-gradient(135deg, rgba(245,158,11,0.20), rgba(217,119,6,0.12)); border:1px solid rgba(245,158,11,0.45); color:#FDE68A; font-weight:800; cursor:pointer;">';
   h += '<span>👷 Técnicos</span>';
-  h += '<span id="tecnicosBadgeCount" style="padding:1px 6px; border-radius:999px; background:#F59E0B; color:#060B18; font-size:10px; font-weight:900;">' + ((systemTecnicos || []).filter(t => t.active !== false).length) + '</span>';
+  h += '<span id="tecnicosBadgeCount" style="padding:1px 6px; border-radius:999px; background:#F59E0B; color:#060B18; font-size:14px; font-weight:900;">' + ((systemTecnicos || []).filter(t => t.active !== false).length) + '</span>';
   h += '</button>';
 
   h += '<button onclick="imprimirFilaOrdens()" style="display:inline-flex; align-items:center; gap:5px; padding:0 12px; background:rgba(16, 185, 129,0.12); border:1px solid rgba(16, 185, 129,0.32); color:#10B981; font-weight:800; cursor:pointer;" title="Imprimir Relatório da Fila GLPI">';
@@ -27812,15 +27812,15 @@ function renderEquipeTecnicaOs() {
 
   // Barra de Abas Superiores GLPI 10
   h += '<div class="admin-toolbar-panel" style="padding:7px 10px; gap:6px; justify-content:flex-start; flex-wrap:wrap;">';
-  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='todas'?'active':'') + '" data-tab="todas" onclick="setOsStatusTab(&quot;todas&quot;)" style="height:32px; padding:0 13px; border-radius:8px; font-size:11.5px; font-weight:800; cursor:pointer; border:1px solid ' + (currentTab==='todas'?'transparent':'var(--card-border)') + '; background:' + (currentTab==='todas'?'linear-gradient(135deg, #F59E0B, #EA580C)':'rgba(255,255,255,0.04)') + '; color:' + (currentTab==='todas'?'#FFFFFF':'var(--text)') + ';">📋 Fila Geral GLPI (' + countTotal + ')</button>';
-  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='glpi_console'?'active':'') + '" data-tab="glpi_console" onclick="setOsStatusTab(&quot;glpi_console&quot;)" style="height:32px; padding:0 13px; border-radius:8px; font-size:11.5px; font-weight:800; cursor:pointer; border:1px solid rgba(37,99,235,0.45); background:' + (currentTab==='glpi_console'?'linear-gradient(135deg, #2563EB, #1D4ED8)':'rgba(37,99,235,0.14)') + '; color:' + (currentTab==='glpi_console'?'#FFFFFF':'#93C5FD') + ';">🖥️ Console GLPI 10 Enterprise</button>';
-  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='pendente'?'active':'') + '" data-tab="pendente" onclick="setOsStatusTab(&quot;pendente&quot;)" style="height:32px; padding:0 12px; border-radius:8px; font-size:11.5px; font-weight:800; cursor:pointer; border:1px solid rgba(245,158,11,0.35); background:' + (currentTab==='pendente'?'linear-gradient(135deg, #F59E0B, #D97706)':'rgba(245,158,11,0.10)') + '; color:' + (currentTab==='pendente'?'#060B18':'#FBBF24') + ';">🔥 Sem Técnico / Novos (' + countPendentes + ')</button>';
-  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='andamento'?'active':'') + '" data-tab="andamento" onclick="setOsStatusTab(&quot;andamento&quot;)" style="height:32px; padding:0 12px; border-radius:8px; font-size:11.5px; font-weight:800; cursor:pointer; border:1px solid rgba(5, 150, 105,0.35); background:' + (currentTab==='andamento'?'linear-gradient(135deg, #10B981, #047857)':'rgba(5, 150, 105,0.10)') + '; color:' + (currentTab==='andamento'?'#FFFFFF':'#34D399') + ';">⚙️ Em Atendimento (' + countAndamento + ')</button>';
-  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='criticos'?'active':'') + '" data-tab="criticos" onclick="setOsStatusTab(&quot;criticos&quot;)" style="height:32px; padding:0 12px; border-radius:8px; font-size:11.5px; font-weight:800; cursor:pointer; border:1px solid rgba(239,68,68,0.35); background:' + (currentTab==='criticos'?'linear-gradient(135deg, #EF4444, #B91C1C)':'rgba(239,68,68,0.10)') + '; color:' + (currentTab==='criticos'?'#FFFFFF':'#F87171') + ';">🚨 Críticos (' + countCriticos + ')</button>';
-  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='concluido'?'active':'') + '" data-tab="concluido" onclick="setOsStatusTab(&quot;concluido&quot;)" style="height:32px; padding:0 12px; border-radius:8px; font-size:11.5px; font-weight:800; cursor:pointer; border:1px solid rgba(5, 150, 105,0.35); background:' + (currentTab==='concluido'?'linear-gradient(135deg, #059669, #059669)':'rgba(5, 150, 105,0.10)') + '; color:' + (currentTab==='concluido'?'#060B18':'#059669') + ';">✅ Resolvidos (' + countConcluidas + ')</button>';
-  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='dashboard'?'active':'') + '" data-tab="dashboard" onclick="setOsStatusTab(&quot;dashboard&quot;)" style="height:32px; padding:0 12px; border-radius:8px; font-size:11.5px; font-weight:800; cursor:pointer; border:1px solid rgba(56,189,248,0.35); background:' + (currentTab==='dashboard'?'linear-gradient(135deg, #0284C7, #0369A1)':'rgba(56,189,248,0.10)') + '; color:' + (currentTab==='dashboard'?'#FFFFFF':'#38BDF8') + ';">📊 Dashboard ITSM</button>';
-  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='receber'?'active':'') + '" data-tab="receber" onclick="setOsStatusTab(&quot;receber&quot;)" style="height:32px; padding:0 12px; border-radius:8px; font-size:11.5px; font-weight:800; cursor:pointer; border:1px solid ' + (currentTab==='receber'?'transparent':'var(--card-border)') + '; background:' + (currentTab==='receber'?'linear-gradient(135deg, #10B981, #059669)':'rgba(255,255,255,0.04)') + '; color:' + (currentTab==='receber'?'#FFFFFF':'var(--text)') + ';">📥 Balcão O.S.</button>';
-  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='tecnicos'?'active':'') + '" data-tab="tecnicos" onclick="setOsStatusTab(&quot;tecnicos&quot;)" style="height:32px; padding:0 12px; border-radius:8px; font-size:11.5px; font-weight:800; cursor:pointer; border:1px solid rgba(245,158,11,0.35); background:' + (currentTab==='tecnicos'?'linear-gradient(135deg, #F59E0B, #D97706)':'rgba(245,158,11,0.10)') + '; color:' + (currentTab==='tecnicos'?'#060B18':'#FDE68A') + '; margin-left:auto;">👷 Equipe Técnica (' + ((systemTecnicos || []).filter(t => t.active !== false).length) + ')</button>';
+  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='todas'?'active':'') + '" data-tab="todas" onclick="setOsStatusTab(&quot;todas&quot;)" style="height:32px; padding:0 13px; border-radius:8px; font-size:14px; font-weight:800; cursor:pointer; border:1px solid ' + (currentTab==='todas'?'transparent':'var(--card-border)') + '; background:' + (currentTab==='todas'?'linear-gradient(135deg, #F59E0B, #EA580C)':'rgba(255,255,255,0.04)') + '; color:' + (currentTab==='todas'?'#FFFFFF':'var(--text)') + ';">📋 Fila Geral GLPI (' + countTotal + ')</button>';
+  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='glpi_console'?'active':'') + '" data-tab="glpi_console" onclick="setOsStatusTab(&quot;glpi_console&quot;)" style="height:32px; padding:0 13px; border-radius:8px; font-size:14px; font-weight:800; cursor:pointer; border:1px solid rgba(37,99,235,0.45); background:' + (currentTab==='glpi_console'?'linear-gradient(135deg, #2563EB, #1D4ED8)':'rgba(37,99,235,0.14)') + '; color:' + (currentTab==='glpi_console'?'#FFFFFF':'#93C5FD') + ';">🖥️ Console GLPI 10 Enterprise</button>';
+  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='pendente'?'active':'') + '" data-tab="pendente" onclick="setOsStatusTab(&quot;pendente&quot;)" style="height:32px; padding:0 12px; border-radius:8px; font-size:14px; font-weight:800; cursor:pointer; border:1px solid rgba(245,158,11,0.35); background:' + (currentTab==='pendente'?'linear-gradient(135deg, #F59E0B, #D97706)':'rgba(245,158,11,0.10)') + '; color:' + (currentTab==='pendente'?'#060B18':'#FBBF24') + ';">🔥 Sem Técnico / Novos (' + countPendentes + ')</button>';
+  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='andamento'?'active':'') + '" data-tab="andamento" onclick="setOsStatusTab(&quot;andamento&quot;)" style="height:32px; padding:0 12px; border-radius:8px; font-size:14px; font-weight:800; cursor:pointer; border:1px solid rgba(5, 150, 105,0.35); background:' + (currentTab==='andamento'?'linear-gradient(135deg, #10B981, #047857)':'rgba(5, 150, 105,0.10)') + '; color:' + (currentTab==='andamento'?'#FFFFFF':'#34D399') + ';">⚙️ Em Atendimento (' + countAndamento + ')</button>';
+  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='criticos'?'active':'') + '" data-tab="criticos" onclick="setOsStatusTab(&quot;criticos&quot;)" style="height:32px; padding:0 12px; border-radius:8px; font-size:14px; font-weight:800; cursor:pointer; border:1px solid rgba(239,68,68,0.35); background:' + (currentTab==='criticos'?'linear-gradient(135deg, #EF4444, #B91C1C)':'rgba(239,68,68,0.10)') + '; color:' + (currentTab==='criticos'?'#FFFFFF':'#F87171') + ';">🚨 Críticos (' + countCriticos + ')</button>';
+  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='concluido'?'active':'') + '" data-tab="concluido" onclick="setOsStatusTab(&quot;concluido&quot;)" style="height:32px; padding:0 12px; border-radius:8px; font-size:14px; font-weight:800; cursor:pointer; border:1px solid rgba(5, 150, 105,0.35); background:' + (currentTab==='concluido'?'linear-gradient(135deg, #059669, #059669)':'rgba(5, 150, 105,0.10)') + '; color:' + (currentTab==='concluido'?'#060B18':'#059669') + ';">✅ Resolvidos (' + countConcluidas + ')</button>';
+  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='dashboard'?'active':'') + '" data-tab="dashboard" onclick="setOsStatusTab(&quot;dashboard&quot;)" style="height:32px; padding:0 12px; border-radius:8px; font-size:14px; font-weight:800; cursor:pointer; border:1px solid rgba(56,189,248,0.35); background:' + (currentTab==='dashboard'?'linear-gradient(135deg, #0284C7, #0369A1)':'rgba(56,189,248,0.10)') + '; color:' + (currentTab==='dashboard'?'#FFFFFF':'#38BDF8') + ';">📊 Dashboard ITSM</button>';
+  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='receber'?'active':'') + '" data-tab="receber" onclick="setOsStatusTab(&quot;receber&quot;)" style="height:32px; padding:0 12px; border-radius:8px; font-size:14px; font-weight:800; cursor:pointer; border:1px solid ' + (currentTab==='receber'?'transparent':'var(--card-border)') + '; background:' + (currentTab==='receber'?'linear-gradient(135deg, #10B981, #059669)':'rgba(255,255,255,0.04)') + '; color:' + (currentTab==='receber'?'#FFFFFF':'var(--text)') + ';">📥 Balcão O.S.</button>';
+  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='tecnicos'?'active':'') + '" data-tab="tecnicos" onclick="setOsStatusTab(&quot;tecnicos&quot;)" style="height:32px; padding:0 12px; border-radius:8px; font-size:14px; font-weight:800; cursor:pointer; border:1px solid rgba(245,158,11,0.35); background:' + (currentTab==='tecnicos'?'linear-gradient(135deg, #F59E0B, #D97706)':'rgba(245,158,11,0.10)') + '; color:' + (currentTab==='tecnicos'?'#060B18':'#FDE68A') + '; margin-left:auto;">👷 Equipe Técnica (' + ((systemTecnicos || []).filter(t => t.active !== false).length) + ')</button>';
   h += '</div>';
 
   if (currentTab === 'glpi_console') {
@@ -27845,30 +27845,30 @@ function renderEquipeTecnicaOs() {
     
     h += '<div class="panel-head" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;">';
     h += '<div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">';
-    h += '<h3 style="font-size:13.5px; font-weight:800; margin:0;">🎫 Fila de Chamados GLPI Service Desk</h3>';
-    h += '<span class="tag" style="font-weight:800; font-size:10.5px; padding:3px 10px;">' + filteredList.length + ' de ' + countTotal + ' chamados</span>';
+    h += '<h3 style="font-size:14px; font-weight:800; margin:0;">🎫 Fila de Chamados GLPI Service Desk</h3>';
+    h += '<span class="tag" style="font-weight:800; font-size:14px; padding:3px 10px;">' + filteredList.length + ' de ' + countTotal + ' chamados</span>';
     h += '</div>';
-    h += '<button type="button" onclick="window.assumirSelecionadosGlpiEmMassa()" style="height:30px; padding:0 12px; border-radius:8px; background:rgba(245,158,11,0.16); border:1px solid rgba(245,158,11,0.45); color:#FBBF24; font-size:11px; font-weight:800; cursor:pointer;">🤝 Assumir Selecionados</button>';
+    h += '<button type="button" onclick="window.assumirSelecionadosGlpiEmMassa()" style="height:30px; padding:0 12px; border-radius:8px; background:rgba(245,158,11,0.16); border:1px solid rgba(245,158,11,0.45); color:#FBBF24; font-size:14px; font-weight:800; cursor:pointer;">🤝 Assumir Selecionados</button>';
     h += '</div>';
 
     h += '<div class="filters" style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; align-items:center;">';
     h += '<div style="position:relative; flex:1.6; min-width:210px;">';
-    h += '<input id="osSearchInput" placeholder="🔍 Buscar no GLPI por protocolo, solicitante, ativo CMDB ou assunto..." onkeyup="filterOrdensTable()" style="width:100%; height:34px; font-size:12px; padding:0 11px; border-radius:9px; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text);">';
+    h += '<input id="osSearchInput" placeholder="🔍 Buscar no GLPI por protocolo, solicitante, ativo CMDB ou assunto..." onkeyup="filterOrdensTable()" style="width:100%; height:34px; font-size:14px; padding:0 11px; border-radius:9px; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text);">';
     h += '</div>';
     
-    h += '<select id="osFilterStatus" onchange="filterOrdensTable()" style="flex:1; min-width:125px; height:34px; padding:0 9px; border-radius:9px; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text); font-size:11.5px; font-weight:700;">';
+    h += '<select id="osFilterStatus" onchange="filterOrdensTable()" style="flex:1; min-width:125px; height:34px; padding:0 9px; border-radius:9px; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text); font-size:14px; font-weight:700;">';
     h += '<option value="">Status: Todos</option><option value="novo">🔵 Novo</option><option value="pendente"' + (currentTab==='pendente'?' selected':'') + '>⏳ Pendentes</option><option value="atendimento">⚙️ Em Atendimento</option><option value="andamento"' + (currentTab==='andamento'?' selected':'') + '>⚙️ Em Andamento</option><option value="resolvido">🟢 Resolvidos</option><option value="concl"' + (currentTab==='concluido'?' selected':'') + '>✅ Concluídos</option><option value="canc"' + (currentTab==='cancelado'?' selected':'') + '>❌ Cancelados</option>';
     h += '</select>';
 
-    h += '<select id="osFilterTecnico" onchange="filterOrdensTable()" style="flex:1.1; min-width:140px; height:34px; padding:0 9px; border-radius:9px; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text); font-size:11.5px; font-weight:700;">';
+    h += '<select id="osFilterTecnico" onchange="filterOrdensTable()" style="flex:1.1; min-width:140px; height:34px; padding:0 9px; border-radius:9px; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text); font-size:14px; font-weight:700;">';
     h += tecOpts;
     h += '</select>';
 
-    h += '<select id="osFilterType" onchange="filterOrdensTable()" style="flex:1; min-width:130px; height:34px; padding:0 9px; border-radius:9px; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text); font-size:11.5px; font-weight:700;">';
+    h += '<select id="osFilterType" onchange="filterOrdensTable()" style="flex:1; min-width:130px; height:34px; padding:0 9px; border-radius:9px; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text); font-size:14px; font-weight:700;">';
     h += '<option value="">Categoria GLPI: Todas</option><option value="financeiro">💰 Financeiro &amp; ERP</option><option value="acessos">🔐 Acessos &amp; Senha</option><option value="suporte">💻 Suporte &amp; Infra</option><option value="projetos">🚀 Projetos &amp; Melhorias</option><option value="pagamento">💳 Pagamento / PIX</option><option value="correção">🛠️ Correção Cadastral</option><option value="bug">🐛 Relato de Bug</option>';
     h += '</select>';
 
-    h += '<select id="osFilterPriority" onchange="filterOrdensTable()" style="flex:1; min-width:115px; height:34px; padding:0 9px; border-radius:9px; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text); font-size:11.5px; font-weight:700;">';
+    h += '<select id="osFilterPriority" onchange="filterOrdensTable()" style="flex:1; min-width:115px; height:34px; padding:0 9px; border-radius:9px; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text); font-size:14px; font-weight:700;">';
     h += '<option value="">Urgência: Todas</option><option value="baixa">🟢 Baixa</option><option value="normal">🟢 Normal</option><option value="média">🔵 Média</option><option value="alta">🟠 Alta</option><option value="urgente">🔴 Urgente</option><option value="crítica">🔴 Crítica</option>';
     h += '</select>';
     h += '</div>';
@@ -28100,10 +28100,10 @@ window.renderGlpiTimelineModal = function(ordem) {
     const dt = item.date ? new Date(item.date).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' }) : '';
     h += '<div style="padding:8px 10px; border-radius:10px; background:' + bg + '; border:1px solid ' + border + ';">';
     h += '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; gap:8px;">';
-    h += '<span style="font-size:10.5px; font-weight:800; color:' + tagColor + ';">' + tagLabel + '</span>';
-    h += '<span style="font-size:10px; color:#94A3B8; font-family:monospace;">' + escapeOsHtml(dt) + '</span>';
+    h += '<span style="font-size:14px; font-weight:800; color:' + tagColor + ';">' + tagLabel + '</span>';
+    h += '<span style="font-size:14px; color:#94A3B8; font-family:monospace;">' + escapeOsHtml(dt) + '</span>';
     h += '</div>';
-    h += '<div style="font-size:12px; color:#F1F5F9; line-height:1.4; white-space:pre-wrap;">' + escapeOsHtml(item.text || '') + '</div>';
+    h += '<div style="font-size:14px; color:#F1F5F9; line-height:1.4; white-space:pre-wrap;">' + escapeOsHtml(item.text || '') + '</div>';
     h += '</div>';
   });
   container.innerHTML = h;
@@ -28709,9 +28709,9 @@ function renderListaTecnicosModal() {
     wrap.innerHTML = \`
       <div style="text-align:center; padding:20px 12px; color:var(--text-dim); background:rgba(255,255,255,0.02); border-radius:12px; border:1px dashed var(--card-border);">
         <div style="font-size:24px; margin-bottom:4px;">👷</div>
-        <h4 style="font-size:13.5px; color:var(--text); margin:0 0 3px 0; font-weight:800;">Nenhum técnico cadastrado</h4>
-        <p style="font-size:11.5px; margin:0 0 10px 0;">Cadastre os membros da equipe técnica para distribuir Ordens de Serviço.</p>
-        <button type="button" onclick="toggleFormTecnico(true)" style="height:30px; padding:0 14px; border-radius:8px; background:linear-gradient(135deg, #F59E0B, #D97706); color:#060B18; font-weight:900; font-size:11.5px; border:none; cursor:pointer;">
+        <h4 style="font-size:14px; color:var(--text); margin:0 0 3px 0; font-weight:800;">Nenhum técnico cadastrado</h4>
+        <p style="font-size:14px; margin:0 0 10px 0;">Cadastre os membros da equipe técnica para distribuir Ordens de Serviço.</p>
+        <button type="button" onclick="toggleFormTecnico(true)" style="height:30px; padding:0 14px; border-radius:8px; background:linear-gradient(135deg, #F59E0B, #D97706); color:#060B18; font-weight:900; font-size:14px; border:none; cursor:pointer;">
           ➕ Cadastrar Primeiro Técnico
         </button>
       </div>
@@ -28726,17 +28726,17 @@ function renderListaTecnicosModal() {
     html += \`
       <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 11px; border-radius:10px; background:rgba(255,255,255,0.03); border:1px solid var(--card-border); gap:10px; flex-wrap:wrap;">
         <div style="display:flex; align-items:center; gap:9px; min-width:0;">
-          <div style="width:32px; height:32px; border-radius:9px; background:linear-gradient(135deg, rgba(245,158,11,0.22), rgba(217,119,6,0.10)); border:1px solid rgba(245,158,11,0.38); display:flex; align-items:center; justify-content:center; color:#FBBF24; font-weight:900; font-size:11.5px; flex-shrink:0;">
+          <div style="width:32px; height:32px; border-radius:9px; background:linear-gradient(135deg, rgba(245,158,11,0.22), rgba(217,119,6,0.10)); border:1px solid rgba(245,158,11,0.38); display:flex; align-items:center; justify-content:center; color:#FBBF24; font-weight:900; font-size:14px; flex-shrink:0;">
             \${inits}
           </div>
           <div style="min-width:0;">
-            <div style="font-size:12.5px; font-weight:800; color:var(--text); display:flex; align-items:center; gap:6px;">
+            <div style="font-size:14px; font-weight:800; color:var(--text); display:flex; align-items:center; gap:6px;">
               <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">\${escapeOsHtml(t.name)}</span>
-              <span style="font-size:9.5px; font-weight:800; padding:1px 6px; border-radius:999px; \${t.active !== false ? 'background:rgba(5, 150, 105,0.15); color:#10B981; border:1px solid rgba(5, 150, 105,0.3);' : 'background:rgba(239,68,68,0.15); color:#F87171; border:1px solid rgba(239,68,68,0.3);'}">
+              <span style="font-size:14px; font-weight:800; padding:1px 6px; border-radius:999px; \${t.active !== false ? 'background:rgba(5, 150, 105,0.15); color:#10B981; border:1px solid rgba(5, 150, 105,0.3);' : 'background:rgba(239,68,68,0.15); color:#F87171; border:1px solid rgba(239,68,68,0.3);'}">
                 \${t.active !== false ? '🟢 Ativo' : '⚪ Inativo'}
               </span>
             </div>
-            <div style="font-size:11px; color:var(--text-dim); margin-top:1px; display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+            <div style="font-size:14px; color:var(--text-dim); margin-top:1px; display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
               <span style="color:#34D399; font-weight:700;">🔧 \${escapeOsHtml(t.specialty || 'Suporte')}</span>
               <span>✉️ \${escapeOsHtml(t.email)}</span>
               \${t.phone ? \`<a href="https://wa.me/55\${cleanPhone}" target="_blank" style="color:#10B981; text-decoration:none; font-weight:700;">📱 \${escapeOsHtml(t.phone)}</a>\` : ''}
@@ -28745,10 +28745,10 @@ function renderListaTecnicosModal() {
         </div>
 
         <div style="display:flex; gap:5px; margin-left:auto;">
-          <button type="button" onclick="editarTecnico('\${t.id}')" style="height:28px; padding:0 10px; border-radius:7px; background:rgba(255,255,255,0.06); border:1px solid var(--card-border); color:var(--text); font-size:11px; font-weight:700; cursor:pointer;" title="Editar dados do técnico">
+          <button type="button" onclick="editarTecnico('\${t.id}')" style="height:28px; padding:0 10px; border-radius:7px; background:rgba(255,255,255,0.06); border:1px solid var(--card-border); color:var(--text); font-size:14px; font-weight:700; cursor:pointer;" title="Editar dados do técnico">
             ✏️ Editar
           </button>
-          <button type="button" onclick="excluirTecnico('\${t.id}')" style="height:28px; padding:0 8px; border-radius:7px; background:rgba(239,68,68,0.12); border:1px solid rgba(239,68,68,0.25); color:#F87171; font-size:11px; cursor:pointer;" title="Excluir técnico">
+          <button type="button" onclick="excluirTecnico('\${t.id}')" style="height:28px; padding:0 8px; border-radius:7px; background:rgba(239,68,68,0.12); border:1px solid rgba(239,68,68,0.25); color:#F87171; font-size:14px; cursor:pointer;" title="Excluir técnico">
             🗑️
           </button>
         </div>
@@ -28946,7 +28946,7 @@ function drawDashboardCharts(){
                 position: 'top',
                 labels: {
                   color: isLightMode ? '#000000' : '#CBD5E1',
-                  font: { weight: '700', size: 11.5 },
+                  font: { weight: '700', size: 14 },
                   boxWidth: 10,
                   boxHeight: 10,
                   usePointStyle: true,
@@ -29022,7 +29022,7 @@ function drawDashboardCharts(){
               align: 'end',
               labels: {
                 color: isLightMode ? '#000000' : '#CBD5E1',
-                font: { weight: '700', size: 11 },
+                font: { weight: '700', size: 14 },
                 boxWidth: 8,
                 boxHeight: 8,
                 usePointStyle: true,
@@ -29053,7 +29053,7 @@ function drawDashboardCharts(){
               },
               ticks: {
                 color: isLightMode ? '#000000' : '#94A3B8',
-                font: { size: 10, weight: '700' }
+                font: { size: 14, weight: '700' }
               }
             },
             y: {
@@ -29063,7 +29063,7 @@ function drawDashboardCharts(){
               },
               ticks: {
                 color: isLightMode ? '#000000' : '#94A3B8',
-                font: { size: 10, weight: '700' },
+                font: { size: 14, weight: '700' },
                 callback: function(v) { return fmt(v); }
               }
             }
@@ -29422,7 +29422,7 @@ function updateCardLimitHint() {
       
       let msg = '💳 <span><strong>Limite Disponível:</strong> <strong>' + fmt(stats.availableLimit) + '</strong> (Limite Total: ' + fmt(stats.totalLimit) + ', Fatura: ' + fmt(stats.spentTotal) + ')';
       if (currentVal > 0) {
-        msg += '<br>📉 <strong>Após esta despesa:</strong> Limite disponível ficará em <strong style="font-size:13px; color:' + (isExceeded ? 'var(--red)' : 'var(--green)') + '">' + fmt(newAvailable) + '</strong> (Nova Fatura: ' + fmt(newSpent) + ')';
+        msg += '<br>📉 <strong>Após esta despesa:</strong> Limite disponível ficará em <strong style="font-size:14px; color:' + (isExceeded ? 'var(--red)' : 'var(--green)') + '">' + fmt(newAvailable) + '</strong> (Nova Fatura: ' + fmt(newSpent) + ')';
         if (isExceeded) {
           msg += ' <span style="color:var(--red); font-weight:800;">⚠️ Atenção: Esta despesa ultrapassa o limite disponível!</span>';
         }
@@ -30462,27 +30462,27 @@ function openLaunchRecurringModal(id){
     summaryEl.innerHTML = 
       '<div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px;">' +
         '<div>' +
-          '<h3 style="margin:0 0 4px 0; font-size:15px; font-weight:800; color:var(--text);">' + r.desc + '</h3>' +
+          '<h3 style="margin:0 0 4px 0; font-size:14px; font-weight:800; color:var(--text);">' + r.desc + '</h3>' +
           '<div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">' +
-            '<span class="pill cat-pill" style="background:' + catColor(r.cat) + '18; color:' + catColor(r.cat) + '; border:1px solid ' + catColor(r.cat) + '35; font-size:10.5px; padding:2px 8px;">' + catIcon(r.cat) + ' ' + r.cat + '</span>' +
-            '<span class="pill acc-pill" style="font-size:10.5px; padding:2px 8px;">' + getAccountIcon(r.acc) + ' ' + r.acc + '</span>' +
-            '<span class="pill" style="background:rgba(245,158,11,0.14); color:var(--orange); font-size:10.5px; padding:2px 8px; font-weight:700;">Dia ' + r.day + '</span>' +
+            '<span class="pill cat-pill" style="background:' + catColor(r.cat) + '18; color:' + catColor(r.cat) + '; border:1px solid ' + catColor(r.cat) + '35; font-size:14px; padding:2px 8px;">' + catIcon(r.cat) + ' ' + r.cat + '</span>' +
+            '<span class="pill acc-pill" style="font-size:14px; padding:2px 8px;">' + getAccountIcon(r.acc) + ' ' + r.acc + '</span>' +
+            '<span class="pill" style="background:rgba(245,158,11,0.14); color:var(--orange); font-size:14px; padding:2px 8px; font-weight:700;">Dia ' + r.day + '</span>' +
           '</div>' +
         '</div>' +
         '<div style="text-align:right;">' +
-          '<div style="font-size:16px; font-weight:800; color:' + (r.type==='in'?'var(--green)':'var(--red)') + ';">' + (r.type==='in'?'+':'-') + fmt(r.val) + '/mês</div>' +
-          (totalM > 0 ? ('<div style="font-size:11px; color:var(--text-dim);">Total: ' + fmt(totalValContratado) + '</div>') : '') +
+          '<div style="font-size:14px; font-weight:800; color:' + (r.type==='in'?'var(--green)':'var(--red)') + ';">' + (r.type==='in'?'+':'-') + fmt(r.val) + '/mês</div>' +
+          (totalM > 0 ? ('<div style="font-size:14px; color:var(--text-dim);">Total: ' + fmt(totalValContratado) + '</div>') : '') +
         '</div>' +
       '</div>' +
       '<div style="margin-top:12px; padding-top:12px; border-top:1px solid rgba(255,255,255,0.06);">' +
-        '<div style="display:flex; justify-content:space-between; align-items:center; font-size:12px; margin-bottom:5px;">' +
+        '<div style="display:flex; justify-content:space-between; align-items:center; font-size:14px; margin-bottom:5px;">' +
           '<span style="color:var(--text); font-weight:700;">Duração Cadastrada: <strong style="color:var(--blue);">' + totalM + ' meses</strong></span>' +
           '<span style="font-weight:800; color:' + (isCompleted ? 'var(--green)' : 'var(--text-dim)') + ';">' + appliedM + '/' + totalM + ' lançados (' + pct + '%)</span>' +
         '</div>' +
         '<div class="rec-progress-bar" style="height:7px;">' +
           '<div class="rec-progress-fill" style="width:' + pct + '%; background:' + (isCompleted ? 'var(--green)' : (pct > 50 ? 'var(--blue)' : 'var(--orange)')) + ';"></div>' +
         '</div>' +
-        '<div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-dim); margin-top:5px;">' +
+        '<div style="display:flex; justify-content:space-between; font-size:14px; color:var(--text-dim); margin-top:5px;">' +
           '<span>Início: ' + (MONTHS[startM-1] || startM) + '/' + startY + '</span>' +
           '<span>' + (isCompleted ? '✓ 100% aplicado' : ('Próximo: ' + nextMonthName)) + '</span>' +
         '</div>' +
@@ -31057,22 +31057,22 @@ function renderImportPreview(){
   if(!el) return;
   const info = pendingImportInfo || { arquivo: '', formato: '', ignoradas: [] };
   const ignoradasTxt = info.ignoradas.length
-    ? '<p style="font-size:12px;color:var(--text-faint);margin:6px 0 0;">' + info.ignoradas.length + ' linha(s) ignorada(s): ' + txEsc(info.ignoradas.slice(0, 3).map(function(i){ return 'linha ' + i.linha + ' (' + i.motivo + ')'; }).join(', ')) + (info.ignoradas.length > 3 ? '…' : '') + '</p>'
+    ? '<p style="font-size:14px;color:var(--text-faint);margin:6px 0 0;">' + info.ignoradas.length + ' linha(s) ignorada(s): ' + txEsc(info.ignoradas.slice(0, 3).map(function(i){ return 'linha ' + i.linha + ' (' + i.motivo + ')'; }).join(', ')) + (info.ignoradas.length > 3 ? '…' : '') + '</p>'
     : '';
   if(pendingImport.length === 0){
-    el.innerHTML = '<p style="color:var(--text-faint);font-size:12.5px;margin-top:12px;">Nenhuma transação reconhecida' + (info.arquivo ? ' em <strong>' + txEsc(info.arquivo) + '</strong>' : ' no arquivo') + '. Confira se o arquivo tem data, descrição e valor.</p>' + ignoradasTxt;
+    el.innerHTML = '<p style="color:var(--text-faint);font-size:14px;margin-top:12px;">Nenhuma transação reconhecida' + (info.arquivo ? ' em <strong>' + txEsc(info.arquivo) + '</strong>' : ' no arquivo') + '. Confira se o arquivo tem data, descrição e valor.</p>' + ignoradasTxt;
     return;
   }
   const sp = splitImportRows();
   const repetidas = new Set(sp.repetidas);
   const linhas = pendingImport.slice(0, 50).map(function(r){
     const jaExiste = repetidas.has(r);
-    return '<tr class="trow"' + (jaExiste ? ' style="opacity:.5;"' : '') + '><td>' + txEsc(formatDateBR(r.date)) + '</td><td>' + txEsc(r.desc) + (jaExiste ? ' <span class="pill" style="font-size:10.5px;">já existe</span>' : '') + '</td><td class="' + (r.val >= 0 ? 'val-in' : 'val-out') + '">' + (r.val >= 0 ? '+' : '−') + fmt(Math.abs(r.val)) + '</td></tr>';
+    return '<tr class="trow"' + (jaExiste ? ' style="opacity:.5;"' : '') + '><td>' + txEsc(formatDateBR(r.date)) + '</td><td>' + txEsc(r.desc) + (jaExiste ? ' <span class="pill" style="font-size:14px;">já existe</span>' : '') + '</td><td class="' + (r.val >= 0 ? 'val-in' : 'val-out') + '">' + (r.val >= 0 ? '+' : '−') + fmt(Math.abs(r.val)) + '</td></tr>';
   }).join('');
   el.innerHTML =
-    '<p style="font-size:12.5px;color:var(--text-dim);margin:14px 0 8px;"><strong>' + pendingImport.length + '</strong> transações reconhecidas em <strong>' + txEsc(info.arquivo) + '</strong> (' + (info.formato === 'ofx' ? 'OFX' : 'CSV') + ') · <strong style="color:var(--green);">' + sp.novas.length + ' novas</strong>' + (sp.repetidas.length ? ' · ' + sp.repetidas.length + ' já existem na conta e serão ignoradas' : '') + '</p>' +
+    '<p style="font-size:14px;color:var(--text-dim);margin:14px 0 8px;"><strong>' + pendingImport.length + '</strong> transações reconhecidas em <strong>' + txEsc(info.arquivo) + '</strong> (' + (info.formato === 'ofx' ? 'OFX' : 'CSV') + ') · <strong style="color:var(--green);">' + sp.novas.length + ' novas</strong>' + (sp.repetidas.length ? ' · ' + sp.repetidas.length + ' já existem na conta e serão ignoradas' : '') + '</p>' +
     '<table><thead><tr><th>Data</th><th>Descrição</th><th>Valor</th></tr></thead><tbody>' + linhas + '</tbody></table>' +
-    (pendingImport.length > 50 ? '<p style="font-size:12px;color:var(--text-faint);margin:6px 0 0;">Mostrando as 50 primeiras; todas as ' + sp.novas.length + ' novas serão importadas.</p>' : '') + ignoradasTxt +
+    (pendingImport.length > 50 ? '<p style="font-size:14px;color:var(--text-faint);margin:6px 0 0;">Mostrando as 50 primeiras; todas as ' + sp.novas.length + ' novas serão importadas.</p>' : '') + ignoradasTxt +
     '<button class="btn-primary" id="btnConfirmarImport" style="margin-top:14px"' + (sp.novas.length ? '' : ' disabled') + '>Confirmar Importação (' + sp.novas.length + ')</button>';
   document.getElementById('btnConfirmarImport').onclick = confirmImport;
 }
@@ -31265,7 +31265,7 @@ function previewAttachment(id){
   } else if (isPdf) {
     contentHtml = '<iframe src="' + urlSegura + '" style="width:100%; height:78vh; border:none; border-radius:12px;"></iframe>';
   } else {
-    contentHtml = '<div style="text-align:center; padding:50px 24px;"><div style="font-size:56px; margin-bottom:14px;">📄</div><h4 style="font-size:18px; font-weight:700;">' + att.name + '</h4><p style="color:var(--text-dim); margin-top:8px; font-size:14px;">Arquivo disponível para visualização e download</p><a href="' + urlSegura + '" download="' + (att.name || 'comprovante') + '" class="btn-primary" style="display:inline-flex; align-items:center; gap:8px; margin-top:20px; text-decoration:none; padding:12px 24px; font-size:15px; font-weight:700; border-radius:10px;">📥 Baixar Arquivo Agora</a></div>';
+    contentHtml = '<div style="text-align:center; padding:50px 24px;"><div style="font-size:56px; margin-bottom:14px;">📄</div><h4 style="font-size:18px; font-weight:700;">' + att.name + '</h4><p style="color:var(--text-dim); margin-top:8px; font-size:14px;">Arquivo disponível para visualização e download</p><a href="' + urlSegura + '" download="' + (att.name || 'comprovante') + '" class="btn-primary" style="display:inline-flex; align-items:center; gap:8px; margin-top:20px; text-decoration:none; padding:12px 24px; font-size:14px; font-weight:700; border-radius:10px;">📥 Baixar Arquivo Agora</a></div>';
   }
 
   const modalOverlay = document.createElement('div');
@@ -32277,7 +32277,7 @@ function applyDisplayScale(scaleVal) {
       iconSpan = document.createElement('span');
       iconSpan.className = 'scale-check-ic';
       iconSpan.style.marginLeft = 'auto';
-      iconSpan.style.fontSize = '12px';
+      iconSpan.style.fontSize = '14px';
       btn.appendChild(iconSpan);
     }
     iconSpan.textContent = isSel ? '✓' : '';
@@ -32292,14 +32292,14 @@ function applyDisplayScale(scaleVal) {
     var orientation = (w >= h) ? 'Paisagem ↔️' : 'Retrato ↕️';
     var devIcon = devType === 'mobile' ? '📱' : devType === 'tablet' ? '📱↔️' : devType === 'laptop' ? '💻' : (devType === '4k' || devType === 'ultrawide') ? '🖥️✨' : '🖥️';
     var autoText = scaleVal === 'auto' ? '<span style="color:var(--green,#06D6A0); font-weight:700;">(Ajuste Inteligente ao Dispositivo)</span>' : '<span style="color:var(--amber,#F59E0B); font-weight:700;">(Definição Manual)</span>';
-    devInfoEl.innerHTML = '<div style="display:flex; align-items:center; gap:12px; padding:14px; border-radius:14px; background:linear-gradient(135deg, rgba(5, 150, 105,0.1) 0%, rgba(5, 150, 105,0.08) 100%); border:1px solid rgba(5, 150, 105,0.25); font-size:13px; margin-top:8px;">' +
+    devInfoEl.innerHTML = '<div style="display:flex; align-items:center; gap:12px; padding:14px; border-radius:14px; background:linear-gradient(135deg, rgba(5, 150, 105,0.1) 0%, rgba(5, 150, 105,0.08) 100%); border:1px solid rgba(5, 150, 105,0.25); font-size:14px; margin-top:8px;">' +
       '<span style="font-size:26px; line-height:1; flex-shrink:0;">' + devIcon + '</span>' +
       '<div style="flex:1; min-width:0;">' +
         '<div style="display:flex; align-items:center; justify-content:space-between; gap:6px; flex-wrap:wrap;">' +
           '<strong>Dispositivo Detectado:</strong>' +
-          '<span style="background:rgba(255,255,255,0.1); padding:2px 8px; border-radius:6px; font-weight:700; font-size:11px; color:var(--accent,#10B981);">' + getDeviceName(devType, devInfo ? devInfo.sw : 0) + '</span>' +
+          '<span style="background:rgba(255,255,255,0.1); padding:2px 8px; border-radius:6px; font-weight:700; font-size:14px; color:var(--accent,#10B981);">' + getDeviceName(devType, devInfo ? devInfo.sw : 0) + '</span>' +
         '</div>' +
-        '<div style="color:var(--text-muted); font-size:12px; margin-top:4px; line-height:1.4;">' +
+        '<div style="color:var(--text-muted); font-size:14px; margin-top:4px; line-height:1.4;">' +
           'Resolução da Tela: <strong>' + (devInfo ? devInfo.sw : w) + ' × ' + (devInfo ? devInfo.sh : h) + ' px</strong> | Janela: <strong>' + w + ' × ' + h + ' px</strong> (' + orientation + ') | DPR: <strong>' + dpr + '</strong><br>' +
           'Escala Ativa: <strong>' + (isMobileScale ? '100%' : effectiveScale) + '</strong> ' + autoText + ' | Área útil da interface: <strong>' + Math.round(w / effZoomNow) + ' × ' + Math.round(h / effZoomNow) + ' px</strong>' +
         '</div>' +

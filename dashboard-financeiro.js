@@ -1135,12 +1135,12 @@
       layout: { padding: { top: 4, right: 6, bottom: 0, left: 0 } },
       plugins: {
         fdCruz: { cor: t.zero },
-        legend: { display: true, position: 'top', align: 'start', labels: { color: t.ink2, usePointStyle: true, pointStyle: 'circle', boxWidth: 8, boxHeight: 8, font: { size: 11.5, weight: '600' }, padding: 14 } },
+        legend: { display: true, position: 'top', align: 'start', labels: { color: t.ink2, usePointStyle: true, pointStyle: 'circle', boxWidth: 8, boxHeight: 8, font: { size: 14, weight: '600' }, padding: 14 } },
         tooltip: { backgroundColor: t.tipFundo, titleColor: t.tipTexto, bodyColor: t.tipTexto, footerColor: t.muted, borderColor: t.grid, borderWidth: 1, padding: 11, boxPadding: 5, cornerRadius: 10, usePointStyle: true, displayColors: true }
       },
       scales: {
-        x: { grid: { display: false }, border: { color: t.grid }, ticks: { color: t.muted, font: { size: 11 }, maxRotation: 0, autoSkipPadding: 12 } },
-        y: { grid: { color: (c) => (c.tick && c.tick.value === 0 ? t.zero : t.grid), lineWidth: 1, drawTicks: false }, border: { display: false }, ticks: { color: t.muted, font: { size: 11 }, padding: 8, callback: (v) => fmtEixo(v) } }
+        x: { grid: { display: false }, border: { color: t.grid }, ticks: { color: t.muted, font: { size: 14 }, maxRotation: 0, autoSkipPadding: 12 } },
+        y: { grid: { color: (c) => (c.tick && c.tick.value === 0 ? t.zero : t.grid), lineWidth: 1, drawTicks: false }, border: { display: false }, ticks: { color: t.muted, font: { size: 14 }, padding: 8, callback: (v) => fmtEixo(v) } }
       }
     };
   }

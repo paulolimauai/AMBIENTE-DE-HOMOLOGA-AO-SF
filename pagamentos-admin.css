@@ -23,7 +23,7 @@
 .pg-grade { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 14px !important; }
 .pg-painel { margin: 0 0 14px !important; padding: 16px 18px !important; border-radius: 16px !important; border: 1px solid var(--adm-line) !important; background: var(--adm-panel) !important; min-width: 0 !important; }
 .pg-painel-larga { grid-column: 1 / -1 !important; }
-.pg-painel h3, .pg-bloco-t h3 { margin: 0 0 12px !important; font-size: 16px !important; font-weight: 800 !important; color: #fff !important; }
+.pg-painel h3, .pg-bloco-t h3 { margin: 0 0 12px !important; font-size: 14px !important; font-weight: 800 !important; color: #fff !important; }
 .pg-bloco { margin: 0 0 22px !important; }
 .pg-bloco-t { display: flex !important; align-items: center !important; gap: 10px !important; margin: 0 0 10px !important; }
 .pg-bloco-t h3 { margin: 0 !important; }
@@ -90,7 +90,7 @@
 .pg-resultado-dados { min-width: 0 !important; }
 .pg-dl { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 10px 16px !important; margin: 0 0 8px !important; }
 .pg-dl dt { font-size: 14px !important; font-weight: 700 !important; letter-spacing: .03em !important; text-transform: uppercase !important; color: var(--adm-mut) !important; }
-.pg-dl dd { margin: 2px 0 0 !important; font-size: 15px !important; font-weight: 700 !important; color: #fff !important; overflow-wrap: anywhere !important; }
+.pg-dl dd { margin: 2px 0 0 !important; font-size: 14px !important; font-weight: 700 !important; color: #fff !important; overflow-wrap: anywhere !important; }
 .pg-dl dd small { display: block !important; font-size: 14px !important; font-weight: 500 !important; color: var(--adm-mut) !important; }
 
 /* ---------- histórico e janelas ---------- */
