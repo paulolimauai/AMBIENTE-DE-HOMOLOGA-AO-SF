@@ -444,7 +444,7 @@ h3 { font-size: 18px !important; }
           <div class="barras"><i></i><i></i><i></i><i></i></div><span id="forca-t"></span>
         </div>
 
-      <p class="dica" id="dica" hidden>Use 8+ caracteres com maiúscula, minúscula, número e símbolo (@ # $ % ! ? * &amp; . _ -).</p>
+      <p class="dica" id="dica" hidden>Sua senha precisa ter no mínimo 8 caracteres, com letra maiúscula, letra minúscula, número e um símbolo (@ # $ % ! ? * &amp; . _ -).</p>
 
       <div class="aceites" id="aceites" hidden>
         <label class="aceite"><input type="checkbox" id="ac-termos"><span>Aceito os <a href="/termos.html" target="_blank" rel="noopener">termos de abertura da conta</a> e a <a href="/privacidade.html" target="_blank" rel="noopener">política de privacidade</a>.</span></label>
@@ -698,7 +698,7 @@ h3 { font-size: 18px !important; }
     $('enviar').textContent=c?'Criar conta':'Entrar no painel';
     $('email').setAttribute('autocomplete',c?'off':'username');
     $('senha').setAttribute('autocomplete',c?'new-password':'current-password');
-    $('senha').placeholder=c?'Mín. 8 caracteres':'Digite sua senha';
+    $('senha').placeholder=c?'Crie uma senha':'Digite sua senha';
     $('form').classList.toggle('dois',c);
     document.querySelector('main').classList.toggle('larga',c);
     limpar();
@@ -1091,7 +1091,7 @@ h3 { font-size: 18px !important; }
     if(!em)falha('email',c?'Informe seu e-mail.':'Informe seu e-mail.');
     else if(!EMAIL.test(em))falha('email','Digite um e-mail válido.');
     if(!se)falha('senha',c?'Crie uma senha.':'Informe sua senha.');
-    else if(c&&!senhaForte(se))falha('senha','Use 8+ caracteres, maiúscula, minúscula, número e símbolo.');
+    else if(c&&!senhaForte(se))falha('senha','A senha ainda não cumpre todos os requisitos indicados abaixo.');
     if(c&&se&&cf!==se)falha('conf','As senhas não coincidem.');
     if(c&&(!$('ac-termos').checked||!$('ac-verdade').checked)){
       ['ac-termos','ac-verdade'].forEach(function(i){if(!$(i).checked){$(i).closest('.aceite').classList.add('err');if(!primeiro)primeiro=i}});
