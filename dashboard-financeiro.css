@@ -522,3 +522,16 @@ html.fd-vidro-ativo #pageContent .dashboard-cockpit-frame.fd-root { max-width: n
 @media (prefers-reduced-motion: reduce) {
   .fd-root, .fd-root *, .fd-btn-icone.girando svg { transition: none !important; animation: none !important; }
 }
+
+/* ==========================================================================
+   Largura máxima do painel em telas muito largas (ultrawide / 1440p+)
+   O modo vidro (fd-vidro-ativo) remove o teto de largura; sem limite o painel
+   estica até ~2200px e fica visualmente diferente do monitor Full HD.
+   Aqui o conteúdo centraliza com teto de 1900px — abaixo disso nada muda.
+   ========================================================================== */
+@media (min-width: 1901px) {
+  html.fd-vidro-ativo #pageContent .dashboard-cockpit-frame.fd-root {
+    max-width: 1900px !important;
+    margin-inline: auto !important;
+  }
+}

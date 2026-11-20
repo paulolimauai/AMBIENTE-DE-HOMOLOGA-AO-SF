@@ -6748,3 +6748,32 @@ body:has(#authPage) {
 @media (max-width: 560px) {
   #authPage.auth-container { padding: 56px 12px 16px !important; height: auto !important; min-height: 100svh !important; }
 }
+
+/* ==========================================================================
+   CAMADA FINAL - Normalização responsiva global (notebook / monitor / celular)
+   Objetivo: a mesma identidade visual em qualquer tela, com proporções
+   ajustadas à largura disponível — sem quebras abruptas entre breakpoints.
+   ========================================================================== */
+
+/* 1) Menu lateral proporcional: em notebooks (861-1279px) fica um pouco mais
+   estreito que o piso antigo de 280px, devolvendo ~40-50px de área útil ao
+   conteúdo. Em monitores grandes continua no teto de 344px (inalterado). */
+@media (min-width: 861px) {
+  html.user-logged-in { --nx-sidebar-w: clamp(236px, 20vw, 344px) !important; }
+}
+@media (min-width: 861px) and (max-width: 1279px) {
+  html.user-logged-in { --nx-sidebar-w: 236px !important; }
+}
+
+/* 2) Indicadores (KPIs) do painel: entre 1181px e 1450px (faixa dos notebooks)
+   passam a usar auto-fit — cabem 4-5 cartões por fileira conforme o espaço,
+   em vez do degrau fixo de 3 colunas. Monitor grande segue com 6 colunas. */
+@media (min-width: 1181px) and (max-width: 1450px) {
+  #pageContent .kpis-grid-6 { grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)) !important; }
+}
+
+/* 3) Respiro lateral uniforme na faixa de notebooks: evita conteúdo colado
+   nas bordas quando o menu está aberto. */
+@media (min-width: 1181px) and (max-width: 1450px) {
+  #pageContent { padding-inline: clamp(18px, 2vw, 32px) !important; }
+}

@@ -65,14 +65,17 @@
     if(salvar)s('nexus:cores',JSON.stringify({id:'custom',hex:hex}));
     avisar();
   }
-  var mq=window.matchMedia?matchMedia('(prefers-color-scheme: light)'):{matches:false};
+  /* Automático por horário: claro das 07h às 18h (hora local), escuro no restante do dia */
+  function autoClaro(){var h=new Date().getHours();return h>=7&&h<18}
   function setModo(m,salvar){
     if(['auto','escuro','claro'].indexOf(m)<0)m='auto';
-    modo=m;r.setAttribute('data-mode',m==='claro'||(m==='auto'&&mq.matches)?'light':'dark');
+    modo=m;r.setAttribute('data-mode',m==='claro'||(m==='auto'&&autoClaro())?'light':'dark');
     if(salvar)s('nexus-modo',m);
     avisar();
   }
-  if(mq.addEventListener)mq.addEventListener('change',function(){if(modo==='auto')setModo('auto')});
+  function autoTick(){if(modo==='auto')setModo('auto')}
+  if(window.setInterval)setInterval(autoTick,60000);
+  document.addEventListener('visibilitychange',function(){if(!document.hidden)autoTick()});
   var FUNDOS=[['padrao','Padrão'],['vidro','Vidro']],fundo='padrao';
   function setFundo(f,salvar){
     if(!FUNDOS.some(function(x){return x[0]===f}))f='padrao';

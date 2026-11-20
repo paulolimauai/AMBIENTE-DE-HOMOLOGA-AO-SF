@@ -19,7 +19,8 @@
     (function () {
         var r = document.documentElement, g = function (k) { try { return localStorage.getItem(k) || ''; } catch (e) { return ''; } };
         var m = g('nexus-modo'), b = g('nexus-fundo');
-        var claro = m === 'claro' || (m !== 'escuro' && window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches);
+        var h = new Date().getHours(); /* automático: claro das 07h às 18h (hora local) */
+        var claro = m === 'claro' || (m !== 'escuro' && h >= 7 && h < 18);
         r.setAttribute('data-mode', claro ? 'light' : 'dark');
         r.setAttribute('data-bg', /^[a-z]+$/.test(b) ? b : 'vidro');
     })();
@@ -3225,15 +3226,17 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         function aplicaImg(u) { document.querySelector('.l-img').style.backgroundImage = u ? 'url("' + u + '")' : ''; }
         var im = ls('nexus-img', ''); if (im) aplicaImg(im);
 
-        /* aparência: só leitura de nexus-modo (automático acompanha o aparelho) */
-        var mq = window.matchMedia('(prefers-color-scheme: light)'), apar = ls('nexus-modo', 'auto');
+        /* aparência: só leitura de nexus-modo (automático segue o horário: claro das 07h às 18h, escuro no restante) */
+        var apar = ls('nexus-modo', 'auto');
+        function autoClaro() { var h = new Date().getHours(); return h >= 7 && h < 18; }
         function aplicarModo() {
             if (['auto', 'escuro', 'claro'].indexOf(apar) < 0) apar = 'auto';
-            root.setAttribute('data-mode', apar === 'claro' || (apar === 'auto' && mq.matches) ? 'light' : 'dark');
+            root.setAttribute('data-mode', apar === 'claro' || (apar === 'auto' && autoClaro()) ? 'light' : 'dark');
         }
         aplicarModo();
-        var mqf = function () { if (apar === 'auto') aplicarModo(); };
-        if (mq.addEventListener) mq.addEventListener('change', mqf); else if (mq.addListener) mq.addListener(mqf);
+        var autoTick = function () { if (apar === 'auto') aplicarModo(); };
+        if (window.setInterval) setInterval(autoTick, 60000);
+        document.addEventListener('visibilitychange', function () { if (!document.hidden) autoTick(); });
     })();
     </script>
     <script>

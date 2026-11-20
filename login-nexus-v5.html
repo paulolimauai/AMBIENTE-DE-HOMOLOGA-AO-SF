@@ -15,7 +15,7 @@
 /* Aparência e fundo antes do primeiro desenho (evita piscar entre claro e escuro). O script do fim da página valida e completa. */
 (function(){
   var r=document.documentElement,g=function(k){try{return localStorage.getItem(k)||''}catch(e){return ''}},m=g('nexus-modo'),b=g('nexus-fundo');
-  var claro=m==='claro'||(m!=='escuro'&&window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches);
+  var h=new Date().getHours(),claro=m==='claro'||(m!=='escuro'&&h>=7&&h<18); /* automático: claro das 07h às 18h (hora local) */
   r.setAttribute('data-mode',claro?'light':'dark');
   if(/^[a-z]+$/.test(b))r.setAttribute('data-bg',b);
 })();
@@ -548,15 +548,17 @@ h3 { font-size: 18px !important; }
   function aplicaImg(u){document.querySelector('.l-img').style.backgroundImage=u?'url("'+u+'")':''}
   var im=ls('nexus-img','');if(im)aplicaImg(im);
 
-  /* aparência: só leitura de nexus-modo (automático acompanha o aparelho) */
-  var mq=window.matchMedia('(prefers-color-scheme: light)'),apar=ls('nexus-modo','auto');
+  /* aparência: só leitura de nexus-modo (automático segue o horário: claro das 07h às 18h, escuro no restante) */
+  var apar=ls('nexus-modo','auto');
+  function autoClaro(){var h=new Date().getHours();return h>=7&&h<18}
   function aplicarModo(){
     if(['auto','escuro','claro'].indexOf(apar)<0)apar='auto';
-    root.setAttribute('data-mode',apar==='claro'||(apar==='auto'&&mq.matches)?'light':'dark');
+    root.setAttribute('data-mode',apar==='claro'||(apar==='auto'&&autoClaro())?'light':'dark');
   }
   aplicarModo();tc();
-  var mqf=function(){if(apar==='auto')aplicarModo()};
-  if(mq.addEventListener)mq.addEventListener('change',mqf);else if(mq.addListener)mq.addListener(mqf);
+  var autoTick=function(){if(apar==='auto')aplicarModo()};
+  if(window.setInterval)setInterval(autoTick,60000);
+  document.addEventListener('visibilitychange',function(){if(!document.hidden)autoTick()});
 
   /* =====================================================================
      Utilitários de formulário

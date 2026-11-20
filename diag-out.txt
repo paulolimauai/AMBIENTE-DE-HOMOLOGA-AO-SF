@@ -1,0 +1,732 @@
+=== 390px ===
+{
+ "vw": 390,
+ "sidebar": {
+  "x": 0,
+  "y": 0,
+  "w": 0,
+  "h": 0
+ },
+ "topbar": {
+  "x": 0,
+  "y": 0,
+  "w": 375,
+  "h": 64
+ },
+ "pageContent": {
+  "x": 0,
+  "y": 64,
+  "w": 375,
+  "h": 3248
+ },
+ "h1": [
+  {
+   "t": "Boa tarde, Paulo",
+   "fs": "19px",
+   "r": {
+    "x": 25,
+    "y": 114,
+    "w": 325,
+    "h": 21
+   }
+  },
+  {
+   "t": "Fluxo de caixa",
+   "fs": "14px",
+   "r": {
+    "x": 25,
+    "y": 1395,
+    "w": 325,
+    "h": 18
+   }
+  },
+  {
+   "t": "Para onde vai o dinheiro",
+   "fs": "14px",
+   "r": {
+    "x": 25,
+    "y": 2026,
+    "w": 317,
+    "h": 18
+   }
+  }
+ ],
+ "kpis": [],
+ "kpiGridCols": null,
+ "bodyFs": "14px",
+ "pFs": "14px",
+ "tableMinW": "620px",
+ "docFs": "14px",
+ "overflowEls": []
+}
+=== 600px ===
+{
+ "vw": 600,
+ "sidebar": {
+  "x": 0,
+  "y": 0,
+  "w": 0,
+  "h": 0
+ },
+ "topbar": {
+  "x": 0,
+  "y": 0,
+  "w": 585,
+  "h": 64
+ },
+ "pageContent": {
+  "x": 0,
+  "y": 64,
+  "w": 585,
+  "h": 2379
+ },
+ "h1": [
+  {
+   "t": "Boa tarde, Paulo",
+   "fs": "19px",
+   "r": {
+    "x": 25,
+    "y": 114,
+    "w": 373,
+    "h": 21
+   }
+  },
+  {
+   "t": "Fluxo de caixa",
+   "fs": "14px",
+   "r": {
+    "x": 25,
+    "y": 978,
+    "w": 508,
+    "h": 18
+   }
+  },
+  {
+   "t": "Para onde vai o dinheiro",
+   "fs": "14px",
+   "r": {
+    "x": 25,
+    "y": 1477,
+    "w": 317,
+    "h": 18
+   }
+  }
+ ],
+ "kpis": [],
+ "kpiGridCols": null,
+ "bodyFs": "14px",
+ "pFs": "14px",
+ "tableMinW": "620px",
+ "docFs": "14px",
+ "overflowEls": []
+}
+=== 768px ===
+{
+ "vw": 768,
+ "sidebar": {
+  "x": 0,
+  "y": 0,
+  "w": 0,
+  "h": 0
+ },
+ "topbar": {
+  "x": 0,
+  "y": 0,
+  "w": 753,
+  "h": 76
+ },
+ "pageContent": {
+  "x": 0,
+  "y": 76,
+  "w": 753,
+  "h": 2210
+ },
+ "h1": [
+  {
+   "t": "Boa tarde, Paulo",
+   "fs": "19px",
+   "r": {
+    "x": 49,
+    "y": 140,
+    "w": 373,
+    "h": 21
+   }
+  },
+  {
+   "t": "Fluxo de caixa",
+   "fs": "14px",
+   "r": {
+    "x": 49,
+    "y": 902,
+    "w": 508,
+    "h": 18
+   }
+  },
+  {
+   "t": "Para onde vai o dinheiro",
+   "fs": "14px",
+   "r": {
+    "x": 49,
+    "y": 1385,
+    "w": 317,
+    "h": 18
+   }
+  }
+ ],
+ "kpis": [],
+ "kpiGridCols": null,
+ "bodyFs": "14px",
+ "pFs": "14px",
+ "tableMinW": "0px",
+ "docFs": "14px",
+ "overflowEls": []
+}
+=== 861px ===
+{
+ "vw": 861,
+ "sidebar": {
+  "x": 0,
+  "y": 76,
+  "w": 280,
+  "h": 824
+ },
+ "topbar": {
+  "x": 0,
+  "y": 0,
+  "w": 846,
+  "h": 76
+ },
+ "pageContent": {
+  "x": 280,
+  "y": 76,
+  "w": 566,
+  "h": 2720
+ },
+ "h1": [
+  {
+   "t": "Boa tarde, Paulo",
+   "fs": "19px",
+   "r": {
+    "x": 334,
+    "y": 141,
+    "w": 373,
+    "h": 21
+   }
+  },
+  {
+   "t": "Fluxo de caixa",
+   "fs": "14px",
+   "r": {
+    "x": 329,
+    "y": 1222,
+    "w": 468,
+    "h": 18
+   }
+  },
+  {
+   "t": "Para onde vai o dinheiro",
+   "fs": "14px",
+   "r": {
+    "x": 329,
+    "y": 1784,
+    "w": 317,
+    "h": 18
+   }
+  }
+ ],
+ "kpis": [],
+ "kpiGridCols": null,
+ "bodyFs": "14px",
+ "pFs": "14px",
+ "tableMinW": "0px",
+ "docFs": "14px",
+ "overflowEls": []
+}
+=== 1024px ===
+{
+ "vw": 1024,
+ "sidebar": {
+  "x": 0,
+  "y": 76,
+  "w": 280,
+  "h": 824
+ },
+ "topbar": {
+  "x": 0,
+  "y": 0,
+  "w": 1009,
+  "h": 76
+ },
+ "pageContent": {
+  "x": 280,
+  "y": 76,
+  "w": 729,
+  "h": 2244
+ },
+ "h1": [
+  {
+   "t": "Boa tarde, Paulo",
+   "fs": "19px",
+   "r": {
+    "x": 334,
+    "y": 141,
+    "w": 373,
+    "h": 21
+   }
+  },
+  {
+   "t": "Fluxo de caixa",
+   "fs": "14px",
+   "r": {
+    "x": 329,
+    "y": 928,
+    "w": 508,
+    "h": 18
+   }
+  },
+  {
+   "t": "Para onde vai o dinheiro",
+   "fs": "14px",
+   "r": {
+    "x": 329,
+    "y": 1433,
+    "w": 317,
+    "h": 18
+   }
+  }
+ ],
+ "kpis": [],
+ "kpiGridCols": null,
+ "bodyFs": "14px",
+ "pFs": "14px",
+ "tableMinW": "0px",
+ "docFs": "14px",
+ "overflowEls": []
+}
+=== 1180px ===
+{
+ "vw": 1180,
+ "sidebar": {
+  "x": 0,
+  "y": 72,
+  "w": 266,
+  "h": 790
+ },
+ "topbar": {
+  "x": 0,
+  "y": 0,
+  "w": 1165,
+  "h": 72
+ },
+ "pageContent": {
+  "x": 266,
+  "y": 72,
+  "w": 899,
+  "h": 1923
+ },
+ "h1": [
+  {
+   "t": "Boa tarde, Paulo",
+   "fs": "20.06px",
+   "r": {
+    "x": 317,
+    "y": 134,
+    "w": 354,
+    "h": 21
+   }
+  },
+  {
+   "t": "Fluxo de caixa",
+   "fs": "14px",
+   "r": {
+    "x": 315,
+    "y": 847,
+    "w": 482,
+    "h": 17
+   }
+  },
+  {
+   "t": "Para onde vai o dinheiro",
+   "fs": "14px",
+   "r": {
+    "x": 315,
+    "y": 1278,
+    "w": 302,
+    "h": 17
+   }
+  }
+ ],
+ "kpis": [],
+ "kpiGridCols": null,
+ "bodyFs": "14px",
+ "pFs": "14px",
+ "tableMinW": "0px",
+ "docFs": "14px",
+ "overflowEls": []
+}
+=== 1280px ===
+{
+ "vw": 1280,
+ "sidebar": {
+  "x": 0,
+  "y": 76,
+  "w": 294,
+  "h": 824
+ },
+ "topbar": {
+  "x": 0,
+  "y": 0,
+  "w": 1265,
+  "h": 76
+ },
+ "pageContent": {
+  "x": 294,
+  "y": 76,
+  "w": 971,
+  "h": 2032
+ },
+ "h1": [
+  {
+   "t": "Boa tarde, Paulo",
+   "fs": "21.76px",
+   "r": {
+    "x": 348,
+    "y": 141,
+    "w": 373,
+    "h": 24
+   }
+  },
+  {
+   "t": "Fluxo de caixa",
+   "fs": "14px",
+   "r": {
+    "x": 346,
+    "y": 899,
+    "w": 508,
+    "h": 18
+   }
+  },
+  {
+   "t": "Para onde vai o dinheiro",
+   "fs": "14px",
+   "r": {
+    "x": 346,
+    "y": 1352,
+    "w": 317,
+    "h": 18
+   }
+  }
+ ],
+ "kpis": [],
+ "kpiGridCols": null,
+ "bodyFs": "14px",
+ "pFs": "14px",
+ "tableMinW": "0px",
+ "docFs": "14px",
+ "overflowEls": []
+}
+=== 1366px ===
+{
+ "vw": 1366,
+ "sidebar": {
+  "x": 0,
+  "y": 76,
+  "w": 314,
+  "h": 824
+ },
+ "topbar": {
+  "x": 0,
+  "y": 0,
+  "w": 1351,
+  "h": 76
+ },
+ "pageContent": {
+  "x": 314,
+  "y": 76,
+  "w": 1037,
+  "h": 2059
+ },
+ "h1": [
+  {
+   "t": "Boa tarde, Paulo",
+   "fs": "23.222px",
+   "r": {
+    "x": 368,
+    "y": 141,
+    "w": 373,
+    "h": 26
+   }
+  },
+  {
+   "t": "Fluxo de caixa",
+   "fs": "14px",
+   "r": {
+    "x": 366,
+    "y": 905,
+    "w": 508,
+    "h": 18
+   }
+  },
+  {
+   "t": "Para onde vai o dinheiro",
+   "fs": "14px",
+   "r": {
+    "x": 366,
+    "y": 1412,
+    "w": 317,
+    "h": 18
+   }
+  }
+ ],
+ "kpis": [],
+ "kpiGridCols": null,
+ "bodyFs": "14px",
+ "pFs": "14px",
+ "tableMinW": "0px",
+ "docFs": "14px",
+ "overflowEls": []
+}
+=== 1440px ===
+{
+ "vw": 1440,
+ "sidebar": {
+  "x": 0,
+  "y": 76,
+  "w": 331,
+  "h": 824
+ },
+ "topbar": {
+  "x": 0,
+  "y": 0,
+  "w": 1425,
+  "h": 76
+ },
+ "pageContent": {
+  "x": 331,
+  "y": 76,
+  "w": 1094,
+  "h": 2061
+ },
+ "h1": [
+  {
+   "t": "Boa tarde, Paulo",
+   "fs": "24px",
+   "r": {
+    "x": 385,
+    "y": 141,
+    "w": 373,
+    "h": 26
+   }
+  },
+  {
+   "t": "Fluxo de caixa",
+   "fs": "14px",
+   "r": {
+    "x": 383,
+    "y": 907,
+    "w": 508,
+    "h": 18
+   }
+  },
+  {
+   "t": "Para onde vai o dinheiro",
+   "fs": "14px",
+   "r": {
+    "x": 383,
+    "y": 1415,
+    "w": 317,
+    "h": 18
+   }
+  }
+ ],
+ "kpis": [],
+ "kpiGridCols": null,
+ "bodyFs": "14px",
+ "pFs": "14px",
+ "tableMinW": "0px",
+ "docFs": "14px",
+ "overflowEls": []
+}
+=== 1600px ===
+{
+ "vw": 1600,
+ "sidebar": {
+  "x": 0,
+  "y": 76,
+  "w": 344,
+  "h": 824
+ },
+ "topbar": {
+  "x": 0,
+  "y": 0,
+  "w": 1585,
+  "h": 76
+ },
+ "pageContent": {
+  "x": 344,
+  "y": 76,
+  "w": 1241,
+  "h": 1884
+ },
+ "h1": [
+  {
+   "t": "Boa tarde, Paulo",
+   "fs": "24px",
+   "r": {
+    "x": 398,
+    "y": 141,
+    "w": 373,
+    "h": 26
+   }
+  },
+  {
+   "t": "Fluxo de caixa",
+   "fs": "14px",
+   "r": {
+    "x": 396,
+    "y": 842,
+    "w": 508,
+    "h": 18
+   }
+  },
+  {
+   "t": "Para onde vai o dinheiro",
+   "fs": "14px",
+   "r": {
+    "x": 396,
+    "y": 1237,
+    "w": 317,
+    "h": 18
+   }
+  }
+ ],
+ "kpis": [],
+ "kpiGridCols": null,
+ "bodyFs": "14px",
+ "pFs": "14px",
+ "tableMinW": "0px",
+ "docFs": "14px",
+ "overflowEls": []
+}
+=== 1920px ===
+{
+ "vw": 1920,
+ "sidebar": {
+  "x": 0,
+  "y": 76,
+  "w": 344,
+  "h": 824
+ },
+ "topbar": {
+  "x": 0,
+  "y": 0,
+  "w": 1905,
+  "h": 76
+ },
+ "pageContent": {
+  "x": 344,
+  "y": 76,
+  "w": 1561,
+  "h": 1452
+ },
+ "h1": [
+  {
+   "t": "Boa tarde, Paulo",
+   "fs": "24px",
+   "r": {
+    "x": 398,
+    "y": 141,
+    "w": 376,
+    "h": 26
+   }
+  },
+  {
+   "t": "Fluxo de caixa",
+   "fs": "14px",
+   "r": {
+    "x": 396,
+    "y": 666,
+    "w": 508,
+    "h": 18
+   }
+  },
+  {
+   "t": "Para onde vai o dinheiro",
+   "fs": "14px",
+   "r": {
+    "x": 1393,
+    "y": 666,
+    "w": 317,
+    "h": 18
+   }
+  }
+ ],
+ "kpis": [],
+ "kpiGridCols": null,
+ "bodyFs": "14px",
+ "pFs": "14px",
+ "tableMinW": "0px",
+ "docFs": "14px",
+ "overflowEls": []
+}
+=== 2560px ===
+{
+ "vw": 2560,
+ "sidebar": {
+  "x": 0,
+  "y": 76,
+  "w": 344,
+  "h": 824
+ },
+ "topbar": {
+  "x": 0,
+  "y": 0,
+  "w": 2545,
+  "h": 76
+ },
+ "pageContent": {
+  "x": 344,
+  "y": 76,
+  "w": 2201,
+  "h": 1383
+ },
+ "h1": [
+  {
+   "t": "Boa tarde, Paulo",
+   "fs": "24px",
+   "r": {
+    "x": 398,
+    "y": 141,
+    "w": 376,
+    "h": 26
+   }
+  },
+  {
+   "t": "Fluxo de caixa",
+   "fs": "14px",
+   "r": {
+    "x": 396,
+    "y": 666,
+    "w": 508,
+    "h": 18
+   }
+  },
+  {
+   "t": "Para onde vai o dinheiro",
+   "fs": "14px",
+   "r": {
+    "x": 1819,
+    "y": 666,
+    "w": 317,
+    "h": 18
+   }
+  }
+ ],
+ "kpis": [],
+ "kpiGridCols": null,
+ "bodyFs": "14px",
+ "pFs": "14px",
+ "tableMinW": "0px",
+ "docFs": "14px",
+ "overflowEls": []
+}

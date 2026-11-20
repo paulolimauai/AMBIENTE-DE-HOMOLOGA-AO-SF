@@ -88,14 +88,17 @@
     if(salvar)s('nexus:cores',JSON.stringify({id:'custom',hex:hex}));
     avisar();
   }
-  var mq=window.matchMedia?matchMedia('(prefers-color-scheme: light)'):{matches:false};
+  /* Automático por horário: claro das 07h às 18h (hora local), escuro no restante do dia */
+  function autoClaro(){var h=new Date().getHours();return h>=7&&h<18}
   function setModo(m,salvar){
     if(['auto','escuro','claro'].indexOf(m)<0)m='auto';
-    modo=m;r.setAttribute('data-mode',m==='claro'||(m==='auto'&&mq.matches)?'light':'dark');
+    modo=m;r.setAttribute('data-mode',m==='claro'||(m==='auto'&&autoClaro())?'light':'dark');
     if(salvar)s('nexus-modo',m);
     tc();avisar();
   }
-  if(mq.addEventListener)mq.addEventListener('change',function(){if(modo==='auto')setModo('auto')});
+  function autoTick(){if(modo==='auto')setModo('auto')}
+  if(window.setInterval)setInterval(autoTick,60000);
+  document.addEventListener('visibilitychange',function(){if(!document.hidden)autoTick()});
   var FUNDOS=[['padrao','Padrão'],['vidro','Vidro']],fundo='padrao';
   function setFundo(f,salvar){
     if(!FUNDOS.some(function(x){return x[0]===f}))f='padrao';
@@ -369,7 +372,7 @@
         <div>
           <span class="kicker">Do seu jeito</span>
           <h2 id="h-pers">O painel com a sua cara</h2>
-          <p class="lead">Escolha entre 10 paletas ou a sua própria cor, alterne entre modo claro, escuro e automático e mude o fundo do site. Experimente aqui mesmo: a escolha vale também depois do login.</p>
+          <p class="lead">Escolha entre 10 paletas ou a sua própria cor, alterne entre modo claro, escuro e automático (claro das 07h às 18h, escuro à noite) e mude o fundo do site. Experimente aqui mesmo: a escolha vale também depois do login.</p>
           <div class="grp"><span>Aparência</span><div class="chips" data-modos role="group" aria-label="Aparência"></div></div>
           <div class="grp"><span>Fundo</span><div class="chips c2" data-fundos role="group" aria-label="Fundo do site"></div></div>
           <div class="grp"><span>Cor de destaque</span><div class="sws" data-cores role="group" aria-label="Paleta de cores"></div></div>
@@ -377,7 +380,7 @@
         <div class="pers-info">
           <div class="card"><span class="ico soft"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.8-.8 1.8-1.7 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2 0-.9.7-1.6 1.6-1.6H16a5 5 0 0 0 5-5c0-4-4-7.3-9-7.3Z"/></svg></span><div><b>A mesma cor no login e no painel</b><span>A cor e a aparência escolhidas aqui continuam valendo depois do login e ficam salvas neste navegador.</span></div></div>
           <div class="card"><span class="ico soft"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg></span><div><b>Escala da tela ajustável</b><span>O painel se adapta ao tamanho da janela, e a escala pode ser ajustada em Minha Conta.</span></div></div>
-          <div class="card"><span class="ico soft"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v18"/></svg></span><div><b>Segue o seu aparelho</b><span>No modo automático, a aparência acompanha a configuração clara ou escura do seu aparelho.</span></div></div>
+          <div class="card"><span class="ico soft"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v18"/></svg></span><div><b>Segue o horário</b><span>No modo automático, o site fica claro das 07h às 18h e escuro no restante do dia.</span></div></div>
         </div>
       </div>
     </div>
@@ -419,7 +422,7 @@
           <ul class="tick">
             <li>Todos os módulos financeiros liberados</li>
             <li>Central de Serviços com suporte por protocolo</li>
-            <li>Aparência personalizável, com modo claro, escuro e automático</li>
+            <li>Aparência personalizável, com modo claro, escuro e automático por horário</li>
             <li>Acesso pelo celular, tablet e computador</li>
           </ul>
           <a class="btn pri lg" data-cta="criar" href="/login.html#criar" ><span class="t">Começar com 1 dia grátis</span></a>
@@ -457,7 +460,7 @@
         <details name="faq"><summary>Como funcionam orçamentos e metas?</summary><p>Em Planejamento Orçamentário você define um limite por categoria e recebe alertas quando o gasto se aproxima do teto. Em Planejamento de Metas você cadastra valor alvo e prazo, e acompanha o progresso na barra de cada meta.</p></details>
         <details name="faq"><summary>Posso guardar comprovantes e documentos?</summary><p>Sim, o módulo Gestão de Documentos permite anexar comprovantes e arquivos ligados aos seus lançamentos, tudo dentro da sua conta.</p></details>
         <details name="faq"><summary>Como peço ajuda ou abro um chamado?</summary><p>Pela Central de Serviços, dentro do sistema ou pelo link "Abrir um chamado" no rodapé deste site. Você escolhe a categoria, descreve o problema e recebe um protocolo para acompanhar cada etapa do atendimento.</p></details>
-        <details name="faq"><summary>Posso personalizar a aparência do painel?</summary><p>Sim. Você escolhe entre 10 paletas de cor ou a sua própria cor, alterna entre modo claro, escuro e automático, e ajusta a escala da tela em Minha Conta. A mesma aparência vale no site, no login e no painel.</p></details>
+        <details name="faq"><summary>Posso personalizar a aparência do painel?</summary><p>Sim. Você escolhe entre 10 paletas de cor ou a sua própria cor, alterna entre modo claro, escuro e automático (claro das 07h às 18h, escuro à noite), e ajusta a escala da tela em Minha Conta. A mesma aparência vale no site, no login e no painel.</p></details>
         <details name="faq"><summary>Meus dados ficam salvos onde?</summary><p>Na nuvem, vinculados à sua conta. Você entra de qualquer computador, tablet ou celular com o mesmo login e pode sair da conta quando quiser.</p></details>
       </div>
     </div>
