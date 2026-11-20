@@ -112,26 +112,35 @@
 
   var CSS = '' +
     '.lb-s{margin:0 0 14px}' +
-    '.lb-l{display:block;font-size:14px;font-weight:600;color:var(--m);margin:0 0 6px;text-transform:uppercase;letter-spacing:.04em}' +
+    '.lb-l{display:block;font-size:var(--fs,14px);font-weight:600;color:var(--m);margin:0 0 6px;text-transform:uppercase;letter-spacing:.04em}' +
     '.lb-chips{display:flex;flex-wrap:wrap;gap:8px}' +
-    '.lb-chip{min-height:38px;padding:0 14px;border-radius:99px;border:1px solid var(--b);background:transparent;color:var(--t);font:inherit;font-weight:600;font-size:14px;cursor:pointer;transition:background .15s,border-color .15s}' +
+    '.lb-chip{min-height:38px;padding:0 14px;border-radius:99px;border:1px solid var(--b);background:transparent;color:var(--t);font:inherit;font-weight:600;font-size:var(--fs,14px);cursor:pointer;transition:background .15s,border-color .15s}' +
     '.lb-chip:hover{border-color:var(--a)}' +
     '.lb-chip[aria-pressed="true"]{background:color-mix(in srgb,var(--a) 22%,transparent);border-color:var(--a)}' +
     '.lb-chip.lb-vit[aria-pressed="true"]{background:color-mix(in srgb,var(--w) 24%,transparent);border-color:var(--w)}' +
     '.lb-custom{display:grid;grid-template-columns:1fr 1fr;gap:10px}' +
-    '.lb-prev{padding:11px 13px;border-radius:12px;border:1px solid var(--b);font-size:14px;line-height:1.5}' +
+    '.lb-prev{padding:11px 13px;border-radius:12px;border:1px solid var(--b);font-size:var(--fs,14px);line-height:1.5}' +
     '.lb-prev.ok{border-color:color-mix(in srgb,var(--e) 45%,transparent);background:color-mix(in srgb,var(--e) 9%,transparent)}' +
     '.lb-prev.warn{border-color:color-mix(in srgb,var(--w) 50%,transparent);background:color-mix(in srgb,var(--w) 10%,transparent)}' +
     '.lb-prev.bad{border-color:color-mix(in srgb,var(--r) 50%,transparent);background:color-mix(in srgb,var(--r) 10%,transparent)}' +
-    '.lb-erro{margin:0;color:var(--r);font-size:14px}' +
+    '.lb-erro{margin:0;color:var(--r);font-size:var(--fs,14px)}' +
     '.lb-pw{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:13px 15px;border-radius:12px;border:1px dashed var(--a);background:color-mix(in srgb,var(--a) 8%,transparent)}' +
     '.lb-pw code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:20px;font-weight:800;letter-spacing:.06em;user-select:all;word-break:break-all}' +
-    '.lb-chk{display:flex;align-items:flex-start;gap:10px;text-transform:none;font-size:14px;color:var(--t);font-weight:500;letter-spacing:0;cursor:pointer}' +
+    '.lb-chk{display:flex;align-items:flex-start;gap:10px;text-transform:none;font-size:var(--fs,14px);color:var(--t);font-weight:500;letter-spacing:0;cursor:pointer}' +
     '.lb-chk input{margin-top:2px}';
 
   var ICONES = {
-    key: '<circle cx="7.5" cy="15.5" r="4.5"/><path d="M10.7 12.3L21 2M17 6l3 3M14 9l2 2"/>'
+    key: '<circle cx="7.5" cy="15.5" r="4.5"/><path d="M10.7 12.3L21 2M17 6l3 3M14 9l2 2"/>',
+    unlock: '<rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 017.5-1.5"/>',
+    ok: '<circle cx="12" cy="12" r="9"/><path d="m8.5 12.5 2.5 2.5 4.5-5"/>'
   };
+  // Mesmo selo de ícone dos diálogos do painel (.ask-h/.ask-ic): cabeçalho consistente em todos os modais
+  function icone(n, tom) {
+    return '<div class="ask-h"><span class="ask-ic ' + (tom || 'n') + '" aria-hidden="true"><svg class="i" viewBox="0 0 24 24">' + (ICONES[n] || '') + '</svg></span>';
+  }
+  function cabecalho(n, tom, titulo) {
+    return icone(n, tom) + '<h3>' + titulo + '</h3></div>';
+  }
 
   function montar(w) {
     var d = w.document;
@@ -191,7 +200,7 @@
       }).join('');
 
       w.modal(
-        '<h3 style="font-size:17px;margin-bottom:4px">Liberar acesso</h3>' +
+        cabecalho('unlock', 's', 'Liberar acesso') +
         '<p class="sub lb-s">Concede tempo direto na conta. Se ainda houver prazo, o novo tempo soma ao vencimento. Vale no Nexus e no GLPI.</p>' +
         '<form id="lbF" class="col" novalidate>' +
           '<div><label for="lbQuem">Assinante</label><select id="lbQuem">' + quem + '</select></div>' +
@@ -273,7 +282,7 @@
         return;
       }
       w.modal(
-        '<h3 style="font-size:17px;margin-bottom:4px">Redefinir senha</h3>' +
+        cabecalho('key', 'n', 'Redefinir senha') +
         '<p class="sub lb-s">Gera uma senha provisória para <b style="color:var(--t)">' + escapar(conta.n) + '</b> (' + escapar(conta.e) + '). A senha atual deixa de valer e quem estiver logado nesta conta é desconectado.</p>' +
         '<form id="lbR" class="col">' +
           '<label class="lb-chk" for="lbTroca"><input type="checkbox" id="lbTroca" checked> Exigir que a pessoa crie uma nova senha no próximo login</label>' +
@@ -300,7 +309,7 @@
       d.addEventListener('keydown', aoTeclar);
       soltarEsc = function () { d.removeEventListener('keydown', aoTeclar); soltarEsc = null; };
       w.modal(
-        '<h3 style="font-size:17px;margin-bottom:4px">Senha redefinida</h3>' +
+        cabecalho('ok', 's', 'Senha redefinida') +
         '<p class="sub lb-s">Passe esta senha provisória a <b style="color:var(--t)">' + escapar(j.name) + '</b> (' + escapar(j.email) + '). Ela aparece só agora: depois de fechar esta janela não dá para ver de novo.</p>' +
         '<div class="lb-pw"><code id="lbSenha">' + escapar(j.tempPassword) + '</code><button type="button" class="btn sm" id="lbCopiar">Copiar</button></div>' +
         '<p class="sub" style="margin:12px 0 0">' + (j.must_change_password
