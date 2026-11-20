@@ -94,7 +94,7 @@
 </script>
 <style>
 /* ---------- Tokens: tudo que tem cor sai daqui, então Escuro e Claro (Personalizar) valem para a tela toda ---------- */
-:root{color-scheme:dark;--fs:clamp(11px,.5vw + 6.5px,13px);--h:224;--h2:260;--sat:100%;--orb:1;--bg:hsl(var(--h) calc(var(--sat)*.68) 7%);--glow-a:hsl(var(--h) calc(var(--sat)*.77) 57%);--glow-b:hsl(var(--h2) calc(var(--sat)*.6) 47%);--brand:hsl(var(--h) var(--sat) 66%);--tint:rgba(255,255,255,.05);--b:rgba(255,255,255,.1);--b2:rgba(255,255,255,.2);--t:#e8eef8;--m:#b1c2d8;--a:hsl(var(--h) var(--sat) 66%);--at:color-mix(in srgb,var(--a) 42%,#fff);--e:#34d399;--w:#fbbf24;--r:#fd8a9b;--surf:rgba(9,16,32,.5);--surf2:rgba(255,255,255,.07);--hov:rgba(255,255,255,.13);--field:rgba(4,10,22,.55);--pop:rgba(11,20,36,.985);--hdr:rgba(9,16,32,.6);--shadow:0 1.4rem 3rem rgba(0,0,0,.5);--vign:rgba(0,0,0,.5);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root{color-scheme:dark;--fs:clamp(12px,.5vw + 6.5px,13px);--h:224;--h2:260;--sat:100%;--orb:1;--bg:hsl(var(--h) calc(var(--sat)*.68) 7%);--glow-a:hsl(var(--h) calc(var(--sat)*.77) 57%);--glow-b:hsl(var(--h2) calc(var(--sat)*.6) 47%);--brand:hsl(var(--h) var(--sat) 66%);--tint:rgba(255,255,255,.05);--b:rgba(255,255,255,.1);--b2:rgba(255,255,255,.2);--t:#e8eef8;--m:#b1c2d8;--a:hsl(var(--h) var(--sat) 66%);--at:color-mix(in srgb,var(--a) 42%,#fff);--e:#34d399;--w:#fbbf24;--r:#fd8a9b;--surf:rgba(9,16,32,.5);--surf2:rgba(255,255,255,.07);--hov:rgba(255,255,255,.13);--field:rgba(4,10,22,.55);--pop:rgba(11,20,36,.985);--hdr:rgba(9,16,32,.6);--shadow:0 1.4rem 3rem rgba(0,0,0,.5);--vign:rgba(0,0,0,.5);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 html[data-mode="light"]{color-scheme:light;--bg:hsl(var(--h) calc(var(--sat)*.6) 96%);--t:#0e1a2b;--m:#455873;--b:rgba(14,26,43,.14);--b2:rgba(14,26,43,.24);--tint:rgba(14,26,43,.05);--a:var(--a-lt,#1d4ed8);--at:var(--a);--e:#03634a;--w:#92400e;--r:#be123c;--surf:rgba(255,255,255,.78);--surf2:rgba(14,26,43,.05);--hov:rgba(14,26,43,.09);--field:rgba(255,255,255,.96);--pop:#fff;--hdr:rgba(255,255,255,.72);--shadow:0 1.2rem 2.6rem rgba(14,26,43,.18);--vign:rgba(14,26,43,.07)}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *{box-sizing:border-box;margin:0}
@@ -279,6 +279,36 @@ td.emp{text-align:center;padding:44px 18px}
 .emp .ei{width:52px;height:52px;margin:0 auto 12px;border-radius:16px;display:grid;place-items:center;background:var(--surf2);color:var(--m)}
 .emp .ei svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .emp b{display:block;font-size:var(--fs)}.emp p{color:var(--m);margin:4px 0 14px;font-size:var(--fs)}
+
+/* ---------- Assinaturas: filtro por situação, linha do assinante, ações e menu ⋯ ---------- */
+.seg{display:inline-flex;gap:2px;padding:3px;border-radius:12px;background:var(--surf2);border:1px solid var(--b);max-width:100%;overflow-x:auto}
+.seg button{display:inline-flex;align-items:center;gap:7px;min-height:34px;padding:0 11px;border:0;border-radius:9px;background:transparent;color:var(--m);font-weight:600;font-size:var(--fs);cursor:pointer;white-space:nowrap;transition:background .15s,color .15s}
+.seg button:hover{color:var(--t);background:var(--hov)}
+.seg button.on{background:var(--pop);color:var(--t);box-shadow:0 1px 4px rgba(0,0,0,.28),inset 0 0 0 1px color-mix(in srgb,var(--a) 55%,transparent)}
+.seg .n{min-width:22px;height:20px;padding:0 6px;border-radius:99px;display:inline-grid;place-items:center;background:color-mix(in srgb,var(--t) 10%,transparent);font-size:var(--fs);font-variant-numeric:tabular-nums}
+.seg button.on .n{background:color-mix(in srgb,var(--a) 22%,transparent)}
+.so{display:inline-flex;align-items:center;gap:8px;color:var(--m);font-size:var(--fs);font-weight:600;white-space:nowrap}
+.so select{width:auto;min-width:0}
+.tbl td[data-l="Assinante"]{max-width:0;width:34%}
+.who .wt{flex:1 1 0}
+.wl{display:flex;align-items:baseline;gap:6px;min-width:0;line-height:1.5}
+.wl .tag{flex:none}
+.lk{all:unset;box-sizing:border-box;cursor:pointer;flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:650;font-size:var(--fs);color:var(--t);border-radius:4px}
+.lk:hover{text-decoration:underline;text-underline-offset:3px}
+.lk:focus-visible{outline:2px solid var(--a);outline-offset:2px}
+.co,.em{color:var(--m);font-size:var(--fs);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.co{flex:1 1 0}.em{flex:0 1 auto}
+.pd.soon{color:var(--w);font-weight:600}
+.xtra{display:none}
+.pm{position:fixed;z-index:60;min-width:216px;padding:6px;border-radius:14px;background:var(--pop);box-shadow:var(--shadow);display:flex;flex-direction:column;animation:pop .15s ease}
+.pm button{display:flex;align-items:center;gap:10px;min-height:40px;padding:0 12px;border:0;border-radius:9px;background:transparent;color:var(--t);font:inherit;font-weight:600;font-size:var(--fs);text-align:left;cursor:pointer}
+.pm button:hover,.pm button:focus-visible{background:var(--hov);outline:0}
+.pm button svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;color:var(--m);flex:none}
+.pm button.d,.pm button.d svg{color:var(--r)}
+.pm button.d:hover,.pm button.d:focus-visible{background:color-mix(in srgb,var(--r) 14%,transparent)}
+.pm hr{border:0;border-top:1px solid var(--b);margin:4px 2px}
+@media(pointer:coarse){.pm button{min-height:44px}}
+@media(max-width:640px){.seg{flex:1 1 100%;flex-wrap:wrap}.so{flex:1 1 100%}.so select{flex:1}}
 @container (max-width:800px){
   thead{display:none}
   table,tbody{display:block}
@@ -293,6 +323,9 @@ td.emp{text-align:center;padding:44px 18px}
   .tbl .ib{width:auto;min-width:40px;padding:0 12px;border-color:var(--b);background:var(--surf2);height:40px}   /* .tbl vence o @media(pointer:coarse) que vem depois */
   .tbl .ib .tx{position:static;width:auto;height:auto;overflow:visible;clip:auto;white-space:nowrap}
   .ib.ph{display:none}
+  .tbl .more{display:none}
+  .tbl .xtra{display:inline-flex}
+  .tbl td[data-l="Assinante"]{max-width:none;width:auto;min-width:0}
   td.emp{flex:1 1 100%}
 }
 
@@ -497,13 +530,21 @@ const fd=d=>d.toLocaleDateString('pt-BR'),sub=id=>S.subs.find(s=>s.id===id);
 const ptBR=v=>{const m=String(v||'').match(/(\d+)\/(\d+)\/(\d+)(?:[ ,]+(\d+):(\d+))?/);return m?new Date(+m[3],m[2]-1,+m[1],+(m[4]||23),+(m[5]||59)):null};
 
 /* ===== Situação da assinatura ===== */
+/* Tempo até/desde uma data, em palavras: "hoje", "amanhã", "em 18 dias", "há 12 dias" (com hora, para o teste de 24 h: "em 5 h") */
+const diasCal=d=>{const dia=x=>new Date(x.getFullYear(),x.getMonth(),x.getDate());return Math.round((dia(d)-dia(new Date()))/864e5)};   /* dias de calendário até a data (negativo = já passou) */
+const tmpRel=(d,hora)=>{if(!d)return'';const ms=d-new Date();
+if(hora&&Math.abs(ms)<1728e5){const n=Math.max(1,Math.round(Math.abs(ms)/36e5));return ms>0?'em '+n+' h':'há '+n+' h'}
+const n=diasCal(d);
+return n===0?'hoje':n===1?'amanhã':n===-1?'ontem':n>0?'em '+n+' dias':'há '+(-n)+' dias'};
 function pinfo(s){if(!s)return{c:'mu',l:'Sem cadastro no site',d:''};
 if(s.val==='Vitalício')return{c:'ok',l:s.p+' • Vitalício',d:'sem vencimento'};
-const d=ptBR(s.val);
-if(d&&d<new Date())return{c:'er',l:s.p+' • Expirado',d:'expirou em '+s.val};
-if(s.p==='Teste grátis')return{c:'wa',l:'Teste grátis • 1 dia',d:'válido até '+(s.val||'—')+' — ainda não contratou o Mensal'};
-return{c:'ok',l:s.p+' • '+brl(s.v),d:'válido até '+(s.val||'—')}}
-const pcell=s=>{const p=pinfo(s);return`<span class="tag ${p.c}">${esc(p.l)}</span><div class="sub" style="font-size:var(--fs);margin:4px 0 0">${esc(p.d)}</div>`};
+const d=ptBR(s.val),teste=s.p==='Teste grátis',r=tmpRel(d,teste),venc=!!(d&&d<new Date());
+if(teste)return venc?{c:'er',l:'Teste encerrado',d:'encerrado '+r+' · não contratou',t:'Terminou em '+s.val}:{c:'wa',l:'Teste grátis • 1 dia',d:d?'termina '+r:'ainda não contratou o Mensal',t:d?'Termina em '+s.val:''};
+if(venc)return{c:'er',l:s.p+' • Expirado',d:'expirou em '+s.val+' · '+r};
+return{c:'ok',l:s.p+' • '+brl(s.v),d:'até '+(s.val||'—')+(d?' · '+r:''),w:!!d&&diasCal(d)<=7}}
+/* Situação para o filtro: bloqueado vem antes de tudo, o resto segue a cor do plano (ok / wa / er) */
+const stSub=s=>s.s==='Bloqueado'?'blk':pinfo(s).c;
+const pcell=s=>{const p=pinfo(s);return`<span class="tag ${p.c}">${esc(p.l)}</span><div class="sub pd${p.w?' soon':''}"${p.t?` title="${esc(p.t)}"`:''}>${esc(p.d)}</div>`};
 const mask=c=>c?String(c).replace(/^(\d{3})\.?\d{3}\.?\d{3}-?(\d{2})$/,'$1.•••.•••-$2'):'—';
 const planLine=e=>{const s=S.subs.find(x=>x.e.toLowerCase()===String(e).toLowerCase());if(!s)return'';const p=pinfo(s);return`<small class="pl" data-c="${p.c}">${esc(s.p==='Administrador'?'Vitalício':p.l)}</small>`};
 
@@ -528,6 +569,7 @@ undo:'<path d="M3 7v6h6"/><path d="M3 13a9 9 0 103-7.7L3 8"/>',
 lock:'<rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 018 0v3"/>',
 unlock:'<rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 017.5-1.5"/>',
 key:'<circle cx="7.5" cy="15.5" r="4.5"/><path d="M10.7 12.3 21 2"/><path d="m17 6 3 3M14 9l2 2"/>'};
+IC.dots='<circle cx="5" cy="12" r="1.7" style="fill:currentColor;stroke:none"/><circle cx="12" cy="12" r="1.7" style="fill:currentColor;stroke:none"/><circle cx="19" cy="12" r="1.7" style="fill:currentColor;stroke:none"/>';
 const MODS=[['subs','Assinaturas'],['pay','Pagamentos'],['acc','Acessos GLPI']];
 const cur=()=>{const h=location.hash.slice(1);return MODS.some(m=>m[0]===h)?h:'subs'};
 const I=n=>`<svg class="i" viewBox="0 0 24 24" aria-hidden="true">${IC[n]||''}</svg>`;
@@ -539,28 +581,28 @@ $('nav').querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{location.hash=b.
 const ini=n=>{const p=String(n||'?').replace(/@.*$/,'').trim().split(/[\s._-]+/).filter(Boolean);return((p[0]||'?')[0]+(p[1]?p[1][0]:(p[0]||'?')[1]||'')).toUpperCase()};
 const hue=s=>{let h=0;for(const c of String(s))h=(h*31+c.charCodeAt(0))%360;return h};
 const av=(n,e)=>`<span class="av" style="--hh:${hue(e||n)}" aria-hidden="true">${esc(ini(n))}</span>`;
-const F={q:'',fs:'',pq:'',pf:'',uq:'',up:'',us:''};   // filtros ficam guardados: não se perdem ao bloquear, liberar ou trocar de aba
+const F={q:'',fs:'',so:'nome',pq:'',pf:'',uq:'',up:'',us:''};   // filtros ficam guardados: não se perdem ao bloquear, liberar ou trocar de aba
 const opt=(v,l,sel)=>`<option value="${esc(v)}"${String(sel)===String(v)?' selected':''}>${esc(l)}</option>`;
 const kpi=(i,l,v,h,k)=>`<div class="glass kpi"${k?` style="--k:var(--${k})"`:''}><span class="kc">${I(i)}</span><div><div class="l">${l}</div><div class="v">${v}</div><div class="h">${h}</div></div></div>`;
 const head=(k,t,s,a)=>`<div class="ph"><div class="pt"><span class="pic">${I(k)}</span><div><h1>${t}</h1><p class="sub">${s}</p></div></div><div class="pa">${a||''}</div></div>`;
 const empty=(cols,i,t,p,btn)=>`<tr><td class="emp" colspan="${cols}"><div class="ei">${I(i)}</div><b>${t}</b><p>${p}</p>${btn||''}</td></tr>`;
-const PH3='<span class="ib ph" aria-hidden="true"></span>'.repeat(3);   // mantém o Editar na mesma coluna nas linhas sem bloquear/remover
+const PH1='<span class="ib ph" aria-hidden="true"></span>';   // mantém o Editar na mesma coluna nas linhas sem o menu "⋯" (a própria conta e a proprietária)
 const ib=(i,l,who,fn,x)=>`<button type="button" class="ib${x?' '+x:''}" title="${esc(l+' · '+who)}" aria-label="${esc(l+' '+who)}" onclick="${fn}">${I(i)}<span class="tx">${esc(l)}</span></button>`;
 const search=(id,ph,val,fn)=>`<div class="sch">${I('search')}<input id="${id}" type="search" placeholder="${ph}" aria-label="${ph}" value="${esc(val)}" oninput="${fn}"></div>`;
 const meMail=()=>String(window.__nxAdminEmail||'').toLowerCase();
 const skel=()=>`<section aria-busy="true" aria-label="Carregando"><div class="ph"><div class="pt"><span class="pic sk"></span><div><div class="sk" style="width:220px;height:26px"></div><div class="sk" style="width:340px;max-width:70vw;height:14px;margin-top:10px"></div></div></div></div><div class="grid g4">${'<div class="glass kpi"><span class="kc sk"></span><div style="flex:1"><div class="sk" style="width:70%;height:12px"></div><div class="sk" style="width:40%;height:26px;margin-top:8px"></div></div></div>'.repeat(4)}</div><div class="glass pad">${'<div class="sk" style="height:52px;margin-bottom:12px"></div>'.repeat(4)}</div></section>`;
 const errView=m=>`<section><div class="glass big"><div class="ei">${I('alert')}</div><h3 style="font-size:calc(var(--fs)*1.286)">Não foi possível carregar os dados</h3><p>${esc(m)}</p><button type="button" class="btn p" onclick="__nxCarregarReais(true)">${I('undo')} Tentar de novo</button></div></section>`;
-function limpar(){Object.assign(F,{q:'',fs:'',pq:'',pf:'',uq:'',up:'',us:''});rend()}
+function limpar(){Object.assign(F,{q:'',fs:'',so:'nome',pq:'',pf:'',uq:'',up:'',us:''});rend()}
 const limparBtn=()=>`<button type="button" class="btn sm" onclick="limpar()">Limpar filtros</button>`;
 
 /* ===== Views ===== */
 const AR=[['t','Chamados'],['u','Usuários e perfis'],['a','Ativos (CMDB)'],['r','Relatórios'],['c','Configuração GLPI']],LV=['Nenhum','Ler','Editar','Total'];
 const V={
-subs(){const P=S.subs.map(pinfo),pag=S.subs.filter((s,i)=>P[i].c==='ok'&&s.v>0),teste=P.filter(p=>p.c==='wa').length,exp=P.filter(p=>p.c==='er').length;
+subs(){const P=S.subs.map(pinfo),pag=S.subs.filter((s,i)=>P[i].c==='ok'&&s.v>0),teste=P.filter(p=>p.c==='wa').length,exp=P.filter(p=>p.c==='er').length,breve=S.subs.filter((s,i)=>P[i].c==='ok'&&s.v>0&&P[i].w).length,nSt=k=>S.subs.filter(s=>stSub(s)===k).length;
 return`<section>${head('subs','Assinaturas','Cadastros do site, plano atual de cada pessoa e liberação de acesso.',`<button type="button" class="btn s" onclick="grant()">${I('unlock')} Liberar assinatura</button><button type="button" class="btn p" onclick="newSub()">${I('plus')} Novo assinante</button>`)}
-<div class="grid g4">${kpi('ok','Assinantes pagantes',pag.length,'Mensal ativo','e')}${kpi('clock','Em teste (1 dia)',teste,'Aguardando contratar','w')}${kpi('alert','Expirados',exp,'Precisam renovar','r')}${kpi('money','Receita mensal',brl(pag.reduce((x,s)=>x+s.v,0)),'Recorrência atual')}</div>
-<div class="glass bar">${search('q','Buscar por nome, CPF, empresa ou e-mail…',F.q,'rows()')}<select id="fs" aria-label="Situação" onchange="rows()">${opt('','Todas as situações',F.fs)}${opt('wa','Em teste',F.fs)}${opt('ok','Ativas',F.fs)}${opt('er','Expiradas',F.fs)}${opt('blk','Acesso bloqueado',F.fs)}</select><label class="pfx">Mensalidade R$ <input type="number" step="0.01" min="0" value="${S.price}" aria-label="Valor da mensalidade" onchange="S.price=parseFloat(this.value)||0;save();rend();toast('Valor da mensalidade atualizado')"></label><span class="cnt" id="scnt"></span></div>
-<div class="glass tbl"><div class="scroll"><table><thead><tr><th style="width:38%">Assinante</th><th>Plano atual</th><th>Acesso</th><th class="c-r">Ações</th></tr></thead><tbody id="tb"></tbody></table></div></div></section>`},
+<div class="grid g4">${kpi('ok','Assinantes pagantes',pag.length,breve?breve+(breve>1?' vencem':' vence')+' em até 7 dias':'Mensal ativo','e')}${kpi('clock','Em teste (1 dia)',teste,'Aguardando contratar','w')}${kpi('alert','Expirados',exp,'Precisam renovar','r')}${kpi('money','Receita mensal',brl(pag.reduce((x,s)=>x+s.v,0)),'Mensalidade '+brl(S.price))}</div>
+<div class="glass bar">${search('q','Buscar por nome, e-mail, CPF ou telefone…',F.q,'rows()')}<div class="seg" role="group" aria-label="Situação">${[['','Todos',S.subs.length],['ok','Ativos',nSt('ok')],['wa','Em teste',nSt('wa')],['er','Vencidos',nSt('er')],['blk','Bloqueados',nSt('blk')]].map(([v,l,n])=>`<button type="button"${F.fs===v?' class="on"':''} data-v="${v}" aria-pressed="${F.fs===v}" onclick="setSit('${v}')">${l}<span class="n">${n}</span></button>`).join('')}</div><label class="so">Ordenar<select id="so" aria-label="Ordenar a lista" onchange="rows()">${opt('nome','Nome (A–Z)',F.so)}${opt('venc','Vencimento mais próximo',F.so)}${opt('novo','Cadastro mais recente',F.so)}</select></label><span class="cnt" id="scnt"></span></div>
+<div class="glass tbl"><div class="scroll"><table><thead><tr><th style="width:34%">Assinante</th><th>Plano e vencimento</th><th>Acesso</th><th class="c-r">Ações</th></tr></thead><tbody id="tb"></tbody></table></div></div></section>`},
 pay(){const P=S.pays,sum=st=>P.filter(p=>p.st===st).reduce((x,p)=>x+p.v,0),cnt=st=>P.filter(p=>p.st===st).length;
 return`<section>${head('pay','Pagamentos','Confirme comprovantes Pix, registre recebimentos e libere a assinatura automaticamente.',`<button type="button" class="btn p" onclick="payNew()">${I('plus')} Registrar pagamento</button>`)}
 <div class="grid g4">${kpi('ok','Recebido',brl(sum('Confirmado')),cnt('Confirmado')+' pagamento(s) confirmado(s)','e')}${kpi('clock','Em análise',cnt('Em análise'),brl(sum('Em análise'))+' aguardando conferência','w')}${kpi('pay','Aguardando Pix',cnt('Aguardando'),brl(sum('Aguardando'))+' ainda não pago')}${kpi('undo','Recusados / estornados',cnt('Recusado')+cnt('Estornado'),brl(sum('Recusado')+sum('Estornado')),'r')}</div>
@@ -578,16 +620,34 @@ ${u?`<div class="glass bar">${search('uq','Buscar nome ou e-mail…',F.uq,'urows
 :`<div class="note">${I('info')}<span>Referência de permissões do painel. O servidor grava cada conta como <b>Administrador</b> ou <b>Usuário</b>.</span></div><div class="grid g3">${S.profs.map((p,i)=>`<div class="glass pcard"><div class="pch"><span class="pic">${I('acc')}</span><div><h3>${esc(p.n)}</h3><small>${S.users.filter(x=>x.p===p.n).length} usuário(s)${p.sys?' • perfil do sistema':''}</small></div><div class="acts">${p.sys?'<span class="tag wa">Protegido</span>':ib('edit','Editar',p.n,`profM(${i})`)+ib('trash','Excluir',p.n,`pdel(${i})`,'d')}</div></div><div>${AR.map(([k,l])=>`<div class="pr"><span>${l}</span><span class="lv" data-n="${p.x[k]}" aria-hidden="true"><i></i><i></i><i></i></span><b>${LV[p.x[k]]}</b></div>`).join('')}</div></div>`).join('')}</div>`}</section>`}};
 const T={subs:'Assinaturas',pay:'Pagamentos',acc:'Acessos GLPI'};
 let lastKey='';
-function rend(){const m=cur(),v=$('view');$('crumb').textContent=T[m];nav();
+function rend(){fecharMenu();const m=cur(),v=$('view');$('crumb').textContent=T[m];nav();
 if(!S.real){v.classList.remove('vsw');v.innerHTML=window.__nxErro?errView(window.__nxErro):skel();return}   // nunca mostra dado de demonstração: ou os dados reais, ou carregando
 const k=m+(m==='acc'?(window.at||'u'):'');v.classList.toggle('vsw',k!==lastKey);lastKey=k;
 v.innerHTML=V[m]();if(m==='subs')rows();if(m==='pay')prows();if(m==='acc')urows()}
 
+/* ===== Situação (filtro) e menu "⋯" da linha ===== */
+function setSit(v){F.fs=v;document.querySelectorAll('.seg [data-v]').forEach(b=>{const on=b.dataset.v===v;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});rows()}
+let menuAb=null;
+function fecharMenu(){if(!menuAb)return;const{el,btn}=menuAb;menuAb=null;el.remove();btn.setAttribute('aria-expanded','false')}
+function menuLinha(ev,id){ev.stopPropagation();const btn=ev.currentTarget,s=sub(id);if(menuAb&&menuAb.btn===btn){fecharMenu();return}fecharMenu();if(!s)return;const b=s.s==='Bloqueado',el=document.createElement('div');
+el.className='pm glass';el.setAttribute('role','menu');el.setAttribute('aria-label','Ações de '+s.n);
+el.innerHTML=`<button type="button" role="menuitem" onclick="fecharMenu();resetPwd('s',${id})">${I('key')}Redefinir senha</button><button type="button" role="menuitem" onclick="fecharMenu();blk(${id})">${I(b?'unlock':'lock')}${b?'Desbloquear acesso':'Bloquear acesso'}</button><hr><button type="button" role="menuitem" class="d" onclick="fecharMenu();del(${id})">${I('trash')}Excluir cadastro</button>`;
+document.body.appendChild(el);const r=btn.getBoundingClientRect(),w=el.offsetWidth,h=el.offsetHeight;let y=r.bottom+6;if(y+h>innerHeight-8)y=Math.max(8,r.top-h-6);
+el.style.left=Math.min(Math.max(8,r.right-w),innerWidth-w-8)+'px';el.style.top=y+'px';btn.setAttribute('aria-expanded','true');menuAb={el,btn};el.querySelector('[role=menuitem]').focus()}
+document.addEventListener('click',e=>{if(menuAb&&!menuAb.el.contains(e.target))fecharMenu()});
+addEventListener('scroll',()=>fecharMenu(),true);addEventListener('resize',()=>fecharMenu());
+addEventListener('keydown',e=>{if(!menuAb)return;const it=[...menuAb.el.querySelectorAll('[role=menuitem]')],i=it.indexOf(document.activeElement);
+if(e.key==='Escape'){e.preventDefault();e.stopPropagation();const b=menuAb.btn;fecharMenu();b.focus()}
+else if(e.key==='ArrowDown'){e.preventDefault();it[(i+1)%it.length].focus()}
+else if(e.key==='ArrowUp'){e.preventDefault();it[(i-1+it.length)%it.length].focus()}
+else if(e.key==='Tab')fecharMenu()},true);
+
 /* ===== Assinaturas ===== */
-function rows(){F.q=$('q').value;F.fs=$('fs').value;const q=F.q.toLowerCase(),f=F.fs,me=meMail();
-const L=S.subs.filter(s=>{const p=pinfo(s);return(!f||(f==='blk'?s.s==='Bloqueado':p.c===f))&&[s.n,s.c,s.e,s.cpf].join(' ').toLowerCase().includes(q)});
+function rows(){fecharMenu();F.q=$('q').value;F.so=$('so').value;const q=F.q.toLowerCase(),f=F.fs,me=meMail();
+const L=S.subs.filter(s=>(!f||stSub(s)===f)&&[s.n,s.c,s.e,s.cpf,s.tel].join(' ').toLowerCase().includes(q));
+const K={venc:s=>s.val==='Vitalício'?9e15:(+ptBR(s.val)||8e15),novo:s=>-(+ptBR(s.cad)||0)},kk=K[F.so];L.sort((a,b)=>(kk?kk(a)-kk(b):0)||String(a.n).localeCompare(String(b.n),'pt-BR',{sensitivity:'base'}));
 $('scnt').textContent=L.length===S.subs.length?L.length+' assinante(s)':L.length+' de '+S.subs.length;
-$('tb').innerHTML=L.map(s=>{const p=pinfo(s),b=s.s==='Bloqueado',own=s.e.toLowerCase()===me;return`<tr><td data-l="Assinante"><div class="who">${av(s.n,s.e)}<div class="wt"><b>${esc(s.n)}</b>${own?' <span class="tag mu">Você</span>':''}${s._owner?' <span class="tag in" title="Conta proprietária: não pode ser bloqueada nem excluída">Proprietário</span>':''}<small>${esc(s.c||'Pessoa física')} • ${esc(s.e)}</small><small>CPF ${esc(mask(s.cpf))}${s.tel?' • '+esc(s.tel):''}</small></div></div></td><td data-l="Plano atual">${pcell(s)}</td><td data-l="Acesso">${b?'<span class="tag mu">Bloqueado</span>':p.c==='er'?'<span class="tag er">Vencido</span>':'<span class="tag ok">Liberado</span>'}</td><td class="ac" data-l="Ações"><div class="acts"><button type="button" class="btn sm s" onclick="grant(${s.id})">${I('unlock')} Liberar</button>${ib('doc','Ficha',s.n,`ficha(${s.id})`)}${ib('edit','Editar',s.n,`editSub(${s.id})`)}${own||s._owner?PH3:ib('key','Redefinir senha',s.n,`resetPwd('s',${s.id})`)+ib(b?'unlock':'lock',b?'Desbloquear':'Bloquear',s.n,`blk(${s.id})`)+ib('trash','Excluir',s.n,`del(${s.id})`,'d')}</div></td></tr>`}).join('')||empty(4,'search','Nenhum assinante encontrado','Ajuste a busca ou os filtros.',(F.q||F.fs)?limparBtn():'')}
+$('tb').innerHTML=L.map(s=>{const p=pinfo(s),b=s.s==='Bloqueado',own=s.e.toLowerCase()===me,prot=own||s._owner;return`<tr><td data-l="Assinante"><div class="who">${av(s.n,s.e)}<div class="wt"><div class="wl"><button type="button" class="lk" title="Abrir a ficha de ${esc(s.n)}" onclick="ficha(${s.id})">${esc(s.n)}</button>${own?'<span class="tag mu">Você</span>':''}${s._owner?'<span class="tag in" title="Conta proprietária: não pode ser bloqueada nem excluída">Proprietário</span>':''}${s.c?`<span class="co" title="${esc(s.c)}">· ${esc(s.c)}</span>`:''}</div><div class="wl"><span class="em" title="${esc(s.e)}">${esc(s.e)}</span></div></div></div></td><td data-l="Plano e vencimento">${pcell(s)}</td><td data-l="Acesso">${b?'<span class="tag mu">Bloqueado</span>':p.c==='er'?'<span class="tag er">Vencido</span>':'<span class="tag ok">Liberado</span>'}</td><td class="ac" data-l="Ações"><div class="acts">${b?`<button type="button" class="btn sm" onclick="blk(${s.id})">${I('unlock')} Desbloquear</button>`:p.c==='ok'?`<button type="button" class="btn sm" onclick="grant(${s.id})">${I('clock')} Renovar</button>`:`<button type="button" class="btn sm s" onclick="grant(${s.id})">${I('unlock')} Liberar</button>`}${ib('doc','Ficha',s.n,`ficha(${s.id})`)}${ib('edit','Editar',s.n,`editSub(${s.id})`)}${prot?PH1:`<button type="button" class="ib more" aria-haspopup="menu" aria-expanded="false" title="Mais ações · ${esc(s.n)}" aria-label="Mais ações de ${esc(s.n)}" onclick="menuLinha(event,${s.id})">${I('dots')}</button>`+ib('key','Redefinir senha',s.n,`resetPwd('s',${s.id})`,'xtra')+ib(b?'unlock':'lock',b?'Desbloquear':'Bloquear',s.n,`blk(${s.id})`,'xtra')+ib('trash','Excluir',s.n,`del(${s.id})`,'d xtra')}</div></td></tr>`}).join('')||empty(4,'search','Nenhum assinante encontrado','Ajuste a busca ou os filtros.',(F.q||F.fs)?limparBtn():'')}
 function setUser(s,on){const u=S.users.find(x=>x.e.toLowerCase()===s.e.toLowerCase());if(u){u.on=on;u.g=true}else S.users.push({id:Date.now(),n:s.n,e:s.e,t:s.tel||'',p:'Assinante',o:'Site',on,g:true})}
 function blk(id){const s=sub(id);s.s=s.s==='Bloqueado'?'Ativo':'Bloqueado';setUser(s,s.s==='Ativo');log(`Acesso de ${s.n} ${s.s==='Ativo'?'liberado':'bloqueado'}.`);save();rend()}
 function del(id){const s=sub(id);if(!confirm('Excluir o cadastro de '+s.n+'?'))return;S.subs=S.subs.filter(x=>x.id!==id);log('Assinante removido: '+s.n);save();rend()}
@@ -681,7 +741,8 @@ function subFromUser(u,i){
   var st=String(u.subscription_status||'').toLowerCase(),plano=String(u.subscription_plan||'').toLowerCase();
   var admin=ehAdmin(u),vital=admin||plano==='vitalicio';
   var p=admin?'Administrador':(vital?'Vitalício':(plano==='anual'?'Nexus Anual':(st==='active'||st==='expired'||st==='pending_payment'?'Nexus Mensal':'Teste grátis')));
-  var val=vital?'Vitalício':(fmtData(u.subscription_expires_at)||'—');
+  var te=(!vital&&p==='Teste grátis'&&!u.subscription_expires_at&&u.trial_started_at)?new Date(new Date(u.trial_started_at).getTime()+864e5):null;   /* teste grátis = 24 h a partir de trial_started_at (mesma regra do servidor) */
+  var val=vital?'Vitalício':(te&&!isNaN(te)?fmtDataHora(te.toISOString()).replace(', ',' '):(fmtData(u.subscription_expires_at)||'—'));
   return{id:i+1,n:u.name||u.email,c:u.company||'',e:u.email,p:p,v:(p==='Nexus Mensal'?S.price:(p==='Nexus Anual'?S.price*12:0)),s:bloqueado(u)?'Bloqueado':'Ativo',
     cpf:u.cpf||'',tel:u.phone||'',nasc:fmtData(u.birth_date),cad:fmtData(u.created_at),val:val,_st:st,_exp:u.subscription_expires_at||'',_plano:plano,_owner:!!u.is_owner};
 }
