@@ -984,18 +984,33 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         .lg-logo { display: flex; align-items: center; gap: .8rem; margin-bottom: 1.4rem; font-weight: 800; font-size: 1.35rem; letter-spacing: -.01em; color: var(--white); }
         .lg-logo small { font-weight: 500; font-size: 1rem; color: var(--muted); }
         .lg-logo .mark { width: 2.8rem; height: 2.8rem; border-radius: .85rem; font-size: 1.6rem; }
-        .lg-card { width: 100%; padding: 2.1rem 2rem 1.6rem; border-radius: 1.4rem; background: var(--glass-fill); }
-        .lg-card h2 { font-family: var(--font-display); font-weight: 600; font-size: 1.8rem; line-height: 1.2; letter-spacing: -.015em; color: var(--white); }
-        .lg-card .sub { margin-top: .4rem; font-size: 1rem; line-height: 1.6; color: var(--ink-2); }
-        .lg-card form { margin-top: 1.4rem; display: grid; gap: 1rem; }
+        /* medidas que acompanham a largura da tela: recuos, título e altura dos campos se ajustam sozinhos */
+        .lg-card { --lg-h: 3.1rem; width: 100%; padding: clamp(1.5rem, 5vw, 2.1rem) clamp(1.25rem, 5vw, 2rem) clamp(1.25rem, 4vw, 1.6rem); border-radius: 1.4rem; background: var(--glass-fill); }
+        .lg-card h2 { font-family: var(--font-display); font-weight: 600; font-size: clamp(1.4rem, 6.2vw, 1.6rem); line-height: 1.2; letter-spacing: -.015em; color: var(--white); text-wrap: balance; }
+        .lg-card .sub { margin-top: .55rem; font-size: 1rem; line-height: 1.55; color: var(--ink-2); text-wrap: pretty; }
+        .lg-card form { margin-top: 1.4rem; display: grid; gap: 1.05rem; }
         .lg-card .input-icon { display: block; min-width: 0; }
-        .lg-card .input { height: 3.1rem; padding-top: 0; padding-bottom: 0; border-radius: .75rem; font-size: 1rem; }
+        .lg-card .input { height: var(--lg-h); padding-top: 0; padding-bottom: 0; border-radius: .75rem; font-family: inherit; font-size: 1rem; font-weight: 500; }
+        .lg-card .input.has-eye { padding-right: 3rem; }
         .lg-card .field label { font-size: 1rem; }
-        .lg-card .btn-lg { height: 3.1rem; border-radius: .75rem; font-size: 1rem; }
+        .lg-card .btn-lg { height: var(--lg-h); border-radius: .75rem; font-size: 1rem; }
+        /* preenchimento automático do navegador (e-mail/senha salvos): o fundo e a letra seguem o tema do campo, em vez do azul-claro
+           ou cinza do Chrome/Edge, que no modo escuro deixava a letra clara sobre fundo claro */
+        .lg-card .input:-webkit-autofill, .lg-card .input:-webkit-autofill:hover {
+            -webkit-box-shadow: 0 0 0 100px rgb(var(--dk)) inset !important; box-shadow: 0 0 0 100px rgb(var(--dk)) inset !important;
+            -webkit-text-fill-color: var(--ink) !important; caret-color: var(--ink);
+        }
+        .lg-card .input:-webkit-autofill:focus {
+            -webkit-box-shadow: 0 0 0 100px rgb(var(--dk)) inset, 0 0 0 3px rgba(var(--acc-rgb), .22) !important; box-shadow: 0 0 0 100px rgb(var(--dk)) inset, 0 0 0 3px rgba(var(--acc-rgb), .22) !important;
+            -webkit-text-fill-color: var(--ink) !important; caret-color: var(--ink);
+        }
+        .lg-card .eye { position: absolute; right: .4rem; top: 50%; transform: translateY(-50%); width: 2.25rem; height: 2.25rem; display: grid; place-items: center; border: 0; border-radius: .6rem; background: transparent; color: var(--faint); font-size: 1rem; cursor: pointer; transition: color .2s, background .2s; }
+        .lg-card .eye:hover { color: var(--ink); background: rgba(var(--lt), .08); }
+        .lg-card .eye:focus-visible { outline: 2px solid var(--acc-l); outline-offset: 1px; color: var(--ink); }
         .login-error { color: var(--t-rose); }
-        .lg-feat { margin-top: 1.4rem; padding-top: 1.2rem; display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem; border-top: 1px solid var(--line-soft); }
-        .lg-feat li { display: inline-flex; align-items: center; gap: .5rem; padding: .35rem .8rem; border-radius: 99px; font-size: 1rem; font-weight: 600; color: var(--ink-2); background: rgba(var(--lt), .06); border: 1px solid var(--line-soft); }
-        .lg-feat li i { font-size: 1rem; color: var(--acc-l); }
+        .lg-feat { margin-top: 1.4rem; padding-top: 1.2rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr)); gap: .5rem; border-top: 1px solid var(--line-soft); }
+        .lg-feat li { display: flex; align-items: center; gap: .7rem; padding: .45rem .7rem; border-radius: .75rem; font-size: 1rem; line-height: 1.35; font-weight: 600; color: var(--ink-2); background: rgba(var(--lt), .06); border: 1px solid var(--line-soft); }
+        .lg-feat li i { flex: none; width: 1.75rem; height: 1.75rem; display: grid; place-items: center; border-radius: .6rem; font-size: 1rem; color: var(--acc-l); background: rgba(var(--acc-rgb), .14); }
         .lg-foot { margin-top: 1.4rem; display: grid; gap: .35rem; justify-items: center; font-size: 1rem; color: var(--muted); text-align: center; }
         .lg-foot i { margin-right: .35rem; color: var(--t-green); }
         .lg-foot .mono { font-size: 1rem; color: var(--faint); }
@@ -1905,7 +1920,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
 
             <section class="glass lg-card" aria-label="Acesso ao GLPI">
                 <h2>Central de Chamados e Suporte</h2>
-                <p class="sub">Abra, acompanhe e resolva chamados com protocolo único. Use o mesmo e-mail e a mesma senha do Nexus Financeiro — seu perfil é reconhecido automaticamente.</p>
+                <p class="sub">Abra e acompanhe chamados com protocolo único. Entre com o mesmo e-mail e a mesma senha do Nexus Financeiro.</p>
 
                 <!-- Login manual (mesmo acesso do Sistema Financeiro) -->
                 <form onsubmit="handleManualLogin(event)">
@@ -1913,14 +1928,15 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                         <label for="login-email">E-mail cadastrado</label>
                         <div class="input-icon">
                             <i class="fa-regular fa-envelope"></i>
-                            <input type="email" id="login-email" class="input" placeholder="nome@exemplo.com" required autocomplete="username">
+                            <input type="email" id="login-email" class="input" placeholder="nome@exemplo.com" required autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" inputmode="email">
                         </div>
                     </div>
                     <div class="field">
                         <label for="login-password">Senha</label>
                         <div class="input-icon">
                             <i class="fa-solid fa-lock"></i>
-                            <input type="password" id="login-password" class="input" placeholder="Digite sua senha" required autocomplete="current-password">
+                            <input type="password" id="login-password" class="input has-eye" placeholder="Digite sua senha" required autocomplete="current-password">
+                            <button type="button" class="eye" id="login-eye" aria-label="Mostrar senha" aria-pressed="false" onclick="toggleLoginPassword(this)"><i class="fa-regular fa-eye" aria-hidden="true"></i></button>
                         </div>
                     </div>
                     <p id="login-error-msg" class="hidden login-error" role="alert"></p>
@@ -1930,9 +1946,8 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 </form>
 
                 <ul class="lg-feat">
-                    <li><i class="fa-solid fa-ticket"></i> Chamados com protocolo e histórico completos</li>
-                    <li><i class="fa-solid fa-stopwatch"></i> Prazos de atendimento (SLA) por severidade</li>
-                    <li><i class="fa-solid fa-server"></i> Ativos de TI vinculados a cada chamado</li>
+                    <li><i class="fa-solid fa-ticket" aria-hidden="true"></i><span>Protocolo e histórico completos</span></li>
+                    <li><i class="fa-solid fa-stopwatch" aria-hidden="true"></i><span>Prazos (SLA) por severidade</span></li>
                 </ul>
             </section>
 
@@ -4241,6 +4256,21 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             } finally {
                 if (submitBtn) setBusy(submitBtn, false);
             }
+        }
+
+        /* Mostrar/ocultar a senha digitada na tela de acesso */
+        function toggleLoginPassword(btn) {
+            const input = $('login-password');
+            if (!input) return;
+            const mostrar = input.type === 'password';
+            input.type = mostrar ? 'text' : 'password';
+            if (btn) {
+                btn.setAttribute('aria-label', mostrar ? 'Ocultar senha' : 'Mostrar senha');
+                btn.setAttribute('aria-pressed', String(mostrar));
+                const ic = btn.querySelector('i');
+                if (ic) ic.className = mostrar ? 'fa-regular fa-eye-slash' : 'fa-regular fa-eye';
+            }
+            input.focus();
         }
 
         async function handleManualLogin(e) {
