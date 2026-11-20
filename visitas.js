@@ -55,9 +55,15 @@ function dispositivoDe(ua) {
   const tipo = /ipad|tablet|android(?!.*mobile)/i.test(u) ? 'Tablet' : (/mobi|iphone|ipod|android/i.test(u) ? 'Celular' : 'Computador');
   const navegador = /edg(e|a|ios)?\//i.test(u) ? 'Edge' : /opr\/|opera/i.test(u) ? 'Opera' : /firefox|fxios/i.test(u) ? 'Firefox'
     : /chrome|crios/i.test(u) ? 'Chrome' : /safari/i.test(u) ? 'Safari' : 'Outro';
-  const so = /iphone|ipad|ipod/i.test(u) ? 'iOS' : /android/i.test(u) ? 'Android' : /windows/i.test(u) ? 'Windows'
-    : /mac os x|macintosh/i.test(u) ? 'macOS' : /linux|x11/i.test(u) ? 'Linux' : 'Outro';
+  // A ordem importa: iPhone/iPad dizem "like Mac OS X", Android diz "Linux" e ChromeOS diz "X11". iPad novo se identifica como Mac (não dá para distinguir).
+  const so = /iphone|ipod/i.test(u) ? 'iOS' : /ipad/i.test(u) ? 'iPadOS' : /android/i.test(u) ? 'Android' : /\bCrOS\b/.test(u) ? 'ChromeOS'
+    : /windows/i.test(u) ? 'Windows' : /mac os x|macintosh/i.test(u) ? 'macOS' : /linux|x11/i.test(u) ? 'Linux' : 'Outro';
   return { tipo, navegador, so };
+}
+
+// "Celular · Android", "Computador · Windows": aparelho e sistema operacional num rótulo só
+function rotuloSistema(tipo, so) {
+  return (tipo || 'Computador') + ' · ' + (so && so !== 'Outro' ? so : 'Outro sistema');
 }
 
 // Localização aproximada (país, estado, cidade) vinda dos cabeçalhos da Cloudflare (CF-IPCountry, CF-Region-Code, CF-IPCity):
@@ -206,6 +212,7 @@ function resumir(dir, opcoes) {
     porDia,
     paginas: contar(pessoas, 'pagina'),
     dispositivos: contar(pessoas, 'tipo'),
+    sistemas: contar(pessoas.map(r => ({ sistema: rotuloSistema(r.tipo, r.so) })), 'sistema'),
     navegadores: contar(pessoas, 'navegador'),
     origens: contar(pessoas, 'origem'),
     paises: contar(pessoas.map(r => ({ pais: nomePais(r.pais) })), 'pais').slice(0, 10),
@@ -214,4 +221,4 @@ function resumir(dir, opcoes) {
   };
 }
 
-module.exports = { RETENCAO_DIAS, INTERVALO_REPETIDO_MS, MAX_LINHAS_POR_DIA, paginaDe, normalizarIp, mascararIp, dispositivoDe, localizacaoDe, normalizarLocal, nomePais, origemDe, diaEHora, montarRegistro, registrarVisita, limparAntigos, resumir, _resetar };
+module.exports = { RETENCAO_DIAS, INTERVALO_REPETIDO_MS, MAX_LINHAS_POR_DIA, paginaDe, normalizarIp, mascararIp, dispositivoDe, rotuloSistema, localizacaoDe, normalizarLocal, nomePais, origemDe, diaEHora, montarRegistro, registrarVisita, limparAntigos, resumir, _resetar };

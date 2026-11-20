@@ -39,7 +39,8 @@
     '.vt-h h3{font-size:calc(var(--fs)*1.14);margin:0}',
     '.vmais{display:flex;justify-content:center;padding:12px;border-top:1px solid var(--b)}',
     '.vip{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:var(--fs)}',
-    '.vnd{color:var(--m)}'
+    '.vnd{color:var(--m)}',
+    '.vsub{display:block;color:var(--m);font-size:var(--fs);margin-top:2px}'
   ].join('');
 
   /* ---------- peças puras ---------- */
@@ -91,14 +92,14 @@
 
   function linhasRecentes(lista) {
     return (lista || []).map(function (r) {
-      var aparelho = [r.tipo, r.navegador].concat(r.so && r.so !== 'Outro' ? [r.so] : []).join(' · ');
+      var sistema = (r.tipo || 'Computador') + ' · ' + (r.so && r.so !== 'Outro' ? r.so : 'Outro sistema');
       var semLocal = !r.local || r.local === 'Não informado';
       return '<tr><td data-l="Quando">' + esc(rotuloDia(r.dia) + ' ' + String(r.hora || '').slice(0, 5)) + '</td>'
         + '<td data-l="Local"><span' + (semLocal ? ' class="vnd"' : '') + '>' + esc(r.local || 'Não informado') + '</span></td>'
         + '<td data-l="IP (mascarado)"><code class="vip">' + esc(r.ip) + '</code></td>'
         + '<td data-l="Página">' + esc(r.pagina) + '</td>'
         + '<td data-l="Origem">' + esc(r.origem) + '</td>'
-        + '<td data-l="Aparelho">' + esc(aparelho) + '</td></tr>';
+        + '<td data-l="Aparelho e sistema"><span>' + esc(sistema) + '</span><small class="vsub">' + esc(r.navegador) + '</small></td></tr>';
     }).join('');
   }
 
@@ -147,11 +148,11 @@
         + ranking('Cidades', d.cidades, d.visitas, 'Nenhuma cidade identificada.')
         + ranking('Páginas', d.paginas, d.visitas)
         + ranking('De onde chegaram', d.origens, d.visitas)
-        + ranking('Aparelhos', d.dispositivos, d.visitas)
+        + ranking('Aparelho e sistema', d.sistemas || d.dispositivos, d.visitas)
         + ranking('Navegadores', d.navegadores, d.visitas)
         + '</div>'
         + '<div class="glass tbl"><div class="vt-h"><h3>Acessos recentes</h3><span class="sub" style="margin:0">' + (mostrados.length === todos.length ? 'Os ' + inteiro(todos.length) + ' mais novos' : 'Os ' + inteiro(mostrados.length) + ' mais novos, de ' + inteiro(todos.length)) + '</span></div>'
-        + '<div class="scroll"><table><thead><tr><th>Quando</th><th>Local</th><th>IP (mascarado)</th><th>Página</th><th>Origem</th><th>Aparelho</th></tr></thead><tbody>'
+        + '<div class="scroll"><table><thead><tr><th>Quando</th><th>Local</th><th>IP (mascarado)</th><th>Página</th><th>Origem</th><th>Aparelho e sistema</th></tr></thead><tbody>'
         + linhasRecentes(mostrados) + '</tbody></table></div>'
         + (todos.length > LINHAS_INICIAIS ? '<div class="vmais"><button type="button" class="btn sm" onclick="visTodos()">' + (todas ? 'Mostrar só os ' + LINHAS_INICIAIS + ' mais novos' : 'Mostrar todos os ' + inteiro(todos.length) + ' acessos') + '</button></div>' : '')
         + '</div>';

@@ -89,6 +89,28 @@ test('a localização é gravada, resumida por país e cidade e aparece nos aces
   assert.ok(!JSON.stringify(r).includes('189.45.10.7'), 'IP completo vazou');
 });
 
+test('sistema operacional: Android, iOS, iPadOS, Windows, macOS, Linux e ChromeOS (na ordem certa)', () => {
+  const so = (ua) => V.dispositivoDe(ua);
+  assert.deepStrictEqual([so(IPHONE).tipo, so(IPHONE).so], ['Celular', 'iOS']);
+  assert.deepStrictEqual(so('Mozilla/5.0 (iPad; CPU OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1'), { tipo: 'Tablet', navegador: 'Safari', so: 'iPadOS' });
+  assert.deepStrictEqual([so('Mozilla/5.0 (Linux; Android 14; SM-S918B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Mobile Safari/537.36').tipo, so('Mozilla/5.0 (Linux; Android 14; SM-S918B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Mobile Safari/537.36').so], ['Celular', 'Android']);
+  assert.strictEqual(so('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15').so, 'macOS');
+  assert.strictEqual(so('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36').so, 'Linux');
+  assert.strictEqual(so('Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:130.0) Gecko/20100101 Firefox/130.0').so, 'Linux');
+  assert.strictEqual(so('Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36').so, 'ChromeOS', 'ChromeOS diz X11, mas não é Linux');
+  assert.strictEqual(so(CHROME_WIN).so, 'Windows');
+  assert.strictEqual(so('Mozilla/5.0 (compatible; Windows NT 10.0; Microsoft Edge)').so, 'Windows', '"Microsoft" não vira ChromeOS');
+  assert.strictEqual(so('AlgumNavegadorRaro/1.0').so, 'Outro');
+});
+
+test('rotuloSistema junta aparelho e sistema num rótulo só', () => {
+  assert.strictEqual(V.rotuloSistema('Celular', 'Android'), 'Celular · Android');
+  assert.strictEqual(V.rotuloSistema('Computador', 'macOS'), 'Computador · macOS');
+  assert.strictEqual(V.rotuloSistema('Tablet', 'iPadOS'), 'Tablet · iPadOS');
+  assert.strictEqual(V.rotuloSistema('Computador', 'Outro'), 'Computador · Outro sistema');
+  assert.strictEqual(V.rotuloSistema('Computador', undefined), 'Computador · Outro sistema');
+});
+
 test('origemDe guarda só o domínio e distingue direto, interno e externo', () => {
   assert.strictEqual(V.origemDe('https://www.google.com/search?q=nexus+financeiro&token=abc', 'nexusfinanceirohub.com.br'), 'google.com');
   assert.strictEqual(V.origemDe('https://nexusfinanceirohub.com.br/inicio', 'nexusfinanceirohub.com.br'), 'Interno');
@@ -173,6 +195,7 @@ test('resumir conta pessoas, separa robôs e NUNCA devolve o IP completo', () =>
   assert.deepStrictEqual(r.porDia.map(d => [d.dia, d.visitas]), [['2026-11-18', 0], ['2026-11-19', 2], ['2026-11-20', 1]]);
   assert.deepStrictEqual(r.paginas.map(p => [p.nome, p.visitas]), [['/inicio', 2], ['/login', 1]]);
   assert.deepStrictEqual(r.dispositivos.map(d => [d.nome, d.visitas]), [['Computador', 2], ['Celular', 1]]);
+  assert.deepStrictEqual(r.sistemas.map(d => [d.nome, d.visitas]), [['Computador · Windows', 2], ['Celular · iOS', 1]], 'aparelho e sistema, sem contar o robô');
   assert.strictEqual(r.recentes[0].ip, '201.17.xxx.xxx', 'mais recente primeiro, mascarado');
   const texto = JSON.stringify(r);
   assert.ok(!texto.includes('189.45.10.7') && !texto.includes('201.17.3.99') && !texto.includes('66.249.66.1'), 'IP completo vazou no resumo');

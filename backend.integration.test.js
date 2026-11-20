@@ -727,6 +727,7 @@ test('visitas: abrir página grava o IP completo na pasta visitas/; só o admini
   assert.equal(r.json.success, true);
   assert.equal(r.json.retencaoDias, 180);
   assert.ok(r.json.visitas >= 1);
+  assert.ok(r.json.sistemas.some(s => s.nome === 'Celular · iOS'), 'aparelho e sistema operacional no resumo');
   assert.ok(r.json.recentes.some(v => v.ip === '189.45.xxx.xxx' && v.pagina === '/inicio'), 'IP mascarado deveria aparecer');
   assert.ok(!r.texto.includes(ip), 'o IP completo não pode sair pela API');
 

@@ -18,6 +18,7 @@ const resumo = (extra) => Object.assign({
   porDia: [dia(14, 0, 0), dia(15, 2, 2), dia(16, 0, 0), dia(17, 3, 2), dia(18, 1, 1), dia(19, 0, 0), dia(20, 4, 3)],
   paginas: [{ nome: '/inicio', visitas: 7 }, { nome: '/login', visitas: 3 }],
   dispositivos: [{ nome: 'Celular', visitas: 6 }, { nome: 'Computador', visitas: 4 }],
+  sistemas: [{ nome: 'Celular · Android', visitas: 4 }, { nome: 'Computador · Windows', visitas: 3 }, { nome: 'Celular · iOS', visitas: 2 }, { nome: 'Computador · macOS', visitas: 1 }],
   navegadores: [{ nome: 'Chrome', visitas: 10 }],
   origens: [{ nome: 'Direto', visitas: 6 }, { nome: 'google.com', visitas: 4 }],
   paises: [{ nome: 'Brasil', visitas: 8 }, { nome: 'Não informado', visitas: 2 }],
@@ -75,8 +76,9 @@ test('linhasRecentes: uma linha por acesso, IP já mascarado, sem local fica esm
   const h = A.linhasRecentes(resumo().recentes.concat([{ dia: '2026-11-19', hora: '08:05:00', ip: 'local', local: 'Não informado', pagina: '/login', origem: 'Direto', tipo: 'Computador', navegador: 'Chrome', so: 'Outro' }]));
   assert.strictEqual((h.match(/<tr>/g) || []).length, 2);
   assert.ok(h.includes('20/11 19:31') && h.includes('189.45.xxx.xxx') && h.includes('São Paulo/SP · Brasil'));
-  assert.ok(h.includes('Celular · Safari · iOS'));
-  assert.ok(h.includes('Computador · Chrome</td>'), 'SO "Outro" não aparece');
+  assert.ok(h.includes('<span>Celular · iOS</span><small class="vsub">Safari</small>'), 'aparelho e sistema em cima, navegador embaixo');
+  assert.ok(h.includes('<span>Computador · Outro sistema</span><small class="vsub">Chrome</small>'), 'sistema desconhecido não some nem mostra "Outro" solto');
+  assert.ok(h.includes('data-l="Aparelho e sistema"'));
   assert.ok(h.includes('<span class="vnd">Não informado</span>'));
   assert.ok(h.includes('data-l="IP (mascarado)"'), 'rótulo para o modo cartão no celular');
 });
@@ -97,7 +99,9 @@ test('tela completa: abas de período, 4 indicadores, gráfico, rankings, tabela
   for (const l of ['Visitas', 'Visitantes', 'Hoje', 'Robôs']) assert.ok(h.includes('class="kpi" data-l="' + l + '"'), l);
   assert.ok(h.includes('<b>10</b>') && h.includes('<b>6</b>') && h.includes('<b>4</b>'), 'visitas, visitantes e hoje (último dia)');
   assert.ok(h.includes('Visitas por dia') && h.includes('Maior dia: 20/11 · 4 visitas'));
-  for (const t of ['Países', 'Cidades', 'Páginas', 'De onde chegaram', 'Aparelhos', 'Navegadores']) assert.ok(h.includes('<h3>' + t + '</h3>'), t);
+  for (const t of ['Países', 'Cidades', 'Páginas', 'De onde chegaram', 'Aparelho e sistema', 'Navegadores']) assert.ok(h.includes('<h3>' + t + '</h3>'), t);
+  for (const s of ['Celular · Android', 'Computador · Windows', 'Celular · iOS', 'Computador · macOS']) assert.ok(h.includes(s), s);
+  assert.ok(h.includes('<th>Aparelho e sistema</th>'));
   assert.ok(h.includes('<th>IP (mascarado)</th>') && h.includes('189.45.xxx.xxx'));
   assert.ok(h.includes('180 dias no servidor'));
   assert.ok(!h.includes('NaN') && !h.includes('undefined'));
@@ -116,6 +120,12 @@ test('acessos recentes: 15 mais novos por padrão, botão para ver todos e para 
   const pouca = A.tela(resumo(), ui, 7, false);   // 1 acesso: sem botão
   assert.strictEqual(linhas(pouca), 1);
   assert.ok(!pouca.includes('visTodos()'));
+});
+
+test('servidor antigo sem "sistemas": o quadro cai para os tipos de aparelho, sem quebrar', () => {
+  const antigo = resumo(); delete antigo.sistemas;
+  const h = A.tela(antigo, ui, 7);
+  assert.ok(h.includes('<h3>Aparelho e sistema</h3>') && h.includes('Computador') && !h.includes('undefined'));
 });
 
 test('os 6 rankings ficam numa grade própria de 3 colunas (não em 4 com sobra)', () => {
