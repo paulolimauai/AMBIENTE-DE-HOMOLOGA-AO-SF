@@ -180,7 +180,8 @@ test('sessão única: telas e script compartilhado são servidos e o login só d
   assert.equal(app, 200);
   const fonte = fs.readFileSync(path.join(__dirname, 'server.js'), 'utf8');
   assert.ok(/id="menuAdminAssinaturasBtn"[^>]*onclick="window\.open\('\/admin-assinaturas-glpi\.html','_blank'\)"/.test(fonte));
-  assert.ok(/id="menuSiteAdminBtn"[^>]*onclick="window\.open\('\/admin-site\.html','_blank'\)"/.test(fonte), 'sem noopener: a aba nova herda a sessão');
+  assert.ok(/id="mobileDrawerAdminAssinaturasBtn"[^>]*onclick="window\.open\('\/admin-assinaturas-glpi\.html','_blank'\)"/.test(fonte), 'gaveta do celular: sem noopener, a aba nova herda a sessão');
+  assert.ok(!/menuSiteAdminBtn|mobileDrawerSiteAdminBtn|>Administrar Site</.test(fonte), 'o atalho "Administrar Site" saiu dos menus do Nexus');
   assert.ok(!/window\.open\('\/glpi\.html\?' \+ modeQuery, '_blank', 'noopener/.test(fonte));
 });
 

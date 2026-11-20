@@ -15399,13 +15399,8 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         <span class="label">Minha Conta</span>
       </button>
 
-      <!-- Administração do Site: exclusiva do perfil Administrador. Abre /admin-site.html em nova aba;
-           o servidor só entrega o conteúdo dos arquivos com token de administrador. -->
-      <button type="button" id="menuSiteAdminBtn" class="menu-btn-user" title="Administrar o site público (nexusfinanceirohub.com.br)" style="display:none !important;" onclick="window.open('/admin-site.html','_blank')">
-        <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
-        <span class="label">Administrar Site</span>
-      </button>
-      <!-- Sem 'noopener' de propósito: a aba nova herda a sessão desta aba (sessionStorage) e o administrador não precisa entrar de novo. -->
+      <!-- Área do administrador: exclusiva do perfil Administrador (o servidor confere o token em /api/auth/session).
+           Sem 'noopener' de propósito: a aba nova herda a sessão desta aba (sessionStorage) e o administrador não precisa entrar de novo. -->
       <button type="button" id="menuAdminAssinaturasBtn" class="menu-btn-user" title="Assinaturas, pagamentos e acessos do Nexus e do GLPI" style="display:none !important;" onclick="window.open('/admin-assinaturas-glpi.html','_blank')">
         <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
         <span class="label">Assinaturas &amp; Acessos</span>
@@ -15583,7 +15578,6 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
       <!-- Seção: Minha Conta -->
       <div class="mobile-drawer-section-title menu-section-minha-conta">Preferências</div>
       <button data-page="config" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><span class="label">Minha Conta</span></button>
-      <button type="button" id="mobileDrawerSiteAdminBtn" class="menu-btn-user" style="display:none !important;" onclick="window.open('/admin-site.html','_blank')"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span><span class="label">Administrar Site</span></button>
       <button type="button" id="mobileDrawerAdminAssinaturasBtn" class="menu-btn-user" style="display:none !important;" onclick="window.open('/admin-assinaturas-glpi.html','_blank')"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span class="label">Assinaturas &amp; Acessos</span></button>
 
       <!-- Liberações (só para conta de usuário com permissão delegada pelo administrador) -->
@@ -22313,11 +22307,11 @@ function updateAdminMenuVisibility(force = false){
   const isAdmin = false;
   updateAdminSidebarBadges();
 
-  // "Administrar Site": só o perfil Administrador real (fora do modo espelho) vê o atalho; o conteúdo
-  // em si continua protegido no servidor pelas rotas /api/admin/site/*. Fica ANTES do retorno por cache:
+  // "Assinaturas & Acessos": só o perfil Administrador real (fora do modo espelho) vê o atalho; o conteúdo
+  // em si continua protegido no servidor (/api/auth/session e rotas /api/admin/*). Fica ANTES do retorno por cache:
   // o papel do usuário chega de forma assíncrona e a chave abaixo não muda quando ele vira administrador.
   const showSiteAdmin = nexusIsAdminUser(currentUser) && !isViewingOtherUser;
-  ['menuSiteAdminBtn', 'mobileDrawerSiteAdminBtn', 'menuAdminAssinaturasBtn', 'mobileDrawerAdminAssinaturasBtn'].forEach(function(id) {
+  ['menuAdminAssinaturasBtn', 'mobileDrawerAdminAssinaturasBtn'].forEach(function(id) {
     const siteBtn = document.getElementById(id);
     // !important inline vence as regras de perfil (.menu-btn-user é ligado/desligado por html.is-admin)
     if (siteBtn) siteBtn.style.setProperty('display', showSiteAdmin ? 'flex' : 'none', 'important');
