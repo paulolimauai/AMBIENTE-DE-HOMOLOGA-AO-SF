@@ -44,6 +44,15 @@ function pickActive(existing, incoming, opts) {
   return { source, active, active_updated_at: clock };
 }
 
+/**
+ * O "ativo" que vale para o LOGIN no PC: o da linha do SQL, a menos que o espelho local tenha uma mudança CARIMBADA (bloqueio/ativação do
+ * administrador) que o SQL ainda não recebeu (UPDATE que falhou ou que ainda não chegou). Sem isto a pessoa recém-bloqueada entrava nessa janela.
+ */
+function ativoEfetivo(linhaSql, espelho) {
+  if (espelho && Number.isFinite(relogioMs(espelho)) && espelho.active !== undefined) return ativo(espelho.active);
+  return linhaSql ? ativo(linhaSql.active) : true;
+}
+
 /** Carimba uma mudança intencional. Nunca recua: se o relógio da máquina voltou, o carimbo novo ainda é maior que o anterior. */
 function stamp(user, agora) {
   if (!user) return user;
@@ -62,4 +71,4 @@ function aplicar(user, pick) {
   return user;
 }
 
-module.exports = { RELOGIO, ativo, relogioMs, pickActive, stamp, aplicar };
+module.exports = { RELOGIO, ativo, relogioMs, pickActive, ativoEfetivo, stamp, aplicar };

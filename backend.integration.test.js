@@ -953,6 +953,53 @@ test('sessões abertas também caem ao redefinir a senha ou excluir a conta, cad
   assert.equal((await api('DELETE', '/api/users?email=' + emailA, { token: admin })).status, 200);
 });
 
+test('conta proprietária: bloquear é RECUSADO com o motivo (antes devolvia "success" e não fazia nada), não é carimbada e ninguém toma a senha dela', async () => {
+  const admin = (await login('admin@teste.nexus', 'Admin@12345')).token;
+  const dono = 'paulolp0101@gmail.com';
+  await criarContaDeTeste(admin, dono, 'Dono@12345');
+  const estado = async () => (await listaDeUsuarios(admin)).find((u) => u.email === dono);
+  const antes = await estado();
+  assert.equal(antes.active, true);
+  assert.equal(antes.is_owner, true, 'a lista marca a conta proprietária para as telas não oferecerem bloquear');
+  assert.ok((await listaDeUsuarios(admin)).filter((u) => u.email !== dono).every((u) => u.is_owner === undefined), 'só a proprietária é marcada');
+
+  // pedido de bloqueio feito pelo administrador (é o que o painel envia)
+  const pedido = await api('POST', '/api/users', { token: admin, body: [{ email: dono, name: 'Dono', active: false }] });
+  assert.equal(pedido.status, 403, pedido.texto);
+  assert.equal(pedido.json.success, false);
+  assert.match(pedido.json.error, /proprietária não pode ser bloqueada/);
+  const depois = await estado();
+  assert.equal(depois.active, true);
+  assert.equal(depois.active_updated_at, antes.active_updated_at, 'recusa não pode deixar carimbo de bloqueio');
+  assert.equal((await login(dono, 'Dono@12345')).success, true, 'a proprietária continua entrando');
+
+  // mesma regra na rota de ativar/bloquear e na redefinição de senha
+  const delegada = await api('POST', '/api/delegate/account-active', { token: admin, body: { email: dono, active: false } });
+  assert.equal(delegada.status, 403, delegada.texto);
+  assert.match(delegada.json.error, /proprietária/);
+  const senha = await api('POST', '/api/admin/users/reset-password', { token: admin, body: { email: dono } });
+  assert.equal(senha.status, 403, senha.texto);
+  assert.match(senha.json.error, /proprietária/);
+  assert.equal((await login(dono, 'Dono@12345')).success, true, 'a senha dela não mudou');
+
+  // lista antiga reenviada com a proprietária ativa, ou espelho do PC com active falso, não bloqueia nem derruba ninguém
+  assert.equal((await api('POST', '/api/users', { token: admin, body: [{ email: dono, name: 'Dono', active: true }] })).status, 200);
+  const doPc = await api('POST', '/api/users?overwrite=true', { headers: { 'X-Nexus-Sync-Token': SYNC_TOKEN }, body: [{ email: dono, name: 'Dono', active: false, active_updated_at: new Date(Date.now() + 60000).toISOString() }] });
+  assert.equal(doPc.status, 200);
+  assert.equal((await estado()).active, true, 'nem a sincronização bloqueia a proprietária');
+
+  // outro administrador continua podendo ser bloqueado e a mensagem do login é legível
+  const outro = 'admin.bloqueavel@teste.nexus';
+  await criarContaDeTeste(admin, outro, 'Outro@12345');
+  assert.equal((await api('POST', '/api/users', { token: admin, body: [{ email: outro, name: 'Outro admin', role: 'Administrador', active: false }] })).status, 200);
+  const recusado = await api('POST', '/api/login', { body: { email: outro, password: 'Outro@12345' } });
+  assert.equal(recusado.status, 403);
+  assert.match(recusado.json.error, /desativada pelo administrador/);
+  assert.ok(!/banco de dados/.test(recusado.json.error), 'a mensagem não fala em "banco de dados"');
+  assert.equal((await api('DELETE', '/api/users?email=' + outro, { token: admin })).status, 200);
+  assert.equal((await api('DELETE', '/api/users?email=' + dono, { token: admin })).status, 403, 'e a proprietária também não é excluída');
+});
+
 // Por último de propósito: se a proteção regredir, este teste apaga os dados de teste e só ele falha (os demais já rodaram)
 test('reset total do banco fica desligado por padrão, mesmo com o token de sincronização', async () => {
   const r = await api('POST', '/api/database/reset', { headers: { 'X-Nexus-Sync-Token': SYNC_TOKEN }, body: { confirm: 'RESETAR-TUDO' } });

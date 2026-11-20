@@ -87,3 +87,14 @@ test('cenário real: bloqueio na nuvem sobrevive a vários ciclos do PC; o desbl
   nuvem.active = true; A.stamp(nuvem, T0 + 60000);
   assert.equal(A.pickActive(nuvem, pc).active, true);
 });
+
+test('ativoEfetivo: no login do PC vale o bloqueio carimbado no espelho que o SQL ainda não recebeu', () => {
+  const sqlAtivo = { active: true };
+  assert.equal(A.ativoEfetivo(sqlAtivo, { active: false, active_updated_at: iso(T0) }), false, 'bloqueio carimbado vale mesmo com o SQL atrasado');
+  assert.equal(A.ativoEfetivo({ active: false }, { active: true, active_updated_at: iso(T0) }), true, 'ativação carimbada também');
+  assert.equal(A.ativoEfetivo(sqlAtivo, { active: false }), true, 'espelho sem carimbo: vale o SQL (fonte soberana), como sempre');
+  assert.equal(A.ativoEfetivo({ active: 0 }, undefined), false);
+  assert.equal(A.ativoEfetivo({ active: 1 }, null), true);
+  assert.equal(A.ativoEfetivo(undefined, undefined), true);
+  assert.equal(A.ativoEfetivo(sqlAtivo, { active_updated_at: iso(T0) }), true, 'carimbo sem valor não inventa bloqueio');
+});

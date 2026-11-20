@@ -979,6 +979,8 @@ function sanitizeUser(user) {
   }
   // Permissões delegadas vêm SEMPRE do arquivo próprio (nunca de um campo do cadastro, que o cliente poderia forjar ao salvar a lista)
   safeUser.permissions = getUserPermissions(user);
+  // Conta proprietária: as telas de administração não oferecem bloquear nem excluir (o servidor recusa de qualquer jeito). Calculado aqui, nunca gravado.
+  if (isOwnerEmail(user.email)) safeUser.is_owner = true; else delete safeUser.is_owner;
   return safeUser;
 }
 
@@ -34283,6 +34285,12 @@ async function handleNexusRequest(req, res) {
               [cleanEmail]
             );
             if (result.rows && result.rows.length > 0) user = result.rows[0];
+            // Bloqueio carimbado no espelho que o SQL ainda não recebeu vale já no login (acesso.js: ativoEfetivo)
+            if (user) {
+              const espelhoLogin = getLocalUsers().find(m => m && m.email && String(m.email).toLowerCase().trim() === cleanEmail);
+              const ativoLogin = Acesso.ativoEfetivo(user, espelhoLogin);
+              if (ativoLogin !== Acesso.ativo(user.active)) user = { ...user, active: ativoLogin };
+            }
           } catch (dbErr) {
             console.warn('[AVISO BD] Falha ao consultar SQL Server no login:', dbErr.message);
           }
@@ -34352,7 +34360,7 @@ async function handleNexusRequest(req, res) {
           return res.end(JSON.stringify({
             success: false,
             errorType: 'user_inactive',
-            error: 'Esta conta de usuário foi desativada no banco de dados pelo administrador.'
+            error: 'Esta conta foi desativada pelo administrador. Entre em contato para mais informações.'
           }));
         }
 
@@ -35705,6 +35713,10 @@ async function handleNexusRequest(req, res) {
     if (resetEmail === String(resetAdmin.email || '').toLowerCase().trim()) {
       return sendJson(res, corsHeaders, 400, { success: false, error: 'Para trocar a sua própria senha use Minha Conta.' });
     }
+    // A conta proprietária é protegida (não bloqueia, não exclui): outro administrador também não a toma redefinindo a senha. Ela troca a própria em Minha Conta.
+    if (isOwnerEmail(resetEmail)) {
+      return sendJson(res, corsHeaders, 403, { success: false, error: 'A senha da conta proprietária só pode ser trocada por ela mesma, em Minha Conta.' });
+    }
     const resetLista = getLocalUsers();
     const resetAlvo = resetLista.find(u => u && u.email && String(u.email).toLowerCase().trim() === resetEmail);
     if (!resetAlvo || isAccountDeleted(resetEmail)) {
@@ -35960,6 +35972,9 @@ async function handleNexusRequest(req, res) {
     if (!alvoAtivo || isAccountDeleted(ativoEmail)) return sendJson(res, corsHeaders, 404, { success: false, error: 'Conta não encontrada.' });
     const negado = delegateTargetDenial(quemBloqueia, alvoAtivo, ativoEmail);
     if (negado) return sendJson(res, corsHeaders, 403, { success: false, error: negado });
+    if (leituraAtivo.dados.active === false && isOwnerEmail(ativoEmail)) {
+      return sendJson(res, corsHeaders, 403, { success: false, error: 'A conta proprietária não pode ser bloqueada.' });
+    }
     if (quemBloqueia.role === 'Administrador' && alvoAtivo.role === 'Administrador' && leituraAtivo.dados.active === false &&
         listaAtivo.filter(u => u && u.role === 'Administrador' && u.active !== false && u.active !== 0).length <= 1) {
       return sendJson(res, corsHeaders, 403, { success: false, error: 'É necessário manter ao menos um administrador ativo.' });
@@ -36050,6 +36065,17 @@ async function handleNexusRequest(req, res) {
         let acceptedUsers = 0;
         const contasBloqueadasAgora = [];   // contas que passaram de ativas a bloqueadas neste envio: as sessões abertas delas caem ao salvar
         const requestIsInternalSync = hasInternalSyncAccess(req, parsedUrl);
+        // A conta proprietária NUNCA pode ser bloqueada (sem ela o proprietário perderia o acesso ao painel). Antes o pedido era aceito ("success") e
+        // ignorado em silêncio: a tela parecia bloquear e o login seguia funcionando. Agora recusa com o motivo, como já fazia para excluir.
+        // Só vale para um pedido do administrador sobre uma conta hoje ativa; a sincronização interna e listas antigas de uma conta já inativa seguem como sempre.
+        if (!requestIsInternalSync) {
+          const pedidoBloqueioDono = users.find(u => u && u.email && isOwnerEmail(String(u.email).toLowerCase().trim()) && u.active !== undefined && !Acesso.ativo(u.active));
+          const donoAtual = pedidoBloqueioDono && existingMap.get(String(pedidoBloqueioDono.email).toLowerCase().trim());
+          if (pedidoBloqueioDono && donoAtual && Acesso.ativo(donoAtual.active)) {
+            res.writeHead(403, { ...corsHeaders, 'Content-Type': 'application/json' });
+            return res.end(JSON.stringify({ success: false, error: 'A conta proprietária não pode ser bloqueada.' }));
+          }
+        }
         users.forEach(u => {
           // Cadastro NOVO digitado pelo administrador: se o e-mail era de uma conta excluída, libera-o (a sincronização interna nunca ressuscita contas)
           if (u && u.admin_create === true && !requestIsInternalSync && u.email && isStrictEmail(String(u.email).trim().toLowerCase()) && !existingMap.has(String(u.email).toLowerCase().trim())) {
@@ -36117,8 +36143,12 @@ async function handleNexusRequest(req, res) {
             // BLOQUEIO DA CONTA (acesso.js), mesma regra da assinatura: cada bloqueio/ativação INTENCIONAL do administrador carimba active_updated_at e entre
             // duas versões vale o carimbo mais novo. Sem isto o PC reenviava a linha antiga do SQL (active = 1) a cada 10 s e desfazia o bloqueio feito na nuvem.
             // O navegador do administrador nunca define o carimbo (reenvia a lista que leu): só a sincronização interna traz o dela.
+            const ownerAccount = isOwnerEmail(emailKey);   // a conta proprietária nunca fica bloqueada: nunca é carimbada nem derruba sessão
             let activeFinal; let activeClock;
-            if (existing && requestIsInternalSync) {
+            if (ownerAccount) {
+              activeFinal = true;
+              activeClock = existing ? existing.active_updated_at : undefined;
+            } else if (existing && requestIsInternalSync) {
               const pickAct = Acesso.pickActive(existing, u, { noClock: 'incoming' });
               activeFinal = pickAct.active; activeClock = pickAct.active_updated_at;
             } else if (existing) {
@@ -36134,7 +36164,6 @@ async function handleNexusRequest(req, res) {
             }
             if (existing && requestIsInternalSync && Acesso.ativo(existing.active) && !activeFinal) contasBloqueadasAgora.push(emailKey);
 
-            const ownerAccount = isOwnerEmail(emailKey);
             userMap.set(emailKey, {
               id: u.id || (existing ? existing.id : Date.now()),
               name: String(u.name || (existing ? existing.name : 'Usuário')).replace(/[<>"`&]/g, '').trim() || 'Usuário',
@@ -38859,7 +38888,7 @@ async function syncWithRenderCloud() {
               ? { active: acEspelho.active, active_updated_at: acEspelho.active_updated_at }
               : { active: currentU.active };
             const escAc = Acesso.pickActive(noPcAc, cu, { noClock: 'existing' });
-            if (escAc.source === 'incoming') {
+            if (escAc.source === 'incoming' && !isOwnerEmail(cleanEmail)) {   // a proprietária nunca é bloqueada, nem pela nuvem
               const mudouNoSql = Acesso.ativo(currentU.active) !== escAc.active;
               if (mudouNoSql) {
                 await pool.query('UPDATE usuarios SET active = $1 WHERE LOWER(email) = LOWER($2)', [escAc.active ? 1 : 0, cleanEmail]);
