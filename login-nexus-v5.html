@@ -1161,6 +1161,8 @@ h3 { font-size: 18px !important; }
   setModo('entrar',true);
   /* vindo do site inicial (/inicio): "Criar conta" já abre na aba de cadastro (/login.html#criar) */
   if(/^#criar$/i.test(location.hash)||/[?&]aba=criar(&|$)/.test(location.search))setModo('criar');
+  /* vindo da Central de Chamados (GLPI): "Esqueci minha senha" cai aqui (/login.html#recuperar) e já abre a recuperação */
+  if(/^#recuperar$/i.test(location.hash))setTimeout(function(){window.nexusAuth.recover('')},250);
   /* Sessão encerrada por outro motivo que não o "Sair" (conta bloqueada, senha redefinida, conta excluída, sessão vencida): o app deixa o
      motivo na aba e esta tela explica, em vez de só aparecer o formulário vazio. */
   var MOTIVOS_SESSAO={

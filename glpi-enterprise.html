@@ -986,7 +986,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         .lg-logo .mark { width: 2.8rem; height: 2.8rem; border-radius: .85rem; font-size: 1.6rem; }
         /* medidas que acompanham a largura da tela: recuos, título e altura dos campos se ajustam sozinhos */
         .lg-card { --lg-h: 3.1rem; width: 100%; padding: clamp(1.5rem, 5vw, 2.1rem) clamp(1.25rem, 5vw, 2rem) clamp(1.25rem, 4vw, 1.6rem); border-radius: 1.4rem; background: var(--glass-fill); }
-        .lg-card h2 { font-family: var(--font-display); font-weight: 600; font-size: clamp(1.4rem, 6.2vw, 1.6rem); line-height: 1.2; letter-spacing: -.015em; color: var(--white); text-wrap: balance; }
+        .lg-card h2 { font-family: var(--font-body); font-weight: 800; font-size: clamp(1.4rem, 6.2vw, 1.6rem); line-height: 1.2; letter-spacing: -.02em; color: var(--white); text-wrap: balance; }
         .lg-card .sub { margin-top: .55rem; font-size: 1rem; line-height: 1.55; color: var(--ink-2); text-wrap: pretty; }
         .lg-card form { margin-top: 1.4rem; display: grid; gap: 1.05rem; }
         .lg-card .input-icon { display: block; min-width: 0; }
@@ -994,6 +994,17 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         .lg-card .input.has-eye { padding-right: 3rem; }
         .lg-card .field label { font-size: 1rem; }
         .lg-card .btn-lg { height: var(--lg-h); border-radius: .75rem; font-size: 1rem; }
+        /* botão principal: letra sempre branca sobre a cor da paleta um pouco mais escura (contraste alto em qualquer paleta) */
+        .lg-card .btn-blue {
+            color: #fff; text-shadow: 0 1px 1px rgba(0, 0, 0, .28);
+            background: linear-gradient(180deg, color-mix(in srgb, var(--brand-d) var(--lg-btn-a, 70%), #0a1020), color-mix(in srgb, var(--brand-d) var(--lg-btn-b, 56%), #0a1020));
+            box-shadow: 0 10px 24px -10px rgba(var(--acc-rgb), .6), inset 0 1px 0 rgba(255, 255, 255, .22), inset 0 -1px 0 rgba(0, 0, 0, .18);
+        }
+        .lg-aux { display: flex; justify-content: flex-end; margin-top: .45rem; }
+        .lg-forgot { font-size: 1rem; font-weight: 700; color: var(--acc-l); text-decoration: none; border-radius: .3rem; }
+        :root[data-mode="light"] .lg-forgot { color: color-mix(in srgb, var(--brand-d) 45%, #0e1530); }
+        .lg-forgot:hover { text-decoration: underline; text-underline-offset: .18em; }
+        .lg-forgot:focus-visible { outline: 2px solid var(--acc-l); outline-offset: 3px; }
         /* preenchimento automático do navegador (e-mail/senha salvos): o fundo e a letra seguem o tema do campo, em vez do azul-claro
            ou cinza do Chrome/Edge, que no modo escuro deixava a letra clara sobre fundo claro */
         .lg-card .input:-webkit-autofill, .lg-card .input:-webkit-autofill:hover {
@@ -1008,9 +1019,10 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         .lg-card .eye:hover { color: var(--ink); background: rgba(var(--lt), .08); }
         .lg-card .eye:focus-visible { outline: 2px solid var(--acc-l); outline-offset: 1px; color: var(--ink); }
         .login-error { color: var(--t-rose); }
-        .lg-feat { margin-top: 1.4rem; padding-top: 1.2rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr)); gap: .5rem; border-top: 1px solid var(--line-soft); }
-        .lg-feat li { display: flex; align-items: center; gap: .7rem; padding: .45rem .7rem; border-radius: .75rem; font-size: 1rem; line-height: 1.35; font-weight: 600; color: var(--ink-2); background: rgba(var(--lt), .06); border: 1px solid var(--line-soft); }
-        .lg-feat li i { flex: none; width: 1.75rem; height: 1.75rem; display: grid; place-items: center; border-radius: .6rem; font-size: 1rem; color: var(--acc-l); background: rgba(var(--acc-rgb), .14); }
+        /* lista informativa: só ícone e texto, sem caixa nem borda, para não parecer botão */
+        .lg-feat { margin-top: 1.3rem; padding-top: 1.1rem; display: grid; gap: .55rem; border-top: 1px solid var(--line-soft); }
+        .lg-feat li { display: flex; align-items: center; gap: .65rem; font-size: 1rem; line-height: 1.4; font-weight: 500; color: var(--ink-2); cursor: default; }
+        .lg-feat li i { flex: none; width: 1.25rem; text-align: center; font-size: 1rem; color: var(--acc-l); }
         .lg-foot { margin-top: 1.4rem; display: grid; gap: .35rem; justify-items: center; font-size: 1rem; color: var(--muted); text-align: center; }
         .lg-foot i { margin-right: .35rem; color: var(--t-green); }
         .lg-foot .mono { font-size: 1rem; color: var(--faint); }
@@ -1938,6 +1950,8 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                             <input type="password" id="login-password" class="input has-eye" placeholder="Digite sua senha" required autocomplete="current-password">
                             <button type="button" class="eye" id="login-eye" aria-label="Mostrar senha" aria-pressed="false" onclick="toggleLoginPassword(this)"><i class="fa-regular fa-eye" aria-hidden="true"></i></button>
                         </div>
+                        <!-- a senha é a do Nexus Financeiro: a recuperação abre direto lá e, depois de entrar, a pessoa volta para esta central -->
+                        <div class="lg-aux"><a class="lg-forgot" href="/login.html?next=%2Fsuporte#recuperar">Esqueci minha senha</a></div>
                     </div>
                     <p id="login-error-msg" class="hidden login-error" role="alert"></p>
                     <button type="submit" id="btn-submit-login" class="btn btn-blue btn-lg btn-block">
@@ -1953,7 +1967,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
 
             <footer class="lg-foot">
                 <span><i class="fa-solid fa-shield-halved"></i> Conexão protegida e criptografada (SSL 256-bit)</span>
-                <span class="mono">GLPI 10.0.12 LTS • ITSM &amp; Service Desk</span>
+                <span class="mono">ITSM &amp; Service Desk</span>
             </footer>
         </main>
     </div>
@@ -3214,6 +3228,13 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             ST.setProperty('--dk-dark', hsl2rgb(h0, Math.round(s * .55), 9).join(', '));
             /* texto sobre a cor de destaque: branco, exceto nas cores claras (amarelo, verde, ciano), onde o branco não é legível */
             ST.setProperty('--on-brand', 1.05 / (lum(br) + .05) < 3 ? 'hsl(' + h0 + ' 55% 9%)' : '#fff');
+            /* botão principal da tela de acesso: letra branca sobre a cor da paleta, escurecida só o quanto precisa para o contraste
+               ficar em 4,7:1 ou mais (o azul quase não escurece; verde, dourado e turquesa escurecem mais) */
+            var bd = hsl2rgb(h0, s * .66, 51), esc = [10, 16, 32], pct = 70;
+            var misturar = function (p) { return bd.map(function (v, i) { return v * p / 100 + esc[i] * (100 - p) / 100; }); };
+            while (pct > 30 && 1.05 / (lum(misturar(pct)) + .05) < 4.7) pct -= 2;
+            ST.setProperty('--lg-btn-a', pct + '%');
+            ST.setProperty('--lg-btn-b', Math.max(pct - 14, 22) + '%');
         }
 
         /* Estado salvo: tudo vem do site principal (/inicio). A cor vem de nexus:cores; sem nada salvo
