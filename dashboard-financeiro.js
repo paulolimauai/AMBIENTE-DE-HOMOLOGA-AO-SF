@@ -36,7 +36,6 @@
   // Eixo: valor inteiro abaixo de 10 mil; compacto ("12 mil") a partir daí
   function fmtEixo(v) {
     const n = Number(v) || 0;
-    if (Math.abs(n) < 0.5) return 'R$ 0';
     if (Math.abs(n) < 10000) return 'R$ ' + Math.round(n).toLocaleString('pt-BR');
     return 'R$ ' + new Intl.NumberFormat('pt-BR', { notation: 'compact', maximumFractionDigits: 1 }).format(n);
   }
@@ -535,7 +534,7 @@
   // ======================================================================
   // Tela (HTML)
   // ======================================================================
-  const estado = { visao: 'saldo', filtro: 'all', tabela: false, modelo: null, util: null, ativo: false, grafico: null, detalhes: false };
+  const estado = { visao: 'saldo', filtro: 'all', tabela: false, modelo: null, util: null, ativo: false, grafico: null };
 
   const svg = (corpo, tam, sw) => '<svg width="' + (tam || 15) + '" height="' + (tam || 15) + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="' + (sw || 2.2) + '" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + corpo + '</svg>';
   const ICONES = {
@@ -548,7 +547,6 @@
     despesa: svg('<path d="M7 7h10v10"/><path d="M7 17 17 7"/>', 16, 2.4),
     resultado: svg('<polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>', 16),
     cartao: svg('<rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/>', 16),
-    resultado: svg('<path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/>', 16),
     carteira: svg('<path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/>', 16),
     atualizar: svg('<path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/>', 16),
     mais: svg('<path d="M12 5v14"/><path d="M5 12h14"/>', 14, 2.6),
@@ -666,9 +664,8 @@
       '<div><strong>' + esc(i.titulo) + '</strong><span>' + esc(i.texto) + '</span></div></div>').join('') + '</div>';
   }
 
-  // Detalhes do saldo (recolhidos): na linha do título ficam o saldo de hoje e a projeção do fim do mês;
-  // abertos, mostram o acumulado de todos os meses e os três números de 30 dias (menor saldo, a receber, a pagar)
-  function blocoDetalhes(m) {
+  // Número-herói: receitas do período em destaque; o saldo em contas, a projeção e a curva do mês ficam logo abaixo
+  function blocoSaldo(m) {
     const c = m.contas;
     const a = m.agenda;
     const projDiff = arred(c.saldoProjetadoFim - c.saldoAtual);
@@ -686,13 +683,20 @@
       (minimo ? mini(rotuloMinimo, dinheiro(minimo.valor), quando(minimo.dia), { pagina: 'transacoes' }, minimo.valor < 0 ? 'fd-mini-neg' : '') : '') +
       mini('A receber · 30 dias', dinheiro(a.totalAReceber), aReceber ? aReceber + (aReceber === 1 ? ' lançamento' : ' lançamentos') : 'nada pendente', { tipo: 'in', status: 'Pendente' }) +
       mini('A pagar · 30 dias', dinheiro(a.totalAPagar), a.qtdVencidas ? '<span class="fd-delta fd-ruim">' + a.qtdVencidas + (a.qtdVencidas === 1 ? ' vencida' : ' vencidas') + '</span>' : (aPagar ? aPagar + (aPagar === 1 ? ' lançamento' : ' lançamentos') : 'em dia'), { tipo: 'out', status: 'Pendente' });
-    const delta = Math.abs(projDiff) >= 0.01 ? ' <span class="fd-delta fd-money ' + (projDiff >= 0 ? 'fd-bom' : 'fd-ruim') + '">' + (projDiff >= 0 ? '▲ ' : '▼ ') + esc(fmtU(Math.abs(projDiff))) + '</span>' : '';
-    return '<details class="fd-card fd-vidro fd-detalhes"' + (estado.detalhes ? ' open' : '') + ' ontoggle="window.NexusDash.estado.detalhes = this.open">' +
-      '<summary><span class="fd-det-tit">Saldo, projeção e acumulado</span>' +
-      '<span class="fd-det-resumo"><span class="fd-hero-proj-rot">Saldo em contas hoje</span> ' + dinheiro(c.saldoAtual) +
-        ' · <span class="fd-hero-proj-rot">' + esc(fimRotulo) + '</span> ' + dinheiro(c.saldoProjetadoFim) + delta + '</span>' +
-      '<span class="fd-det-seta" aria-hidden="true">' + ICONES.seta + '</span></summary>' +
-      '<div class="fd-det-corpo">' + blocoAcumulado(m) + '<div class="fd-mini">' + itens + '</div></div></details>';
+    const t = m.totais;
+    return '<section class="fd-card fd-vidro fd-saldo" aria-label="Receitas e saldo">' +
+      '<div class="fd-hero-rotulo">Receitas <span class="fd-dica" tabindex="0" title="Total de receitas do período: já recebido + a receber. O saldo das contas aparece logo abaixo.">?</span></div>' +
+      '<div class="fd-hero-valor fd-money fd-hero-in" data-anim-val="' + t.receitas.total + '">' + esc(fmtU(t.receitas.total)) + '</div>' +
+      '<div class="fd-hero-proj"><span class="fd-hero-proj-rot">Já recebido</span> ' + dinheiro(t.receitas.realizado) +
+        ' · <span class="fd-hero-proj-rot">A receber</span> ' + dinheiro(t.receitas.previsto) + '</div>' +
+      '<div class="fd-hero-proj"><span class="fd-hero-proj-rot">Saldo em contas hoje</span> ' + dinheiro(c.saldoAtual) +
+        ' · <span class="fd-hero-proj-rot">' + esc(fimRotulo) + '</span> ' + dinheiro(c.saldoProjetadoFim) +
+        (Math.abs(projDiff) >= 0.01 ? ' <span class="fd-delta fd-money ' + (projDiff >= 0 ? 'fd-bom' : 'fd-ruim') + '">' + (projDiff >= 0 ? '▲ ' : '▼ ') + esc(fmtU(Math.abs(projDiff))) + '</span>' : '') + '</div>' +
+      blocoAcumulado(m) +
+      (m.serieDiaria && m.serieDiaria.dias && m.serieDiaria.dias.length > 1
+        ? '<div class="fd-hero-cap">Saldo em contas no mês <span>linha cheia = realizado · tracejada = projeção</span></div>' : '') +
+      '<div class="fd-hero-grafico">' + graficoSaldo(m) + '</div>' +
+      '<div class="fd-mini">' + itens + '</div></section>';
   }
 
   // Acumulado de todos os meses cadastrados: mini-gráfico da evolução do acumulado + barra do que entrou vs saiu,
@@ -753,26 +757,12 @@
       o.valorHtml + '<div class="fd-tile-rodape">' + o.linhas.filter(Boolean).map((l) => '<div class="fd-tile-linha">' + l + '</div>').join('') + '</div></div>';
   }
 
-  // Quatro cartões do mesmo tamanho, sempre na mesma ordem: o que entrou, o que saiu, o que sobrou e o que ainda pode ser gasto.
-  // Receitas, despesas e resultado trazem a comparação com o mês anterior (até o mesmo dia).
   function blocoKpis(m) {
     const c = m.contas;
     const t = m.totais;
     const cmp = m.comparativo;
     const cartoes = c.cartoes;
-    const divida = cartoes.divida != null ? cartoes.divida : cartoes.fatura;
-    const resultado = arred(t.receitas.total - t.despesas.total);
-    const taxa = t.receitas.total > 0 ? Math.round((resultado / t.receitas.total) * 100) : null;
     const tiles =
-      tileKpi({
-        rotulo: 'Receitas', tom: 'fd-ic-in', icone: ICONES.receita, ir: { tipo: 'in' }, dica: 'Ver as receitas em Movimentações', classe: 'fd-tile-in',
-        valorHtml: valorTile(t.receitas.total),
-        linhas: [
-          cmp ? chipVariacao(cmp.receitas, 'subir', cmp.rotulo) : '',
-          resumoFluxo(t.receitas, 'já recebido', 'a receber', 'entrada'),
-          progresso(t.receitas.realizado, t.receitas.previsto, 'Receitas')
-        ]
-      }) +
       tileKpi({
         rotulo: 'Despesas', tom: 'fd-ic-out', icone: ICONES.despesa, ir: { tipo: 'out' }, dica: 'Ver as despesas em Movimentações', classe: 'fd-tile-out',
         valorHtml: valorTile(t.despesas.total),
@@ -783,24 +773,21 @@
         ]
       }) +
       tileKpi({
-        rotulo: 'Resultado do período', tom: resultado < 0 ? 'fd-ic-out' : 'fd-ic-in', icone: ICONES.resultado, ir: {}, classe: resultado < 0 ? 'fd-tile-out' : 'fd-tile-in',
-        dica: 'Receitas menos despesas do período (realizadas e previstas)',
-        valorHtml: valorTile(resultado),
-        linhas: [
-          cmp && cmp.resultado ? chipVariacao(cmp.resultado, 'subir', cmp.rotulo, true) : '',
-          taxa == null ? 'Sem receitas no período' : (resultado >= 0 ? 'Sobram ' + taxa + '% das receitas' : 'Despesas passam as receitas em ' + Math.abs(taxa) + '%'),
-          'Receitas ' + dinheiro(t.receitas.total) + ' − Despesas ' + dinheiro(t.despesas.total)
-        ]
-      }) +
-      tileKpi({
-        rotulo: 'Disponível p/ gastar', tom: 'fd-ic-neutro', icone: ICONES.carteira, ir: {}, dica: 'Saldo das contas, mais o que falta receber, menos o que falta pagar',
+        rotulo: 'Disponível p/ gastar', tom: 'fd-ic-neutro', icone: ICONES.carteira, ir: {}, dica: 'Receitas menos despesas do período — quanto do dinheiro ainda pode ser gasto',
         classe: c.disponivelGastar < 0 ? 'fd-tile-out' : 'fd-tile-in',
         valorHtml: valorTile(c.disponivelGastar),
         linhas: [
           'Saldo ' + dinheiro(c.saldoAtual) + ' + a receber ' + dinheiro(t.receitas.previsto) + ' − a pagar ' + dinheiro(t.despesas.previsto),
-          cartoes.itens.length || divida > 0
-            ? '<span class="fd-clicavel"' + atalho({ pagina: 'cartoes' }) + '>Dívida nos cartões ' + dinheiro(divida) + (cartoes.itens.length ? ' · ' + cartoes.usoPct + '% do limite' : '') + '</span>'
-            : 'Nenhum cartão cadastrado'
+          'Receitas ' + dinheiro(t.receitas.total) + ' − Despesas ' + dinheiro(t.despesas.total) + ' no período'
+        ]
+      }) +
+      tileKpi({
+        rotulo: 'Dívida nos cartões', tom: 'fd-ic-out', icone: ICONES.cartao, ir: { pagina: 'cartoes' }, dica: 'Total acumulado devido em todos os cartões de crédito (todas as faturas, de todos os meses e cartões cadastrados)',
+        valorHtml: valorTile(cartoes.divida != null ? cartoes.divida : cartoes.fatura),
+        linhas: [
+          cartoes.itens.length ? 'Acumulado de todas as faturas · ' + cartoes.usoPct + '% do limite · ' + dinheiro(cartoes.disponivel) + ' livres'
+            : ((cartoes.divida != null ? cartoes.divida : cartoes.fatura) > 0 ? 'Há compras no cartão, mas nenhum cartão cadastrado · cadastre em Contas e Cartões' : 'Nenhum cartão cadastrado'),
+          cartoes.itens.length ? '<div class="fd-meter" role="img" aria-label="Uso do limite ' + cartoes.usoPct + '%"><i class="' + (cartoes.usoPct >= 85 ? 'fd-m-ruim' : cartoes.usoPct >= 60 ? 'fd-m-medio' : 'fd-m-bom') + '" style="width:' + Math.min(100, cartoes.usoPct) + '%"></i></div>' : ''
         ]
       });
     return '<div class="fd-kpis" aria-label="Resumo do período">' + tiles + '</div>';
@@ -940,7 +927,7 @@
         (c.cartoes.dividaExtra > 0 ? ' · não identificados ' + esc(fmtU(c.cartoes.dividaExtra)) : '') + ')</span></p>' +
         '<ul class="fd-cartoes">' + c.cartoes.itens.map((k) => '<li class="fd-clicavel"' + atalho({ conta: k.nome }) + ' title="Ver as movimentações de ' + esc(k.nome) + '"><div class="fd-cartao-topo"><span>' + esc(k.nome) + '</span><strong>' + k.usoPct + '%</strong></div>' +
         medidor(k.usoPct, k.usoPct >= 85 ? 'fd-m-ruim' : k.usoPct >= 60 ? 'fd-m-medio' : 'fd-m-bom', k.nome + ' ' + k.usoPct + '% do limite') +
-        '<div class="fd-cartao-nota"><span>Fatura ' + dinheiro(k.fatura) + '</span><span>' + (k.disponivel < 0 ? 'Acima do limite ' + dinheiro(-k.disponivel) : 'Livre ' + dinheiro(k.disponivel)) + '</span></div></li>').join('') + '</ul>'
+        '<div class="fd-cartao-nota"><span>Fatura ' + dinheiro(k.fatura) + '</span><span>Livre ' + dinheiro(k.disponivel) + '</span></div></li>').join('') + '</ul>'
       : '';
     return '<article class="fd-card fd-vidro"><div class="fd-card-topo"><div><h2 class="fd-titulo">Contas e cartões</h2><p class="fd-legenda">Saldos de hoje e uso dos limites</p></div>' +
       '<button type="button" class="fd-link fd-link-topo" data-fd-ir="cartoes">Gerenciar</button></div>' +
@@ -978,35 +965,19 @@
       '<div id="fdUltimas">' + linhasUltimas(m, estado.filtro) + '</div></article>';
   }
 
-  // Conta sem nenhum lançamento: em vez de cartões e gráficos em R$ 0,00, três passos com um botão em cada
-  function blocoVazio(m) {
-    const temConta = m.contas.bancarias.length + m.contas.cartoes.itens.length > 0;
-    const passo = (n, ok, titulo, texto, acoes) => '<li class="fd-passo' + (ok ? ' fd-passo-ok' : '') + '"><span class="fd-passo-n">' + (ok ? ICONES.check : n) + '</span>' +
-      '<div><strong>' + titulo + '</strong><span class="fd-passo-txt">' + texto + '</span></div><div class="fd-passo-acoes">' + (ok ? '<span class="fd-selo fd-selo-bom">Concluído</span>' : acoes) + '</div></li>';
-    return '<section class="fd-card fd-vidro fd-vazio-total"><h2 class="fd-titulo">Comece em 3 passos</h2>' +
-      '<p class="fd-legenda">Com os primeiros dados, o painel passa a mostrar saldo, projeção, categorias e contas a pagar.</p>' +
-      '<ol class="fd-passos">' +
-      passo(1, temConta, 'Cadastre uma conta ou cartão', 'Informe o saldo inicial das contas e o limite dos cartões.', '<button type="button" class="fd-btn" data-fd-ir="cartoes">Cadastrar</button>') +
-      passo(2, false, 'Lance sua primeira receita', 'Salário, freelance ou qualquer entrada.', '<button type="button" class="fd-btn fd-btn-receita" data-fd-acao="nova-receita">' + ICONES.mais + '<span>Receita</span></button>') +
-      passo(3, false, 'Lance uma despesa ou importe um extrato', 'Digite os gastos ou traga o extrato do banco em OFX ou CSV.',
-        '<button type="button" class="fd-btn fd-btn-despesa" data-fd-acao="nova-despesa">' + ICONES.mais + '<span>Despesa</span></button><button type="button" class="fd-btn" data-fd-ir="importar">Importar extrato</button>') +
-      '</ol></section>';
+  function blocoVazio() {
+    return '<section class="fd-card fd-vidro fd-vazio-total"><h2 class="fd-titulo">Comece pelas suas movimentações</h2>' +
+      '<p class="fd-legenda">Cadastre receitas e despesas para ver saldo, projeção, categorias e contas a pagar aqui.</p>' +
+      '<button type="button" class="fd-btn fd-btn-despesa" data-fd-acao="nova-despesa">' + ICONES.mais + '<span>Cadastrar movimentação</span></button></section>';
   }
 
   function paginaHtml(m, util) {
     const raiz = (miolo) => '<div class="dashboard-cockpit-frame fd-root">' + cabecalho(m, util) + miolo + '</div>';
-    // Sem nenhum lançamento: passo a passo (e as contas, se já existirem) no lugar de cartões e gráficos zerados
-    if (m.vazio) {
-      const temConta = m.contas.bancarias.length + m.contas.cartoes.itens.length > 0;
-      return raiz('<div class="fd-corpo">' + blocoVazio(m) + (temConta ? blocoContas(m) : '') + '</div>');
-    }
     const baixo = [blocoSaude(m), blocoContas(m), blocoOrcamentos(m)].filter(Boolean);
     return raiz('<div class="fd-corpo">' +
-      blocoAvisos(m) +
-      blocoKpis(m) +
+      '<div class="fd-linha fd-linha-a">' + blocoSaldo(m) + blocoKpis(m) + '</div>' +
       '<div class="fd-linha fd-linha-b">' + blocoGrafico(m) + blocoCategorias(m) + '</div>' +
       '<div class="fd-linha fd-linha-c">' + blocoAgenda(m) + blocoUltimas(m) + '</div>' +
-      blocoDetalhes(m) +
       '<div class="fd-linha fd-linha-d fd-n' + baixo.length + '">' + baixo.join('') + '</div></div>');
   }
 

@@ -315,8 +315,8 @@ body.light .fd-root .fd-selo-medio, html.light .fd-root .fd-selo-medio { color: 
 .fd-mini-neg strong { color: var(--fd-chip-ruim); }
 
 /* ---------- KPIs ---------- */
-.fd-kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
-.fd-tile { display: flex; flex-direction: column; justify-content: flex-start; gap: 4px; min-width: 0; padding: 11px 14px 10px; border-radius: 14px; transition: transform .2s ease, box-shadow .2s ease; }
+.fd-kpis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.fd-tile { display: flex; flex-direction: column; justify-content: center; gap: 4px; min-width: 0; padding: 11px 14px 10px; border-radius: 14px; transition: transform .2s ease, box-shadow .2s ease; }
 .fd-tile:hover { transform: translateY(-2px); }
 .fd-tile-topo { display: flex; align-items: center; gap: 8px; }
 .fd-tile-rotulo { font-size: 14px; font-weight: 650; color: var(--fd-ink-2); }
@@ -464,7 +464,6 @@ body.light .fd-root .fd-link, html.light .fd-root .fd-link { color: #1D5FB8; }
   .fd-linha-a, .fd-linha-b, .fd-linha-c { grid-template-columns: minmax(0, 1fr); }
   .fd-linha-d.fd-n3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .fd-linha-d.fd-n3 > :last-child { grid-column: 1 / -1; }
-  .fd-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @container fd (max-width: 1080px) {
   .fd-metricas { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -473,7 +472,7 @@ body.light .fd-root .fd-link, html.light .fd-root .fd-link { color: #1D5FB8; }
   .fd-linha-a, .fd-linha-b, .fd-linha-c { grid-template-columns: minmax(0, 1fr); }
   .fd-linha-d.fd-n3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .fd-linha-d.fd-n3 > :last-child { grid-column: 1 / -1; }
-  .fd-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .fd-kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .fd-metricas { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 @container fd (max-width: 700px) {
@@ -535,32 +534,4 @@ html.fd-vidro-ativo #pageContent .dashboard-cockpit-frame.fd-root { max-width: n
     max-width: 1900px !important;
     margin-inline: auto !important;
   }
-}
-
-/* =====================================================================================
-   4. Detalhes recolhidos e conta vazia (passo a passo)
-   ===================================================================================== */
-.fd-detalhes { display: block; padding: 0; }
-.fd-detalhes > summary { list-style: none; cursor: pointer; display: flex; align-items: center; flex-wrap: wrap; gap: 6px 18px; padding: 12px 16px; border-radius: 16px; }
-.fd-detalhes > summary::-webkit-details-marker { display: none; }
-.fd-detalhes > summary:focus-visible { outline: 2px solid var(--fd-accent); outline-offset: -2px; }
-.fd-det-tit { font-size: 14px; font-weight: 720; letter-spacing: -.015em; color: var(--fd-ink); }
-.fd-det-resumo { font-size: 14px; color: var(--fd-muted); display: inline-flex; align-items: center; flex-wrap: wrap; gap: 4px 6px; min-width: 0; }
-.fd-det-resumo .fd-money { color: var(--fd-ink-2); font-weight: 600; }
-.fd-det-seta { margin-left: auto; display: inline-flex; color: var(--fd-muted); transform: rotate(90deg); transition: transform .2s ease; }
-.fd-detalhes[open] .fd-det-seta { transform: rotate(-90deg); }
-.fd-det-corpo { display: flex; flex-direction: column; gap: 10px; padding: 0 16px 14px; }
-
-.fd-passos { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 820px; }
-.fd-passo { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 12px; background: var(--fd-wash); box-shadow: inset 0 0 0 1px var(--fd-line); }
-.fd-passo-n { display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; font-weight: 760; background: var(--fd-chip-neutro-bg); color: var(--fd-ink); }
-.fd-passo-ok .fd-passo-n { background: var(--fd-chip-bom-bg); color: var(--fd-chip-bom); }
-.fd-passo strong { display: block; font-size: 14px; font-weight: 700; color: var(--fd-ink); }
-.fd-passo-txt { font-size: 14px; color: var(--fd-muted); line-height: 1.4; }
-.fd-passo-acoes { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
-@container fd (max-width: 700px) {
-  .fd-passo { grid-template-columns: 34px minmax(0, 1fr); }
-  .fd-passo-acoes { grid-column: 1 / -1; justify-content: flex-start; }
-  .fd-det-corpo { padding: 0 13px 12px; }
-  .fd-detalhes > summary { padding: 11px 13px; }
 }
