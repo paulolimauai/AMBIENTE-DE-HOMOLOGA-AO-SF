@@ -70,3 +70,6 @@ mb.txt
 
 # Backups automáticos dos arquivos do site criados pelo "Administrar Site" (estado local de execução)
 site_backups/
+
+# Registro de visitas ao site (IP completo de quem acessou = dado pessoal): nunca versionar
+visitas/

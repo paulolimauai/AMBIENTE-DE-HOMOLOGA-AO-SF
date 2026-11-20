@@ -691,6 +691,40 @@ test('site inicial: "/" sem sessão abre o /inicio antes do login; o /inicio mos
   assert.match(js.headers.get('content-type'), /javascript/);
 });
 
+test('visitas: abrir página grava o IP completo na pasta visitas/; só o administrador consulta e vê o IP mascarado', async () => {
+  const ip = '189.45.10.77';
+  const UA = 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1';
+  const cab = { 'User-Agent': UA, Referer: 'https://www.google.com/search?q=nexus&token=segredo' };
+  assert.equal((await api('GET', '/inicio', { ip, headers: cab })).status, 200);
+  // arquivo, API e imagem não são "visita": só a abertura da página
+  await api('GET', '/site-inicial.css', { ip, headers: cab });
+  await api('GET', '/api/health', { ip, headers: cab });
+
+  const pastaVisitas = path.join(pasta, 'visitas');
+  const linhas = [];
+  fs.readdirSync(pastaVisitas).filter(n => /^\d{4}-\d{2}-\d{2}\.jsonl$/.test(n)).forEach(n => {
+    fs.readFileSync(path.join(pastaVisitas, n), 'utf8').split('\n').filter(Boolean).forEach(l => linhas.push(JSON.parse(l)));
+  });
+  const minhas = linhas.filter(l => l.ip === ip);
+  assert.equal(minhas.length, 1, 'só a página /inicio deveria ter sido registrada');
+  assert.equal(minhas[0].pagina, '/inicio');
+  assert.equal(minhas[0].tipo, 'Celular');
+  assert.equal(minhas[0].origem, 'google.com');
+  assert.ok(!JSON.stringify(minhas[0]).includes('segredo'), 'a query da origem não pode ser gravada');
+
+  assert.equal((await api('GET', '/api/admin/visitas')).status, 401, 'sem login');
+  const ana = (await login('ana@teste.nexus', 'Ana@12345')).token;
+  assert.ok([401, 403].includes((await api('GET', '/api/admin/visitas', { token: ana })).status), 'usuário comum');
+  const admin = (await login('admin@teste.nexus', 'Admin@12345')).token;
+  const r = await api('GET', '/api/admin/visitas?dias=7', { token: admin });
+  assert.equal(r.status, 200);
+  assert.equal(r.json.success, true);
+  assert.equal(r.json.retencaoDias, 180);
+  assert.ok(r.json.visitas >= 1);
+  assert.ok(r.json.recentes.some(v => v.ip === '189.45.xxx.xxx' && v.pagina === '/inicio'), 'IP mascarado deveria aparecer');
+  assert.ok(!r.texto.includes(ip), 'o IP completo não pode sair pela API');
+});
+
 test('site inicial profissional: endereço canônico no domínio próprio, imagem de compartilhamento, dados estruturados, ícones, manifest, links legais e cache versionado', async () => {
   const site = (await api('GET', '/inicio')).texto;
   const DOMINIO = 'https://nexusfinanceirohub.com.br';

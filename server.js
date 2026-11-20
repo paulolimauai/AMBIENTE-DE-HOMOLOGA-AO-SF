@@ -30,10 +30,12 @@ const { qrSvg } = require('./qr-svg'); // QR Code do Pix gerado aqui (antes vinh
 const Assinatura = require('./assinatura'); // relógio da assinatura: qual versão vale entre a nuvem e o PC (liberar/bloquear/pagar não pode ser desfeito pelo outro servidor)
 const Acesso = require('./acesso'); // relógio do bloqueio da conta (active): o bloqueio feito na nuvem não pode ser desfeito pela linha antiga do SQL Server do PC
 const Credenciais = require('./credenciais'); // qual senha vale quando a conta existe na nuvem, no SQL Server do PC e no Supabase (vale a trocada por último)
+const Visitas = require('./visitas'); // registro de visitas ao site (pasta visitas/, IP completo só no arquivo e mascarado em qualquer resposta)
 
 const PORT = process.env.PORT || 3000;
 const SERVER_START_TIME = Date.now();
 const RUNTIME_DATA_DIR = process.env.NEXUS_DATA_DIR || __dirname;
+const VISITAS_DIR = path.join(RUNTIME_DATA_DIR, 'visitas'); // um arquivo por dia (AAAA-MM-DD.jsonl), guardado por 180 dias; fora do Git
 // Gravação direta e durável de todos os dados no Supabase (supabase-sync.js): cada gravação de arquivo de estado é enviada em ~0,4 s,
 // e o que o Supabase ainda não confirmou é guardado em disco e reenviado até entrar. Sem o módulo/pacote (cópia de teste) vira no-op.
 let SupabaseSync;
@@ -33969,6 +33971,11 @@ async function handleNexusRequest(req, res) {
 
   console.log(`[HTTP ${req.method}] ${parsedUrl.pathname}`);
 
+  // Visita ao site: só a abertura de páginas (nunca CSS/JS/imagens/API). Falha de disco não afeta a resposta.
+  if (req.method === 'GET') {
+    Visitas.registrarVisita(VISITAS_DIR, { ip: getClientIp(req), pathname: parsedUrl.pathname, ua: req.headers['user-agent'], referer: req.headers.referer, host: req.headers.host });
+  }
+
   // Cabeçalhos globais de CORS e Segurança HTTP
   const requestOrigin = String(req.headers.origin || '');
   let allowOrigin = '';
@@ -36120,6 +36127,14 @@ async function handleNexusRequest(req, res) {
       try { supabaseBody.audit = await SupabaseSync.audit(); } catch (auditErr) { supabaseBody.audit = { error: String((auditErr && auditErr.message) || auditErr).slice(0, 200) }; }
     }
     return sendJson(res, corsHeaders, 200, supabaseBody);
+  }
+
+  // Visitas ao site (resumo dos últimos N dias). O IP sai mascarado; o completo só existe nos arquivos da pasta visitas/.
+  if (req.method === 'GET' && parsedUrl.pathname === '/api/admin/visitas') {
+    if (!getAuthenticatedAdmin(req)) {
+      return sendJson(res, corsHeaders, 401, { success: false, error: 'Autenticação de administrador obrigatória.' });
+    }
+    return sendJson(res, corsHeaders, 200, { success: true, retencaoDias: Visitas.RETENCAO_DIAS, ...Visitas.resumir(VISITAS_DIR, { dias: parsedUrl.query.dias }) });
   }
 
   // Uso real de cada conta para a tela Cadastros & Contas do administrador: só contagens (nunca valores, descrições nem saldos)
