@@ -645,6 +645,21 @@ h3 { font-size: 18px !important; }
      Abas Entrar / Criar conta
      ===================================================================== */
   function lembrado(){return ls('nexus:email','')||ls('nexus_remembered_email','')}
+
+  /* Sessão única: a administração, o GLPI e o Nexus mandam para cá com ?next=<tela de origem> e a pessoa volta
+     para ela depois de entrar. Só valem telas do próprio site (lista fechada), nunca outro endereço. */
+  var DESTINOS_OK=['/','/admin-site.html','/admin-assinaturas-glpi.html','/glpi.html','/glpi','/suporte'];
+  function destinoPosLogin(){
+    try{
+      var n=new URLSearchParams(location.search).get('next');
+      if(!n||n.charAt(0)!=='/'||n.charAt(1)==='/'||n.charAt(1)==='\\')return '/';
+      var u=new URL(n,location.origin);
+      if(u.origin!==location.origin||DESTINOS_OK.indexOf(u.pathname)<0)return '/';
+      return u.pathname+u.search+u.hash;
+    }catch(e){return '/'}
+  }
+  var SUB_ENTRAR=/^\/admin-/.test(destinoPosLogin())?'Entre com a conta de administrador para abrir a administração.':'Seu resumo do mês está esperando por você.';
+
   function setModo(m,inicio){
     modo=m==='criar'?'criar':'entrar';
     var c=modo==='criar';
@@ -653,7 +668,7 @@ h3 { font-size: 18px !important; }
     ['g-nome','g-cpf','g-conf','forca','dica','aceites'].forEach(function(i){$(i).hidden=!c});
     $('opts').hidden=c;
     $('titulo').textContent=c?'Crie sua conta':'Entre no seu painel';
-    $('subtitulo').textContent=c?'Leva menos de um minuto para começar.':'Seu resumo do mês está esperando por você.';
+    $('subtitulo').textContent=c?'Leva menos de um minuto para começar.':SUB_ENTRAR;
     $('enviar').textContent=c?'Criar conta':'Entrar no painel';
     $('email').setAttribute('autocomplete',c?'off':'username');
     $('senha').setAttribute('autocomplete',c?'new-password':'current-password');
@@ -921,7 +936,7 @@ h3 { font-size: 18px !important; }
       if(pend(r.must_change_password)||(r.user&&pend(r.user.must_change_password)))await trocarSenhaProvisoria(d.email,r.token);
       else persistirSessao(r,d.email);
       aviso('Tudo certo. Abrindo o seu painel…',true);
-      setTimeout(function(){location.replace('/')},180);
+      setTimeout(function(){location.replace(destinoPosLogin())},180);
     },
     async register(d){
       var movel=/Android|webOS|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent||'');
@@ -931,7 +946,7 @@ h3 { font-size: 18px !important; }
       });
       persistirSessao(r,d.email);
       aviso('Conta criada. Bem-vindo ao Nexus!',true);
-      setTimeout(function(){location.replace('/')},220);
+      setTimeout(function(){location.replace(destinoPosLogin())},220);
     },
     /* Identifica a conta por e-mail OU CPF e confirma a identidade (nascimento, ou e-mail + CPF juntos) antes de gerar a senha
        provisória. Nunca revela se uma conta foi excluída: responde sempre "Usuário não possui conta criada.". */

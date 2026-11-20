@@ -15,7 +15,9 @@ body{
 .ads-brand strong{font-size:1.05rem;letter-spacing:.14em;color:#fff}
 .ads-brand span{font-size:.72rem;font-weight:800;letter-spacing:.22em;color:#34D399;margin-left:.35rem}
 .ads-brand small{display:block;font-size:.72rem;color:#8B98AC;margin-top:.1rem}
-.ads-actions{display:flex;gap:.6rem;flex-wrap:wrap}
+.ads-actions{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center}
+.ads-who{font-size:.78rem;color:#8B98AC;padding:0 .3rem;max-width:18rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ads-who[hidden]{display:none}
 
 .ads-btn{
   display:inline-flex;align-items:center;justify-content:center;gap:.45rem;

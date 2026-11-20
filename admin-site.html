@@ -21,11 +21,15 @@
       <small>Administração do Site</small>
     </div>
   </div>
+  <!-- Sessão única: o login é o do site principal (/login.html). Os atalhos abaixo abrem na mesma aba e continuam logados. -->
   <div class="ads-actions">
+    <span class="ads-who" id="adsWho" hidden></span>
     <a class="ads-btn ghost" id="adsOpenSite" href="/inicio" target="_blank" rel="noopener">Abrir site</a>
-    <a class="ads-btn ghost" href="/admin-assinaturas-glpi.html" target="_blank" rel="noopener">Assinaturas &amp; GLPI</a>
-    <a class="ads-btn ghost" href="/">Voltar ao painel</a>
+    <a class="ads-btn ghost" href="/admin-assinaturas-glpi.html">Assinaturas &amp; Acessos</a>
+    <a class="ads-btn ghost" href="/">Nexus Financeiro</a>
+    <a class="ads-btn ghost" href="/glpi.html?mode=tech&amp;tab=queue">GLPI</a>
     <button class="ads-btn" id="adsReload" type="button">Atualizar</button>
+    <button class="ads-btn danger" id="adsSair" type="button">Sair</button>
   </div>
 </header>
 
@@ -33,8 +37,14 @@
   <div class="ads-loading" id="adsLoading">Verificando acesso de administrador…</div>
   <div class="ads-denied" id="adsDenied" hidden>
     <h2>Acesso restrito</h2>
-    <p>Esta área é exclusiva para contas com perfil <strong>Administrador</strong>.</p>
-    <a class="ads-btn" href="/admin-assinaturas-glpi.html">Ir para o login do administrador</a>
+    <p id="adsDeniedMsg">Esta área é exclusiva para contas com perfil <strong>Administrador</strong>.</p>
+    <a class="ads-btn" href="/">Voltar ao Nexus Financeiro</a>
+    <button class="ads-btn ghost" id="adsOutraConta" type="button">Entrar com outra conta</button>
+  </div>
+  <div class="ads-denied" id="adsErro" hidden>
+    <h2>Não foi possível verificar o acesso</h2>
+    <p>O servidor não respondeu. Confira a conexão e tente de novo.</p>
+    <button class="ads-btn" id="adsTentar" type="button">Tentar de novo</button>
   </div>
 
   <div class="ads-body" id="adsBody" hidden>
@@ -75,6 +85,7 @@
   </div>
 </div>
 
+<script src="/nexus-sso.js"></script>
 <script src="/admin-site.js" defer></script>
 </body>
 </html>

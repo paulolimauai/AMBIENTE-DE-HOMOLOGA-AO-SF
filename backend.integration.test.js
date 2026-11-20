@@ -137,6 +137,53 @@ test('rotas sensíveis exigem autenticação e isolam usuários', async () => {
   assert.ok((await api('GET', '/api/users', { token: admin })).json.length >= 3);
 });
 
+test('sessão única: /api/auth/session diz quem é a conta e se é administradora (telas do admin não têm login próprio)', async () => {
+  const ana = (await login('ana@teste.nexus', 'Ana@12345')).token;
+  const admin = (await login('admin@teste.nexus', 'Admin@12345')).token;
+  assert.equal((await api('GET', '/api/auth/session')).status, 401, 'sem token');
+  assert.equal((await api('GET', '/api/auth/session', { token: 'lixo.lixo.lixo' })).status, 401, 'token inválido');
+  const a = await api('GET', '/api/auth/session', { token: admin });
+  assert.equal(a.status, 200, a.texto);
+  assert.equal(a.json.user.isAdmin, true);
+  assert.equal(a.json.user.role, 'Administrador');
+  assert.equal(a.json.user.email, 'admin@teste.nexus');
+  assert.match(a.headers.get('cache-control') || '', /no-store/);
+  const u = await api('GET', '/api/auth/session', { token: ana });
+  assert.equal(u.status, 200, u.texto);
+  assert.equal(u.json.user.isAdmin, false, 'usuário comum nunca é administrador');
+  assert.notEqual(u.json.user.role, 'Administrador');
+  assert.ok(!/password|scrypt|eyJ/i.test(a.texto + u.texto), 'a resposta não pode conter senha, hash nem token');
+  // a mesma decisão vale para o conteúdo: usuário comum não lê os arquivos do site, administrador lê
+  assert.ok([401, 403].includes((await api('GET', '/api/admin/site/files', { token: ana })).status));
+  assert.equal((await api('GET', '/api/admin/site/files', { token: admin })).status, 200);
+});
+
+test('sessão única: telas e script compartilhado são servidos e o login só devolve para telas do próprio site', async () => {
+  for (const [rota, tipo] of [['/nexus-sso.js', 'javascript'], ['/admin-site.html', 'html'], ['/admin-site.js', 'javascript'], ['/admin-assinaturas-glpi.html', 'html'], ['/login.html', 'html'], ['/glpi.html', 'html']]) {
+    const r = await api('GET', rota);
+    assert.equal(r.status, 200, rota);
+    assert.ok((r.headers.get('content-type') || '').includes(tipo), rota + ' ' + r.headers.get('content-type'));
+  }
+  // as telas do administrador não podem ter voltado a ter formulário de login próprio
+  const painel = (await api('GET', '/admin-assinaturas-glpi.html')).texto;
+  assert.ok(!/id="lf"|id="demo"|paulolp0101@gmail\.com"\s*>|type="password"/.test(painel), 'painel do admin não tem login próprio');
+  assert.ok(painel.includes('/nexus-sso.js') && painel.includes('NexusSSO.exigirAdmin'), 'painel usa o porteiro compartilhado');
+  assert.ok((await api('GET', '/admin-site.html')).texto.includes('/nexus-sso.js'));
+  // o login só aceita voltar para uma lista fechada de telas (nada de redirecionamento aberto)
+  const loginHtml = (await api('GET', '/login.html')).texto;
+  assert.ok(loginHtml.includes('DESTINOS_OK'), 'login tem a lista fechada de destinos');
+  assert.ok(!/location\.replace\('\/'\)/.test(loginHtml), 'login não manda mais sempre para "/" (usa o destino validado)');
+  // Nexus e GLPI: "Sair" apaga também a sessão do outro; botões do menu mantêm a sessão da aba (sem noopener)
+  const glpi = (await api('GET', '/glpi.html')).texto;
+  assert.ok(glpi.includes('limparSessaoCompartilhada') && glpi.includes('abrirNoNexus'));
+  const app = (await api('GET', '/login.html')).status;   // o app em "/" depende de sessão; a presença dos botões é conferida no código-fonte
+  assert.equal(app, 200);
+  const fonte = fs.readFileSync(path.join(__dirname, 'server.js'), 'utf8');
+  assert.ok(/id="menuAdminAssinaturasBtn"[^>]*onclick="window\.open\('\/admin-assinaturas-glpi\.html','_blank'\)"/.test(fonte));
+  assert.ok(/id="menuSiteAdminBtn"[^>]*onclick="window\.open\('\/admin-site\.html','_blank'\)"/.test(fonte), 'sem noopener: a aba nova herda a sessão');
+  assert.ok(!/window\.open\('\/glpi\.html\?' \+ modeQuery, '_blank', 'noopener/.test(fonte));
+});
+
 test('corpo com caractere acentuado dividido entre dois pedaços é salvo sem corromper (UTF-8)', async () => {
   const ip = ipNovo();
   const token = (await login('ana@teste.nexus', 'Ana@12345')).token;

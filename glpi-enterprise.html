@@ -2019,7 +2019,9 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                         <span id="um-email"></span>
                         <em id="um-role"></em>
                     </div>
-                    <button type="button" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Sair do GLPI</button>
+                    <button type="button" onclick="abrirNoNexus('/')"><i class="fa-solid fa-chart-line"></i> Abrir Nexus Financeiro</button>
+                    <button type="button" id="um-admin" class="hidden" onclick="abrirNoNexus('/admin-assinaturas-glpi.html')"><i class="fa-solid fa-user-shield"></i> Painel do administrador</button>
+                    <button type="button" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Sair</button>
                 </div>
             </div>
         </div>
@@ -4216,6 +4218,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 localStorage.setItem('nexus_session', JSON.stringify({ email: data.user.email || email, id: data.user.id || 1 }));
                 localStorage.setItem('nexus_cached_user', JSON.stringify(data.user));
                 try { sessionStorage.removeItem('glpi_manual_logout'); } catch (e) {}
+                marcarAbaNexus();
 
                 currentUser = buildGlpiUserFromNexus(data.user);
                 localStorage.setItem('glpi_10_session', JSON.stringify(currentUser));
@@ -4248,6 +4251,30 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             await authenticateWithFinancialSystem(email, password);
         }
 
+        // ---- Sessão única: o login é o do site principal e vale no Nexus Financeiro, no GLPI e na administração ----
+        const CHAVES_SESSAO_LOCAL = ['nexus_session', 'nexus_cached_user', 'nexus_token', 'nexus_auth_token', 'nexus_viewing_user', 'nexus_login_v5', 'glpi_10_session'];
+        const CHAVES_SESSAO_ABA = ['nexus_session_active', 'nexus_last_activity', 'nexus_session_expired_reason'];
+
+        // O app em "/" só aceita o login guardado quando a aba tem esta marca; sem ela, abrir o Nexus a partir daqui cairia no login.
+        function marcarAbaNexus() {
+            try {
+                sessionStorage.setItem('nexus_session_active', 'true');
+                sessionStorage.setItem('nexus_last_activity', String(Date.now()));
+                sessionStorage.removeItem('nexus_session_expired_reason');
+            } catch (e) {}
+        }
+
+        function limparSessaoCompartilhada() {
+            CHAVES_SESSAO_LOCAL.forEach((k) => { try { localStorage.removeItem(k); } catch (e) {} });
+            CHAVES_SESSAO_ABA.forEach((k) => { try { sessionStorage.removeItem(k); } catch (e) {} });
+        }
+
+        // Abre outra tela do sistema nesta mesma aba, já logado
+        function abrirNoNexus(destino) {
+            marcarAbaNexus();
+            window.location.href = destino;
+        }
+
         function logout(expired) {
             stopSync();
             cfgPronta = false;
@@ -4255,6 +4282,8 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             try { sessionStorage.removeItem('glpi_aba_user'); sessionStorage.removeItem('glpi_aba_tech'); sessionStorage.removeItem('glpi_busca_user'); sessionStorage.removeItem('glpi_busca_tech'); } catch (e) {}
             // Só o "Sair" feito pela pessoa trava a entrada automática desta aba; sessão expirada não trava (o F5 tenta de novo)
             try { if (expired !== true && new URLSearchParams(window.location.search).get('embedded') !== '1') sessionStorage.setItem('glpi_manual_logout', '1'); } catch (e) {}
+            // "Sair" feito pela pessoa encerra a sessão única (Nexus e administração saem junto); sessão expirada e GLPI embutido não
+            try { if (expired !== true && new URLSearchParams(window.location.search).get('embedded') !== '1') limparSessaoCompartilhada(); } catch (e) {}
             currentUser = null;
             ticketsList = [];
             queuesList = [];
@@ -5528,6 +5557,8 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 $('um-name').textContent = currentUser.name || '';
                 $('um-email').textContent = currentUser.email || '';
                 $('um-role').textContent = isTechMode() ? 'Administrador • atendimento' : (currentUser.isAdmin ? 'Administrador • solicitação' : 'Usuário • solicitação');
+                const umAdmin = $('um-admin');
+                if (umAdmin) umAdmin.classList.toggle('hidden', !currentUser.isAdmin);
             }
             toggleProfileMenu(true);
             menu.classList.toggle('hidden');

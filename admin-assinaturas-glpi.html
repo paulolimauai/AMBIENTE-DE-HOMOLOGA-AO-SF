@@ -131,6 +131,8 @@ label{display:block;font-size:11px;font-weight:600;color:var(--m);margin:0 0 5px
 .btn.s{background:#0f9f77;border-color:transparent}
 .btn.d{color:var(--r);border-color:rgba(251,113,133,.35)}
 .btn.sm{padding:5px 10px;font-size:11.5px}
+a.btn{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;color:inherit}
+.top .atalhos{display:flex;gap:6px;flex-wrap:wrap}
 .tag{display:inline-block;padding:2px 9px;border-radius:99px;font-size:10.5px;font-weight:600;border:1px solid}
 .ok{color:var(--e);background:rgba(52,211,153,.1);border-color:rgba(52,211,153,.35)}
 .wa{color:var(--w);background:rgba(251,191,36,.1);border-color:rgba(251,191,36,.35)}
@@ -199,12 +201,16 @@ tr:hover td{background:rgba(255,255,255,.025)}
 </head>
 <body>
 <div class="bg" aria-hidden="true"><div class="bg-a"><i class="o1"></i><i class="o2"></i><i class="o3"></i><span class="gr"></span></div><div class="bg-v"><i class="s1"></i><i class="s2"></i><i class="s3"></i><b class="p1"></b><b class="p2"></b><b class="p3"></b></div></div>
+<!-- Porteiro (sem login próprio): a sessão é a do site principal. Sem sessão a página vai para /login.html e volta para cá;
+     conta que não é administradora vê o aviso abaixo. Quem confirma é o servidor (/api/auth/session). -->
 <div id="login"><div class="glass">
- <div style="text-align:center;margin-bottom:22px"><div class="logo" style="margin:0 auto 12px">NX</div><h1>Nexus Financeiro Hub</h1><p class="sub">Administração de assinaturas e acessos GLPI</p></div>
- <form id="lf" class="col"><div><label>E-mail do administrador</label><input type="email" required value="paulolp0101@gmail.com"></div><div><label>Senha</label><input type="password" required placeholder="••••••••••••"></div>
- <div id="lerr" class="sub" style="display:none;color:var(--r);font-size:12px"></div>
- <button class="btn p" style="padding:11px">Entrar</button><button type="button" class="btn s" id="demo">Entrar em modo demonstração</button></form>
- <p class="sub" style="text-align:center;margin-top:16px;font-size:11px">Mesmo login do site e do painel (conta administradora). <a href="/login.html#recuperar" target="_blank" rel="noopener" style="color:var(--a)">Esqueci a senha</a></p>
+ <div style="text-align:center;margin-bottom:22px"><div class="logo" style="margin:0 auto 12px">NX</div><h1>Nexus Financeiro Hub</h1><p class="sub" id="gate-sub" role="status" aria-live="polite">Verificando o seu acesso de administrador…</p></div>
+ <div class="col">
+  <a class="btn p hide" id="gate-voltar" href="/" style="padding:11px">Voltar ao Nexus Financeiro</a>
+  <button type="button" class="btn s hide" id="gate-outra" style="padding:11px">Entrar com outra conta</button>
+  <button type="button" class="btn p hide" id="gate-tentar" style="padding:11px">Tentar de novo</button>
+ </div>
+ <p class="sub" style="text-align:center;margin-top:16px;font-size:11px">Login único: a mesma conta vale no site, no Nexus Financeiro, no GLPI e aqui. <a href="/login.html#recuperar" style="color:var(--a)">Esqueci a senha</a></p>
 </div></div>
 
 <div id="app" class="hide">
@@ -214,7 +220,7 @@ tr:hover td{background:rgba(255,255,255,.025)}
   <div style="margin-top:auto;padding-top:16px" class="row"><button class="btn sm" style="flex:1" id="rst">↺ Resetar</button><button class="btn sm d" style="flex:1" id="out">Sair</button></div>
  </div></aside>
  <main>
-  <header class="glass top"><div><span style="color:var(--m)">Administração /</span> <b id="crumb"></b></div><div class="row"><span class="mono sub" style="margin:0;font-size:11px">nexusfinanceirohub.com.br</span>
+  <header class="glass top"><div><span style="color:var(--m)">Administração /</span> <b id="crumb"></b></div><div class="row"><div class="atalhos"><a class="btn sm" href="/" title="Abrir o Nexus Financeiro (mesma sessão)">Nexus Financeiro</a><a class="btn sm" href="/glpi.html?mode=tech&amp;tab=queue" title="Abrir o GLPI no modo atendimento (mesma sessão)">GLPI</a><a class="btn sm" href="/admin-site.html" title="Administrar o site público">Site</a></div>
    <div class="cfg">
     <button class="cfg-btn" id="cfg-btn" type="button" aria-expanded="false" aria-controls="cfg-pop" title="Personalizar cores, fundo e aparência">
      <svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.8-.8 1.8-1.7 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2 0-.9.7-1.6 1.6-1.6H16a5 5 0 0 0 5-5c0-4-4-7.3-9-7.3Z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10.5" cy="7.5" r="1"/><circle cx="15" cy="8" r="1"/></svg>
@@ -227,13 +233,14 @@ tr:hover td{background:rgba(255,255,255,.025)}
      <button class="chip" id="cfg-reset" type="button">Restaurar padrão</button>
     </div>
    </div>
-   <div class="logo" style="width:32px;height:32px;font-size:11px">AD</div></div></header>
+   <div class="logo" id="who-av" style="width:32px;height:32px;font-size:11px">AD</div></div></header>
   <div id="view"></div>
  </main>
 </div>
 <div id="mod"><div class="glass" id="mc"></div></div>
 <div id="toasts"></div>
 
+<script src="/nexus-sso.js"></script>
 <script>
 const KEY='nexus_admin_v4';
 const D={auth:false,price:18,
@@ -377,50 +384,12 @@ function savePix(){S.pix={key:$('pk').value,name:$('pn').value};log('Conta de re
 
 /* ===== Sessão ===== */
 function enter(){$('login').classList.add('hide');$('app').classList.remove('hide');S.auth=true;save();rend()}
-/* Login REAL: valida e-mail e senha no mesmo /api/login do sistema e exige perfil Administrador.
-   O token fica em nexus_token (mesmo do app), então as rotas /api/admin/* continuam protegidas. */
-$('lf').onsubmit=function(e){
-  e.preventDefault();
-  var em=(this.querySelector('input[type="email"]')||{}).value||'';
-  var pw=(this.querySelector('input[type="password"]')||{}).value||'';
-  var err=$('lerr'); if(err){err.style.display='none';err.textContent='';}
-  var btn=this.querySelector('button.btn.p'); if(btn)btn.disabled=true;
-  fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:em,password:pw})})
-  .then(function(r){return r.json().then(function(d){return{s:r.status,d:d}})})
-  .then(function(res){
-    if(btn)btn.disabled=false;
-    var d=res.d||{};
-    if(d.success&&d.token){
-      var u=d.user||{};
-      var isOwner=String(u.email||'').toLowerCase().trim()==='paulolp0101@gmail.com';
-      if(u.role!=='Administrador'&&!isOwner){
-        if(err){err.textContent='Esta conta não é administradora. Acesso permitido apenas a administradores.';err.style.display='block';}
-        return;
-      }
-      try{
-        localStorage.setItem('nexus_token',d.token);
-        localStorage.setItem('nexus_cached_user',JSON.stringify(u));
-        localStorage.setItem('nexus_session',JSON.stringify({email:u.email}));
-        sessionStorage.setItem('nexus_session_active','true');
-        localStorage.setItem('nexus_login_v5','true');
-      }catch(_){}
-      enter();
-      return;
-    }
-    var msg=(d&&d.error)?d.error:'Não foi possível entrar. Verifique e-mail e senha.';
-    if(err){err.textContent=msg;err.style.display='block';}
-  })
-  .catch(function(){
-    if(btn)btn.disabled=false;
-    if(err){err.textContent='Falha de conexão com o servidor. Tente novamente.';err.style.display='block';}
-  });
-};
-$('demo').onclick=enter;
-$('out').onclick=()=>{S.auth=false;save();$('app').classList.add('hide');$('login').classList.remove('hide')};
+/* Sem login próprio: a entrada é feita pelo porteiro (último script desta página), que usa a sessão do login
+   principal (/login.html) e confirma no servidor que a conta é administradora. Sair encerra a sessão em todas as telas. */
+$('out').onclick=()=>{S.auth=false;save();NexusSSO.sair()};
 $('rst').onclick=()=>{if(!confirm('Restaurar dados de demonstração?'))return;S=JSON.parse(JSON.stringify(D));S.auth=true;save();rend();toast('Dados restaurados')};
 $('mb').onclick=()=>$('nav').classList.toggle('open');
 addEventListener('hashchange',()=>S.auth&&rend());
-if(S.auth)enter();
 </script>
 <script>
 /* ===== Dados REAIS do Nexus =====
@@ -429,10 +398,14 @@ if(S.auth)enter();
    do livro financeiro (/api/admin/pagamentos). As ações gravam no servidor de verdade. */
 (function(){
 var token=function(){try{return localStorage.getItem('nexus_token')||''}catch(e){return''}};
-var adminEmail=function(){try{var u=JSON.parse(localStorage.getItem('nexus_cached_user')||'null');return u&&u.email?u.email:''}catch(e){return''}};
+/* E-mail do administrador: o que o servidor confirmou no porteiro (window.__nxAdminEmail); o cache do login é só reserva */
+var adminEmail=function(){if(window.__nxAdminEmail)return window.__nxAdminEmail;try{var u=JSON.parse(localStorage.getItem('nexus_cached_user')||'null');return u&&u.email?u.email:''}catch(e){return''}};
 function api(path,method,body){
   return fetch(path,{method:method||'GET',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token()},body:body?JSON.stringify(body):undefined})
-  .then(function(r){return r.json().catch(function(){return{}}).then(function(d){if(!r.ok||d.success===false){var e=new Error(d.error||('Erro '+r.status));e.status=r.status;throw e}return d})});
+  .then(function(r){return r.json().catch(function(){return{}}).then(function(d){
+    /* 401 = sessão vencida: confirma (com nova tentativa) e volta ao login principal, que traz de volta para esta tela */
+    if(r.status===401&&window.NexusSSO)window.NexusSSO.verificar().then(function(v){if(v.estado==='sem-sessao')window.NexusSSO.irParaLogin()});
+    if(!r.ok||d.success===false){var e=new Error(d.error||('Erro '+r.status));e.status=r.status;throw e}return d})});
 }
 function fmtData(v){if(!v)return'';var s=String(v);var m=s.match(/^(\d{4})-(\d{2})-(\d{2})/);if(m)return m[3]+'/'+m[2]+'/'+m[1];var d=new Date(s);return isNaN(d)?'':d.toLocaleDateString('pt-BR')}
 function fmtDataHora(v){if(!v)return'';var d=new Date(v);return isNaN(d)?'':d.toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'})}
@@ -532,32 +505,43 @@ $('f').onsubmit=function(e){e.preventDefault();var em=$('ps').value,v=parseFloat
 function savePix(){toast('A chave Pix de recebimento é configurada no servidor (Financeiro → Configuração). Aqui ela aparece somente para consulta.','var(--m)')}
 /* Os botões de demonstração e a entrada por token passam a usar a versão real */
 window.enter=enterReal;
-$('demo').onclick=function(){S.auth=true;save();$('login').classList.add('hide');$('app').classList.remove('hide');rend();carregarReais();};
 })();
 </script>
 <script>
-/* Guarda de administrador (roda depois do script principal):
-   - sem token de sessão: garante que só a tela de login apareça;
-   - com token: confirma no servidor que é administrador; se não for, volta para o login;
-   - admin confirmado na primeira visita: entra direto no painel. */
+/* Porteiro da administração (roda depois do script principal). Não existe login aqui: a sessão é a do site principal
+   (/login.html), a mesma do Nexus Financeiro e do GLPI.
+   - sem sessão ou sessão vencida: vai para /login.html e volta para esta tela depois de entrar;
+   - conta que não é administradora: o servidor recusa e a tela explica, com saída para o Nexus ou troca de conta;
+   - administrador confirmado pelo servidor: abre o painel e carrega os dados reais. */
 (function(){
-  function showLogin(){
-    try{ if(typeof S!=='undefined'&&S){ S.auth=false; save(); } }catch(e){}
-    var l=document.getElementById('login'); if(l) l.classList.remove('hide');
-    var a=document.getElementById('app'); if(a) a.classList.add('hide');
+  function el(i){return document.getElementById(i)}
+  function mostrar(ids,esconder){ids.forEach(function(i){var e=el(i);if(e)e.classList.remove('hide')});(esconder||[]).forEach(function(i){var e=el(i);if(e)e.classList.add('hide')})}
+  function texto(msg){var s=el('gate-sub');if(s)s.textContent=msg}
+  function iniciais(u){var n=String((u&&(u.name||u.email))||'AD').replace(/@.*$/,'').trim().split(/[\s._-]+/).filter(Boolean);return ((n[0]||'A')[0]+((n[1]||n[0]||'D')[n[1]?0:1]||'D')).toUpperCase()}
+  function negado(u){
+    texto(u&&u.email?'A conta '+u.email+' não tem o perfil Administrador. Entre com uma conta de administrador para abrir esta área.':'Esta área é exclusiva para contas com perfil Administrador.');
+    mostrar(['gate-voltar','gate-outra'],['gate-tentar']);
   }
-  var token='';try{token=localStorage.getItem('nexus_token')||''}catch(e){}
-  if(!token){ showLogin(); return; }
-  fetch('/api/admin/site/files',{headers:{Authorization:'Bearer '+token}}).then(function(r){
-    if(r.status===401||r.status===403){ showLogin(); return; }
-    try{ if(window.__nxCarregarReais) window.__nxCarregarReais(); }catch(e){}
-    try{
-      if(!localStorage.getItem('nexus_admin_v4')){
-        var demo=document.getElementById('demo');
-        if(demo) demo.click();
-      }
-    }catch(e){}
-  }).catch(function(){ showLogin(); });
+  function semServidor(){
+    texto('Não foi possível confirmar o seu acesso: o servidor não respondeu. Confira a conexão e tente de novo.');
+    mostrar(['gate-tentar'],['gate-voltar','gate-outra']);
+  }
+  function iniciar(){
+    texto('Verificando o seu acesso de administrador…');
+    mostrar([],['gate-voltar','gate-outra','gate-tentar']);
+    window.NexusSSO.exigirAdmin({
+      admin:function(u){
+        window.__nxAdminEmail=u.email;
+        var av=el('who-av');if(av){av.textContent=iniciais(u);av.title=(u.name?u.name+' · ':'')+u.email}
+        window.enter();
+      },
+      naoAdmin:negado,
+      erro:semServidor
+    });
+  }
+  el('gate-outra').onclick=function(){window.NexusSSO.sair('/admin-assinaturas-glpi.html')};
+  el('gate-tentar').onclick=iniciar;
+  iniciar();
 })();
 </script>
 <script>
