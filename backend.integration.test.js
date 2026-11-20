@@ -724,6 +724,107 @@ test('os logs em memória chegam ao arquivo (gravação adiada) e não crescem s
   assert.ok(lerArquivo('system_logs.json').length <= 1000);
 });
 
+// Cria uma conta de usuário comum só para o teste (nunca mexe na senha das contas fixas dos outros testes)
+async function criarContaDeTeste(admin, email, senha) {
+  const r = await api('POST', '/api/users', { token: admin, body: [{ name: 'Conta ' + email.split('@')[0], email, password: senha, role: 'Usuário', active: true, terms_accepted: true, admin_create: true }] });
+  assert.ok(r.status === 200 || r.status === 201, 'criar conta de teste: ' + r.status + ' ' + r.texto);
+}
+
+test('liberar assinatura: horas, dias, vitalício, limite de 10 anos e conta que já é vitalício', async () => {
+  const admin = (await login('admin@teste.nexus', 'Admin@12345')).token;
+  const email = 'liberar.teste@teste.nexus';
+  await criarContaDeTeste(admin, email, 'Liberar@12345');
+  const liberar = (corpo) => api('POST', '/api/subscription/admin-grant-time', { token: admin, body: { admin_email: 'admin@teste.nexus', target_email: email, ...corpo } });
+  const conta = async () => (await api('GET', '/api/users', { token: admin })).json.find((u) => u.email === email);
+
+  const horas = await liberar({ duration_minutes: 3 * 60 });
+  assert.equal(horas.status, 200, horas.texto);
+  assert.match(horas.json.message, /3 horas/, horas.json.message);
+  const venc1 = new Date((await conta()).subscription_expires_at).getTime();
+  assert.ok(Math.abs(venc1 - (Date.now() + 3 * 3600e3)) < 120e3, 'vence em ~3 horas');
+
+  // soma ao vencimento que ainda vale: +1 dia
+  const dia = await liberar({ duration_minutes: 1440 });
+  assert.equal(dia.status, 200, dia.texto);
+  assert.match(dia.json.message, /1 dia\b/, dia.json.message);
+  const venc2 = new Date((await conta()).subscription_expires_at).getTime();
+  assert.ok(Math.abs((venc2 - venc1) - 86400e3) < 5e3, 'somou 1 dia ao vencimento anterior');
+
+  const misto = await liberar({ duration_minutes: 1440 + 150 });
+  assert.match(misto.json.message, /1 dia, 2 horas e 30 minutos/, misto.json.message);
+
+  // limite de 10 anos: no limite passa, 1 minuto a mais é recusado
+  assert.equal((await liberar({ duration_minutes: 10 * 365 * 24 * 60 + 1 })).status, 400);
+  assert.equal((await liberar({ duration_minutes: 10 * 365 * 24 * 60 })).status, 200);
+
+  // vitalício: sem prazo; e a partir daí tempo avulso é recusado em vez de rebaixar o plano
+  const vit = await liberar({ is_lifetime: true });
+  assert.equal(vit.status, 200, vit.texto);
+  assert.match(vit.json.message, /vitalício/i);
+  assert.equal((await conta()).subscription_plan, 'vitalicio');
+  const somar = await liberar({ duration_minutes: 60 });
+  assert.equal(somar.status, 409, somar.texto);
+  assert.equal((await conta()).subscription_plan, 'vitalicio', 'o plano vitalício não pode ser rebaixado por uma liberação de horas');
+
+  // usuário comum não libera nada
+  const ana = (await login('ana@teste.nexus', 'Ana@12345')).token;
+  const negado = await api('POST', '/api/subscription/admin-grant-time', { token: ana, body: { admin_email: 'ana@teste.nexus', target_email: email, duration_minutes: 60 } });
+  assert.ok([401, 403].includes(negado.status), 'status ' + negado.status);
+  assert.equal((await api('DELETE', '/api/users?email=' + email, { token: admin })).status, 200);
+});
+
+test('redefinir senha pelo administrador: senha provisória única, troca obrigatória, sessões antigas caem, auditoria sem a senha', async () => {
+  const admin = (await login('admin@teste.nexus', 'Admin@12345')).token;
+  const ana = (await login('ana@teste.nexus', 'Ana@12345')).token;
+  const email = 'senha.teste@teste.nexus';
+  await criarContaDeTeste(admin, email, 'Antiga@12345');
+  const sessaoAntiga = (await login(email, 'Antiga@12345')).token;
+  assert.ok(sessaoAntiga);
+  const redefinir = (corpo, token) => api('POST', '/api/admin/users/reset-password', { token, body: corpo });
+
+  // quem pode: só administrador autenticado; a própria conta, e-mail inválido e conta inexistente são recusados
+  assert.equal((await redefinir({ email }, undefined)).status, 401, 'sem login');
+  assert.ok([401, 403].includes((await redefinir({ email }, ana)).status), 'usuário comum');
+  assert.equal((await redefinir({ email: 'admin@teste.nexus' }, admin)).status, 400, 'própria conta');
+  assert.equal((await redefinir({ email: 'isso-nao-e-email' }, admin)).status, 400);
+  assert.equal((await redefinir({ email: 'ninguem@teste.nexus' }, admin)).status, 404);
+  assert.equal((await login(email, 'Antiga@12345')).success, true, 'as recusas não podem ter mexido na senha');
+
+  await dorme(1100);   // o token vale por segundo: a troca precisa ser POSTERIOR à emissão da sessão antiga
+  const r = await redefinir({ email }, admin);
+  assert.equal(r.status, 200, r.texto);
+  assert.equal(r.json.success, true);
+  assert.match(r.json.tempPassword, /^Nx@[0-9a-f]{12}$/);
+  assert.equal(r.json.must_change_password, true, 'troca obrigatória por padrão');
+  assert.match(r.headers.get('cache-control') || '', /no-store/);
+  const provisoria = r.json.tempPassword;
+
+  // senha antiga morreu, a provisória entra e exige a troca; a sessão aberta antes foi derrubada
+  const antiga = await api('POST', '/api/login', { body: { email, password: 'Antiga@12345' } });
+  assert.equal(antiga.status, 401, 'a senha antiga não pode mais entrar');
+  const nova = await login(email, provisoria);
+  assert.equal(nova.success, true, JSON.stringify(nova));
+  assert.ok(nova.must_change_password === true || (nova.user && nova.user.must_change_password === true), 'deve exigir a troca no login');
+  assert.equal((await api('GET', '/api/auth/session', { token: sessaoAntiga })).status, 401, 'sessão aberta antes da redefinição deve cair');
+  assert.equal((await api('GET', '/api/auth/session', { token: nova.token })).status, 200);
+
+  // dá para redefinir sem exigir a troca; cada redefinição gera uma senha diferente
+  const r2 = await redefinir({ email, must_change_password: false }, admin);
+  assert.equal(r2.status, 200, r2.texto);
+  assert.notEqual(r2.json.tempPassword, provisoria);
+  assert.equal(r2.json.must_change_password, false);
+  const livre = await login(email, r2.json.tempPassword);
+  assert.equal(livre.success, true);
+  assert.ok(!(livre.must_change_password === true || (livre.user && livre.user.must_change_password === true)), 'não deveria exigir a troca');
+
+  // auditoria: registra quem fez e em quem, nunca a senha
+  const logs = JSON.stringify((await api('GET', '/api/logs', { token: admin })).json);
+  assert.ok(logs.includes('Redefinição de senha') && logs.includes(email), 'a redefinição deve constar do log');
+  assert.ok(!logs.includes(provisoria) && !logs.includes(r2.json.tempPassword), 'a senha provisória nunca pode ir para o log');
+  assert.ok(!JSON.stringify(lerArquivo('local_users.json')).includes(r2.json.tempPassword), 'a senha só pode ficar guardada como hash');
+  assert.equal((await api('DELETE', '/api/users?email=' + email, { token: admin })).status, 200);
+});
+
 // Por último de propósito: se a proteção regredir, este teste apaga os dados de teste e só ele falha (os demais já rodaram)
 test('reset total do banco fica desligado por padrão, mesmo com o token de sincronização', async () => {
   const r = await api('POST', '/api/database/reset', { headers: { 'X-Nexus-Sync-Token': SYNC_TOKEN }, body: { confirm: 'RESETAR-TUDO' } });

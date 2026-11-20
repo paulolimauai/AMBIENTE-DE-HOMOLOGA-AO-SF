@@ -1058,6 +1058,19 @@ function delegateTargetDenial(actor, targetUser, targetEmail) {
   return '';
 }
 
+// Duração em minutos para texto: 90 -> "1 hora e 30 minutos"; 1560 -> "1 dia e 2 horas" (mensagem da liberação e linha do log)
+function descreverDuracao(totalMinutos) {
+  let resto = Math.max(0, Math.round(Number(totalMinutos) || 0));
+  const dias = Math.floor(resto / 1440); resto -= dias * 1440;
+  const horas = Math.floor(resto / 60); resto -= horas * 60;
+  const partes = [];
+  if (dias) partes.push(dias + (dias === 1 ? ' dia' : ' dias'));
+  if (horas) partes.push(horas + (horas === 1 ? ' hora' : ' horas'));
+  if (resto) partes.push(resto + (resto === 1 ? ' minuto' : ' minutos'));
+  if (!partes.length) return '0 minuto';
+  return partes.length === 1 ? partes[0] : partes.slice(0, -1).join(', ') + ' e ' + partes[partes.length - 1];
+}
+
 function googleOAuthConfig(req) {
   const configuredBase = String(process.env.APP_BASE_URL || '').replace(/\/$/, '');
   const forwardedProto = String(req.headers['x-forwarded-proto'] || '').split(',')[0].trim();
@@ -35597,6 +35610,56 @@ async function handleNexusRequest(req, res) {
     });
   }
 
+  // ==================== REDEFINIR A SENHA DE UMA CONTA (somente administrador) ====================
+  // Gera uma senha provisória, grava (SQL Server, espelho local e Supabase), exige a troca no próximo login (a menos que o
+  // administrador desmarque) e derruba as sessões abertas da conta (password_changed_at). A senha volta NESTA resposta, uma
+  // única vez, para o administrador repassar; ela nunca vai para o log nem para e-mail. A própria conta usa "Minha Conta".
+  if (req.method === 'POST' && parsedUrl.pathname === '/api/admin/users/reset-password') {
+    const resetAdmin = getAuthenticatedAdmin(req);
+    if (!resetAdmin) {
+      return sendJson(res, corsHeaders, 401, { success: false, error: 'Autenticação de administrador obrigatória.' });
+    }
+    const leituraReset = await lerCorpoJson(req);
+    if (!leituraReset.ok) return sendJson(res, corsHeaders, leituraReset.status, { success: false, error: leituraReset.mensagem });
+    const resetEmail = String(leituraReset.dados.email || '').toLowerCase().trim();
+    if (!resetEmail || !isStrictEmail(resetEmail)) {
+      return sendJson(res, corsHeaders, 400, { success: false, error: 'Informe o e-mail da conta.' });
+    }
+    if (resetEmail === String(resetAdmin.email || '').toLowerCase().trim()) {
+      return sendJson(res, corsHeaders, 400, { success: false, error: 'Para trocar a sua própria senha use Minha Conta.' });
+    }
+    const resetLista = getLocalUsers();
+    const resetAlvo = resetLista.find(u => u && u.email && String(u.email).toLowerCase().trim() === resetEmail);
+    if (!resetAlvo || isAccountDeleted(resetEmail)) {
+      return sendJson(res, corsHeaders, 404, { success: false, error: 'Conta não encontrada.' });
+    }
+    const resetExigirTroca = leituraReset.dados.must_change_password !== false;
+    const resetSenha = 'Nx@' + crypto.randomBytes(6).toString('hex');   // CSPRNG, mesmo formato da senha provisória da recuperação
+    const resetHash = hashPassword(resetSenha);
+    if (pool) {
+      try {
+        await pool.query('UPDATE usuarios SET password = $1, must_change_password = ' + (resetExigirTroca ? '1' : '0') + ' WHERE LOWER(email) = LOWER($2)', [resetHash, resetEmail]);
+      } catch (dbErr) {
+        console.warn('[AVISO BD] Falha ao gravar a senha redefinida no SQL Server:', dbErr.message);
+      }
+    }
+    resetAlvo.password = resetHash;
+    resetAlvo.must_change_password = resetExigirTroca;
+    resetAlvo.password_changed_at = new Date().toISOString();   // as sessões antigas da conta deixam de valer
+    saveLocalUsers(resetLista);
+    await confirmCredentialsInSupabase();   // só responde (e mostra a senha) depois de guardada também no Supabase
+    recordSystemLog(resetAdmin.name || 'Administrador', resetAdmin.email, 'Redefinição de senha', 'Administração',
+      `Administrador redefiniu a senha de ${resetAlvo.name || resetEmail} (${resetEmail})${resetExigirTroca ? ' com troca obrigatória no próximo login' : ' sem exigir troca'}`);
+    broadcastEvent('users_updated', { email: resetEmail });
+    return sendJson(res, { ...corsHeaders, 'Cache-Control': 'no-store' }, 200, {
+      success: true,
+      email: resetEmail,
+      name: resetAlvo.name || resetEmail,
+      tempPassword: resetSenha,
+      must_change_password: resetExigirTroca
+    });
+  }
+
   // ==================== ADMINISTRAÇÃO DO SITE PÚBLICO (somente administrador) ====================
   // Editor dos arquivos que montam o site (landing /inicio, login, termos, privacidade, Central de Serviços /suporte e favicon).
   // Cada gravação copia o arquivo atual para site_backups/ antes de sobrescrever: o administrador desfaz qualquer
@@ -36597,6 +36660,12 @@ async function handleNexusRequest(req, res) {
           return res.end(JSON.stringify({ success: false, error: grantDenial }));
         }
 
+        // Quem já é vitalício não tem tempo a somar: somar a 2099 trocava o plano vitalício por "cortesia" sem avisar
+        if (!isLifetime && targetUser.subscription_plan === 'vitalicio') {
+          res.writeHead(409, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'Esta conta já tem acesso vitalício: não há tempo a somar.' }));
+        }
+
         const now = new Date();
         let expiresDate;
         let planName = 'cortesia_admin';
@@ -36619,7 +36688,7 @@ async function handleNexusRequest(req, res) {
           }
 
           expiresDate = new Date(baseTime + totalMinutes * 60 * 1000);
-          msgDesc = totalMinutes >= 1440 ? (Math.round(totalMinutes/1440) + ' dia(s) grátis') : (totalMinutes + ' minuto(s) grátis');
+          msgDesc = descreverDuracao(totalMinutes) + ' de acesso';
         }
 
         const expiresIso = getBrasiliaIsoString(expiresDate);
@@ -36671,7 +36740,7 @@ async function handleNexusRequest(req, res) {
         res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
         return res.end(JSON.stringify({
           success: true,
-          message: `Tempo grátis liberado com sucesso: ${msgDesc}!${isLifetime ? '' : ' Vence em ' + dataHoraBRServidor(expiresDate) + '.'}`,
+          message: isLifetime ? 'Acesso vitalício liberado: a conta não vence.' : `Acesso liberado: ${msgDesc}. Vence em ${dataHoraBRServidor(expiresDate)}.`,
           target_email: targetEmail,
           plan: planName,
           expires_at: expiresIso
@@ -38269,6 +38338,7 @@ async function handleNexusRequest(req, res) {
     '/admin-site.js': 'application/javascript; charset=utf-8',
     '/admin-assinaturas-glpi.html': 'text/html; charset=utf-8',
     '/nexus-sso.js': 'application/javascript; charset=utf-8',
+    '/admin-liberacao.js': 'application/javascript; charset=utf-8',
     '/favicon.svg': 'image/svg+xml',
     '/termos.html': 'text/html; charset=utf-8',
     '/privacidade.html': 'text/html; charset=utf-8'
