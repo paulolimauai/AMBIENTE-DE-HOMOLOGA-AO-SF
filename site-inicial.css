@@ -317,6 +317,29 @@ h1 em{font-style:normal;background:linear-gradient(100deg,var(--accent),var(--br
 .mock-note{margin-top:.8rem;font-size:14px;color:var(--soft)}
 
 /* faixa de números */
+/* ---------- acesso rápido: os três endereços principais logo abaixo do início ---------- */
+.acx{padding:0 0 clamp(1.2rem,2.4vw,1.8rem)}
+.acx-t{margin:0 0 .9rem;font:800 14px/1.2 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+.acx-g{display:grid;grid-template-columns:minmax(0,1fr);gap:.8rem}
+.acx-g>li{min-width:0}
+@media (min-width:720px){.acx-g{grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}}
+.acx-c{position:relative;display:flex;align-items:center;gap:1rem;height:100%;padding:1.05rem 3.2rem 1.05rem 1.1rem;color:inherit;text-decoration:none;transition:transform .2s,border-color .2s}
+@media (min-width:720px){.acx-c{flex-direction:column;align-items:flex-start;gap:.9rem;padding:1.3rem 1.3rem 1.25rem}}
+.acx-c:hover{transform:translateY(-3px);border-color:color-mix(in srgb,var(--brand) 55%,var(--card-line));text-decoration:none}
+.acx-c:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.acx-x{display:flex;flex-direction:column;gap:.2rem;min-width:0}
+.acx-x b{font-size:1.2rem;font-weight:700;line-height:1.25;color:var(--white)}
+.acx-x em{font-style:normal;font-size:1rem;line-height:1.45;color:var(--soft)}
+.acx-x small{margin-top:.35rem;font-size:14px;font-weight:700;line-height:1.4;color:var(--accent);overflow-wrap:anywhere}
+.acx-x small i{font-style:normal;white-space:nowrap}
+.acx-a{position:absolute;top:50%;right:1.1rem;width:1.3rem;height:1.3rem;margin-top:-.65rem;color:var(--accent);transition:transform .2s}
+@media (min-width:720px){.acx-a{top:1.35rem;margin-top:0}}
+.acx-c:hover .acx-a{transform:translateX(4px)}
+:root[data-mode="light"] .acx-t,:root[data-mode="light"] .acx-x small,:root[data-mode="light"] .acx-a{color:color-mix(in srgb,var(--brand-d) 45%,#0e1530)}
+@media (prefers-reduced-motion:reduce){.acx-c,.acx-a{transition:none}.acx-c:hover,.acx-c:hover .acx-a{transform:none}}
+.gaveta .gv-acx{margin-top:.6rem;padding-top:.5rem;border-top:1px solid var(--card-line)}
+.gaveta .gv-t{display:block;padding:.5rem 1rem .2rem;font-size:14px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+
 .faixa{padding:0 0 clamp(1rem,2vw,1.5rem)}
 .nums{display:grid;grid-template-columns:minmax(0,1fr);gap:1px;border-radius:var(--r);overflow:hidden;background:var(--card-line);border:1px solid var(--card-line)}
 @media (min-width:480px){.nums{grid-template-columns:repeat(3,minmax(0,1fr))}}

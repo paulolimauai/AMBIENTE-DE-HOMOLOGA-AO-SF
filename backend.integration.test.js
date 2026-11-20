@@ -180,7 +180,13 @@ test('sessão única: telas e script compartilhado são servidos e o login só d
   assert.equal(limpo.texto, painel, 'o endereço limpo serve o mesmo painel');
   assert.notEqual((await api('GET', '/admin-assinaturas-glpi/outra-coisa')).texto, painel, 'o alias não vale para subcaminhos');
   const inicio = (await api('GET', '/inicio')).texto;
-  assert.ok(/<a href="\/admin-assinaturas-glpi">Área do Administrador<\/a>/.test(inicio), 'rodapé do /inicio aponta para o painel do administrador');
+  assert.ok(/<a href="\/login\.html\?next=admin">Área do Administrador<\/a>/.test(inicio), 'rodapé do /inicio aponta para o painel do administrador pelo endereço curto');
+  // faixa "Acesso rápido": Financeiro, Central de Suporte e Administrador como links diretos, também na gaveta do celular
+  assert.ok(/id="acessos"/.test(inicio), '/inicio tem a faixa Acesso rápido');
+  for (const href of ['/login.html', '/suporte', '/login.html?next=admin']) {
+    assert.ok(inicio.includes('class="acx-c card" href="' + href + '"'), 'cartão de acesso rápido para ' + href);
+    assert.ok(inicio.includes('<a href="' + href + '">'), 'gaveta do celular com o link ' + href);
+  }
   assert.ok(!/admin-site\.html/.test(inicio), '/inicio não aponta mais para o editor do site');
   const loginPagina = (await api('GET', '/login.html')).texto;
   assert.ok(/href="\/admin-assinaturas-glpi">Área do administrador</.test(loginPagina), 'rodapé do login aponta para o painel');
