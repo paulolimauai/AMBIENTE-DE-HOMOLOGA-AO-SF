@@ -208,11 +208,6 @@ test('acumulado soma o realizado de todos os meses cadastrados (entradas − sa�
   const vazio = D.calcular(ctx({ transacoes: [], contas: [] }));
   assert.equal(vazio.acumulado.resultado, 0);
   assert.equal(vazio.acumulado.meses, 0);
-  const html = D.pagina({ ...ctx(), util: {} });
-  assert.ok(html.includes('Acumulado de todos os meses'));
-  assert.ok(html.includes('saldo positivo disponível'));
-  assert.ok(html.includes('fd-acum-barra'));
-  assert.ok(html.includes('fd-acum-svg'));
 });
 
 test('dados legados: type receita/despesa, amount/description/category e status Efetivado entram nos totais', () => {
@@ -291,8 +286,16 @@ test('sem movimentações: modelo vazio exibe painel completo e sem exceções',
   assert.equal(m.contas.saldoAtual, 0);
   assert.equal(m.agenda.itens.length, 0);
   const html = D.pagina({ ...ctx({ transacoes: [], contas: [] }), util: {} });
-  assert.match(html, /Saldo em contas hoje/);
+  assert.match(html, /Disponível p\/ gastar/);
   assert.match(html, /Fluxo de caixa/);
+  // conta vazia: a nota fica "--" (sem "Excelente 85" inventado), a rosca fica apagada e há convite para cadastrar
+  assert.equal(m.saude.semDados, true);
+  assert.equal(m.saude.score, null);
+  assert.equal(m.saude.status, 'Sem dados');
+  assert.match(html, /--<small> \/ 100<\/small>/);
+  assert.match(html, /Nenhuma despesa no período/);
+  assert.match(html, /Cadastrar conta/);
+  assert.ok(!/Excelente/.test(html), 'conta vazia não pode mostrar nota "Excelente"');
 });
 
 test('dados sujos: valor em texto, data em DD/MM/AAAA, tipo inválido e data ausente', () => {
@@ -310,7 +313,7 @@ test('dados sujos: valor em texto, data em DD/MM/AAAA, tipo inválido e data aus
 test('pagina() gera o HTML com os blocos, botões de baixa e escapa texto do usuário', () => {
   const lista = transacoes().concat([tx(12, 'out', '<img src=x onerror=alert(1)>', 10, '2026-11-08', 'Outros', 'Pendente')]);
   const html = D.pagina({ ...ctx({ transacoes: lista }), util: { saudacao: () => ({ text: 'Bom dia' }), primeiroNome: 'Marina', dataHoje: () => 'sexta-feira, 6 de novembro' } });
-  for (const trecho of ['Saldo em contas hoje', 'Fluxo de caixa', 'Para onde vai o dinheiro', 'Contas dos próximos 30 dias', 'Saúde financeira', 'Últimas movimentações', 'data-paytx="2"', 'Bom dia, <span>Marina</span>']) {
+  for (const trecho of ['Disponível p/ gastar', 'Dívida nos cartões', 'Fluxo de caixa', 'Para onde vai o dinheiro', 'Contas dos próximos 30 dias', 'Saúde financeira', 'Últimas movimentações', 'data-paytx="2"', 'Bom dia, <strong class="fd-nome">Marina</strong>']) {
     assert.ok(html.includes(trecho), 'faltou: ' + trecho);
   }
   assert.ok(!html.includes('<img src=x onerror'), 'texto do usuário não foi escapado');
@@ -360,7 +363,8 @@ test('pagina(): atalhos de navegação, ações rápidas e escape dos atributos'
     'data-fd-ir="mov" data-fd-tipo="in" data-fd-status="Pendente"', // A receber (30 dias)
     'data-fd-ir="mov" data-fd-tipo="out" data-fd-cat="Supermercado"', // categoria do ranking
     'data-fd-acao="nova-receita"', 'data-fd-acao="nova-despesa"', 'data-fd-acao="atualizar"',
-    'fd-spark-ponto', 'fd-spark-eixo'
+    'data-fd-ir="mov" data-fd-tipo="out" data-fd-status="Pendente"', // A pagar (30 dias)
+    'fd-rosca-leg', 'fd-titulo-abas'
   ]) assert.ok(html.includes(trecho), 'faltou: ' + trecho);
   // categoria com aspas e sinais de maior/menor não escapa do atributo
   assert.ok(html.includes('data-fd-cat="A&quot;B&lt;c&gt;"'));
@@ -371,5 +375,6 @@ test('pagina() vazia: exibe todas as faixas do painel completo e mantém o cabe�
   const html = D.pagina({ ...ctx({ transacoes: [], contas: [] }), util: {} });
   assert.match(html, /data-fd-acao="nova-despesa"/);
   assert.match(html, /data-fd-acao="nova-receita"/);
-  assert.ok(html.includes('fd-linha-a'), 'sem dados exibe as faixas completas do painel');
+  for (const faixa of ['fd-kpis', 'fd-linha-b', 'fd-linha-c']) assert.ok(html.includes(faixa), 'sem dados exibe as faixas completas do painel: ' + faixa);
+  assert.equal((html.match(/class="fd-tile /g) || []).length, 4, 'os 4 cartões do topo (Receitas, Despesas, Disponível, Dívida)');
 });

@@ -115,6 +115,13 @@ body.light .fd-vinheta, html.light .fd-vinheta { background: radial-gradient(ell
   --fd-btn-desp-bg: rgba(239, 68, 68, .20);
   --fd-btn-desp-bd: rgba(248, 113, 113, .45);
   --fd-btn-desp: #FDBABA;
+  /* Botões cheios do topo (Receita/Despesa) e tons dos cartões do topo */
+  --fd-btn-rec-solid: #0F8A63;
+  --fd-btn-desp-solid: #D14343;
+  --fd-tint-in: rgba(5, 150, 105, .24);
+  --fd-tint-out: rgba(239, 68, 68, .22);
+  --fd-tint-disp: rgba(20, 184, 166, .20);
+  --fd-disp-ink: #5EEAD4;
   display: flex; flex-direction: column; gap: 12px; position: relative;
   color: var(--fd-ink); font-family: var(--font-sans, 'Inter', -apple-system, 'Segoe UI', Roboto, sans-serif);
 }
@@ -162,6 +169,10 @@ body.light .fd-root, html.light .fd-root {
   --fd-btn-desp-bg: rgba(220, 38, 38, .11);
   --fd-btn-desp-bd: rgba(220, 38, 38, .38);
   --fd-btn-desp: #B91C1C;
+  --fd-tint-in: rgba(5, 150, 105, .13);
+  --fd-tint-out: rgba(220, 38, 38, .11);
+  --fd-tint-disp: rgba(13, 148, 136, .13);
+  --fd-disp-ink: #0F766E;
 }
 .fd-root *, .fd-root *::before, .fd-root *::after { box-sizing: border-box; }
 .fd-root h1, .fd-root h2, .fd-root h3, .fd-root p, .fd-root ul, .fd-root ol, .fd-root dl, .fd-root dd { margin: 0; padding: 0; }
@@ -171,8 +182,8 @@ body.light .fd-root, html.light .fd-root {
 /* Privacidade: os valores desfocam junto com os KPIs do app */
 body.hide-sensitive-balances .fd-root .fd-money,
 body.hide-sensitive-balances .fd-root .fd-grafico-caixa canvas,
-body.hide-sensitive-balances .fd-root .fd-hero-grafico { filter: blur(9px); user-select: none; }
-.fd-money, .fd-grafico-caixa canvas, .fd-hero-grafico { transition: filter .25s ease; }
+body.hide-sensitive-balances .fd-root .fd-rosca { filter: blur(9px); user-select: none; }
+.fd-money, .fd-grafico-caixa canvas, .fd-rosca { transition: filter .25s ease; }
 
 /* ---------- Superfície de vidro ---------- */
 .fd-vidro {
@@ -206,23 +217,31 @@ body.hide-sensitive-balances .fd-root .fd-hero-grafico { filter: blur(9px); user
 .fd-btn-icone.girando svg { animation: fd-gira .8s linear infinite; }
 @keyframes fd-gira { to { transform: rotate(360deg); } }
 .fd-acoes-rapidas { display: inline-flex; gap: 8px; }
-.fd-btn-receita { background: var(--fd-btn-rec-bg); border-color: var(--fd-btn-rec-bd); color: var(--fd-btn-rec); }
-.fd-btn-receita:hover { background: var(--fd-btn-rec-bg); border-color: var(--fd-btn-rec); }
-.fd-btn-despesa { background: var(--fd-btn-desp-bg); border-color: var(--fd-btn-desp-bd); color: var(--fd-btn-desp); }
-.fd-btn-despesa:hover { background: var(--fd-btn-desp-bg); border-color: var(--fd-btn-desp); }
+/* + Receita e + Despesa: botões cheios (verde e vermelho) com letra branca, como no desenho do painel */
+.fd-btn-receita { background: var(--fd-btn-rec-solid); border-color: transparent; color: #fff; }
+.fd-btn-receita:hover { background: color-mix(in srgb, var(--fd-btn-rec-solid) 86%, #fff); border-color: transparent; }
+.fd-btn-despesa { background: var(--fd-btn-desp-solid); border-color: transparent; color: #fff; }
+.fd-btn-despesa:hover { background: color-mix(in srgb, var(--fd-btn-desp-solid) 86%, #fff); border-color: transparent; }
 .fd-cabecalho .fd-privacidade { min-width: 0; }
 .fd-cabecalho .fd-privacidade span { display: inline-flex; align-items: center; }
 
-/* ---------- Cabeçalho ---------- */
-.fd-cabecalho { display: flex; align-items: center; justify-content: space-between; gap: 10px 20px; flex-wrap: wrap; padding: 12px 18px; border-radius: 16px; position: relative; z-index: 20; }
-.fd-data { font-size: 14px; font-weight: 600; color: var(--fd-muted); margin-bottom: 2px; }
-.fd-saudacao { font-size: clamp(19px, 1.7vw, 24px); font-weight: 760; letter-spacing: -.025em; line-height: 1.1; color: var(--fd-ink); }
-.fd-saudacao span { color: var(--fd-ink); }
-.fd-sub { font-size: 14px; color: var(--fd-muted); margin-top: 3px; }
+/* ---------- Cabeçalho (sem moldura: a saudação fica direto sobre o fundo) ---------- */
+.fd-cabecalho { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px 20px; flex-wrap: wrap; padding: 2px 2px 4px; position: relative; z-index: 20; }
+.fd-data { font-size: 14px; font-weight: 600; color: var(--fd-muted); margin-bottom: 4px; }
+.fd-saudacao { font-size: clamp(22px, 2vw, 30px); font-weight: 780; letter-spacing: -.03em; line-height: 1.1; color: var(--fd-ink); }
+/* O nome tem o mesmo tamanho da saudação. É <strong>, não <span>: a regra global de 14px do shell (camada nx-shell, !important) atinge qualquer <span> do painel */
+.fd-saudacao .fd-nome { font: inherit; letter-spacing: inherit; color: var(--fd-ink); }
+.fd-sub { font-size: 14px; color: var(--fd-muted); margin-top: 4px; }
+/* O horário do carimbo é o botão de atualizar: sublinhado pontilhado só no foco/hover para parecer texto e agir como botão */
+.fd-atualiza { border: 0; background: transparent; padding: 0; font: inherit; color: inherit; cursor: pointer; text-decoration: underline dotted; text-underline-offset: 3px; }
+.fd-atualiza:hover { color: var(--fd-ink); }
+.fd-atualiza.girando { opacity: .55; cursor: progress; }
+.fd-atualiza:focus-visible { outline: 2px solid var(--fd-accent); outline-offset: 2px; border-radius: 4px; }
 .fd-cab-dir { display: flex; align-items: center; justify-content: flex-end; gap: 8px; flex-wrap: wrap; }
 .fd-cab-dir .period-wrap { flex: none; }
+.fd-cabecalho .fd-btn { height: 36px; padding: 0 14px; }
 /* O seletor de período é do app (.period); aqui ele acompanha a altura dos demais botões do cabeçalho */
-.fd-cabecalho .period { height: 32px !important; min-height: 0 !important; padding: 0 10px !important; gap: 7px !important; border-radius: 10px !important; font-size: 14px !important; }
+.fd-cabecalho .period { height: 36px !important; min-height: 0 !important; padding: 0 12px !important; gap: 7px !important; border-radius: 10px !important; font-size: 14px !important; }
 .fd-cabecalho .period .period-text { font-size: 14px !important; }
 .fd-cabecalho .period .period-ic { width: 20px !important; height: 20px !important; border-radius: 6px !important; }
 .fd-cabecalho .period .period-ic svg { width: 12px !important; height: 12px !important; }
@@ -241,9 +260,8 @@ body.hide-sensitive-balances .fd-root .fd-hero-grafico { filter: blur(9px); user
 /* ---------- Grade ---------- */
 .fd-corpo { display: flex; flex-direction: column; gap: 12px; container-type: inline-size; container-name: fd; min-width: 0; }
 .fd-linha { display: grid; gap: 12px; min-width: 0; }
-.fd-linha-a { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
-.fd-linha-b { grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); }
-.fd-linha-c { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); }
+.fd-linha-b { grid-template-columns: minmax(0, 2.15fr) minmax(0, 1fr); }
+.fd-linha-c { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1.45fr) minmax(0, 1fr); }
 .fd-linha-d.fd-n3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .fd-linha-d.fd-n2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .fd-linha-d.fd-n1 { grid-template-columns: minmax(0, 1fr); }
@@ -260,82 +278,26 @@ body.light .fd-root .fd-selo-medio, html.light .fd-root .fd-selo-medio { color: 
 .fd-selo-ruim { background: var(--fd-chip-ruim-bg); color: var(--fd-chip-ruim); }
 .fd-sub-titulo { font-size: 14px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--fd-muted); margin-top: 4px; }
 
-/* ---------- Saldo (número-herói) ---------- */
-.fd-saldo { gap: 4px; padding: 14px 18px 12px; }
-.fd-hero-rotulo { font-size: 14px; font-weight: 600; color: var(--fd-ink-2); display: flex; align-items: center; gap: 8px; }
-.fd-dica { display: inline-grid; place-items: center; width: 17px; height: 17px; border-radius: 50%; border: 1px solid var(--fd-zero); font-size: 14px; font-weight: 700; color: var(--fd-muted); cursor: help; }
-.fd-hero-valor { font-size: clamp(32px, 2.9vw, 40px); font-weight: 760; letter-spacing: -.035em; line-height: 1.02; color: var(--fd-ink); font-variant-numeric: proportional-nums; }
-.fd-hero-valor.fd-hero-in { color: var(--fd-in); }
-.fd-hero-proj { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 14px; color: var(--fd-ink-2); }
-.fd-hero-proj .fd-money { font-weight: 700; color: var(--fd-ink); }
-/* Acumulado de todos os meses cadastrados na seção de saldo */
-.fd-acum { display: flex; flex-direction: column; gap: 7px; margin-top: 3px; padding: 9px 11px; border-radius: 12px; background: var(--fd-wash); box-shadow: inset 0 0 0 1px var(--fd-line); }
-.fd-acum-topo { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 14px; color: var(--fd-muted); }
-.fd-hero-acum-rot { font-weight: 600; }
-.fd-acum-valor { margin-left: auto; font-size: 17px; font-weight: 780; letter-spacing: -.02em; color: var(--fd-ink); }
-.fd-acum-corpo { display: flex; align-items: center; gap: 14px; }
-.fd-acum-grafico { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
-.fd-acum-svg { width: 100%; height: 40px; display: block; overflow: visible; }
-.fd-acum-area { fill: var(--fd-accent); opacity: .13; }
-.fd-acum-linha { fill: none; stroke: var(--fd-accent); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
-.fd-acum-zero { stroke: var(--fd-zero); stroke-width: 1; stroke-dasharray: 3 3; vector-effect: non-scaling-stroke; }
-.fd-acum-ponto { fill: var(--fd-accent); }
-.fd-acum-eixo { display: flex; justify-content: space-between; font-size: 14px; font-weight: 600; color: var(--fd-faint); }
-.fd-acum-lado { flex: none; width: max-content; min-width: 190px; max-width: 56%; display: flex; flex-direction: column; gap: 5px; }
-.fd-acum-barra { display: flex; height: 9px; border-radius: 99px; overflow: hidden; background: var(--fd-track); }
-.fd-acum-barra i { display: block; height: 100%; }
-.fd-acum-in { background: var(--fd-in); }
-.fd-acum-out { background: var(--fd-out); }
-.fd-acum-legenda { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 12px; font-size: 14px; color: var(--fd-muted); }
-.fd-acum-legenda span { display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
-.fd-acum-legenda .fd-money { font-weight: 700; color: var(--fd-ink); }
-.fd-hero-grafico { margin: 6px 0 2px; }
-.fd-hero-cap { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 10px; margin-top: 8px; font-size: 14px; font-weight: 600; color: var(--fd-ink-2); }
-.fd-hero-cap span { font-size: 14px; font-weight: 500; color: var(--fd-muted); }
-.fd-spark-caixa { position: relative; }
-.fd-spark { width: 100%; height: 84px; display: block; overflow: visible; }
-.fd-spark path, .fd-spark line { vector-effect: non-scaling-stroke; }
-.fd-spark-real, .fd-spark-proj { fill: none; stroke: var(--fd-accent); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
-.fd-spark-proj { stroke-dasharray: 5 4; opacity: .9; }
-.fd-spark-ponto { position: absolute; width: 11px; height: 11px; border-radius: 50%; background: var(--fd-accent); box-shadow: 0 0 0 2.5px var(--fd-surface); transform: translate(-50%, -50%); }
-.fd-grad-a { stop-color: var(--fd-accent); stop-opacity: .34; }
-.fd-grad-b { stop-color: var(--fd-accent); stop-opacity: 0; }
-.fd-svg-zero, .fd-svg-hoje { stroke: var(--fd-zero); stroke-width: 1; }
-.fd-spark-eixo { position: relative; height: 14px; margin-top: 4px; font-size: 14px; font-weight: 600; color: var(--fd-muted); }
-.fd-spark-eixo span { position: absolute; top: 0; }
-.fd-spark-eixo .fd-spark-hoje { transform: translateX(-50%); }
-
-.fd-mini { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: auto; padding-top: 8px; border-top: 1px solid var(--fd-line); }
-.fd-mini-item { display: flex; flex-direction: column; gap: 1px; min-width: 0; padding: 5px 10px; border-radius: 10px; transition: background-color .18s; }
-.fd-mini-item:first-child { margin-left: -10px; }
-.fd-mini-item:hover { background: var(--fd-wash); }
-.fd-mini-rot { font-size: 14px; font-weight: 600; color: var(--fd-muted); }
-.fd-mini-item strong { font-size: 14px; font-weight: 720; letter-spacing: -.01em; color: var(--fd-ink); white-space: nowrap; font-variant-numeric: proportional-nums; }
-.fd-mini-item em { font-style: normal; font-size: 14px; color: var(--fd-faint); display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
-.fd-mini-neg strong { color: var(--fd-chip-ruim); }
-
-/* ---------- KPIs ---------- */
-.fd-kpis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
-.fd-tile { display: flex; flex-direction: column; justify-content: center; gap: 4px; min-width: 0; padding: 11px 14px 10px; border-radius: 14px; transition: transform .2s ease, box-shadow .2s ease; }
+/* ---------- KPIs: quatro cartões iguais (Receitas, Despesas, Disponível p/ gastar, Dívida nos cartões) ---------- */
+.fd-kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+/* Mesmo desenho dos cartões da tela Transações (.tx-kpi): fundo liso, filete de 3px na cor do assunto, ícone de 34px com 15% de tinta e valor de 26px.
+   O número fica na cor do texto; só vira vermelho quando o saldo é negativo. A cor do assunto vem de --fd-tile-accent. */
+.fd-tile { --fd-tile-accent: var(--fd-faint); position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 6px; min-width: 0; padding: 16px 20px 14px 22px; border-radius: 16px; transition: transform .2s ease, box-shadow .2s ease; }
+.fd-tile::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 3px; background: var(--fd-tile-accent); }
 .fd-tile:hover { transform: translateY(-2px); }
-.fd-tile-topo { display: flex; align-items: center; gap: 8px; }
-.fd-tile-rotulo { font-size: 14px; font-weight: 650; color: var(--fd-ink-2); }
-.fd-ir { margin-left: auto; color: var(--fd-muted); opacity: 0; transform: translateX(-4px); transition: opacity .18s, transform .18s; display: inline-flex; }
-.fd-tile:hover .fd-ir, .fd-tile:focus-visible .fd-ir { opacity: 1; transform: none; }
-.fd-ic { display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 8px; flex: none; background: var(--fd-wash); color: var(--fd-ink-2); box-shadow: inset 0 0 0 1px var(--fd-line); }
-.fd-ic-in { background: var(--fd-chip-bom-bg); color: var(--fd-chip-bom); box-shadow: inset 0 0 0 1px rgba(52, 211, 153, .25); }
-.fd-ic-out { background: var(--fd-chip-ruim-bg); color: var(--fd-chip-ruim); box-shadow: inset 0 0 0 1px rgba(248, 113, 113, .25); }
-.fd-tile-valor { font-size: clamp(20px, 1.7vw, 25px); font-weight: 780; letter-spacing: -.03em; line-height: 1.12; color: var(--fd-ink); font-variant-numeric: proportional-nums; white-space: nowrap; margin-top: 2px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
-/* Receitas e despesas em destaque: valor grande na cor do fluxo (verde entra, vermelho sai) */
-.fd-tile-in .fd-tile-valor { color: var(--fd-in); }
-.fd-tile-out .fd-tile-valor { color: var(--fd-out); }
-.fd-tile-in .fd-tile-valor, .fd-tile-out .fd-tile-valor { text-shadow: 0 0 22px color-mix(in srgb, currentColor 22%, transparent); }
-.fd-tile-qtd { opacity: .72; font-weight: 600; }
-.fd-tile-rodape { display: flex; flex-direction: column; gap: 4px; margin-top: 4px; padding-top: 7px; border-top: 1px solid var(--fd-line); }
-.fd-tile-linha { font-size: 14px; color: var(--fd-muted); line-height: 1.45; display: flex; align-items: center; flex-wrap: wrap; gap: 4px 6px; }
+.fd-tile-in { --fd-tile-accent: var(--fd-chip-bom); }
+.fd-tile-out { --fd-tile-accent: var(--fd-chip-ruim); }
+.fd-tile-disp { --fd-tile-accent: var(--fd-accent); }
+.fd-tile-topo { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.fd-tile-rotulo { font-size: 14px; font-weight: 600; letter-spacing: .01em; color: var(--fd-muted); }
+.fd-tile .fd-ic { display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 10px; flex: none; color: var(--fd-tile-accent); background: var(--fd-wash); background: color-mix(in srgb, var(--fd-tile-accent) 15%, transparent); }
+.fd-tile-valor { font-size: 26px; font-weight: 750; letter-spacing: -.02em; line-height: 1.1; color: var(--fd-ink); font-variant-numeric: tabular-nums; white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+.fd-tile-valor.fd-val-out { color: var(--fd-out); }
+.fd-tile-rodape { display: flex; flex-direction: column; gap: 3px; }
+.fd-tile-linha { font-size: 14px; color: var(--fd-muted); line-height: 1.45; display: flex; align-items: center; flex-wrap: wrap; gap: 3px 6px; }
+.fd-tile-linha:empty { display: none; }
 .fd-tile-linha .fd-money { color: var(--fd-ink-2); font-weight: 600; }
-.fd-tile-linha .fd-meter { flex: 1 1 100%; }
-.fd-tile-neg::after { background: linear-gradient(135deg, rgba(248, 113, 113, .75), rgba(239, 68, 68, .12) 40%, rgba(239, 68, 68, .35)); }
+.fd-tile-linha .fd-meter { flex: 1 1 100%; margin-top: 2px; }
 
 /* Variação: cor + seta + sinal (nunca só cor) */
 .fd-delta { display: inline-flex; align-items: center; gap: 3px; padding: 1px 7px; border-radius: 99px; font-size: 14px; font-weight: 700; line-height: 1.5; white-space: nowrap; }
@@ -363,7 +325,7 @@ body.light .fd-root .fd-selo-medio, html.light .fd-root .fd-selo-medio { color: 
 .fd-btn-tabela:hover, .fd-btn-tabela.ativa { color: var(--fd-ink); border-color: var(--fd-zero); background: var(--fd-wash); }
 
 /* Gráfico */
-.fd-grafico-caixa { position: relative; flex: 1 1 auto; min-height: 220px; }
+.fd-grafico-caixa { position: relative; flex: 1 1 auto; min-height: 175px; }
 /* Escala automática (zoom do body em 2K/4K/5K): o Chart.js mede o contêiner em pixels VISUAIS e dimensiona o canvas com esse número; num contêiner de
    altura automática o canvas crescia ×zoom² (333px a 100% → 749px a 150%) e empurrava a página. Com o canvas fora do fluxo, a altura vem só do layout
    (linha do grid) e escala junto com o zoom, como o resto da tela. A 100% nada muda. */
@@ -374,9 +336,10 @@ body.light .fd-root .fd-selo-medio, html.light .fd-root .fd-selo-medio { color: 
 .fd-tabela th { position: sticky; top: 0; text-align: left; padding: 6px 10px; font-size: 14px; letter-spacing: .04em; text-transform: uppercase; color: var(--fd-muted); background: var(--fd-th); border-bottom: 1px solid var(--fd-line); }
 .fd-tabela td { padding: 5px 10px; color: var(--fd-ink-2); border-bottom: 1px solid var(--fd-line); font-variant-numeric: tabular-nums; }
 .fd-so-leitor { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-.fd-metricas { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; padding-top: 10px; border-top: 1px solid var(--fd-line); }
+.fd-metricas { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; padding-top: 10px; border-top: 1px solid var(--fd-line); }
 .fd-metrica { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
-.fd-metrica span { font-size: 14px; color: var(--fd-muted); font-weight: 600; }
+.fd-metrica > span { font-size: 14px; color: var(--fd-muted); font-weight: 600; }
+.fd-metrica-v { display: flex; align-items: baseline; flex-wrap: wrap; gap: 0 8px; }
 .fd-metrica strong { font-size: 14px; font-weight: 700; color: var(--fd-ink); letter-spacing: -.01em; white-space: nowrap; }
 .fd-metrica em { font-style: normal; font-size: 14px; color: var(--fd-faint); }
 
@@ -456,56 +419,106 @@ body.light .fd-root .fd-link, html.light .fd-root .fd-link { color: #1D5FB8; }
 .fd-vazio-total { align-items: flex-start; padding: 22px; gap: 10px; }
 
 /* =====================================================================================
+   Componentes novos do layout em faixas (20/11)
+   ===================================================================================== */
+/* Fluxo de caixa: aviso por cima do eixo quando não há nenhuma movimentação */
+.fd-grafico-aviso { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 0 16px 26px; text-align: center; pointer-events: none; }
+.fd-grafico-aviso strong, .fd-grafico-aviso span { padding: 1px 12px; border-radius: 8px; background: color-mix(in srgb, var(--fd-surface) 78%, transparent); }
+.fd-grafico-aviso strong { font-size: 14px; font-weight: 700; color: var(--fd-ink); }
+.fd-grafico-aviso span { font-size: 14px; color: var(--fd-muted); }
+.fd-sai-neg { color: var(--fd-chip-ruim); }
+
+/* Para onde vai o dinheiro: rosca + lista */
+.fd-rosca-caixa { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 14px 20px; flex: 1; }
+.fd-rosca-box { position: relative; width: 158px; height: 158px; flex: none; }
+.fd-rosca { position: absolute; inset: 0; border-radius: 50%; -webkit-mask: radial-gradient(farthest-side, transparent 67%, #000 68%); mask: radial-gradient(farthest-side, transparent 67%, #000 68%); }
+.fd-rosca-centro { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 26px; text-align: center; line-height: 1.2; }
+.fd-rosca-centro strong { font-size: 14px; font-weight: 780; letter-spacing: -.02em; color: var(--fd-ink); text-wrap: balance; }
+.fd-rosca-centro span { font-size: 14px; color: var(--fd-muted); }
+.fd-rosca-leg { display: flex; flex-direction: column; gap: 1px; flex: 1 1 170px; min-width: 0; max-width: 380px; }
+.fd-rosca-leg li { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 9px; padding: 5px 8px; margin: 0 -8px; border-radius: 10px; transition: background-color .18s; }
+.fd-rosca-leg li.fd-clicavel:hover { background: var(--fd-wash); }
+.fd-leg-nome { display: flex; flex-direction: column; min-width: 0; font-size: 14px; font-weight: 650; color: var(--fd-ink); line-height: 1.25; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fd-leg-nome small { font-size: 14px; font-weight: 500; color: var(--fd-muted); }
+.fd-rosca-leg b { font-size: 14px; font-weight: 760; color: var(--fd-ink); font-variant-numeric: tabular-nums; }
+.fd-rosca-vazia { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; flex: 1; text-align: center; padding: 4px 0 2px; }
+.fd-rosca-vazia .fd-rosca-box { width: 104px; height: 104px; }
+.fd-rosca-fantasma { background: conic-gradient(rgba(148, 163, 184, .34) 0 32%, rgba(148, 163, 184, .18) 32% 62%, rgba(148, 163, 184, .09) 62% 100%); }
+body.light .fd-root .fd-rosca-fantasma, html.light .fd-root .fd-rosca-fantasma { background: conic-gradient(rgba(71, 85, 105, .30) 0 32%, rgba(71, 85, 105, .17) 32% 62%, rgba(71, 85, 105, .09) 62% 100%); }
+.fd-rosca-vazia .fd-vazio { padding: 0; }
+
+/* Título em abas ("Contas dos próximos 30 dias" / "Últimas movimentações") */
+.fd-titulo-abas { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 18px; }
+.fd-tab-titulo { border: 0; background: transparent; padding: 0 0 3px; font-size: 14px; font-weight: 720; letter-spacing: -.015em; color: var(--fd-muted); border-bottom: 2px solid transparent; cursor: pointer; transition: color .18s, border-color .18s; }
+.fd-tab-titulo:hover { color: var(--fd-ink); }
+.fd-tab-titulo.ativa { color: var(--fd-ink); border-bottom-color: var(--fd-accent); }
+.fd-tab-titulo:focus-visible { outline: 2px solid var(--fd-accent); outline-offset: 2px; border-radius: 4px; }
+.fd-resumo-agenda .fd-clicavel { padding: 0 6px; margin: 0 -6px; border-radius: 8px; transition: background-color .18s; }
+.fd-resumo-agenda .fd-clicavel:hover { background: var(--fd-wash); }
+
+/* Saúde financeira: caixa da nota + linhas com barras */
+/* Cada coluna ocupa só o próprio conteúdo: a linha do painel é tão alta quanto a agenda ao lado, e a caixa esticada ficava alta e vazia */
+.fd-saude-corpo { display: grid; grid-template-columns: minmax(150px, .85fr) minmax(0, 1.25fr); gap: 14px; align-items: start; align-content: start; flex: 1; }
+.fd-nota-caixa { display: flex; flex-direction: column; justify-content: center; gap: 5px; padding: 14px 16px; border-radius: 14px; background: var(--fd-wash); box-shadow: inset 0 0 0 1px var(--fd-line); }
+.fd-nota-num { font-size: 36px; font-weight: 780; letter-spacing: -.035em; line-height: 1; color: var(--fd-ink); font-variant-numeric: proportional-nums; }
+.fd-nota-num small { font-size: 14px; font-weight: 600; color: var(--fd-muted); letter-spacing: 0; }
+.fd-nota-status { font-size: 14px; font-weight: 700; color: var(--fd-ink-2); }
+.fd-nota-bom { color: var(--fd-chip-bom); }
+.fd-nota-medio { color: #FCD34D; }
+body.light .fd-root .fd-nota-medio, html.light .fd-root .fd-nota-medio { color: #92400E; }
+.fd-nota-ruim { color: var(--fd-chip-ruim); }
+.fd-nota-dica { font-size: 14px; color: var(--fd-muted); line-height: 1.4; }
+.fd-saude-linhas { display: flex; flex-direction: column; justify-content: center; gap: 11px; min-width: 0; }
+.fd-saude-linha .fd-pilar-topo { margin-bottom: 5px; }
+.fd-m-neutro { background: var(--fd-faint); }
+
+/* Contas e cartões */
+.fd-btn-centro { align-self: center; }
+.fd-card-contas > .fd-vazio { padding: 10px 8px 2px; }
+.fd-card-contas .fd-sub-titulo { margin-top: 8px; }
+
+/* =====================================================================================
    3. Larguras do painel (container query: acompanha o menu lateral aberto/fechado)
    ===================================================================================== */
-@container fd (max-width: 1250px) {
-  /* Notebook/desktop médio: antes que os cards espremidos comecem a cortar textos, as linhas empilham
-     (o conteúdo fica em largura total, como no celular, em vez de dois painéis apertados) */
-  .fd-linha-a, .fd-linha-b, .fd-linha-c { grid-template-columns: minmax(0, 1fr); }
-  .fd-linha-d.fd-n3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .fd-linha-d.fd-n3 > :last-child { grid-column: 1 / -1; }
+@container fd (max-width: 1350px) {
+  /* Notebook: saúde e agenda lado a lado e "Contas e cartões" embaixo, na largura toda */
+  .fd-linha-c { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .fd-linha-c > :last-child { grid-column: 1 / -1; }
 }
-@container fd (max-width: 1080px) {
-  .fd-metricas { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+/* Os 4 cartões do topo ficam lado a lado até ~1000px de painel (notebook 1366 com o menu aberto): em 2 linhas eles empurravam o gráfico para fora da 1ª tela */
+@container fd (max-width: 1000px) {
+  .fd-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@container fd (max-width: 1100px) {
+  .fd-linha-b { grid-template-columns: minmax(0, 1fr); }
+  .fd-rosca-caixa { flex-wrap: nowrap; }
 }
 @container fd (max-width: 960px) {
-  .fd-linha-a, .fd-linha-b, .fd-linha-c { grid-template-columns: minmax(0, 1fr); }
+  .fd-linha-c { grid-template-columns: minmax(0, 1fr); }
   .fd-linha-d.fd-n3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .fd-linha-d.fd-n3 > :last-child { grid-column: 1 / -1; }
-  .fd-kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .fd-metricas { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 @container fd (max-width: 700px) {
   .fd-linha-d.fd-n3, .fd-linha-d.fd-n2 { grid-template-columns: minmax(0, 1fr); }
-  .fd-metricas { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .fd-card { padding: 13px; border-radius: 14px; }
-  .fd-saldo { padding: 13px 13px 11px; }
   .fd-ag-item { grid-template-columns: 42px minmax(0, 1fr) auto; }
   .fd-ag-item .fd-btn-baixa { grid-column: 2 / -1; justify-self: start; }
-  .fd-acum-corpo { flex-direction: column; align-items: stretch; gap: 8px; }
-  .fd-acum-lado { width: auto; min-width: 0; max-width: none; }
-  .fd-acum-svg { height: 48px; }
+  .fd-saude-corpo { grid-template-columns: minmax(0, 1fr); }
+  .fd-rosca-caixa { flex-wrap: wrap; }
 }
 @container fd (max-width: 520px) {
   .fd-kpis { grid-template-columns: minmax(0, 1fr); gap: 12px; }
-  .fd-tile { padding: 10px 11px 9px; }
-  .fd-tile-valor { font-size: clamp(18px, 5vw, 23px); }
+  .fd-tile { padding: 13px 14px 12px 17px; }
+  .fd-tile-valor { font-size: clamp(22px, 6.5vw, 26px); }
   .fd-pilares { grid-template-columns: 1fr; }
-  .fd-mini { grid-template-columns: minmax(0, 1fr); gap: 2px; }
-  .fd-mini-item { flex-direction: row; align-items: baseline; flex-wrap: wrap; gap: 4px 10px; margin-left: -10px; }
-  .fd-mini-rot { flex: 1 1 100%; }
   .fd-resumo-agenda { width: 100%; justify-content: space-between; }
   .fd-resumo-agenda span { text-align: left; }
-}
-@container fd (max-width: 340px) {
-  .fd-kpis { grid-template-columns: minmax(0, 1fr); }
 }
 /* Telas largas (2K/4K): o app limita a página a ~1600px; o painel usa mais, sem esticar além do que lê bem */
 html.fd-vidro-ativo #pageContent { max-width: 2200px !important; }
 html.fd-vidro-ativo #pageContent .dashboard-cockpit-frame.fd-root { max-width: none !important; }
 @media (max-width: 820px) {
   .fd-root, .fd-corpo, .fd-linha { gap: 10px; }
-  .fd-cabecalho { padding: 11px 13px; border-radius: 14px; }
   .fd-cab-dir { width: 100%; justify-content: flex-start; }
   .fd-grafico-caixa { min-height: 200px; }
   /* Menos vidro nas telas pequenas: desfoque menor e sem placas (poupa bateria e mantém a rolagem fluida) */

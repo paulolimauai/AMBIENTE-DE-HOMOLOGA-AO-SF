@@ -36,7 +36,7 @@
   // Eixo: valor inteiro abaixo de 10 mil; compacto ("12 mil") a partir daí
   function fmtEixo(v) {
     const n = Number(v) || 0;
-    if (Math.abs(n) < 10000) return 'R$ ' + Math.round(n).toLocaleString('pt-BR');
+    if (Math.abs(n) < 10000) { const r = Math.round(n); return 'R$ ' + (r === 0 ? 0 : r).toLocaleString('pt-BR'); }   // sem "R$ -0"
     return 'R$ ' + new Intl.NumberFormat('pt-BR', { notation: 'compact', maximumFractionDigits: 1 }).format(n);
   }
   function esc(valor) {
@@ -165,10 +165,10 @@
   }
 
   function somar(lista) {
-    const r = { realizado: 0, previsto: 0, qtd: 0, qtdPrevisto: 0, total: 0 };
+    const r = { realizado: 0, previsto: 0, qtd: 0, qtdPrevisto: 0, qtdRealizado: 0, total: 0 };
     lista.forEach((l) => {
       r.qtd += 1;
-      if (l.realizado) r.realizado += l.valor;
+      if (l.realizado) { r.realizado += l.valor; r.qtdRealizado += 1; }
       else { r.previsto += l.valor; r.qtdPrevisto += 1; }
     });
     r.realizado = arred(r.realizado);
@@ -450,10 +450,13 @@
     if (cartoesResumo.usoPct <= 50) score += 5; else if (cartoesResumo.usoPct > 80) score -= 10;
     if (agenda.qtdVencidas > 0) score -= 20;
     score = Math.max(10, Math.min(100, score));
+    // Sem nenhuma movimentação no período não há o que avaliar: a nota fica vazia ("--") em vez de inventar "Excelente 85"
+    const semDados = receitas.qtd + despesas.qtd === 0;
     const saude = {
-      score,
-      status: score >= 75 ? 'Excelente' : score >= 50 ? 'Equilibrado' : 'Atenção',
-      nivel: score >= 75 ? 'bom' : score >= 50 ? 'medio' : 'ruim',
+      score: semDados ? null : score,
+      semDados,
+      status: semDados ? 'Sem dados' : (score >= 75 ? 'Excelente' : score >= 50 ? 'Equilibrado' : 'Atenção'),
+      nivel: semDados ? 'neutro' : (score >= 75 ? 'bom' : score >= 50 ? 'medio' : 'ruim'),
       pilares: [
         { nome: 'Poupança', valor: taxaPoupanca == null ? 0 : Math.max(0, taxaPoupanca), bom: taxaPoupanca != null && taxaPoupanca >= 20, medio: taxaPoupanca != null && taxaPoupanca >= 10, maisEhMelhor: true },
         { nome: 'Comprometimento', valor: Math.min(100, comprometimento), bom: comprometimento <= 60, medio: comprometimento <= 80, maisEhMelhor: false },
@@ -534,7 +537,7 @@
   // ======================================================================
   // Tela (HTML)
   // ======================================================================
-  const estado = { visao: 'saldo', filtro: 'all', tabela: false, modelo: null, util: null, ativo: false, grafico: null };
+  const estado = { visao: 'saldo', filtro: 'all', aba: 'agenda', tabela: false, modelo: null, util: null, ativo: false, grafico: null };
 
   const svg = (corpo, tam, sw) => '<svg width="' + (tam || 15) + '" height="' + (tam || 15) + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="' + (sw || 2.2) + '" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + corpo + '</svg>';
   const ICONES = {
@@ -581,74 +584,20 @@
     return '<span class="fd-delta ' + (bom ? 'fd-bom' : 'fd-ruim') + (emReais ? ' fd-money' : '') + '" title="' + esc(dica) + '">' + (sobe ? '▲' : '▼') + ' ' + esc(texto) + '</span>' + rot;
   }
 
-  // Evolução do saldo no mês (área sob o realizado, tracejado na projeção, marcador em "hoje"); preenche a largura do cartão
-  function graficoSaldo(m) {
-    const d = m.serieDiaria;
-    const pontos = [];
-    d.dias.forEach((dia, i) => {
-      const real = d.saldoReal[i];
-      const proj = d.saldoProj[i];
-      if (real != null || proj != null) pontos.push({ i, real, proj });
-    });
-    if (pontos.length < 2) return '';
-    const valores = [];
-    pontos.forEach((p) => { if (p.real != null) valores.push(p.real); if (p.proj != null) valores.push(p.proj); });
-    let min = Math.min(...valores);
-    let max = Math.max(...valores);
-    const folga = ((max - min) || Math.abs(max) || 1) * 0.14;
-    min -= folga; max += folga;
-    // O SVG estica na largura do cartão (preserveAspectRatio none) e tem altura fixa: traços com non-scaling-stroke;
-    // o marcador de "hoje" e os rótulos do eixo ficam em HTML posicionado por porcentagem, para não deformarem
-    const L = 460; const A = 130; const mE = 0; const mD = 0; const mT = 10; const mB = 8;
-    const base = A - mB;
-    const x = (i) => mE + (i / Math.max(1, d.dias.length - 1)) * (L - mE - mD);
-    const y = (v) => mT + (1 - (v - min) / (max - min)) * (A - mT - mB);
-    const rota = (lista) => lista.map((p, k) => (k ? 'L' : 'M') + x(p.i).toFixed(1) + ' ' + y(p.v).toFixed(1)).join(' ');
-    const reais = pontos.filter((p) => p.real != null).map((p) => ({ i: p.i, v: p.real }));
-    const projs = pontos.filter((p) => p.proj != null).map((p) => ({ i: p.i, v: p.proj }));
-    const hojeP = d.hojeIdx >= 0 ? reais[reais.length - 1] : null;
-    const area = reais.length > 1 ? rota(reais) + ' L' + x(reais[reais.length - 1].i).toFixed(1) + ' ' + base + ' L' + x(reais[0].i).toFixed(1) + ' ' + base + ' Z' : '';
-    const zero = min < 0 && max > 0 ? '<line x1="' + mE + '" x2="' + (L - mD) + '" y1="' + y(0).toFixed(1) + '" y2="' + y(0).toFixed(1) + '" class="fd-svg-zero"/>' : '';
-    const pctX = (i) => (x(i) / L * 100).toFixed(2) + '%';
-    const ultimo = d.dias.length - 1;
-    const eixo = '<div class="fd-spark-eixo" aria-hidden="true"><span style="left:0">' + d.dias[0] + '</span>' +
-      (hojeP && hojeP.i > 3 && hojeP.i < ultimo - 3 ? '<span class="fd-spark-hoje" style="left:' + pctX(hojeP.i) + '">hoje</span>' : '') +
-      '<span style="right:0">' + d.dias[ultimo] + '</span></div>';
-    return '<div class="fd-spark-caixa"><svg class="fd-spark" viewBox="0 0 ' + L + ' ' + A + '" preserveAspectRatio="none" role="img" aria-label="Evolução do saldo em contas no mês: a linha cheia é o realizado e a tracejada é a projeção com as pendências cadastradas">' +
-      '<defs><linearGradient id="fdGradSaldo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="fd-grad-a"/><stop offset="1" class="fd-grad-b"/></linearGradient></defs>' +
-      zero +
-      (area ? '<path d="' + area + '" fill="url(#fdGradSaldo)"/>' : '') +
-      (hojeP ? '<line x1="' + x(hojeP.i).toFixed(1) + '" x2="' + x(hojeP.i).toFixed(1) + '" y1="' + mT + '" y2="' + base + '" class="fd-svg-hoje"/>' : '') +
-      (reais.length > 1 ? '<path d="' + rota(reais) + '" class="fd-spark-real"/>' : '') +
-      (projs.length > 1 ? '<path d="' + rota(projs) + '" class="fd-spark-proj"/>' : '') +
-      '</svg>' +
-      (hojeP ? '<i class="fd-spark-ponto" style="left:' + pctX(hojeP.i) + ';top:' + (y(hojeP.v) / A * 100).toFixed(2) + '%"></i>' : '') + '</div>' + eixo;
-  }
-
-  const valorTile = (v, prefixo) => '<div class="fd-tile-valor fd-money" data-anim-val="' + v + '"' + (prefixo ? ' data-prefix="' + prefixo + '"' : '') + '>' + esc((prefixo || '') + fmtU(v)) + '</div>';
-  // Linha de apoio dos tiles de fluxo: "R$ X já recebido · R$ Y a receber (N entradas)" — realizado e previsto sempre visíveis
-  const resumoFluxo = (s, pago, aFazer, un) => {
-    if (!s.qtd) return 'Sem lançamentos no período';
-    return '<span class="fd-money">' + esc(fmtU(s.realizado)) + '</span> ' + pago +
-      (s.previsto > 0 ? ' · ' + dinheiro(s.previsto) + ' ' + aFazer : '') +
-      ' <span class="fd-tile-qtd">(' + s.qtd + ' ' + un + (s.qtd === 1 ? '' : 's') + ')</span>';
-  };
-  const progresso = (real, previsto, rotulo) => {
-    if (!(previsto > 0)) return '';
-    const pct = Math.max(2, Math.min(100, Math.round((real / (real + previsto)) * 100)));
-    return '<div class="fd-meter" role="img" aria-label="' + esc(rotulo + ': ' + pct + '% já realizado') + '"><i class="fd-m-acc" style="width:' + pct + '%"></i></div>';
-  };
+  // Valor grande dos cartões do topo; "cls" pinta o número (fd-val-in / fd-val-out) quando o sinal importa
+  const valorTile = (v, cls) => '<div class="fd-tile-valor fd-money' + (cls ? ' ' + cls : '') + '" data-anim-val="' + v + '">' + esc(fmtU(v)) + '</div>';
 
   function cabecalho(m, util) {
     const saud = util.saudacao ? util.saudacao() : { text: 'Olá' };
     const oculto = typeof document !== 'undefined' && document.body && document.body.classList.contains('hide-sensitive-balances');
-    const movs = m.totais.receitas.qtd + m.totais.despesas.qtd;
-    return '<header class="fd-cabecalho fd-vidro">' +
+    const feitas = m.totais.receitas.qtdRealizado + m.totais.despesas.qtdRealizado;
+    // Sem moldura: a saudação fica direto sobre o fundo. O horário é o botão de atualizar (o carimbo é preenchido por carimbarAtualizacao)
+    return '<header class="fd-cabecalho">' +
       '<div class="fd-cab-esq"><div class="fd-data">' + esc(util.dataHoje ? util.dataHoje() : m.hoje) + '</div>' +
-      '<h1 class="fd-saudacao">' + esc(saud.text) + ', <span>' + esc(util.primeiroNome || 'Usuário') + '</span></h1>' +
-      '<p class="fd-sub">' + esc(m.periodo.rotulo) + ' · ' + movs + ' movimentaç' + (movs === 1 ? 'ão' : 'ões') + ' · atualizado às <span id="fdAtualizadoEm">--:--</span></p></div>' +
+      '<h1 class="fd-saudacao">' + esc(saud.text) + ', <strong class="fd-nome">' + esc(util.primeiroNome || 'Usuário') + '</strong></h1>' +
+      '<p class="fd-sub">' + esc(m.periodo.rotulo) + ' • ' + feitas + (feitas === 1 ? ' movimentação realizada' : ' movimentações realizadas') +
+      ' <button type="button" class="fd-atualiza" data-fd-acao="atualizar" title="Atualizar os dados agora" aria-label="Atualizar os dados">até às <span id="fdAtualizadoEm">--:--</span></button></p></div>' +
       '<div class="fd-cab-dir">' + (util.periodPickerHTML ? util.periodPickerHTML() : '') +
-      '<button type="button" class="fd-btn fd-btn-icone" data-fd-acao="atualizar" title="Atualizar os dados" aria-label="Atualizar os dados">' + ICONES.atualizar + '</button>' +
       '<button type="button" class="fd-btn fd-privacidade" onclick="window.toggleSensitiveBalances()" id="btnToggleBalances" title="Ocultar ou exibir saldos">' +
       '<span id="btnEyeIcon">' + (oculto ? ICONES.olhoFechado : ICONES.olho) + '</span><span id="btnEyeText">' + (oculto ? 'Exibir Saldos' : 'Ocultar Saldos') + '</span></button>' +
       '<div class="fd-acoes-rapidas">' +
@@ -664,131 +613,52 @@
       '<div><strong>' + esc(i.titulo) + '</strong><span>' + esc(i.texto) + '</span></div></div>').join('') + '</div>';
   }
 
-  // Número-herói: receitas do período em destaque; o saldo em contas, a projeção e a curva do mês ficam logo abaixo
-  function blocoSaldo(m) {
-    const c = m.contas;
-    const a = m.agenda;
-    const projDiff = arred(c.saldoProjetadoFim - c.saldoAtual);
-    const mesCurto = MESES_CURTOS[m.periodo.mes - 1];
-    const encerrado = !m.periodo.ehMesAtual && !m.periodo.ehFuturo && !m.periodo.todasAsDatas;
-    const fimRotulo = encerrado ? 'Saldo no fim de ' + mesCurto : (m.periodo.ehFuturo ? 'Projeção para o fim de ' + mesCurto : 'Projeção para o fim do mês');
-    const minProj = menorSaldoProjetado(m.serieDiaria);
-    const minimo = minProj || menorSaldoRealizado(m.serieDiaria);
-    const rotuloMinimo = minProj ? 'Menor saldo previsto' : 'Menor saldo';
-    const quando = (dia) => (m.periodo.ehMesAtual && dia === m.hojeDia ? 'hoje' : 'em ' + pad(dia) + '/' + pad(m.periodo.mes));
-    const aReceber = a.itens.filter((i) => i.tipo === 'in').length;
-    const aPagar = a.itens.filter((i) => i.tipo === 'out').length;
-    const mini = (rot, valorHtml, nota, ir, classe) => '<div class="fd-mini-item fd-clicavel ' + (classe || '') + '"' + atalho(ir) + '><span class="fd-mini-rot">' + rot + '</span><strong>' + valorHtml + '</strong><em>' + nota + '</em></div>';
-    const itens =
-      (minimo ? mini(rotuloMinimo, dinheiro(minimo.valor), quando(minimo.dia), { pagina: 'transacoes' }, minimo.valor < 0 ? 'fd-mini-neg' : '') : '') +
-      mini('A receber · 30 dias', dinheiro(a.totalAReceber), aReceber ? aReceber + (aReceber === 1 ? ' lançamento' : ' lançamentos') : 'nada pendente', { tipo: 'in', status: 'Pendente' }) +
-      mini('A pagar · 30 dias', dinheiro(a.totalAPagar), a.qtdVencidas ? '<span class="fd-delta fd-ruim">' + a.qtdVencidas + (a.qtdVencidas === 1 ? ' vencida' : ' vencidas') + '</span>' : (aPagar ? aPagar + (aPagar === 1 ? ' lançamento' : ' lançamentos') : 'em dia'), { tipo: 'out', status: 'Pendente' });
-    const t = m.totais;
-    return '<section class="fd-card fd-vidro fd-saldo" aria-label="Receitas e saldo">' +
-      '<div class="fd-hero-rotulo">Receitas <span class="fd-dica" tabindex="0" title="Total de receitas do período: já recebido + a receber. O saldo das contas aparece logo abaixo.">?</span></div>' +
-      '<div class="fd-hero-valor fd-money fd-hero-in" data-anim-val="' + t.receitas.total + '">' + esc(fmtU(t.receitas.total)) + '</div>' +
-      '<div class="fd-hero-proj"><span class="fd-hero-proj-rot">Já recebido</span> ' + dinheiro(t.receitas.realizado) +
-        ' · <span class="fd-hero-proj-rot">A receber</span> ' + dinheiro(t.receitas.previsto) + '</div>' +
-      '<div class="fd-hero-proj"><span class="fd-hero-proj-rot">Saldo em contas hoje</span> ' + dinheiro(c.saldoAtual) +
-        ' · <span class="fd-hero-proj-rot">' + esc(fimRotulo) + '</span> ' + dinheiro(c.saldoProjetadoFim) +
-        (Math.abs(projDiff) >= 0.01 ? ' <span class="fd-delta fd-money ' + (projDiff >= 0 ? 'fd-bom' : 'fd-ruim') + '">' + (projDiff >= 0 ? '▲ ' : '▼ ') + esc(fmtU(Math.abs(projDiff))) + '</span>' : '') + '</div>' +
-      blocoAcumulado(m) +
-      (m.serieDiaria && m.serieDiaria.dias && m.serieDiaria.dias.length > 1
-        ? '<div class="fd-hero-cap">Saldo em contas no mês <span>linha cheia = realizado · tracejada = projeção</span></div>' : '') +
-      '<div class="fd-hero-grafico">' + graficoSaldo(m) + '</div>' +
-      '<div class="fd-mini">' + itens + '</div></section>';
-  }
-
-  // Acumulado de todos os meses cadastrados: mini-gráfico da evolução do acumulado + barra do que entrou vs saiu,
-  // deixando claro quanto do total é saldo positivo disponível
-  function graficoAcumulado(serie) {
-    const n = serie.length;
-    if (n === 0) return '';
-    const W = 100;
-    const H = 34;
-    const pts = serie.map((p) => p.acumulado);
-    const min = Math.min(0, ...pts);
-    const max = Math.max(0, ...pts);
-    const span = max - min || 1;
-    const x = (i) => (n === 1 ? W / 2 : (i / (n - 1)) * W);
-    const y = (v) => (H - 4) - ((v - min) / span) * (H - 8);
-    const linha = pts.map((v, i) => x(i).toFixed(2) + ',' + y(v).toFixed(2)).join(' ');
-    const area = 'M' + x(0).toFixed(2) + ',' + (H - 1) + ' L' + linha.replace(/ /g, ' L') + ' L' + x(n - 1).toFixed(2) + ',' + (H - 1) + ' Z';
-    const zeroY = y(0);
-    const cruzou = min < 0 && max > 0;
-    const primeiro = serie[0].rotulo;
-    const ultimo = serie[n - 1].rotulo;
-    return '<svg class="fd-acum-svg" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none" role="img" aria-label="Evolução do acumulado de ' + esc(primeiro) + ' a ' + esc(ultimo) + '">' +
-      '<path class="fd-acum-area" d="' + area + '"></path>' +
-      (cruzou ? '<line class="fd-acum-zero" x1="0" y1="' + zeroY.toFixed(2) + '" x2="' + W + '" y2="' + zeroY.toFixed(2) + '"></line>' : '') +
-      '<polyline class="fd-acum-linha" points="' + linha + '"></polyline>' +
-      '<circle class="fd-acum-ponto" cx="' + x(n - 1).toFixed(2) + '" cy="' + y(pts[n - 1]).toFixed(2) + '" r="1.6"></circle>' +
-      '</svg>';
-  }
-
-  function blocoAcumulado(m) {
-    const a = m.acumulado || { resultado: 0, meses: 0, serie: [] };
-    const positivo = a.resultado > 0.004;
-    const negativo = a.resultado < -0.004;
-    const selo = positivo ? 'fd-selo-bom' : negativo ? 'fd-selo-ruim' : '';
-    const texto = positivo ? 'saldo positivo disponível' : negativo ? 'déficit acumulado' : 'sem movimentações';
-    const totalFluxo = a.entradas + a.saidas;
-    const pctIn = totalFluxo > 0 ? Math.max(0, Math.min(100, (a.entradas / totalFluxo) * 100)) : 0;
-    const corpo = (a.serie && a.serie.length > 0) || totalFluxo > 0
-      ? '<div class="fd-acum-corpo">' +
-        (a.serie && a.serie.length > 1 ? '<div class="fd-acum-grafico">' + graficoAcumulado(a.serie) +
-          '<div class="fd-acum-eixo"><span>' + esc(a.serie[0].rotulo) + '</span><span>' + esc(a.serie[a.serie.length - 1].rotulo) + '</span></div></div>' : '') +
-        (totalFluxo > 0 ? '<div class="fd-acum-lado">' +
-          '<div class="fd-acum-barra" role="img" aria-label="Entradas ' + esc(fmtU(a.entradas)) + ' e saídas ' + esc(fmtU(a.saidas)) + ' no acumulado"><i class="fd-acum-in" style="width:' + pctIn.toFixed(1) + '%"></i><i class="fd-acum-out" style="width:' + (100 - pctIn).toFixed(1) + '%"></i></div>' +
-          '<div class="fd-acum-legenda"><span><i class="fd-bolinha" style="background:var(--fd-in)"></i>' + dinheiro(a.entradas) + ' entrou</span>' +
-          '<span><i class="fd-bolinha" style="background:var(--fd-out)"></i>' + dinheiro(a.saidas) + ' saiu</span></div>' +
-        '</div>' : '') +
-      '</div>'
-      : '';
-    return '<div class="fd-acum"><div class="fd-acum-topo"><span class="fd-hero-acum-rot">Acumulado de todos os meses' +
-      (a.meses ? ' (' + a.meses + (a.meses === 1 ? ' mês' : ' meses') + ')' : '') + '</span>' +
-      '<span class="fd-acum-valor fd-money" data-anim-val="' + a.resultado + '">' + esc(fmtU(a.resultado)) + '</span>' +
-      '<span class="fd-selo ' + (selo || 'fd-selo') + '">' + texto + '</span></div>' + corpo + '</div>';
-  }
-
+  // Cartão do topo: rótulo + ícone, número grande e uma ou duas linhas de apoio
   function tileKpi(o) {
     return '<div class="fd-tile fd-vidro fd-clicavel ' + (o.classe || '') + '"' + atalho(o.ir) + ' title="' + esc(o.dica) + '">' +
-      '<div class="fd-tile-topo"><span class="fd-ic ' + o.tom + '">' + o.icone + '</span><span class="fd-tile-rotulo">' + esc(o.rotulo) + '</span><span class="fd-ir" aria-hidden="true">' + ICONES.seta + '</span></div>' +
+      '<div class="fd-tile-topo"><span class="fd-tile-rotulo">' + esc(o.rotulo) + '</span><span class="fd-ic ' + o.tom + '">' + o.icone + '</span></div>' +
       o.valorHtml + '<div class="fd-tile-rodape">' + o.linhas.filter(Boolean).map((l) => '<div class="fd-tile-linha">' + l + '</div>').join('') + '</div></div>';
   }
 
+  // Quatro cartões iguais: Receitas, Despesas, Disponível p/ gastar e Dívida nos cartões
   function blocoKpis(m) {
     const c = m.contas;
     const t = m.totais;
     const cmp = m.comparativo;
     const cartoes = c.cartoes;
+    const dividaTotal = cartoes.divida != null ? cartoes.divida : cartoes.fatura;
+    const semMov = t.receitas.qtd + t.despesas.qtd === 0;
+    const recebido = t.receitas.qtd
+      ? 'Recebido ' + dinheiro(t.receitas.realizado) + ' · A receber ' + dinheiro(t.receitas.previsto)
+      : 'A receber: ' + dinheiro(0);
+    const pago = t.despesas.qtd
+      ? 'Pago ' + dinheiro(t.despesas.realizado) + ' · A pagar ' + dinheiro(t.despesas.previsto)
+      : 'Sem lançamentos no período';
+    const formula = semMov && c.saldoAtual === 0
+      ? 'Saldo + A receber − A pagar'
+      : 'Saldo ' + dinheiro(c.saldoAtual) + ' + A receber ' + dinheiro(t.receitas.previsto) + ' − A pagar ' + dinheiro(t.despesas.previsto);
     const tiles =
       tileKpi({
+        rotulo: 'Receitas', tom: 'fd-ic-in', icone: ICONES.receita, ir: { tipo: 'in' }, dica: 'Ver as receitas em Movimentações', classe: 'fd-tile-in',
+        valorHtml: valorTile(t.receitas.total), linhas: [recebido, cmp ? chipVariacao(cmp.receitas, 'subir', cmp.rotulo) : '']
+      }) +
+      tileKpi({
         rotulo: 'Despesas', tom: 'fd-ic-out', icone: ICONES.despesa, ir: { tipo: 'out' }, dica: 'Ver as despesas em Movimentações', classe: 'fd-tile-out',
-        valorHtml: valorTile(t.despesas.total),
-        linhas: [
-          cmp ? chipVariacao(cmp.despesas, 'descer', cmp.rotulo) : '',
-          resumoFluxo(t.despesas, 'já pago', 'a pagar', 'saída'),
-          progresso(t.despesas.realizado, t.despesas.previsto, 'Despesas')
-        ]
+        valorHtml: valorTile(t.despesas.total), linhas: [pago, cmp ? chipVariacao(cmp.despesas, 'descer', cmp.rotulo) : '']
       }) +
       tileKpi({
-        rotulo: 'Disponível p/ gastar', tom: 'fd-ic-neutro', icone: ICONES.carteira, ir: {}, dica: 'Receitas menos despesas do período — quanto do dinheiro ainda pode ser gasto',
-        classe: c.disponivelGastar < 0 ? 'fd-tile-out' : 'fd-tile-in',
-        valorHtml: valorTile(c.disponivelGastar),
-        linhas: [
-          'Saldo ' + dinheiro(c.saldoAtual) + ' + a receber ' + dinheiro(t.receitas.previsto) + ' − a pagar ' + dinheiro(t.despesas.previsto),
-          'Receitas ' + dinheiro(t.receitas.total) + ' − Despesas ' + dinheiro(t.despesas.total) + ' no período'
-        ]
+        rotulo: 'Disponível p/ gastar', tom: 'fd-ic-disp', icone: ICONES.carteira, ir: {}, dica: 'Saldo em contas + o que falta receber − o que falta pagar: quanto ainda pode ser gasto',
+        classe: 'fd-tile-disp',
+        valorHtml: valorTile(c.disponivelGastar, c.disponivelGastar < 0 ? 'fd-val-out' : (c.disponivelGastar > 0 ? 'fd-val-in' : '')), linhas: [formula]
       }) +
       tileKpi({
-        rotulo: 'Dívida nos cartões', tom: 'fd-ic-out', icone: ICONES.cartao, ir: { pagina: 'cartoes' }, dica: 'Total acumulado devido em todos os cartões de crédito (todas as faturas, de todos os meses e cartões cadastrados)',
-        valorHtml: valorTile(cartoes.divida != null ? cartoes.divida : cartoes.fatura),
-        linhas: [
-          cartoes.itens.length ? 'Acumulado de todas as faturas · ' + cartoes.usoPct + '% do limite · ' + dinheiro(cartoes.disponivel) + ' livres'
-            : ((cartoes.divida != null ? cartoes.divida : cartoes.fatura) > 0 ? 'Há compras no cartão, mas nenhum cartão cadastrado · cadastre em Contas e Cartões' : 'Nenhum cartão cadastrado'),
-          cartoes.itens.length ? '<div class="fd-meter" role="img" aria-label="Uso do limite ' + cartoes.usoPct + '%"><i class="' + (cartoes.usoPct >= 85 ? 'fd-m-ruim' : cartoes.usoPct >= 60 ? 'fd-m-medio' : 'fd-m-bom') + '" style="width:' + Math.min(100, cartoes.usoPct) + '%"></i></div>' : ''
-        ]
+        rotulo: 'Dívida nos cartões', tom: 'fd-ic-neutro', icone: ICONES.cartao, ir: { pagina: 'cartoes' }, dica: 'Total devido em todos os cartões de crédito cadastrados (todas as faturas)',
+        classe: 'fd-tile-neutro',
+        valorHtml: valorTile(dividaTotal),
+        linhas: cartoes.itens.length
+          ? [cartoes.usoPct + '% do limite · ' + (cartoes.disponivel < 0 ? dinheiro(Math.abs(cartoes.disponivel)) + ' acima do limite' : dinheiro(cartoes.disponivel) + ' livres'),
+            '<div class="fd-meter" role="img" aria-label="Uso do limite ' + cartoes.usoPct + '%"><i class="' + (cartoes.usoPct >= 85 ? 'fd-m-ruim' : cartoes.usoPct >= 60 ? 'fd-m-medio' : 'fd-m-bom') + '" style="width:' + Math.min(100, cartoes.usoPct) + '%"></i></div>']
+          : [dividaTotal > 0 ? 'Há compras no cartão, mas nenhum cartão cadastrado · cadastre em Contas e Cartões' : 'Nenhum cartão cadastrado']
       });
     return '<div class="fd-kpis" aria-label="Resumo do período">' + tiles + '</div>';
   }
@@ -802,25 +672,33 @@
   function textoGrafico(m) {
     if (estado.visao === 'mensal') return 'Realizado em cada mês — o mês de referência é o último';
     if (estado.visao === 'diario') return 'Entradas e saídas de ' + m.periodo.rotulo + ' (as previstas em tom mais claro)';
-    return m.periodo.ehFuturo ? 'Projeção do saldo a partir das pendências cadastradas' : 'Linha cheia = realizado · tracejada = projeção com as pendências cadastradas';
+    return m.periodo.ehFuturo ? 'Projeção do saldo a partir das pendências cadastradas' : 'Saldo em contas ao fim de cada dia · realizado até ontem, hoje e projeção com as pendências';
   }
 
   function blocoGrafico(m) {
     const r = m.ritmo;
+    // Menor saldo do período (previsto, quando há projeção) e o dia em que acontece: avisa antes do caixa ficar no vermelho
+    const minProj = menorSaldoProjetado(m.serieDiaria);
+    const minimo = minProj || menorSaldoRealizado(m.serieDiaria);
+    const quandoMin = minimo ? (m.periodo.ehMesAtual && minimo.dia === m.hojeDia ? 'hoje' : 'em ' + pad(minimo.dia) + '/' + pad(m.periodo.mes)) : '';
+    const metricaMinimo = minimo ? metrica(minProj ? 'Menor saldo previsto' : 'Menor saldo', '<span class="' + (minimo.valor < 0 ? 'fd-sai-neg' : '') + '">' + dinheiro(minimo.valor) + '</span>', quandoMin) : '';
+    // Sem nenhuma movimentação o gráfico mostra só o eixo, com um aviso honesto por cima (nada de barras inventadas)
+    const aviso = m.vazio ? '<div class="fd-grafico-aviso"><strong>Sem movimentações em ' + esc(m.periodo.rotulo) + '</strong><span>O fluxo de caixa aparece assim que você cadastrar receitas e despesas.</span></div>' : '';
     return '<article class="fd-card fd-vidro fd-card-grafico">' +
       '<div class="fd-card-topo"><div><h2 class="fd-titulo">Fluxo de caixa</h2><p class="fd-legenda" id="fdLegendaGrafico">' + esc(textoGrafico(m)) + '</p></div>' +
       '<div class="fd-topo-acoes">' + abasGrafico() +
       '<button type="button" class="fd-btn-tabela' + (estado.tabela ? ' ativa' : '') + '" onclick="NexusDash.alternarTabela()" aria-pressed="' + estado.tabela + '" title="Ver os mesmos dados em tabela">' + ICONES.tabela + ' Tabela</button></div></div>' +
-      '<div class="fd-grafico-caixa fd-grafico-caixa-saldo" id="fdGraficoCaixa"' + (estado.tabela ? ' hidden' : '') + '><canvas id="fdChartPrincipal" role="img" aria-label="Gráfico de fluxo de caixa"></canvas></div>' +
+      '<div class="fd-grafico-caixa fd-grafico-caixa-saldo" id="fdGraficoCaixa"' + (estado.tabela ? ' hidden' : '') + '><canvas id="fdChartPrincipal" role="img" aria-label="Gráfico de fluxo de caixa"></canvas>' + aviso + '</div>' +
       '<div class="fd-tabela-caixa" id="fdTabelaCaixa"' + (estado.tabela ? '' : ' hidden') + '>' + tabelaDados(m) + '</div>' +
-      '<div class="fd-metricas">' +
-        metrica('Média diária de gastos', r.mediaDiaria30 > 0 ? dinheiro(r.mediaDiaria30) : '—', r.mediaDiaria30 > 0 ? 'últimos 30 dias' : 'Aguardando lançamentos pagos') +
-        metrica('Autonomia', r.autonomiaDias == null ? (r.mediaDiaria30 <= 0 && m.contas.saldoAtual > 0 ? 'Sem limite' : '—') : r.autonomiaDias + (r.autonomiaDias === 1 ? ' dia' : ' dias'), r.mediaDiaria30 > 0 ? 'saldo ÷ gasto diário' : 'Sem gastos pagos p/ calcular') +
-        metrica('Maior entrada', dinheiro(r.maiorEntrada), esc(m.periodo.rotulo)) +
-        metrica('Maior saída', dinheiro(r.maiorSaida), esc(m.periodo.rotulo)) +
+      '<div class="fd-metricas">' + metricaMinimo +
+        metrica('Média diária de gastos', r.mediaDiaria30 > 0 ? dinheiro(r.mediaDiaria30) : '—', r.mediaDiaria30 > 0 ? '30 dias' : 'sem gastos pagos') +
+        metrica('Autonomia', r.autonomiaDias == null ? (r.mediaDiaria30 <= 0 && m.contas.saldoAtual > 0 ? 'Sem limite' : '—') : r.autonomiaDias + (r.autonomiaDias === 1 ? ' dia' : ' dias'), r.mediaDiaria30 > 0 ? 'saldo ÷ gasto diário' : '') +
+        metrica('Maior entrada', dinheiro(r.maiorEntrada), '') +
+        metrica('Maior saída', dinheiro(r.maiorSaida), '') +
       '</div></article>';
   }
-  const metrica = (rot, valor, nota) => '<div class="fd-metrica"><span>' + rot + '</span><strong>' + valor + '</strong><em>' + nota + '</em></div>';
+  // Rótulo em cima; embaixo o valor e a nota curta na mesma linha (quebra só se faltar largura)
+  const metrica = (rot, valor, nota) => '<div class="fd-metrica"><span>' + rot + '</span><div class="fd-metrica-v"><strong>' + valor + '</strong>' + (nota ? '<em>' + nota + '</em>' : '') + '</div></div>';
 
   function tabelaDados(m) {
     if (estado.visao === 'mensal') {
@@ -837,39 +715,30 @@
       linhas.map(({ dia, i }) => '<tr><td>' + pad(dia) + '/' + pad(m.periodo.mes) + '</td><td>' + (d.saldoReal[i] == null ? '—' : dinheiro(d.saldoReal[i])) + '</td><td>' + (d.saldoProj[i] == null ? '—' : dinheiro(d.saldoProj[i])) + '</td></tr>').join('') + '</tbody></table>';
   }
 
-  function chipDeCategoria(c) {
-    if (c.novo) return '<span class="fd-delta fd-neutro" title="Sem gasto nesta categoria no período de comparação">novo</span>';
-    if (c.deltaPct == null) return '';
-    if (c.baseFraca) {
-      if (Math.abs(c.deltaValor) < 20) return '';
-      const sobe = c.deltaValor > 0;
-      return '<span class="fd-delta fd-money ' + (sobe ? 'fd-ruim' : 'fd-bom') + '" title="Mês anterior até o mesmo dia: ' + esc(fmtU(c.anterior)) + '">' + (sobe ? '▲ ' : '▼ ') + esc(fmtU(Math.abs(c.deltaValor))) + '</span>';
-    }
-    const p = Math.round(c.deltaPct);
-    if (p === 0) return '<span class="fd-delta fd-neutro">= estável</span>';
-    return '<span class="fd-delta ' + (p > 0 ? 'fd-ruim' : 'fd-bom') + '" title="Mês anterior até o mesmo dia: ' + esc(fmtU(c.anterior)) + '">' + (p > 0 ? '▲' : '▼') + ' ' + Math.abs(p) + '%</span>';
-  }
-
-  // Ranking de categorias: barras horizontais de um tom só, na mesma linha de base (a rosca esconde diferenças pequenas)
+  // Para onde vai o dinheiro: rosca com as 5 maiores categorias (o resto vira "Outras") e a lista ao lado com valor e %.
+  // Cada linha leva às despesas da categoria. Sem despesas: rosca apagada, explicação e o botão de cadastrar.
   function blocoCategorias(m) {
     const lista = m.categorias;
     let corpo;
     if (!lista.length) {
-      corpo = '<div class="fd-vazio"><strong>Sem despesas neste período</strong><span>Cadastre movimentações para ver para onde vai o dinheiro.</span></div>';
+      corpo = '<div class="fd-rosca-vazia"><span class="fd-rosca-box"><span class="fd-rosca fd-rosca-fantasma" aria-hidden="true"></span></span>' +
+        '<div class="fd-vazio"><strong>Nenhuma despesa no período.</strong><span>Cadastre movimentações para ver para onde vai o seu dinheiro.</span></div>' +
+        '<button type="button" class="fd-btn" data-fd-acao="nova-despesa">' + ICONES.mais + '<span>Cadastrar movimentação</span></button></div>';
     } else {
-      const topo = lista.slice(0, 6);
-      const resto = lista.slice(6);
-      const maximo = topo[0].valor || 1;
-      corpo = '<ol class="fd-ranking">' + topo.map((c) =>
-        '<li class="fd-rank-item fd-clicavel"' + atalho({ tipo: 'out', cat: c.nome }) + ' title="Ver as despesas de ' + esc(c.nome) + '"><div class="fd-rank-linha"><span class="fd-rank-nome"><i class="fd-bolinha" style="background:' + esc(c.cor) + '"></i>' + esc(c.nome) + '</span>' + chipDeCategoria(c) +
-        '<span class="fd-rank-valor">' + dinheiro(c.valor) + ' <small>' + Math.round(c.pct) + '%</small></span></div>' +
-        '<div class="fd-barra" role="img" aria-label="' + esc(c.nome) + ': ' + Math.round(c.pct) + '% das despesas"><i style="width:' + Math.max(2, (c.valor / maximo) * 100).toFixed(1) + '%"></i></div>' +
-        (c.previsto > 0 ? '<div class="fd-rank-nota"><span class="fd-delta-rot">' + dinheiro(c.previsto) + ' ainda a pagar</span></div>' : '') + '</li>').join('') + '</ol>' +
-        (resto.length ? '<div class="fd-rank-resto">+ ' + resto.length + ' categoria' + (resto.length === 1 ? '' : 's') + ' · ' + dinheiro(resto.reduce((s, c) => s + c.valor, 0)) + '</div>' : '');
+      const topo = lista.slice(0, 5);
+      const resto = lista.slice(5);
+      const fatias = topo.map((c) => ({ nome: c.nome, cor: c.cor, pct: c.pct, valor: c.valor, ir: c.nome }))
+        .concat(resto.length ? [{ nome: 'Outras (' + resto.length + ')', cor: '#8a93a3', pct: resto.reduce((s, c) => s + c.pct, 0), valor: resto.reduce((s, c) => s + c.valor, 0), ir: null }] : []);
+      let acc = 0;
+      const paradas = fatias.map((f) => { const ini = acc; acc += f.pct; return f.cor + ' ' + ini.toFixed(2) + '% ' + Math.min(100, acc).toFixed(2) + '%'; }).join(', ');
+      const descricao = fatias.map((f) => f.nome + ' ' + Math.round(f.pct) + '%').join(', ');
+      corpo = '<div class="fd-rosca-caixa"><div class="fd-rosca-box"><span class="fd-rosca" role="img" aria-label="Despesas por categoria: ' + esc(descricao) + '" style="background:conic-gradient(' + paradas + ')"></span>' +
+        '<div class="fd-rosca-centro"><strong class="fd-money">' + esc(fmtU(m.totalDespesaCats)) + '</strong><span>em despesas</span></div></div>' +
+        '<ul class="fd-rosca-leg">' + fatias.map((f) =>
+          '<li class="' + (f.ir ? 'fd-clicavel' : '') + '"' + (f.ir ? atalho({ tipo: 'out', cat: f.ir }) + ' title="Ver as despesas de ' + esc(f.nome) + '"' : '') + '>' +
+          '<i class="fd-bolinha" style="background:' + esc(f.cor) + '"></i><span class="fd-leg-nome">' + esc(f.nome) + '<small class="fd-money">' + esc(fmtU(f.valor)) + '</small></span><b>' + Math.round(f.pct) + '%</b></li>').join('') + '</ul></div>';
     }
-    return '<article class="fd-card fd-vidro fd-card-categorias"><div class="fd-card-topo"><div><h2 class="fd-titulo">Para onde vai o dinheiro</h2><p class="fd-legenda">Despesas de ' + esc(m.periodo.rotulo) + ' · pagas e a pagar</p></div>' +
-      '<span class="fd-selo">' + dinheiro(m.totalDespesaCats) + '</span></div>' + corpo +
-      (m.comparativo && lista.length ? '<p class="fd-rodape-nota">Variação ' + esc(m.comparativo.rotulo) + '. Toque numa categoria para ver os lançamentos.</p>' : '') + '</article>';
+    return '<article class="fd-card fd-vidro fd-card-categorias"><div class="fd-card-topo"><div><h2 class="fd-titulo">Para onde vai o dinheiro</h2><p class="fd-legenda">Despesas de ' + esc(m.periodo.rotulo) + ' · pagas e a pagar</p></div></div>' + corpo + '</article>';
   }
 
   function linhaAgenda(i, hojeStr) {
@@ -882,7 +751,7 @@
       '<button type="button" class="fd-btn-baixa" data-paytx="' + esc(i.id) + '" title="' + (entra ? 'Marcar como recebido' : 'Marcar como pago') + '">' + ICONES.check + '<span>' + (entra ? 'Receber' : 'Pagar') + '</span></button></li>';
   }
 
-  function blocoAgenda(m) {
+  function corpoAgenda(m) {
     const a = m.agenda;
     const secoes = [['Vencidas', a.grupos.vencidas, 'fd-grupo-ruim'], ['Hoje', a.grupos.hoje, ''], ['Próximos 7 dias', a.grupos.semana, ''], ['Até 30 dias', a.grupos.mes, '']];
     let restante = 8;
@@ -894,44 +763,47 @@
       corpo += '<div class="fd-grupo ' + classe + '"><h3>' + nome + ' <em>' + itens.length + '</em></h3><ul class="fd-ag-lista">' + mostrar.map((i) => linhaAgenda(i, m.hoje)).join('') + '</ul></div>';
     });
     const ocultos = a.itens.length - (8 - restante);
-    if (!a.itens.length) corpo = '<div class="fd-vazio fd-vazio-ok"><strong>Tudo em dia</strong><span>Nenhuma conta a pagar ou a receber nos próximos 30 dias.</span></div>';
-    return '<article class="fd-card fd-vidro fd-card-agenda"><div class="fd-card-topo"><div><h2 class="fd-titulo">Contas dos próximos 30 dias</h2><p class="fd-legenda">Pendências cadastradas, das mais urgentes às mais distantes</p></div>' +
-      '<div class="fd-resumo-agenda"><span><em>A pagar</em>' + dinheiro(a.totalAPagar) + '</span><span><em>A receber</em>' + dinheiro(a.totalAReceber) + '</span></div></div>' + corpo +
-      (ocultos > 0 ? '<button type="button" class="fd-link" data-fd-ir="mov" data-fd-status="Pendente">+ ' + ocultos + ' lançamento' + (ocultos === 1 ? '' : 's') + ' · ver todos ' + ICONES.seta + '</button>' : '') + '</article>';
+    if (!a.itens.length) corpo = '<div class="fd-vazio fd-vazio-ok"><strong>Nada para pagar ou receber nos próximos 30 dias.</strong><span>Tudo em dia por aqui.</span></div>';
+    return corpo + (ocultos > 0 ? '<button type="button" class="fd-link" data-fd-ir="mov" data-fd-status="Pendente">+ ' + ocultos + ' lançamento' + (ocultos === 1 ? '' : 's') + ' · ver todos ' + ICONES.seta + '</button>' : '');
   }
 
   function medidor(valor, nivelClasse, rotulo) {
     return '<div class="fd-meter" role="img" aria-label="' + esc(rotulo) + '"><i class="' + nivelClasse + '" style="width:' + Math.max(0, Math.min(100, valor)) + '%"></i></div>';
   }
 
+  // Saúde financeira: caixa com a nota ("--" enquanto não há movimentações) e, ao lado, a nota e os pilares com barras
   function blocoSaude(m) {
     const s = m.saude;
-    const pilares = s.pilares.map((p) => {
-      const nivel = p.bom ? 'fd-m-bom' : p.medio ? 'fd-m-medio' : 'fd-m-ruim';
-      return '<div class="fd-pilar"><div class="fd-pilar-topo"><span>' + esc(p.nome) + '</span><strong>' + Math.round(p.valor) + '%</strong></div>' + medidor(p.valor, nivel, p.nome + ' ' + Math.round(p.valor) + '%') + '</div>';
-    }).join('');
-    return '<article class="fd-card fd-vidro"><div class="fd-card-topo"><div><h2 class="fd-titulo">Saúde financeira</h2><p class="fd-legenda">Nota calculada com as movimentações do período</p></div>' +
-      '<span class="fd-selo fd-selo-' + s.nivel + '">' + esc(s.status) + '</span></div>' +
-      '<div class="fd-nota"><div class="fd-nota-valor">' + s.score + '<small>/100</small></div>' + medidor(s.score, s.nivel === 'bom' ? 'fd-m-bom' : s.nivel === 'medio' ? 'fd-m-medio' : 'fd-m-ruim', 'Nota ' + s.score + ' de 100') + '</div>' +
-      '<div class="fd-pilares">' + pilares + '</div></article>';
+    const nivelCls = s.nivel === 'bom' ? 'fd-m-bom' : s.nivel === 'medio' ? 'fd-m-medio' : s.nivel === 'ruim' ? 'fd-m-ruim' : 'fd-m-neutro';
+    const temCartao = m.contas.cartoes.itens.length > 0;
+    const linhas = [{ nome: 'Score', texto: s.semDados ? '-- / 100' : s.score + ' / 100', valor: s.semDados ? 0 : s.score, nivel: nivelCls }]
+      .concat(s.pilares.filter((p) => p.nome !== 'Uso do cartão' || temCartao).map((p) => ({
+        nome: p.nome, texto: Math.round(p.valor) + '%', valor: p.valor,
+        nivel: s.semDados && p.nome !== 'Pontualidade' ? 'fd-m-neutro' : (p.bom ? 'fd-m-bom' : p.medio ? 'fd-m-medio' : 'fd-m-ruim')
+      })));
+    return '<article class="fd-card fd-vidro fd-card-saude"><div class="fd-card-topo"><div><h2 class="fd-titulo">Saúde financeira</h2><p class="fd-legenda">Nota atualizada com as movimentações</p></div></div>' +
+      '<div class="fd-saude-corpo"><div class="fd-nota-caixa"><div class="fd-nota-num">' + (s.semDados ? '--' : s.score) + '<small> / 100</small></div>' +
+      '<div class="fd-nota-status' + (s.semDados ? '' : ' fd-nota-' + s.nivel) + '">' + esc(s.status) + '</div>' +
+      '<p class="fd-nota-dica">' + (s.semDados ? 'Cadastre suas primeiras movimentações para calcular seu score.' : 'Calculada com as movimentações do período.') + '</p></div>' +
+      '<div class="fd-saude-linhas">' + linhas.map((l) => '<div class="fd-saude-linha"><div class="fd-pilar-topo"><span>' + esc(l.nome) + '</span><strong>' + esc(l.texto) + '</strong></div>' + medidor(l.valor, l.nivel, l.nome + ' ' + l.texto) + '</div>').join('') + '</div></div></article>';
   }
 
   function blocoContas(m) {
     const c = m.contas;
     const bancos = c.bancarias.length
       ? '<ul class="fd-lista-simples">' + c.bancarias.map((b) => '<li class="fd-clicavel"' + atalho({ conta: b.nome }) + ' title="Ver as movimentações de ' + esc(b.nome) + '"><span>' + esc(b.nome) + '</span><strong class="' + (b.saldo < 0 ? 'fd-sai' : '') + '">' + dinheiro(b.saldo) + '</strong></li>').join('') + '</ul>'
-      : '<p class="fd-legenda">Nenhuma conta bancária cadastrada.</p>';
+      : '<div class="fd-vazio"><strong>Nenhuma conta bancária cadastrada.</strong></div><button type="button" class="fd-btn fd-btn-centro" data-fd-ir="cartoes">' + ICONES.mais + '<span>Cadastrar conta</span></button>';
     const cartoes = c.cartoes.itens.length
       ? '<p class="fd-legenda" style="margin:0 0 6px">Dívida total nos cartões: <strong class="fd-money">' + esc(fmtU(c.cartoes.divida != null ? c.cartoes.divida : c.cartoes.fatura)) + '</strong>' +
         ' <span style="opacity:.75">(' + c.cartoes.itens.map((k) => esc(k.nome) + ' ' + esc(fmtU(k.fatura))).join(' · ') +
         (c.cartoes.dividaExtra > 0 ? ' · não identificados ' + esc(fmtU(c.cartoes.dividaExtra)) : '') + ')</span></p>' +
         '<ul class="fd-cartoes">' + c.cartoes.itens.map((k) => '<li class="fd-clicavel"' + atalho({ conta: k.nome }) + ' title="Ver as movimentações de ' + esc(k.nome) + '"><div class="fd-cartao-topo"><span>' + esc(k.nome) + '</span><strong>' + k.usoPct + '%</strong></div>' +
         medidor(k.usoPct, k.usoPct >= 85 ? 'fd-m-ruim' : k.usoPct >= 60 ? 'fd-m-medio' : 'fd-m-bom', k.nome + ' ' + k.usoPct + '% do limite') +
-        '<div class="fd-cartao-nota"><span>Fatura ' + dinheiro(k.fatura) + '</span><span>Livre ' + dinheiro(k.disponivel) + '</span></div></li>').join('') + '</ul>'
+        '<div class="fd-cartao-nota"><span>Fatura ' + dinheiro(k.fatura) + '</span><span>' + (k.disponivel < 0 ? 'Acima do limite ' + dinheiro(Math.abs(k.disponivel)) : 'Livre ' + dinheiro(k.disponivel)) + '</span></div></li>').join('') + '</ul>'
       : '';
-    return '<article class="fd-card fd-vidro"><div class="fd-card-topo"><div><h2 class="fd-titulo">Contas e cartões</h2><p class="fd-legenda">Saldos de hoje e uso dos limites</p></div>' +
-      '<button type="button" class="fd-link fd-link-topo" data-fd-ir="cartoes">Gerenciar</button></div>' +
-      '<h3 class="fd-sub-titulo">Contas</h3>' + bancos + (cartoes ? '<h3 class="fd-sub-titulo">Cartões de crédito</h3>' + cartoes : '') + '</article>';
+    return '<article class="fd-card fd-vidro fd-card-contas"><div class="fd-card-topo"><div><h2 class="fd-titulo">Contas e cartões</h2></div>' +
+      (c.bancarias.length || c.cartoes.itens.length ? '<button type="button" class="fd-link fd-link-topo" data-fd-ir="cartoes">Gerenciar</button>' : '') + '</div>' +
+      bancos + (cartoes ? '<h3 class="fd-sub-titulo">Cartões de crédito</h3>' + cartoes : '') + '</article>';
   }
 
   function blocoOrcamentos(m) {
@@ -956,13 +828,29 @@
       '<div class="fd-ult-valor ' + (u.tipo === 'in' ? 'fd-entra' : 'fd-sai') + '">' + dinheiroSinal(u.valor, u.tipo) + '</div></li>').join('') + '</ul>';
   }
 
-  function blocoUltimas(m) {
-    const filtros = [['all', 'Todas'], ['in', 'Receitas'], ['out', 'Despesas']];
-    return '<article class="fd-card fd-vidro fd-card-ultimas"><div class="fd-card-topo"><div><h2 class="fd-titulo">Últimas movimentações</h2><p class="fd-legenda">Só o que já foi pago ou recebido em ' + esc(m.periodo.rotulo) + '</p></div>' +
-      '<div class="fd-topo-acoes"><div class="fd-abas fd-abas-peq" role="group" aria-label="Filtrar movimentações">' + filtros.map(([id, nome]) =>
+  // Lado direito do cabeçalho do cartão de contas: totais da agenda ou filtros + extrato, conforme a aba
+  function ladoAgenda(m, aba) {
+    if (aba === 'ultimas') {
+      const filtros = [['all', 'Todas'], ['in', 'Receitas'], ['out', 'Despesas']];
+      return '<div class="fd-abas fd-abas-peq" role="group" aria-label="Filtrar movimentações">' + filtros.map(([id, nome]) =>
         '<button type="button" class="fd-aba' + (estado.filtro === id ? ' ativa' : '') + '" data-fd-filtro="' + id + '" onclick="NexusDash.filtrarUltimas(\'' + id + '\')">' + nome + '</button>').join('') + '</div>' +
-      '<button type="button" class="fd-link fd-link-topo" id="fdVerExtrato" data-fd-ir="mov"' + (estado.filtro !== 'all' ? ' data-fd-tipo="' + estado.filtro + '"' : '') + '>Ver extrato ' + ICONES.seta + '</button></div></div>' +
-      '<div id="fdUltimas">' + linhasUltimas(m, estado.filtro) + '</div></article>';
+        '<button type="button" class="fd-link fd-link-topo" id="fdVerExtrato" data-fd-ir="mov"' + (estado.filtro !== 'all' ? ' data-fd-tipo="' + estado.filtro + '"' : '') + '>Ver extrato ' + ICONES.seta + '</button>';
+    }
+    const a = m.agenda;
+    // Os dois totais levam às pendências do tipo correspondente
+    return '<div class="fd-resumo-agenda"><span class="fd-clicavel"' + atalho({ tipo: 'out', status: 'Pendente' }) + ' title="Ver as despesas pendentes"><em>A pagar</em>' + dinheiro(a.totalAPagar) + '</span>' +
+      '<span class="fd-clicavel"' + atalho({ tipo: 'in', status: 'Pendente' }) + ' title="Ver as receitas pendentes"><em>A receber</em>' + dinheiro(a.totalAReceber) + '</span></div>';
+  }
+
+  // Um cartão com duas abas no título: "Contas dos próximos 30 dias" e "Últimas movimentações"
+  function blocoAgendaUltimas(m) {
+    const aba = estado.aba === 'ultimas' ? 'ultimas' : 'agenda';
+    const titulos = [['agenda', 'Contas dos próximos 30 dias'], ['ultimas', 'Últimas movimentações']];
+    return '<article class="fd-card fd-vidro fd-card-agenda"><div class="fd-card-topo">' +
+      '<div class="fd-titulo-abas" role="tablist" aria-label="Contas e movimentações">' + titulos.map(([id, nome]) =>
+        '<button type="button" role="tab" class="fd-tab-titulo' + (aba === id ? ' ativa' : '') + '" aria-selected="' + (aba === id) + '" data-fd-aba="' + id + '" onclick="NexusDash.mudarAba(\'' + id + '\')">' + nome + '</button>').join('') + '</div>' +
+      '<div class="fd-topo-acoes" id="fdAgendaLado">' + ladoAgenda(m, aba) + '</div></div>' +
+      '<div id="fdAgendaCorpo">' + (aba === 'ultimas' ? '<div id="fdUltimas">' + linhasUltimas(m, estado.filtro) + '</div>' : corpoAgenda(m)) + '</div></article>';
   }
 
   function blocoVazio() {
@@ -973,12 +861,12 @@
 
   function paginaHtml(m, util) {
     const raiz = (miolo) => '<div class="dashboard-cockpit-frame fd-root">' + cabecalho(m, util) + miolo + '</div>';
-    const baixo = [blocoSaude(m), blocoContas(m), blocoOrcamentos(m)].filter(Boolean);
+    const orcamentos = blocoOrcamentos(m);
     return raiz('<div class="fd-corpo">' +
-      '<div class="fd-linha fd-linha-a">' + blocoSaldo(m) + blocoKpis(m) + '</div>' +
+      blocoKpis(m) +
       '<div class="fd-linha fd-linha-b">' + blocoGrafico(m) + blocoCategorias(m) + '</div>' +
-      '<div class="fd-linha fd-linha-c">' + blocoAgenda(m) + blocoUltimas(m) + '</div>' +
-      '<div class="fd-linha fd-linha-d fd-n' + baixo.length + '">' + baixo.join('') + '</div></div>');
+      '<div class="fd-linha fd-linha-c">' + blocoSaude(m) + blocoAgendaUltimas(m) + blocoContas(m) + '</div>' +
+      (orcamentos ? '<div class="fd-linha fd-linha-d fd-n1">' + orcamentos + '</div>' : '') + '</div>');
   }
 
   // ======================================================================
@@ -1150,10 +1038,13 @@
     const opc = opcoesBase(t, m);
     const hojeIdx = d.hojeIdx;
     opc.scales.x.ticks.callback = function (valor, i) { return d.dias[i]; };
-    // Chave da legenda como traço: a linha cheia (realizado) e a tracejada (projeção) se distinguem sem depender de cor
-    opc.plugins.legend.labels.usePointStyle = false;
-    opc.plugins.legend.labels.boxWidth = 28;
-    opc.plugins.legend.labels.boxHeight = 2;
+    // Barras com o saldo ao fim de cada dia, sempre a partir do zero (a escala não exagera as variações):
+    // verde = realizado, azul = hoje, azul claro = projeção com as pendências. A chave da legenda é um quadradinho.
+    opc.plugins.legend.labels.pointStyle = 'rectRounded';
+    opc.scales.y.beginAtZero = true;
+    // Conta sem movimentação nenhuma: escala de 0 a 100 em vez de R$ -1 / R$ 1 repetidos no eixo
+    const valores = [].concat(d.saldoReal, d.saldoProj).filter((v) => v != null && Math.abs(v) > 0.004);
+    if (!valores.length) { opc.scales.y.min = 0; opc.scales.y.suggestedMax = 100; opc.scales.y.ticks.maxTicksLimit = 4; }
     opc.plugins.tooltip.callbacks = {
       title: (itens) => { const i = itens[0].dataIndex; return diaSemana(chave(m.periodo.ano, m.periodo.mes, d.dias[i])) + ', ' + pad(d.dias[i]) + '/' + pad(m.periodo.mes); },
       label: (c) => ' ' + c.dataset.label + ': ' + fmtU(c.parsed.y),
@@ -1162,27 +1053,24 @@
         return ev.map((e) => (e.tipo === 'in' ? '+ ' : '− ') + e.desc + ' · ' + fmtU(e.valor) + (e.realizado ? '' : ' (previsto)'));
       }
     };
-    // Área sob o realizado: degradê do acento até transparente (calculado com a área útil do gráfico)
-    const degrade = (c) => {
-      const area = c.chart.chartArea;
-      if (!area) return comAlpha(t.accent, 0.12);
-      const g = c.chart.ctx.createLinearGradient(0, area.top, 0, area.bottom);
-      g.addColorStop(0, comAlpha(t.accent, 0.34));
-      g.addColorStop(1, comAlpha(t.accent, 0));
-      return g;
-    };
+    // Cada dia pertence a UMA série: realizado (até ontem), hoje, ou projeção (de amanhã em diante). Mês encerrado = só realizado; mês futuro = só projeção.
+    const antes = (i) => hojeIdx < 0 || i < hojeIdx;
+    const depois = (i) => hojeIdx < 0 || i > hojeIdx;
+    const realizado = d.saldoReal.map((v, i) => (antes(i) ? v : null));
+    const hoje = d.saldoReal.map((v, i) => (i === hojeIdx ? (v != null ? v : d.saldoProj[i]) : null));
+    const projecao = d.saldoProj.map((v, i) => (depois(i) ? v : null));
+    const base = { borderRadius: { topLeft: 3, topRight: 3, bottomLeft: 3, bottomRight: 3 }, borderSkipped: false, maxBarThickness: 18, barPercentage: 0.82, categoryPercentage: 0.94, grouped: false };
     return {
-      type: 'line',
+      type: 'bar',
       data: {
         labels: d.dias.map((x) => String(x)),
         datasets: [
-          { label: 'Saldo realizado', data: d.saldoReal, borderColor: t.accent, backgroundColor: degrade, fill: 'origin', borderWidth: 2, tension: 0.2, spanGaps: false,
-            pointRadius: d.saldoReal.map((v, i) => (i === hojeIdx ? 5 : 0)), pointHoverRadius: 6, pointHitRadius: 18, pointBackgroundColor: t.accent, pointBorderColor: t.surface, pointBorderWidth: 2 },
-          { label: 'Saldo projetado', data: d.saldoProj, borderColor: t.accent, backgroundColor: 'transparent', fill: false, borderWidth: 2, borderDash: [6, 5], tension: 0.2, spanGaps: false,
-            pointRadius: 0, pointHoverRadius: 6, pointHitRadius: 18, pointBackgroundColor: t.accent, pointBorderColor: t.surface, pointBorderWidth: 2 }
+          { label: 'Realizado', data: realizado, backgroundColor: comAlpha(t.entrada, 0.82), ...base },
+          { label: 'Hoje', data: hoje, backgroundColor: t.accent, ...base },
+          { label: 'Projetado', data: projecao, backgroundColor: comAlpha(t.accent, 0.36), borderColor: comAlpha(t.accent, 0.7), borderWidth: 1, ...base }
         ]
       },
-      options: opc, plugins: [plugins.cruz]
+      options: opc
     };
   }
 
@@ -1313,6 +1201,21 @@
     desenhar();
   }
 
+  // Abas do cartão "Contas dos próximos 30 dias" / "Últimas movimentações": troca só o miolo do cartão (sem redesenhar o painel)
+  function mudarAba(aba) {
+    estado.aba = aba === 'ultimas' ? 'ultimas' : 'agenda';
+    if (typeof document === 'undefined' || !estado.modelo) return;
+    document.querySelectorAll('[data-fd-aba]').forEach((b) => {
+      const ativa = b.getAttribute('data-fd-aba') === estado.aba;
+      b.classList.toggle('ativa', ativa);
+      b.setAttribute('aria-selected', String(ativa));
+    });
+    const lado = document.getElementById('fdAgendaLado');
+    if (lado) lado.innerHTML = ladoAgenda(estado.modelo, estado.aba);
+    const corpo = document.getElementById('fdAgendaCorpo');
+    if (corpo) corpo.innerHTML = estado.aba === 'ultimas' ? '<div id="fdUltimas">' + linhasUltimas(estado.modelo, estado.filtro) + '</div>' : corpoAgenda(estado.modelo);
+  }
+
   function alternarTabela() {
     estado.tabela = !estado.tabela;
     if (typeof document === 'undefined') return;
@@ -1337,7 +1240,7 @@
   }
 
   return {
-    calcular, pagina, desenhar, mudarVisao, alternarTabela, filtrarUltimas, estado,
+    calcular, pagina, desenhar, mudarVisao, mudarAba, alternarTabela, filtrarUltimas, estado,
     graficoPrincipal: () => estado.grafico,
     // exportados para os testes
     menorSaldoProjetado, filtrosDeAtalho,
