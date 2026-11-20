@@ -38481,9 +38481,11 @@ async function handleNexusRequest(req, res) {
       const cached = fileCache.get(siteKey);
       let siteHtml = cached && cached.mtimeMs === stat.mtimeMs ? cached.body : null;
       if (!siteHtml) {
+        const gsv = String(process.env.GOOGLE_SITE_VERIFICATION || '').trim();
         siteHtml = Buffer.from(fs.readFileSync(sitePath, 'utf8')
           .replace(/%%V_CSS%%/g, vCss)
           .replace(/%%V_JS%%/g, vJs)
+          .replace(/%%GSV_TAG%%/g, gsv ? '<meta name="google-site-verification" content="' + gsv + '">' : '')
           .replace(/%%PRECO_LABEL%%/g, SUBSCRIPTION_MONTHLY_LABEL)
           .replace(/%%PRECO_INT%%/g, SUBSCRIPTION_MONTHLY_INT)
           .replace(/%%PRECO_CENTS%%/g, SUBSCRIPTION_MONTHLY_CENTS), 'utf8');
