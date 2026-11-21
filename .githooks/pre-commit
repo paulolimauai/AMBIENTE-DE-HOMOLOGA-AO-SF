@@ -1,0 +1,4 @@
+#!/bin/sh
+# Barra, ANTES do commit, senha/chave/token/hash e dados de clientes (ver scripts/verificar_segredos.js).
+# Ativado com: git config core.hooksPath .githooks   (npm run proteger:git faz isso)
+node scripts/verificar_segredos.js --staged || exit 1

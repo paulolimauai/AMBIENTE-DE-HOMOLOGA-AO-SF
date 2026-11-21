@@ -16,7 +16,7 @@ function jwt(user) {
   const s = crypto.createHmac('sha256', SECRET).update(h + '.' + p).digest('base64url');
   return h + '.' + p + '.' + s;
 }
-const USER = { id: '1', email: 'paulolp0101@gmail.com', name: 'Paulo Lima', role: 'Administrador', active: true, device_type: 'Computador', terms_accepted: true, subscription_status: 'ativo', subscription_plan: 'mensal' };
+const USER = { id: '1', email: process.env.NEXUS_DIAG_EMAIL || 'diag@teste.nexus', name: 'Paulo Lima', role: 'Administrador', active: true, device_type: 'Computador', terms_accepted: true, subscription_status: 'ativo', subscription_plan: 'mensal' };
 const TOKEN = jwt(USER);
 
 const WIDTHS = [390, 600, 768, 861, 1024, 1180, 1280, 1366, 1440, 1600, 1920, 2560];

@@ -24,6 +24,9 @@ services:
       # sync:false = o blueprint declara a variavel mas NAO grava o valor (ele fica no dashboard).
       - key: NEXUS_SYNC_TOKEN
         sync: false
+      # E-mail da conta proprietaria (acesso total). Fica so no painel e no .env do PC: nunca no codigo, no HTML do site nem no Git.
+      - key: NEXUS_OWNER_EMAIL
+        sync: false
       - key: JWT_SECRET
         sync: false
       - key: SUPABASE_URL

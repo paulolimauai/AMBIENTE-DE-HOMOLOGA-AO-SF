@@ -9,7 +9,7 @@ const AGORA = '2026-11-06T15:00:00.000Z';
 const pedidoValido = () => ({
   client_name: '  Maria   da Silva ',
   client_email: 'Maria@Exemplo.com',
-  client_phone: '62992345372',
+  client_phone: '62988887777',
   client_cpf: '529.982.247-25',
   service_type: 'reset de senha',
   priority: 'alta',
@@ -72,7 +72,7 @@ test('validarAbertura normaliza e escapa o pedido do público', () => {
   const d = r.dados;
   assert.equal(d.client_name, 'Maria da Silva');
   assert.equal(d.client_email, 'maria@exemplo.com');
-  assert.equal(d.client_phone, '(62) 99234-5372');
+  assert.equal(d.client_phone, '(62) 98888-7777');
   assert.equal(d.client_cpf, '52998224725');
   assert.equal(d.service_type, 'Reset de senha');
   assert.equal(d.ticket_type, 'Requisição'); // sem escolha, vale o tipo sugerido pela categoria
@@ -123,8 +123,8 @@ test('validarAbertura descarta CPF inválido sem barrar o chamado e telefone é 
 });
 
 test('validarAbertura aceita telefone com +55 e formata', () => {
-  const r = A.validarAbertura({ ...pedidoValido(), client_phone: '+55 (62) 99234-5372' });
-  assert.equal(r.dados.client_phone, '+55 (62) 99234-5372');
+  const r = A.validarAbertura({ ...pedidoValido(), client_phone: '+55 (62) 98888-7777' });
+  assert.equal(r.dados.client_phone, '+55 (62) 98888-7777');
   const fixo = A.validarAbertura({ ...pedidoValido(), client_phone: '6232345372' });
   assert.equal(fixo.dados.client_phone, '(62) 3234-5372');
 });
@@ -266,28 +266,28 @@ test('mesclarOrdens: banco vence, o que só existe localmente é mantido, mais r
 test('classificarConsulta separa protocolo, e-mail, número e inválido', () => {
   assert.deepEqual(A.classificarConsulta('#OS-261106-K7QX'), { tipo: 'protocolo', valor: 'OS-261106-K7QX' });
   assert.deepEqual(A.classificarConsulta(' Maria@Exemplo.com '), { tipo: 'email', valor: 'maria@exemplo.com' });
-  assert.deepEqual(A.classificarConsulta('(62) 99234-5372'), { tipo: 'numero', valor: '62992345372' });
-  assert.deepEqual(A.classificarConsulta('040.233.261-00'), { tipo: 'numero', valor: '04023326100' });
+  assert.deepEqual(A.classificarConsulta('(62) 98888-7777'), { tipo: 'numero', valor: '62988887777' });
+  assert.deepEqual(A.classificarConsulta('529.982.247-25'), { tipo: 'numero', valor: '52998224725' });
   for (const ruim of ['', 'maria', 'ab', '123', 'maria@', "' OR 1=1 --", '%']) {
     assert.equal(A.classificarConsulta(ruim).tipo, 'invalida', ruim);
   }
 });
 
 test('ordemCorresponde exige correspondência exata (não aceita pedaço de e-mail, nome ou título)', () => {
-  const ordem = { protocol: 'OS-24448467', client_email: 'paulolp0101@gmail.com', client_phone: '(62) 99234-5372', client_cpf: '04023326100', client_name: 'PAULO', title: 'ajuste' };
+  const ordem = { protocol: 'OS-24448467', client_email: 'cliente.exemplo@teste.nexus', client_phone: '(62) 98888-7777', client_cpf: '52998224725', client_name: 'PAULO', title: 'ajuste' };
   assert.ok(A.ordemCorresponde(ordem, A.classificarConsulta('os-24448467')));
-  assert.ok(A.ordemCorresponde(ordem, A.classificarConsulta('PauloLP0101@gmail.com')));
-  assert.ok(A.ordemCorresponde(ordem, A.classificarConsulta('62992345372')));
-  assert.ok(A.ordemCorresponde(ordem, A.classificarConsulta('+55 62 99234-5372')));
-  assert.ok(A.ordemCorresponde(ordem, A.classificarConsulta('040.233.261-00')));
-  assert.ok(!A.ordemCorresponde(ordem, A.classificarConsulta('paulolp0101@gmail.co')));
-  assert.ok(!A.ordemCorresponde(ordem, A.classificarConsulta('99234-5372')));
+  assert.ok(A.ordemCorresponde(ordem, A.classificarConsulta('Cliente.Exemplo@teste.nexus')));
+  assert.ok(A.ordemCorresponde(ordem, A.classificarConsulta('62988887777')));
+  assert.ok(A.ordemCorresponde(ordem, A.classificarConsulta('+55 62 98888-7777')));
+  assert.ok(A.ordemCorresponde(ordem, A.classificarConsulta('529.982.247-25')));
+  assert.ok(!A.ordemCorresponde(ordem, A.classificarConsulta('cliente.exemplo@teste.nexu')));
+  assert.ok(!A.ordemCorresponde(ordem, A.classificarConsulta('98888-7777')));
   assert.ok(!A.ordemCorresponde(ordem, { tipo: 'invalida' }));
 });
 
 test('visaoPublica nunca expõe dados pessoais, parecer interno nem id; resumo não mostra título/descrição', () => {
   const ordem = {
-    id: 6, protocol: 'OS-24448467', client_name: 'PAULO', client_email: 'p@x.com', client_phone: '62999999999', client_cpf: '04023326100',
+    id: 6, protocol: 'OS-24448467', client_name: 'PAULO', client_email: 'p@x.com', client_phone: '62999999999', client_cpf: '52998224725',
     service_type: 'Dados Cadastrais', priority: 'Alta', title: 'ajuste', description: 'bug no cartão', status: 'Resolvido',
     admin_notes: 'Protocolo LIB-ADMIN-PIX interno', tecnico_responsavel: 'Carlos', assumido_em: AGORA, canal_atendimento: 'Tela de Login',
     concluido_em: 'Nov  2 2026 12:24PM', created_at: AGORA, updated_at: AGORA
@@ -296,7 +296,7 @@ test('visaoPublica nunca expõe dados pessoais, parecer interno nem id; resumo n
   const resumo = A.visaoPublica(ordem);
   for (const visao of [completo, resumo]) {
     const texto = JSON.stringify(visao);
-    for (const segredo of ['PAULO', 'p@x.com', '62999999999', '04023326100', 'LIB-ADMIN-PIX', '"id"', 'admin_notes', 'client_']) {
+    for (const segredo of ['PAULO', 'p@x.com', '62999999999', '52998224725', 'LIB-ADMIN-PIX', '"id"', 'admin_notes', 'client_']) {
       assert.ok(!texto.includes(segredo), 'vazou: ' + segredo);
     }
   }

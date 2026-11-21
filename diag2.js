@@ -12,7 +12,7 @@ function jwt(user) {
   const p = b64({ id: user.id, email: user.email, name: user.name, role: user.role, iat: Math.floor(Date.now() / 1000), iatMs: Date.now(), exp: Math.floor(Date.now() / 1000) + 7 * 24 * 3600 });
   return h + '.' + p + '.' + crypto.createHmac('sha256', SECRET).update(h + '.' + p).digest('base64url');
 }
-const USER = { id: '1', email: 'paulolp0101@gmail.com', name: 'Paulo Lima', role: 'Administrador', active: true };
+const USER = { id: '1', email: process.env.NEXUS_DIAG_EMAIL || 'diag@teste.nexus', name: 'Paulo Lima', role: 'Administrador', active: true };
 const TOKEN = jwt(USER);
 
 (async () => {

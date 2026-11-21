@@ -12,7 +12,7 @@ function jwt(u) {
   const p = b({ id: u.id, email: u.email, name: u.name, role: u.role, iat: Math.floor(Date.now() / 1000), iatMs: Date.now(), exp: Math.floor(Date.now() / 1000) + 604800 });
   return h + '.' + p + '.' + crypto.createHmac('sha256', SECRET).update(h + '.' + p).digest('base64url');
 }
-const U = { id: '1', email: 'paulolp0101@gmail.com', name: 'Paulo Lima', role: 'Administrador', active: true };
+const U = { id: '1', email: process.env.NEXUS_DIAG_EMAIL || 'diag@teste.nexus', name: 'Paulo Lima', role: 'Administrador', active: true };
 const T = jwt(U);
 const PAGES = ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'config', 'usuarios', 'assinaturas', 'pagamentos', 'logs'];
 const WIDTHS = [390, 768, 1366, 1920];

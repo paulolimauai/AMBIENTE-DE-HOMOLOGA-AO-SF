@@ -87,3 +87,12 @@ backups_contas/
 # Estado do segundo espelho (PC -> Supabase direto)
 supabase_sync_state.nuvem.json
 supabase_sync_state.nuvem.json.tmp
+
+# Segredos e dados sensiveis: SO neste computador (e nas variaveis do painel do Render). Nunca no Git; o hook .githooks/pre-commit tambem barra o commit.
+.nexus_*
+.tmp_tok*
+.env.*
+!.env.example
+diag-out.txt
+diag3-out.txt
+*.novo

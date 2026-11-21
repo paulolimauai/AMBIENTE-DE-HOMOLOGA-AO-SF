@@ -72,7 +72,7 @@ test.before(async () => {
   const seed = { 'local_users.json': usuarios, 'local_users.backup.json': usuarios, 'deleted_accounts.json': [], 'local_database_data.json': {}, 'local_database_data.backup.json': {}, 'cpf_registry.json': {}, 'cpf_registry.backup.json': {}, 'local_ordens_servico.json': [], 'local_tecnicos.json': [], 'local_filas.json': require('./atendimento').filasIniciais(), 'pending_logins.json': [], 'system_logs.json': [] };
   for (const [nome, conteudo] of Object.entries(seed)) fs.writeFileSync(path.join(pasta, nome), JSON.stringify(conteudo, null, 2));
   porta = await portaLivre();
-  const env = { ...process.env, PORT: String(porta), NEXUS_DATA_DIR: pasta, NEXUS_DEPOIMENTOS_FILE: path.join(pasta, 'depoimentos.json'), NEXUS_DISABLE_DB: '1', NEXUS_COBRANCA_AUTO: '0', JWT_SECRET, NEXUS_SYNC_TOKEN: SYNC_TOKEN, RENDER_CLOUD_URL: 'https://127.0.0.1:9', TRUST_PROXY: '1' };
+  const env = { ...process.env, PORT: String(porta), NEXUS_DATA_DIR: pasta, NEXUS_DEPOIMENTOS_FILE: path.join(pasta, 'depoimentos.json'), NEXUS_DISABLE_DB: '1', NEXUS_COBRANCA_AUTO: '0', JWT_SECRET, NEXUS_SYNC_TOKEN: SYNC_TOKEN, NEXUS_OWNER_EMAIL: 'dono@teste.nexus', NEXUS_RESERVED_EMAILS: 'reservado@teste.nexus', RENDER_CLOUD_URL: 'https://127.0.0.1:9', TRUST_PROXY: '1' };
   delete env.RENDER; delete env.IS_RENDER; delete env.NEXUS_ALLOW_DB_RESET;
   proc = spawn(process.execPath, ['server.js'], { cwd: __dirname, env, stdio: ['ignore', 'pipe', 'pipe'] });
   proc.stdout.on('data', (d) => { logSaida += d.toString(); });
@@ -166,7 +166,7 @@ test('sessão única: telas e script compartilhado são servidos e o login só d
   }
   // as telas do administrador não podem ter voltado a ter formulário de login próprio
   const painel = (await api('GET', '/admin-assinaturas-glpi.html')).texto;
-  assert.ok(!/id="lf"|id="demo"|paulolp0101@gmail\.com"\s*>|type="password"/.test(painel), 'painel do admin não tem login próprio');
+  assert.ok(!/id="lf"|id="demo"|[A-Za-z0-9._-]+@gmail\.com"\s*>|type="password"/.test(painel), 'painel do admin não tem login próprio');
   assert.ok(painel.includes('/nexus-sso.js') && painel.includes('NexusSSO.exigirAdmin'), 'painel usa o porteiro compartilhado');
   // Os botões do painel usam onclick="blk(..)" etc. (escopo global): se as funções reais não forem expostas em window, valem as de demonstração,
   // que só mexem no cache do navegador — "Bloquear" parecia funcionar na tela e o servidor nunca era avisado.
@@ -1116,7 +1116,7 @@ test('sessões abertas também caem ao redefinir a senha ou excluir a conta, cad
 
 test('conta proprietária: bloquear é RECUSADO com o motivo (antes devolvia "success" e não fazia nada), não é carimbada e ninguém toma a senha dela', async () => {
   const admin = (await login('admin@teste.nexus', 'Admin@12345')).token;
-  const dono = 'paulo.pereira@nexusfinanceirohub.com.br';   // a conta proprietária é a que está em OWNER_EMAIL (server.js)
+  const dono = 'dono@teste.nexus';   // a conta proprietária é a que está em NEXUS_OWNER_EMAIL (o teste define no ambiente do servidor)
   await criarContaDeTeste(admin, dono, 'Dono@12345');
   const estado = async () => (await listaDeUsuarios(admin)).find((u) => u.email === dono);
   const antes = await estado();
@@ -1161,9 +1161,9 @@ test('conta proprietária: bloquear é RECUSADO com o motivo (antes devolvia "su
   assert.equal((await api('DELETE', '/api/users?email=' + dono, { token: admin })).status, 403, 'e a proprietária também não é excluída');
 });
 
-test('a antiga proprietária (paulolp0101@gmail.com) virou conta comum: sem poder de administrador, o login não a promove de volta e ela pode ser bloqueada e excluída', async () => {
+test('a antiga proprietária (antiga.dona@teste.nexus) virou conta comum: sem poder de administrador, o login não a promove de volta e ela pode ser bloqueada e excluída', async () => {
   const admin = (await login('admin@teste.nexus', 'Admin@12345')).token;
-  const antiga = 'paulolp0101@gmail.com';
+  const antiga = 'antiga.dona@teste.nexus';
   await criarContaDeTeste(admin, antiga, 'Antiga@12345');
   const sessao = await login(antiga, 'Antiga@12345');
   assert.equal(sessao.success, true);
@@ -1177,14 +1177,42 @@ test('a antiga proprietária (paulolp0101@gmail.com) virou conta comum: sem pode
   // pode ser bloqueada e excluída como qualquer conta comum
   assert.equal((await api('POST', '/api/users', { token: admin, body: [{ email: antiga, name: 'Antiga', active: false }] })).status, 200);
   assert.equal((await api('DELETE', '/api/users?email=' + antiga, { token: admin })).status, 200);
-  // o app não carrega mais o e-mail da antiga: a proprietária vem do servidor (uma constante só) e o painel usa is_owner
+  // o HTML do app é público (qualquer visitante lê, sem login): NENHUM e-mail de proprietária, nem a atual nem a antiga, pode estar nele; o app usa is_owner
   const app = (await api('GET', '/')).texto;
-  assert.ok(app.includes("const NEXUS_OWNER_EMAIL = 'paulo.pereira@nexusfinanceirohub.com.br';"), 'o app recebe a proprietária do servidor');
+  assert.ok(!app.toLowerCase().includes('dono@teste.nexus'), 'o e-mail da proprietária atual está escrito no HTML público do app');
+  assert.ok(!app.includes('NEXUS_OWNER_EMAIL'), 'o app não tem mais a constante com o e-mail da proprietária');
+  assert.ok(app.includes('u.is_owner === true'), 'o app reconhece a proprietária pela marca is_owner do servidor');
   assert.ok(!app.toLowerCase().includes(antiga), 'o app não repete o e-mail da antiga proprietária');
   const painel = (await api('GET', '/admin-assinaturas-glpi.html')).texto;
   assert.ok(!painel.toLowerCase().includes(antiga) && painel.includes('u.is_owner===true'), 'o painel reconhece a proprietária pela marca is_owner, sem e-mail fixo');
 });
 
+test('e-mail RESERVADO: o cadastro público nunca o cria (mesmo com a lista vazia); só a sincronização interna cria; o login e a sessão marcam is_owner da proprietária', async () => {
+  const admin = (await login('admin@teste.nexus', 'Admin@12345')).token;
+  const reservado = 'reservado@teste.nexus';   // definido em NEXUS_RESERVED_EMAILS (a proprietária entra na mesma lista; ver RESERVED_EMAILS no server.js)
+  assert.ok(!(await listaDeUsuarios(admin)).some((u) => u.email === reservado), 'pré-condição: nenhuma conta com esse e-mail');
+  const corpo = { name: 'Pessoa Qualquer', email: reservado, password: 'Atacante@2026', cpf: '93541134780', terms_accepted: true, truthful_declaration: true };
+  const publico = await api('POST', '/api/register', { body: corpo });
+  assert.equal(publico.status, 409, 'cadastro público do e-mail reservado devia ser recusado: ' + publico.texto);
+  assert.equal(publico.json.errorType, 'email_exists');
+  assert.equal(publico.json.error, 'Este e-mail já possui cadastro.', 'a resposta não revela que o e-mail é reservado');
+  const variacao = await api('POST', '/api/register', { body: { ...corpo, email: '  RESERVADO@Teste.Nexus ' } });
+  assert.equal(variacao.status, 409, 'caixa/espaço não burlam a reserva: ' + variacao.texto);
+  assert.ok(!(await listaDeUsuarios(admin)).some((u) => u.email === reservado), 'o cadastro público criou a conta reservada');
+  // a sincronização interna (token + senha já em hash) continua podendo criar a conta
+  const interno = await api('POST', '/api/register', { headers: { 'X-Nexus-Sync-Token': SYNC_TOKEN }, body: { name: 'Dona Verdadeira', email: reservado, password_hash: hashPwd('Dona@12345'), cpf: '93541134780', terms_accepted: true, truthful_declaration: true } });
+  assert.equal(interno.status, 200, interno.texto);
+  assert.equal((await api('DELETE', '/api/users?email=' + reservado, { token: admin })).status, 200);
+  // a proprietária atual (NEXUS_OWNER_EMAIL) vem marcada pelo servidor no login e na sessão, e conta comum nunca é marcada
+  const entrou = await api('POST', '/api/login', { body: { email: 'dono@teste.nexus', password: 'Dono@12345' } });
+  assert.equal(entrou.status, 200, entrou.texto);
+  assert.equal(entrou.json.user.is_owner, true, 'o login devolve a marca is_owner para o app (que não tem mais o e-mail no HTML)');
+  assert.equal(entrou.json.user.role, 'Administrador');
+  const sessao = await api('GET', '/api/auth/session', { token: entrou.json.token });
+  assert.equal(sessao.json.user.is_owner, true, 'a sessão também marca is_owner');
+  const comum = await api('POST', '/api/login', { body: { email: 'ana@teste.nexus', password: 'Ana@12345' } });
+  assert.equal(comum.json.user.is_owner, undefined, 'conta comum nunca é marcada');
+});
 test('excluir conta registra tombstone com motivo e o histórico só abre para administrador', async () => {
   const admin = (await login('admin@teste.nexus', 'Admin@12345')).token;
   const ana = (await login('ana@teste.nexus', 'Ana@12345')).token;

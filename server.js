@@ -98,9 +98,9 @@ const JWT_SECRET = loadOrCreateJwtSecret();
 // Token de sincronização interna (Render <-> servidor local). Vem de NEXUS_SYNC_TOKEN; sem ele é DERIVADO do JWT_SECRET (HMAC),
 // de modo que o próprio segredo de assinatura nunca é enviado pela rede (antes o token era o JWT_SECRET puro, mandado à nuvem a cada 10 s).
 // Os dois lados continuam precisando do mesmo JWT_SECRET (ou do mesmo NEXUS_SYNC_TOKEN) para se entenderem.
-// Credencial de sincronização compartilhada: NEXUS_SYNC_TOKEN (ambiente) > arquivo versionado .nexus_sync_token > derivação do JWT_SECRET.
-// O arquivo versionado existe porque o Render não recebe variáveis de ambiente novas sem acesso ao painel: sem um segredo
-// comum aos dois lados, o espelho de usuários da nuvem fica vazio e ninguém consegue entrar no site oficial.
+// Credencial de sincronização compartilhada: NEXUS_SYNC_TOKEN (ambiente: .env deste computador e variável do painel do Render) > arquivo LOCAL .nexus_sync_token
+// (fora do Git: .gitignore e o verificador de segredos o barram) > derivação do JWT_SECRET. NUNCA vai para o repositório: quem lê o token vira administrador
+// de tudo (lista de contas com hash, dados financeiros, escrita de contas). O nome "committed" é histórico: o arquivo não é mais versionado.
 function loadCommittedSyncToken() {
   try {
     const tokenFile = process.env.NEXUS_SYNC_TOKEN_FILE || path.join(__dirname, '.nexus_sync_token');
@@ -115,11 +115,25 @@ const SYNC_TOKEN = EXPLICIT_SYNC_TOKEN || BackendUtils.deriveSyncToken(JWT_SECRE
 const LEGACY_SYNC_TOKEN = EXPLICIT_SYNC_TOKEN ? '' : JWT_SECRET;
 
 // Conta proprietária do sistema: acesso total garantido pelo servidor (nunca é rebaixada, bloqueada ou excluída).
-// É a ÚNICA conta administradora por e-mail: o app (nexusIsAdminUser...) e o painel recebem esta conta daqui, nada repete o e-mail no cliente.
-// Em 20/11/2026 a propriedade passou de paulolp0101@gmail.com para esta conta; a antiga virou conta comum.
-const OWNER_EMAIL = 'paulo.pereira@nexusfinanceirohub.com.br';
+// É a ÚNICA conta administradora por e-mail. O e-mail NÃO fica no repositório nem no HTML das páginas: vem de NEXUS_OWNER_EMAIL (arquivo .env deste
+// computador / variável do painel do Render) ou do arquivo local .nexus_owner (fora do Git). O cliente reconhece a proprietária pela marca `is_owner`
+// que o servidor coloca no cadastro (sanitizeUser), nunca por e-mail.
+function loadOwnerEmail() {
+  const doAmbiente = String(process.env.NEXUS_OWNER_EMAIL || '').toLowerCase().trim();
+  if (doAmbiente) return doAmbiente;
+  try { return fs.readFileSync(path.join(__dirname, '.nexus_owner'), 'utf8').toLowerCase().trim(); } catch (e) { return ''; }
+}
+// TRANSIÇÃO (remover depois que NEXUS_OWNER_EMAIL estiver no painel do Render): enquanto a variável não existe lá, o valor antigo evita que a nuvem
+// perca a proprietária. Em qualquer ambiente com a variável definida (este computador) o valor abaixo nunca é usado.
+const OWNER_EMAIL = loadOwnerEmail() || 'paulo.pereira@nexusfinanceirohub.com.br';   // nexus-segredos:permitir (transição; sai quando o Render tiver NEXUS_OWNER_EMAIL)
 function isOwnerEmail(email) {
-  return String(email || '').toLowerCase().trim() === OWNER_EMAIL;
+  return Boolean(OWNER_EMAIL) && String(email || '').toLowerCase().trim() === OWNER_EMAIL;
+}
+// E-mails que o cadastro PÚBLICO nunca aceita (a proprietária e, opcionalmente, outros em NEXUS_RESERVED_EMAILS, separados por vírgula): num servidor recém-reiniciado
+// e sem contas, quem cadastrasse o e-mail da proprietária virava administrador. A sincronização interna (com o token) continua podendo criar a conta.
+const RESERVED_EMAILS = new Set([OWNER_EMAIL].concat(String(process.env.NEXUS_RESERVED_EMAILS || '').split(',')).map(e => String(e || '').toLowerCase().trim()).filter(Boolean));
+function isReservedEmail(email) {
+  return RESERVED_EMAILS.has(String(email || '').toLowerCase().trim());
 }
 
 if (process.env.NEXUS_DATA_DIR) {
@@ -20768,9 +20782,8 @@ const DEFAULT_TRANSACTIONS = [];
 
 function isCurrentAdmin() {
   if (!currentUser) return false;
-  if (currentUser.role === 'Administrador') return true;
-  const e = (currentUser.email || '').toLowerCase().trim();
-  return e === 'admin@nexusfinanceiro.com';
+  // Só pelo papel que o servidor devolve (e pela marca da proprietária): nenhum e-mail escrito no código dá poder de administrador
+  return currentUser.role === 'Administrador' || currentUser.is_owner === true;
 }
 
 function resetUserDataState() {
@@ -21531,18 +21544,18 @@ function pd(day){ return pdCustom(currentPeriod.year, currentPeriod.month, day);
 // hash da URL, página salva no navegador e render() usam esta mesma fonte (a primeira página é o destino padrão).
 const NEXUS_ADMIN_PAGES = ['usuarios', 'assinaturas', 'pagamentos', 'logs'];
 const NEXUS_USER_PAGES = ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'config'];
-const NEXUS_OWNER_EMAIL = '${OWNER_EMAIL}';   // vem do servidor (OWNER_EMAIL): único lugar onde o e-mail da proprietária é escrito
-function nexusIsAdminUser(u) { return !!(u && (u.role === 'Administrador' || String(u.email || '').toLowerCase().trim() === NEXUS_OWNER_EMAIL)); }
+// A proprietária vem MARCADA pelo servidor (is_owner, calculado em sanitizeUser): o e-mail dela nunca é escrito no HTML (qualquer visitante lê o HTML da página).
+function nexusIsAdminUser(u) { return !!(u && (u.role === 'Administrador' || u.is_owner === true)); }
 // A conta proprietária é administradora por definição: normaliza o papel no objeto do cliente para que caches
 // antigos (nexus_cached_user, nexus_users) com role defasado não escondam o perfil admin na tela.
 function nexusGarantirPerfil(u) {
-  if (u && String(u.email || '').toLowerCase().trim() === NEXUS_OWNER_EMAIL && u.role !== 'Administrador') u.role = 'Administrador';
+  if (u && u.is_owner === true && u.role !== 'Administrador') u.role = 'Administrador';
   return u;
 }
 // Permissões delegadas: o administrador marca, conta a conta, ações extras para um usuário comum (lista "permissions" vinda do servidor).
 // Aqui só se decide o que MOSTRAR; quem realmente autoriza cada ação é o servidor.
 const NEXUS_DELEGATE_PAGES = ['liberacoes'];
-function nexusTemPermissao(u, id) { return !!u && ((u.role === 'Administrador' || String(u.email || '').toLowerCase().trim() === NEXUS_OWNER_EMAIL) || (Array.isArray(u.permissions) && u.permissions.indexOf(id) >= 0)); }
+function nexusTemPermissao(u, id) { return !!u && ((u.role === 'Administrador' || u.is_owner === true) || (Array.isArray(u.permissions) && u.permissions.indexOf(id) >= 0)); }
 function nexusTemLiberacoes(u) {
   return !!u && !nexusIsAdminUser(u) && (nexusTemPermissao(u, 'assinatura.liberar') || nexusTemPermissao(u, 'contas.bloquear') || nexusTemPermissao(u, 'logs.ver'));
 }
@@ -35237,6 +35250,13 @@ async function handleNexusRequest(req, res) {
           return res.end(JSON.stringify({ success: false, error: 'Informe o celular com DDD (10 ou 11 dígitos).', errorType: 'invalid_phone' }));
         }
 
+        // E-mail reservado (proprietária): o cadastro PÚBLICO nunca o cria, mesmo com a lista vazia (servidor recém-reiniciado, disco novo). A resposta é a mesma
+        // de um e-mail já cadastrado, para não revelar qual é. Só a sincronização interna (com o token, senha já em hash) pode criar a conta.
+        if (!syncPasswordHash && isReservedEmail(cleanEmail)) {
+          console.warn('[CADASTRO RECUSADO] E-mail reservado: tentativa de cadastro público (' + String(getClientIp(req) || 'ip?') + ').');
+          res.writeHead(409, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'Este e-mail já possui cadastro.', errorType: 'email_exists' }));
+        }
         const localUsersBeforeRegister = getLocalUsers();
         const existingLocalEmail = localUsersBeforeRegister.find(user => user && String(user.email || '').toLowerCase().trim() === cleanEmail);
         if (existingLocalEmail) {
@@ -36191,7 +36211,8 @@ async function handleNexusRequest(req, res) {
         name: sessaoUser.name || String(sessaoUser.email || '').split('@')[0],
         email: String(sessaoUser.email || '').toLowerCase().trim(),
         role: sessaoAdmin ? 'Administrador' : (sessaoUser.role || 'Usuário'),
-        isAdmin: sessaoAdmin
+        isAdmin: sessaoAdmin,
+        ...(isOwnerEmail(sessaoUser.email) ? { is_owner: true } : {})   // as telas reconhecem a proprietária por esta marca (o e-mail dela não está mais no HTML)
       }
     });
   }

@@ -27,11 +27,41 @@ console.log('[build] Sintaxe OK em ' + jsFiles.length + ' arquivos.');
 fs.rmSync(DIST, { recursive: true, force: true });
 fs.mkdirSync(DIST, { recursive: true });
 
-const staticFiles = fs.readdirSync(ROOT).filter((f) =>
-  /\.(html|css|js|png|jpg|jpeg|svg|ico|webmanifest|txt|json)$/i.test(f) &&
-  !f.endsWith('.test.js') &&
-  !['package.json', 'package-lock.json'].includes(f)
-);
+// O QUE VAI PARA O SITE (dist/ é público na internet). Regras, todas ao mesmo tempo:
+//  1) só arquivo VERSIONADO no Git (o que o Git ignora — dados de clientes, cofre, estados locais, .env, .nexus_* — nunca é copiado, mesmo que exista nesta pasta);
+//  2) só o que o NAVEGADOR usa: html, css, imagens, manifest e os .js de tela listados abaixo (a mesma lista que o servidor entrega em STATIC_EXACT_FILES);
+//  3) nunca .json/.txt (dados e diagnósticos), nunca teste, nunca código do servidor (server.js, supabase-sync.js, credenciais, cofre, sincronização...).
+// Tudo que ficar de fora continua sendo atendido pelo servidor no Render (o Worker repassa o que não está em dist/).
+const JS_DO_NAVEGADOR = new Set([
+  'dashboard-financeiro.js', 'importacao.js', 'transacoes.js', 'administracao.js', 'assinaturas.js', 'pagamentos-admin.js',
+  'site-inicial.js', 'admin-site.js', 'admin-liberacao.js', 'admin-visitas.js', 'nexus-sso.js'
+]);
+// A fonte da verdade é o mapa STATIC_EXACT_FILES do server.js (o que o servidor entrega ao navegador): quando um .js de tela novo entra lá, entra aqui sozinho.
+try {
+  const fonte = fs.readFileSync(path.join(ROOT, 'server.js'), 'utf8');
+  const ini = fonte.indexOf('const STATIC_EXACT_FILES = {');
+  const bloco = ini >= 0 ? fonte.slice(ini, fonte.indexOf('};', ini)) : '';
+  for (const m of bloco.matchAll(/'\/([A-Za-z0-9_\-.]+\.js)'\s*:/g)) JS_DO_NAVEGADOR.add(m[1]);
+} catch (e) { /* mantém a lista fixa acima */ }
+function arquivosVersionados() {
+  try {
+    const lista = execFileSync('git', ['-c', 'core.quotepath=false', 'ls-files', '-z'], { cwd: ROOT, encoding: 'utf8', maxBuffer: 1 << 26 }).split('\0').filter(Boolean);
+    return new Set(lista.filter((f) => !f.includes('/')));
+  } catch (e) {
+    console.warn('[build] git indisponível (' + e.message.split('\n')[0] + '): sem o filtro de arquivos versionados; valem só as regras 2 e 3.');
+    return null;
+  }
+}
+const versionados = arquivosVersionados();
+const SENSIVEL = /^(\.|local_|cofre_|backups_|deleted_accounts|cpf_registry|system_logs|pending_logins|sql_vigia|supabase_sync|espelho_|page\.html$|script5\.js$)/;
+const staticFiles = fs.readdirSync(ROOT).filter((f) => {
+  if (!fs.statSync(path.join(ROOT, f)).isFile()) return false;
+  if (versionados && !versionados.has(f)) return false;
+  if (SENSIVEL.test(f) || f.endsWith('.test.js')) return false;
+  if (/\.(html|css|png|jpg|jpeg|svg|ico|webmanifest)$/i.test(f)) return true;
+  if (/\.js$/i.test(f)) return JS_DO_NAVEGADOR.has(f);
+  return false;
+});
 for (const f of staticFiles) {
   fs.copyFileSync(path.join(ROOT, f), path.join(DIST, f));
 }

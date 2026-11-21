@@ -17,7 +17,7 @@ function jwt(user) {
   return h + '.' + p + '.' + s;
 }
 
-const USER = { id: '1', email: 'paulolp0101@gmail.com', name: 'Paulo Lima', role: 'Administrador', active: true, device_type: 'Computador', terms_accepted: true, subscription_status: 'ativo', subscription_plan: 'mensal' };
+const USER = { id: '1', email: process.env.NEXUS_DIAG_EMAIL || 'diag@teste.nexus', name: 'Paulo Lima', role: 'Administrador', active: true, device_type: 'Computador', terms_accepted: true, subscription_status: 'ativo', subscription_plan: 'mensal' };
 const TOKEN = jwt(USER);
 
 const WIDTHS = [

@@ -1,0 +1,3 @@
+# O hook roda em sh: fim de linha LF sempre
+.githooks/* text eol=lf
+*.sh text eol=lf

@@ -120,8 +120,8 @@ test('sanitizeDeviceType: só texto curto e comum', () => {
 test('normalizePhoneInput: aceita DDD + 10/11 dígitos (com ou sem +55) e rejeita o resto', () => {
   assert.deepEqual(U.normalizePhoneInput(''), { ok: true, value: null });
   assert.deepEqual(U.normalizePhoneInput(null), { ok: true, value: null });
-  assert.deepEqual(U.normalizePhoneInput('(62) 99234-5372'), { ok: true, value: '(62) 99234-5372' });
-  assert.deepEqual(U.normalizePhoneInput('+55 62 99234 5372'), { ok: true, value: '(62) 99234-5372' });
+  assert.deepEqual(U.normalizePhoneInput('(62) 98888-7777'), { ok: true, value: '(62) 98888-7777' });
+  assert.deepEqual(U.normalizePhoneInput('+55 62 98888 7777'), { ok: true, value: '(62) 98888-7777' });
   assert.deepEqual(U.normalizePhoneInput('6232345372'), { ok: true, value: '(62) 3234-5372' });
   assert.equal(U.normalizePhoneInput('123').ok, false);
   assert.equal(U.normalizePhoneInput('<script>').ok, false);
