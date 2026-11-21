@@ -26,6 +26,7 @@ if (!DB_DISABLED) {
 }
 const BackendUtils = require('./backend-utils'); // utilitários puros e testados (corpo UTF-8, escrita atômica, cache JSON, validações)
 const Pagamentos = require('./pagamentos'); // livro de pagamentos, prazo da assinatura, Pix, resumo financeiro e conciliação de extrato (regras puras e testadas)
+const NexusPag = require('./pagamentos-admin'); // documentos HTML do livro (boleto Pix e recibo): o servidor usa o mesmo modelo do painel do administrador
 const { qrSvg } = require('./qr-svg'); // QR Code do Pix gerado aqui (antes vinha do site api.qrserver.com)
 const Assinatura = require('./assinatura'); // relógio da assinatura: qual versão vale entre a nuvem e o PC (liberar/bloquear/pagar não pode ser desfeito pelo outro servidor)
 const Acesso = require('./acesso'); // relógio do bloqueio da conta (active): o bloqueio feito na nuvem não pode ser desfeito pela linha antiga do SQL Server do PC
@@ -17121,6 +17122,11 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
               </div>
             </div>
 
+            <button type="button" class="pw-btn pw-btn-sky" onclick="window.abrirBoletoPix()" style="width:100%;margin-top:12px;justify-content:center;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              <span>2ª via do boleto Pix — imprimir ou salvar em PDF</span>
+            </button>
+
             <ol class="pw-how" aria-label="Como pagar">
               <li><span class="pw-how-n">1</span><span>Abra o app do seu banco e escolha <strong>Pix</strong>.</span></li>
               <li><span class="pw-how-n">2</span><span>Pague <strong>${SUBSCRIPTION_MONTHLY_LABEL}</strong> com o QR Code ou o copia e cola.</span></li>
@@ -19931,6 +19937,26 @@ window.copyPixCodeToClipboard = function() {
     navigator.clipboard.writeText(inputEl.value).then(onCopied).catch(fallbackCopy);
   } else {
     fallbackCopy();
+  }
+};
+
+// 2ª via do boleto Pix na conta do próprio cliente: busca o documento no servidor (mesma via do painel do administrador)
+// e abre numa aba nova para imprimir ou salvar em PDF.
+window.abrirBoletoPix = async function() {
+  const token = loadFromStorage('nexus_token', '');
+  try {
+    const res = await fetch('/api/subscription/boleto', { headers: { 'Authorization': 'Bearer ' + token } });
+    if (!res.ok) {
+      const j = await res.json().catch(function () { return {}; });
+      if (typeof showToast === 'function') showToast(j.error || 'Não foi possível abrir o boleto agora.');
+      return;
+    }
+    const html = await res.text();
+    const url = URL.createObjectURL(new Blob([html], { type: 'text/html;charset=utf-8' }));
+    window.open(url, '_blank');
+    setTimeout(function () { try { URL.revokeObjectURL(url); } catch (e) {} }, 60000);
+  } catch (e) {
+    if (typeof showToast === 'function') showToast('Falha ao abrir o boleto. Tente novamente.');
   }
 };
 
@@ -37739,6 +37765,49 @@ async function handleNexusRequest(req, res) {
         return res.end(JSON.stringify({ success: false, error: failure.error }));
       }
     });
+    return;
+  }
+
+  // Boleto Pix da própria conta: o cliente baixa/imprime a via de pagamento direto na conta dele, sem passar pelo administrador.
+  // Reaproveita a cobrança em aberto; se não houver, emite uma (origem "usuario") com vencimento no prazo mínimo de 5 dias.
+  // O documento é o mesmo do painel (NexusPag.cobrancaDocumento): logo, pagador, recebedor, QR e copia e cola.
+  if (req.method === 'GET' && parsedUrl.pathname === '/api/subscription/boleto') {
+    const boletoUser = getAuthenticatedUser(req);
+    if (!boletoUser) {
+      res.writeHead(401, { ...corsHeaders, 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({ success: false, error: 'Entre na sua conta para ver o boleto.' }));
+    }
+    const boletoInfo = getUserSubscriptionInfo(boletoUser);
+    const boletoVitalicio = String(boletoUser.subscription_plan || '').toLowerCase() === 'vitalicio';
+    if (!boletoInfo || boletoInfo.is_admin || boletoVitalicio) {
+      res.writeHead(403, { ...corsHeaders, 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({ success: false, error: 'Esta conta não possui cobrança de assinatura.' }));
+    }
+    try {
+      const agoraBoleto = Date.now();
+      const livroBoleto = getLocalPagamentos();
+      const abertasBoleto = pagamentoPorEmail(livroBoleto, boletoUser.email).filter(p => Pagamentos.emAberto(p)).sort(pagamentoMaisRecente);
+      let regBoleto = abertasBoleto[0] || null;
+      if (!regBoleto) {
+        regBoleto = Pagamentos.criarCobranca({
+          usuario: boletoUser, valor: SUBSCRIPTION_MONTHLY_PRICE, plano: 'mensal', origem: 'usuario',
+          por: { nome: boletoUser.name || boletoUser.email, email: boletoUser.email }, agora: agoraBoleto, existentes: livroBoleto,
+          vencimento: Pagamentos.diaDe(agoraBoleto + Pagamentos.PRAZO_COBRANCA_MINIMO * Pagamentos.DIA)
+        });
+        livroBoleto.push(regBoleto);
+        saveLocalPagamentos(livroBoleto);
+      }
+      const pagamentoBoleto = Object.assign(Pagamentos.publico(regBoleto, agoraBoleto), { pagador: { cpf: boletoUser.cpf || '', phone: boletoUser.phone || '' } });
+      const protoBoleto = String(req.headers['x-forwarded-proto'] || '').split(',')[0].trim() || 'http';
+      const origemBoleto = protoBoleto + '://' + String(req.headers.host || 'localhost:' + PORT);
+      const htmlBoleto = NexusPag.cobrancaDocumento({ pagamento: pagamentoBoleto, pix: pixDaCobranca(regBoleto) }, origemBoleto);
+      res.writeHead(200, { ...corsHeaders, 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' });
+      res.end(htmlBoleto);
+    } catch (boletoErr) {
+      const failure = publicFailure(boletoErr, 'Não foi possível gerar o boleto agora.', 500);
+      res.writeHead(failure.status, { ...corsHeaders, 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, error: failure.error }));
+    }
     return;
   }
 

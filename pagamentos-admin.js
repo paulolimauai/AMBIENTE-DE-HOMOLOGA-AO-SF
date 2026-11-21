@@ -582,7 +582,8 @@
   }
   function cobrancaDocumento(res, origem) {
     var p = res.pagamento, pix = res.pix;
-    var u = acharConta(p.email) || {};
+    // CPF/telefone do pagador: no painel vêm da lista de contas (ctx); na 2ª via da conta do cliente vêm embutidos em p.pagador
+    var u = acharConta(p.email) || p.pagador || {};
     var origemBase = String(origem || '').replace(/\/+$/, '');
     var logoUrl = origemBase + '/images/icons/icon-192.png';
     var chave = chavePixDoc(pix);

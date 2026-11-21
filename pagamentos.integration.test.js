@@ -601,3 +601,31 @@ test('lançamento retroativo: estornar tira da receita sem mexer no acesso, e o 
   for (let i = 0; i < 30 && !/Lançou o pagamento retroativo/.test(trilha); i++) { await dorme(200); trilha = JSON.stringify((await api('GET', '/api/logs', { token: admin })).json); }
   assert.match(trilha, /Lançou o pagamento retroativo/);
 });
+test('boleto Pix na conta do cliente: 2ª via completa na conta dele, sem passar pelo administrador', async () => {
+  assert.equal((await api('GET', '/api/subscription/boleto')).status, 401, 'sem login não sai boleto');
+  assert.equal((await api('GET', '/api/subscription/boleto', { token: admin })).status, 403, 'administrador/vitalício não tem cobrança');
+
+  const fabio = (await login('fabio@teste.nexus', 'Fabio@12345')).token;
+  const antes = livro().filter((p) => p.email === 'fabio@teste.nexus').length;
+  const doc = await api('GET', '/api/subscription/boleto', { token: fabio });
+  assert.equal(doc.status, 200, doc.texto.slice(0, 300));
+  assert.match(doc.headers.get('content-type'), /text\/html/);
+  assert.match(doc.texto, /BOLETO PIX/);
+  assert.match(doc.texto, /NEXUS FINANCEIRO HUB/);
+  assert.match(doc.texto, /Fabio Sem Cobranca/);
+  assert.match(doc.texto, /fabio@teste\.nexus/);
+  assert.match(doc.texto, /CPF: 456\.789\.123-85/);
+  assert.match(doc.texto, /RECEBEDOR/);
+  assert.match(doc.texto, /Chave Pix \(/);
+  assert.match(doc.texto, /\/api\/pix\/qr\.svg\?data=/);
+  assert.match(doc.texto, /não um boleto bancário registrado/);
+
+  const abertasFabio = livro().filter((p) => p.email === 'fabio@teste.nexus' && p.origem === 'usuario' && P.emAberto(p));
+  assert.equal(abertasFabio.length, 1, 'a 1ª via emitiu a cobrança na conta do cliente');
+  assert.ok(livro().length > antes, 'a cobrança entrou no livro');
+
+  const doc2 = await api('GET', '/api/subscription/boleto', { token: fabio });
+  assert.equal(doc2.status, 200);
+  assert.match(doc2.texto, new RegExp(abertasFabio[0].ref), 'a 2ª via é da MESMA cobrança');
+  assert.equal(livro().filter((p) => p.email === 'fabio@teste.nexus' && p.origem === 'usuario' && P.emAberto(p)).length, 1, 'baixar de novo não duplica a cobrança');
+});
