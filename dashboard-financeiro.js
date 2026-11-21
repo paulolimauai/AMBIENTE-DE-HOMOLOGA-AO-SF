@@ -439,27 +439,35 @@
     const acumulado = { entradas: arred(acumEntradas), saidas: arred(acumSaidas), resultado: arred(acumEntradas - acumSaidas), meses: mesesCadastrados.size, serie: serieAcumulado };
 
     // ---------- Saúde financeira (0 a 100) ----------
+    // Mede a saúde GERAL da pessoa, não do mês: usa TODAS as movimentações cadastradas (realizadas e pendentes —
+    // a pendência já é compromisso assumido). Antes media só o período e só o "realizado": quem lançava tudo como
+    // Pendente, ou movimentava em outro mês, via a nota congelada no mesmo número.
+    const entGeral = lancsFluxo.filter((l) => l.tipo === 'in').reduce((s, l) => s + l.valor, 0);
+    const saiGeral = lancsFluxo.filter((l) => l.tipo === 'out').reduce((s, l) => s + l.valor, 0);
+    const resultadoGeral = arred(entGeral - saiGeral);
+    const taxaPoupancaG = entGeral > 0 ? Math.round((resultadoGeral / entGeral) * 100) : null;
+    const comprometimentoG = entGeral > 0 ? Math.round((saiGeral / entGeral) * 100) : (saiGeral > 0 ? 100 : 0);
     let score = 55;
-    if (receitas.realizado > 0) {
-      if (resultadoRealizado > 0) score += 25;
-      if (taxaPoupanca >= 20) score += 15; else if (taxaPoupanca >= 10) score += 10;
-      if (comprometimento <= 60) score += 10; else if (comprometimento > 85) score -= 15;
-    } else if (despesas.realizado === 0) {
+    if (entGeral > 0 || saiGeral > 0) {
+      if (resultadoGeral > 0) score += 25;
+      if (taxaPoupancaG != null && taxaPoupancaG >= 20) score += 15; else if (taxaPoupancaG != null && taxaPoupancaG >= 10) score += 10;
+      if (comprometimentoG <= 60) score += 10; else if (comprometimentoG > 85) score -= 15;
+    } else {
       score = 80;
     }
     if (cartoesResumo.usoPct <= 50) score += 5; else if (cartoesResumo.usoPct > 80) score -= 10;
     if (agenda.qtdVencidas > 0) score -= 20;
     score = Math.max(10, Math.min(100, score));
-    // Sem nenhuma movimentação no período não há o que avaliar: a nota fica vazia ("--") em vez de inventar "Excelente 85"
-    const semDados = receitas.qtd + despesas.qtd === 0;
+    // Sem nenhuma movimentação cadastrada não há o que avaliar: a nota fica vazia ("--") em vez de inventar "Excelente"
+    const semDados = lancsFluxo.length === 0;
     const saude = {
       score: semDados ? null : score,
       semDados,
       status: semDados ? 'Sem dados' : (score >= 75 ? 'Excelente' : score >= 50 ? 'Equilibrado' : 'Atenção'),
       nivel: semDados ? 'neutro' : (score >= 75 ? 'bom' : score >= 50 ? 'medio' : 'ruim'),
       pilares: [
-        { nome: 'Poupança', valor: taxaPoupanca == null ? 0 : Math.max(0, taxaPoupanca), bom: taxaPoupanca != null && taxaPoupanca >= 20, medio: taxaPoupanca != null && taxaPoupanca >= 10, maisEhMelhor: true },
-        { nome: 'Comprometimento', valor: Math.min(100, comprometimento), bom: comprometimento <= 60, medio: comprometimento <= 80, maisEhMelhor: false },
+        { nome: 'Poupança', valor: taxaPoupancaG == null ? 0 : Math.max(0, taxaPoupancaG), bom: taxaPoupancaG != null && taxaPoupancaG >= 20, medio: taxaPoupancaG != null && taxaPoupancaG >= 10, maisEhMelhor: true },
+        { nome: 'Comprometimento', valor: Math.min(100, comprometimentoG), bom: comprometimentoG <= 60, medio: comprometimentoG <= 80, maisEhMelhor: false },
         { nome: 'Uso do cartão', valor: cartoesResumo.usoPct, bom: cartoesResumo.usoPct <= 50, medio: cartoesResumo.usoPct <= 80, maisEhMelhor: false },
         { nome: 'Pontualidade', valor: agenda.qtdVencidas > 0 ? Math.max(0, 100 - agenda.qtdVencidas * 25) : 100, bom: agenda.qtdVencidas === 0, medio: agenda.qtdVencidas === 1, maisEhMelhor: true }
       ]
@@ -784,7 +792,7 @@
     return '<article class="fd-card fd-vidro fd-card-saude"><div class="fd-card-topo"><div><h2 class="fd-titulo">Saúde financeira</h2><p class="fd-legenda">Nota atualizada com as movimentações</p></div></div>' +
       '<div class="fd-saude-corpo"><div class="fd-nota-caixa"><div class="fd-nota-num">' + (s.semDados ? '--' : s.score) + '<small> / 100</small></div>' +
       '<div class="fd-nota-status' + (s.semDados ? '' : ' fd-nota-' + s.nivel) + '">' + esc(s.status) + '</div>' +
-      '<p class="fd-nota-dica">' + (s.semDados ? 'Cadastre suas primeiras movimentações para calcular seu score.' : 'Calculada com as movimentações do período.') + '</p></div>' +
+      '<p class="fd-nota-dica">' + (s.semDados ? 'Cadastre suas primeiras movimentações para calcular seu score.' : 'Calculada com todas as movimentações cadastradas.') + '</p></div>' +
       '<div class="fd-saude-linhas">' + linhas.map((l) => '<div class="fd-saude-linha"><div class="fd-pilar-topo"><span>' + esc(l.nome) + '</span><strong>' + esc(l.texto) + '</strong></div>' + medidor(l.valor, l.nivel, l.nome + ' ' + l.texto) + '</div>').join('') + '</div></div></article>';
   }
 
