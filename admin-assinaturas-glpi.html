@@ -569,9 +569,10 @@ info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/>',
 undo:'<path d="M3 7v6h6"/><path d="M3 13a9 9 0 103-7.7L3 8"/>',
 lock:'<rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 018 0v3"/>',
 unlock:'<rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 017.5-1.5"/>',
-key:'<circle cx="7.5" cy="15.5" r="4.5"/><path d="M10.7 12.3 21 2"/><path d="m17 6 3 3M14 9l2 2"/>'};
+key:'<circle cx="7.5" cy="15.5" r="4.5"/><path d="M10.7 12.3 21 2"/><path d="m17 6 3 3M14 9l2 2"/>',
+mon:'<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>'};
 IC.dots='<circle cx="5" cy="12" r="1.7" style="fill:currentColor;stroke:none"/><circle cx="12" cy="12" r="1.7" style="fill:currentColor;stroke:none"/><circle cx="19" cy="12" r="1.7" style="fill:currentColor;stroke:none"/>';
-const MODS=[['subs','Assinaturas'],['pay','Pagamentos'],['acc','Acessos GLPI']];
+const MODS=[['subs','Assinaturas'],['pay','Pagamentos'],['acc','Acessos GLPI'],['mon','Monitoramento']];
 const cur=()=>{const h=location.hash.slice(1);return MODS.some(m=>m[0]===h)?h:'subs'};
 const I=n=>`<svg class="i" viewBox="0 0 24 24" aria-hidden="true">${IC[n]||''}</svg>`;
 function nav(){const pend=S.users.filter(u=>!u.g).length,pp=(S.pays||[]).filter(p=>p.st==='Em análise').length;
@@ -615,6 +616,8 @@ return`<section>${head('pay','Pagamentos','Confirme comprovantes Pix, registre r
 <div class="glass pad col"><h3>Como funciona a liberação</h3><ol class="steps"><li><span>O cliente paga o Pix e envia o comprovante</span></li><li><span>Você confere e clica em <b>Confirmar</b></span></li><li><span>A assinatura Mensal é ativada por +30 dias (renovações somam ao vencimento)</span></li><li><span>O acesso é liberado no GLPI automaticamente</span></li></ol><div class="sub" style="font-size:var(--fs);margin:0">Para baixa automática, ligue um gateway no servidor. Chaves de API nunca devem ficar neste arquivo.</div></div></div>
 <div class="glass bar">${search('pq','Buscar por pedido, nome ou referência…',F.pq,'prows()')}<select id="pf" aria-label="Status do pagamento" onchange="prows()">${opt('','Todos os status',F.pf)}${['Em análise','Aguardando','Confirmado','Recusado','Estornado'].map(x=>opt(x,x,F.pf)).join('')}</select><span class="cnt" id="pcnt"></span></div>
 <div class="glass tbl"><div class="scroll"><table><thead><tr><th>Pedido</th><th style="min-width:290px">Cliente</th><th>Valor</th><th>Forma</th><th>Status</th><th class="c-r">Ações</th></tr></thead><tbody id="pb"></tbody></table></div></div></section>`},
+mon(){return`<section>${head('mon','Monitoramento','Verificação automática de desvios: acesso liberado com assinatura vencida, assinaturas sem validade, CPF duplicado e chamados fora do prazo. Todo desvio novo abre uma O.S. na fila sozinha.',`<button type="button" class="btn p" onclick="monScan()">${I('search')} Verificar e abrir chamados</button>`)}
+<div id="monbox"><div class="glass pad"><p class="sub" style="margin:0">Verificando desvios…</p></div></div></section>`},
 acc(){const u=(window.at||'u')==='u',n=S.users.length,adm=S.users.filter(x=>x.p==='Administrador'||x.p==='Proprietário').length,on=S.users.filter(x=>x.on).length,off=n-on,pend=S.users.filter(x=>!x.g).length;
 const ps=Array.from(new Set(S.users.map(x=>x.p)));
 return`<section>${head('acc','Acessos GLPI','Inclua, altere, bloqueie ou remova usuários e crie perfis de acesso.',`<button type="button" class="btn p" onclick="${u?'userM()':'profM()'}">${I('plus')} ${u?'Novo usuário':'Novo perfil'}</button>`)}
@@ -623,12 +626,12 @@ return`<section>${head('acc','Acessos GLPI','Inclua, altere, bloqueie ou remova 
 ${u?`<div class="glass bar">${search('uq','Buscar nome ou e-mail…',F.uq,'urows()')}<select id="up" aria-label="Perfil" onchange="urows()">${opt('','Todos os perfis',F.up)}${ps.map(p=>opt(p,p,F.up)).join('')}</select><select id="us" aria-label="Status" onchange="urows()">${opt('','Todos os status',F.us)}${opt('1','Ativos',F.us)}${opt('0','Bloqueados',F.us)}</select><span class="cnt" id="ucnt"></span></div>
 <div class="glass tbl"><div class="scroll"><table><thead><tr><th style="width:34%">Usuário</th><th>Perfil</th><th>Origem</th><th>GLPI</th><th>Status</th><th class="c-r">Ações</th></tr></thead><tbody id="ub"></tbody></table></div></div>`
 :`<div class="note">${I('info')}<span>Referência de permissões do painel. O servidor grava cada conta como <b>Administrador</b> ou <b>Usuário</b>.</span></div><div class="grid g3">${S.profs.map((p,i)=>`<div class="glass pcard"><div class="pch"><span class="pic">${I('acc')}</span><div><h3>${esc(p.n)}</h3><small>${S.users.filter(x=>x.p===p.n).length} usuário(s)${p.sys?' • perfil do sistema':''}</small></div><div class="acts">${p.sys?'<span class="tag wa">Protegido</span>':ib('edit','Editar',p.n,`profM(${i})`)+ib('trash','Excluir',p.n,`pdel(${i})`,'d')}</div></div><div>${AR.map(([k,l])=>`<div class="pr"><span>${l}</span><span class="lv" data-n="${p.x[k]}" aria-hidden="true"><i></i><i></i><i></i></span><b>${LV[p.x[k]]}</b></div>`).join('')}</div></div>`).join('')}</div>`}</section>`}};
-const T={subs:'Assinaturas',pay:'Pagamentos',acc:'Acessos GLPI'};
+const T={subs:'Assinaturas',pay:'Pagamentos',acc:'Acessos GLPI',mon:'Monitoramento'};
 let lastKey='';
 function rend(){fecharMenu();const m=cur(),v=$('view');$('crumb').textContent=T[m];nav();
 if(!S.real){v.classList.remove('vsw');v.innerHTML=window.__nxErro?errView(window.__nxErro):skel();return}   // nunca mostra dado de demonstração: ou os dados reais, ou carregando
 const k=m+(m==='acc'?(window.at||'u'):'');v.classList.toggle('vsw',k!==lastKey);lastKey=k;
-v.innerHTML=V[m]();if(m==='subs')rows();if(m==='pay')prows();if(m==='acc')urows()}
+v.innerHTML=V[m]();if(m==='subs')rows();if(m==='pay')prows();if(m==='acc')urows();if(m==='mon'&&window.monLoad)window.monLoad()}
 
 /* ===== Situação (filtro) e menu "⋯" da linha ===== */
 function setSit(v){F.fs=v;document.querySelectorAll('.seg [data-v]').forEach(b=>{const on=b.dataset.v===v;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});rows()}
@@ -860,8 +863,48 @@ $('f').onsubmit=function(e){e.preventDefault();var em=$('ps').value,v=parseFloat
 function savePix(){toast('A chave Pix de recebimento é configurada no servidor (Financeiro → Configuração). Aqui ela aparece somente para consulta.','var(--m)')}
 /* Os botões de demonstração e a entrada por token passam a usar a versão real */
 window.enter=enterReal;
+/* ===== Monitoramento de desvios =====
+   O servidor verifica contas e chamados e devolve cada desvio com a O.S. vinculada (se houver).
+   O botão "Verificar e abrir chamados" roda a varredura com abertura automática; o servidor também
+   faz isso sozinho a cada 15 minutos. */
+var SEV={'Alta':'er','Média':'wa','Baixa':'mu'};
+async function monLoad(){
+  var box=$('monbox');if(!box)return;
+  box.innerHTML='<div class="glass pad"><p class="sub" style="margin:0">Verificando desvios…</p></div>';
+  try{
+    var d=await api('/api/admin/monitoramento');
+    S.mon=d;monRender(d);
+  }catch(e){box.innerHTML='<div class="glass big"><div class="ei">'+I('alert')+'</div><h3 style="font-size:calc(var(--fs)*1.286)">Não foi possível verificar os desvios</h3><p>'+esc(e.message)+'</p><button type="button" class="btn p" onclick="monLoad()">'+I('undo')+' Tentar de novo</button></div>'}
+}
+function monRender(d){
+  var box=$('monbox');if(!box)return;
+  var L=d.desvios||[],comOs=L.filter(function(x){return x.os}).length,sem=L.length-comOs;
+  var quando=d.verificado_em?fmtDataHora(d.verificado_em):'—';
+  box.innerHTML=
+  '<div class="grid g4">'+
+    kpi('alert','Desvios encontrados',L.length,L.length?'Precisam de atenção':'Tudo certo','r')+
+    kpi('ok','Com chamado aberto',comOs,'O.S. na fila de atendimento','e')+
+    kpi('clock','Sem chamado',sem,sem?'Abrir com "Verificar"':'Nada pendente','w')+
+    kpi('info','Última verificação',quando,'Automática a cada 15 min','in')+
+  '</div>'+
+  '<div class="glass tbl" style="margin-top:14px"><div class="scroll"><table><thead><tr><th>Desvio</th><th>Severidade</th><th>Chamado</th></tr></thead><tbody>'+
+  (L.map(function(x){
+    return '<tr><td data-l="Desvio"><b>'+esc(x.titulo)+'</b><br><small class="sub" style="font-size:var(--fs)">'+esc(x.descricao)+'</small></td>'+
+      '<td data-l="Severidade"><span class="tag '+(SEV[x.severidade]||'mu')+'">'+esc(x.severidade||'—')+'</span></td>'+
+      '<td data-l="Chamado">'+(x.os?'<span class="tag ok">'+esc(x.os.protocol)+'</span><br><small class="sub" style="font-size:var(--fs)">'+esc(x.os.status)+'</small>':'<span class="tag wa">Sem chamado</span>')+'</td></tr>';
+  }).join('')||'<tr><td class="emp" colspan="3"><div class="ei">'+I('ok')+'</div><b>Nenhum desvio encontrado</b><p>Assinaturas, CPFs e chamados estão consistentes no momento.</p></td></tr>')+
+  '</tbody></table></div></div>'+
+  '<div class="note" style="margin-top:14px">'+I('info')+'<span>O servidor refaz esta verificação sozinho a cada 15 minutos e abre a O.S. automaticamente quando surge um desvio novo — sem chamado duplicado enquanto o anterior estiver aberto.</span></div>';
+}
+function monScan(){
+  var box=$('monbox');if(box)box.innerHTML='<div class="glass pad"><p class="sub" style="margin:0">Verificando desvios e abrindo chamados…</p></div>';
+  api('/api/admin/monitoramento/varredura','POST',{}).then(function(r){
+    toast(r.message||(r.abertos?r.abertos+' chamado(s) aberto(s)':'Nenhum desvio novo'));
+    return monLoad();
+  }).catch(function(e){toast(e.message,'var(--r)');return monLoad()});
+}
 /* Os botões usam onclick="blk(..)" etc. (escopo global): sem isto valiam as versões de demonstração, que só mexiam no cache local */
-Object.assign(window,{blk:blk,del:del,grant:grant,newSub:newSub,utog:utog,udel:udel,userM:userM,editSub:editSub,pull:pull,gsync:gsync,payOk:payOk,payNo:payNo,payRef:payRef,payNew:payNew,savePix:savePix});
+Object.assign(window,{blk:blk,del:del,grant:grant,newSub:newSub,utog:utog,udel:udel,userM:userM,editSub:editSub,pull:pull,gsync:gsync,payOk:payOk,payNo:payNo,payRef:payRef,payNew:payNew,savePix:savePix,monLoad:monLoad,monScan:monScan});
 })();
 </script>
 <script src="/admin-liberacao.js"></script><script src="/admin-visitas.js"></script><script src="/admin-pagamentos.js"></script>
