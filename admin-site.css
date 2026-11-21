@@ -15,7 +15,7 @@ body{
 .ads-brand strong{font-size:1.05rem;letter-spacing:.14em;color:#fff}
 .ads-brand span{font-size:.72rem;font-weight:800;letter-spacing:.22em;color:#34D399;margin-left:.35rem}
 .ads-brand small{display:block;font-size:.72rem;color:#8B98AC;margin-top:.1rem}
-.ads-actions{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center}
+.ads-actions{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;flex:1 1 auto;justify-content:flex-end}
 .ads-who{font-size:.78rem;color:#8B98AC;padding:0 .3rem;max-width:18rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ads-who[hidden]{display:none}
 
@@ -30,6 +30,7 @@ body{
 .ads-btn.ghost:hover{background:rgba(148,163,184,.16);color:#fff}
 .ads-btn:disabled{opacity:.5;cursor:not-allowed}
 .ads-btn.danger{background:rgba(239,68,68,.14);color:#FCA5A5;border-color:rgba(239,68,68,.4)}
+.ads-sair{display:none}
 
 .ads-wrap{max-width:1400px;margin:0 auto;padding:1.4rem}
 .ads-loading,.ads-denied{
@@ -97,7 +98,7 @@ body{
   .ads-brand small{font-size:.65rem}
   .ads-who{display:none}
   .ads-btn{padding:.5rem .7rem;font-size:.74rem;border-radius:8px;white-space:nowrap}
-  .ads-wrap{padding:.8rem}
+  .ads-wrap{padding:.8rem .8rem 4.4rem}
   .ads-side,.ads-editor{border-radius:12px}
   .ads-side{padding:.8rem}
   .ads-files li button{padding:.55rem .65rem;font-size:.78rem}
@@ -170,4 +171,11 @@ body{
     opacity:0;transition:opacity .2s;
   }
   .ads-overlay.show{opacity:1}
+  /* Sair: fora do menu, botão flutuante pequeno no canto inferior direito (o do menu fica escondido no mobile) */
+  .ads-sair{
+    display:inline-flex;position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:80;
+    width:auto;padding:.45rem .85rem;font-size:.7rem;border-radius:999px;
+    box-shadow:0 10px 26px -8px rgba(0,0,0,.65);
+  }
+  #adsSairMenu{display:none}
 }

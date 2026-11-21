@@ -32,7 +32,8 @@
     burger: document.getElementById('adsBurger'),
     actions: document.getElementById('adsActions'),
     overlay: document.getElementById('adsOverlay'),
-    drawerClose: document.getElementById('adsDrawerClose')
+    drawerClose: document.getElementById('adsDrawerClose'),
+    sairMenu: document.getElementById('adsSairMenu')
   };
 
   var state = { files: [], current: null, dirty: false };
@@ -256,10 +257,13 @@
 
   els.save.addEventListener('click', saveFile);
   els.reload.addEventListener('click', function () { loadFiles(); });
-  els.sair.addEventListener('click', function () {
-    if (state.dirty && !window.confirm('Há alterações não salvas. Sair mesmo assim?')) return;
-    state.dirty = false;
-    window.NexusSSO.sair();
+  /* Dois botões "Sair": o do menu (desktop e gaveta) e o flutuante do celular — mesma ação. */
+  [els.sair, els.sairMenu].forEach(function (btn) {
+    if (btn) btn.addEventListener('click', function () {
+      if (state.dirty && !window.confirm('Há alterações não salvas. Sair mesmo assim?')) return;
+      state.dirty = false;
+      window.NexusSSO.sair();
+    });
   });
   els.outraConta.addEventListener('click', function () { window.NexusSSO.sair('/admin-site.html'); });
   els.tentar.addEventListener('click', function () { els.erro.hidden = true; els.loading.hidden = false; iniciar(); });
