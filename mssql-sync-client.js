@@ -46,14 +46,70 @@ function toError(err, table) {
   return out;
 }
 
+// ---------------------------------------------------------------------------------------------------------------------------------
+// Fuso das colunas de data. NO APLICATIVO INTEIRO o literal de uma coluna DATETIME2 do SQL Server é HORÁRIO DE BRASÍLIA (GETDATE(), getBrasiliaSqlString,
+// getBrasiliaIsoString tratam assim), e o driver devolve esse literal como um Date "em UTC" (literal 14:08:14 => 14:08:14Z).
+// O motor de espelho, escrito para o Postgres, fala em instantes UTC (ISO com "Z"). Antes, o "Z" era descartado na conversão para DATETIME2 (o literal virava
+// o horário UTC) e a leitura devolvia o literal como se fosse UTC: o motor e o app discordavam por 3 h. O espelho de usuários realimenta o próprio JSON
+// a partir do SQL, então cada volta SQL -> arquivo -> SQL somava +3 h em created_at/last_login (≈ 1 dia a cada minuto: contas "criadas em 2028").
+// Agora: escrita = instante -> literal de Brasília; leitura = literal de Brasília -> instante. Ida e volta é idêntica, não há deriva possível.
+// ---------------------------------------------------------------------------------------------------------------------------------
+const BRASILIA_MS = 3 * 60 * 60 * 1000;   // UTC-3 fixo (o app usa "-03:00" em todo lugar; o Brasil não tem horário de verão desde 2019)
+const ISO_COM_FUSO_RE = /^\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}(\.\d{1,7})?(Z|[+-]\d{2}:?\d{2})$/;
+
+// Instante (Date ou texto ISO COM fuso) -> literal de Brasília "AAAA-MM-DD HH:MM:SS.mmm" para a coluna. Qualquer outra coisa volta como veio.
+function paraLiteralBrasilia(valor) {
+  let ms = NaN;
+  if (valor instanceof Date) ms = valor.getTime();
+  else if (typeof valor === 'string' && ISO_COM_FUSO_RE.test(valor.trim())) ms = Date.parse(valor.trim().replace(' ', 'T'));
+  if (!Number.isFinite(ms)) return valor;
+  const d = new Date(ms - BRASILIA_MS);
+  const p = (n, w) => String(n).padStart(w || 2, '0');
+  return d.getUTCFullYear() + '-' + p(d.getUTCMonth() + 1) + '-' + p(d.getUTCDate()) + ' ' + p(d.getUTCHours()) + ':' + p(d.getUTCMinutes()) + ':' + p(d.getUTCSeconds()) + '.' + p(d.getUTCMilliseconds(), 3);
+}
+
+// Date devolvido pelo driver (literal de Brasília lido como UTC) -> instante verdadeiro em ISO
+function deLiteralBrasilia(date) {
+  return new Date(date.getTime() + BRASILIA_MS).toISOString();
+}
+
 // Converte valores lidos do SQL Server para o formato que o motor espera:
-// Date -> ISO, demais valores passam como estão (o adapter já faz JSON.parse em "dados").
+// Date -> ISO do instante verdadeiro, demais valores passam como estão (o adapter já faz JSON.parse em "dados").
 function normalizeRow(row) {
   if (!row || typeof row !== 'object') return row;
   const out = {};
   for (const k of Object.keys(row)) {
     const v = row[k];
-    out[k] = (v instanceof Date) ? v.toISOString() : v;
+    out[k] = (v instanceof Date) ? deLiteralBrasilia(v) : v;
+  }
+  return out;
+}
+
+// Colunas de data de cada tabela (consultadas uma vez por pool e guardadas). Se a consulta falhar não converte nada (o comportamento é o de antes).
+const colunasDataPorPool = new WeakMap();
+async function colunasData(pool, table) {
+  let porTabela = colunasDataPorPool.get(pool);
+  if (!porTabela) { porTabela = new Map(); colunasDataPorPool.set(pool, porTabela); }
+  if (porTabela.has(table)) return porTabela.get(table);
+  let cols = new Set();
+  try {
+    const res = await pool.query(
+      "SELECT c.name AS coluna FROM sys.columns c WHERE c.object_id = OBJECT_ID($1) AND TYPE_NAME(c.user_type_id) IN ('datetime','datetime2','smalldatetime')",
+      [table]
+    );
+    cols = new Set((res.rows || []).map(r => String(r.coluna)));
+    porTabela.set(table, cols);
+  } catch (e) { /* sem acesso ao catálogo: não converte e tenta de novo na próxima escrita */ }
+  return cols;
+}
+function converterDatas(row, cols) {
+  if (!cols || !cols.size || !row || typeof row !== 'object') return row;
+  let out = row;
+  for (const c of cols) {
+    if (Object.prototype.hasOwnProperty.call(row, c)) {
+      const novo = paraLiteralBrasilia(row[c]);
+      if (novo !== row[c]) { if (out === row) out = Object.assign({}, row); out[c] = novo; }
+    }
   }
   return out;
 }
@@ -224,6 +280,14 @@ class Query {
   async execute() {
     try {
       if (this.op === 'select') return await this.runSelect();
+      if (this.op === 'insert' || this.op === 'upsert' || this.op === 'update') {
+        // Datas em instante UTC (ISO com "Z"/offset) viram o literal de Brasília que o resto do app espera (ver o bloco "Fuso das colunas de data")
+        const cols = await colunasData(this.pool, this.table);
+        if (cols.size) {
+          if (this.op === 'update') this.payload = converterDatas(this.payload, cols);
+          else this.payload = (this.payload || []).map(r => converterDatas(r, cols));
+        }
+      }
       if (this.op === 'insert') return await this.runInsert(this.payload);
       if (this.op === 'upsert') return await this.runUpsert(this.payload);
       if (this.op === 'update') return await this.runUpdate(this.payload);
@@ -258,4 +322,4 @@ function createClient(pool) {
   };
 }
 
-module.exports = { createClient, TABELA_FISICA };
+module.exports = { createClient, TABELA_FISICA, paraLiteralBrasilia, deLiteralBrasilia };

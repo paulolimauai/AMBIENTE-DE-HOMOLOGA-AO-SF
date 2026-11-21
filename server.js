@@ -34,6 +34,7 @@ const SqlVigia = require('./sql-vigia'); // alteração feita DIRETO no SQL Serv
 const Visitas = require('./visitas'); // registro de visitas ao site (pasta visitas/, IP completo só no arquivo e mascarado em qualquer resposta)
 const KeepAlive = require('./keepalive'); // o Render dorme após 15 min sem tráfego: no Render o servidor chama o próprio /ping a cada ~4 min (liga só com RENDER_EXTERNAL_URL)
 const BackupFinanceiro = require('./backup-financeiro'); // cópias HISTÓRICAS dos dados financeiros (backups_financeiros/): o que nenhum retrato zerado, redeploy ou sincronização consegue apagar
+const CofreContas = require('./cofre-contas'); // cofre de contas: a última versão de TODA conta (com a senha em hash) fica guardada; só a exclusão de propósito (lápide) a tira de circulação
 
 const PORT = process.env.PORT || 3000;
 const SERVER_START_TIME = Date.now();
@@ -54,13 +55,19 @@ try {
 } catch (e) {
   SupabaseSync = { noteWrite() {}, restoreMissingFiles: async () => ({ restored: [] }), flushAndStop: async () => ({}), flushNow: async () => ({}), fetchUserRecord: async () => null, fetchFinancialRecord: async () => null, status: () => ({ enabled: false, disabledReason: 'módulo indisponível' }) };
 }
+// No PC o motor principal grava no SQL Server interno (nexus_app) e NADA ia ao Supabase: de 20/11 ~12:15 a 21/11 o Supabase ficou parado (a conta nova do
+// dono, logins e trocas de senha não chegaram lá). Esta segunda instância do mesmo motor grava a cópia direto no Supabase, com estado de envio próprio.
+// Na nuvem (Render) o motor principal já é o Supabase e esta fica nula.
+let SupabaseNuvem = null;
+// Cofre de contas (cofre-contas.js): guarda a última versão de cada conta junto dos dados, fora do alcance de qualquer sincronização
+const cofreContas = CofreContas.criarCofre({ dir: RUNTIME_DATA_DIR });
 // Senha criada/trocada só é "pronta" quando o Supabase confirmou: espera o envio (no máximo maxMs) antes de responder ao usuário.
 // Sem Supabase, sem rede ou acima do tempo, segue: o dado fica em disco na fila de reenvio e o envio continua em segundo plano.
 async function confirmCredentialsInSupabase(maxMs) {
   try {
     let timer;
     const limit = new Promise(resolve => { timer = setTimeout(resolve, maxMs || 3500); if (timer.unref) timer.unref(); });
-    await Promise.race([SupabaseSync.flushNow(), limit]);
+    await Promise.race([Promise.all([SupabaseSync.flushNow(), SupabaseNuvem ? SupabaseNuvem.flushNow() : null]), limit]);
     clearTimeout(timer);
   } catch (e) { /* o reenvio automático cuida */ }
 }
@@ -178,6 +185,7 @@ function writeJsonFile(file, text) {
     jsonCache.invalidate(file);
   }
   try { SupabaseSync.noteWrite(file); } catch (e) {}   // arquivo gravado: agenda o envio ao Supabase (nunca bloqueia nem derruba a gravação)
+  try { if (SupabaseNuvem) SupabaseNuvem.noteWrite(file); } catch (e) {}   // PC: a cópia que vai direto ao Supabase
 }
 
 // Campos extras do tombstone de exclusão (histórico): nome do cadastro, motivo, quem excluiu e quando.
@@ -1658,6 +1666,18 @@ function getMirrorSyncClient() {
   mirrorSyncClientPool = pool;
   return mirrorSyncClient;
 }
+// PC: segunda cópia de tudo, direto no Supabase (estado de envio próprio). Sem ela o Supabase não recebia nada enquanto o SQL Server estivesse de pé.
+function iniciarEspelhoNuvem() {
+  try {
+    if (SupabaseNuvem || DB_DISABLED || process.env.RENDER || process.env.IS_RENDER === 'true' || process.env.NEXUS_DISABLE_SUPABASE === '1') return;
+    if (!SupabaseSync || typeof SupabaseSync.createSync !== 'function') return;
+    const segundo = SupabaseSync.createSync();
+    segundo.init({ dataDir: RUNTIME_DATA_DIR, stateFile: 'supabase_sync_state.nuvem.json' });
+    if (segundo.isEnabled()) SupabaseNuvem = segundo;
+  } catch (e) {
+    console.warn('[SUPABASE] A cópia direta do PC no Supabase não iniciou: ' + e.message);
+  }
+}
 function initInternalMirrorSync() {
   if (!SupabaseSync || typeof SupabaseSync.init !== 'function') return;
   if (pool) {
@@ -1670,6 +1690,7 @@ function initInternalMirrorSync() {
         projectRef: (process.env.MSSQL_DATABASE || 'nexus_app') + '#espelho-v2',
         role: 'mssql'
       });
+      iniciarEspelhoNuvem();   // e, em paralelo, a cópia direta no Supabase
       return;
     } catch (e) {
       console.warn('[SYNC] Cliente MSSQL do espelho indisponível (' + e.message + '); usando Supabase.');
@@ -33477,9 +33498,25 @@ function getLocalUsers() {
 function saveLocalUsers(users, overwrite = false) {
   try {
     const rawList = Array.isArray(users) ? users : [];
-    const listToSave = rawList.map(u => {
+    const emailDe = (u) => String((u && u.email) || '').toLowerCase().trim();
+    // O que o arquivo tem AGORA: base da trava anti-perda e do saneamento de datas abaixo
+    let anteriores = [];
+    try { const atual = jsonCache.read(LOCAL_USERS_PATH); if (atual.exists && Array.isArray(atual.value)) anteriores = atual.value; } catch (readErr) { /* ilegível: sem base */ }
+    // TRAVA ANTI-PERDA ("cadastro a senha certinho e quando volto diz que o usuário não possui conta criada"): uma conta que estava no arquivo e NÃO veio
+    // na lista nova, sem lápide de exclusão, é uma conta PERDIDA e não uma exclusão: ela continua no arquivo. Quem devolvia uma lista menor era, por
+    // exemplo, GET /api/users com o SQL Server (grava só as linhas do banco), o espelho de um banco recém-criado e qualquer sincronização atrasada.
+    // Excluir de propósito segue funcionando: a lápide é gravada antes e removeLocalUser escreve o arquivo sem passar por aqui.
+    const novosEmails = new Set(rawList.map(emailDe).filter(Boolean));
+    const lapides = new Set(getDeletedAccounts().map(item => item.email));
+    const preservadas = anteriores.filter(u => emailDe(u) && !novosEmails.has(emailDe(u)) && !lapides.has(emailDe(u)));
+    if (preservadas.length) {
+      console.warn('🛟 [CONTAS] ' + preservadas.length + ' conta(s) estavam no arquivo e não vieram na lista a gravar; sem lápide de exclusão, foram MANTIDAS: ' + preservadas.map(emailDe).join(', '));
+    }
+    const anteriorPorEmail = new Map(anteriores.filter(u => emailDe(u)).map(u => [emailDe(u), u]));
+    const listToSave = (preservadas.length ? rawList.concat(preservadas) : rawList).map(u => {
       if (!u) return u;
-      const copy = { ...u };
+      // Data impossível (futura: deriva de fuso do espelho) nunca é gravada: vale a anterior real da mesma conta
+      const copy = { ...CofreContas.datasSanas(u, anteriorPorEmail.get(emailDe(u))) };
       if (!copy.name || /^(admin|administrador)$/i.test(String(copy.name).trim())) {
         copy.name = 'Paulo Lima';
       }
@@ -33497,9 +33534,56 @@ function saveLocalUsers(users, overwrite = false) {
     try {
       writeJsonFile(LOCAL_USERS_BACKUP_PATH, jsonContent);
     } catch (bErr) {}
+    cofreContas.registrar(listToSave);   // a versão mais nova de cada conta fica no cofre (nunca lança)
   } catch (e) {
     console.error('Erro ao salvar local_users.json:', e);
   }
+}
+
+// Contas que o cofre conhece e a lista não tem (e que não têm lápide) voltam para a lista. Devolve as contas restauradas.
+function restaurarContasDoCofre(origem) {
+  try {
+    const atuais = getLocalUsers();
+    const lapides = new Set(getDeletedAccounts().map(item => item.email));
+    const faltam = cofreContas.faltantes(atuais, lapides);
+    if (!faltam.length) return [];
+    saveLocalUsers(atuais.concat(faltam));
+    console.warn('🛟 [COFRE] ' + faltam.length + ' conta(s) estavam fora da lista (' + (origem || 'verificação') + ') e voltaram do cofre: ' + faltam.map(u => u.email).join(', '));
+    if (pool) garantirContasNoSql(faltam).catch(() => {});
+    return faltam;
+  } catch (e) { return []; }
+}
+
+// Conta que existe no espelho/cofre mas não no SQL Server do PC: grava lá (com a senha em hash e o perfil), sem apagar nem alterar nada que já exista.
+// O SQL Server é soberano, mas uma conta que ele não tem não pode simplesmente deixar de existir.
+async function garantirContasNoSql(contas) {
+  if (!pool || !Array.isArray(contas) || !contas.length) return 0;
+  let gravadas = 0;
+  for (const u of contas) {
+    const email = String((u && u.email) || '').toLowerCase().trim();
+    if (!email || !email.includes('@') || isAccountDeleted(email)) continue;
+    try {
+      const ja = await pool.query('SELECT TOP 1 id FROM usuarios WHERE LOWER(email) = LOWER($1)', [email]);
+      if (ja.rows && ja.rows.length) continue;
+      const cpf = u.cpf ? String(u.cpf).replace(/\D/g, '') : null;
+      await pool.query(
+        `INSERT INTO usuarios (name, email, password, role, active, cpf, phone, birth_date, terms_accepted, device_type, must_change_password, created_at, last_login, trial_started_at, subscription_plan, subscription_status, subscription_expires_at, subscription_method, subscription_payment_id)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, COALESCE($12, GETDATE()), $13, $14, $15, COALESCE($16, 'trial'), $17, $18, $19)`,
+        [
+          String(u.name || 'Usuário').trim() || 'Usuário', email, u.password || hashPassword(crypto.randomBytes(24).toString('hex')), u.role || 'Usuário',
+          Acesso.ativo(u.active) ? 1 : 0, cpf || null, u.phone || null, u.birth_date || null, u.terms_accepted === false ? 0 : 1, u.device_type || 'Computador',
+          (u.must_change_password === 1 || u.must_change_password === true || u.must_change_password === '1') ? 1 : 0,
+          u.created_at ? getBrasiliaSqlString(u.created_at) : null, u.last_login ? getBrasiliaSqlString(u.last_login) : null,
+          u.trial_started_at ? getBrasiliaSqlString(u.trial_started_at) : null, u.subscription_plan || null, u.subscription_status || null,
+          u.subscription_expires_at ? getBrasiliaSqlString(u.subscription_expires_at) : null, u.subscription_method || null, u.subscription_payment_id || null
+        ]
+      );
+      await ensureUserIsConfiguredInDatabase(email, { name: u.name, cpf, phone: u.phone, birth_date: u.birth_date, device_type: u.device_type }).catch(() => {});
+      gravadas++;
+      console.log('🛟 [COFRE → SQL SERVER] Conta ' + email + ' estava só no espelho/cofre e foi gravada no SQL Server.');
+    } catch (e) { /* conflito (CPF repetido...) ou banco ocupado: tenta de novo no próximo ciclo */ }
+  }
+  return gravadas;
 }
 
 // Login que "puxa do banco": a senha guardada no Supabase vale quando o servidor local não tem a conta (disco zerado no redeploy do Render)
@@ -33507,7 +33591,8 @@ function saveLocalUsers(users, overwrite = false) {
 // se a digitada confere com a do Supabase. Devolve o cadastro já corrigido (e gravado no arquivo e no SQL Server) ou null.
 async function healCredentialFromSupabase(cleanEmail, password, localUser) {
   try {
-    const remote = await SupabaseSync.fetchUserRecord(cleanEmail, { timeoutMs: 3000 });
+    // No PC a fonte independente é a cópia direta no Supabase (o motor principal lê do próprio SQL Server, que já foi consultado)
+    const remote = await (SupabaseNuvem || SupabaseSync).fetchUserRecord(cleanEmail, { timeoutMs: 3000 });
     if (!remote) return null;
     const mirror = getLocalUsers();
     const idx = mirror.findIndex(u => u && String(u.email || '').toLowerCase().trim() === cleanEmail);
@@ -33530,11 +33615,57 @@ async function healCredentialFromSupabase(cleanEmail, password, localUser) {
   } catch (e) { return null; }
 }
 
+// A conta não está na lista, mas pode estar guardada: 1) no cofre (e-mail ou CPF); 2) no Supabase (só por e-mail). Sem lápide, ela volta para a lista
+// (e para o SQL Server) e o fluxo segue como se nunca tivesse sumido. Devolve o cadastro restaurado ou null. Usada pelo login e pela recuperação de senha.
+async function recuperarContaPerdida(email, cpf, origem) {
+  try {
+    const cleanEmail = String(email || '').toLowerCase().trim();
+    if (cleanEmail && isAccountDeleted(cleanEmail)) return null;
+    const noCofre = cleanEmail ? cofreContas.buscar(cleanEmail) : cofreContas.buscarPorCpf(cpf);
+    if (noCofre && !isAccountDeleted(noCofre.email)) {
+      restaurarContasDoCofre(origem);
+      return getLocalUsers().find(u => u && String(u.email || '').toLowerCase().trim() === String(noCofre.email).toLowerCase().trim()) || noCofre;
+    }
+    if (cleanEmail) {
+      const remoto = await (SupabaseNuvem || SupabaseSync).fetchUserRecord(cleanEmail, { timeoutMs: 3000 });
+      if (remoto && remoto.email && remoto.password && String(remoto.password).startsWith('scrypt:') && !isAccountDeleted(cleanEmail)) {
+        const lista = getLocalUsers();
+        if (!lista.some(u => u && String(u.email || '').toLowerCase().trim() === cleanEmail)) {
+          const conta = { ...remoto, email: cleanEmail, active: remoto.active === undefined ? true : remoto.active };
+          saveLocalUsers(lista.concat([conta]));
+          console.warn('🛟 [SUPABASE → CONTA] ' + cleanEmail + ' não estava neste servidor (' + (origem || 'verificação') + '); o cadastro voltou do Supabase.');
+          if (pool) garantirContasNoSql([conta]).catch(() => {});
+        }
+        return getLocalUsers().find(u => u && String(u.email || '').toLowerCase().trim() === cleanEmail) || null;
+      }
+    }
+  } catch (e) { /* sem cofre/Supabase: segue como "não encontrada" */ }
+  return null;
+}
+
+// Estado dos guardiões das contas, para o /api/health (só administrador ou sincronização interna). Nunca inclui e-mail, hash nem chave.
+function resumoArmazenamento() {
+  const resumo = (motor) => {
+    try {
+      const st = motor.status();
+      return { ativo: Boolean(st.enabled), motivo_inativo: st.disabledReason || null, projeto: st.project || null, em_dia: Boolean(st.inSync), pendentes: st.pending || 0,
+        falhas_seguidas: st.consecutiveFailures || 0, ultimo_ok: st.lastSuccessAt || null, registros_confirmados: st.confirmedRecords || 0, restaurados_na_subida: st.restoredFiles || [] };
+    } catch (e) { return null; }
+  };
+  return {
+    espelho_principal: resumo(SupabaseSync),
+    supabase_direto_do_pc: SupabaseNuvem ? resumo(SupabaseNuvem) : null,
+    cofre_contas: cofreContas.resumo(),
+    contas_no_arquivo: getLocalUsers().length
+  };
+}
+
 function removeLocalUser(email) {
   try {
     const clean = (email || '').toLowerCase().trim();
     const current = getLocalUsers();
     const filtered = current.filter(u => (u.email || '').toLowerCase().trim() !== clean);
+    try { cofreContas.excluir(clean); } catch (cofreErr) {}   // exclusão de propósito: sai do cofre (a última versão fica em "excluidas")
     try { setStoredAvatar(clean, ''); } catch (avatarErr) {}
     // Conta excluída perde as permissões delegadas: quem recriar o mesmo e-mail não herda poderes
     try { if (getStoredPermissions(clean).length) setStoredPermissions(clean, []); } catch (permErr) {}
@@ -34368,7 +34499,8 @@ async function handleNexusRequest(req, res) {
           heap_used_mb: (mem.heapUsed / 1024 / 1024).toFixed(2),
           heap_total_mb: (mem.heapTotal / 1024 / 1024).toFixed(2)
         },
-        keepalive: KeepAlive.estadoAtual()   // auto-ping do Render: ativo, último ok, falhas seguidas (ver keepalive.js)
+        keepalive: KeepAlive.estadoAtual(),   // auto-ping do Render: ativo, último ok, falhas seguidas (ver keepalive.js)
+        armazenamento: resumoArmazenamento()  // onde as contas estão guardadas além do arquivo: Supabase, cofre (só admin/sincronização; sem e-mail nem senha)
       });
     }
     return res.end(JSON.stringify(healthPayload));
@@ -34642,6 +34774,12 @@ async function handleNexusRequest(req, res) {
         if (!user) {
           const localUsers = getLocalUsers();
           user = localUsers.find(u => u && u.email && String(u.email).toLowerCase().trim() === cleanEmail) || null;
+        }
+
+        // A conta sumiu da lista (disco zerado no redeploy, lista menor devolvida por uma sincronização, banco novo)? Antes de dizer "não possui conta criada"
+        // procura no cofre de contas e no Supabase: sem lápide de exclusão ela volta, e a senha digitada é conferida normalmente logo abaixo.
+        if (!user && !isAccountDeleted(cleanEmail)) {
+          user = await recuperarContaPerdida(cleanEmail, null, 'login de ' + cleanEmail);
         }
 
         // A senha digitada não confere com a do servidor (ou a conta nem está aqui: disco zerado no redeploy, espelho antigo): o Supabase guarda
@@ -35342,6 +35480,10 @@ async function handleNexusRequest(req, res) {
           if (localMatches.length === 1) user = localMatches[0];
           else if (localMatches.length > 1) ambiguous = true;
         }
+        // Conta fora da lista (arquivo zerado, banco novo...)? Cofre de contas e Supabase antes de responder "não possui conta criada"
+        if (!user && !ambiguous) {
+          user = await recuperarContaPerdida(reqEmail, reqCpf, 'recuperação de senha');
+        }
         if (ambiguous || !user) {
           return notFoundResponse();
         }
@@ -35758,6 +35900,7 @@ async function handleNexusRequest(req, res) {
         }
 
         const freshUsers = DEFAULT_AUTHORIZED_USERS.map(u => ({ ...u }));
+        getLocalUsers().forEach(u => { try { cofreContas.excluir(u.email); } catch (e) {} });   // reset TOTAL pedido e confirmado: o cofre não ressuscita o que se quis apagar
         saveLocalUsers(freshUsers, true);
 
         try {
@@ -36342,7 +36485,7 @@ async function handleNexusRequest(req, res) {
     if (!getAuthenticatedAdmin(req)) {
       return sendJson(res, corsHeaders, 401, { success: false, error: 'Autenticação de administrador obrigatória.' });
     }
-    const supabaseBody = { success: true, supabase: SupabaseSync.status() };
+    const supabaseBody = { success: true, supabase: SupabaseSync.status(), supabase_direto_do_pc: SupabaseNuvem ? SupabaseNuvem.status() : null, cofre_contas: cofreContas.resumo() };
     // ?audit=1: confere o CONTEÚDO (linha a linha) do que os arquivos dizem que deveria estar no Supabase × o que está lá (só leitura, sem dados pessoais)
     if (parsedUrl.query && String(parsedUrl.query.audit) === '1') {
       try { supabaseBody.audit = await SupabaseSync.audit(); } catch (auditErr) { supabaseBody.audit = { error: String((auditErr && auditErr.message) || auditErr).slice(0, 200) }; }
@@ -39075,7 +39218,10 @@ function gracefulShutdown(signal) {
   try { KeepAlive.pararTudo(); } catch(e){}
   try { flushFileLogsNow(); } catch(e){}
   // Antes de sair, envia ao Supabase o que ainda estiver na fila (no máximo 4 s): num desligamento normal nada fica para trás
-  SupabaseSync.flushAndStop(4000).catch(() => {}).then(() => process.exit(0));
+  Promise.all([
+    SupabaseSync.flushAndStop(4000).catch(() => {}),
+    SupabaseNuvem ? SupabaseNuvem.flushAndStop(4000).catch(() => {}) : null
+  ]).then(() => process.exit(0));
 }
 
 process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
@@ -39421,7 +39567,8 @@ async function syncWithRenderCloud() {
             const currentSqlTime = getBrasiliaSqlString(currentU.last_login);
             const t1 = brasiliaSqlTime ? new Date(brasiliaSqlTime.replace(' ', 'T')).getTime() : 0;
             const t2 = currentSqlTime ? new Date(currentSqlTime.replace(' ', 'T')).getTime() : 0;
-            if (brasiliaSqlTime && (!t2 || (t1 - t2 > 60000))) {
+            // Data impossível (futura) vinda da nuvem é efeito da deriva de fuso do espelho e nunca vai para o SQL Server
+            if (brasiliaSqlTime && !CofreContas.dataImpossivel(cu.last_login) && (!t2 || (t1 - t2 > 60000))) {
               await pool.query(
                 `UPDATE usuarios SET last_login = $1 WHERE id = $2 OR LOWER(email) = LOWER($3)`,
                 [brasiliaSqlTime, currentU.id, cleanEmail]
@@ -39528,7 +39675,15 @@ async function syncWithRenderCloud() {
     }
 
     // D) Enviar para o Render quaisquer usuários cadastrados localmente no SQL Server (PRESERVANDO SENHAS CRIPTOGRAFADAS E IDS)
-    const localUsersRes = await pool.query('SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted, device_type, must_change_password, trial_started_at, subscription_plan, subscription_status, subscription_expires_at, subscription_method, subscription_payment_id FROM usuarios ORDER BY id ASC');
+    let localUsersRes = await pool.query('SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted, device_type, must_change_password, trial_started_at, subscription_plan, subscription_status, subscription_expires_at, subscription_method, subscription_payment_id FROM usuarios ORDER BY id ASC');
+    // Conta que está no espelho (ou voltou do cofre/Supabase) mas o SQL Server não tem: é gravada lá e entra neste mesmo ciclo. Nunca apaga nem altera linha existente.
+    try {
+      const noSql = new Set((localUsersRes.rows || []).map(r => String(r.email || '').toLowerCase().trim()));
+      const soNoEspelho = getLocalUsers().filter(m => m && m.email && !noSql.has(String(m.email).toLowerCase().trim()) && !deletedEmailSet.has(String(m.email).toLowerCase().trim()));
+      if (soNoEspelho.length && await garantirContasNoSql(soNoEspelho) > 0) {
+        localUsersRes = await pool.query('SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted, device_type, must_change_password, trial_started_at, subscription_plan, subscription_status, subscription_expires_at, subscription_method, subscription_payment_id FROM usuarios ORDER BY id ASC');
+      }
+    } catch (soEspelhoErr) { /* o próximo ciclo tenta de novo */ }
     // Conta com diferença do SQL esperando ficar estável (alteração direta no banco, sql-vigia.js) fica de fora deste ciclo: nem é reconciliada com o
     // espelho nem enviada com o valor antigo; o vigia a adota em instantes, carimba, e o envio seguinte já leva a mudança
     const syncableLocalUsers = (localUsersRes.rows || []).filter(u => !deletedEmailSet.has(String(u.email || '').toLowerCase().trim()) && !sqlVigia.emEdicao(u.email));
@@ -39632,7 +39787,16 @@ server.on('error', (err) => {
 
 // Disco novo/vazio (ex.: redeploy no Render): recompõe os arquivos a partir do Supabase ANTES de aceitar conexões.
 // Só age quando falta dado local e o disco nunca foi sincronizado (no máximo 8 s); com dados locais não faz nada.
-SupabaseSync.restoreMissingFiles({ timeoutMs: 8000 }).catch(() => {}).then(() => server.listen(PORT, '0.0.0.0', () => {
+// Cofre de contas: a lista de contas pode ter vindo menor que o cofre (disco novo, arquivo zerado, lista menor devolvida por uma sincronização). As contas sem lápide
+// voltam ANTES de o servidor aceitar conexões; e o cofre aprende o que a lista tem (primeira subida depois da instalação do cofre).
+function conferirCofreNaSubida() {
+  try {
+    const voltaram = restaurarContasDoCofre('subida do servidor');
+    cofreContas.registrar(getLocalUsers());
+    console.log('🛟 [COFRE] Contas guardadas: ' + cofreContas.total() + (voltaram.length ? ' (' + voltaram.length + ' restaurada(s) agora)' : ''));
+  } catch (e) { console.warn('[COFRE] Conferência da subida falhou:', e.message); }
+}
+SupabaseSync.restoreMissingFiles({ timeoutMs: 8000 }).catch(() => {}).then(() => { conferirCofreNaSubida(); }).then(() => server.listen(PORT, '0.0.0.0', () => {
   console.log(`==================================================`);
   console.log(`🚀 Servidor Nexus Financeiro Hub rodando em 0.0.0.0:${PORT}`);
   console.log(`📋 Logs do banco disponíveis em tempo real: system_logs.json`);

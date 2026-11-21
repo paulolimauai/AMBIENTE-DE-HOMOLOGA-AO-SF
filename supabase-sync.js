@@ -423,7 +423,10 @@ function createSync() {
   let lastAudit = null;               // resultado da última conferência de conteúdo
   let lastAuditAt = 0;
 
-  const statePath = () => path.join(dataDir, STATE_FILE);
+  // Cada instância tem o seu arquivo de estado (init({ stateFile })): no PC há duas — uma para o SQL Server interno e outra direto no Supabase —
+  // e elas não podem dividir o "o que já foi confirmado".
+  let stateFileName = STATE_FILE;
+  const statePath = () => path.join(dataDir, stateFileName);
 
   function say(level, key, message) {            // registro com limite: a mesma mensagem no máximo a cada 5 min
     const now = Date.now();
@@ -452,7 +455,7 @@ function createSync() {
       const tmp = statePath() + '.tmp';
       fs.writeFileSync(tmp, JSON.stringify(state));
       fs.renameSync(tmp, statePath());
-    } catch (e) { say('warn', 'state', 'Não foi possível gravar ' + STATE_FILE + ': ' + e.message); }
+    } catch (e) { say('warn', 'state', 'Não foi possível gravar ' + stateFileName + ': ' + e.message); }
   }
   const ack = (u) => { state.acked[u.id] = u.hash; delete state.rejected[u.id]; };
   const reject = (u, message) => { state.rejected[u.id] = { hash: u.hash, at: Date.now(), table: u.table, key: u.key, message: String(message).slice(0, 300) }; };
@@ -1137,6 +1140,7 @@ function createSync() {
       return api;
     }
     dataDir = opts.dataDir || __dirname;
+    if (opts.stateFile && /^[A-Za-z0-9._-]+\.json$/.test(String(opts.stateFile))) stateFileName = String(opts.stateFile);
     log = opts.log || console;
     timersOn = opts.timers !== false;
     if (opts.disabled || process.env.NEXUS_DISABLE_DB === '1' || process.env.NEXUS_DISABLE_SUPABASE === '1') { disabledReason = 'desligado por variável de ambiente'; return api; }
