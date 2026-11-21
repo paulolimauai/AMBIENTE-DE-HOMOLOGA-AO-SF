@@ -5,6 +5,9 @@ services:
     plan: 0.5c-512mb
     buildCommand: npm install --no-audit --omit=optional || npm install --no-audit
     startCommand: npm start
+    # O Render chama /ping (resposta 200 sem tocar em banco): reinicia a instância que parar de responder e só troca a versão
+    # nova no deploy depois que ela responde (sem derrubar o site a cada push).
+    healthCheckPath: /ping
     autoDeploy: true
     disk:
       name: nexus-cadastro-data

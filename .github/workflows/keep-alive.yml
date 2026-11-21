@@ -10,5 +10,8 @@ jobs:
     name: Ping Render Instance
     runs-on: ubuntu-latest
     steps:
+      # Camada de reserva: o cron do GitHub é "melhor esforço" e atrasa horas (rodou 14 vezes em 4 dias). Quem segura o Render acordado de verdade
+      # é o auto-ping do servidor (keepalive.js) e o Cron Trigger do Cloudflare (worker.js, de 5 em 5 min).
+      # --max-time/--retry: com o Render dormindo o 1º ping espera até ~50 s ele subir.
       - name: Send Keep-Alive Ping
-        run: curl -f -s -A "GitHub-Actions-KeepAlive/1.0" https://ambiente-de-homologa-ao-sf.onrender.com/ping
+        run: curl -f -s -A "GitHub-Actions-KeepAlive/1.0" --max-time 90 --retry 3 --retry-delay 10 --retry-all-errors https://ambiente-de-homologa-ao-sf.onrender.com/ping

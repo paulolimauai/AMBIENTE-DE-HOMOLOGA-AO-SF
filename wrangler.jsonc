@@ -11,6 +11,10 @@
     { "pattern": "nexusfinanceirohub.com.br", "custom_domain": true },
     { "pattern": "www.nexusfinanceirohub.com.br", "custom_domain": true }
   ],
+  // Keep-alive do Render: o Worker chama /ping de 5 em 5 min (ver scheduled() em worker.js). O Render dorme após 15 min sem tráfego.
+  "triggers": {
+    "crons": ["*/5 * * * *"]
+  },
   "observability": {
     "enabled": true
   }

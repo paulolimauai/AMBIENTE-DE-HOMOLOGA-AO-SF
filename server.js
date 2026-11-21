@@ -32,6 +32,7 @@ const Acesso = require('./acesso'); // relógio do bloqueio da conta (active): o
 const Credenciais = require('./credenciais'); // qual senha vale quando a conta existe na nuvem, no SQL Server do PC e no Supabase (vale a trocada por último)
 const SqlVigia = require('./sql-vigia'); // alteração feita DIRETO no SQL Server (SSMS) é reconhecida, carimbada e levada à nuvem e ao Supabase em vez de ser desfeita pelo ciclo de 10 s
 const Visitas = require('./visitas'); // registro de visitas ao site (pasta visitas/, IP completo só no arquivo e mascarado em qualquer resposta)
+const KeepAlive = require('./keepalive'); // o Render dorme após 15 min sem tráfego: no Render o servidor chama o próprio /ping a cada ~4 min (liga só com RENDER_EXTERNAL_URL)
 const BackupFinanceiro = require('./backup-financeiro'); // cópias HISTÓRICAS dos dados financeiros (backups_financeiros/): o que nenhum retrato zerado, redeploy ou sincronização consegue apagar
 
 const PORT = process.env.PORT || 3000;
@@ -34182,7 +34183,7 @@ async function handleNexusRequest(req, res) {
     parsedUrl = { pathname: req.url.split('?')[0] || '/', query: {} };
   }
 
-  console.log(`[HTTP ${req.method}] ${parsedUrl.pathname}`);
+  if (parsedUrl.pathname !== '/ping') console.log(`[HTTP ${req.method}] ${parsedUrl.pathname}`);   // o keep-alive chama /ping a cada poucos minutos (Cloudflare e o próprio servidor): sem linha de log por ping
 
   // Visita ao site: só a abertura de páginas (nunca CSS/JS/imagens/API). Falha de disco não afeta a resposta.
   if (req.method === 'GET') {
@@ -34366,7 +34367,8 @@ async function handleNexusRequest(req, res) {
           rss_mb: (mem.rss / 1024 / 1024).toFixed(2),
           heap_used_mb: (mem.heapUsed / 1024 / 1024).toFixed(2),
           heap_total_mb: (mem.heapTotal / 1024 / 1024).toFixed(2)
-        }
+        },
+        keepalive: KeepAlive.estadoAtual()   // auto-ping do Render: ativo, último ok, falhas seguidas (ver keepalive.js)
       });
     }
     return res.end(JSON.stringify(healthPayload));
@@ -39070,6 +39072,7 @@ function gracefulShutdown(signal) {
   } catch(e){}
 
   try { sqlVigia.parar(); } catch(e){}
+  try { KeepAlive.pararTudo(); } catch(e){}
   try { flushFileLogsNow(); } catch(e){}
   // Antes de sair, envia ao Supabase o que ainda estiver na fila (no máximo 4 s): num desligamento normal nada fica para trás
   SupabaseSync.flushAndStop(4000).catch(() => {}).then(() => process.exit(0));
@@ -39639,6 +39642,9 @@ SupabaseSync.restoreMissingFiles({ timeoutMs: 8000 }).catch(() => {}).then(() =>
   if (!process.env.RENDER && process.env.IS_RENDER !== 'true') {
     startRenderCloudSyncWorker();
   }
+
+  // Mantém o Render acordado: o servidor chama o próprio /ping de ~4 em ~4 min (só liga com RENDER_EXTERNAL_URL ou NEXUS_KEEPALIVE_URL; no PC fica desligado)
+  try { KeepAlive.iniciarSeConfigurado(process.env); } catch (e) { console.warn('[KEEPALIVE] Não iniciou:', e.message); }
 
   // Conexão e Auto-Reconexão Contínua com o Microsoft SQL Server (Sem Bloquear o Servidor)
   initDatabase()
