@@ -221,6 +221,9 @@
     $$('[data-cores]').forEach(montarCores);
     $$('[data-modos]').forEach(montarModos);
     $$('[data-fundos]').forEach(montarFundos);
+    /* a seção "Do seu jeito" é só ilustrativa: mostra as opções atuais, mas não deixa mudar a aparência por ali */
+    var pers = $('#personalizar');
+    if (pers) $$('button,input', pers).forEach(function (el) { el.disabled = true; el.setAttribute('aria-disabled', 'true'); });
     if (T) { T.onChange = sincronizarControles; sincronizarControles(); }
     var btn = $('#cfg-btn'), pop = $('#cfg-pop');
     if (!btn || !pop) return;

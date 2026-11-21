@@ -475,6 +475,9 @@ h1 em{font-style:normal;background:linear-gradient(100deg,var(--accent),var(--br
 @media (min-width:900px){.pers{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:2.6rem}}
 .pers .grp{margin-top:1.3rem}
 .pers .chips{max-width:24rem}
+/* seção só ilustrativa: os controles aparecem, mas não alteram nada (o ajuste é no popup Personalizar) */
+.pers .grp{cursor:default}
+.pers .grp button:disabled,.pers .grp .sw-c{cursor:default}
 /* as 11 bolinhas de cor cabem numa linha só quando há espaço; quando falta, quebram por igual em vez de deixar uma sobrando */
 .pers .sws{grid-template-columns:repeat(auto-fill,2.5rem);justify-content:start;justify-items:start;gap:.6rem}
 .pers-info{display:grid;gap:.8rem}
