@@ -129,6 +129,9 @@ function aplicar(espelho, linha, mud, opts) {
  */
 function createVigia(deps) {
   const d = deps || {};
+  // DESLIGADO por padrão: só liga com NEXUS_ENABLE_SQL_VIGIA=1 (e NEXUS_DISABLE_SQL_VIGIA=1 sempre desliga). No banco real ele entrou em laço de
+  // adoção por causa de datas do SQL 3 h à frente das do espelho; até isso ser entendido e corrigido não pode ser ligado sem querer.
+  const ligado = () => process.env.NEXUS_ENABLE_SQL_VIGIA === '1' && process.env.NEXUS_DISABLE_SQL_VIGIA !== '1';
   const agora = typeof d.agora === 'function' ? d.agora : () => Date.now();
   const log = typeof d.log === 'function' ? d.log : () => {};
   let estado = null;                 // { usuarios: { email: foto } }
@@ -208,7 +211,7 @@ function createVigia(deps) {
 
   /** Lê `usuarios` no SQL e processa. `dentroDoCiclo` = chamado pelo próprio ciclo com a nuvem (que já marcou "ocupado"). */
   async function tickUsuarios(opts) {
-    if (process.env.NEXUS_DISABLE_SQL_VIGIA === '1') return [];   // interruptor: com 1 o vigia não lê nem adota nada
+    if (!ligado()) return [];
     const pool = typeof d.getPool === 'function' ? d.getPool() : null;
     if (!pool) return [];
     const dentro = !!(opts && opts.dentroDoCiclo);
@@ -219,7 +222,7 @@ function createVigia(deps) {
   }
 
   function iniciar() {
-    if (timer) return;
+    if (timer || !ligado()) return;
     carregar();
     timer = setInterval(() => {
       if (ocupado) return;

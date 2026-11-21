@@ -4,6 +4,7 @@ const assert = require('node:assert/strict');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
+process.env.NEXUS_ENABLE_SQL_VIGIA = '1';   // o vigia é desligado por padrão: os testes o ligam
 const V = require('./sql-vigia');
 const Acesso = require('./acesso');
 const Assinatura = require('./assinatura');
