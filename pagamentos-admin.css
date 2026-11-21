@@ -136,4 +136,70 @@
 @media (max-width: 900px) {
   .pg-cfg-form { grid-template-columns: minmax(0, 1fr) !important; }
 }
+
+/* ---------- MODO CLARO (Light Mode) - Contraste Máximo e Texto Preto Sólido ---------- */
+html[data-theme="light"] .pg-painel,
+html[data-theme="light"] .pg-detalhes,
+html[data-theme="light"] .adm-shell {
+  background: #FFFFFF !important;
+  border-color: #CBD5E1 !important;
+  color: #000000 !important;
+}
+html[data-theme="light"] .pg-painel h3,
+html[data-theme="light"] .pg-bloco-t h3,
+html[data-theme="light"] .pg-lista-curta b,
+html[data-theme="light"] .pg-tabela td b,
+html[data-theme="light"] .pg-barra-v,
+html[data-theme="light"] .pg-dl dd,
+html[data-theme="light"] .pg-hist li b,
+html[data-theme="light"] .pg-detalhes summary {
+  color: #000000 !important;
+}
+html[data-theme="light"] .pg-nota,
+html[data-theme="light"] .pg-nada,
+html[data-theme="light"] .pg-barra-m,
+html[data-theme="light"] .pg-barra small,
+html[data-theme="light"] .pg-lista-curta small,
+html[data-theme="light"] .pg-tabela td small,
+html[data-theme="light"] .pg-campo span,
+html[data-theme="light"] .pg-dica,
+html[data-theme="light"] .pg-hist li small,
+html[data-theme="light"] .pg-hist li span,
+html[data-theme="light"] .pg-dl dt {
+  color: #334155 !important;
+}
+html[data-theme="light"] .pg-campo input,
+html[data-theme="light"] .pg-campo select,
+html[data-theme="light"] .pg-campo textarea {
+  background: #F8FAFC !important;
+  border-color: #CBD5E1 !important;
+  color: #000000 !important;
+  color-scheme: light !important;
+}
+html[data-theme="light"] .pg-abas {
+  background: #F1F5F9 !important;
+  border-color: #CBD5E1 !important;
+}
+html[data-theme="light"] .pg-aba {
+  color: #334155 !important;
+}
+html[data-theme="light"] .pg-aba:hover {
+  background: #E2E8F0 !important;
+  color: #000000 !important;
+}
+html[data-theme="light"] .pg-aba.is-on {
+  background: #FFFFFF !important;
+  border-color: #D97706 !important;
+  color: #D97706 !important;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06) !important;
+}
+html[data-theme="light"] .pg-lista-curta li,
+html[data-theme="light"] .pg-hist li {
+  background: #F8FAFC !important;
+  border-color: #E2E8F0 !important;
+  color: #000000 !important;
+}
+html[data-theme="light"] .pg-barra-trilho {
+  background: #E2E8F0 !important;
+}
 }

@@ -27,6 +27,10 @@
     importar: 'Traga o extrato do banco',
     anexos: 'Comprovantes e arquivos',
     config: 'Perfil, aparência e segurança',
+    usuarios: 'Usuários, planos e acessos',
+    assinaturas: 'Planos, testes e cortesias',
+    pagamentos: 'Pix, cartão, boleto e 2ª via',
+    logs: 'Eventos e auditoria',
     menuAdminAssinaturasBtn: 'Pagamentos e acessos'
   };
 
@@ -116,7 +120,7 @@
         var t = el.querySelector('.menu-section-title');
         // oculto = escondido pelo JS do app (style inline); o CSS do menu recolhido também esconde os títulos e não conta
         saida.push({ tipo: 'titulo', chave: chaveDoGrupo(el.className), titulo: t ? t.textContent : '', oculto: el.style.display === 'none' });
-      } else if (el.tagName === 'BUTTON' && el.classList.contains('menu-btn-user')) {
+      } else if (el.tagName === 'BUTTON' && (el.classList.contains('menu-btn-user') || el.classList.contains('menu-btn-admin'))) {
         var rot = el.querySelector('.label');
         var ic = el.querySelector('.ic svg');
         var oculto = el.style.display === 'none';

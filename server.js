@@ -15033,6 +15033,12 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 <link rel="stylesheet" href="/transacoes.css?v=${ASSETS_V}" />
 <script src="/transacoes.js?v=${ASSETS_V}"></script>
 <script src="/importacao.js?v=${ASSETS_V}"></script>
+<link rel="stylesheet" href="/administracao.css?v=${ASSETS_V}" />
+<script src="/administracao.js?v=${ASSETS_V}"></script>
+<link rel="stylesheet" href="/assinaturas.css?v=${ASSETS_V}" />
+<script src="/assinaturas.js?v=${ASSETS_V}"></script>
+<link rel="stylesheet" href="/pagamentos-admin.css?v=${ASSETS_V}" />
+<script src="/pagamentos-admin.js?v=${ASSETS_V}"></script>
 </head>
 <body>
 <!-- CAMADA PERMANENTE DE FUNDO 4K (Zero-Flicker / Sem Piscar) -->
@@ -15700,6 +15706,36 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         <span class="menu-section-line"></span>
       </div>
 
+      <!-- Painel administrativo do Nexus (as 4 abas internas: Cadastros, Assinaturas, Pagamentos e Auditoria) -->
+      <button data-page="usuarios" id="menuUsuariosBtn" class="menu-btn-admin" style="display:none;" title="Cadastros & Contas">
+        <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+        <span class="admin-menu-field-body">
+          <span class="label">Cadastros &amp; Contas</span>
+          <span class="sub-label">Usuários, Planos e Acessos</span>
+        </span>
+      </button>
+      <button data-page="assinaturas" id="menuAssinaturasBtn" class="menu-btn-admin" style="display:none;" title="Assinaturas, testes e cortesias">
+        <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 5 3.4 8 8 9 4.6-1 8-4 8-9V6l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg></span>
+        <span class="admin-menu-field-body">
+          <span class="label">Assinaturas</span>
+          <span class="sub-label">Planos, testes e cortesias</span>
+        </span>
+      </button>
+      <button data-page="pagamentos" id="menuPagamentosBtn" class="menu-btn-admin" style="display:none;" title="Pagamentos (Pix, Cartão, Boleto), Liberação & 2ª Via de Boleto">
+        <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><path d="M6 15h4"/><path d="M14 15h4"/></svg></span>
+        <span class="admin-menu-field-body">
+          <span class="label">Pagamentos &amp; Boletos</span>
+          <span class="sub-label">Pix, Cartão, 2ª Via e Liberação</span>
+        </span>
+      </button>
+      <button data-page="logs" id="menuLogsBtn" class="menu-btn-admin" style="display:none;" title="Logs do Sistema & Auditoria">
+        <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>
+        <span class="admin-menu-field-body">
+          <span class="label">Auditoria &amp; Logs</span>
+          <span class="sub-label">Eventos e Segurança</span>
+        </span>
+      </button>
+
       <!-- Área do administrador: exclusiva do perfil Administrador (o servidor confere o token em /api/auth/session).
            Sem 'noopener' de propósito: a aba nova herda a sessão desta aba (sessionStorage) e o administrador não precisa entrar de novo. -->
       <button type="button" id="menuAdminAssinaturasBtn" class="menu-btn-user" title="Assinaturas, pagamentos e acessos do Nexus e do GLPI" style="display:none !important;" onclick="window.open('/admin-assinaturas-glpi.html','_blank')">
@@ -15758,6 +15794,24 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
     <button type="button" data-page="metas" class="mobile-bottom-btn mobile-btn-user" title="Metas">
       <span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2" fill="currentColor"/></svg></span>
       <span>Metas</span>
+    </button>
+
+    <!-- Abas para Administrador: as 4 telas do painel + "Mais" (gaveta com a área GLPI) -->
+    <button type="button" data-page="usuarios" class="mobile-bottom-btn mobile-btn-admin" style="display:none;" title="Cadastros & Contas">
+      <span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+      <span>Cadastros</span>
+    </button>
+    <button type="button" data-page="assinaturas" class="mobile-bottom-btn mobile-btn-admin" style="display:none;" title="Assinaturas">
+      <span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 5 3.4 8 8 9 4.6-1 8-4 8-9V6l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg></span>
+      <span>Assinaturas</span>
+    </button>
+    <button type="button" data-page="pagamentos" class="mobile-bottom-btn mobile-btn-admin" style="display:none;" title="Pagamentos & Boletos">
+      <span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><path d="M6 15h4"/><path d="M14 15h4"/></svg></span>
+      <span>Pagamentos</span>
+    </button>
+    <button type="button" data-page="logs" class="mobile-bottom-btn mobile-btn-admin" style="display:none;" title="Auditoria & Logs">
+      <span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>
+      <span>Auditoria</span>
     </button>
 
     <button type="button" class="mobile-bottom-btn" id="mobileBottomMoreBtn" title="Todas as Opções">
@@ -15880,7 +15934,11 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
       <div class="mobile-drawer-section-title menu-section-minha-conta">Preferências</div>
       <button data-page="config" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><span class="label">Minha Conta</span></button>
       <div class="mobile-drawer-section-title menu-section-admin" style="display:none;">Administração</div>
-      <button type="button" id="mobileDrawerAdminAssinaturasBtn" class="menu-btn-user" style="display:none !important;" onclick="window.open('/admin-assinaturas-glpi.html','_blank')"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span class="label">Assinaturas &amp; Acessos</span></button>
+      <button data-page="usuarios" id="mobileDrawerUsuariosBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span class="label">Cadastros &amp; Contas</span></button>
+      <button data-page="assinaturas" id="mobileDrawerAssinaturasBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 5 3.4 8 8 9 4.6-1 8-4 8-9V6l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg></span><span class="label">Assinaturas</span></button>
+      <button data-page="pagamentos" id="mobileDrawerPagamentosBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><path d="M6 15h4"/><path d="M14 15h4"/></svg></span><span class="label">Pagamentos &amp; Boletos</span></button>
+      <button data-page="logs" id="mobileDrawerLogsBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span><span class="label">Auditoria &amp; Logs</span></button>
+      <button type="button" id="mobileDrawerAdminAssinaturasBtn" class="menu-btn-user" style="display:none !important;" onclick="window.open('/admin-assinaturas-glpi.html','_blank')"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span class="label">Assinaturas &amp; Acessos (GLPI)</span></button>
 
       <!-- Liberações (só para conta de usuário com permissão delegada pelo administrador) -->
       <div class="mobile-drawer-section-title menu-section-liberacoes" style="display:none;">Liberações</div>
@@ -21620,7 +21678,7 @@ function nexusTemPermissao(u, id) { return !!u && ((u.role === 'Administrador' |
 function nexusTemLiberacoes(u) {
   return !!u && !nexusIsAdminUser(u) && (nexusTemPermissao(u, 'assinatura.liberar') || nexusTemPermissao(u, 'contas.bloquear') || nexusTemPermissao(u, 'logs.ver'));
 }
-function nexusPagesFor(u) { return NEXUS_USER_PAGES.concat(nexusTemLiberacoes(u) ? NEXUS_DELEGATE_PAGES : []); }
+function nexusPagesFor(u) { return nexusIsAdminUser(u) ? NEXUS_ADMIN_PAGES : (nexusTemLiberacoes(u) ? NEXUS_USER_PAGES.concat(NEXUS_DELEGATE_PAGES) : NEXUS_USER_PAGES); }
 // Quem está logado muda a lista de permissões no servidor (o administrador marcou ou tirou algo): atualiza menu e tela sem novo login
 function nexusRefreshOwnPermissions() {
   if (!currentUser || isViewingOtherUser || nexusIsAdminUser(currentUser)) return;
@@ -22682,14 +22740,13 @@ function updateAdminSidebarBadges(){
 }
 
 function updateAdminMenuVisibility(force = false){
-  // O painel administrativo saiu do app (virará página própria): administrador usa as mesmas páginas do usuário.
-  const isAdmin = false;
   updateAdminSidebarBadges();
 
   // "Assinaturas & Acessos": só o perfil Administrador real (fora do modo espelho) vê o atalho; o conteúdo
   // em si continua protegido no servidor (/api/auth/session e rotas /api/admin/*). Fica ANTES do retorno por cache:
   // o papel do usuário chega de forma assíncrona e a chave abaixo não muda quando ele vira administrador.
   const showSiteAdmin = nexusIsAdminUser(currentUser) && !isViewingOtherUser;
+  const isAdmin = showSiteAdmin;
   ['menuAdminAssinaturasBtn', 'mobileDrawerAdminAssinaturasBtn'].forEach(function(id) {
     const siteBtn = document.getElementById(id);
     // !important inline vence as regras de perfil (.menu-btn-user é ligado/desligado por html.is-admin)
