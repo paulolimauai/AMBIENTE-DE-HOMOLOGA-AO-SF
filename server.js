@@ -36245,6 +36245,34 @@ async function handleNexusRequest(req, res) {
           });
         }
 
+        // A senha e o cadastro valem do banco: se o espelho local não tiver a conta (sincronização atrasada,
+        // arquivo zerado, conta criada direto no SQL), o SQL Server é consultado para que NENHUMA alteração
+        // derrube a senha de quem já está cadastrado — sem isto o cadastro caía no "senha aleatória" abaixo.
+        if (pool) {
+          try {
+            const emailsPedido = users.map(u => u && u.email ? String(u.email).toLowerCase().trim() : '').filter(Boolean);
+            if (emailsPedido.length) {
+              const marcadores = emailsPedido.map((_, i) => '$' + (i + 1)).join(',');
+              const sqlRows = await pool.query(
+                'SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted, device_type, must_change_password, trial_started_at, subscription_plan, subscription_status, subscription_expires_at, subscription_method, subscription_payment_id FROM usuarios WHERE LOWER(email) IN (' + marcadores + ')',
+                emailsPedido
+              );
+              (sqlRows.rows || []).forEach(row => {
+                if (!row || !row.email) return;
+                const key = String(row.email).toLowerCase().trim();
+                const espelho = existingMap.get(key);
+                if (!espelho) {
+                  existingMap.set(key, row);
+                } else if (!espelho.password && row.password) {
+                  espelho.password = row.password;   // espelho sem senha + banco com senha: o banco manda
+                }
+              });
+            }
+          } catch (sqlErr) {
+            console.warn('[AVISO BD] Falha ao conferir cadastros no SQL Server antes de salvar usuários:', sqlErr.message);
+          }
+        }
+
         let acceptedUsers = 0;
         const contasBloqueadasAgora = [];   // contas que passaram de ativas a bloqueadas neste envio: as sessões abertas delas caem ao salvar
         const requestIsInternalSync = hasInternalSyncAccess(req, parsedUrl);
