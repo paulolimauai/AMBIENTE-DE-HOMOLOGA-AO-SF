@@ -85,6 +85,32 @@ body{
 .ads-status.ok{color:#6EE7B7}
 .ads-status.err{color:#FCA5A5}
 
+@media (max-width:900px){
+  .ads-side{position:static;top:auto}
+}
+@media (max-width:640px){
+  .ads-top{padding:.7rem .8rem;gap:.6rem}
+  .ads-brand{gap:.55rem}
+  .ads-brand svg{width:22px;height:22px}
+  .ads-brand strong{font-size:.95rem}
+  .ads-brand span{font-size:.6rem;letter-spacing:.14em}
+  .ads-brand small{font-size:.65rem}
+  .ads-who{display:none}
+  .ads-actions{width:100%;gap:.4rem}
+  .ads-btn{padding:.5rem .65rem;font-size:.72rem;border-radius:8px;white-space:nowrap}
+  .ads-wrap{padding:.8rem}
+  .ads-side,.ads-editor{border-radius:12px}
+  .ads-side{padding:.8rem}
+  .ads-files li button{padding:.55rem .65rem;font-size:.78rem}
+  .ads-editor-bar{flex-direction:column;align-items:stretch}
+  .ads-editor-actions{display:flex}
+  .ads-editor-actions .ads-btn{flex:1 1 0;min-width:0}
+  #adsContent{font-size:.76rem;padding:.75rem;min-height:50vh;line-height:1.5}
+  .ads-status{padding:.6rem .8rem;font-size:.74rem}
+  .ads-modal-box{max-height:92vh}
+  .ads-backup-item{flex-direction:column;align-items:flex-start;gap:.4rem}
+}
+
 .ads-modal{
   position:fixed;inset:0;background:rgba(3,6,12,.75);display:flex;
   align-items:center;justify-content:center;z-index:50;padding:1rem;
