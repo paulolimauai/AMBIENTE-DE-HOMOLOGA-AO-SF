@@ -616,7 +616,7 @@ return`<section>${head('pay','Pagamentos','Confirme comprovantes Pix, registre r
 <div class="glass pad col"><h3>Como funciona a liberação</h3><ol class="steps"><li><span>O cliente paga o Pix e envia o comprovante</span></li><li><span>Você confere e clica em <b>Confirmar</b></span></li><li><span>A assinatura Mensal é ativada por +30 dias (renovações somam ao vencimento)</span></li><li><span>O acesso é liberado no GLPI automaticamente</span></li></ol><div class="sub" style="font-size:var(--fs);margin:0">Para baixa automática, ligue um gateway no servidor. Chaves de API nunca devem ficar neste arquivo.</div></div></div>
 <div class="glass bar">${search('pq','Buscar por pedido, nome ou referência…',F.pq,'prows()')}<select id="pf" aria-label="Status do pagamento" onchange="prows()">${opt('','Todos os status',F.pf)}${['Em análise','Aguardando','Confirmado','Recusado','Estornado'].map(x=>opt(x,x,F.pf)).join('')}</select><span class="cnt" id="pcnt"></span></div>
 <div class="glass tbl"><div class="scroll"><table><thead><tr><th>Pedido</th><th style="min-width:290px">Cliente</th><th>Valor</th><th>Forma</th><th>Status</th><th class="c-r">Ações</th></tr></thead><tbody id="pb"></tbody></table></div></div></section>`},
-mon(){return`<section>${head('mon','Monitoramento','Verificação automática de desvios: acesso liberado com assinatura vencida, assinaturas sem validade, CPF duplicado e chamados fora do prazo. Todo desvio novo abre uma O.S. na fila sozinha.',`<button type="button" class="btn p" onclick="monScan()">${I('search')} Verificar e abrir chamados</button>`)}
+mon(){return`<section>${head('mon','Monitoramento','Verificação automática de desvios: site fora do ar, banco indisponível, acesso liberado com assinatura vencida, assinaturas sem validade, CPF duplicado e chamados fora do prazo. Todo desvio novo abre uma O.S. na fila sozinha.',`<button type="button" class="btn p" onclick="monScan()">${I('search')} Verificar e abrir chamados</button>`)}
 <div id="monbox"><div class="glass pad"><p class="sub" style="margin:0">Verificando desvios…</p></div></div></section>`},
 acc(){const u=(window.at||'u')==='u',n=S.users.length,adm=S.users.filter(x=>x.p==='Administrador'||x.p==='Proprietário').length,on=S.users.filter(x=>x.on).length,off=n-on,pend=S.users.filter(x=>!x.g).length;
 const ps=Array.from(new Set(S.users.map(x=>x.p)));
@@ -885,7 +885,7 @@ function monRender(d){
     kpi('alert','Desvios encontrados',L.length,L.length?'Precisam de atenção':'Tudo certo','r')+
     kpi('ok','Com chamado aberto',comOs,'O.S. na fila de atendimento','e')+
     kpi('clock','Sem chamado',sem,sem?'Abrir com "Verificar"':'Nada pendente','w')+
-    kpi('info','Última verificação',quando,'Automática a cada 15 min','in')+
+    kpi('info','Última verificação',quando,'Automática a cada 5 min','in')+
   '</div>'+
   '<div class="glass tbl" style="margin-top:14px"><div class="scroll"><table><thead><tr><th>Desvio</th><th>Severidade</th><th>Chamado</th></tr></thead><tbody>'+
   (L.map(function(x){
@@ -894,7 +894,7 @@ function monRender(d){
       '<td data-l="Chamado">'+(x.os?'<span class="tag ok">'+esc(x.os.protocol)+'</span><br><small class="sub" style="font-size:var(--fs)">'+esc(x.os.status)+'</small>':'<span class="tag wa">Sem chamado</span>')+'</td></tr>';
   }).join('')||'<tr><td class="emp" colspan="3"><div class="ei">'+I('ok')+'</div><b>Nenhum desvio encontrado</b><p>Assinaturas, CPFs e chamados estão consistentes no momento.</p></td></tr>')+
   '</tbody></table></div></div>'+
-  '<div class="note" style="margin-top:14px">'+I('info')+'<span>O servidor refaz esta verificação sozinho a cada 15 minutos e abre a O.S. automaticamente quando surge um desvio novo — sem chamado duplicado enquanto o anterior estiver aberto.</span></div>';
+  '<div class="note" style="margin-top:14px">'+I('info')+'<span>O servidor refaz esta verificação sozinho a cada 5 minutos e abre a O.S. automaticamente quando surge um desvio novo — sem chamado duplicado enquanto o anterior estiver aberto.</span></div>';
 }
 function monScan(){
   var box=$('monbox');if(box)box.innerHTML='<div class="glass pad"><p class="sub" style="margin:0">Verificando desvios e abrindo chamados…</p></div>';

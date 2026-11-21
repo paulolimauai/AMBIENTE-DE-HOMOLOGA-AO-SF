@@ -34071,11 +34071,68 @@ async function abrirChamadoDeDesvio(d) {
   return registrarOrdemNova(novaOrdem);
 }
 
+// ---------- Monitoramento de infraestrutura: site fora do ar e banco fora do ar viram incidente ----------
+// O endereço vigiado é o público (NEXUS_SITE_URL/NEXUS_MONITOR_URL/RENDER_EXTERNAL_URL): sem ele não há o que
+// checar de fora. Só vira desvio depois de 2 falhas seguidas, para não abrir chamado por oscilação de rede.
+let falhasSiteSeguidas = 0;
+const SITE_MONITOR_TIMEOUT_MS = 12000;
+
+function urlMonitoramentoSite() {
+  const base = String(process.env.NEXUS_SITE_URL || process.env.NEXUS_MONITOR_URL || process.env.RENDER_EXTERNAL_URL || '').trim().replace(/\/+$/, '');
+  return base || null;
+}
+
+async function verificacaoSite() {
+  const base = urlMonitoramentoSite();
+  if (!base) return; // sem endereço público configurado: não há verificação externa a fazer
+  let erro = null;
+  try {
+    const ctrl = typeof AbortController === 'function' ? new AbortController() : null;
+    const timer = ctrl ? setTimeout(() => ctrl.abort(), SITE_MONITOR_TIMEOUT_MS) : null;
+    if (timer && timer.unref) timer.unref();
+    const res = await fetch(base + '/api/health', { signal: ctrl ? ctrl.signal : undefined, headers: { 'Cache-Control': 'no-cache' } });
+    if (timer) clearTimeout(timer);
+    if (res && res.ok) { falhasSiteSeguidas = 0; return; }
+    erro = 'HTTP ' + (res ? res.status : '?');
+  } catch (e) {
+    erro = (e && e.name === 'AbortError') ? 'tempo esgotado (' + Math.round(SITE_MONITOR_TIMEOUT_MS / 1000) + ' s)' : String((e && e.message) || e);
+  }
+  falhasSiteSeguidas++;
+  if (falhasSiteSeguidas < 2) return; // primeira falha pode ser oscilação: espera a próxima varredura
+  return {
+    codigo: 'site_fora_do_ar', chave: 'site',
+    titulo: 'Site fora do ar',
+    descricao: 'O endereço público do site (' + base + ') não respondeu à verificação de saúde: ' + erro + '. ' +
+      'Falhas seguidas: ' + falhasSiteSeguidas + '. Verificar a hospedagem (Render), o deploy e o keep-alive; se o serviço estiver suspenso, religar.',
+    severidade: 'alta'
+  };
+}
+
+async function desviosInfraestrutura() {
+  const desvios = [];
+  const site = await verificacaoSite();
+  if (site) desvios.push(site);
+  if (pool) {
+    try {
+      await pool.query('SELECT 1');
+    } catch (e) {
+      desvios.push({
+        codigo: 'banco_indisponivel', chave: 'sqlserver',
+        titulo: 'Banco de dados indisponível',
+        descricao: 'O SQL Server não respondeu ao teste de conexão: ' + (e && e.message ? e.message : e) +
+          '. O sistema segue operando no arquivo local; verificar a instância e a string de conexão.',
+        severidade: 'alta'
+      });
+    }
+  }
+  return desvios;
+}
+
 // Roda as verificações e, se pedido, abre chamado para cada desvio que ainda não tem um em aberto.
 async function varreduraMonitoramento({ abrirChamados = false } = {}) {
   const usuarios = getLocalUsers();
   const ordens = await carregarOrdens();
-  const desvios = Monitoramento.executarVerificacoes({ usuarios, ordens });
+  const desvios = Monitoramento.executarVerificacoes({ usuarios, ordens }).concat(await desviosInfraestrutura());
   const resultado = desvios.map((d) => {
     const os = Monitoramento.osDoDesvio(ordens, d);
     return { ...d, os: os ? { id: os.id, protocol: os.protocol, status: os.status } : null };
@@ -40096,11 +40153,11 @@ SupabaseSync.restoreMissingFiles({ timeoutMs: 8000 }).catch(() => {}).then(() =>
     .then(() => rotinaDeAssinaturas());
   setInterval(rotinaDeAssinaturas, 60 * 60 * 1000).unref();
   setInterval(() => { healAllFinancial('periodico').catch(() => {}); }, 5 * 60 * 1000).unref();
-  // Monitoramento de desvios: a cada 15 min verifica contas e chamados e abre O.S. automática para desvio novo
+  // Monitoramento de desvios: a cada 5 min verifica contas, chamados, site e banco; abre O.S. automática para desvio novo
   setInterval(() => {
     varreduraMonitoramento({ abrirChamados: true })
       .then((r) => { if (r.abertos) console.log('[MONITORAMENTO] ' + r.abertos + ' chamado(s) aberto(s) automaticamente.'); })
       .catch((e) => console.warn('[MONITORAMENTO] Varredura falhou:', e.message));
-  }, 15 * 60 * 1000).unref();
+  }, 5 * 60 * 1000).unref();
 }));
 
