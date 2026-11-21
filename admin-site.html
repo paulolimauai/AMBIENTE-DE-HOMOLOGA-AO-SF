@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Administração do Site · Nexus Financeiro</title>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="/admin-site.css?v=3">
+<link rel="stylesheet" href="/admin-site.css?v=4">
 </head>
 <body>
 <header class="ads-top">
@@ -22,7 +22,11 @@
     </div>
   </div>
   <!-- Sessão única: o login é o do site principal (/login.html). Os atalhos abaixo abrem na mesma aba e continuam logados. -->
-  <div class="ads-actions">
+  <div class="ads-actions" id="adsActions">
+    <div class="ads-drawer-head">
+      <strong>Menu</strong>
+      <button class="ads-btn ghost" id="adsDrawerClose" type="button" aria-label="Fechar menu">✕</button>
+    </div>
     <span class="ads-who" id="adsWho" hidden></span>
     <a class="ads-btn ghost" id="adsOpenSite" href="/inicio" target="_blank" rel="noopener">Abrir site</a>
     <a class="ads-btn ghost" href="/admin-assinaturas-glpi.html">Assinaturas &amp; Acessos</a>
@@ -31,7 +35,9 @@
     <button class="ads-btn" id="adsReload" type="button">Atualizar</button>
     <button class="ads-btn danger" id="adsSair" type="button">Sair</button>
   </div>
+  <button class="ads-btn ghost ads-burger" id="adsBurger" type="button" aria-label="Abrir menu" aria-expanded="false">☰</button>
 </header>
+<div class="ads-overlay" id="adsOverlay" hidden></div>
 
 <div class="ads-wrap" id="adsWrap">
   <div class="ads-loading" id="adsLoading">Verificando acesso de administrador…</div>

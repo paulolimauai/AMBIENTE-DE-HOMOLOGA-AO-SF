@@ -96,12 +96,7 @@ body{
   .ads-brand span{font-size:.6rem;letter-spacing:.14em}
   .ads-brand small{font-size:.65rem}
   .ads-who{display:none}
-  .ads-actions{
-    width:100%;gap:.4rem;flex-wrap:nowrap;overflow-x:auto;
-    scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-bottom:.15rem;
-  }
-  .ads-actions::-webkit-scrollbar{display:none}
-  .ads-btn{flex:0 0 auto;padding:.5rem .7rem;font-size:.74rem;border-radius:8px;white-space:nowrap}
+  .ads-btn{padding:.5rem .7rem;font-size:.74rem;border-radius:8px;white-space:nowrap}
   .ads-wrap{padding:.8rem}
   .ads-side,.ads-editor{border-radius:12px}
   .ads-side{padding:.8rem}
@@ -139,3 +134,34 @@ body{
 .ads-backup-item .when{color:#CBD5E1;font-weight:600}
 .ads-backup-item .size{color:#8B98AC;font-size:.75rem}
 .ads-backup-empty{color:#8B98AC;font-size:.85rem;text-align:center;padding:1.5rem 0}
+
+/* Menu lateral (drawer) — só no celular */
+.ads-burger{display:none}
+.ads-drawer-head{display:none}
+.ads-overlay{display:none}
+@media (max-width:640px){
+  .ads-burger{display:inline-flex}
+  .ads-actions{
+    position:fixed;top:0;right:0;bottom:0;width:min(290px,86vw);z-index:70;
+    flex-direction:column;align-items:stretch;gap:.55rem;
+    background:#0B1120;border-left:1px solid rgba(148,163,184,.22);
+    padding:1rem .9rem calc(1rem + env(safe-area-inset-bottom,0px));
+    overflow-y:auto;transform:translateX(105%);
+    transition:transform .26s cubic-bezier(.2,.8,.2,1);
+    box-shadow:-12px 0 40px rgba(0,0,0,.5);
+  }
+  .ads-actions.open{transform:none}
+  .ads-actions .ads-btn{width:100%;justify-content:flex-start}
+  .ads-drawer-head{
+    display:flex;align-items:center;justify-content:space-between;
+    padding-bottom:.7rem;margin-bottom:.3rem;border-bottom:1px solid rgba(148,163,184,.14);
+  }
+  .ads-drawer-head strong{color:#fff;font-size:.95rem;letter-spacing:.08em}
+  .ads-drawer-head .ads-btn{width:auto;padding:.35rem .6rem}
+  .ads-who{display:block !important;max-width:none;white-space:normal;padding:.2rem .1rem .5rem}
+  .ads-overlay{
+    display:block;position:fixed;inset:0;background:rgba(3,6,12,.6);z-index:65;
+    opacity:0;transition:opacity .2s;
+  }
+  .ads-overlay.show{opacity:1}
+}

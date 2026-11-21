@@ -28,7 +28,11 @@
     modalTitle: document.getElementById('adsModalTitle'),
     modalBody: document.getElementById('adsModalBody'),
     modalClose: document.getElementById('adsModalClose'),
-    reload: document.getElementById('adsReload')
+    reload: document.getElementById('adsReload'),
+    burger: document.getElementById('adsBurger'),
+    actions: document.getElementById('adsActions'),
+    overlay: document.getElementById('adsOverlay'),
+    drawerClose: document.getElementById('adsDrawerClose')
   };
 
   var state = { files: [], current: null, dirty: false };
@@ -233,6 +237,22 @@
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
     });
   }
+
+  /* Menu lateral do celular: o botão ☰ abre a gaveta pela direita; fecha pelo ✕, pelo fundo ou por Escape. */
+  function setDrawer(open) {
+    if (!els.actions || !els.overlay || !els.burger) return;
+    els.actions.classList.toggle('open', open);
+    els.overlay.hidden = !open;
+    els.overlay.classList.toggle('show', open);
+    els.burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  if (els.burger) els.burger.addEventListener('click', function () { setDrawer(true); });
+  if (els.drawerClose) els.drawerClose.addEventListener('click', function () { setDrawer(false); });
+  if (els.overlay) els.overlay.addEventListener('click', function () { setDrawer(false); });
+  window.addEventListener('keydown', function (e) { if (e.key === 'Escape') setDrawer(false); });
+  if (els.actions) els.actions.addEventListener('click', function (e) {
+    if (e.target && e.target.closest && e.target.closest('a')) setDrawer(false);
+  });
 
   els.save.addEventListener('click', saveFile);
   els.reload.addEventListener('click', function () { loadFiles(); });
