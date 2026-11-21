@@ -311,6 +311,47 @@
 
   /* ---- Nova cobrança (2ª via) ---- */
   function rotuloConta(u) { return (u.name || u.email) + ' — ' + u.email; }
+  // Situação da assinatura da conta, para o administrador gerar o Pix já vendo plano, vencimento e se há cobrança em aberto
+  function assinaturaStatus(u) {
+    if (!u) return null;
+    var agora = Date.now();
+    var plano = String(u.subscription_plan || '').toLowerCase();
+    var st = String(u.subscription_status || '').toLowerCase();
+    var exp = paraMs(u.subscription_expires_at);
+    if (u.role === 'Administrador') return { rotulo: 'Administrador', detalhe: 'acesso ilimitado: não há cobrança a gerar', cls: 'adm-p-neutro' };
+    if (plano === 'vitalicio') return { rotulo: 'Vitalício', detalhe: 'acesso permanente: não há cobrança a gerar', cls: 'adm-p-ok' };
+    if (st === 'active' && exp > agora) {
+      var dias = Math.ceil((exp - agora) / DIA);
+      var cortesia = u.subscription_method === 'admin_cortesia' || plano === 'cortesia_admin';
+      return { rotulo: cortesia ? 'Cortesia' : 'Ativo', detalhe: 'vence ' + (dias <= 1 ? 'hoje' : 'em ' + plural(dias, 'dia', 'dias')) + ' · ' + dataBR(new Date(exp).toISOString()), cls: cortesia ? 'adm-p-info' : 'adm-p-ok' };
+    }
+    if (st === 'pending_payment') return { rotulo: 'Aguardando pagamento', detalhe: 'o cliente avisou que pagou: confira antes de cobrar de novo', cls: 'adm-p-aviso' };
+    if (exp > 0 && exp <= agora) {
+      var atraso = Math.max(0, Math.floor((agora - exp) / DIA));
+      return { rotulo: 'Expirado', detalhe: 'venceu ' + (atraso <= 0 ? 'hoje' : 'há ' + plural(atraso, 'dia', 'dias')) + ' · ' + dataBR(new Date(exp).toISOString()), cls: 'adm-p-ruim' };
+    }
+    var ini = paraMs(u.trial_started_at);
+    if (!isNaN(ini) && agora - ini < DIA) return { rotulo: 'Teste grátis', detalhe: 'o dia de teste ainda está valendo', cls: 'adm-p-info' };
+    if (!isNaN(ini)) return { rotulo: 'Teste encerrado', detalhe: 'o dia grátis já passou: a cobrança reativa o acesso', cls: 'adm-p-aviso' };
+    return { rotulo: 'Sem assinatura', detalhe: 'a conta nunca teve plano ativo', cls: 'adm-p-neutro' };
+  }
+  function planoRotulo(plano) {
+    plano = String(plano || '').toLowerCase();
+    return plano === 'anual' ? 'Anual (365 dias)' : plano === 'vitalicio' ? 'Vitalício' : plano === 'cortesia_admin' ? 'Cortesia' : plano ? 'Mensal (30 dias)' : '—';
+  }
+  function assinaturaDaConta(u, dados) {
+    if (!u) return '';
+    var info = assinaturaStatus(u) || { rotulo: '—', detalhe: '', cls: 'adm-p-neutro' };
+    var abertas = dados && dados.pagamentos ? dados.pagamentos.filter(function (p) { return p && aberta(p) && String(p.email).toLowerCase() === String(u.email).toLowerCase(); }).length : 0;
+    var semCobranca = u.role === 'Administrador' || String(u.subscription_plan || '').toLowerCase() === 'vitalicio';
+    return '<section class="pg-painel pg-assin"><h3>Dados da assinatura</h3>' +
+      '<dl class="pg-dl"><div><dt>Cliente</dt><dd>' + esc(u.name || u.email) + '<small>' + esc(u.email) + '</small></dd></div>' +
+      '<div><dt>Situação</dt><dd><span class="adm-pill ' + info.cls + '">' + esc(info.rotulo) + '</span><small>' + esc(info.detalhe) + '</small></dd></div>' +
+      '<div><dt>Plano</dt><dd>' + esc(planoRotulo(u.subscription_plan)) + '</dd></div>' +
+      '<div><dt>Telefone</dt><dd>' + esc(u.phone || '—') + '</dd></div>' +
+      '<div><dt>Cobranças em aberto</dt><dd>' + (abertas ? esc(String(abertas)) + '<small>a cobrança nova reaproveita a que já está aberta (2ª via)</small>' : 'nenhuma') + '</dd></div></dl>' +
+      (semCobranca ? '<p class="pg-aviso">Esta conta não recebe cobrança: o servidor recusa a geração do Pix.</p>' : '') + '</section>';
+  }
   // Depois de uma troca de preço, a conta pode ficar com a cobrança antiga (preço antigo) e a nova abertas ao mesmo tempo: o administrador decide qual cancelar
   function avisoOutrasAbertas(res) {
     var o = (res && res.outras_abertas) || [];
@@ -324,10 +365,12 @@
     var tel = usuario && usuario.phone;
     var msg = mensagemWhats({ tipo: 'cobranca', nome: p.nome, valor: p.valor, vencimento: p.vencimento ? diaBR(p.vencimento) : '', payload: pix.payload, ref: p.ref, chave: pix.chave, tipoChave: pix.tipo_chave, favorecido: pix.favorecido });
     var link = linkWhats(tel, msg);
+    var stAssin = usuario ? assinaturaStatus(usuario) : null;
     return '<div class="pg-resultado">' +
       '<div class="pg-resultado-qr"><img src="' + esc(pix.qr_url) + '" alt="QR Code Pix da cobrança ' + esc(p.ref) + '" width="220" height="220"></div>' +
       '<div class="pg-resultado-dados">' +
         '<dl class="pg-dl"><div><dt>Cliente</dt><dd>' + esc(p.nome) + '<small>' + esc(p.email) + '</small></dd></div>' +
+        (stAssin ? '<div><dt>Assinatura</dt><dd><span class="adm-pill ' + stAssin.cls + '">' + esc(stAssin.rotulo) + '</span><small>' + esc(stAssin.detalhe) + '</small></dd></div>' : '') +
         '<div><dt>Valor</dt><dd>' + esc(moeda(p.valor)) + '</dd></div><div><dt>Vencimento</dt><dd>' + esc(p.vencimento ? diaBR(p.vencimento) : '—') + '</dd></div>' +
         '<div><dt>Referência</dt><dd>' + esc(p.ref) + '</dd></div></dl>' +
         (res.reutilizada ? '<p class="pg-aviso">Já existia uma cobrança em aberto para esta conta: esta é a <b>2ª via da mesma cobrança</b> (mesma referência), com o vencimento ajustado.</p>' : '') + avisoOutrasAbertas(res) +
@@ -345,6 +388,9 @@
       .sort(function (a, b) { return String(a.name || a.email).localeCompare(String(b.name || b.email), 'pt-BR'); });
     var n = estado.nova;
     var valorSel = n.cliente != null && n.cliente !== '' ? n.cliente : (n.email ? (function () { var u = usuarios.filter(function (x) { return x.email.toLowerCase() === n.email; })[0]; return u ? rotuloConta(u) : n.email; })() : '');
+    var textoSel = valorSel || '';
+    var emailSel = /[^\s<>()]+@[^\s<>()]+\.[^\s<>()]+/.exec(textoSel);
+    var usuarioSel = emailSel ? usuarios.filter(function (x) { return x.email && x.email.toLowerCase() === emailSel[0].toLowerCase(); })[0] || null : null;
     return '<section class="pg-painel"><h3>Gerar a cobrança Pix de um cliente</h3>' +
       '<p class="pg-nota">Escolha a conta; o valor é o da assinatura mensal (' + esc(moeda(estado.dados ? estado.dados.preco : 0)) + '). Se já houver uma cobrança em aberto para a conta, ela é reaproveitada (2ª via).</p>' +
       '<div class="pg-form">' +
@@ -355,7 +401,9 @@
       '</div>' +
       '<div class="pg-botoes"><button type="button" class="adm-btn adm-btn-pri" data-pg-a="nova-gerar"' + (n.enviando ? ' disabled' : '') + '>' + (n.enviando ? 'Gerando…' : 'Gerar cobrança Pix') + '</button></div>' +
       (n.erro ? '<p class="pg-erro" role="alert">' + esc(n.erro) + '</p>' : '') +
-      '</section>' + (n.resultado ? '<section class="pg-painel"><h3>Cobrança pronta para enviar</h3>' + cobrancaResultadoHTML(n.resultado, n.usuario) + '</section>' : '');
+      '</section>' +
+      (usuarioSel ? assinaturaDaConta(usuarioSel, estado.dados) : '') +
+      (n.resultado ? '<section class="pg-painel"><h3>Cobrança pronta para enviar</h3>' + cobrancaResultadoHTML(n.resultado, n.usuario) + '</section>' : '');
   }
 
   /* ---- Conciliação ---- */
@@ -1085,6 +1133,8 @@
       if (t.matches('[data-pg-arquivo]')) { lerArquivo(t.files && t.files[0]); t.value = ''; }
       // Trocar o tipo da chave redesenha a aba (muda a dica) sem perder o que já foi digitado
       if (t.id === 'pgCfgTipo') { estado.cfg.sujo = true; estado.cfg.form = lerFormConfig(); estado.cfg.erro = ''; estado.cfg.campo = ''; repintarAba(); }
+      // Ao escolher/trocar o cliente da nova cobrança (digitação ou datalist), mostra os dados da assinatura na hora
+      if (t.matches && t.matches('[data-pg-nova="cliente"]')) { estado.nova.cliente = t.value; estado.nova.erro = ''; repintarAba(); }
     });
     d.addEventListener('input', function (ev) {
       var t = ev.target;
