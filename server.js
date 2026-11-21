@@ -104,8 +104,10 @@ const SYNC_TOKEN = EXPLICIT_SYNC_TOKEN || BackendUtils.deriveSyncToken(JWT_SECRE
 // assina tokens de qualquer usuário); remover quando todos os ambientes estiverem atualizados.
 const LEGACY_SYNC_TOKEN = EXPLICIT_SYNC_TOKEN ? '' : JWT_SECRET;
 
-// Conta proprietária do sistema: acesso total garantido pelo servidor (nunca é rebaixada, bloqueada ou excluída)
-const OWNER_EMAIL = 'paulolp0101@gmail.com';
+// Conta proprietária do sistema: acesso total garantido pelo servidor (nunca é rebaixada, bloqueada ou excluída).
+// É a ÚNICA conta administradora por e-mail: o app (nexusIsAdminUser...) e o painel recebem esta conta daqui, nada repete o e-mail no cliente.
+// Em 20/11/2026 a propriedade passou de paulolp0101@gmail.com para esta conta; a antiga virou conta comum.
+const OWNER_EMAIL = 'paulo.pereira@nexusfinanceirohub.com.br';
 function isOwnerEmail(email) {
   return String(email || '').toLowerCase().trim() === OWNER_EMAIL;
 }
@@ -21416,17 +21418,18 @@ function pd(day){ return pdCustom(currentPeriod.year, currentPeriod.month, day);
 // hash da URL, página salva no navegador e render() usam esta mesma fonte (a primeira página é o destino padrão).
 const NEXUS_ADMIN_PAGES = ['usuarios', 'assinaturas', 'pagamentos', 'logs'];
 const NEXUS_USER_PAGES = ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'config'];
-function nexusIsAdminUser(u) { return !!(u && (u.role === 'Administrador' || String(u.email || '').toLowerCase().trim() === 'paulolp0101@gmail.com')); }
+const NEXUS_OWNER_EMAIL = '${OWNER_EMAIL}';   // vem do servidor (OWNER_EMAIL): único lugar onde o e-mail da proprietária é escrito
+function nexusIsAdminUser(u) { return !!(u && (u.role === 'Administrador' || String(u.email || '').toLowerCase().trim() === NEXUS_OWNER_EMAIL)); }
 // A conta proprietária é administradora por definição: normaliza o papel no objeto do cliente para que caches
 // antigos (nexus_cached_user, nexus_users) com role defasado não escondam o perfil admin na tela.
 function nexusGarantirPerfil(u) {
-  if (u && String(u.email || '').toLowerCase().trim() === 'paulolp0101@gmail.com' && u.role !== 'Administrador') u.role = 'Administrador';
+  if (u && String(u.email || '').toLowerCase().trim() === NEXUS_OWNER_EMAIL && u.role !== 'Administrador') u.role = 'Administrador';
   return u;
 }
 // Permissões delegadas: o administrador marca, conta a conta, ações extras para um usuário comum (lista "permissions" vinda do servidor).
 // Aqui só se decide o que MOSTRAR; quem realmente autoriza cada ação é o servidor.
 const NEXUS_DELEGATE_PAGES = ['liberacoes'];
-function nexusTemPermissao(u, id) { return !!u && ((u.role === 'Administrador' || String(u.email || '').toLowerCase().trim() === 'paulolp0101@gmail.com') || (Array.isArray(u.permissions) && u.permissions.indexOf(id) >= 0)); }
+function nexusTemPermissao(u, id) { return !!u && ((u.role === 'Administrador' || String(u.email || '').toLowerCase().trim() === NEXUS_OWNER_EMAIL) || (Array.isArray(u.permissions) && u.permissions.indexOf(id) >= 0)); }
 function nexusTemLiberacoes(u) {
   return !!u && !nexusIsAdminUser(u) && (nexusTemPermissao(u, 'assinatura.liberar') || nexusTemPermissao(u, 'contas.bloquear') || nexusTemPermissao(u, 'logs.ver'));
 }

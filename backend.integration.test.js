@@ -1116,7 +1116,7 @@ test('sessões abertas também caem ao redefinir a senha ou excluir a conta, cad
 
 test('conta proprietária: bloquear é RECUSADO com o motivo (antes devolvia "success" e não fazia nada), não é carimbada e ninguém toma a senha dela', async () => {
   const admin = (await login('admin@teste.nexus', 'Admin@12345')).token;
-  const dono = 'paulolp0101@gmail.com';
+  const dono = 'paulo.pereira@nexusfinanceirohub.com.br';   // a conta proprietária é a que está em OWNER_EMAIL (server.js)
   await criarContaDeTeste(admin, dono, 'Dono@12345');
   const estado = async () => (await listaDeUsuarios(admin)).find((u) => u.email === dono);
   const antes = await estado();
@@ -1159,6 +1159,30 @@ test('conta proprietária: bloquear é RECUSADO com o motivo (antes devolvia "su
   assert.ok(!/banco de dados/.test(recusado.json.error), 'a mensagem não fala em "banco de dados"');
   assert.equal((await api('DELETE', '/api/users?email=' + outro, { token: admin })).status, 200);
   assert.equal((await api('DELETE', '/api/users?email=' + dono, { token: admin })).status, 403, 'e a proprietária também não é excluída');
+});
+
+test('a antiga proprietária (paulolp0101@gmail.com) virou conta comum: sem poder de administrador, o login não a promove de volta e ela pode ser bloqueada e excluída', async () => {
+  const admin = (await login('admin@teste.nexus', 'Admin@12345')).token;
+  const antiga = 'paulolp0101@gmail.com';
+  await criarContaDeTeste(admin, antiga, 'Antiga@12345');
+  const sessao = await login(antiga, 'Antiga@12345');
+  assert.equal(sessao.success, true);
+  const eu = (await listaDeUsuarios(admin)).find((u) => u.email === antiga);
+  assert.equal(eu.role, 'Usuário', 'o login não a promove de volta a Administrador (isso só vale para a proprietária atual)');
+  assert.equal(eu.is_owner, undefined, 'ela não é mais marcada como proprietária');
+  for (const rota of ['/api/admin/visitas', '/api/admin/usage']) {
+    const r = await api('GET', rota, { token: sessao.token });
+    assert.ok([401, 403].includes(r.status), rota + ' deveria recusar quem não é administrador: ' + r.status);
+  }
+  // pode ser bloqueada e excluída como qualquer conta comum
+  assert.equal((await api('POST', '/api/users', { token: admin, body: [{ email: antiga, name: 'Antiga', active: false }] })).status, 200);
+  assert.equal((await api('DELETE', '/api/users?email=' + antiga, { token: admin })).status, 200);
+  // o app não carrega mais o e-mail da antiga: a proprietária vem do servidor (uma constante só) e o painel usa is_owner
+  const app = (await api('GET', '/')).texto;
+  assert.ok(app.includes("const NEXUS_OWNER_EMAIL = 'paulo.pereira@nexusfinanceirohub.com.br';"), 'o app recebe a proprietária do servidor');
+  assert.ok(!app.toLowerCase().includes(antiga), 'o app não repete o e-mail da antiga proprietária');
+  const painel = (await api('GET', '/admin-assinaturas-glpi.html')).texto;
+  assert.ok(!painel.toLowerCase().includes(antiga) && painel.includes('u.is_owner===true'), 'o painel reconhece a proprietária pela marca is_owner, sem e-mail fixo');
 });
 
 // Por último de propósito: se a proteção regredir, este teste apaga os dados de teste e só ele falha (os demais já rodaram)

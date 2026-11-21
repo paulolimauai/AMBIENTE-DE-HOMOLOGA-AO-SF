@@ -735,7 +735,7 @@ function api(path,method,body){
 }
 function fmtData(v){if(!v)return'';var s=String(v);var m=s.match(/^(\d{4})-(\d{2})-(\d{2})/);if(m)return m[3]+'/'+m[2]+'/'+m[1];var d=new Date(s);return isNaN(d)?'':d.toLocaleDateString('pt-BR')}
 function fmtDataHora(v){if(!v)return'';var d=new Date(v);return isNaN(d)?'':d.toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'})}
-var ehAdmin=function(u){return u&&(u.role==='Administrador'||String(u.email||'').toLowerCase()==='paulolp0101@gmail.com')};
+var ehAdmin=function(u){return u&&(u.role==='Administrador'||u.is_owner===true)};   /* a proprietária vem marcada pelo servidor (is_owner): nenhum e-mail fixo aqui */
 var bloqueado=function(u){return u&&(u.active===false||u.active===0||u.active==='0')};
 function subFromUser(u,i){
   var st=String(u.subscription_status||'').toLowerCase(),plano=String(u.subscription_plan||'').toLowerCase();
