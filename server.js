@@ -2920,7 +2920,7 @@ function buildHtmlContent() { return `<!DOCTYPE html>
       else if (w <= 1440) dev = 'laptop';
       // Aparelho de mão: celular/tablet ou tela pequena só de toque. Notebook/monitor com tela sensível (ponteiro principal = mouse/touchpad) escala normalmente.
       var handheld = (dev === 'mobile' || dev === 'tablet' || (coarse && Math.min(sw, sh) <= 1100));
-      return { dev: dev, w: w, h: h, sw: sw, sh: sh, handheld: handheld, coarse: coarse };
+      return { dev: dev, w: w, h: h, sw: sw, sh: sh, dpr: window.devicePixelRatio || 1, handheld: handheld, coarse: coarse };
     };
     window.__nexusAutoScale = function (i) {
       if (i.handheld) return 1;
@@ -2928,8 +2928,16 @@ function buildHtmlContent() { return `<!DOCTYPE html>
       var zw = 1 + 0.5 * (i.w / 1920 - 1);
       var zh = 1 + 0.5 * (i.h / 970 - 1);
       var z = Math.min(zw, zh, 2);
-      if (z < 1.03) return 1;
-      return Math.round(z * 20) / 20;
+      if (z >= 1.03) return Math.round(z * 20) / 20;
+      // Tela menor que o Full HD E ampliada pelo Windows (notebook de 1920x1080 a 125%/150% só tem 1536/1280 px de largura em CSS): o texto saía
+      // maior que no monitor, os rótulos quebravam em 2 linhas e a tela cortava embaixo. Aqui o zoom ENCOLHE para o desenho de 1920 px de largura
+      // caber inteiro, igual ao monitor. Pela TELA (não pela janela), então não oscila ao redimensionar nem desfaz o Ctrl+ do navegador.
+      // Só encolhe quando dpr > 1: em 1366x768 a 100% o texto já é pequeno e fica como está; 1/dpr é o piso (o texto nunca fica menor que num Full HD a 100%).
+      if (i.sw < 1900 && (i.dpr || 1) > 1.02) {
+        var fit = Math.min(1, Math.max(i.sw / 1920, 1 / i.dpr));
+        return Math.max(0.65, Math.round(fit * 20) / 20);
+      }
+      return 1;
     };
     window.__nexusScaleFor = function (scaleVal, i) {
       var num = (scaleVal === 'auto') ? window.__nexusAutoScale(i) : (parseFloat(scaleVal) / 100 || 1.0);
@@ -2940,6 +2948,16 @@ function buildHtmlContent() { return `<!DOCTYPE html>
     var info = window.__nexusDeviceInfo();
     var dev = info.dev;
     var w = info.w;
+
+    // Migração única (revisão 2 da escala): o zoom manual em "100%" nunca recebe o ajuste do Auto e o notebook ampliado pelo Windows ficava com a
+    // interface grande demais. Onde o Auto agora ENCOLHE (< 94%), quem estava em "100%" volta para o Auto uma vez; quem escolher "100%" de novo é
+    // respeitado (a revisão fica gravada). Outros valores manuais e telas onde o Auto continua em 100% (ou 95%) não são tocados.
+    try {
+      if (localStorage.getItem('nexus_scale_rev') !== '2') {
+        if (sc === '100%' && window.__nexusAutoScale(info) < 0.94) { sc = 'auto'; localStorage.setItem('nexus_display_scale', 'auto'); }
+        localStorage.setItem('nexus_scale_rev', '2');
+      }
+    } catch (eRev) {}
 
     document.documentElement.setAttribute('data-device-type', dev);
 
@@ -15748,7 +15766,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
       var savedScale = localStorage.getItem('nexus_display_scale') || 'auto';
       var scaleLabel = document.getElementById('currentScaleLabel');
       if (scaleLabel) {
-        scaleLabel.textContent = (savedScale === 'auto') ? 'Auto (100%)' : savedScale;
+        scaleLabel.textContent = (savedScale === 'auto') ? 'Auto (' + (window.__nexusAutoScale && window.__nexusDeviceInfo ? Math.round(window.__nexusAutoScale(window.__nexusDeviceInfo()) * 100) : 100) + '%)' : savedScale;
       }
 
       var cu = localStorage.getItem('nexus_cached_user');

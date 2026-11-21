@@ -38,7 +38,23 @@ html.user-logged-in #appMain {
   html.user-logged-in #appMain { min-height: calc(100dvh / var(--app-zoom, 1)) !important; }
 }
 /* A barra lateral é presa pelo topo e pela base (não por uma altura em vh) */
-html.user-logged-in #menu.sidebar-menu { height: auto !important; bottom: 0 !important; }
+html.user-logged-in #menu.sidebar-menu { height: auto !important; max-height: none !important; bottom: 0 !important; }
+
+/* Zoom ABAIXO de 100% (o Auto encolhe em notebook ampliado pelo Windows, ex.: 80%): medidas em vh/vw dentro do body com zoom ficavam CURTAS.
+   O fundo fixo deixava uma faixa escura à direita e embaixo e o menu (max-height: calc(100vh - 66px) do server.js) terminava antes do rodapé.
+   Dividir pelo zoom efetivo mantém 100% da janela; com zoom 1 (ou maior) nada muda. */
+html.user-logged-in #persistentSystemBg,
+html.user-logged-in .persistent-system-bg {
+  width: calc(100vw / var(--app-zoom, 1)) !important;
+  height: calc(100vh / var(--app-zoom, 1)) !important;
+}
+
+/* Menu recolhido (trilho só de ícones): "Assinaturas & Acessos" (admin) abre outra página e não tem data-page, então escapava das regras do trilho:
+   o rótulo ficava visível e cortado ("aturas") e o intervalo de 10px empurrava o ícone para fora do botão. Aqui ele passa a ser só o ícone, como os demais. */
+html.sidebar-collapsed #menu #menuAdminAssinaturasBtn .label,
+body.sidebar-collapsed #menu #menuAdminAssinaturasBtn .label { display: none !important; }
+html.sidebar-collapsed #menu #menuAdminAssinaturasBtn,
+body.sidebar-collapsed #menu #menuAdminAssinaturasBtn { gap: 0 !important; }
 
 /* =====================================================================================
    2. Menu lateral (computador e tablet largo)
@@ -1149,6 +1165,13 @@ html.user-logged-in :is(
   .notif-empty, .toast, .toast-text, .toast-close
 ) {
   font-size: 14px !important;
+}
+
+/* Orçamentos: os cartões de categoria cortavam o texto com reticências ("Definir limite men…"), no monitor e no notebook. Agora quebram em 2 linhas. */
+html.user-logged-in .orc-chip-txt strong,
+html.user-logged-in .orc-chip-txt small {
+  white-space: normal !important; overflow: visible !important; text-overflow: clip !important;
+  overflow-wrap: anywhere !important; line-height: 1.25 !important;
 }
 
 html.user-logged-in :is(
