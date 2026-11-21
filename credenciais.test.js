@@ -2,7 +2,7 @@
 // Regras de "qual senha vale" (nuvem x SQL Server do PC x Supabase). Rodar: node --test credenciais.test.js
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { isHash, clockMs, pickPassword, shouldAdoptRemote } = require('./credenciais');
+const { isHash, clockMs, pickPassword, shouldAdoptRemote, sqlPasswordAdoption } = require('./credenciais');
 
 const H1 = 'scrypt:' + 'a1'.repeat(16) + ':' + 'b1'.repeat(64);
 const H2 = 'scrypt:' + 'a2'.repeat(16) + ':' + 'b2'.repeat(64);
@@ -85,4 +85,33 @@ test('shouldAdoptRemote: o Supabase só vale no login se for mais novo ou se a c
   assert.equal(shouldAdoptRemote({ password: H1, password_changed_at: T1 }, { password: H2 }), false, 'só o servidor tem relógio');
   assert.equal(shouldAdoptRemote({ password: H1 }, { password: 'texto puro' }), false, 'Supabase sem hash válido');
   assert.equal(shouldAdoptRemote({ password: H1 }, null), false, 'Supabase sem a conta');
+});
+
+test('sqlPasswordAdoption: hash divergente no SQL Server (troca direta no banco) é adotado com carimbo novo', () => {
+  const agora = Date.parse('2026-11-20T15:00:00.000Z');
+  const r = sqlPasswordAdoption({ password: H2 }, { password: H1, password_changed_at: T1 }, agora);
+  assert.equal(r.password, H2, 'o banco manda: o hash do SQL é o adotado');
+  assert.equal(Date.parse(r.password_changed_at), agora, 'carimbo = agora quando é mais novo que o do espelho');
+  assert.ok(Date.parse(r.password_changed_at) > clockMs({ password_changed_at: T1 }), 'carimbo sempre mais novo que o do espelho');
+});
+
+test('sqlPasswordAdoption: carimbo nunca fica para trás — espelho com relógio no futuro ainda perde', () => {
+  const futuro = '2027-01-01T00:00:00.000Z';
+  const r = sqlPasswordAdoption({ password: H2 }, { password: H1, password_changed_at: futuro }, Date.parse('2026-11-20T15:00:00.000Z'));
+  assert.ok(Date.parse(r.password_changed_at) > Date.parse(futuro), 'carimbo = relógio do espelho + 1 ms');
+});
+
+test('sqlPasswordAdoption: sem divergência não há o que adotar', () => {
+  const agora = Date.parse('2026-11-20T15:00:00.000Z');
+  assert.equal(sqlPasswordAdoption({ password: H1 }, { password: H1, password_changed_at: T1 }, agora), null, 'hashes iguais');
+  assert.equal(sqlPasswordAdoption({ password: '' }, { password: H1, password_changed_at: T1 }, agora), null, 'SQL sem hash');
+  assert.equal(sqlPasswordAdoption({ password: 'texto puro' }, { password: H1, password_changed_at: T1 }, agora), null, 'SQL com texto puro legado');
+  assert.equal(sqlPasswordAdoption(null, { password: H1 }, agora), null, 'sem linha do SQL');
+  assert.equal(sqlPasswordAdoption({}, null, agora), null, 'sem espelho');
+});
+
+test('sqlPasswordAdoption: espelho sem senha válida também recebe o hash do banco', () => {
+  const r = sqlPasswordAdoption({ password: H2 }, { password: '' }, Date.parse('2026-11-20T15:00:00.000Z'));
+  assert.equal(r.password, H2);
+  assert.ok(r.password_changed_at, 'ganha carimbo para valer na disputa');
 });

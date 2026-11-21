@@ -39332,6 +39332,18 @@ async function syncWithRenderCloud() {
           usersToSync.push(espelho);
           continue;
         }
+        // Senha: o SQL Server é a fonte da verdade. O aplicativo grava a senha no SQL e no espelho sempre juntos (e as rotas
+        // de troca falham fechado se o UPDATE no banco não acontecer), então hash diferente entre os dois só existe quando a
+        // senha foi trocada DIRETO no banco (SSMS). Antes esse hash do SQL era enviado à nuvem com o relógio ANTIGO do espelho
+        // e perdia a disputa do carimbo: o site continuava aceitando só a senha velha e a credencial "sumia". Aqui o banco
+        // manda: o espelho adota o hash do SQL com carimbo novo, e ele passa a valer na nuvem e no Supabase no próximo envio.
+        const adocaoSenhaSql = espelho ? Credenciais.sqlPasswordAdoption(u, espelho) : null;
+        if (adocaoSenhaSql) {
+          espelho.password = adocaoSenhaSql.password;
+          espelho.password_changed_at = adocaoSenhaSql.password_changed_at;
+          passwordClockByEmail.set(chave, adocaoSenhaSql.password_changed_at);
+          console.log(`🔐 [SYNC SENHA → NUVEM] ${chave}: senha alterada direto no SQL Server difere do espelho; adotada com carimbo novo para valer na nuvem e no Supabase.`);
+        }
         usersToSync.push(BackendUtils.userForCloud(u, getBrasiliaIsoString, passwordClockByEmail.get(chave), espelho));
         // Bloqueio carimbado no espelho que o SQL ainda não recebeu (o UPDATE falhou ou ainda não chegou): o SQL é reconciliado com o espelho
         if (espelho && Number.isFinite(Acesso.relogioMs(espelho)) && espelho.active !== undefined && Acesso.ativo(u.active) !== Acesso.ativo(espelho.active)) {

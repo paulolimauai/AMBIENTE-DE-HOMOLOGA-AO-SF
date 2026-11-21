@@ -68,4 +68,23 @@ function shouldAdoptRemote(local, remote) {
   return pickPassword(local, remote, { noClock: 'existing' }).source === 'incoming';
 }
 
-module.exports = { isHash, clockMs, pickPassword, shouldAdoptRemote };
+/**
+ * Senha divergente entre o SQL Server (`sqlUser`, a fonte da verdade) e o espelho local (`mirrorUser`).
+ * O aplicativo grava a senha nos dois lugares juntos e as rotas de troca falham fechado quando o UPDATE no banco
+ * não acontece, então hashes diferentes entre os dois só existem quando a senha foi trocada DIRETO no banco (SSMS).
+ * Nesse caso o banco manda: devolve { password, password_changed_at } para o espelho adotar o hash do SQL com um
+ * carimbo NOVO (maior que o do espelho e que agora), para ele vencer a disputa do relógio na nuvem e no Supabase —
+ * antes o hash do banco era enviado com o carimbo antigo do espelho e o site seguia aceitando só a senha velha.
+ * Devolve null quando os dois já concordam ou quando o SQL não tem hash válido
+ * (texto puro legado nunca é propagado).
+ */
+function sqlPasswordAdoption(sqlUser, mirrorUser, nowMs) {
+  const sqlHash = isHash(sqlUser && sqlUser.password) ? String(sqlUser.password).trim() : '';
+  const mirHash = isHash(mirrorUser && mirrorUser.password) ? String(mirrorUser.password).trim() : '';
+  if (!sqlHash || sqlHash === mirHash) return null;
+  const agora = Number.isFinite(nowMs) ? nowMs : Date.now();
+  const carimbo = new Date(Math.max(agora, clockMs(mirrorUser) + 1)).toISOString();
+  return { password: sqlHash, password_changed_at: carimbo };
+}
+
+module.exports = { isHash, clockMs, pickPassword, shouldAdoptRemote, sqlPasswordAdoption };
