@@ -33872,6 +33872,16 @@ function getEmptyFinancialData() {
   return getDefaultConfiguredFinancialData();
 }
 
+// Um retrato "zerado" (todas as listas de conteúdo vazias, só categorias padrão) não representa exclusão
+// intencional: é o que uma conta recém-criada ou um disco recém-restaurado devolve. Ele nunca pode apagar
+// dados preenchidos do outro lado da sincronização — foi assim que um Render com disco zerado apagou o
+// SQL Server, o espelho local e as tabelas relacionais.
+function isBlankFinancialData(data) {
+  if (!data || typeof data !== 'object' || Array.isArray(data)) return true;
+  const listas = ['transactions', 'accounts', 'budgets', 'goals', 'recurringList', 'alerts', 'attachments', 'notifications'];
+  return listas.every(k => !Array.isArray(data[k]) || data[k].length === 0);
+}
+
 async function ensureUserIsConfiguredInDatabase(cleanEmail, userMeta = {}) {
   if (!cleanEmail) return;
   const email = cleanEmail.toLowerCase().trim();
@@ -33969,6 +33979,12 @@ function mergeFinancialData(serverData, localData) {
   if (!sData && !lData) return getEmptyFinancialData();
   if (!sData) return lData;
   if (!lData) return sData;
+
+  // Retrato zerado nunca vence dado preenchido, mesmo com carimbo mais novo: disco novo/restore vazio
+  // chegava com updated_at atual e apagava o lado que tinha lançamentos, contas e metas.
+  const sBlank = isBlankFinancialData(sData);
+  const lBlank = isBlankFinancialData(lData);
+  if (sBlank !== lBlank) return lBlank ? sData : lData;
 
   const sTime = sData.updated_at ? new Date(sData.updated_at).getTime() : 0;
   const lTime = lData.updated_at ? new Date(lData.updated_at).getTime() : 0;
@@ -36657,7 +36673,9 @@ async function handleNexusRequest(req, res) {
           if (typeof serverData === 'string') {
             try { serverData = JSON.parse(serverData); } catch(e){ serverData = null; }
           }
-          let finalData = serverData || localData || getEmptyFinancialData();
+          // Merge consciente: um retrato zerado no SQL não esconde dados preenchidos do espelho local
+          // (antes bastava existir QUALQUER linha em dados_financeiros para o GET devolver o SQL cru).
+          let finalData = mergeFinancialData(serverData, localData) || getEmptyFinancialData();
           if (!finalData || typeof finalData !== 'object' || Object.keys(finalData).length === 0) {
             finalData = getEmptyFinancialData();
           }
@@ -36715,7 +36733,7 @@ async function handleNexusRequest(req, res) {
   if (req.method === 'POST' && parsedUrl.pathname === '/api/data') {
     let body = '';
     req.on('data', chunk => body += BackendUtils.decodeBodyChunk(req, chunk));
-    req.on('end', () => {
+    req.on('end', async () => {
       let payload;
       try {
         payload = JSON.parse(body);
@@ -36747,6 +36765,27 @@ async function handleNexusRequest(req, res) {
       }
       dataToSave = neutralizeFinancialData(dataToSave);
       dataToSave.updated_at = dataToSave.updated_at || new Date().toISOString();
+
+      // Um salvamento "zerado" (todas as listas de conteúdo vazias) sem forceEmpty nem confirm_empty não
+      // apaga uma conta que tem dados: foi o vetor que zerou SQL, espelho e tabelas quando um cliente
+      // enviou a estrutura vazia de um disco novo. Exclusão intencional continua via forceEmpty da
+      // sincronização ou confirm_empty explícito.
+      if (isBlankFinancialData(dataToSave) && payload.forceEmpty !== true && payload.confirm_empty !== true) {
+        const espelho = getLocalData(cleanEmail);
+        let temConteudo = Boolean(espelho) && !isBlankFinancialData(espelho);
+        if (!temConteudo && pool) {
+          try {
+            const r = await pool.query('SELECT dados FROM dados_financeiros WHERE LOWER(email) = LOWER($1)', [cleanEmail]);
+            let d = r.rows[0] && r.rows[0].dados;
+            if (typeof d === 'string') { try { d = JSON.parse(d); } catch (e) { d = null; } }
+            temConteudo = Boolean(d) && !isBlankFinancialData(d);
+          } catch (e) {}
+        }
+        if (temConteudo) {
+          res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: true, preserved: true }));
+        }
+      }
 
       saveLocalData(cleanEmail, dataToSave);
       recordSystemLog(cleanEmail, cleanEmail, 'Salvamento', 'Dados Financeiros', 'Atualizou dados financeiros no sistema');
@@ -39248,10 +39287,16 @@ async function syncWithRenderCloud() {
         const localTime = localData && localData.updated_at ? new Date(localData.updated_at).getTime() : 0;
         const cloudTime = financialPayload && financialPayload.updated_at ? new Date(financialPayload.updated_at).getTime() : 0;
 
-        // Se a nuvem tiver alteração estritamente mais recente, adota a nuvem; caso contrário, preserva a soberania do banco local
+        // Se a nuvem tiver alteração estritamente mais recente, adota a nuvem; caso contrário, preserva a soberania do banco local.
+        // Exceção de proteção: um retrato ZERADO da nuvem (disco novo do Render, restore vazio do Supabase) nunca apaga uma conta
+        // local preenchida — antes bastava a nuvem responder estrutura vazia com carimbo novo para zerar SQL, espelho e tabelas.
+        const cloudBlank = isBlankFinancialData(financialPayload);
+        const localBlank = isBlankFinancialData(localData);
         let finalDataToKeep;
         let isNewChange = false;
-        if (cloudTime > localTime) {
+        if (localData && !localBlank && cloudBlank) {
+          finalDataToKeep = localData;
+        } else if (cloudTime > localTime) {
           finalDataToKeep = financialPayload;
           isNewChange = true;
         } else if (localData) {

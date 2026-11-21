@@ -562,13 +562,15 @@ html.user-logged-in #pageContent .kpi-tag { font-size: 14px !important; }
 
 /* Conteúdo compacto (09/11/2026): selo + (situação, título e uma frase) e uma linha de selos. Nada se repete: o título diz o que aconteceu,
    a frase diz o que isso significa e os selos dão o essencial (segurança, dados e horário). */
-.sg-in { position: relative !important; z-index: 2 !important; display: flex !important; flex-direction: column !important; gap: 14px !important; padding: 20px 22px 22px !important; }
-.sg-hero-row { display: grid !important; grid-template-columns: auto minmax(0, 1fr) !important; gap: 16px !important; align-items: start !important; text-align: left !important; }
-.sg-main { min-width: 0 !important; padding-right: 30px !important; }
-.sg-meta { display: flex !important; align-items: center !important; flex-wrap: wrap !important; gap: 6px 12px !important; margin: 1px 0 9px !important; min-width: 0 !important; }
+/* Refinamento de 20/11/2026 ("tela super profissional"): o print mostrava a situação caindo numa 2ª linha e o 3º selo órfão. Agora a placa tem 540px,
+   o topo (cargo + situação) cabe numa linha só, e os 3 selos viram uma faixa de rodapé (sem borda de pílula, separados por filetes) que cabe numa linha. */
+.sg-in { position: relative !important; z-index: 2 !important; display: flex !important; flex-direction: column !important; gap: 0 !important; padding: 0 !important; }
+.sg-hero-row { display: grid !important; grid-template-columns: auto minmax(0, 1fr) !important; gap: 18px !important; align-items: start !important; text-align: left !important; padding: 24px 24px 22px !important; }
+.sg-main { min-width: 0 !important; padding: 1px 0 0 !important; }
+.sg-meta { display: flex !important; align-items: center !important; flex-wrap: wrap !important; gap: 6px 12px !important; margin: 0 0 11px !important; min-width: 0 !important; padding-right: 36px !important; }
 .sg-status-pill {
-  display: inline-flex !important; align-items: center !important; gap: 6px !important; padding: 5px 11px 5px 9px !important; border-radius: 999px !important;
-  font-size: 14px !important; font-weight: 800 !important; letter-spacing: .08em !important; text-transform: uppercase !important; line-height: 1 !important;
+  display: inline-flex !important; align-items: center !important; gap: 6px !important; padding: 6px 12px 6px 10px !important; border-radius: 999px !important;
+  font-size: 14px !important; font-weight: 800 !important; letter-spacing: .06em !important; text-transform: uppercase !important; line-height: 1 !important;
   color: #fff !important; border: 1px solid rgba(var(--sg), .8) !important;
   background: linear-gradient(rgba(4, 9, 22, .56), rgba(4, 9, 22, .56)), linear-gradient(135deg, rgba(var(--sg), .42), rgba(var(--sg-2), .34)) !important;
   box-shadow: 0 4px 16px -4px rgba(var(--sg), .5), inset 0 1px 0 rgba(255, 255, 255, .28) !important;
@@ -579,8 +581,8 @@ html.user-logged-in #pageContent .kpi-tag { font-size: 14px !important; }
 .sg-dot::after { content: "" !important; position: absolute !important; inset: 0 !important; border-radius: 50% !important; background: rgb(var(--sg)) !important; animation: sgPulse 1.9s ease-out infinite; }
 @keyframes sgPulse { 0% { transform: scale(1); opacity: .7; } 100% { transform: scale(3); opacity: 0; } }
 .sg-x {
-  position: absolute !important; top: 14px !important; right: 14px !important; z-index: 5 !important;
-  flex: none !important; width: 30px !important; height: 30px !important; padding: 0 !important; display: inline-flex !important; align-items: center !important; justify-content: center !important;
+  position: absolute !important; top: 16px !important; right: 16px !important; z-index: 5 !important;
+  flex: none !important; width: 32px !important; height: 32px !important; padding: 0 !important; display: inline-flex !important; align-items: center !important; justify-content: center !important;
   border-radius: 10px !important; cursor: pointer !important; color: #DCE4F2 !important;
   background: rgba(255, 255, 255, .09) !important; border: 1px solid rgba(255, 255, 255, .2) !important; transition: background .18s, color .18s, border-color .18s !important;
 }
@@ -588,22 +590,30 @@ html.user-logged-in #pageContent .kpi-tag { font-size: 14px !important; }
 .sg-x:focus-visible { outline: 2px solid rgba(var(--sg), 1) !important; outline-offset: 2px !important; }
 .sg-x svg { width: 14px !important; height: 14px !important; }
 .sg-plaque:focus { outline: none !important; }
-.sg-title { margin: 0 0 4px !important; font-size: 19px !important; font-weight: 800 !important; letter-spacing: -.02em !important; line-height: 1.25 !important; color: #fff !important; text-shadow: 0 2px 16px rgba(0, 0, 0, .4) !important; }
-.sg-text { margin: 0 !important; font-size: 14px !important; line-height: 1.5 !important; color: #DDE5F1 !important; }
+.sg-title { margin: 0 0 6px !important; padding-right: 36px !important; font-size: 22px !important; font-weight: 800 !important; letter-spacing: -.025em !important; line-height: 1.2 !important; color: #fff !important; text-shadow: 0 2px 16px rgba(0, 0, 0, .4) !important; }
+.sg-text { margin: 0 !important; font-size: 14px !important; line-height: 1.55 !important; color: #DDE5F1 !important; }
 .sg-text strong { color: #fff !important; font-weight: 700 !important; }
-.sg-chips { display: flex !important; flex-wrap: wrap !important; gap: 6px !important; margin: 0 !important; padding: 14px 0 0 !important; border: 0 !important; border-top: 1px solid rgba(255, 255, 255, .14) !important; }
-.sg-chip {
-  display: inline-flex !important; align-items: center !important; gap: 6px !important; padding: 5px 10px 5px 8px !important; border-radius: 999px !important;
-  font-size: 14px !important; font-weight: 600 !important; line-height: 1 !important; color: #EAF0F9 !important;
-  background: rgba(255, 255, 255, .08) !important; border: 1px solid rgba(255, 255, 255, .18) !important; box-shadow: inset 0 1px 0 rgba(255, 255, 255, .12) !important;
+/* Rodapé: faixa mais escura que a placa (reforça o contraste e separa "o quê" de "os dados da sessão"), 3 itens em uma linha */
+.sg-chips {
+  display: flex !important; flex-wrap: wrap !important; align-items: center !important; gap: 8px 0 !important; margin: 0 !important; padding: 14px 24px 18px !important;
+  border: 0 !important; border-top: 1px solid rgba(255, 255, 255, .14) !important;
+  background: linear-gradient(180deg, rgba(3, 6, 16, .3), rgba(3, 6, 16, .5)) !important;
 }
-.sg-chip svg { width: 12px !important; height: 12px !important; flex: none !important; color: rgb(var(--sg)) !important; filter: brightness(1.45) saturate(1.1) !important; }
+.sg-chip {
+  position: relative !important; display: inline-flex !important; align-items: center !important; gap: 8px !important; padding: 0 16px !important; border: 0 !important; border-radius: 0 !important;
+  font-size: 14px !important; font-weight: 600 !important; line-height: 1.2 !important; color: #EAF0F9 !important; white-space: nowrap !important;
+  background: none !important; box-shadow: none !important;
+}
+.sg-chip:first-child { padding-left: 0 !important; }
+.sg-chip:last-child { padding-right: 0 !important; }
+.sg-chip + .sg-chip::before { content: "" !important; position: absolute !important; left: 0 !important; top: 50% !important; width: 1px !important; height: 16px !important; margin-top: -8px !important; background: rgba(255, 255, 255, .2) !important; }
+.sg-chip svg { width: 15px !important; height: 15px !important; flex: none !important; color: rgb(var(--sg)) !important; filter: brightness(1.45) saturate(1.1) !important; }
 .sg-chip time, .sg-chip .mono { font-variant-numeric: tabular-nums !important; }
 
 /* Selo do ícone: vidro colorido com anel que pulsa e o "check" que se desenha */
 .sg-plate {
-  position: relative !important; width: 52px !important; height: 52px !important; flex: none !important; display: grid !important; place-items: center !important;
-  border-radius: 17px !important; color: #fff !important;
+  position: relative !important; width: 56px !important; height: 56px !important; flex: none !important; display: grid !important; place-items: center !important;
+  border-radius: 18px !important; color: #fff !important;
   background: linear-gradient(145deg, rgba(255, 255, 255, .4), rgba(var(--sg), .62) 52%, rgba(var(--sg), .95)) !important;
   border: 1px solid rgba(255, 255, 255, .6) !important;
   box-shadow: 0 16px 32px -8px rgba(var(--sg), .8), inset 0 1px 0 rgba(255, 255, 255, .7), inset 0 -10px 16px rgba(0, 0, 0, .16) !important;
@@ -611,13 +621,13 @@ html.user-logged-in #pageContent .kpi-tag { font-size: 14px !important; }
 .sg-plate::before { content: "" !important; position: absolute !important; inset: -1px !important; border-radius: inherit !important; border: 1px solid rgba(var(--sg), .9) !important; opacity: 0; }
 .sg.show .sg-plate::before { animation: sgRing 1.1s .15s ease-out 1; }
 @keyframes sgRing { 0% { transform: scale(1); opacity: .8; } 100% { transform: scale(1.6); opacity: 0; } }
-.sg-plate svg { width: 26px !important; height: 26px !important; fill: none !important; stroke: currentColor !important; stroke-width: 2.1 !important; stroke-linecap: round !important; stroke-linejoin: round !important; filter: drop-shadow(0 2px 5px rgba(0, 20, 40, .4)) !important; }
+.sg-plate svg { width: 28px !important; height: 28px !important; fill: none !important; stroke: currentColor !important; stroke-width: 2.1 !important; stroke-linecap: round !important; stroke-linejoin: round !important; filter: drop-shadow(0 2px 5px rgba(0, 20, 40, .4)) !important; }
 .sg-check { stroke-dasharray: 14; stroke-dashoffset: 0; }
 .sg.show .sg-check { animation: sgDraw .4s .15s ease-out both; }
 @keyframes sgDraw { from { stroke-dashoffset: 14; } to { stroke-dashoffset: 0; } }
 
 /* Barra de tempo */
-.sg-bar { position: absolute !important; left: 0 !important; right: 0 !important; bottom: 0 !important; height: 4px !important; z-index: 3 !important; background: rgba(255, 255, 255, .1) !important; overflow: hidden !important; }
+.sg-bar { position: absolute !important; left: 0 !important; right: 0 !important; bottom: 0 !important; height: 3px !important; z-index: 3 !important; background: rgba(255, 255, 255, .1) !important; overflow: hidden !important; }
 .sg-bar i { display: block !important; height: 100% !important; width: 100% !important; transform-origin: left center; background: linear-gradient(90deg, rgb(var(--sg)), rgb(var(--sg-2))) !important; box-shadow: 0 0 12px rgba(var(--sg), .7) !important; }
 .sg.show .sg-bar i { animation: sgFill var(--sg-ms) linear forwards; }
 .sg.paused .sg-bar i { animation-play-state: paused; }
@@ -716,7 +726,7 @@ html.nexus-farewell #authPage { display: none !important; }
   left: auto !important;
   margin: auto !important;
   z-index: 2 !important;
-  width: min(480px, calc((100vw / var(--app-zoom, 1)) - 32px)) !important;
+  width: min(540px, calc((100vw / var(--app-zoom, 1)) - 32px)) !important;
   transform: translate3d(0, 24px, 0) scale(.96);
 }
 .sg-toast.show,
@@ -729,13 +739,25 @@ html.nexus-farewell #authPage { display: none !important; }
   .sg-stage { padding: 14px !important; }
   .sg-toast,
   .sg-plaque { top: auto !important; right: auto !important; left: auto !important; width: 100% !important; border-radius: 18px !important; }
-  .sg-in { gap: 12px !important; padding: 18px 16px 20px !important; }
-  .sg-hero-row { gap: 12px !important; }
+  .sg-hero-row { gap: 12px !important; padding: 18px 16px 16px !important; }
   .sg-plate { width: 44px !important; height: 44px !important; border-radius: 14px !important; }
   .sg-plate svg { width: 22px !important; height: 22px !important; }
-  .sg-title { font-size: 17.5px !important; }
+  .sg-meta { padding-right: 34px !important; }
+  .sg-title { font-size: 19px !important; padding-right: 34px !important; }
   .sg-text { font-size: 14px !important; }
   .sg-chip { font-size: 14px !important; }
+  .sg-status-pill { white-space: nowrap !important; letter-spacing: .02em !important; padding: 6px 10px 6px 8px !important; }
+  /* No celular os 3 itens viram 3 colunas (ícone em cima, rótulo embaixo): nenhum fica órfão numa 2ª linha */
+  .sg-chips { display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)) !important; align-items: stretch !important; gap: 0 !important; padding: 14px 8px 17px !important; }
+  .sg-chip, .sg-chip:first-child, .sg-chip:last-child { flex-direction: column !important; justify-content: flex-start !important; gap: 6px !important; padding: 0 6px !important; text-align: center !important; white-space: normal !important; line-height: 1.25 !important; }
+  .sg-chip + .sg-chip::before { height: 72% !important; top: 14% !important; margin-top: 0 !important; }
+}
+@media (max-width: 380px) {
+  /* Telas muito estreitas (320px): lista em uma coluna e o cargo pode quebrar dentro da pílula (retângulo arredondado, não cápsula) */
+  .sg-status-pill { white-space: normal !important; border-radius: 14px !important; line-height: 1.25 !important; }
+  .sg-chips { grid-template-columns: minmax(0, 1fr) !important; gap: 10px !important; padding: 14px 16px 17px !important; }
+  .sg-chip, .sg-chip:first-child, .sg-chip:last-child { flex-direction: row !important; justify-content: flex-start !important; gap: 8px !important; padding: 0 !important; text-align: left !important; }
+  .sg-chip + .sg-chip::before { display: none !important; }
 }
 @media (prefers-reduced-motion: reduce) {
   .sg, .sg-stage { transition: opacity .2s ease !important; transform: none !important; }
