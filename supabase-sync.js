@@ -418,6 +418,7 @@ function createSync() {
   let verifying = false;
   let credentialGuards = 0;           // quantas vezes uma senha MAIS NOVA que já estava no Supabase foi preservada
   let sequenceGuards = 0;             // idem para o contador de protocolo (vale sempre o maior)
+  let blankGuards = 0;                // quantas vezes um retrato financeiro ZERADO deixou de sobrescrever conteúdo que o destino já tinha
   let staleHealed = 0;                // registros reenviados porque o Supabase tinha uma versão mais antiga (cura)
   let lastAudit = null;               // resultado da última conferência de conteúdo
   let lastAuditAt = 0;
@@ -712,7 +713,38 @@ function createSync() {
       say('warn', 'seqguard', 'O contador de protocolo do Supabase (' + rUlt + ') é maior que o deste servidor (' + (Number.isFinite(mine) ? mine : '?') + '): o maior foi mantido.');
     }
   }
-  const GUARDS = { 'local_users.json': guardCredentials, 'local_os_sequencia.json': guardSequence };
+  // Retrato financeiro ZERADO neste servidor (disco novo, restore vazio, arquivo zerado por uma sincronização antiga) nunca substitui um que já
+  // tem conteúdo no destino: sem esta guarda o destino (Supabase ou, no PC, o banco interno) recebia o zero em ~1,5 s depois da subida e a
+  // única cópia boa era arquivada em __sis__/_substituidos, de onde ninguém a puxava de volta. A linha e as tabelas relacionais da conta
+  // (transacoes, contas_bancarias, categorias — o "replace" apagaria as linhas antigas) ficam de fora desta rodada.
+  const FIN_LISTS = ['transactions', 'accounts', 'budgets', 'goals', 'recurringList', 'alerts', 'attachments', 'notifications'];
+  const isBlankFin = (d) => !d || typeof d !== 'object' || Array.isArray(d) || FIN_LISTS.every(k => !Array.isArray(d[k]) || d[k].length === 0);
+  async function guardBlankFinancial(todo) {
+    const blanks = todo.filter(u => u.table === 'nexus_dados_financeiros' && u.kind === 'upsert' && !String(u.key).startsWith(DOC_PREFIX) && isBlankFin(u.row && u.row.dados));
+    if (!blanks.length) return;
+    const remote = new Map();
+    for (const part of chunkArr(Array.from(new Set(blanks.map(u => String(u.key)))), 50)) {
+      const res = await call(() => sb.from('nexus_dados_financeiros').select('email,dados').in('email', part));
+      if (res.error) {
+        const kind = classify(res.error);
+        if (kind === 'transient' || kind === 'auth') throw toError(kind, res.error, 'nexus_dados_financeiros');
+        return;                                                      // sem como ler (esquema diferente): segue como antes
+      }
+      for (const r of (res.data || [])) remote.set(lc(r.email), r.dados);
+    }
+    for (const u of blanks) {
+      let r = remote.get(lc(u.key));
+      if (typeof r === 'string') { try { r = JSON.parse(r); } catch (e) { r = null; } }
+      if (!r || isBlankFin(r)) continue;                             // o destino também está vazio (conta nova): pode enviar
+      for (let i = todo.length - 1; i >= 0; i--) {
+        const x = todo[i];
+        if (String(x.key) === String(u.key) && (x === u || x.table === 'transacoes' || x.table === 'contas_bancarias' || x.table === 'categorias')) { state.acked[x.id] = x.hash; todo.splice(i, 1); }
+      }
+      blankGuards++;
+      say('warn', 'blankguard:' + sha(u.key), 'Os dados financeiros de ' + maskEmail(u.key) + ' estão ZERADOS neste servidor, mas o destino tem conteúdo: o zerado NÃO foi enviado e o conteúdo do destino foi preservado.');
+    }
+  }
+  const GUARDS = { 'local_users.json': guardCredentials, 'local_os_sequencia.json': guardSequence, 'local_database_data.json': guardBlankFinancial };
 
   // Cura do ponto cego do ack ("enviei" ≠ "está lá"): se outro servidor gravou depois uma versão MAIS ANTIGA, reenvia a nossa. Só nos dois
   // casos em que qual é a mais nova é inequívoco (relógio da senha e contador de protocolo); o resto não é "curado" para os dois
@@ -1084,7 +1116,7 @@ function createSync() {
       degradedTables: Object.fromEntries(Object.entries(degraded).filter(([, d]) => d.until > Date.now()).map(([t, d]) => [t, d.message])),
       omittedColumns: Object.fromEntries(Object.entries(skipCols).map(([t, s]) => [t, Array.from(s)])),
       confirmedRecords: state ? Object.keys(state.acked).length : 0, restoredFiles,
-      guards: { credentials: credentialGuards, sequence: sequenceGuards, staleHealed },
+      guards: { credentials: credentialGuards, sequence: sequenceGuards, blankFinancial: blankGuards, staleHealed },
       lastAudit: lastAudit ? { checkedAt: lastAudit.checkedAt, planned: lastAudit.planned, ok: lastAudit.ok, missing: lastAudit.missing, different: lastAudit.different, moving: lastAudit.moving, consistent: lastAudit.consistent } : null
     };
   }
@@ -1184,6 +1216,30 @@ function createSync() {
     finally { clearTimeout(timer); }
   }
 
+  // Dados financeiros de UMA conta como o espelho durável (Supabase ou, no PC, o SQL Server interno) os guarda, lidos na hora. É a fonte de
+  // "puxar de volta" quando o arquivo local e o SQL principal vieram zerados. Nunca lança: sem espelho, sem rede ou acima do tempo devolve null.
+  async function fetchFinancialRecord(email, opts) {
+    const key = lc(email);
+    if (!enabled || !sb || !key) return null;
+    const maxMs = Math.max(500, (opts && opts.timeoutMs) || 3000);
+    let timer;
+    const limit = new Promise(resolve => { timer = setTimeout(() => resolve({ timeout: true }), maxMs); if (timer.unref) timer.unref(); });
+    const noRetry = (q) => (q && typeof q.retry === 'function') ? q.retry(false) : q;
+    try {
+      const out = await Promise.race([
+        call(() => noRetry(sb.from('nexus_dados_financeiros').select('email,dados,updated_at').eq('email', key).range(0, 0))),
+        limit
+      ]);
+      if (!out || out.timeout) { say('warn', 'fin-timeout', 'O espelho demorou mais de ' + maxMs + ' ms para devolver os dados financeiros de uma conta.'); return null; }
+      if (out.error) { say('warn', 'fin-read', 'Não foi possível ler os dados financeiros da conta no espelho: ' + (out.error.message || out.error)); return null; }
+      const row = (out.data || [])[0];
+      let dados = row && row.dados;
+      if (typeof dados === 'string') { try { dados = JSON.parse(dados); } catch (e) { dados = null; } }
+      return dados && typeof dados === 'object' && !Array.isArray(dados) ? dados : null;
+    } catch (e) { return null; }
+    finally { clearTimeout(timer); }
+  }
+
   async function flushAndStop(maxMs) {
     if (!enabled || stopped) return status();
     const limit = new Promise(resolve => { const t = setTimeout(resolve, maxMs || 4000); if (t.unref) t.unref(); });
@@ -1194,7 +1250,7 @@ function createSync() {
     return status();
   }
 
-  const api = { init, noteWrite, restoreMissingFiles, flushNow, syncEverythingNow, flushAndStop, status, isEnabled: () => enabled, verifyRemote, fetchUserRecord, audit, _state: () => state };
+  const api = { init, noteWrite, restoreMissingFiles, flushNow, syncEverythingNow, flushAndStop, status, isEnabled: () => enabled, verifyRemote, fetchUserRecord, fetchFinancialRecord, audit, _state: () => state };
   return api;
 }
 

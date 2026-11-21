@@ -240,15 +240,22 @@ class Query {
   catch(onRejected) { return this.execute().catch(onRejected); }
 }
 
+// Tabelas do motor cujo nome COLIDE com uma tabela do próprio aplicativo no mesmo banco.
+// No Supabase, "dados_financeiros" guarda a cópia fiel do CADASTRO do usuário ({ id, name, email, password... }), mas no banco interno
+// "dados_financeiros" é a tabela do aplicativo com o retrato FINANCEIRO da conta ({ transactions, accounts, ... }), com a mesma chave (e-mail).
+// Entre 20/11 e 21/11/2026 o espelho gravou o cadastro por cima do financeiro a cada subida do servidor, e a leitura seguinte devolvia o
+// cadastro à tela como se fosse o financeiro: "mudei o código e some tudo". Agora o espelho usa a própria tabela física.
+const TABELA_FISICA = { dados_financeiros: 'espelho_dados_financeiros' };
+
 // Cria o cliente compatível: { from(tabela) -> Query } — mesma superfície usada pelo supabase-sync.js.
 function createClient(pool) {
   if (!pool || typeof pool.query !== 'function') throw new Error('pool MSSQL inválido para o cliente de sincronização');
   return {
     from(table) {
       if (!IDENT_RE.test(String(table || ''))) throw new Error('tabela inválida: ' + table);
-      return new Query(pool, table);
+      return new Query(pool, TABELA_FISICA[table] || table);
     }
   };
 }
 
-module.exports = { createClient };
+module.exports = { createClient, TABELA_FISICA };

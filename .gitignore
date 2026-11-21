@@ -75,3 +75,7 @@ site_backups/
 visitas/
 
 sql_vigia_estado.json
+
+# Histórico das cópias dos dados financeiros de cada conta (backup-financeiro.js): dados de cliente, nunca no repositório
+backups_financeiros/
+espelho_*.json

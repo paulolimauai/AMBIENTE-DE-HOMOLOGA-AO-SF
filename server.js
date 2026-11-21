@@ -32,6 +32,7 @@ const Acesso = require('./acesso'); // relógio do bloqueio da conta (active): o
 const Credenciais = require('./credenciais'); // qual senha vale quando a conta existe na nuvem, no SQL Server do PC e no Supabase (vale a trocada por último)
 const SqlVigia = require('./sql-vigia'); // alteração feita DIRETO no SQL Server (SSMS) é reconhecida, carimbada e levada à nuvem e ao Supabase em vez de ser desfeita pelo ciclo de 10 s
 const Visitas = require('./visitas'); // registro de visitas ao site (pasta visitas/, IP completo só no arquivo e mascarado em qualquer resposta)
+const BackupFinanceiro = require('./backup-financeiro'); // cópias HISTÓRICAS dos dados financeiros (backups_financeiros/): o que nenhum retrato zerado, redeploy ou sincronização consegue apagar
 
 const PORT = process.env.PORT || 3000;
 const SERVER_START_TIME = Date.now();
@@ -50,7 +51,7 @@ try {
     SupabaseSync.init({ dataDir: RUNTIME_DATA_DIR });
   }
 } catch (e) {
-  SupabaseSync = { noteWrite() {}, restoreMissingFiles: async () => ({ restored: [] }), flushAndStop: async () => ({}), flushNow: async () => ({}), fetchUserRecord: async () => null, status: () => ({ enabled: false, disabledReason: 'módulo indisponível' }) };
+  SupabaseSync = { noteWrite() {}, restoreMissingFiles: async () => ({ restored: [] }), flushAndStop: async () => ({}), flushNow: async () => ({}), fetchUserRecord: async () => null, fetchFinancialRecord: async () => null, status: () => ({ enabled: false, disabledReason: 'módulo indisponível' }) };
 }
 // Senha criada/trocada só é "pronta" quando o Supabase confirmou: espera o envio (no máximo maxMs) antes de responder ao usuário.
 // Sem Supabase, sem rede ou acima do tempo, segue: o dado fica em disco na fila de reenvio e o envio continua em segundo plano.
@@ -150,6 +151,10 @@ function clearDeletedEmailTombstone(email) {
 const LOGS_FILE_PATH = path.join(RUNTIME_DATA_DIR, 'system_logs.json');
 const LOCAL_DATA_PATH = path.join(RUNTIME_DATA_DIR, 'local_database_data.json');
 const LOCAL_DATA_BACKUP_PATH = path.join(RUNTIME_DATA_DIR, 'local_database_data.backup.json');
+// O .backup.json acima é um ESPELHO gravado junto com o principal (zera junto). Este é o histórico de verdade: uma cópia por versão com conteúdo,
+// 30 mais recentes + 1 por dia nos últimos 30 dias, por conta. Fora do Git (.gitignore).
+const FINANCE_BACKUPS_DIR = path.join(RUNTIME_DATA_DIR, 'backups_financeiros');
+const financeBackups = BackupFinanceiro.createStore({ dir: FINANCE_BACKUPS_DIR });
 const LOCAL_USERS_PATH = path.join(RUNTIME_DATA_DIR, 'local_users.json');
 const LOCAL_USERS_BACKUP_PATH = path.join(RUNTIME_DATA_DIR, 'local_users.backup.json');
 const LOCAL_ORDENS_PATH = path.join(RUNTIME_DATA_DIR, 'local_ordens_servico.json');
@@ -1659,7 +1664,9 @@ function initInternalMirrorSync() {
       SupabaseSync.init({
         dataDir: RUNTIME_DATA_DIR,
         client: getMirrorSyncClient(),
-        projectRef: process.env.MSSQL_DATABASE || 'nexus_app',
+        // O sufixo muda o "projeto" do estado de envio: tudo é reenviado UMA vez, agora para a tabela física própria do espelho
+        // (espelho_dados_financeiros). Antes o cadastro dos usuários era gravado por cima do financeiro em dados_financeiros.
+        projectRef: (process.env.MSSQL_DATABASE || 'nexus_app') + '#espelho-v2',
         role: 'mssql'
       });
       return;
@@ -2316,6 +2323,20 @@ async function setupDatabaseTablesAndSync() {
     END;
   `);
 
+  // Cópia fiel do CADASTRO dos usuários para o espelho durável. No Supabase essa tabela se chama dados_financeiros; aqui ela precisa ter
+  // OUTRO nome físico (ver TABELA_FISICA em mssql-sync-client.js), porque dados_financeiros é a tabela do aplicativo com o financeiro da conta.
+  await pool.query(`
+    IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'espelho_dados_financeiros')
+    BEGIN
+      CREATE TABLE espelho_dados_financeiros (
+        id INT IDENTITY(1,1) PRIMARY KEY,
+        email NVARCHAR(900) NOT NULL,
+        dados NVARCHAR(MAX) NOT NULL DEFAULT '{}',
+        updated_at DATETIME2 NOT NULL DEFAULT GETDATE()
+      );
+    END;
+  `);
+
   // 4. Sincronização Estrita: O SQL Server é a FONTE ÚNICA E SOBERANA de usuários
   try {
     try {
@@ -2368,6 +2389,7 @@ async function setupDatabaseTablesAndSync() {
       if (typeof dbData === 'string') {
         try { dbData = JSON.parse(dbData); } catch (e) { dbData = null; }
       }
+      dbData = asFinancialData(dbData);   // cadastro do usuário gravado por engano nesta tabela não é financeiro
       if (!dbData || typeof dbData !== 'object' || Array.isArray(dbData) || Object.keys(dbData).length === 0) continue;
 
       const cachedData = getLocalData(cleanEmail);
@@ -2398,7 +2420,7 @@ async function setupDatabaseTablesAndSync() {
           // Se já existe, atualiza pelo timestamp ou pelo estado mais recente do local
           const dbDados = existingData.rows[0].dados;
           let shouldUpdateDb = false;
-          if (!dbDados || typeof dbDados !== 'object' || Object.keys(dbDados).length === 0) {
+          if (!dbDados || typeof dbDados !== 'object' || Object.keys(dbDados).length === 0 || !asFinancialData(dbDados)) {
             shouldUpdateDb = true;
           } else {
             const localTime = dataVal.updated_at ? new Date(dataVal.updated_at).getTime() : 0;
@@ -21107,6 +21129,16 @@ function getDataStateSignature() {
   }
 }
 
+// "Zerado" = nenhuma lista de conteúdo tem item (só as categorias padrão não contam). Mesma regra do servidor (isBlankFinancialData).
+function nexusDadosVazios(d) {
+  if (!d || typeof d !== 'object') return true;
+  var listas = ['transactions', 'accounts', 'budgets', 'goals', 'recurringList', 'alerts', 'attachments', 'notifications'];
+  for (var i = 0; i < listas.length; i++) {
+    if (Array.isArray(d[listas[i]]) && d[listas[i]].length > 0) return false;
+  }
+  return true;
+}
+
 async function loadUserData() {
   if (!currentUser) {
     resetUserDataState();
@@ -21137,10 +21169,22 @@ async function loadUserData() {
         try { serverData = JSON.parse(serverData); } catch(e){}
       }
       if (serverData && typeof serverData === 'object') {
-        applyDataPayload(serverData);
-        saveToStorage(userKey, serverData);
-        const nextSig = getDataStateSignature();
-        hasServerChanges = (nextSig !== prevSig);
+        if (nexusDadosVazios(serverData) && localData && !nexusDadosVazios(localData)) {
+          // O servidor devolveu a conta ZERADA, mas este navegador ainda tem os dados: não troca a tela pelo vazio nem apaga a cópia
+          // do navegador; devolve os dados ao servidor (ele aceita conteúdo sobre zerado) para a conta voltar ao banco.
+          try {
+            await fetch(window.location.origin + '/api/data', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email: currentUser.email, data: localData })
+            });
+          } catch (restoreErr) {}
+        } else {
+          applyDataPayload(serverData);
+          saveToStorage(userKey, serverData);
+          const nextSig = getDataStateSignature();
+          hasServerChanges = (nextSig !== prevSig);
+        }
       }
     }
   } catch(e) {
@@ -33502,6 +33546,8 @@ function removeLocalUser(email) {
       if (fs.existsSync(LOCAL_DATA_PATH)) {
         const allData = JSON.parse(fs.readFileSync(LOCAL_DATA_PATH, 'utf8')) || {};
         if (allData[clean]) {
+          // Excluir a conta apaga os dados dela do arquivo, do SQL e do espelho: a última versão com conteúdo fica no histórico local
+          try { financeBackups.save(clean, allData[clean], { force: true, motivo: 'antes-de-excluir-conta' }); } catch (backupErr) {}
           delete allData[clean];
           const allDataJson = JSON.stringify(allData, null, 2);
           writeJsonFile(LOCAL_DATA_PATH, allDataJson);
@@ -33882,6 +33928,16 @@ function isBlankFinancialData(data) {
   return listas.every(k => !Array.isArray(data[k]) || data[k].length === 0);
 }
 
+// Só é "dado financeiro" o que TEM formato financeiro (alguma lista: transactions, accounts, categories...). A tabela dados_financeiros chegou a
+// guardar o cadastro do usuário ({ id, name, email, password... }) por engano do espelho (20–21/11/2026): isso nunca pode ser lido como o
+// financeiro da conta, nem devolvido à tela, nem escolhido como fonte de recuperação.
+function asFinancialData(d) {
+  if (typeof d === 'string') { try { d = JSON.parse(d); } catch (e) { return null; } }
+  if (!d || typeof d !== 'object' || Array.isArray(d)) return null;
+  const temLista = ['transactions', 'accounts', 'budgets', 'goals', 'recurringList', 'alerts', 'attachments', 'notifications', 'categories'].some(k => Array.isArray(d[k]));
+  return temLista ? d : null;
+}
+
 async function ensureUserIsConfiguredInDatabase(cleanEmail, userMeta = {}) {
   if (!cleanEmail) return;
   const email = cleanEmail.toLowerCase().trim();
@@ -33958,9 +34014,17 @@ function saveLocalData(email, data) {
     const current = readAllLocalFinancial();
     // Nada mudou: não reescreve o arquivo de TODAS as contas (nem o backup). GET /api/data e a sincronização salvavam o mesmo conteúdo a cada chamada.
     if (current[key] !== undefined && JSON.stringify(current[key]) === JSON.stringify(data)) return;
+    // Rede de proteção: gravação que REDUZ (ou zera) o conteúdo guarda antes a versão atual no histórico, na hora (sem esperar o intervalo)
+    try {
+      const antes = current[key];
+      if (antes && !isBlankFinancialData(antes) && BackupFinanceiro.contentCount(data) < BackupFinanceiro.contentCount(antes)) {
+        financeBackups.save(key, antes, { force: true, motivo: 'antes-de-reduzir' });
+      }
+    } catch (backupErr) {}
     const jsonStr = JSON.stringify({ ...current, [key]: data }, null, 2);
     writeJsonFile(LOCAL_DATA_PATH, jsonStr);
     try { writeJsonFile(LOCAL_DATA_BACKUP_PATH, jsonStr); } catch(be){}
+    try { financeBackups.save(key, data); } catch (backupErr) {}
   } catch (e) {
     console.error('Erro ao salvar local_database_data.json:', e);
   }
@@ -33993,6 +34057,106 @@ function mergeFinancialData(serverData, localData) {
   if (lTime > sTime) return lData;
 
   return sData || lData;
+}
+
+// Grava o retrato financeiro da conta em dados_financeiros (SQL Server). Devolve true só quando o banco CONFIRMOU a gravação
+// (antes o POST respondia "sucesso" sem esperar, e uma falha do banco só aparecia como aviso no log).
+async function writeFinancialToSql(email, data) {
+  if (!pool) return null;
+  try {
+    await pool.query(
+      `IF EXISTS (SELECT 1 FROM dados_financeiros WHERE LOWER(email) = LOWER($1))
+       BEGIN
+         UPDATE dados_financeiros SET dados = $2, updated_at = GETDATE() WHERE LOWER(email) = LOWER($1);
+       END
+       ELSE
+       BEGIN
+         INSERT INTO dados_financeiros (email, dados, updated_at) VALUES ($1, $2, GETDATE());
+       END`,
+      [email, JSON.stringify(data)]
+    );
+    return true;
+  } catch (err) {
+    console.warn('[AVISO BD] Falha ao salvar no SQL Server. Dados salvos com resiliência local.', err.message);
+    return false;
+  }
+}
+
+// ==================== Recuperação automática dos dados financeiros ====================
+// Conta SEM conteúdo no arquivo local (zerada por disco novo, restore vazio, sincronização antiga...) mas COM conteúdo em outro lugar
+// (SQL Server principal, espelho durável/Supabase ou histórico local em backups_financeiros/) volta sozinha: a versão mais recente com
+// conteúdo é gravada no arquivo, no SQL e (pelo gancho do arquivo) no espelho. Conta que tem conteúdo só alimenta o histórico.
+// Nunca apaga nada: só preenche o que está vazio. O mesmo retrato zerado jamais vence um preenchido (isBlankFinancialData).
+const healLastTry = new Map();
+let healRunning = false;
+function maskEmailForLog(email) { return String(email || '').replace(/^([^@]{1,3})[^@]*@/, '$1***@'); }
+
+async function healFinancialData(email, opts) {
+  opts = opts || {};
+  const key = String(email || '').toLowerCase().trim();
+  if (!key || isAccountDeleted(key)) return { restored: false };
+  const atual = getLocalData(key);
+  // Linha do SQL Server (dados_financeiros) como retrato FINANCEIRO; null = não existe ou guarda outra coisa (cadastro do usuário, por engano do espelho)
+  let sqlLinha = null; let sqlLido = false;
+  if (pool) {
+    try {
+      const r = await pool.query('SELECT dados FROM dados_financeiros WHERE LOWER(email) = LOWER($1)', [key]);
+      sqlLinha = asFinancialData(r.rows[0] && r.rows[0].dados);
+      sqlLido = true;
+    } catch (e) {}
+  }
+  if (atual && !isBlankFinancialData(atual)) {
+    try { financeBackups.save(key, atual); } catch (e) {}   // semeia o histórico com o que já existe (não repete o que já foi guardado)
+    // O arquivo local tem o conteúdo mas o SQL Server não (linha ausente, zerada ou com o cadastro do usuário no lugar): refaz o SQL a partir do arquivo
+    if (sqlLido && (!sqlLinha || isBlankFinancialData(sqlLinha))) {
+      if (await writeFinancialToSql(key, atual)) {
+        try { relationalSyncRunner(key, atual); } catch (e) {}
+        console.log('[RECUPERAÇÃO] SQL Server refeito para ' + maskEmailForLog(key) + ' a partir do arquivo local (' + BackupFinanceiro.contentCount(atual) + ' itens).');
+      }
+    }
+    return { restored: false };
+  }
+  const candidatos = [];
+  if (sqlLinha) candidatos.push({ fonte: 'SQL Server', dados: sqlLinha });
+  try {
+    const d = await SupabaseSync.fetchFinancialRecord(key, { timeoutMs: opts.timeoutMs || 3000 });
+    if (d) candidatos.push({ fonte: 'espelho durável (Supabase / SQL interno)', dados: d });
+  } catch (e) {}
+  try {
+    const snap = financeBackups.latest(key);
+    if (snap) candidatos.push({ fonte: 'histórico local (backups_financeiros)', dados: snap.dados, ts: snap.ts });
+  } catch (e) {}
+  const melhor = BackupFinanceiro.pickBest(candidatos);
+  if (!melhor) {
+    // Nada com conteúdo em lugar nenhum. Se a linha do SQL guarda o cadastro do usuário no lugar do financeiro, troca pelo retrato zerado correto
+    if (sqlLido && !sqlLinha) await writeFinancialToSql(key, atual && typeof atual === 'object' ? atual : getEmptyFinancialData());
+    return { restored: false };
+  }
+  const dados = neutralizeFinancialData(melhor.dados);
+  saveLocalData(key, dados);
+  await writeFinancialToSql(key, dados);
+  if (pool) { try { relationalSyncRunner(key, dados); } catch (e) {} }
+  healLastTry.delete(key);   // recuperou: se zerar de novo, a próxima conferência não espera (o intervalo só vale quando não havia nada a restaurar)
+  console.log('[RECUPERAÇÃO] Dados financeiros de ' + maskEmailForLog(key) + ' restaurados de ' + melhor.fonte + ' (' + BackupFinanceiro.contentCount(dados) + ' itens).');
+  return { restored: true, fonte: melhor.fonte, dados };
+}
+
+async function healAllFinancial(reason) {
+  if (healRunning) return;
+  healRunning = true;
+  try {
+    const emails = new Set(Object.keys(readAllLocalFinancial()));
+    try { getLocalUsers().forEach(u => { if (u && u.email) emails.add(String(u.email).toLowerCase().trim()); }); } catch (e) {}
+    for (const email of emails) {
+      if (!email) continue;
+      const atual = getLocalData(email);
+      const vazio = !atual || isBlankFinancialData(atual);
+      // Conta nova e vazia não consulta o banco a toda hora: no máximo a cada 30 min (na subida sempre confere)
+      if (vazio && reason !== 'boot' && Date.now() - (healLastTry.get(email) || 0) < 30 * 60 * 1000) continue;
+      if (vazio) healLastTry.set(email, Date.now());
+      try { await healFinancialData(email); } catch (e) { console.warn('[RECUPERAÇÃO] Falha ao conferir ' + maskEmailForLog(email) + ':', e.message); }
+    }
+  } finally { healRunning = false; }
 }
 
 
@@ -36665,7 +36829,13 @@ async function handleNexusRequest(req, res) {
       res.writeHead(404, { ...corsHeaders, 'Content-Type': 'application/json' });
       return res.end(JSON.stringify({ success: false, errorType: 'user_not_found', error: 'Usuário não possui conta criada.' }));
     }
-    const localData = getLocalData(email);
+    let localData = getLocalData(email);
+    // Conta zerada aqui mas com conteúdo no SQL Server, no espelho ou no histórico local: puxa de volta ANTES de responder
+    // (a tela nunca recebe "tudo vazio" quando existe cópia em algum lugar).
+    if ((!localData || isBlankFinancialData(localData)) && Date.now() - (healLastTry.get(email) || 0) > 60000) {
+      healLastTry.set(email, Date.now());   // conta nova e vazia não consulta o banco a cada abertura: no máximo 1 vez por minuto
+      try { const h = await healFinancialData(email, { timeoutMs: 2500 }); if (h.restored) localData = h.dados; } catch (e) {}
+    }
     if (pool) {
       pool.query('SELECT dados FROM dados_financeiros WHERE LOWER(email) = LOWER($1)', [email])
         .then(result => {
@@ -36673,6 +36843,7 @@ async function handleNexusRequest(req, res) {
           if (typeof serverData === 'string') {
             try { serverData = JSON.parse(serverData); } catch(e){ serverData = null; }
           }
+          serverData = asFinancialData(serverData);   // nunca devolve à tela o cadastro do usuário no lugar do financeiro
           // Merge consciente: um retrato zerado no SQL não esconde dados preenchidos do espelho local
           // (antes bastava existir QUALQUER linha em dados_financeiros para o GET devolver o SQL cru).
           let finalData = mergeFinancialData(serverData, localData) || getEmptyFinancialData();
@@ -36778,6 +36949,7 @@ async function handleNexusRequest(req, res) {
             const r = await pool.query('SELECT dados FROM dados_financeiros WHERE LOWER(email) = LOWER($1)', [cleanEmail]);
             let d = r.rows[0] && r.rows[0].dados;
             if (typeof d === 'string') { try { d = JSON.parse(d); } catch (e) { d = null; } }
+            d = asFinancialData(d);
             temConteudo = Boolean(d) && !isBlankFinancialData(d);
           } catch (e) {}
         }
@@ -36790,28 +36962,17 @@ async function handleNexusRequest(req, res) {
       saveLocalData(cleanEmail, dataToSave);
       recordSystemLog(cleanEmail, cleanEmail, 'Salvamento', 'Dados Financeiros', 'Atualizou dados financeiros no sistema');
 
+      // O SQL Server é esperado (não mais "dispara e esquece"): a resposta diz se o banco CONFIRMOU (sql: true) ou se só o arquivo local
+      // guardou (sql: false; o histórico local e o espelho cobrem, e a conferência periódica reenvia). Sem banco configurado: sql: null.
+      let sqlOk = null;
       if (pool) {
-        const strDataToSave = JSON.stringify(dataToSave);
-        pool.query(
-          `IF EXISTS (SELECT 1 FROM dados_financeiros WHERE LOWER(email) = LOWER($1))
-           BEGIN
-             UPDATE dados_financeiros SET dados = $2, updated_at = GETDATE() WHERE LOWER(email) = LOWER($1);
-           END
-           ELSE
-           BEGIN
-             INSERT INTO dados_financeiros (email, dados, updated_at) VALUES ($1, $2, GETDATE());
-           END`,
-          [cleanEmail, strDataToSave]
-        ).catch(err => {
-          console.warn('[AVISO BD] Falha ao salvar no SQL Server. Dados salvos com resiliência local.', err.message);
-        });
-
+        sqlOk = await writeFinancialToSql(cleanEmail, dataToSave);
         // Persistência relacional imediata no SQL Server (tabelas transacoes, contas_bancarias, categorias)
         relationalSyncRunner(cleanEmail, dataToSave);
       }
 
       res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ success: true }));
+      res.end(JSON.stringify({ success: true, sql: sqlOk }));
     });
     return;
   }
@@ -39481,13 +39642,16 @@ SupabaseSync.restoreMissingFiles({ timeoutMs: 8000 }).catch(() => {}).then(() =>
 
   // Conexão e Auto-Reconexão Contínua com o Microsoft SQL Server (Sem Bloquear o Servidor)
   initDatabase()
-    .then(() => {
+    .then(async () => {
       if (pool) {
         const dbNameStr = process.env.MSSQL_DATABASE || 'AMBIENTE DE HOMOLOGAÇAO SF';
         console.log(`[BANCO] Conexão ativa e sincronizada com Microsoft SQL Server (Interno) (banco: ${dbNameStr})`);
       } else {
         console.log(`[BANCO LOCAL] Operando com alta resiliência e persistência em arquivos JSON locais.`);
       }
+      // ANTES de falar com a nuvem: conta zerada puxa de volta o que o SQL Server, o espelho ou o histórico local têm; conta preenchida
+      // alimenta o histórico. Depois, a conferência se repete de 5 em 5 minutos (e a leitura de /api/data também confere).
+      try { await healAllFinancial('boot'); } catch (healErr) { console.warn('[RECUPERAÇÃO] Conferência inicial falhou:', healErr.message); }
       if (!process.env.RENDER && process.env.IS_RENDER !== 'true') {
         syncWithRenderCloud().catch(() => {});
       }
@@ -39499,5 +39663,6 @@ SupabaseSync.restoreMissingFiles({ timeoutMs: 8000 }).catch(() => {}).then(() =>
     // e, a partir do dia 5 de cada mês, cada assinatura ativa ganha a cobrança do mês. Se o servidor ficou desligado no dia 5, completa depois.
     .then(() => rotinaDeAssinaturas());
   setInterval(rotinaDeAssinaturas, 60 * 60 * 1000).unref();
+  setInterval(() => { healAllFinancial('periodico').catch(() => {}); }, 5 * 60 * 1000).unref();
 }));
 

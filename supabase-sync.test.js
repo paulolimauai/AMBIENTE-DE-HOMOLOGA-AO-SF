@@ -719,3 +719,43 @@ test('audit: a fila transitória de logins (pending_logins) não derruba a consi
   assert.equal(a.transient, 2);
   assert.ok(fake.tables.nexus_dados_financeiros.some(r => r.email.startsWith(DOC_PREFIX + 'pending/')), 'a fila continua sendo gravada no Supabase');
 });
+
+// ================================================================ dados financeiros zerados nunca sobrescrevem conteúdo do destino (21/11/2026)
+test('retrato ZERADO neste servidor NÃO sobrescreve conteúdo que o destino já tem (nem apaga as tabelas relacionais)', async () => {
+  const dir = tmpDir(); seedAll(dir); const fake = createFake();
+  put(dir, 'local_database_data.json', Object.assign({}, FIN, { 'ana@exemplo.com': { categories: [{ name: 'Casa' }], accounts: [], transactions: [], budgets: [], goals: [], recurringList: [], alerts: [], attachments: [], notifications: [], updated_at: '2030-01-01T00:00:00.000Z' } }));
+  fake.tables.nexus_dados_financeiros = [{ email: 'ana@exemplo.com', dados: { transactions: [{ id: 1, description: 'Aluguel', amount: 900 }], accounts: [{ id: 1, name: 'Cartão' }], updated_at: '2026-11-10T00:00:00.000Z' }, updated_at: 'x' }];
+  fake.tables.transacoes = [{ id: 71, user_email: 'ana@exemplo.com', description: 'Aluguel' }];
+  fake.tables.contas_bancarias = [{ id: 72, user_email: 'ana@exemplo.com', name: 'Cartão' }];
+  const s = make(fake, dir);
+  await s.syncEverythingNow();
+  const linha = fake.tables.nexus_dados_financeiros.find(r => r.email === 'ana@exemplo.com');
+  assert.equal(linha.dados.transactions.length, 1, 'o zerado sobrescreveu o conteúdo do destino');
+  assert.equal(fake.tables.transacoes.filter(r => r.user_email === 'ana@exemplo.com').length, 1, 'as linhas relacionais foram apagadas');
+  assert.equal(fake.tables.contas_bancarias.filter(r => r.user_email === 'ana@exemplo.com').length, 1);
+  assert.equal(s.status().guards.blankFinancial, 1);
+  assert.ok(!fake.tables.nexus_dados_financeiros.some(r => r.email.startsWith(ARCHIVE_PREFIX) && r.dados.tabela === 'nexus_dados_financeiros'), 'nada precisou ser arquivado: o destino não foi tocado');
+  // depois que a conta volta a ter conteúdo, o envio normal segue
+  put(dir, 'local_database_data.json', Object.assign({}, FIN, { 'ana@exemplo.com': { categories: [], accounts: [], transactions: [{ id: 1, description: 'Aluguel', amount: 900 }, { id: 2, description: 'Luz', amount: 120 }], budgets: [], goals: [], updated_at: '2030-02-01T00:00:00.000Z' } }));
+  s.noteWrite(path.join(dir, 'local_database_data.json'));
+  await s.flushNow();
+  assert.equal(fake.tables.nexus_dados_financeiros.find(r => r.email === 'ana@exemplo.com').dados.transactions.length, 2);
+});
+
+test('conta nova e zerada (destino também vazio) é enviada normalmente', async () => {
+  const dir = tmpDir(); seedAll(dir); const fake = createFake(); const s = make(fake, dir);
+  await s.syncEverythingNow();
+  assert.ok(fake.tables.nexus_dados_financeiros.some(r => r.email === 'vazio@exemplo.com'), 'a conta zerada não foi criada no destino');
+  assert.equal(s.status().guards.blankFinancial, 0);
+});
+
+test('fetchFinancialRecord devolve os dados de UMA conta (sem diferenciar maiúsculas) e null quando não há, sem lançar', async () => {
+  const dir = tmpDir(); seedAll(dir); const fake = createFake(); const s = make(fake, dir);
+  await s.syncEverythingNow();
+  const lido = await s.fetchFinancialRecord('ANA@exemplo.com');
+  assert.ok(lido && Array.isArray(lido.transactions) && lido.transactions.length > 0);
+  assert.equal(await s.fetchFinancialRecord('ninguem@exemplo.com'), null);
+  assert.equal(await s.fetchFinancialRecord(''), null);
+  fake.online = false;
+  assert.equal(await s.fetchFinancialRecord('ana@exemplo.com'), null, 'sem rede devolve null (não lança)');
+});
