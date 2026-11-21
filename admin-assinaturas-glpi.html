@@ -587,7 +587,7 @@ const opt=(v,l,sel)=>`<option value="${esc(v)}"${String(sel)===String(v)?' selec
 const kpi=(i,l,v,h,k)=>`<div class="glass kpi"${k?` style="--k:var(--${k})"`:''}><span class="kc">${I(i)}</span><div><div class="l">${l}</div><div class="v">${v}</div><div class="h">${h}</div></div></div>`;
 const head=(k,t,s,a)=>`<div class="ph"><div class="pt"><span class="pic">${I(k)}</span><div><h1>${t}</h1><p class="sub">${s}</p></div></div><div class="pa">${a||''}</div></div>`;
 const empty=(cols,i,t,p,btn)=>`<tr><td class="emp" colspan="${cols}"><div class="ei">${I(i)}</div><b>${t}</b><p>${p}</p>${btn||''}</td></tr>`;
-const PH1='<span class="ib ph" aria-hidden="true"></span>';   // mantém o Editar na mesma coluna nas linhas sem o menu "⋯" (a própria conta e a proprietária)
+const PH1='<span class="ib ph" aria-hidden="true"></span>';const PH3=PH1.repeat(3);   // mantém o Editar na mesma coluna nas linhas sem o menu "⋯" (PH1: aba Assinaturas) ou sem redefinir/bloquear/remover (PH3: aba Acessos GLPI), na própria conta e na proprietária
 const ib=(i,l,who,fn,x)=>`<button type="button" class="ib${x?' '+x:''}" title="${esc(l+' · '+who)}" aria-label="${esc(l+' '+who)}" onclick="${fn}">${I(i)}<span class="tx">${esc(l)}</span></button>`;
 const search=(id,ph,val,fn)=>`<div class="sch">${I('search')}<input id="${id}" type="search" placeholder="${ph}" aria-label="${ph}" value="${esc(val)}" oninput="${fn}"></div>`;
 const meMail=()=>String(window.__nxAdminEmail||'').toLowerCase();
