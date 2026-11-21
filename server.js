@@ -39188,6 +39188,19 @@ async function handleNexusRequest(req, res) {
     return res.end(JSON.stringify({ error: 'Arquivo não encontrado.' }));
   }
 
+  // Manual técnico de infraestrutura: existe SÓ no PC local — nunca no Render (contém topologia interna e nomes de variáveis).
+  // No Render o caminho simplesmente não é servido (cai no 404 do fim das rotas estáticas).
+  if ((pathname === '/manual-tecnico' || pathname === '/manual-tecnico.html') && !process.env.RENDER && process.env.IS_RENDER !== 'true') {
+    const manualTecnicoPath = path.join(__dirname, 'manual-tecnico.html');
+    if (fs.existsSync(manualTecnicoPath)) {
+      const stat = fs.statSync(manualTecnicoPath);
+      const cached = fileCache.get(manualTecnicoPath);
+      const body = cached && cached.mtimeMs === stat.mtimeMs ? cached.body : fs.readFileSync(manualTecnicoPath);
+      if (!cached || cached.mtimeMs !== stat.mtimeMs) fileCache.set(manualTecnicoPath, { mtimeMs: stat.mtimeMs, body });
+      return sendTextResponse(res, 200, body, 'text/html; charset=utf-8', { ...corsHeaders, 'Cache-Control': 'no-cache, must-revalidate' });
+    }
+  }
+
   // Arquivos estáticos: SOMENTE lista de permissão. Antes qualquer .js/.json/.html da pasta do projeto (server.js, package.json,
   // node_modules, cópias em /images/...) e qualquer arquivo sob /images/ (inclusive .env) eram baixáveis por qualquer visitante.
   const STATIC_IMAGE_TYPES = {
