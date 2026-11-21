@@ -96,3 +96,6 @@ supabase_sync_state.nuvem.json.tmp
 diag-out.txt
 diag3-out.txt
 *.novo
+
+manual-tecnico.html
+MANUAL-TECNICO.md
