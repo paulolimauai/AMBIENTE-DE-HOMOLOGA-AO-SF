@@ -1185,6 +1185,43 @@ test('a antiga proprietária (paulolp0101@gmail.com) virou conta comum: sem pode
   assert.ok(!painel.toLowerCase().includes(antiga) && painel.includes('u.is_owner===true'), 'o painel reconhece a proprietária pela marca is_owner, sem e-mail fixo');
 });
 
+test('excluir conta registra tombstone com motivo e o histórico só abre para administrador', async () => {
+  const admin = (await login('admin@teste.nexus', 'Admin@12345')).token;
+  const ana = (await login('ana@teste.nexus', 'Ana@12345')).token;
+  const email = 'excluir.com.motivo@teste.nexus';
+  await criarContaDeTeste(admin, email, 'Exclui@12345');
+
+  // usuário comum não vê o histórico de exclusões
+  const semPerm = await api('GET', '/api/admin/contas-excluidas', { token: ana });
+  assert.ok([401, 403].includes(semPerm.status), 'status ' + semPerm.status);
+
+  const motivo = 'Cadastro duplicado, pedido do cliente';
+  const del = await api('DELETE', '/api/users?email=' + encodeURIComponent(email) + '&reason=' + encodeURIComponent(motivo), { token: admin });
+  assert.equal(del.status, 200, del.texto);
+
+  // tombstone gravado com nome, motivo, quem excluiu e data — o arquivo é replicado ao Supabase
+  const excluidas = lerArquivo('deleted_accounts.json');
+  const reg = excluidas.find(x => x.email === email);
+  assert.ok(reg, 'a exclusão deve gerar tombstone em deleted_accounts.json');
+  assert.equal(reg.reason, motivo);
+  assert.ok(reg.deleted_at);
+  assert.equal(reg.deleted_by, 'admin@teste.nexus');
+
+  // endpoint admin devolve o histórico com o motivo
+  const hist = await api('GET', '/api/admin/contas-excluidas', { token: admin });
+  assert.equal(hist.status, 200, hist.texto);
+  const item = (hist.json.exclusoes || []).find(x => x.email === email);
+  assert.ok(item && item.reason === motivo, 'o histórico deve trazer o motivo');
+
+  // o item não retorna às listagens
+  const lista = await listaDeUsuarios(admin);
+  assert.ok(!lista.some(u => u.email === email));
+
+  // a auditoria registra o motivo
+  const logs = JSON.stringify((await api('GET', '/api/logs', { token: admin })).json);
+  assert.ok(logs.includes(motivo), 'o motivo deve constar no log de auditoria');
+});
+
 // Por último de propósito: se a proteção regredir, este teste apaga os dados de teste e só ele falha (os demais já rodaram)
 test('reset total do banco fica desligado por padrão, mesmo com o token de sincronização', async () => {
   const r = await api('POST', '/api/database/reset', { headers: { 'X-Nexus-Sync-Token': SYNC_TOKEN }, body: { confirm: 'RESETAR-TUDO' } });

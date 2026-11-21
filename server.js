@@ -174,13 +174,20 @@ function writeJsonFile(file, text) {
   try { SupabaseSync.noteWrite(file); } catch (e) {}   // arquivo gravado: agenda o envio ao Supabase (nunca bloqueia nem derruba a gravação)
 }
 
+// Campos extras do tombstone de exclusão (histórico): nome do cadastro, motivo, quem excluiu e quando.
+const DELETED_ACCOUNT_META_FIELDS = ['name', 'reason', 'deleted_by', 'deleted_by_name'];
+
 function getDeletedAccounts() {
   try {
     const cached = jsonCache.read(DELETED_ACCOUNTS_PATH);
     if (!cached.exists || !Array.isArray(cached.value)) return [];
     return cached.value.map(item => typeof item === 'string' ? { email: item } : item)
       .filter(item => item && item.email)
-      .map(item => ({ email: String(item.email).toLowerCase().trim(), deleted_at: item.deleted_at || null }));
+      .map(item => {
+        const out = { email: String(item.email).toLowerCase().trim(), deleted_at: item.deleted_at || null };
+        DELETED_ACCOUNT_META_FIELDS.forEach(k => { if (item[k] != null && item[k] !== '') out[k] = item[k]; });
+        return out;
+      });
   } catch (e) {
     return [];
   }
@@ -188,22 +195,44 @@ function getDeletedAccounts() {
 
 function saveDeletedAccounts(accounts) {
   const merged = new Map();
-  [...getDeletedAccounts(), ...(Array.isArray(accounts) ? accounts : [])].forEach(item => {
-    const email = String(typeof item === 'string' ? item : (item && item.email) || '').toLowerCase().trim();
-    if (email && email.includes('@')) {
-      const current = merged.get(email);
-      merged.set(email, { email, deleted_at: current ? current.deleted_at : (item.deleted_at || new Date().toISOString()) });
-    }
+  const normalize = (item) => {
+    const src = typeof item === 'string' ? { email: item } : (item || {});
+    const email = String(src.email || '').toLowerCase().trim();
+    if (!email || !email.includes('@')) return null;
+    const out = { email };
+    if (src.deleted_at) out.deleted_at = src.deleted_at;
+    DELETED_ACCOUNT_META_FIELDS.forEach(k => { if (src[k] != null && src[k] !== '') out[k] = src[k]; });
+    return out;
+  };
+  [...getDeletedAccounts(), ...(Array.isArray(accounts) ? accounts : [])].forEach(raw => {
+    const item = normalize(raw);
+    if (!item) return;
+    const current = merged.get(item.email) || {};
+    // O item mais recente (fim da lista) vence nos campos informados; deleted_at fica com o mais novo conhecido
+    // (sincronizações antigas não podem regredir a data de uma exclusão mais recente).
+    const datas = [item.deleted_at, current.deleted_at].filter(Boolean).sort();
+    merged.set(item.email, {
+      ...current,
+      ...item,
+      deleted_at: datas.length ? datas[datas.length - 1] : new Date().toISOString()
+    });
   });
   const result = Array.from(merged.values());
   writeJsonFile(DELETED_ACCOUNTS_PATH, JSON.stringify(result, null, 2));
   return result;
 }
 
-function markAccountDeleted(email) {
+function markAccountDeleted(email, meta) {
   const cleanEmail = String(email || '').toLowerCase().trim();
   if (!cleanEmail || !cleanEmail.includes('@')) return getDeletedAccounts();
-  return saveDeletedAccounts([{ email: cleanEmail, deleted_at: new Date().toISOString() }]);
+  const entry = { email: cleanEmail, deleted_at: new Date().toISOString() };
+  if (meta && typeof meta === 'object') {
+    if (meta.name) entry.name = String(meta.name).slice(0, 200);
+    if (meta.reason) entry.reason = String(meta.reason).slice(0, 500);
+    if (meta.deleted_by) entry.deleted_by = String(meta.deleted_by).slice(0, 200);
+    if (meta.deleted_by_name) entry.deleted_by_name = String(meta.deleted_by_name).slice(0, 200);
+  }
+  return saveDeletedAccounts([entry]);
 }
 
 function isAccountDeleted(email) {
@@ -36136,6 +36165,18 @@ async function handleNexusRequest(req, res) {
     return sendJson(res, corsHeaders, 200, supabaseBody);
   }
 
+  // Histórico de contas excluídas (tombstones com motivo, quem excluiu e quando). Somente administrador:
+  // a lista expõe e-mails de contas que não existem mais, então nunca vai para usuário comum nem para a sincronização.
+  if (req.method === 'GET' && parsedUrl.pathname === '/api/admin/contas-excluidas') {
+    if (!getAuthenticatedAdmin(req)) {
+      return sendJson(res, corsHeaders, 401, { success: false, error: 'Autenticação de administrador obrigatória.' });
+    }
+    const exclusoes = getDeletedAccounts()
+      .slice()
+      .sort((a, b) => String(b.deleted_at || '').localeCompare(String(a.deleted_at || '')));
+    return sendJson(res, corsHeaders, 200, { success: true, exclusoes });
+  }
+
   // Visitas ao site (resumo dos últimos N dias). O IP sai mascarado; o completo só existe nos arquivos da pasta visitas/.
   if (req.method === 'GET' && parsedUrl.pathname === '/api/admin/visitas') {
     if (!getAuthenticatedAdmin(req)) {
@@ -36444,6 +36485,7 @@ async function handleNexusRequest(req, res) {
 
   if (req.method === 'DELETE' && parsedUrl.pathname === '/api/users') {
     const emailToDelete = (parsedUrl.query.email || '').toLowerCase().trim();
+    const deleteReason = String(parsedUrl.query.reason || '').trim().slice(0, 500);
     const adminUser = getAuthenticatedAdmin(req);
     if (!adminUser) {
       res.writeHead(401, { ...corsHeaders, 'Content-Type': 'application/json' });
@@ -36468,10 +36510,19 @@ async function handleNexusRequest(req, res) {
       return res.end(JSON.stringify({ success: false, error: 'É necessário manter ao menos um administrador ativo.' }));
     }
     try {
-      markAccountDeleted(emailToDelete);
+      // Tombstone com histórico: nome do cadastro, motivo, quem excluiu e quando — o item não retorna às listagens
+      // e a exclusão fica registrada em deleted_accounts.json (replicado ao Supabase) e em system_logs (SQL Server).
+      markAccountDeleted(emailToDelete, {
+        name: targetUser ? (targetUser.name || '') : '',
+        reason: deleteReason,
+        deleted_by: adminUser.email || '',
+        deleted_by_name: adminUser.name || 'Administrador'
+      });
       await purgeDeletedUserFromDatabase(emailToDelete);
       removeLocalUser(emailToDelete);
-      recordSystemLog(adminUser.name || 'Administrador', adminUser.email, 'Exclusão completa', 'Usuários', 'Cadastro e dados associados removidos permanentemente.');
+      recordSystemLog(adminUser.name || 'Administrador', adminUser.email, 'Exclusão completa', 'Usuários',
+        'Cadastro de ' + (targetUser && targetUser.name ? targetUser.name + ' (' + emailToDelete + ')' : emailToDelete) + ' removido permanentemente.' +
+        (deleteReason ? ' Motivo: ' + deleteReason : ' Motivo: não informado.'));
       broadcastEvent('users_updated', { deleted: true });
       encerrarSessoesDaConta(emailToDelete, 'deleted');   // quem estava com o app aberto sai agora
       res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
