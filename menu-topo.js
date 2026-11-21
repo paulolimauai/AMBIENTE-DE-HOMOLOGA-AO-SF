@@ -14,7 +14,7 @@
   var CHAVE_MODO = 'nexus_menu_pos';   // 'side' = menu lateral; qualquer outro valor (ou vazio) = menu no topo
 
   // Cor de cada grupo (r,g,b): as mesmas do hover dos ícones do menu lateral
-  var CORES = { visao: '52, 211, 153', planejamento: '56, 189, 248', ferramentas: '167, 139, 250', 'minha-conta': '244, 114, 182', liberacoes: '251, 191, 36' };
+  var CORES = { visao: '52, 211, 153', planejamento: '56, 189, 248', ferramentas: '167, 139, 250', 'minha-conta': '244, 114, 182', liberacoes: '251, 191, 36', admin: '245, 158, 11' };
   // Uma linha de apoio para cada tela (aparece sob o nome na lista do grupo)
   var DESCRICOES = {
     dashboard: 'Resumo das suas finanças',

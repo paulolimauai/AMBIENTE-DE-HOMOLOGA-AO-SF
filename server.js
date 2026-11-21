@@ -15693,6 +15693,12 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         <span class="label">Minha Conta</span>
       </button>
 
+      <!-- Seção: Administração (exclusiva do perfil Administrador - aparece como grupo próprio na barra em cascata) -->
+      <div class="menu-section-header menu-section-admin" style="display:none;">
+        <span class="menu-section-title">Administração</span>
+        <span class="menu-section-line"></span>
+      </div>
+
       <!-- Área do administrador: exclusiva do perfil Administrador (o servidor confere o token em /api/auth/session).
            Sem 'noopener' de propósito: a aba nova herda a sessão desta aba (sessionStorage) e o administrador não precisa entrar de novo. -->
       <button type="button" id="menuAdminAssinaturasBtn" class="menu-btn-user" title="Assinaturas, pagamentos e acessos do Nexus e do GLPI" style="display:none !important;" onclick="window.open('/admin-assinaturas-glpi.html','_blank')">
@@ -15872,6 +15878,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
       <!-- Seção: Minha Conta -->
       <div class="mobile-drawer-section-title menu-section-minha-conta">Preferências</div>
       <button data-page="config" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><span class="label">Minha Conta</span></button>
+      <div class="mobile-drawer-section-title menu-section-admin" style="display:none;">Administração</div>
       <button type="button" id="mobileDrawerAdminAssinaturasBtn" class="menu-btn-user" style="display:none !important;" onclick="window.open('/admin-assinaturas-glpi.html','_blank')"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span class="label">Assinaturas &amp; Acessos</span></button>
 
       <!-- Liberações (só para conta de usuário com permissão delegada pelo administrador) -->
@@ -22687,6 +22694,10 @@ function updateAdminMenuVisibility(force = false){
     // !important inline vence as regras de perfil (.menu-btn-user é ligado/desligado por html.is-admin)
     if (siteBtn) siteBtn.style.setProperty('display', showSiteAdmin ? 'flex' : 'none', 'important');
   });
+  // Cabeçalho da seção "Administração" (menu lateral, gaveta mobile e grupo próprio na barra em cascata do topo)
+  document.querySelectorAll('.menu-section-admin').forEach(function(el) {
+    el.style.setProperty('display', showSiteAdmin ? 'flex' : 'none', 'important');
+  });
 
   const currentKey = String(isAdmin) + '|' + (nexusTemLiberacoes(currentUser) ? '1' : '0');
   if (!force && _lastAdminVisibilityKey === currentKey) return;
@@ -22719,10 +22730,10 @@ function updateAdminMenuVisibility(force = false){
     });
   });
 
-  // Seção e Botões de Administração: Exclusiva para o Administrador
+  // Seção e Botões de Administração: visíveis para quem tem o atalho administrativo (perfil Administrador real)
   const adminSections = document.querySelectorAll('.menu-section-admin');
   adminSections.forEach(function(el) {
-    el.style.display = isAdmin ? 'flex' : 'none';
+    el.style.setProperty('display', showSiteAdmin ? 'flex' : 'none', 'important');
   });
 
   NEXUS_ADMIN_PAGES.forEach(function(pg) {
