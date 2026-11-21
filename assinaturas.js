@@ -362,7 +362,7 @@
   // Botão contextual da linha: o próximo passo mais provável para aquela situação
   function acaoRapida(r, agora) {
     if (r.sit === 'pendente') return { a: 'mensal', rotulo: 'Confirmar pagamento', ic: 'ok', pri: true, dica: 'Reconhece o pagamento informado e libera o plano mensal' };
-    if (r.sit === 'encerrada' || r.sit === 'teste' || vencendo(r, agora)) return { a: 'mensal', rotulo: 'Liberar mensal', ic: 'ok', pri: true, dica: 'Reconhece o pagamento e libera mais 30 dias' };
+    if (r.sit === 'encerrada' || r.sit === 'teste' || vencendo(r, agora)) return { a: 'mensal', rotulo: 'Liberar mensal', ic: 'ok', pri: true, dica: 'Reconhece o pagamento e deixa o acesso válido por 30 dias' };
     // Assinante pago em dia não ganha atalho: dar tempo a quem paga troca o plano para "cortesia" (regra do servidor), e isso não pode ser um clique sem querer
     if (r.sit === 'cortesia') return { a: 'conceder', min: 43200, rotulo: '+30 dias', ic: 'relogio', dica: 'Soma 30 dias de cortesia ao que ainda resta' };
     return null;
@@ -497,7 +497,7 @@
     } else {
       corpoAcoes =
         '<section><h4>Liberar o plano mensal</h4>' +
-          '<p class="adm-nota">Reconhece o pagamento, registra no livro de pagamentos e libera mais 30 dias.</p>' +
+          '<p class="adm-nota">Reconhece o pagamento, registra no livro de pagamentos e deixa o acesso válido por 30 dias a partir da confirmação.</p>' +
           '<button type="button" class="adm-btn adm-btn-pri as-cheio" data-as-a="mensal" data-email="' + esc(r.email) + '">' + IC.ok + '<span>Liberar mensal' + esc(rotuloPreco) + '</span></button></section>' +
         '<section><h4>Dar tempo (cortesia)</h4>' +
           '<p class="adm-nota">Soma ao que a conta ainda tem. Não entra como receita.</p>' +
@@ -753,7 +753,7 @@
     var pendente = r.sit === 'pendente';
     var metodo = await dialogo({
       titulo: pendente ? 'Confirmar o pagamento de ' + r.nome + '?' : 'Liberar o plano mensal para ' + r.nome + '?',
-      html: '<p>' + (pendente ? 'A pessoa informou o pagamento. Ao confirmar, ' : 'Só confirme se o pagamento foi recebido. ') + 'o sistema <b>registra ' + (preco > 0 ? esc(moeda(preco)) : 'o valor do plano') + ' no livro de pagamentos</b> e libera <b>mais 30 dias</b> de acesso' + (r.venc && r.venc > Date.now() ? ' (somados ao que ainda resta)' : '') + '.</p>' + selectMetodos(r.metodo),
+      html: '<p>' + (pendente ? 'A pessoa informou o pagamento. Ao confirmar, ' : 'Só confirme se o pagamento foi recebido. ') + 'o sistema <b>registra ' + (preco > 0 ? esc(moeda(preco)) : 'o valor do plano') + ' no livro de pagamentos</b> e deixa o acesso válido por <b>30 dias a partir da confirmação</b>.</p>' + selectMetodos(r.metodo),
       ok: pendente ? 'Confirmar pagamento' : 'Liberar mensal', foco: '#asDlgMetodo',
       coletar: function (el) { var s = el.querySelector('#asDlgMetodo'); return s ? s.value : 'pix'; }
     });

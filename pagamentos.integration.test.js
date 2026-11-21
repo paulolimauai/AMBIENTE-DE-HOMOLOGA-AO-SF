@@ -188,7 +188,7 @@ test('renovação antes de vencer: assinante ATIVO que avisa o Pix aparece na fi
   assert.equal(conta('bia@teste.nexus').subscription_status, 'active');
 });
 
-test('confirmar soma 30 dias ao prazo que sobrava e confirmar de novo não soma outra vez', async () => {
+test('confirmar fixa o vencimento em 30 dias a partir da confirmação (sem acumular o que restava) e confirmar de novo não estende outra vez', async () => {
   const id = livro().find((p) => p.email === 'bia@teste.nexus').id;
   const antes = ms(conta('bia@teste.nexus').subscription_expires_at);
   assert.ok(Math.abs(antes - T0_BIA) < 2000);
@@ -196,7 +196,8 @@ test('confirmar soma 30 dias ao prazo que sobrava e confirmar de novo não soma 
   assert.equal(c1.status, 200, c1.texto);
   assert.equal(c1.json.already_confirmed, false);
   const depois = ms(conta('bia@teste.nexus').subscription_expires_at);
-  assert.ok(Math.abs(depois - (T0_BIA + 30 * DIA)) < 2000, 'somou 30 dias aos 10 que restavam: ' + ((depois - Date.now()) / DIA).toFixed(2) + ' dias');
+  const diasApos = (depois - Date.now()) / DIA;
+  assert.ok(diasApos > 29.9 && diasApos <= 30.01, 'vencimento = confirmação + 30 dias (os 10 dias que restavam não acumulam): ' + diasApos.toFixed(2) + ' dias');
   const reg = livro().find((p) => p.id === id);
   assert.equal(reg.status, 'paga');
   assert.equal(reg.valor, 18, '"18.00" vale 18, nunca 1800');
@@ -269,7 +270,7 @@ test('permissão "liberar assinatura": a conta delegada confirma, mas não vê o
   assert.equal(livro().find((p) => p.id === cob.json.pagamento.id).confirmado_por.email, 'eva@teste.nexus', 'fica registrado quem confirmou');
 });
 
-test('rota antiga de confirmar (cadastros e O.S.): cria o registro no livro, soma ao prazo e o duplo clique não soma duas vezes', async () => {
+test('rota antiga de confirmar (cadastros e O.S.): cria o registro no livro, fixa 30 dias e o duplo clique não estende duas vezes', async () => {
   const antes = livro().length;
   const corpo = { admin_email: 'admin@teste.nexus', target_email: 'fabio@teste.nexus', plan: 'mensal', method: 'pix', amount: '18,00', obs: 'Pix direto' };
   const a = await api('POST', '/api/subscription/confirm-payment', { token: admin, body: corpo });

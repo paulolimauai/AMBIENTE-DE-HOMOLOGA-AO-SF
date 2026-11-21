@@ -141,8 +141,7 @@ test('o painel recebe o dia da cobrança, a próxima data e as cobranças marcad
   assert.equal(j.resumo.emitidas.qtd, 2);
 });
 
-test('o cliente avisa o pagamento: entra na MESMA cobrança gerada (sem duplicar) e o administrador confirma somando 30 dias', async () => {
-  const antes = Date.parse(sv.conta('gabi@teste.nexus').subscription_expires_at);
+test('o cliente avisa o pagamento: entra na MESMA cobrança gerada (sem duplicar) e o administrador confirma fixando 30 dias', async () => {
   const doGabi = sv.livro().find((p) => p.email === 'gabi@teste.nexus');
   const pay = await sv.api('POST', '/api/subscription/pay', { token: gabi, body: { email: 'gabi@teste.nexus', plan: 'mensal', method: 'pix', receipt_code: 'E2E123456' } });
   assert.equal(pay.status, 200, pay.texto);
@@ -155,7 +154,8 @@ test('o cliente avisa o pagamento: entra na MESMA cobrança gerada (sem duplicar
   const ok = await sv.api('POST', '/api/admin/pagamentos/acao', { token: admin, body: { id: doGabi.id, acao: 'confirmar', valor: '18,00', metodo: 'pix' } });
   assert.equal(ok.status, 200, ok.texto);
   const depois = Date.parse(sv.conta('gabi@teste.nexus').subscription_expires_at);
-  assert.ok(Math.abs(depois - (antes + 30 * DIA)) < 2000, 'somou 30 dias ao prazo que restava');
+  const diasApos = (depois - Date.now()) / DIA;
+  assert.ok(diasApos > 29.9 && diasApos <= 30.01, 'vencimento = confirmação + 30 dias: ' + diasApos.toFixed(2) + ' dias');
   assert.equal(sv.livro().find((p) => p.id === doGabi.id).status, 'paga');
 });
 

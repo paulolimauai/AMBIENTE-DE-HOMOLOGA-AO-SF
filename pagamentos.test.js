@@ -53,11 +53,11 @@ test('situacao: emitida vence depois da data; informada fica aguardando; estados
   assert.equal(P.situacao(r, AGORA + 40 * DIA), 'paga');
 });
 
-test('calcularPeriodo soma ao que ainda resta e começa do zero quando já venceu', () => {
+test('calcularPeriodo: o vencimento é sempre a confirmação + prazo do plano (30 dias), sem acumular o que restava', () => {
   const resta = AGORA + 10 * DIA;
   const a = P.calcularPeriodo({ plano: 'mensal', expiraAtualMs: resta, agora: AGORA });
-  assert.equal(a.inicio, resta);
-  assert.equal(a.fim, resta + 30 * DIA);
+  assert.equal(a.inicio, AGORA);
+  assert.equal(a.fim, AGORA + 30 * DIA, 'mesmo com 10 dias restantes, o vencimento é confirmação + 30 dias');
   const b = P.calcularPeriodo({ plano: 'mensal', expiraAtualMs: AGORA - DIA, agora: AGORA });
   assert.equal(b.inicio, AGORA);
   assert.equal(b.fim, AGORA + 30 * DIA);
@@ -73,8 +73,8 @@ test('marcarPaga registra valor recebido, quem confirmou e o período coberto', 
   assert.equal(r.status, 'paga');
   assert.equal(r.valor, 20);
   assert.equal(r.confirmado_por.email, 'admin@nexus.com');
-  assert.equal(Date.parse(r.periodo_inicio), AGORA + 5 * DIA);
-  assert.equal(Date.parse(r.periodo_fim), AGORA + 35 * DIA);
+  assert.equal(Date.parse(r.periodo_inicio), AGORA);
+  assert.equal(Date.parse(r.periodo_fim), AGORA + 30 * DIA);
   assert.equal(r.dias, 30);
 });
 

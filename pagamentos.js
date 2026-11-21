@@ -5,7 +5,7 @@
    - LIVRO DE PAGAMENTOS: cada cobrança/pagamento é um registro que nunca é sobrescrito (antes só o último protocolo ficava na conta).
        status: emitida (cobrança gerada, 2ª via) -> informada (cliente avisou que pagou) -> paga (admin confirmou)
                ou cancelada / estornada. "vencida" e "aguardando" são derivados (situacao()).
-   - PRAZO: pagar soma 30 dias ao que ainda resta (antes o prazo restante era perdido).
+   - PRAZO: o pagamento confirmado fixa o vencimento em "confirmação + 30 dias" (o primeiro dia é gratuito; não acumula o que restava).
    - PIX: payload copia-e-cola (EMV/BR Code) com CRC16, no servidor, para o QR sair daqui e não de um site de terceiros.
    - RESUMO FINANCEIRO: receita, MRR (estimativa), vencimentos, expirados, série dos últimos 6 meses.
    - CONCILIAÇÃO: lê extrato OFX/CSV e SUGERE quais cobranças abertas foram pagas (quem confirma é sempre o administrador).
@@ -130,14 +130,14 @@ function marcarInformada(reg, o) {
   return reg;
 }
 
-// Soma ao que ainda resta (quem paga antes de vencer não perde dias). Vitalício vai a 2099.
+// O pagamento confirmado vale sempre o prazo do plano (30 dias no mensal) contado DA CONFIRMAÇÃO:
+// quem paga na janela de renovação tem o vencimento fixado em "pagamento + 30 dias", sem acumular os dias que restavam.
+// Vitalício vai a 2099.
 function calcularPeriodo(o) {
   const agora = o.agora || Date.now();
   if (o.plano === 'vitalicio') return { inicio: agora, fim: FIM_VITALICIO, dias: 36500 };
   const dias = o.plano === 'anual' ? 365 : 30;
-  const resta = Number.isFinite(o.expiraAtualMs) && o.expiraAtualMs > agora;
-  const inicio = resta ? o.expiraAtualMs : agora;
-  return { inicio, fim: inicio + dias * DIA, dias };
+  return { inicio: agora, fim: agora + dias * DIA, dias };
 }
 
 function valorConfirmado(v, padrao) {

@@ -326,7 +326,7 @@
           return '<tr class="adm-lin pg-lin"><td data-l="Cliente"><b class="adm-nome">' + esc(u.nome) + '</b><small>' + esc(u.email) + '</small></td>' +
             '<td data-l="Vencimento"><span class="adm-pill adm-p-aviso">' + (u.dias <= 0 ? 'Vence hoje' : 'Em ' + plural(u.dias, 'dia', 'dias')) + '</span><small>' + esc(dataBR(u.expira)) + (u.cortesia ? ' · cortesia' : '') + '</small></td>' +
             '<td class="pg-acoes" data-l="Ações"><button type="button" class="adm-btn adm-btn-sm adm-btn-pri" data-pg-a="cobrar" data-email="' + esc(u.email) + '" data-tipo="lembrete" data-dias="' + u.dias + '">Enviar lembrete</button>' +
-            '<button type="button" class="adm-btn adm-btn-sm" data-pg-a="receber" data-email="' + esc(u.email) + '" title="O cliente já renovou: somar mais 30 dias ao prazo">Recebi a renovação</button></td></tr>';
+            '<button type="button" class="adm-btn adm-btn-sm" data-pg-a="receber" data-email="' + esc(u.email) + '" title="O cliente já renovou: o acesso fica válido por 30 dias a partir da confirmação">Recebi a renovação</button></td></tr>';
         }).join('') + '</tbody></table></div>'
       : vazio('Nada vence em 7 dias', 'Nenhuma assinatura precisa de lembrete agora.');
     return '<section class="pg-bloco"><div class="pg-bloco-t"><h3>Vencem nos próximos 7 dias</h3><span class="adm-pill adm-p-aviso">' + r.a_vencer_7d.qtd + '</span></div>' + tabelaVenc + '</section>' +
@@ -830,7 +830,7 @@
         '<label class="pg-campo"><span>Valor recebido (R$)</span><input data-campo="valor" inputmode="decimal" value="' + esc(String(Number(extra.valor != null ? extra.valor : p.valor).toFixed(2)).replace('.', ',')) + '"></label>' +
         '<label class="pg-campo"><span>Recebido por</span>' + selectMetodos('pix') + '</label>' +
         '<label class="pg-campo"><span>Observação (opcional)</span><input data-campo="obs" maxlength="200" placeholder="Ex.: comprovante enviado pelo WhatsApp"></label>' +
-        '<p class="pg-nota">O acesso soma 30 dias ao prazo que a conta ainda tem. Confirmar duas vezes o mesmo registro não soma de novo.</p>',
+        '<p class="pg-nota">O acesso fica válido por 30 dias a partir da confirmação do recebimento (o primeiro dia é gratuito). Confirmar duas vezes o mesmo registro não estende de novo.</p>',
       validar: validarValor
     }).then(function (v) {
       if (!v) return null;

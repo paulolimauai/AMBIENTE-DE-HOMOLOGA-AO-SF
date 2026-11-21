@@ -337,8 +337,9 @@ function pagamentoPorEmail(lista, email) {
 }
 function pagamentoMaisRecente(a, b) { return (Pagamentos.paraMs(b.emitida_em) || 0) - (Pagamentos.paraMs(a.emitida_em) || 0); }
 
-// Confirma o recebimento de um pagamento: fecha o registro no livro (valor, quem, quando, período) e estende a assinatura da conta.
-// Soma ao prazo que ainda resta (pagar antes de vencer não perde dias) e é idempotente: confirmar de novo o mesmo registro não estende outra vez.
+// Confirma o recebimento de um pagamento: fecha o registro no livro (valor, quem, quando, período) e ativa a assinatura da conta.
+// O vencimento fica sempre "confirmação + prazo do plano" (30 dias no mensal; o primeiro dia é gratuito) e é idempotente:
+// confirmar de novo o mesmo registro não estende outra vez.
 // A leitura e a gravação do livro e da conta acontecem sem nenhum `await` no meio (Node é de uma thread só), então dois cliques seguidos não duplicam.
 async function executarConfirmacao(o) {
   const agora = Date.now();
@@ -386,9 +387,7 @@ async function executarConfirmacao(o) {
   if (Number.isNaN(valor)) return { status: 400, error: 'Valor recebido inválido (use um valor maior que zero, até R$ ' + Pagamentos.VALOR_MAXIMO + ').' };
 
   const metodo = PAGAMENTO_METODOS[o.metodo] ? o.metodo : (targetUser.subscription_method && PAGAMENTO_METODOS[targetUser.subscription_method] ? targetUser.subscription_method : 'pix');
-  const ativoAgora = targetUser.subscription_status === 'active' && String(targetUser.subscription_plan || '').toLowerCase() !== 'vitalicio';
-  const expiraAtualMs = ativoAgora ? Pagamentos.paraMs(getBrasiliaIsoString(targetUser.subscription_expires_at) || targetUser.subscription_expires_at) : NaN;
-  const periodo = Pagamentos.calcularPeriodo({ plano, expiraAtualMs, agora });
+  const periodo = Pagamentos.calcularPeriodo({ plano, agora });
   const nota = String(o.comprovante || '').trim();
   const suffix = nota ? ('-' + nota.replace(/[^a-zA-Z0-9]/g, '').slice(0, 12).toUpperCase()) : '';
   const txId = (targetUser.subscription_payment_id && String(targetUser.subscription_payment_id).startsWith('NEXUS-SUB-') && !nota)
@@ -37841,7 +37840,7 @@ async function handleNexusRequest(req, res) {
           return res.end(JSON.stringify({ success: false, error: 'Somente administradores, ou quem recebeu a permissão de liberar assinatura, podem liberar pagamentos não reconhecidos.' }));
         }
 
-        // O livro de pagamentos, o prazo (soma ao que ainda resta) e a conta são tratados em executarConfirmacao
+        // O livro de pagamentos, o prazo (confirmação + 30 dias) e a conta são tratados em executarConfirmacao
         const resultado = await executarConfirmacao({
           actor: adminUser, targetEmail, plano: plan, metodo: rawMethod, valor: parsed.amount,
           paymentId: String(parsed.payment_id || '').trim().slice(0, 40), comprovante: receiptNote, obs: String(parsed.obs || '').trim().slice(0, 200)

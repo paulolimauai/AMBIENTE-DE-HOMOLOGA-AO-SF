@@ -698,7 +698,7 @@
     w.pgConfirmar = function (id) {
       var p = achar(id); if (!p) return;
       modal('<div class="ask-h"><span class="ask-ic s" aria-hidden="true">' + I('ok') + '</span><h3>Confirmar recebimento</h3></div>'
-        + '<p class="sub ask-m">Cliente <b>' + esc(p.nome || p.email) + '</b> · cobrança <span class="mono">' + esc(p.ref) + '</span>. Ao confirmar, a assinatura é liberada (30 dias somados ao que ainda resta).</p>'
+        + '<p class="sub ask-m">Cliente <b>' + esc(p.nome || p.email) + '</b> · cobrança <span class="mono">' + esc(p.ref) + '</span>. Ao confirmar, a assinatura é liberada (30 dias a partir da confirmação).</p>'
         + '<form id="pgf" class="col"><div class="pg-form"><div><label for="pgv">Valor recebido (R$)</label><input id="pgv" inputmode="decimal" value="' + esc(Number(p.valor).toFixed(2).replace('.', ',')) + '"></div>'
         + '<div><label for="pgm">Forma</label><select id="pgm">' + Object.keys(FORMAS).map(function (k) { return opt(k, FORMAS[k], p.metodo || 'pix'); }).join('') + '</select></div></div>'
         + '<div><label for="pgr">Comprovante / ID do Pix (opcional)</label><input id="pgr" maxlength="80" value="' + esc(p.comprovante || '') + '" placeholder="Ex.: E123…"></div>'
@@ -757,7 +757,7 @@
         mostra('pgw-venc', m === 'cobranca'); mostra('pgw-data', m === 'antigo'); mostra('pgw-valor', m !== 'cobranca'); mostra('pgw-forma', m !== 'cobranca'); mostra('pgw-comp', m === 'recebido');
         $('pgok').textContent = m === 'cobranca' ? 'Emitir cobrança' : (m === 'recebido' ? 'Registrar e liberar acesso' : 'Lançar no histórico');
         $('pgdica').textContent = m === 'cobranca' ? 'O valor é sempre a mensalidade de ' + brl(preco) + '. Se já houver uma cobrança em aberto desta conta, é ela que sai de novo (2ª via).'
-          : m === 'recebido' ? 'Cria (ou usa a cobrança em aberto) e confirma na hora: a assinatura soma 30 dias ao que ainda resta.'
+          : m === 'recebido' ? 'Cria (ou usa a cobrança em aberto) e confirma na hora: a assinatura fica válida por 30 dias a partir da confirmação.'
           : 'Para um pagamento que já aconteceu antes do sistema ou por fora dele. Entra na receita do mês do recebimento e NÃO muda o acesso da conta.';
       };
       w.pgModo();

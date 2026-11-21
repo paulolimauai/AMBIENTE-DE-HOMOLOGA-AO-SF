@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#060a1f">
 <meta name="color-scheme" content="dark light">
 <title>Manual do Usuário | Nexus Financeiro</title>
-<meta name="description" content="Manual autoexplicativo do Nexus Financeiro: cadastro, painel, lançamentos, contas e cartões, orçamentos, metas, relatórios, importação de extrato, documentos e Central de Serviços.">
+<meta name="description" content="Manual ilustrado do Nexus Financeiro: cadastro, painel, lançamentos, contas e cartões, orçamentos, metas, relatórios, importação de extrato, documentos e Central de Serviços.">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
@@ -40,6 +40,8 @@
   body{background:#fff!important;color:#000!important}
   .lg-doc h2{break-after:avoid}
   .lg-doc li,.lg-doc p{break-inside:avoid}
+  .manual-fig img{border-color:#bbb}
+  .manual-fig figcaption{color:#444}
 }
 .manual-acoes{display:flex;gap:.75rem;flex-wrap:wrap;margin:1.25rem 0 1.75rem}
 .manual-acoes .lg-btn{display:inline-flex;align-items:center;gap:.5rem;padding:.65rem 1.15rem;border-radius:.75rem;font-weight:700;text-decoration:none;border:1px solid color-mix(in srgb,var(--h) 55%,transparent);color:inherit;background:color-mix(in srgb,var(--h) 14%,transparent);cursor:pointer;font:inherit}
@@ -49,6 +51,12 @@
 .lg-doc th,.lg-doc td{border:1px solid rgba(127,127,127,.35);padding:.45rem .6rem;text-align:left;vertical-align:top}
 .lg-doc th{background:rgba(127,127,127,.12)}
 .lg-doc .dica{border-left:3px solid var(--h,#4f7cff);padding:.35rem .9rem;margin:.7rem 0;background:rgba(127,127,127,.08);border-radius:0 .5rem .5rem 0}
+.manual-fig{margin:1rem 0 1.4rem}
+.manual-fig img{display:block;width:100%;height:auto;border-radius:.8rem;border:1px solid rgba(127,127,127,.35);background:#0b1026}
+.manual-fig.duas{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+.manual-fig.duas img{max-height:340px;object-fit:cover;object-position:top}
+.manual-fig figcaption{margin-top:.4rem;font-size:.85rem;opacity:.75}
+@media (max-width:640px){.manual-fig.duas{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -66,13 +74,18 @@
 <main id="conteudo">
   <span class="lg-kicker">Documentação</span>
   <h1>Manual do Usuário</h1>
-  <p class="lg-meta">Nexus Financeiro · novembro de 2026</p>
-  <p class="lg-intro">Este manual explica, passo a passo, como usar o Nexus Financeiro: do cadastro ao painel financeiro, passando por lançamentos, contas e cartões, orçamentos, metas, relatórios, importação de extrato e Central de Serviços. Leia uma vez e você já sabe operar tudo.</p>
+  <p class="lg-meta">Nexus Financeiro · novembro de 2026 · edição ilustrada</p>
+  <p class="lg-intro">Este manual explica, passo a passo e com imagens reais do sistema, como usar o Nexus Financeiro: do cadastro ao painel financeiro, passando por lançamentos, contas e cartões, orçamentos, metas, relatórios, importação de extrato e Central de Serviços. Leia uma vez e você já sabe operar tudo.</p>
 
   <div class="manual-acoes">
     <button type="button" class="lg-btn" onclick="window.print()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg><span>Baixar em PDF</span></button>
     <a class="lg-btn" href="/manual-do-usuario.html" download="Manual_do_Usuario_Nexus_Financeiro.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg><span>Baixar versão HTML</span></a>
   </div>
+
+  <figure class="manual-fig">
+    <img src="/images/manual/site-inicio.png" alt="Página inicial do site Nexus Financeiro" loading="lazy">
+    <figcaption>O site inicial do Nexus Financeiro: veja os recursos, os planos e baixe este manual antes mesmo de criar a conta.</figcaption>
+  </figure>
 
   <nav class="lg-toc" aria-label="Neste documento">
     <b>Neste documento</b>
@@ -83,28 +96,34 @@
       <li><a href="#s4">Conhecendo o painel</a></li>
       <li><a href="#s5">Lançamentos e transações</a></li>
       <li><a href="#s6">Contas e cartões</a></li>
-      <li><a href="#s7">Planejamento: orçamentos e metas</a></li>
-      <li><a href="#s8">Relatórios e dashboards</a></li>
-      <li><a href="#s9">Importar extrato do banco</a></li>
-      <li><a href="#s10">Documentos e comprovantes</a></li>
-      <li><a href="#s11">Central de Serviços</a></li>
-      <li><a href="#s12">Personalizar a aparência</a></li>
-      <li><a href="#s13">Sair da conta e privacidade</a></li>
-      <li><a href="#s14">Perguntas frequentes</a></li>
-      <li><a href="#s15">Resolvendo problemas comuns</a></li>
+      <li><a href="#s7">Despesas fixas e recorrências</a></li>
+      <li><a href="#s8">Planejamento: orçamentos e metas</a></li>
+      <li><a href="#s9">Relatórios e dashboards</a></li>
+      <li><a href="#s10">Importar extrato do banco</a></li>
+      <li><a href="#s11">Documentos e comprovantes</a></li>
+      <li><a href="#s12">Central de Serviços</a></li>
+      <li><a href="#s13">Personalizar a aparência</a></li>
+      <li><a href="#s14">Sair da conta e privacidade</a></li>
+      <li><a href="#s15">Perguntas frequentes</a></li>
+      <li><a href="#s16">Resolvendo problemas comuns</a></li>
     </ol>
   </nav>
 
   <article class="lg-doc">
     <h2 id="s1">1. O que é o Nexus Financeiro</h2>
-    <p>O Nexus Financeiro é um painel web de gestão financeira pessoal e empresarial. Ele reúne em um só lugar tudo o que você precisa para acompanhar seu dinheiro: lançamentos, contas bancárias, cartões de crédito, orçamentos por categoria, metas de economia, relatórios e gráficos. Além da parte financeira, o sistema tem uma Central de Serviços integrada para abrir chamados de suporte sem sair do painel.</p>
+    <p>O Nexus Financeiro é um painel web de gestão financeira. Ele reúne em um só lugar tudo o que você precisa para acompanhar seu dinheiro: lançamentos de receitas e despesas, contas bancárias, cartões de crédito, despesas fixas, orçamentos por categoria, metas de economia, relatórios e gráficos. Além da parte financeira, o sistema tem uma <strong>Central de Serviços</strong> integrada para abrir chamados de suporte sem sair do painel.</p>
     <ul>
-      <li><strong>Funciona no navegador:</strong> não precisa instalar nada. Acesse de computador, tablet ou celular.</li>
-      <li><strong>Dados na nuvem:</strong> suas informações ficam salvas na sua conta e acompanham você em qualquer aparelho.</li>
-      <li><strong>Um teste grátis:</strong> todo novo cadastro ganha 1 dia de teste completo, sem cartão de crédito.</li>
+      <li><strong>Funciona no navegador:</strong> não precisa instalar nada. Acesse de computador, tablet ou celular — a mesma conta mostra os mesmos dados em qualquer aparelho.</li>
+      <li><strong>Dados na nuvem:</strong> suas informações ficam salvas na sua conta, com acesso protegido a cada requisição.</li>
+      <li><strong>Um teste grátis:</strong> todo novo cadastro ganha 1 dia de teste completo, sem cartão de crédito e sem cobrança automática.</li>
+      <li><strong>Aparência a seu gosto:</strong> 10 paletas de cor ou a sua própria cor, tema claro, escuro, preto ou automático.</li>
     </ul>
 
     <h2 id="s2">2. Criar conta e entrar</h2>
+    <figure class="manual-fig">
+      <img src="/images/manual/login.png" alt="Tela de entrada do Nexus Financeiro com campos de e-mail e senha" loading="lazy">
+      <figcaption>A tela de entrada: use o e-mail (ou CPF) e a senha da sua conta. Embaixo, os atalhos para criar conta e abrir um chamado.</figcaption>
+    </figure>
     <h3>2.1 Criar uma conta</h3>
     <ol>
       <li>Acesse o site e clique em <strong>Criar conta grátis</strong> (ou vá direto ao login e escolha a aba de cadastro).</li>
@@ -115,7 +134,8 @@
     <h3>2.2 Entrar na conta</h3>
     <ol>
       <li>Na tela de entrada, informe seu e-mail (ou CPF) e senha.</li>
-      <li>Você cai direto no painel financeiro, com o menu lateral de módulos à esquerda.</li>
+      <li>Opcionalmente marque <strong>Manter conectado</strong> para não precisar entrar de novo no mesmo aparelho.</li>
+      <li>Você cai direto no painel financeiro, com o menu no topo (computador) ou na barra inferior (celular).</li>
     </ol>
     <h3>2.3 Esqueci minha senha</h3>
     <p>Na tela de entrada, clique em <strong>Esqueci minha senha</strong>. Confirme seus dados (e-mail ou CPF e data de nascimento). O sistema envia uma <strong>senha provisória</strong> e você define a nova senha no primeiro acesso.</p>
@@ -125,97 +145,165 @@
       <li><strong>1 dia grátis:</strong> começa automaticamente no cadastro. Nenhum cartão é pedido e nada é cobrado sozinho.</li>
       <li><strong>Plano mensal:</strong> quando o teste termina, o painel avisa e pede a assinatura para continuar. O pagamento é <strong>somente via Pix</strong>, dentro do próprio sistema.</li>
       <li><strong>Como pagar:</strong> na tela de pagamento, o QR Code Pix e a chave são exibidos. Assim que o pagamento é conferido, o acesso é liberado na hora e o recibo fica disponível na sua conta.</li>
-      <li><strong>Sem cobrança automática:</strong> nada é debitado sem você gerar o Pix.</li>
+      <li><strong>Sem cobrança automática:</strong> nada é debitado sem você gerar o Pix. A assinatura pode ser renovada antes do vencimento e cancelada quando quiser.</li>
     </ul>
 
     <h2 id="s4">4. Conhecendo o painel</h2>
-    <p>Depois de entrar, você vê o painel principal com uma visão geral do seu dinheiro:</p>
+    <p>Depois de entrar, o Dashboard mostra a foto do seu dinheiro em números e gráficos:</p>
+    <figure class="manual-fig">
+      <img src="/images/manual/painel-dashboard.png" alt="Dashboard do Nexus Financeiro com saldo, receitas, despesas e gráficos" loading="lazy">
+      <figcaption>Dashboard: saldo geral, receitas e despesas do período, gráficos de evolução e alertas de orçamento e metas.</figcaption>
+    </figure>
     <ul>
       <li><strong>Saldo geral:</strong> soma de todas as suas contas e cartões no período.</li>
-      <li><strong>Receitas e despesas:</strong> totais do mês e do período filtrado.</li>
+      <li><strong>Receitas e despesas:</strong> totais do mês e do período filtrado, com a quantidade de lançamentos.</li>
       <li><strong>Gráficos:</strong> evolução mês a mês, gastos por categoria e comparativos visuais.</li>
       <li><strong>Alertas:</strong> avisos de orçamentos próximos do limite e de metas em andamento.</li>
+      <li><strong>Filtros rápidos:</strong> veja só entradas, só saídas ou tudo, direto nos cartões do topo.</li>
     </ul>
-    <p>O menu lateral dá acesso aos módulos: <strong>Lançamentos, Contas e Cartões, Planejamento Orçamentário, Metas, Relatórios, Importar Extrato, Documentos, Central de Serviços</strong> e <strong>Minha Conta</strong>.</p>
+    <p>O menu dá acesso aos módulos: <strong>Dashboard, Extrato de Transações, Cartões, Planejamento Orçamentário, Metas, Relatórios, Despesas Fixas, Importar Extrato, Documentos, Minha Conta</strong> e, para administradores, os painéis de assinaturas e pagamentos.</p>
+    <figure class="manual-fig duas">
+      <figure class="manual-fig" style="margin:0">
+        <img src="/images/manual/site-como-funciona.png" alt="Seção como funciona do site" loading="lazy">
+        <figcaption>No site, a seção "Como funciona" resume o caminho: cadastre, lance, planeje e acompanhe.</figcaption>
+      </figure>
+      <figure class="manual-fig" style="margin:0">
+        <img src="/images/manual/painel-celular.png" alt="Painel do Nexus Financeiro aberto no celular" loading="lazy">
+        <figcaption>No celular, o painel vira uma versão compacta com menu na barra inferior.</figcaption>
+      </figure>
+    </figure>
 
     <h2 id="s5">5. Lançamentos e transações</h2>
-    <p>Lançamento é cada entrada ou saída de dinheiro registrada (salário, mercado, conta de luz etc.).</p>
+    <p>Lançamento é cada entrada ou saída de dinheiro registrada: salário, mercado, conta de luz, frete etc. Tudo acontece no módulo <strong>Extrato de Transações</strong>.</p>
+    <figure class="manual-fig">
+      <img src="/images/manual/modulo-lancamentos.png" alt="Tela de extrato de transações com lançamentos, filtros e resumo" loading="lazy">
+      <figcaption>Extrato de Transações: tabela com todos os lançamentos do período, cartões de resumo (receitas, despesas, saldo) e filtros por data, conta e categoria.</figcaption>
+    </figure>
     <h3>5.1 Registrar um lançamento</h3>
     <ol>
-      <li>Abra o módulo <strong>Lançamentos</strong> e clique em novo lançamento.</li>
+      <li>Abra <strong>Extrato de Transações</strong> e clique em novo lançamento.</li>
       <li>Informe descrição, valor, data, tipo (receita ou despesa) e a conta/cartão de origem.</li>
-      <li>Escolha a categoria — isso alimenta os gráficos e os orçamentos.</li>
-      <li>Anexe comprovante, se quiser, e salve.</li>
+      <li>Escolha a categoria — isso alimenta os gráficos, os orçamentos e os relatórios.</li>
+      <li>Anexe comprovante, se quiser (ver seção de Documentos), e salve.</li>
     </ol>
     <h3>5.2 Gerenciar lançamentos</h3>
     <ul>
       <li><strong>Filtrar:</strong> por período, conta, categoria ou tipo de transação.</li>
-      <li><strong>Editar ou excluir:</strong> cada lançamento pode ser corrigido ou removido a qualquer momento.</li>
-      <li><strong>Saldo:</strong> o saldo de cada conta é calculado automaticamente: saldo inicial + entradas − saídas.</li>
+      <li><strong>Editar ou excluir:</strong> cada lançamento pode ser corrigido ou removido a qualquer momento — o saldo recalcula sozinho.</li>
+      <li><strong>Saldo:</strong> cada conta mostra saldo inicial + entradas − saídas, sempre atualizado.</li>
+      <li><strong>Importados:</strong> lançamentos vindos do extrato do banco chegam marcados para revisão antes de valer.</li>
     </ul>
 
     <h2 id="s6">6. Contas e cartões</h2>
-    <p>Cadastre cada lugar onde seu dinheiro está guardado ou cobrado.</p>
+    <p>Cadastre cada lugar onde seu dinheiro está guardado ou cobrado. O módulo <strong>Cartões</strong> concentra contas bancárias e cartões de crédito/débito.</p>
+    <figure class="manual-fig">
+      <img src="/images/manual/modulo-contas-cartoes.png" alt="Tela de contas e cartões com saldos e limites" loading="lazy">
+      <figcaption>Contas e Cartões: cada cartão mostra saldo, limite e fatura; cada conta bancária mostra o extrato e o saldo atual.</figcaption>
+    </figure>
     <table>
       <tr><th>Tipo</th><th>Para que serve</th></tr>
-      <tr><td>Conta corrente / poupança / investimento</td><td>Recebem lançamentos e acumulam saldo.</td></tr>
-      <tr><td>Cartão de crédito</td><td>Controlam gastos e faturas; o limite informado vira a base do saldo disponível.</td></tr>
+      <tr><td>Conta corrente / poupança / investimento</td><td>Recebem lançamentos e acumulam saldo no tempo.</td></tr>
+      <tr><td>Cartão de crédito</td><td>Controlam gastos e faturas; o limite informado vira a base do disponível.</td></tr>
+      <tr><td>Cartão de débito</td><td>Funcionam como uma conta: cada compra abate o saldo.</td></tr>
     </table>
     <ol>
-      <li>Abra <strong>Contas e Cartões</strong> e cadastre nome, tipo, saldo inicial e limite (nos cartões).</li>
-      <li>A partir daí, todo lançamento escolhe uma dessas contas — o saldo atualiza sozinho.</li>
-      <li>Para cartão de crédito, o painel separa o que já foi pago do que está na fatura.</li>
+      <li>Abra <strong>Cartões</strong> e cadastre nome, tipo, saldo inicial e limite (nos cartões).</li>
+      <li>A partir daí, todo lançamento escolhe uma dessas contas — o saldo atualiza automaticamente.</li>
+      <li>Para cartão de crédito, o painel separa o que já foi pago do que está na fatura atual.</li>
     </ol>
 
-    <h2 id="s7">7. Planejamento: orçamentos e metas</h2>
-    <h3>7.1 Orçamento por categoria</h3>
+    <h2 id="s7">7. Despesas fixas e recorrências</h2>
+    <p>Contas que se repetem — aluguel, assinatura de streaming, salário — não precisam ser lançadas todo mês.</p>
+    <figure class="manual-fig">
+      <img src="/images/manual/modulo-recorrentes.png" alt="Tela de despesas fixas e recorrências" loading="lazy">
+      <figcaption>Despesas Fixas: cadastre uma vez e o sistema gera os lançamentos futuros sozinho, no dia certo.</figcaption>
+    </figure>
+    <ol>
+      <li>Em <strong>Despesas Fixas</strong>, crie a recorrência com descrição, valor, dia do mês e conta.</li>
+      <li>O sistema projeta os lançamentos futuros e já os inclui nos relatórios e orçamentos.</li>
+      <li>Quando um valor muda (reajuste de plano, por exemplo), edite a recorrência — os próximos meses já saem corrigidos.</li>
+    </ol>
+
+    <h2 id="s8">8. Planejamento: orçamentos e metas</h2>
+    <h3>8.1 Orçamento por categoria</h3>
+    <figure class="manual-fig">
+      <img src="/images/manual/modulo-orcamentos.png" alt="Tela de planejamento orçamentário com limites por categoria" loading="lazy">
+      <figcaption>Planejamento Orçamentário: defina um teto mensal para cada categoria e acompanhe o quanto já foi usado.</figcaption>
+    </figure>
     <ol>
       <li>Em <strong>Planejamento Orçamentário</strong>, defina um limite mensal para cada categoria de gasto (mercado, transporte, lazer...).</li>
       <li>Conforme você lança despesas, o sistema mostra quanto já foi usado do teto.</li>
-      <li>Quando o gasto se aproxima do limite, aparece um alerta no painel.</li>
+      <li>Quando o gasto se aproxima do limite, aparece um alerta no Dashboard.</li>
     </ol>
-    <h3>7.2 Metas de economia</h3>
+    <h3>8.2 Metas de economia</h3>
+    <figure class="manual-fig">
+      <img src="/images/manual/modulo-metas.png" alt="Tela de planejamento de metas com barras de progresso" loading="lazy">
+      <figcaption>Planejamento de Metas: cada meta tem valor alvo, prazo e barra de progresso.</figcaption>
+    </figure>
     <ol>
-      <li>Em <strong>Planejamento de Metas</strong>, crie uma meta com nome, valor alvo e prazo.</li>
-      <li>Associe as entradas que contam para a meta (ex.: reserva mensal).</li>
+      <li>Em <strong>Planejamento de Metas</strong>, crie uma meta com nome, valor alvo e prazo (ex.: reserva de emergência, viagem).</li>
+      <li>Associe as entradas que contam para a meta (ex.: aporte mensal na reserva).</li>
       <li>A barra de progresso de cada meta mostra quanto falta e quanto tempo resta.</li>
     </ol>
 
-    <h2 id="s8">8. Relatórios e dashboards</h2>
+    <h2 id="s9">9. Relatórios e dashboards</h2>
+    <figure class="manual-fig">
+      <img src="/images/manual/modulo-relatorios.png" alt="Tela de relatórios com gráficos e análises" loading="lazy">
+      <figcaption>Relatórios e Insights: gráficos de receitas x despesas, gastos por categoria e evolução no tempo.</figcaption>
+    </figure>
     <ul>
       <li><strong>Dashboard financeiro:</strong> visão consolidada de receitas, despesas, saldo e gráficos por mês e categoria.</li>
       <li><strong>Filtros de período:</strong> semana, mês, ano ou intervalo personalizado.</li>
       <li><strong>Relatórios:</strong> resumos para imprimir ou salvar, úteis para prestar contas ou planejar.</li>
     </ul>
 
-    <h2 id="s9">9. Importar extrato do banco</h2>
-    <p>Em vez de digitar lançamento por lançamento, suba o extrato do banco.</p>
+    <h2 id="s10">10. Importar extrato do banco</h2>
+    <p>Em vez de digitar lançamento por lançamento, suba o extrato do banco — o sistema lê o arquivo e monta os lançamentos para você.</p>
+    <figure class="manual-fig">
+      <img src="/images/manual/modulo-importar.png" alt="Tela de importação de extrato OFX e CSV" loading="lazy">
+      <figcaption>Importar Extrato: escolha o arquivo OFX ou CSV exportado do internet banking e revise os lançamentos antes de gravar.</figcaption>
+    </figure>
     <ol>
       <li>Abra <strong>Importar Extrato</strong>.</li>
       <li>Envie o arquivo <strong>OFX ou CSV</strong> exportado do internet banking.</li>
       <li>O sistema lê as transações e as traz para revisão: você confirma, ajusta categorias e vincula à conta certa antes de gravar.</li>
+      <li>Lançamentos já existentes não são duplicados — a importação avisa o que é novo.</li>
     </ol>
 
-    <h2 id="s10">10. Documentos e comprovantes</h2>
-    <p>O módulo <strong>Gestão de Documentos</strong> guarda comprovantes, notas e arquivos ligados aos seus lançamentos — tudo dentro da sua conta, acessível de qualquer aparelho.</p>
-
-    <h2 id="s11">11. Central de Serviços</h2>
-    <p>Precisa de ajuda? A Central de Serviços funciona dentro do sistema e também pelo site.</p>
-    <ol>
-      <li>Clique em <strong>Central de Serviços</strong> (no painel) ou em <strong>Abrir um chamado</strong> no rodapé do site.</li>
-      <li>Escolha a categoria do problema e descreva com detalhes (prints ajudam).</li>
-      <li>Você recebe um <strong>protocolo</strong> e acompanha cada etapa do atendimento até a solução.</li>
-    </ol>
-
-    <h2 id="s12">12. Personalizar a aparência</h2>
-    <p>Em <strong>Minha Conta</strong> você ajusta tudo:</p>
+    <h2 id="s11">11. Documentos e comprovantes</h2>
+    <p>O módulo <strong>Documentos</strong> guarda comprovantes, notas fiscais e arquivos ligados aos seus lançamentos — tudo dentro da sua conta, acessível de qualquer aparelho.</p>
+    <figure class="manual-fig">
+      <img src="/images/manual/modulo-documentos.png" alt="Tela de gestão de documentos e comprovantes" loading="lazy">
+      <figcaption>Gestão de Documentos: anexe comprovantes aos lançamentos e encontre tudo depois pela busca.</figcaption>
+    </figure>
     <ul>
-      <li><strong>Cor:</strong> 10 paletas prontas ou a sua própria cor — a mesma escolha vale no site, no login e no painel.</li>
-      <li><strong>Tema:</strong> claro, escuro, preto ou automático (claro das 07h às 18h, escuro à noite).</li>
-      <li><strong>Tamanho da tela:</strong> escala de zoom para deixar o painel mais confortável.</li>
+      <li>Anexe comprovante direto no lançamento ou depois, pela tela de Documentos.</li>
+      <li>Use a busca para localizar um comprovante pelo nome, data ou lançamento ligado.</li>
     </ul>
 
-    <h2 id="s13">13. Sair da conta e privacidade</h2>
+    <h2 id="s12">12. Central de Serviços</h2>
+    <p>Precisa de ajuda? A Central de Serviços funciona dentro do sistema e também pelo site — você descreve o problema, recebe um protocolo e acompanha cada etapa até a solução.</p>
+    <ol>
+      <li>Clique em <strong>Central de Serviços</strong> (no painel) ou em <strong>Abrir um chamado</strong> no rodapé do site.</li>
+      <li>Escolha a categoria do problema (conta/login, pagamento, falhas, dados cadastrais e outras) e descreva com detalhes — prints ajudam.</li>
+      <li>Você recebe um <strong>protocolo</strong> e acompanha cada etapa: Novo → Atendimento atribuído → Pendente (se precisar) → Resolvido → Fechado.</li>
+      <li>Chamado resolvido pode ser <strong>reaberto em até 7 dias</strong> se o problema voltar.</li>
+    </ol>
+
+    <h2 id="s13">13. Personalizar a aparência</h2>
+    <p>Em <strong>Minha Conta</strong> você ajusta tudo — e a mesma aparência vale no site, no login e no painel.</p>
+    <figure class="manual-fig">
+      <img src="/images/manual/modulo-minha-conta.png" alt="Tela de Minha Conta com preferências de aparência e segurança" loading="lazy">
+      <figcaption>Minha Conta: perfil, aparência, segurança e dados da assinatura em um só lugar.</figcaption>
+    </figure>
+    <ul>
+      <li><strong>Cor:</strong> 10 paletas prontas ou a sua própria cor.</li>
+      <li><strong>Tema:</strong> claro, escuro, preto ou automático (claro das 07h às 18h, escuro à noite).</li>
+      <li><strong>Tamanho da tela:</strong> escala de zoom para deixar o painel mais confortável.</li>
+      <li><strong>Dados e segurança:</strong> revise seus dados cadastrais e a assinatura aqui também.</li>
+    </ul>
+
+    <h2 id="s14">14. Sair da conta e privacidade</h2>
     <ul>
       <li>Use <strong>Sair</strong> no topo do painel quando terminar, principalmente em computadores compartilhados.</li>
       <li>A sessão expira sozinha após um período sem uso.</li>
@@ -223,26 +311,30 @@
       <li>Detalhes completos em <a href="/privacidade.html">Política de Privacidade</a> e <a href="/termos.html">Termos de abertura de conta</a>.</li>
     </ul>
 
-    <h2 id="s14">14. Perguntas frequentes</h2>
+    <h2 id="s15">15. Perguntas frequentes</h2>
     <h3>O teste grátis pede cartão?</h3>
     <p>Não. O dia grátis começa no cadastro e o plano mensal só é pago via Pix, quando você decidir assinar.</p>
     <h3>Esqueci minha senha. E agora?</h3>
     <p>Use "Esqueci minha senha" na tela de entrada. Você recebe uma senha provisória e define a nova no primeiro acesso.</p>
     <h3>Funciona no celular?</h3>
-    <p>Sim. O painel é totalmente responsivo em celulares, tablets, computadores e telas grandes.</p>
+    <p>Sim. O painel é totalmente responsivo: em telas pequenas o menu vai para a barra inferior e os cartões se reorganizam sozinhos.</p>
     <h3>Alguém vê meus lançamentos?</h3>
     <p>Não. Cada conta acessa somente os próprios dados, e o servidor confere o acesso em cada requisição.</p>
     <h3>Como pago a assinatura?</h3>
     <p>Somente via Pix, dentro do sistema. A tela de pagamento mostra o QR Code e a chave; ao confirmar, o acesso é liberado e o recibo fica na conta.</p>
     <h3>Posso importar o extrato do banco?</h3>
-    <p>Sim. O módulo Importar Extrato aceita arquivos OFX e CSV, prontos para revisão antes de gravar.</p>
+    <p>Sim. O módulo Importar Extrato aceita arquivos OFX e CSV, prontos para revisão antes de gravar — sem duplicar o que já existe.</p>
+    <h3>Meu orçamento estourou. O que faço?</h3>
+    <p>O sistema avisa quando um gasto se aproxima do teto da categoria. Para ajustar, edite o limite em Planejamento Orçamentário ou lance a despesa na categoria certa para o controle voltar a bater.</p>
 
-    <h2 id="s15">15. Resolvendo problemas comuns</h2>
+    <h2 id="s16">16. Resolvendo problemas comuns</h2>
     <table>
       <tr><th>Situação</th><th>O que fazer</th></tr>
       <tr><td>Não consigo entrar</td><td>Confira e-mail/CPF e senha; use "Esqueci minha senha" se necessário.</td></tr>
       <tr><td>O dia grátis acabou</td><td>O painel pede a assinatura. Gere o Pix quando quiser continuar — nada é cobrado sozinho.</td></tr>
-      <tr><td>Lançamento com valor errado</td><td>Edite o lançamento na lista; o saldo da conta recalcula automaticamente.</td></tr>
+      <tr><td>Lançamento com valor errado</td><td>Edite o lançamento no Extrato de Transações; o saldo da conta recalcula automaticamente.</td></tr>
+      <tr><td>Gasto não apareceu no orçamento</td><td>Verifique se o lançamento tem categoria definida e se o período do filtro inclui a data dele.</td></tr>
+      <tr><td>Importei o extrato e duplicou</td><td>A importação pula lançamentos que já existem; revise os pendentes antes de confirmar a gravação.</td></tr>
       <tr><td>Gráfico ou total não bate</td><td>Confira o período filtrado e se todos os lançamentos têm categoria e conta definidas.</td></tr>
       <tr><td>Problema que não resolveu</td><td>Abra um chamado na Central de Serviços e guarde o protocolo.</td></tr>
     </table>
