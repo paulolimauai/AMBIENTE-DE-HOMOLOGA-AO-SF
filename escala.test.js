@@ -88,6 +88,24 @@ test('menu recolhido: "Assinaturas & Acessos" (admin, sem data-page) esconde o r
   assert.match(css, /sidebar-collapsed #menu #menuAdminAssinaturasBtn \{ gap: 0 !important; \}/);
 });
 
+test('menu lateral (seção 2c): cartão da conta sem altura fixa, ícones sem caixa em repouso e pastilha por grupo no hover', () => {
+  const iniSec = css.lastIndexOf('/*', css.indexOf('2c. Menu lateral - acabamento profissional'));   // começa na abertura do comentário do título
+  const fimSec = css.lastIndexOf('/*', css.indexOf('3. Barra inferior (celular e tablet em pé)'));
+  const sec = css.slice(iniSec, fimSec).replace(/\/\*[\s\S]*?\*\//g, '');   // sem comentários
+  assert.ok(sec.length > 1500, 'seção 2c não encontrada');
+  // a etiqueta do plano era cortada: o botão tinha height/max-height de 40px com overflow oculto
+  assert.match(sec, /#menu \.sidebar-account-link \{[^}]*height: auto !important;[^}]*max-height: none !important;/);
+  // ícone em repouso sem caixa
+  assert.match(sec, /#menu button\.menu-btn-user \.ic \{[^}]*background: transparent !important;[^}]*border-color: transparent !important;/);
+  // como esta camada vence o server.js, o hover colorido de cada página precisa estar repetido aqui
+  for (const pg of ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'config']) {
+    assert.ok(sec.includes('button[data-page="' + pg + '"]:hover:not(.active) .ic'), 'hover do ícone de ' + pg);
+  }
+  // não define "display" em botões do menu (o JS esconde itens por perfil) nem mexe no menu do administrador
+  assert.ok(!/button\.menu-btn-user[^{]*\{[^}]*\bdisplay\s*:/.test(sec), 'a seção 2c não pode definir display nos botões');
+  assert.ok(!sec.includes('menu-btn-admin'), 'a seção 2c não mexe no menu do administrador');
+});
+
 test('Orçamentos: os cartões de categoria quebram o texto em vez de cortar com reticências', () => {
   assert.match(css, /\.orc-chip-txt small \{[^}]*white-space: normal !important;[^}]*text-overflow: clip !important;/);
 });

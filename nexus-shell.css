@@ -158,6 +158,119 @@ html.user-logged-in #mobileBottomBar button:focus-visible,
 html.user-logged-in #mobileDrawer button:focus-visible { outline: 2px solid rgba(var(--nx-sh-acc), .95) !important; outline-offset: 2px !important; }
 
 /* =====================================================================================
+   2c. Menu lateral - acabamento profissional (21/11/2026)
+   Mesma identidade (cores da paleta escolhida em Personalizar, títulos entre fios, item ativo com barra de acento) e mesma geometria
+   (altura dos itens, ícones, larguras): muda só o acabamento. Para voltar ao visual anterior basta apagar esta seção inteira.
+   Não define "display" de botões/seções (o JS esconde itens por perfil) e não mexe no menu do administrador (.menu-btn-admin).
+   Ícones em repouso ficam SEM caixa (antes: dez quadradinhos com borda, lista pesada); a pastilha aparece no hover, na cor do grupo
+   (verde Visão Geral, azul Planejamento, roxo Ferramentas, rosa Preferências: as mesmas cores das regras do server.js, repetidas aqui porque
+   esta camada vence aquelas) e no item ATIVO, em degradê luminoso da paleta.
+   ===================================================================================== */
+/* Itens (menu expandido e trilho de ícones): cantos mais suaves, rótulo mais claro e transições uniformes */
+html.user-logged-in #menu button.menu-btn-user {
+  border-radius: 11px !important;
+  color: #C5D0E0 !important;
+  font-weight: 600 !important;
+  transition: background-color .18s ease, border-color .18s ease, color .18s ease, box-shadow .18s ease !important;
+}
+html.user-logged-in #menu button.menu-btn-user .ic {
+  border-radius: 10px !important;
+  background: transparent !important;
+  border-color: transparent !important;
+  color: #9DB0C8 !important;
+  transition: background-color .18s ease, border-color .18s ease, color .18s ease, box-shadow .18s ease !important;
+}
+html.user-logged-in #menu button.menu-btn-user:hover:not(.active) {
+  background: rgba(255, 255, 255, .05) !important;
+  border-color: rgba(255, 255, 255, .08) !important;
+  color: #FFFFFF !important;
+}
+/* Pastilha do ícone no hover, na cor do grupo */
+html.user-logged-in #menu button[data-page="dashboard"]:hover:not(.active) .ic,
+html.user-logged-in #menu button[data-page="transacoes"]:hover:not(.active) .ic,
+html.user-logged-in #menu button[data-page="cartoes"]:hover:not(.active) .ic { background: rgba(16, 185, 129, .16) !important; border-color: rgba(16, 185, 129, .38) !important; color: #34D399 !important; }
+html.user-logged-in #menu button[data-page="orcamentos"]:hover:not(.active) .ic,
+html.user-logged-in #menu button[data-page="metas"]:hover:not(.active) .ic,
+html.user-logged-in #menu button[data-page="relatorios"]:hover:not(.active) .ic { background: rgba(14, 165, 233, .16) !important; border-color: rgba(14, 165, 233, .38) !important; color: #38BDF8 !important; }
+html.user-logged-in #menu button[data-page="recorrentes"]:hover:not(.active) .ic,
+html.user-logged-in #menu button[data-page="importar"]:hover:not(.active) .ic,
+html.user-logged-in #menu button[data-page="anexos"]:hover:not(.active) .ic { background: rgba(139, 92, 246, .16) !important; border-color: rgba(139, 92, 246, .38) !important; color: #A78BFA !important; }
+html.user-logged-in #menu button[data-page="config"]:hover:not(.active) .ic,
+html.user-logged-in #menu #menuAdminAssinaturasBtn:hover:not(.active) .ic { background: rgba(244, 114, 182, .16) !important; border-color: rgba(244, 114, 182, .38) !important; color: #F472B6 !important; }
+/* Trilho de ícones: no hover só a pastilha do ícone (antes: caixa do botão + pastilha dentro = caixa dupla) */
+html.sidebar-collapsed #menu button.menu-btn-user:hover:not(.active),
+body.sidebar-collapsed #menu button.menu-btn-user:hover:not(.active) { background: transparent !important; border-color: transparent !important; }
+/* ...e no item ativo do trilho só a pastilha luminosa (sem a cápsula em volta) */
+html.sidebar-collapsed #menu button.menu-btn-user.active,
+body.sidebar-collapsed #menu button.menu-btn-user.active { background: transparent !important; border-color: transparent !important; box-shadow: none !important; }
+html.user-logged-in #menu button.menu-btn-user:focus-visible { outline: 2px solid rgba(var(--nx-sh-acc), .95) !important; outline-offset: 2px !important; }
+
+/* Item ativo: faixa em degradê da paleta, ícone em "pastilha" luminosa e barra de acento com brilho */
+html.user-logged-in #menu button.menu-btn-user.active {
+  background: linear-gradient(90deg, rgba(var(--nx-sh-acc), .30) 0%, rgba(var(--nx-sh-acc-2), .08) 100%) !important;
+  border-color: rgba(var(--nx-sh-acc), .52) !important;
+  color: #FFFFFF !important;
+  font-weight: 700 !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .07), 0 10px 24px -14px rgba(var(--nx-sh-acc), .8) !important;
+}
+html.user-logged-in #menu button.menu-btn-user.active .ic {
+  background: linear-gradient(140deg, rgba(var(--nx-sh-acc), .46) 0%, rgba(var(--nx-sh-acc-2), .26) 100%) !important;
+  border-color: rgba(var(--nx-sh-acc), .62) !important;
+  color: #E6ECFF !important;
+  color: color-mix(in srgb, rgb(var(--nx-sh-acc)) 26%, #ffffff) !important;   /* claro em qualquer paleta (a 1ª linha é reserva) */
+  box-shadow: 0 6px 14px -7px rgba(var(--nx-sh-acc), .9), inset 0 1px 0 rgba(255, 255, 255, .22) !important;
+}
+html.user-logged-in #menu button.menu-btn-user.active::before {
+  width: 3px !important;
+  height: 22px !important;
+  border-radius: 0 4px 4px 0 !important;
+  background: linear-gradient(180deg, rgb(var(--nx-sh-acc)), rgb(var(--nx-sh-acc-2))) !important;
+  box-shadow: 0 0 14px rgba(var(--nx-sh-acc), .85) !important;
+}
+
+/* Títulos de seção: os dois fios iguais, esmaecendo para fora na cor da paleta (antes: esquerdo quase branco, direito azul sólido) */
+html.user-logged-in #menu .menu-section-header::before { background: linear-gradient(270deg, rgba(var(--nx-sh-acc), .42), rgba(var(--nx-sh-acc), 0)) !important; }
+html.user-logged-in #menu .menu-section-header .menu-section-line { background: linear-gradient(90deg, rgba(var(--nx-sh-acc), .42), rgba(var(--nx-sh-acc), 0)) !important; }
+
+@media (min-width: 861px) {
+  /* Cartão da conta: antes o botão tinha altura fixa de 40px com overflow oculto e a etiqueta do plano era cortada embaixo */
+  html.user-logged-in:not(.sidebar-collapsed) body:not(.sidebar-collapsed) #menu .sidebar-account-link {
+    height: auto !important;
+    max-height: none !important;
+    min-height: 58px !important;
+    padding: 8px 12px !important;
+    background: linear-gradient(135deg, rgba(255, 255, 255, .065), rgba(255, 255, 255, .025)) !important;
+    border: 1px solid rgba(255, 255, 255, .10) !important;
+    border-radius: 14px !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .05) !important;
+    transition: background-color .18s ease, border-color .18s ease !important;
+  }
+  html.user-logged-in:not(.sidebar-collapsed) body:not(.sidebar-collapsed) #menu .sidebar-account-link:hover {
+    background: linear-gradient(135deg, rgba(var(--nx-sh-acc), .16), rgba(255, 255, 255, .04)) !important;
+    border-color: rgba(var(--nx-sh-acc), .45) !important;
+  }
+  html.user-logged-in:not(.sidebar-collapsed) body:not(.sidebar-collapsed) #menu .sidebar-account-arrow { color: var(--nx-sh-muted) !important; transition: transform .18s ease, color .18s ease !important; }
+  html.user-logged-in:not(.sidebar-collapsed) body:not(.sidebar-collapsed) #menu .sidebar-account-link:hover .sidebar-account-arrow { color: #FFFFFF !important; transform: translateX(2px) !important; }
+  /* Recolher Menu: botão discreto (antes um bloco azul-marinho pesado) */
+  html.user-logged-in:not(.sidebar-collapsed) body:not(.sidebar-collapsed) #menu .sidebar-toggle-btn {
+    background: rgba(255, 255, 255, .035) !important;
+    border: 1px solid rgba(255, 255, 255, .09) !important;
+    border-radius: 11px !important;
+    color: var(--nx-sh-ink-2) !important;
+    transition: background-color .18s ease, border-color .18s ease, color .18s ease !important;
+  }
+  html.user-logged-in:not(.sidebar-collapsed) body:not(.sidebar-collapsed) #menu .sidebar-toggle-btn:hover {
+    background: rgba(var(--nx-sh-acc), .14) !important;
+    border-color: rgba(var(--nx-sh-acc), .42) !important;
+    color: #FFFFFF !important;
+  }
+}
+/* Janela baixa: o cartão da conta fica mais compacto para a lista de itens ter mais espaço */
+@media (min-width: 861px) and (max-height: 800px) {
+  html.user-logged-in:not(.sidebar-collapsed) body:not(.sidebar-collapsed) #menu .sidebar-account-link { min-height: 50px !important; padding: 5px 12px !important; }
+}
+
+/* =====================================================================================
    3. Barra inferior (celular e tablet em pé)
    ===================================================================================== */
 html.user-logged-in #mobileBottomBar {
