@@ -353,7 +353,7 @@ test('filtrosDeAtalho: só entrega à lista de movimentações valores que ela a
   assert.deepEqual(D.filtrosDeAtalho(undefined), { tipo: '', status: '', cat: '', conta: '' });
 });
 
-test('pagina(): atalhos de navegação, ações rápidas e escape dos atributos', () => {
+test('pagina(): atalhos de navegação, ação de atualizar e escape dos atributos', () => {
   const lista = transacoes().concat([tx(12, 'out', 'Teste', 10, '2026-11-02', 'A"B<c>', 'Pago')]);
   const html = D.pagina({ ...ctx({ transacoes: lista }), util: { saudacao: () => ({ text: 'Bom dia' }), primeiroNome: 'Marina', dataHoje: () => 'sexta-feira' } });
   for (const trecho of [
@@ -362,7 +362,7 @@ test('pagina(): atalhos de navegação, ações rápidas e escape dos atributos'
     'data-fd-ir="cartoes"', // tile Cartões
     'data-fd-ir="mov" data-fd-tipo="in" data-fd-status="Pendente"', // A receber (30 dias)
     'data-fd-ir="mov" data-fd-tipo="out" data-fd-cat="Supermercado"', // categoria do ranking
-    'data-fd-acao="nova-receita"', 'data-fd-acao="nova-despesa"', 'data-fd-acao="atualizar"',
+    'data-fd-acao="atualizar"',
     'data-fd-ir="mov" data-fd-tipo="out" data-fd-status="Pendente"', // A pagar (30 dias)
     'fd-rosca-leg', 'fd-titulo-abas'
   ]) assert.ok(html.includes(trecho), 'faltou: ' + trecho);
@@ -371,10 +371,11 @@ test('pagina(): atalhos de navegação, ações rápidas e escape dos atributos'
   assert.ok(!html.includes('data-fd-cat="A"B'));
 });
 
-test('pagina() vazia: exibe todas as faixas do painel completo e mantém o cabeçalho com as ações rápidas', () => {
+test('pagina() vazia: exibe todas as faixas do painel completo e o cabeçalho sem as ações rápidas de receita/despesa', () => {
   const html = D.pagina({ ...ctx({ transacoes: [], contas: [] }), util: {} });
-  assert.match(html, /data-fd-acao="nova-despesa"/);
-  assert.match(html, /data-fd-acao="nova-receita"/);
+  const cabecalho = html.slice(0, html.indexOf('fd-corpo'));
+  assert.ok(!cabecalho.includes('fd-acoes-rapidas'), 'cabeçalho não deve ter os botões rápidos Receita/Despesa');
+  assert.ok(!cabecalho.includes('nova-receita') && !cabecalho.includes('nova-despesa'), 'cabeçalho sem atalhos de novo lançamento');
   for (const faixa of ['fd-kpis', 'fd-linha-b', 'fd-linha-c']) assert.ok(html.includes(faixa), 'sem dados exibe as faixas completas do painel: ' + faixa);
   assert.equal((html.match(/class="fd-tile /g) || []).length, 4, 'os 4 cartões do topo (Receitas, Despesas, Disponível, Dívida)');
 });

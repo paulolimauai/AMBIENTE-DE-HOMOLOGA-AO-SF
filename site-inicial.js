@@ -190,7 +190,7 @@
   }
   function montarModos(box) {
     if (!T || !box) return;
-    [['auto', 'Automático'], ['escuro', 'Escuro'], ['claro', 'Claro']].forEach(function (m) {
+    [['auto', 'Automático'], ['escuro', 'Escuro'], ['preto', 'Preto'], ['claro', 'Claro']].forEach(function (m) {
       var b = D.createElement('button');
       b.type = 'button'; b.className = 'chip'; b.dataset.m = m[0]; b.textContent = m[1]; b.setAttribute('aria-pressed', 'false');
       b.addEventListener('click', function () { T.setModo(m[0], true); });

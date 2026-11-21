@@ -91,8 +91,8 @@
   /* Automático por horário: claro das 07h às 18h (hora local), escuro no restante do dia */
   function autoClaro(){var h=new Date().getHours();return h>=7&&h<18}
   function setModo(m,salvar){
-    if(['auto','escuro','claro'].indexOf(m)<0)m='auto';
-    modo=m;r.setAttribute('data-mode',m==='claro'||(m==='auto'&&autoClaro())?'light':'dark');
+    if(['auto','escuro','claro','preto'].indexOf(m)<0)m='auto';
+    modo=m;r.setAttribute('data-mode',m==='preto'?'black':(m==='claro'||(m==='auto'&&autoClaro())?'light':'dark'));
     if(salvar)s('nexus-modo',m);
     tc();avisar();
   }
@@ -353,7 +353,7 @@
         <div>
           <span class="kicker">Do seu jeito</span>
           <h2 id="h-pers">O painel com a sua cara</h2>
-          <p class="lead">Escolha uma das 10 paletas, ou a sua própria cor, o modo claro, escuro ou automático (claro das 07h às 18h, escuro à noite) e o fundo do site, padrão ou de vidro. Experimente aqui, sem sair da página.</p>
+          <p class="lead">Escolha uma das 10 paletas, ou a sua própria cor, o modo claro, escuro, preto ou automático (claro das 07h às 18h, escuro à noite) e o fundo do site, padrão ou de vidro. Experimente aqui, sem sair da página.</p>
           <div class="grp"><span>Aparência</span><div class="chips" data-modos role="group" aria-label="Aparência"></div></div>
           <div class="grp"><span>Fundo</span><div class="chips c2" data-fundos role="group" aria-label="Fundo do site"></div></div>
           <div class="grp"><span>Cor de destaque</span><div class="sws" data-cores role="group" aria-label="Paleta de cores"></div></div>

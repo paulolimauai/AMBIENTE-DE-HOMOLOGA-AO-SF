@@ -608,9 +608,6 @@
       '<div class="fd-cab-dir">' + (util.periodPickerHTML ? util.periodPickerHTML() : '') +
       '<button type="button" class="fd-btn fd-privacidade" onclick="window.toggleSensitiveBalances()" id="btnToggleBalances" title="Ocultar ou exibir saldos">' +
       '<span id="btnEyeIcon">' + (oculto ? ICONES.olhoFechado : ICONES.olho) + '</span><span id="btnEyeText">' + (oculto ? 'Exibir Saldos' : 'Ocultar Saldos') + '</span></button>' +
-      '<div class="fd-acoes-rapidas">' +
-      '<button type="button" class="fd-btn fd-btn-receita" data-fd-acao="nova-receita" title="Lançar uma receita">' + ICONES.mais + '<span>Receita</span></button>' +
-      '<button type="button" class="fd-btn fd-btn-despesa" data-fd-acao="nova-despesa" title="Lançar uma despesa">' + ICONES.mais + '<span>Despesa</span></button></div>' +
       '</div></header>';
   }
 

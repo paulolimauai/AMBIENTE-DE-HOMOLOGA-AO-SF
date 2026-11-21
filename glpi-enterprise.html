@@ -1060,6 +1060,11 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 inset 0 1px 0 rgba(255, 255, 255, .9),
                 inset 0 -1px 0 rgba(20, 30, 80, .04);
         }
+        /* ---------- Modo preto (AMOLED): fundo e superfícies escuras em preto puro ---------- */
+        :root[data-mode="black"] {
+            --dk-dark: 0, 0, 0;
+            --base: #000;
+        }
         :root[data-mode="light"] .input, :root[data-mode="light"] .select, :root[data-mode="light"] .textarea { box-shadow: inset 0 1px 2px rgba(20, 30, 80, .1); }
         :root[data-mode="light"] .input:focus, :root[data-mode="light"] .select:focus, :root[data-mode="light"] .textarea:focus { background: #fff; box-shadow: 0 0 0 3px rgba(var(--acc-rgb), .22), inset 0 1px 2px rgba(20, 30, 80, .08); }
         :root[data-mode="light"] .input[readonly] { box-shadow: none; }
@@ -3323,8 +3328,8 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         var apar = ls('nexus-modo', 'auto');
         function autoClaro() { var h = new Date().getHours(); return h >= 7 && h < 18; }
         function aplicarModo() {
-            if (['auto', 'escuro', 'claro'].indexOf(apar) < 0) apar = 'auto';
-            root.setAttribute('data-mode', apar === 'claro' || (apar === 'auto' && autoClaro()) ? 'light' : 'dark');
+            if (['auto', 'escuro', 'claro', 'preto'].indexOf(apar) < 0) apar = 'auto';
+            root.setAttribute('data-mode', apar === 'preto' ? 'black' : (apar === 'claro' || (apar === 'auto' && autoClaro()) ? 'light' : 'dark'));
         }
         aplicarModo();
         var autoTick = function () { if (apar === 'auto') aplicarModo(); };
