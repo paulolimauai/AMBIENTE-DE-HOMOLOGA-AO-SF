@@ -110,13 +110,32 @@ test('CSS: mesma camada do nexus-shell, só no computador, fonte >= 14px e conte
   assert.match(css, /@media \(min-width: 861px\)/);
   assert.match(css, /#nxTopNav \{ display: none !important; \}/, 'sem a classe nx-menu-topo (ou no celular) a barra não aparece');
   const tamanhos = [...css.matchAll(/font-size:\s*([\d.]+)px/g)].map((m) => Number(m[1]));
-  assert.ok(tamanhos.length > 5 && tamanhos.every((n) => n >= 14), 'fonte menor que 14px: ' + tamanhos.join(','));
+  assert.ok(tamanhos.every((n) => n >= 14), 'fonte menor que 14px: ' + tamanhos.join(','));   // (a letra do menu vem das variáveis --nx-mt-f/-f2, conferidas no teste de tamanhos)
+  assert.ok(!/font-size:\s*(\d|1[0-3])(\.\d+)?px/.test(css), 'não pode haver font-size literal abaixo de 14px');
   // o conteúdo precisa vencer a regra do frontend-polish.css (mesma camada, carregada depois): margin-left 0 com especificidade alta
-  assert.match(css, /main\.main \{[^}]*margin-left: 0 !important;[^}]*width: 100% !important;[^}]*margin-top: 126px !important;/);
+  assert.match(css, /main\.main \{[^}]*margin-left: 0 !important;[^}]*width: 100% !important;[^}]*margin-top: calc\(76px \+ var\(--nx-mt-h\)\) !important;/);
+  assert.match(css, /margin-top: calc\(126px \+ var\(--nx-mt-h\)\) !important;/, 'modo espelho: o cabeçalho desce 50px');
+  assert.match(css, /height: var\(--nx-mt-h\) !important;/, 'a barra e o espaço do conteúdo usam a MESMA variável de altura');
   assert.match(css, /html\.user-logged-in\.nx-menu-topo #menu \{ display: none !important; \}/);
   // o cabeçalho continua limpo (AGENTS.md seção 6): a barra é um elemento à parte e fica abaixo dele
   assert.match(css, /top: 76px !important;/);
   assert.match(css, /z-index: 99990 !important;/);
+});
+
+test('CSS: tamanhos do menu saem de variáveis --nx-mt-*, são grandes (letra >= 17px, apoio >= 15px, barra >= 68px) e só crescem com o zoom < 100%', () => {
+  const css = lerArquivo('menu-topo.css');
+  const base = (nome) => Number((new RegExp('--nx-mt-' + nome + ': calc\\((\\d+)px \\* var\\(--nx-mt-k\\)\\)').exec(css) || [])[1]);
+  assert.ok(base('f') >= 17, 'letra dos grupos/telas: ' + base('f'));
+  assert.ok(base('f2') >= 15, 'letra de apoio: ' + base('f2'));
+  assert.ok(base('h') >= 68, 'altura da barra: ' + base('h'));
+  assert.ok(base('b') >= 50 && base('t') >= 48 && base('s') >= 23, 'botões, pastilha e ícone');
+  // compensação parcial do zoom: nunca abaixo de 1 (zoom >= 100% não diminui o menu)
+  assert.match(css, /--nx-mt-k: max\(1, calc\(1 \+ \(1 \/ var\(--app-zoom, 1\) - 1\) \* \.6\)\);/);
+  // o que o usuário lê usa as variáveis, não números soltos
+  assert.match(css, /\.nx-mt-grupo \{[^}]*font-size: var\(--nx-mt-f\) !important;/);
+  assert.match(css, /\.nx-mt-tt b \{ font-size: var\(--nx-mt-f\) !important;/);
+  assert.match(css, /\.nx-mt-tt small \{ font-size: var\(--nx-mt-f2\) !important;/);
+  assert.match(css, /grid-template-columns: var\(--nx-mt-t\) 1fr !important;/);
 });
 
 test('menu-topo.js: rótulos entram por textContent (nunca por innerHTML) e o modo é lido antes da primeira pintura', () => {
