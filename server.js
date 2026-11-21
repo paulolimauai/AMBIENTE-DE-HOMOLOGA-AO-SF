@@ -34456,6 +34456,14 @@ async function handleNexusRequest(req, res) {
           user = localUsers.find(u => u && u.email && u.email.toLowerCase() === cleanEmail);
         }
 
+        // Resiliência do login: se o SQL Server não respondeu (queda, timeout, pool indisponível) ou não achou
+        // a conta, o espelho local local_users.json — sincronizado do banco a cada poucos segundos — ainda
+        // permite validar usuário e senha, para nenhuma alteração derrubar o acesso de quem está cadastrado.
+        if (!user) {
+          const localUsers = getLocalUsers();
+          user = localUsers.find(u => u && u.email && String(u.email).toLowerCase().trim() === cleanEmail) || null;
+        }
+
         // A senha digitada não confere com a do servidor (ou a conta nem está aqui: disco zerado no redeploy, espelho antigo): o Supabase guarda
         // a senha criada e é consultado na hora. Só vale se a conta não foi excluída e se a do Supabase for a mais nova (ver credenciais.js).
         let passwordVerified = false;

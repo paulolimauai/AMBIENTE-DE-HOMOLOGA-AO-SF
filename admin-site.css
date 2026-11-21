@@ -96,8 +96,12 @@ body{
   .ads-brand span{font-size:.6rem;letter-spacing:.14em}
   .ads-brand small{font-size:.65rem}
   .ads-who{display:none}
-  .ads-actions{width:100%;gap:.4rem}
-  .ads-btn{padding:.5rem .65rem;font-size:.72rem;border-radius:8px;white-space:nowrap}
+  .ads-actions{
+    width:100%;gap:.4rem;flex-wrap:nowrap;overflow-x:auto;
+    scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-bottom:.15rem;
+  }
+  .ads-actions::-webkit-scrollbar{display:none}
+  .ads-btn{flex:0 0 auto;padding:.5rem .7rem;font-size:.74rem;border-radius:8px;white-space:nowrap}
   .ads-wrap{padding:.8rem}
   .ads-side,.ads-editor{border-radius:12px}
   .ads-side{padding:.8rem}
