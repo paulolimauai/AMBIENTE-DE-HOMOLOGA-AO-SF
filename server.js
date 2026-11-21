@@ -15832,15 +15832,13 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
   <div class="modal">
     <button class="close-x" id="closeModal">✕</button>
     <h2 id="modalTitle">Nova Transação</h2>
+    <div class="field"><label>Descrição</label><input id="fDesc" placeholder="Ex: Supermercado"></div>
+    <div class="field"><label>Valor (R$)</label><input id="fValor" type="number" step="0.01" placeholder="0,00"></div>
     <div class="toggle-type">
       <button type="button" id="typeInBtn">↓ Receita</button>
       <button type="button" id="typeOutBtn">↑ Despesa</button>
     </div>
-    <div class="field"><label>Descrição</label><input id="fDesc" placeholder="Ex: Supermercado"></div>
-    <div class="field-row">
-      <div class="field"><label>Valor (R$)</label><input id="fValor" type="number" step="0.01" placeholder="0,00"></div>
-      <div class="field"><label>Data</label><input id="fData" type="date"></div>
-    </div>
+    <div class="field"><label>Data de vencimento</label><input id="fData" type="date"></div>
     <div class="field"><label>Categoria</label>
       <div style="display:flex; gap:6px;">
         <select id="fCategoria" style="flex:1;"></select>
