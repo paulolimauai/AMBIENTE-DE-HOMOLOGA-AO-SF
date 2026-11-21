@@ -171,9 +171,10 @@ body{
     opacity:0;transition:opacity .2s;
   }
   .ads-overlay.show{opacity:1}
-  /* Sair: fora do menu, botão flutuante pequeno no canto inferior direito (o do menu fica escondido no mobile) */
+  /* Sair: fora do menu, botão flutuante pequeno centralizado na parte inferior (o do menu fica escondido no mobile) */
   .ads-sair{
-    display:inline-flex;position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:80;
+    display:inline-flex;position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:80;
+    transform:translateX(-50%);
     width:auto;padding:.45rem .85rem;font-size:.7rem;border-radius:999px;
     box-shadow:0 10px 26px -8px rgba(0,0,0,.65);
   }
