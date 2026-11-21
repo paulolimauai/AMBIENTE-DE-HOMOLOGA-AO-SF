@@ -304,3 +304,60 @@ test('a aba entra no menu do topo do painel, na segunda posição', () => {
   assert.deepEqual(ids, ['usuarios', 'assinaturas', 'pagamentos', 'logs']);
   assert.ok(/data-adm-ir="assinaturas" aria-selected="true" aria-current="page"/.test(h));
 });
+
+test('filtro "Vencem hoje": só paga ou cortesia que vence nas próximas 24 h', () => {
+  const hoje = usuario({ id: 10, name: 'Hoje Paga', email: 'hoje@example.com', subscription_status: 'active', subscription_plan: 'mensal', subscription_method: 'pix', subscription_expires_at: iso(AGORA + 5 * HORA) });
+  const amanha = usuario({ id: 11, name: 'Amanha Paga', email: 'amanha@example.com', subscription_status: 'active', subscription_plan: 'mensal', subscription_method: 'pix', subscription_expires_at: iso(AGORA + 30 * HORA) });
+  const r = [hoje, amanha].map(reg);
+  assert.deepEqual(S.filtrar(r, { sit: 'hoje' }, AGORA).map((x) => x.nome), ['Hoje Paga']);
+  assert.equal(S.venceHoje(r[0], AGORA), true);
+  assert.equal(S.venceHoje(r[1], AGORA), false, '30 h é "vencendo", não "hoje"');
+  assert.deepEqual(S.filtrar(r, { sit: 'vencendo' }, AGORA).map((x) => x.nome), ['Hoje Paga', 'Amanha Paga']);
+});
+
+test('ordenar por último acesso: datas ausentes ficam no fim', () => {
+  const r = regs();
+  r[0].ultimoLogin = AGORA - HORA;
+  r[1].ultimoLogin = AGORA - 2 * DIA;
+  const nomes = S.ordenar(r, 'login:desc', AGORA).map((x) => x.nome);
+  assert.deepEqual(nomes.slice(0, 2), ['Ana Paga', 'Bruno Longe']);
+  assert.equal(nomes[nomes.length - 1], 'Gabi Vitalicia', 'sem login vai para o fim (desempate por nome)');
+});
+
+test('alvosMensal: pendente, encerrada, teste e quem vence entram; em dia, vitalício e admin ficam de fora', () => {
+  const r = regs();
+  const todos = r.map((x) => x.email);
+  const a = S.alvosMensal(r, todos, 'admin@example.com', AGORA);
+  // Ana vence em 3 dias (renovação), Bruno em 25 (em dia), Cíntia pendente, Davi encerrado, Eva teste, Fábio cortesia em 10d (em dia), Gabi vitalícia
+  // o admin do teste é o próprio eu: conta como "sua conta", não como administrador
+  assert.deepEqual(a.elegiveis.map((x) => x.nome).sort(), ['Ana Paga', 'Cíntia Pendente', 'Davi Encerrado', 'Eva Teste']);
+  assert.deepEqual(a.ignoradas, { voce: 1, admin: 0, vitalicio: 1, emDia: 2 });
+  const b = S.alvosMensal(r, todos, 'ana@example.com', AGORA);
+  assert.equal(b.ignoradas.voce, 1);
+  assert.equal(S.textoIgnoradasMensal(b.ignoradas), '2 contas já em dia, 1 vitalícia, 1 administrador, a sua conta');
+});
+
+test('barra de lote mostra "Liberar mensal" com a contagem certa', () => {
+  const c = ctx(massa());
+  const m = S.calcular(c);
+  S.estado.sel = { 'ana@example.com': true, 'bruno@example.com': true, 'cintia@example.com': true };
+  try {
+    const h = S.htmlSelecao(m);
+    assert.ok(h.includes('Liberar mensal (2)'), 'Ana (vence logo) e Cíntia (pendente); Bruno em dia fica de fora');
+    S.estado.sel = { 'bruno@example.com': true };
+    assert.ok(S.htmlSelecao(m).includes('data-as-a="lote-mensal" disabled'), 'só quem está em dia: botão desabilitado');
+  } finally { S.estado.sel = {}; }
+});
+
+test('gaveta: dados da conta (CPF, telefone, nascimento, acesso, cadastro) e barra de progresso do período', () => {
+  const c = ctx(massa(), { eventos: () => [] });
+  const m = S.calcular(c);
+  const ana = m.todos.find((x) => x.email === 'ana@example.com');
+  const h = S.detalheHTML(ana, m, c);
+  assert.ok(h.includes('<h4>Dados da conta</h4>'));
+  assert.ok(h.includes('111.222.333-44'), 'CPF formatado');
+  assert.ok(h.includes('class="as-prog"'), 'assinante pago tem a barra do período');
+  assert.ok(/aria-valuenow="\d+"/.test(h));
+  const eva = m.todos.find((x) => x.email === 'eva@example.com');
+  assert.ok(!S.detalheHTML(eva, m, c).includes('class="as-prog"'), 'teste não tem barra de período mensal');
+});

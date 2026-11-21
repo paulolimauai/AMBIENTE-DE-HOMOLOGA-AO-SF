@@ -123,6 +123,11 @@
 .as-erro[hidden] { display: none !important; }
 .as-dr .adm-nota { margin: 0 0 10px !important; font-size: 14px !important; color: var(--adm-mut) !important; }
 
+/* barra de progresso do período mensal na gaveta (só para assinatura paga) */
+.as-prog { height: 6px !important; border-radius: 99px !important; background: rgba(255, 255, 255, .10) !important; overflow: hidden !important; margin: 6px 0 0 !important; }
+.as-prog i { display: block !important; height: 100% !important; border-radius: inherit !important; background: linear-gradient(90deg, rgb(var(--adm-acc)), #34D399) !important; transition: width .3s ease !important; }
+.as-prog-t { display: block !important; margin: 3px 0 10px !important; font-size: 14px !important; font-weight: 700 !important; color: var(--adm-mut) !important; }
+
 /* ---------- janela de confirmação ---------- */
 .as-dlg-lista { margin: 0 0 12px !important; padding: 0 !important; list-style: none !important; max-height: 190px !important; overflow-y: auto !important; border-radius: 12px !important; border: 1px solid var(--adm-line2) !important; background: rgba(0, 0, 0, .25) !important; }
 .as-dlg-lista li { padding: 8px 12px !important; font-size: 14px !important; color: var(--adm-ink) !important; border-top: 1px solid var(--adm-line2) !important; }

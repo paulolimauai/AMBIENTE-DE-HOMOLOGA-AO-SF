@@ -26173,6 +26173,36 @@ async function admConcederVarios(emails, minutos){
   render();
   return feitas > 0;
 }
+// Liberar o plano mensal a várias contas (a confirmação já foi feita pelo módulo): uma chamada por conta; o servidor confere tudo de novo
+async function admLiberarMensalVarios(emails, metodo){
+  if(!nexusTemPermissao(currentUser, 'assinatura.liberar')){
+    showToast('Apenas administradores, ou quem recebeu a permissão de liberar assinatura, podem confirmar e liberar pagamentos');
+    return false;
+  }
+  const lista = Array.from(new Set((emails || []).map(admMinusculo).filter(Boolean)));
+  if(!lista.length) return false;
+  const token = loadFromStorage('nexus_token', '') || '';
+  const met = ['pix', 'credit_card', 'debit_card', 'boleto'].indexOf(String(metodo || '').toLowerCase()) >= 0 ? String(metodo).toLowerCase() : 'pix';
+  let feitas = 0;
+  const falhas = [];
+  for(const alvo of lista){
+    try {
+      const res = await fetch(window.location.origin + '/api/subscription/confirm-payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+        body: JSON.stringify({ admin_email: currentUser.email, target_email: alvo, plan: 'mensal', method: met })
+      });
+      const d = await res.json().catch(function(){ return {}; });
+      if(res.ok && d && d.success) feitas++; else falhas.push(alvo);
+    } catch(e) { falhas.push(alvo); }
+  }
+  await syncUsersWithServer();
+  showToast(falhas.length
+    ? feitas + ' de ' + lista.length + ' conta(s) tiveram o mensal liberado; ' + falhas.length + ' falharam (veja a auditoria).'
+    : 'Plano mensal liberado para ' + feitas + (feitas === 1 ? ' conta.' : ' contas.'));
+  render();
+  return feitas > 0;
+}
 function assContexto(){
   // Preço em vigor: o que o administrador configurou (livro de pagamentos, já carregado) ou o da época em que a página foi montada
   const precoVivo = (window.NexusPag && NexusPag.estado && NexusPag.estado.dados && NexusPag.estado.dados.preco > 0) ? NexusPag.estado.dados.preco : ${SUBSCRIPTION_MONTHLY_PRICE};
@@ -26188,6 +26218,7 @@ function assContexto(){
       conceder: function(email, minutos){ return window.adminGrantTimeQuick(email, minutos); },
       vitalicio: function(email){ return window.adminGrantTimeLifetime(email); },
       mensal: function(email, metodo){ return window.adminConfirmUserPayment(email, 'mensal', metodo || 'pix'); },
+      mensalVarios: admLiberarMensalVarios,
       bloquear: function(email){ return window.adminRevokeUserPayment(email); },
       reiniciarTeste: function(email){ return window.adminResetTrialAction(email); },
       segundaVia: function(r){ window.abrirSegundaViaBoletoParaUsuario(r.email, r.nome, r.cpf, r.tel); },

@@ -5,7 +5,7 @@
    bloquear, reiniciar o teste e abrir a 2ª via, além de ver quem vence nos próximos dias e agir em várias contas de uma vez.
 
    ctx = função que devolve { agora, usuarios, eu:{email,nome}, preco:{numero,rotulo}, sincronizadoEm, eventos(email):[...], toast(msg),
-         acoes:{ conceder(email,min), vitalicio(email), mensal(email,metodo), bloquear(email), reiniciarTeste(email), segundaVia(r),
+         acoes:{ conceder(email,min), vitalicio(email), mensal(email,metodo), mensalVarios(emails,metodo), bloquear(email), reiniciarTeste(email), segundaVia(r),
                  abrirCadastro(email), sincronizar(), concederVarios(emails,min), expirarVarios(emails) } }
 
    A situação segue as regras do servidor (getUserSubscriptionInfo) pelo classificarAssinatura() do administracao.js, que precisa
@@ -78,6 +78,11 @@
     if (r.sit !== 'paga' && r.sit !== 'cortesia') return false;
     return !!r.venc && r.venc > agora && r.venc - agora <= (dias || DIAS_VENCENDO) * DIA;
   }
+  // Vence nas próximas 24 h (subconjunto de "vencendo": urgência máxima, usada no filtro "Vencem hoje")
+  function venceHoje(r, agora) {
+    agora = agora || Date.now();
+    return vencendo(r, agora) && r.venc - agora <= DIA;
+  }
 
   function relFuturo(ms) {
     if (ms < HORA) return 'em menos de 1 h';
@@ -105,6 +110,7 @@
     if (r.admin) return false;
     if (f.sit && f.sit !== 'todas') {
       if (f.sit === 'vencendo') { if (!vencendo(r, agora)) return false; }
+      else if (f.sit === 'hoje') { if (!venceHoje(r, agora)) return false; }
       else if (r.sit !== f.sit) return false;
     }
     var termos = semAcento(f.busca || '').split(/\s+/).filter(Boolean);
@@ -127,12 +133,13 @@
     };
   }
   var ORDENS = [['prioridade', 'Quem precisa de atenção'], ['venc:asc', 'Vencimento (mais próximo)'], ['venc:desc', 'Vencimento (mais distante)'],
-    ['nome:asc', 'Nome (A a Z)'], ['criadoEm:desc', 'Cadastro (mais recente)']];
+    ['login:desc', 'Último acesso (mais recente)'], ['nome:asc', 'Nome (A a Z)'], ['criadoEm:desc', 'Cadastro (mais recente)']];
   function ordenar(regs, ordem, agora) {
     agora = agora || Date.now();
     var lista = regs.slice();
     if (ordem === 'nome:asc') return lista.sort(porNome);
     if (ordem === 'criadoEm:desc') return lista.sort(porData('criadoEm', 'desc'));
+    if (ordem === 'login:desc') return lista.sort(porData('ultimoLogin', 'desc'));
     if (ordem === 'venc:asc') return lista.sort(porData('venc', 'asc'));
     if (ordem === 'venc:desc') return lista.sort(porData('venc', 'desc'));
     return lista.sort(function (a, b) {
@@ -199,6 +206,32 @@
     return p.join(', ');
   }
 
+  /* ---- liberar o mensal em lote ---- */
+  // Quem recebe "Liberar mensal" em lote: pendente, encerrada ou teste — e assinante/cortesia prestes a vencer (renovação). Quem está em dia fica de fora.
+  function alvosMensal(regs, emails, eu, agora) {
+    agora = agora || Date.now();
+    var sel = {};
+    (emails || []).forEach(function (e) { sel[String(e).toLowerCase()] = true; });
+    var out = { elegiveis: [], ignoradas: { voce: 0, admin: 0, vitalicio: 0, emDia: 0 } };
+    (regs || []).forEach(function (r) {
+      if (!sel[r.email]) return;
+      if (r.email === eu) out.ignoradas.voce++;
+      else if (r.admin) out.ignoradas.admin++;
+      else if (r.sit === 'vitalicia') out.ignoradas.vitalicio++;
+      else if ((r.sit === 'paga' || r.sit === 'cortesia') && !vencendo(r, agora)) out.ignoradas.emDia++;
+      else out.elegiveis.push(r);
+    });
+    return out;
+  }
+  function textoIgnoradasMensal(ig) {
+    var p = [];
+    if (ig.emDia) p.push(plural(ig.emDia, 'conta já em dia', 'contas já em dia'));
+    if (ig.vitalicio) p.push(plural(ig.vitalicio, 'vitalícia', 'vitalícias'));
+    if (ig.admin) p.push(plural(ig.admin, 'administrador', 'administradores'));
+    if (ig.voce) p.push('a sua conta');
+    return p.join(', ');
+  }
+
   /* ---- CSV (abre no Excel: ; como separador, célula que começa com = + - @ ganha apóstrofo) ---- */
   function csvCelula(v) {
     var s = String(v == null ? '' : v).replace(/\r?\n/g, ' ');
@@ -218,7 +251,7 @@
   /* ============================================================ estado ============================================================ */
   // larguraDr: largura do painel da conta em px (null = padrão); drMax: painel em tela cheia
   var estado = { busca: '', sit: 'todas', ordem: 'prioridade', pagina: 1, porPagina: 25, sel: {}, detalhe: null, retorno: null, ocupado: false, larguraDr: null, drMax: false };
-  var ctxFn = null, ligado = false, tempoBusca = null, ultimo = {};
+  var ctxFn = null, ligado = false, tempoBusca = null, relTimer = null, ultimo = {};
   var CHAVE_PREFS = 'nexus_ass_prefs';
   // O painel da conta é uma janela no MEIO da tela: 1040 px mostra situação, histórico e ações lado a lado (2 colunas) sem cortar nada
   // Mínimo 520: abaixo disso o nome da pessoa quebra no meio da palavra (avatar + setas + tela cheia + fechar dividem o cabeçalho)
@@ -334,7 +367,7 @@
   }
 
   var ICONE_FILTRO = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="22 3 2 3 10 12.5 10 19 14 21 14 12.5 22 3"/></svg>';
-  var NOME_SIT = { todas: 'Todas', paga: 'Assinantes', vencendo: 'Vencem em ' + DIAS_VENCENDO + ' dias', pendente: 'Aguardando pagamento', encerrada: 'Acesso encerrado', teste: 'Em teste', cortesia: 'Cortesias', vitalicia: 'Vitalícios' };
+  var NOME_SIT = { todas: 'Todas', paga: 'Assinantes', vencendo: 'Vencem em ' + DIAS_VENCENDO + ' dias', hoje: 'Vencem hoje', pendente: 'Aguardando pagamento', encerrada: 'Acesso encerrado', teste: 'Em teste', cortesia: 'Cortesias', vitalicia: 'Vitalícios' };
   function htmlContador(m) {
     return '<span class="adm-cont" aria-live="polite"><b>' + m.pag.total + '</b> de ' + m.resumo.total + ' conta' + (m.resumo.total === 1 ? '' : 's') + '</span>';
   }
@@ -350,7 +383,7 @@
     var nf = estado.sit !== 'todas' ? 1 : 0;
     // Situação e Ordenar ficam logo depois da caixa #asFtog: no celular o CSS do painel as esconde e o botão "Filtros" as mostra (no computador o botão some)
     return '<div class="adm-barra as-barra">' +
-      '<label class="adm-busca">' + IC.busca + '<input type="search" id="asBusca" data-as-busca autocomplete="off" spellcheck="false" placeholder="Buscar nome, e-mail, CPF…" value="' + esc(estado.busca) + '" aria-label="Buscar contas"></label>' +
+      '<label class="adm-busca">' + IC.busca + '<input type="search" id="asBusca" data-as-busca autocomplete="off" spellcheck="false" placeholder="Buscar nome, e-mail, CPF…  ( / )" value="' + esc(estado.busca) + '" aria-label="Buscar contas"></label>' +
       '<input type="checkbox" id="asFtog" class="adm-ftog" aria-label="Mostrar ou esconder os filtros">' +
       '<label for="asFtog" class="adm-fbtn as-fbtn" title="Situação e ordem">' + ICONE_FILTRO + '<span>Filtros</span><b class="adm-fn" data-as-fn' + (nf ? '' : ' hidden') + '>' + (nf || '') + '</b></label>' +
       '<label class="adm-sel"><span>Situação</span><select data-as-filtro="sit">' + opcoes(Object.keys(NOME_SIT).map(function (k) { return [k, NOME_SIT[k]]; }), estado.sit) + '</select></label>' +
@@ -434,12 +467,14 @@
     if (!emails.length) return '';
     var nCon = alvosConceder(m.todos, emails, m.eu).elegiveis.length;
     var nExp = Adm.alvosExpirar(m.todos, emails, m.eu).elegiveis.length;
+    var nMen = alvosMensal(m.todos, emails, m.eu, m.agora).elegiveis.length;
     var naoSel = m.ordenados.filter(function (r) { return r.email !== m.eu && !estado.sel[r.email]; }).length;
     return '<div class="adm-selbar as-selbar" role="region" aria-label="Ações em lote"><b>' + plural(emails.length, 'selecionada', 'selecionadas') + '</b>' +
       (naoSel > 0 ? '<button type="button" class="adm-link" data-as-a="sel-filtrados">Selecionar todas as ' + m.ordenados.filter(function (r) { return r.email !== m.eu; }).length + ' da lista</button>' : '') +
       '<span class="adm-selbar-sp"></span>' +
       '<span class="as-lote-tempo"><select id="asLoteTempo" aria-label="Tempo a conceder">' + opcoes(LOTE_TEMPOS, 10080) + '</select></span>' +
       '<button type="button" class="adm-btn adm-btn-sm adm-btn-pri" data-as-a="lote-conceder"' + (nCon ? '' : ' disabled') + ' title="Soma o tempo escolhido, como cortesia, às contas selecionadas">' + IC.relogio + '<span>Dar tempo' + (nCon ? ' (' + nCon + ')' : '') + '</span></button>' +
+      '<button type="button" class="adm-btn adm-btn-sm" data-as-a="lote-mensal"' + (nMen ? ' title="Reconhece o pagamento e libera 30 dias para as contas que estão sem plano em dia"' : ' disabled title="Nenhuma conta selecionada precisa do mensal (em dia, vitalícia ou fora do escopo)"') + '>' + IC.ok + '<span>Liberar mensal' + (nMen ? ' (' + nMen + ')' : '') + '</span></button>' +
       '<button type="button" class="adm-btn adm-btn-sm adm-btn-perigo" data-as-a="lote-expirar"' + (nExp ? ' title="Exige novo pagamento de ' + plural(nExp, 'conta com assinatura ativa', 'contas com assinatura ativa') + '"' : ' disabled title="Nenhuma conta selecionada tem assinatura ativa"') + '>' + IC.cadeado + '<span>Expirar' + (nExp ? ' (' + nExp + ')' : '') + '</span></button>' +
       '<button type="button" class="adm-btn adm-btn-sm" data-as-a="lote-exportar">' + IC.baixar + '<span>Exportar seleção</span></button>' +
       '<button type="button" class="adm-ib" data-as-a="lote-limpar" title="Limpar seleção" aria-label="Limpar seleção">' + IC.x + '</button></div>';
@@ -481,6 +516,13 @@
 
   /* ============================================================ HTML: gaveta de uma conta ============================================================ */
   function linhaDl(t, v) { return '<div class="adm-dl-l"><dt>' + esc(t) + '</dt><dd>' + (v === '' || v == null ? '<span class="adm-nd">—</span>' : v) + '</dd></div>'; }
+  // Quanto do período mensal de 30 dias já passou (só faz sentido para assinatura paga; cortesia e vitalício não têm período fixo)
+  function htmlProgresso(r, agora) {
+    if (r.sit !== 'paga' || !r.venc) return '';
+    var pct = Math.max(0, Math.min(100, Math.round((1 - (r.venc - agora) / (30 * DIA)) * 100)));
+    return '<div class="as-prog" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + pct + '" aria-label="Período mensal decorrido" title="' + pct + '% do período mensal de 30 dias já passou">' +
+      '<i style="width:' + pct + '%"></i></div><small class="as-prog-t">' + pct + '% do período mensal</small>';
+  }
   function btnAc(a, email, ic, rotulo, dica, classe, extra) {
     return '<button type="button" class="adm-ac ' + (classe || '') + '" data-as-a="' + a + '" data-email="' + esc(email) + '"' + (extra || '') + (dica ? ' title="' + esc(dica) + '"' : '') + '>' + IC[ic] + '<span>' + esc(rotulo) + '</span></button>';
   }
@@ -542,7 +584,11 @@
           linhaDl('Vencimento', vencTxt) +
           linhaDl('Forma de pagamento', esc(r.metodoRotulo)) + linhaDl('Último protocolo', esc(r.protocolo)) +
           linhaDl('Teste iniciado em', isNaN(r.testeInicio) ? '' : esc(dataBR(r.testeInicio, true))) +
-          linhaDl('Conta', r.ativo ? 'Ativa' : 'Bloqueada') + '</dl></section></div>' +
+          linhaDl('Conta', r.ativo ? 'Ativa' : 'Bloqueada') + '</dl>' + htmlProgresso(r, m.agora) + '</section>' +
+        '<section><h4>Dados da conta</h4><dl class="adm-dl">' +
+          linhaDl('CPF', esc(r.cpfFmt)) + linhaDl('Telefone', esc(r.telFmt)) + linhaDl('Nascimento', esc(r.nasc)) +
+          linhaDl('Último acesso', r.ultimoLogin ? esc(dataBR(r.ultimoLogin, true)) : '') +
+          linhaDl('Cadastro', r.criadoEm ? esc(dataBR(r.criadoEm, true)) : '') + '</dl></section></div>' +
         // Em painel largo: situação e histórico na coluna da esquerda, ações na da direita (CSS por container query)
         '<div class="as-dr-b">' + corpoAcoes + '</div>' +
         '<div class="as-dr-c"><section><h4>Histórico da assinatura</h4>' + ev + '</section></div>' +
@@ -805,6 +851,23 @@
     var res = await A.concederVarios(alvos.elegiveis.map(function (r) { return r.email; }), minutos);
     if (res !== false) estado.sel = {};
   }
+  async function loteMensal(m, A) {
+    var alvos = alvosMensal(m.todos, selecionados(), m.eu, m.agora);
+    if (!alvos.elegiveis.length || !A.mensalVarios) return;
+    var ign = textoIgnoradasMensal(alvos.ignoradas);
+    var metodo = await dialogo({
+      titulo: 'Liberar o plano mensal para ' + plural(alvos.elegiveis.length, 'conta', 'contas') + '?',
+      html: '<p>Só confirme se <b>todos os pagamentos foram recebidos</b>: cada conta ganha <b>30 dias de acesso</b>' +
+        (m.preco > 0 ? ' e ' + esc(moeda(m.preco)) + ' entra no livro de pagamentos por conta' : ' e o valor entra no livro de pagamentos por conta') + '. Quem já está em dia fica de fora.</p>' +
+        selectMetodos('pix') + listaNomes(alvos.elegiveis) +
+        (ign ? '<p class="adm-nota">Ignoradas: ' + esc(ign) + '.</p>' : ''),
+      ok: 'Liberar mensal', foco: '#asDlgMetodo',
+      coletar: function (el) { var s = el.querySelector('#asDlgMetodo'); return s ? s.value : 'pix'; }
+    });
+    if (!metodo) return;
+    var res = await A.mensalVarios(alvos.elegiveis.map(function (r) { return r.email; }), metodo);
+    if (res !== false) estado.sel = {};
+  }
   async function loteExpirar(m, A) {
     var alvos = Adm.alvosExpirar(m.todos, selecionados(), m.eu);
     if (!alvos.elegiveis.length) return;
@@ -845,6 +908,7 @@
         baixarArquivo(nomeArquivo(), csv(regs, m.agora)); toast('Seleção exportada: ' + plural(regs.length, 'conta', 'contas') + '.'); return;
       }
       case 'lote-conceder': await loteConceder(m, A); repintar(); return;
+      case 'lote-mensal': await loteMensal(m, A); repintar(); return;
       case 'lote-expirar': await loteExpirar(m, A); repintar(); return;
       case 'copiar':
         if (r && root.navigator && root.navigator.clipboard) root.navigator.clipboard.writeText(r.email).then(function () { toast('E-mail copiado.'); }, function () { toast('Não foi possível copiar.'); });
@@ -939,6 +1003,16 @@
       if (ev.target && ev.target.closest && ev.target.closest('[data-as-alca]') && paginaAtiva()) aplicarLargura(LARG_PADRAO, true);
     });
     root.addEventListener('resize', function () { if (estado.detalhe) sincronizarLargura(); });
+    // Relógio da página: repinta os prazos ("vence em X") mesmo sem nenhuma ação, para nunca mostrar tempo velho
+    if (!relTimer) relTimer = setInterval(function () { if (paginaAtiva()) repintar(); }, 60000);
+    // Atalho de teclado: "/" foca a busca de qualquer lugar da aba (fora de campos de texto)
+    d.addEventListener('keydown', function (ev) {
+      if (ev.key !== '/' || !paginaAtiva() || d.getElementById('asDialogo')) return;
+      var tag = ev.target && ev.target.tagName;
+      if (tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA') return;
+      var bs = d.getElementById('asBusca');
+      if (bs) { ev.preventDefault(); bs.focus(); if (bs.select) bs.select(); }
+    });
     d.addEventListener('keydown', function (ev) {
       if (!paginaAtiva() || !estado.detalhe || d.getElementById('asDialogo')) return;
       var tag = ev.target && ev.target.tagName;
@@ -969,7 +1043,7 @@
   return {
     // modelo
     SIT: SIT, situacaoDe: situacaoDe, registro: registro, vencendo: vencendo, textoVenc: textoVenc, filtrar: filtrar, ordenar: ordenar, resumo: resumo, paginar: paginar,
-    limitarLargura: limitarLargura, LARG_MIN: LARG_MIN, LARG_PADRAO: LARG_PADRAO, minutosDe: minutosDe, textoMinutos: textoMinutos, alvosConceder: alvosConceder, textoIgnoradasConceder: textoIgnoradasConceder, csv: csv, acaoRapida: acaoRapida,
+    limitarLargura: limitarLargura, LARG_MIN: LARG_MIN, LARG_PADRAO: LARG_PADRAO, minutosDe: minutosDe, textoMinutos: textoMinutos, alvosConceder: alvosConceder, textoIgnoradasConceder: textoIgnoradasConceder, alvosMensal: alvosMensal, textoIgnoradasMensal: textoIgnoradasMensal, csv: csv, acaoRapida: acaoRapida, venceHoje: venceHoje,
     // telas
     paginaHTML: paginaHTML, htmlResumo: htmlResumo, htmlLista: htmlLista, htmlSelecao: htmlSelecao, htmlLinha: linhaTabela, htmlCartao: cartao, detalheHTML: detalheHTML,
     // integração com o app
