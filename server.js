@@ -15023,6 +15023,8 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 .sidebar-search { display: none !important; }
 </style>
 <link rel="stylesheet" href="/nexus-shell.css?v=${ASSETS_V}" />
+<link rel="stylesheet" href="/menu-topo.css?v=${ASSETS_V}" />
+<script src="/menu-topo.js?v=${ASSETS_V}"></script>
 <link rel="stylesheet" href="/frontend-polish.css?v=${ASSETS_V}" />
 <link rel="stylesheet" href="/dashboard-financeiro.css?v=${ASSETS_V}" />
 <script src="/dashboard-financeiro.js?v=${ASSETS_V}"></script>
@@ -39094,6 +39096,8 @@ async function handleNexusRequest(req, res) {
   const STATIC_EXACT_FILES = {
     '/frontend-polish.css': 'text/css',
     '/nexus-shell.css': 'text/css',
+    '/menu-topo.css': 'text/css',
+    '/menu-topo.js': 'application/javascript; charset=utf-8',
     '/dashboard-financeiro.css': 'text/css',
     '/dashboard-financeiro.js': 'application/javascript; charset=utf-8',
     '/importacao.js': 'application/javascript; charset=utf-8',

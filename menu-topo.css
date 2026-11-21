@@ -1,0 +1,213 @@
+/* Menu do topo em cascata (ver menu-topo.js).
+   Vale só no computador (>= 861 px), logado e com o modo "topo" (html.nx-menu-topo, o padrão). Nesse modo o menu lateral some e o conteúdo
+   usa a largura toda. Celular e tablet em pé continuam com a barra inferior e a gaveta.
+   Entra na MESMA camada do nexus-shell.css (@layer nx-shell, a primeira declarada): o !important dela vence as regras antigas do menu lateral
+   e do .main (margin-left/width pela largura do menu). Por isso tudo aqui é !important e nunca define "display" fora das regras abaixo.
+   Fonte mínima de 14px em todo texto (regra do projeto). */
+@layer nx-shell {
+
+/* A barra só existe no computador, logado e no modo topo */
+#nxTopNav { display: none !important; }
+
+@media (min-width: 861px) {
+  html.user-logged-in.nx-menu-topo #nxTopNav {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 12px !important;
+    box-sizing: border-box !important;
+    position: fixed !important;
+    top: 76px !important;            /* logo abaixo do cabeçalho (76px; no modo espelho do administrador o cabeçalho desce 50px) */
+    left: 0 !important;
+    right: 0 !important;
+    height: 50px !important;
+    padding: 0 30px !important;      /* mesmo recuo lateral do cabeçalho */
+    z-index: 99990 !important;       /* abaixo do cabeçalho (99999): sino e zoom abrem por cima da barra */
+    background: linear-gradient(180deg, rgba(var(--nx-sh-acc), .13) 0%, rgba(7, 12, 24, .86) 100%) !important;
+    -webkit-backdrop-filter: blur(18px) saturate(160%) !important;
+    backdrop-filter: blur(18px) saturate(160%) !important;
+    border-bottom: 1px solid rgba(var(--nx-sh-acc), .26) !important;
+    box-shadow: 0 16px 34px -24px rgba(0, 0, 0, .95) !important;
+  }
+  html.has-view-mode-banner.user-logged-in.nx-menu-topo #nxTopNav,
+  html.user-logged-in.nx-menu-topo body.has-view-mode-banner #nxTopNav { top: 126px !important; }
+
+  /* O menu lateral continua no DOM (é a fonte da barra), só não aparece; o conteúdo ocupa a largura toda e desce a altura da barra */
+  html.user-logged-in.nx-menu-topo #menu { display: none !important; }
+  /* Especificidade alta de propósito (os ":not(.nx-x)" só somam peso): o frontend-polish.css redeclara, na mesma camada e DEPOIS deste arquivo,
+     "html.user-logged-in:not(.sidebar-collapsed) body:not(.sidebar-collapsed) .main { margin-left: var(--nx-sidebar-w) }" */
+  html.user-logged-in.nx-menu-topo:not(.nx-x) body:not(.nx-x) main.main,
+  html.user-logged-in.nx-menu-topo.sidebar-collapsed:not(.nx-x) body:not(.nx-x) main.main,
+  html.user-logged-in.nx-menu-topo:not(.nx-x) body.sidebar-collapsed:not(.nx-x) main.main {
+    margin-left: 0 !important;
+    width: 100% !important;
+    margin-top: 126px !important;    /* 76 do cabeçalho + 50 da barra */
+  }
+  html.has-view-mode-banner.user-logged-in.nx-menu-topo:not(.nx-x) body:not(.nx-x) main.main,
+  html.user-logged-in.nx-menu-topo:not(.nx-x) body.has-view-mode-banner:not(.nx-x) main.main { margin-top: 176px !important; }
+
+  /* ---- Lista de grupos ---- */
+  html.user-logged-in.nx-menu-topo #nxTopNav .nx-mt-lista { display: flex !important; align-items: center !important; gap: 4px !important; min-width: 0 !important; }
+  #nxTopNav .nx-mt-g { position: relative !important; }
+
+  #nxTopNav .nx-mt-grupo {
+    position: relative !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    height: 38px !important;
+    margin: 0 !important;
+    padding: 0 12px 0 14px !important;
+    border: 1px solid transparent !important;
+    border-radius: 11px !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    color: #C5D0E0 !important;
+    font-family: inherit !important;
+    font-size: 14px !important;
+    font-weight: 650 !important;
+    line-height: 1 !important;
+    letter-spacing: .005em !important;
+    white-space: nowrap !important;
+    cursor: pointer !important;
+    transition: background-color .16s ease, border-color .16s ease, color .16s ease !important;
+  }
+  #nxTopNav .nx-mt-grupo:hover,
+  #nxTopNav .nx-mt-g.is-aberto > .nx-mt-grupo { background: rgba(255, 255, 255, .06) !important; border-color: rgba(255, 255, 255, .09) !important; color: #FFFFFF !important; }
+  #nxTopNav .nx-mt-grupo:focus-visible,
+  #nxTopNav .nx-mt-item:focus-visible,
+  #nxTopNav .nx-mt-conta:focus-visible,
+  #nxTopNav .nx-mt-lateral:focus-visible { outline: 2px solid rgba(var(--nx-sh-acc), .95) !important; outline-offset: 2px !important; }
+  /* grupo da tela atual: texto claro e fio de acento na cor do grupo embaixo */
+  #nxTopNav .nx-mt-g.is-ativo > .nx-mt-grupo { color: #FFFFFF !important; }
+  #nxTopNav .nx-mt-g > .nx-mt-grupo::after {
+    content: "" !important; position: absolute !important; left: 14px !important; right: 14px !important; bottom: 3px !important; height: 2px !important; border-radius: 2px !important;
+    background: linear-gradient(90deg, rgb(var(--nx-g, var(--nx-sh-acc))), rgba(var(--nx-g, var(--nx-sh-acc)), .15)) !important;
+    opacity: 0 !important; transform: scaleX(.4) !important; transform-origin: left center !important;
+    transition: opacity .18s ease, transform .22s ease !important;
+  }
+  #nxTopNav .nx-mt-g.is-ativo > .nx-mt-grupo::after { opacity: 1 !important; transform: none !important; }
+
+  #nxTopNav .nx-mt-pt { width: 8px !important; height: 8px !important; border-radius: 50% !important; flex: none !important; background: rgb(var(--nx-g, var(--nx-sh-acc))) !important; box-shadow: 0 0 0 3px rgba(var(--nx-g, var(--nx-sh-acc)), .16) !important; }
+  #nxTopNav .nx-mt-cr { display: inline-flex !important; color: #94A3B8 !important; transition: transform .2s ease, color .16s ease !important; }
+  #nxTopNav .nx-mt-g.is-aberto .nx-mt-cr { transform: rotate(180deg) !important; color: #FFFFFF !important; }
+  /* grupo de uma tela só (link direto): ícone na cor do grupo */
+  #nxTopNav .nx-mt-dic { display: inline-flex !important; color: rgb(var(--nx-g, var(--nx-sh-acc))) !important; }
+  #nxTopNav .nx-mt-dic svg { width: 17px !important; height: 17px !important; }
+
+  /* ---- Lista do grupo (a cascata) ---- */
+  #nxTopNav .nx-mt-painel {
+    position: absolute !important;
+    top: 100% !important;
+    left: 0 !important;
+    min-width: 316px !important;
+    padding-top: 8px !important;      /* ponte invisível entre o botão e a lista: o mouse não "perde" o hover no caminho */
+    z-index: 5 !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    transform: translateY(-6px) !important;
+    pointer-events: none !important;
+    transition: opacity .16s ease, transform .18s ease, visibility 0s linear .18s !important;
+  }
+  #nxTopNav .nx-mt-painel.nx-mt-esq { left: auto !important; right: 0 !important; }
+  #nxTopNav .nx-mt-g.is-aberto > .nx-mt-painel { visibility: visible !important; opacity: 1 !important; transform: none !important; pointer-events: auto !important; transition: opacity .16s ease, transform .18s ease, visibility 0s !important; }
+  #nxTopNav .nx-mt-caixa {
+    padding: 8px !important;
+    border-radius: 16px !important;
+    /* fundo OPACO: com transparência o título da página aparecia "fantasma" por trás da lista */
+    background: linear-gradient(180deg, rgba(var(--nx-g, var(--nx-sh-acc)), .10) 0%, rgba(var(--nx-g, var(--nx-sh-acc)), 0) 42%), #0A1324 !important;
+    border: 1px solid rgba(255, 255, 255, .11) !important;
+    box-shadow: 0 28px 64px -22px rgba(0, 0, 0, .9), 0 0 0 1px rgba(var(--nx-g, var(--nx-sh-acc)), .10), inset 0 1px 0 rgba(255, 255, 255, .06) !important;
+  }
+  #nxTopNav .nx-mt-item {
+    position: relative !important;
+    display: grid !important;
+    grid-template-columns: 36px 1fr !important;
+    align-items: center !important;
+    gap: 12px !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 8px 10px !important;
+    border: 1px solid transparent !important;
+    border-radius: 12px !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    color: #E8EEF8 !important;
+    font-family: inherit !important;
+    text-align: left !important;
+    cursor: pointer !important;
+    transition: background-color .15s ease, border-color .15s ease !important;
+  }
+  #nxTopNav .nx-mt-item + .nx-mt-item { margin-top: 2px !important; }
+  #nxTopNav .nx-mt-item:hover { background: rgba(255, 255, 255, .06) !important; border-color: rgba(255, 255, 255, .08) !important; }
+  #nxTopNav .nx-mt-item.is-ativo { background: linear-gradient(90deg, rgba(var(--nx-g, var(--nx-sh-acc)), .20), rgba(var(--nx-g, var(--nx-sh-acc)), .04)) !important; border-color: rgba(var(--nx-g, var(--nx-sh-acc)), .38) !important; }
+  #nxTopNav .nx-mt-item.is-ativo::before {
+    content: "" !important; position: absolute !important; left: -1px !important; top: 50% !important; width: 3px !important; height: 20px !important; transform: translateY(-50%) !important;
+    border-radius: 0 4px 4px 0 !important; background: rgb(var(--nx-g, var(--nx-sh-acc))) !important; box-shadow: 0 0 12px rgba(var(--nx-g, var(--nx-sh-acc)), .85) !important;
+  }
+  #nxTopNav .nx-mt-ic {
+    display: inline-flex !important; align-items: center !important; justify-content: center !important; width: 36px !important; height: 36px !important; border-radius: 11px !important;
+    color: rgb(var(--nx-g, var(--nx-sh-acc))) !important;
+    background: rgba(var(--nx-g, var(--nx-sh-acc)), .13) !important; border: 1px solid rgba(var(--nx-g, var(--nx-sh-acc)), .30) !important;
+  }
+  #nxTopNav .nx-mt-ic svg { width: 18px !important; height: 18px !important; }
+  #nxTopNav .nx-mt-tt { display: flex !important; flex-direction: column !important; gap: 2px !important; min-width: 0 !important; }
+  #nxTopNav .nx-mt-tt b { font-size: 14px !important; font-weight: 700 !important; line-height: 1.25 !important; color: #F4F7FC !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; }
+  #nxTopNav .nx-mt-tt small { font-size: 14px !important; font-weight: 500 !important; line-height: 1.25 !important; color: #9AA9BF !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; }
+
+  /* ---- Lado direito: conta e troca para o menu lateral ---- */
+  #nxTopNav .nx-mt-dir { display: flex !important; align-items: center !important; gap: 8px !important; flex: none !important; }
+  #nxTopNav .nx-mt-conta {
+    display: inline-flex !important; align-items: center !important; gap: 10px !important; height: 40px !important; max-width: 320px !important; margin: 0 !important; padding: 0 12px 0 4px !important;
+    border: 1px solid rgba(255, 255, 255, .10) !important; border-radius: 999px !important;
+    background: linear-gradient(135deg, rgba(255, 255, 255, .07), rgba(255, 255, 255, .025)) !important;
+    color: #F1F5F9 !important; font-family: inherit !important; text-align: left !important; cursor: pointer !important;
+    transition: background-color .16s ease, border-color .16s ease !important;
+  }
+  #nxTopNav .nx-mt-conta:hover { border-color: rgba(var(--nx-sh-acc), .5) !important; background: linear-gradient(135deg, rgba(var(--nx-sh-acc), .18), rgba(255, 255, 255, .04)) !important; }
+  #nxTopNav .nx-mt-av {
+    display: inline-flex !important; align-items: center !important; justify-content: center !important; flex: none !important; width: 32px !important; height: 32px !important; overflow: hidden !important; border-radius: 50% !important;
+    background: linear-gradient(150deg, #24324D 0%, #131C30 100%) !important; border: 1px solid rgba(var(--nx-sh-acc), .5) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .09), 0 0 0 3px rgba(var(--nx-sh-acc), .08) !important; color: #F1F5F9 !important; font-size: 14px !important; font-weight: 700 !important; letter-spacing: .03em !important;
+  }
+  #nxTopNav .nx-mt-av img { width: 100% !important; height: 100% !important; object-fit: cover !important; display: block !important; }
+  /* nome e plano na MESMA linha (numa pílula de 40px, em duas linhas ficavam espremidos) */
+  #nxTopNav .nx-mt-cc { display: flex !important; flex-direction: row !important; align-items: center !important; gap: 8px !important; min-width: 0 !important; }
+  #nxTopNav .nx-mt-cc strong { max-width: 160px !important; font-size: 14px !important; font-weight: 700 !important; line-height: 1.2 !important; color: #FFFFFF !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; }
+  #nxTopNav .nx-mt-cc small {
+    max-width: 170px !important; padding: 2px 9px !important; border: 1px solid rgba(110, 231, 183, .26) !important; border-radius: 999px !important; background: rgba(16, 185, 129, .12) !important;
+    color: #A7F0D1 !important; font-size: 14px !important; font-weight: 600 !important; line-height: 1.2 !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important;
+  }
+  #nxTopNav .nx-mt-cc small[hidden] { display: none !important; }
+  #nxTopNav .nx-mt-lateral {
+    display: inline-flex !important; align-items: center !important; justify-content: center !important; width: 40px !important; height: 40px !important; margin: 0 !important; padding: 0 !important;
+    border: 1px solid rgba(255, 255, 255, .10) !important; border-radius: 12px !important; background: rgba(255, 255, 255, .04) !important; color: #B4C0D2 !important; cursor: pointer !important;
+    transition: background-color .16s ease, border-color .16s ease, color .16s ease !important;
+  }
+  #nxTopNav .nx-mt-lateral:hover { background: rgba(var(--nx-sh-acc), .16) !important; border-color: rgba(var(--nx-sh-acc), .45) !important; color: #FFFFFF !important; }
+}
+
+/* Telas mais estreitas: a conta mostra só a foto e os grupos ficam mais juntos */
+@media (min-width: 861px) and (max-width: 1180px) {
+  html.user-logged-in.nx-menu-topo #nxTopNav { padding: 0 16px !important; }
+  #nxTopNav .nx-mt-cc { display: none !important; }
+  #nxTopNav .nx-mt-conta { padding: 0 4px !important; }
+  #nxTopNav .nx-mt-grupo { padding: 0 9px 0 11px !important; }
+}
+
+/* Botão para voltar ao menu do topo: aparece só no menu lateral, ao lado de "Recolher Menu" (no trilho recolhido some) */
+.nx-mt-voltar { display: none !important; }
+@media (min-width: 861px) {
+  html.user-logged-in:not(.nx-menu-topo):not(.sidebar-collapsed) #menu .sidebar-footer .nx-mt-voltar {
+    display: inline-flex !important; align-items: center !important; justify-content: center !important; flex: none !important; width: 36px !important; height: 36px !important; margin: 0 0 0 8px !important; padding: 0 !important;
+    border: 1px solid rgba(255, 255, 255, .09) !important; border-radius: 11px !important; background: rgba(255, 255, 255, .035) !important; color: var(--nx-sh-ink-2, #BAC6D9) !important; cursor: pointer !important;
+    transition: background-color .16s ease, border-color .16s ease, color .16s ease !important;
+  }
+  html.user-logged-in:not(.nx-menu-topo):not(.sidebar-collapsed) #menu .sidebar-footer .nx-mt-voltar:hover { background: rgba(var(--nx-sh-acc), .14) !important; border-color: rgba(var(--nx-sh-acc), .42) !important; color: #FFFFFF !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #nxTopNav *, #nxTopNav { transition: none !important; }
+}
+
+}
