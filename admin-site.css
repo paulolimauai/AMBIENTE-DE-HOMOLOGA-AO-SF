@@ -101,13 +101,18 @@ body{
   .ads-side,.ads-editor{border-radius:12px}
   .ads-side{padding:.8rem}
   .ads-files li button{padding:.55rem .65rem;font-size:.78rem}
+  .ads-files li button span,.ads-files li button small{overflow-wrap:anywhere;word-break:break-word}
   .ads-editor-bar{flex-direction:column;align-items:stretch}
-  .ads-editor-actions{display:flex}
-  .ads-editor-actions .ads-btn{flex:1 1 0;min-width:0}
+  .ads-file-info strong{font-size:.88rem}
+  .ads-editor-actions{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+  .ads-editor-actions .ads-btn{width:100%;min-width:0;padding:.55rem .4rem;font-size:.72rem;white-space:normal;text-align:center;line-height:1.2}
+  .ads-editor-actions .ads-btn:last-child{grid-column:1/-1}
   #adsContent{font-size:.76rem;padding:.75rem;min-height:50vh;line-height:1.5}
   .ads-status{padding:.6rem .8rem;font-size:.74rem}
   .ads-modal-box{max-height:92vh}
+  .ads-modal-head h3{min-width:0;overflow-wrap:anywhere}
   .ads-backup-item{flex-direction:column;align-items:flex-start;gap:.4rem}
+  .ads-backup-item .ads-btn{width:100%}
 }
 
 .ads-modal{
