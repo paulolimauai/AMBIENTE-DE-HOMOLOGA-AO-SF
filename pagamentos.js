@@ -223,6 +223,7 @@ function classificarUsuario(u, agora) {
 
 /* ============================================================ cobrança mensal automática (todo dia 5) ============================================================ */
 const COBRANCA_DIA_PADRAO = 5;
+const PRAZO_COBRANCA_MINIMO = 5; // a cobrança fica disponível para pagamento 5 dias antes do vencimento
 
 function numeroDoDia(ms) { return parseInt(diaDe(ms).slice(8, 10), 10); }
 // Meia-noite (Brasília) do dia `dia` do mês `chave` (AAAA-MM), em ms
@@ -261,7 +262,8 @@ function chaveAutomatica(email, competencia) {
 function gerarCobrancasMensais(o) {
   const agora = o.agora || Date.now();
   const dia = o.dia || COBRANCA_DIA_PADRAO;
-  const prazoDias = Number.isFinite(o.prazoDias) ? o.prazoDias : 3;
+  // Toda conta fica disponível para pagamento a partir de 5 dias antes do vencimento: a cobrança só vence PRAZO_COBRANCA_MINIMO dias depois de emitida
+  const prazoDias = Math.max(PRAZO_COBRANCA_MINIMO, Number.isFinite(o.prazoDias) ? o.prazoDias : PRAZO_COBRANCA_MINIMO);
   const comp = mesDe(agora);
   const pagamentos = o.pagamentos || [];
   const r = { competencia: comp, dia, novas: [], substituidas: [], elegiveis: 0, puladas: { ja_gerada: 0, em_aberto: 0, pagou_no_ciclo: 0 }, motivo: '' };
@@ -663,7 +665,7 @@ function validarConfig(entrada) {
 
   const dia = Number(cob.dia), prazo = Number(cob.prazo_dias);
   if (!Number.isInteger(dia) || dia < 1 || dia > 28) return falha('cobranca.dia', 'O dia da cobrança mensal deve ser de 1 a 28.');
-  if (!Number.isInteger(prazo) || prazo < 1 || prazo > 30) return falha('cobranca.prazo_dias', 'O prazo da cobrança deve ser de 1 a 30 dias.');
+  if (!Number.isInteger(prazo) || prazo < PRAZO_COBRANCA_MINIMO || prazo > 30) return falha('cobranca.prazo_dias', 'O prazo da cobrança deve ser de ' + PRAZO_COBRANCA_MINIMO + ' a 30 dias: toda conta fica disponível para pagamento 5 dias antes do vencimento.');
 
   return { ok: true, config: { preco: arredondar(preco), pix: { tipo, chave: k.chave, nome, cidade }, whatsapp, cobranca: { dia, prazo_dias: prazo } } };
 }
@@ -703,7 +705,7 @@ module.exports = {
   novoId, novaReferencia, limparReferencia,
   criarCobranca, situacao, emAberto, marcarInformada, calcularPeriodo, valorConfirmado, marcarPaga, cancelar, estornar, evento,
   sincronizarLegado, publico, classificarUsuario, resumo, csv,
-  COBRANCA_DIA_PADRAO, gerarCobrancasMensais, proximaGeracao, recebeCobrancaMensal,
+  COBRANCA_DIA_PADRAO, PRAZO_COBRANCA_MINIMO, gerarCobrancasMensais, proximaGeracao, recebeCobrancaMensal,
   crc16, pixPayload, pixLer,
   numeroBR, lerExtrato, conciliar
 };

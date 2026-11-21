@@ -318,7 +318,7 @@ const DIA5 = Date.parse('2026-12-05T15:00:00Z'); // 05/12/2026, 12:00 em Brasíl
 const ativa = (extra) => usuario(Object.assign({ subscription_status: 'active', subscription_plan: 'mensal', subscription_method: 'pix', subscription_expires_at: '2026-12-20T12:00:00.000Z' }, extra || {}));
 const gerar = (usuarios, pagamentos, extra) => P.gerarCobrancasMensais(Object.assign({ usuarios, pagamentos: pagamentos || [], agora: DIA5, preco: PRECO }, extra || {}));
 
-test('cobrança mensal: no dia 5 cada assinatura paga e ativa recebe uma cobrança Pix de R$ 18 com vencimento 3 dias depois', () => {
+test('cobrança mensal: no dia 5 cada assinatura paga e ativa recebe uma cobrança Pix de R$ 18 com vencimento 5 dias depois (disponível 5 dias antes do vencimento)', () => {
   const r = gerar([ativa({ email: 'ana@x.com' }), ativa({ email: 'bia@x.com', name: 'Bia Lima' })]);
   assert.equal(r.competencia, '2026-12');
   assert.equal(r.novas.length, 2);
@@ -329,7 +329,7 @@ test('cobrança mensal: no dia 5 cada assinatura paga e ativa recebe uma cobran�
   assert.equal(c.status, 'emitida');
   assert.equal(c.origem, 'automatica');
   assert.equal(c.competencia, '2026-12');
-  assert.equal(c.vencimento, '2026-12-08');
+  assert.equal(c.vencimento, '2026-12-10');
   assert.equal(c.historico[0].por, 'sistema');
   assert.match(c.ref, /^NXA202612[0-9A-F]{8}$/);
   assert.match(c.id, /^PG-AUTO-202612-[0-9A-F]{8}$/);
@@ -393,7 +393,7 @@ test('cobrança mensal: servidor desligado no dia 5 completa nos dias seguintes,
   const jaRodouAntes = P.criarCobranca({ usuario: ativa({ email: 'outra@x.com' }), valor: 18, origem: 'automatica', competencia: '2026-11', agora: Date.parse('2026-11-05T15:00:00Z') });
   const completa = gerar([ativa()], [jaRodouAntes], { agora: dia9 });
   assert.equal(completa.novas.length, 1);
-  assert.equal(completa.novas[0].vencimento, '2026-12-12', 'vence 3 dias depois de gerada');
+  assert.equal(completa.novas[0].vencimento, '2026-12-14', 'vence 5 dias depois de gerada');
 });
 
 test('cobrança mensal: quem já pagou do dia 5 em diante está em dia; quem pagou antes do dia 5 recebe a do mês', () => {
@@ -437,12 +437,12 @@ test('cobrança mensal: proximaGeracao diz o próximo dia 5 (hoje conta se ainda
 
 
 /* ---------------------------------------------------------------- configuração financeira (preço, Pix, cobrança) */
-const CONFIG_OK = () => ({ preco: '18,00', pix: { tipo: 'telefone', chave: '(62) 99234-5372', nome: 'Paulo Lima', cidade: 'Goiânia' }, whatsapp: '(62) 99234-5372', cobranca: { dia: 5, prazo_dias: 3 } });
+const CONFIG_OK = () => ({ preco: '18,00', pix: { tipo: 'telefone', chave: '(62) 99234-5372', nome: 'Paulo Lima', cidade: 'Goiânia' }, whatsapp: '(62) 99234-5372', cobranca: { dia: 5, prazo_dias: 5 } });
 
 test('config: valida e normaliza a configuração atual do sistema (celular vira +55, nome e cidade sem acento e em maiúsculas)', () => {
   const r = P.validarConfig(CONFIG_OK());
   assert.equal(r.ok, true, JSON.stringify(r));
-  assert.deepEqual(r.config, { preco: 18, pix: { tipo: 'telefone', chave: '+5562992345372', nome: 'PAULO LIMA', cidade: 'GOIANIA' }, whatsapp: '62992345372', cobranca: { dia: 5, prazo_dias: 3 } });
+  assert.deepEqual(r.config, { preco: 18, pix: { tipo: 'telefone', chave: '+5562992345372', nome: 'PAULO LIMA', cidade: 'GOIANIA' }, whatsapp: '62992345372', cobranca: { dia: 5, prazo_dias: 5 } });
   const a = P.apresentarConfig(r.config);
   assert.equal(a.chave_exibicao, '(62) 99234-5372');
   assert.equal(a.chave_copiar, '62992345372');
@@ -500,7 +500,7 @@ test('config: o QR gerado com a chave nova leva a chave, o nome e a cidade norma
   assert.equal(lido.campos['54'], '18.00');
 });
 
-test('config: nome e cidade precisam ter ao menos 2 letras depois de limpos; WhatsApp precisa de DDD; dia 1-28 e prazo 1-30 dias', () => {
+test('config: nome e cidade precisam ter ao menos 2 letras depois de limpos; WhatsApp precisa de DDD; dia 1-28 e prazo 5-30 dias', () => {
   const com = (f) => { const c = CONFIG_OK(); f(c); return P.validarConfig(c); };
   assert.equal(com((c) => { c.pix.nome = '@#$'; }).campo, 'pix.nome');
   assert.equal(com((c) => { c.pix.cidade = 'X'; }).campo, 'pix.cidade');
@@ -510,6 +510,7 @@ test('config: nome e cidade precisam ter ao menos 2 letras depois de limpos; Wha
   assert.equal(com((c) => { c.cobranca.dia = 29; }).campo, 'cobranca.dia', 'dia 29-31 não existe em todo mês');
   assert.equal(com((c) => { c.cobranca.dia = 2.5; }).campo, 'cobranca.dia');
   assert.equal(com((c) => { c.cobranca.dia = 28; }).ok, true);
+  assert.equal(com((c) => { c.cobranca.prazo_dias = 4; }).campo, 'cobranca.prazo_dias', 'menos de 5 dias: a conta não fica disponível 5 dias antes do vencimento');
   assert.equal(com((c) => { c.cobranca.prazo_dias = 0; }).campo, 'cobranca.prazo_dias');
   assert.equal(com((c) => { c.cobranca.prazo_dias = 31; }).campo, 'cobranca.prazo_dias');
   assert.equal(com((c) => { c.cobranca.prazo_dias = '7'; }).config.cobranca.prazo_dias, 7, 'vindo de um formulário, o número chega como texto');

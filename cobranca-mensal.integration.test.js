@@ -112,7 +112,7 @@ test('gera uma cobrança de R$ 18 para cada assinatura paga e ativa, e só para 
     assert.equal(p.status, 'emitida');
     assert.equal(p.origem, 'automatica');
     assert.equal(p.competencia, mesAtual);
-    assert.equal(p.vencimento, P.diaDe(Date.now() + 3 * DIA));
+    assert.equal(p.vencimento, P.diaDe(Date.now() + 5 * DIA));
     assert.match(p.ref, /^NXA\d{6}[0-9A-F]{8}$/);
   }
   // as contas não mudam: o acesso só muda quando o administrador confirma o recebimento
@@ -135,7 +135,7 @@ test('rodar de novo no mesmo mês não repete nenhuma cobrança', async () => {
 test('o painel recebe o dia da cobrança, a próxima data e as cobranças marcadas como automáticas', async () => {
   const j = (await sv.api('GET', '/api/admin/pagamentos', { token: admin })).json;
   assert.equal(j.cobranca_mensal.dia, 5);
-  assert.equal(j.cobranca_mensal.prazo_dias, 3);
+  assert.equal(j.cobranca_mensal.prazo_dias, 5);
   assert.equal(j.cobranca_mensal.proxima, P.proximaGeracao(Date.now(), 5));
   assert.equal(j.pagamentos.filter((p) => p.origem === 'automatica').length, 2);
   assert.equal(j.resumo.emitidas.qtd, 2);

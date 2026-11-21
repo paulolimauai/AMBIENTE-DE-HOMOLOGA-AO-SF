@@ -38,6 +38,31 @@
   }
   function primeiroNome(n) { return String(n || '').trim().split(/\s+/)[0] || ''; }
   function plural(n, um, varios) { return n + ' ' + (n === 1 ? um : varios); }
+  // Valor por extenso para o boleto (até 9.999,99): "dezoito reais" / "e cinquenta centavos"
+  var EXT_UNI = ['zero', 'um', 'dois', 'três', 'quatro', 'cinco', 'seis', 'sete', 'oito', 'nove', 'dez', 'onze', 'doze', 'treze', 'catorze', 'quinze', 'dezesseis', 'dezessete', 'dezoito', 'dezenove'];
+  var EXT_DEZ = ['', '', 'vinte', 'trinta', 'quarenta', 'cinquenta', 'sessenta', 'setenta', 'oitenta', 'noventa'];
+  var EXT_CEN = ['', 'cento', 'duzentos', 'trezentos', 'quatrocentos', 'quinhentos', 'seiscentos', 'setecentos', 'oitocentos', 'novecentos'];
+  function extensoAte999(n) {
+    if (n < 20) return EXT_UNI[n];
+    if (n < 100) { var d = Math.floor(n / 10), u = n % 10; return EXT_DEZ[d] + (u ? ' e ' + EXT_UNI[u] : ''); }
+    if (n === 100) return 'cem';
+    var c = Math.floor(n / 100), r = n % 100;
+    return EXT_CEN[c] + (r ? ' e ' + extensoAte999(r) : '');
+  }
+  function extensoInteiro(n) {
+    if (n >= 1000) {
+      var mil = Math.floor(n / 1000), resto = n % 1000;
+      return (mil === 1 ? 'mil' : extensoAte999(mil) + ' mil') + (resto ? ' e ' + extensoAte999(resto) : '');
+    }
+    return extensoAte999(n);
+  }
+  function valorPorExtenso(v) {
+    var cent = Math.round((Number(v) || 0) * 100);
+    var reais = Math.floor(cent / 100), c = cent % 100;
+    var txt = extensoInteiro(reais) + (reais === 1 ? ' real' : ' reais');
+    if (c) txt += ' e ' + extensoAte999(c) + (c === 1 ? ' centavo' : ' centavos');
+    return txt.charAt(0).toUpperCase() + txt.slice(1);
+  }
   function hojeIso(agora) { return new Date((agora || Date.now()) - 3 * 3600000).toISOString().slice(0, 10); }
   function maisDiasIso(dias, agora) { return new Date((agora || Date.now()) - 3 * 3600000 + dias * DIA).toISOString().slice(0, 10); }
   // WhatsApp do Brasil: 55 + DDD + número (aceita com ou sem 55 e com máscara)
@@ -396,7 +421,7 @@
       '<div class="pg-form">' +
         '<label class="pg-campo"><span>Cliente</span><input list="pgContas" id="pgNovaCliente" data-pg-nova="cliente" autocomplete="off" placeholder="Digite o nome ou o e-mail…" value="' + esc(valorSel) + '"></label>' +
         '<datalist id="pgContas">' + usuarios.map(function (u) { return '<option value="' + esc(rotuloConta(u)) + '"></option>'; }).join('') + '</datalist>' +
-        '<label class="pg-campo"><span>Vencimento</span><input type="date" id="pgNovaVenc" data-pg-nova="venc" min="' + esc(hojeIso()) + '" value="' + esc(n.venc || maisDiasIso(3)) + '"></label>' +
+        '<label class="pg-campo"><span>Vencimento</span><input type="date" id="pgNovaVenc" data-pg-nova="venc" min="' + esc(hojeIso()) + '" value="' + esc(n.venc || maisDiasIso(5)) + '"></label>' +
         '<label class="pg-campo pg-campo-larga"><span>Observação (opcional)</span><input type="text" id="pgNovaObs" data-pg-nova="obs" maxlength="200" placeholder="Ex.: renovação de dezembro" value="' + esc(n.obs || '') + '"></label>' +
       '</div>' +
       '<div class="pg-botoes"><button type="button" class="adm-btn adm-btn-pri" data-pg-a="nova-gerar"' + (n.enviando ? ' disabled' : '') + '>' + (n.enviando ? 'Gerando…' : 'Gerar cobrança Pix') + '</button></div>' +
@@ -544,15 +569,82 @@
       '<style>body{font:14px Arial,sans-serif;color:#172033;max-width:760px;margin:32px auto;padding:24px}header{border-bottom:2px solid #059669;padding-bottom:14px}h1{font-size:24px;margin:0 0 6px}small{color:#64748b}.box{border:1px solid #cbd5e1;border-radius:12px;padding:18px;margin:18px 0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.qr{width:220px;height:220px}.code{font:14px monospace;word-break:break-all;background:#f1f5f9;padding:12px;border-radius:8px}.note{color:#92400e;background:#fffbeb;border:1px solid #fcd34d;padding:12px;border-radius:8px}button{font:inherit;padding:8px 14px;cursor:pointer}@media print{button{display:none}body{margin:0 auto}}</style>' +
       '<body>' + corpo + '<p><button onclick="window.print()">Imprimir / salvar em PDF</button></p></body></html>';
   }
+  /* Boleto de pagamento via Pix: documento profissional para imprimir/PDF, no padrão de carnê —
+     logo do Nexus, pagador (quem está pagando), recebedor (favorecido do Pix), QR Code e copia e cola. */
+  function cpfDoc(s) { var d = soDigitos(s); return d.length === 11 ? d.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4') : String(s || ''); }
+  function telDoc(s) { var d = soDigitos(s); return d.length === 11 ? '(' + d.slice(0, 2) + ') ' + d.slice(2, 7) + '-' + d.slice(7) : (d.length === 10 ? '(' + d.slice(0, 2) + ') ' + d.slice(2, 6) + '-' + d.slice(6) : String(s || '')); }
+  function chavePixDoc(pix) {
+    // Na via do cliente a chave aparece como o pagador digitaria no app: celular vira os 11 dígitos (62992345372)
+    var dig = soDigitos(pix && pix.chave_digitos);
+    if (dig) return dig;
+    var d2 = soDigitos(pix && pix.chave);
+    return d2.length >= 10 && d2.length <= 13 ? d2 : String((pix && pix.chave) || '');
+  }
   function cobrancaDocumento(res, origem) {
     var p = res.pagamento, pix = res.pix;
-    return docBase('Cobrança Pix ' + p.ref,
-      '<header><small>NEXUS FINANCEIRO HUB · COBRANÇA</small><h1>Instrução de pagamento via Pix</h1><small>Referência ' + esc(p.ref) + '</small></header>' +
-      '<section class="box grid"><div><small>CLIENTE</small><p><strong>' + esc(p.nome) + '</strong><br>' + esc(p.email) + '</p></div><div><small>PLANO</small><p><strong>Mensal · 30 dias</strong></p></div>' +
-      '<div><small>VALOR</small><p><strong>' + esc(moeda(p.valor)) + '</strong></p></div><div><small>VENCIMENTO</small><p><strong>' + esc(p.vencimento ? diaBR(p.vencimento) : '—') + '</strong></p></div></section>' +
-      '<section class="box" style="text-align:center"><h2>Escaneie o QR Code Pix</h2><img class="qr" src="' + esc((origem || '') + pix.qr_url) + '" alt="QR Code Pix"><p>Favorecido: <strong>' + esc(pix.favorecido) + '</strong></p><p>Chave Pix (' + esc(pix.tipo_chave || 'celular') + '): <strong>' + esc(pix.chave) + '</strong></p></section>' +
-      '<section class="box"><strong>Pix copia e cola</strong><p class="code">' + esc(pix.payload) + '</p></section>' +
-      '<p class="note"><strong>Importante:</strong> este documento é uma instrução de pagamento via Pix, não é um boleto bancário registrado. O acesso é liberado após a confirmação do recebimento.</p>');
+    var u = acharConta(p.email) || {};
+    var origemBase = String(origem || '').replace(/\/+$/, '');
+    var logoUrl = origemBase + '/images/icons/icon-192.png';
+    var chave = chavePixDoc(pix);
+    var favorecido = pix.favorecido || '';
+    var cidade = pix.cidade || '';
+    var tipoChave = pix.tipo_chave || 'celular';
+    var emissao = p.emitida_em ? dataBR(p.emitida_em, true) : '';
+    var venc = p.vencimento ? diaBR(p.vencimento) : '—';
+    var situacao = p.situacao || '';
+    var selo = situacao === 'vencida' ? '<span class="selo vencida">VENCIDA</span>' : (situacao === 'aguardando' ? '<span class="selo aguardando">AGUARDANDO</span>' : '');
+    return '<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Boleto Pix ' + esc(p.ref) + '</title>' +
+      '<style>' +
+      '*{box-sizing:border-box}body{font:14px/1.5 "Segoe UI",Arial,sans-serif;color:#0f172a;margin:0;background:#e2e8f0;-webkit-print-color-adjust:exact;print-color-adjust:exact}' +
+      '.folha{max-width:800px;margin:24px auto;background:#fff;box-shadow:0 10px 40px rgba(15,23,42,.18);border-radius:14px;overflow:hidden}' +
+      'header{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:22px 28px;background:linear-gradient(120deg,#022c22 0%,#065f46 55%,#059669 100%);color:#fff}' +
+      '.marca{display:flex;align-items:center;gap:14px}.marca img{width:56px;height:56px;border-radius:14px;background:#fff;padding:5px;box-shadow:0 4px 14px rgba(0,0,0,.25)}' +
+      '.marca strong{display:block;font-size:19px;letter-spacing:.4px}.marca span{display:block;font-size:12px;opacity:.85;margin-top:2px}' +
+      '.doc-meta{text-align:right}.doc-tipo{display:inline-block;background:#fbbf24;color:#451a03;font-weight:800;font-size:12px;letter-spacing:1px;padding:4px 12px;border-radius:999px}' +
+      '.doc-meta small{display:block;margin-top:8px;opacity:.9;font-size:12px}.doc-meta b{font-size:15px}' +
+      '.faixa{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:18px 28px;background:#f0fdf4;border-bottom:2px solid #a7f3d0;flex-wrap:wrap}' +
+      '.faixa .valor small{display:block;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#047857;font-weight:700}.faixa .valor strong{font-size:30px;color:#065f46}' +
+      '.faixa .valor em{display:block;font-style:normal;font-size:12px;color:#475569}' +
+      '.faixa .venc{text-align:right}.faixa .venc small{display:block;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#047857;font-weight:700}.faixa .venc strong{font-size:22px;color:#0f172a}' +
+      '.partes{display:grid;grid-template-columns:1fr 1fr;gap:0}' +
+      '.parte{padding:18px 28px}.parte.pagador{border-right:1px dashed #cbd5e1}.parte h4{margin:0 0 8px;font-size:11px;letter-spacing:1.5px;color:#64748b}' +
+      '.parte p{margin:0}.parte strong{font-size:15px;color:#0f172a}.parte small{color:#475569}' +
+      '.pix{display:grid;grid-template-columns:200px 1fr;gap:20px;padding:22px 28px;border-top:2px solid #e2e8f0}' +
+      '.qr{width:200px;height:200px;border:1px solid #e2e8f0;border-radius:12px;padding:8px;background:#fff}' +
+      '.qr img{width:100%;height:100%;image-rendering:pixelated;display:block}' +
+      '.pix h4{margin:0 0 6px;font-size:12px;letter-spacing:1.5px;color:#047857}.pix p{margin:0 0 10px;color:#334155}' +
+      '.linha{font:600 13px/1.6 "Courier New",monospace;letter-spacing:.5px;background:#f8fafc;border:1px solid #cbd5e1;border-radius:8px;padding:10px 12px;word-break:break-all;color:#0f172a;margin-bottom:10px}' +
+      '.cod{font:12px/1.5 "Courier New",monospace;word-break:break-all;background:#f8fafc;border:1px solid #cbd5e1;border-radius:8px;padding:10px 12px;color:#0f172a;max-height:74px;overflow:hidden}' +
+      '.chave{margin-top:10px;font-size:13px}.chave b{font-size:15px;color:#065f46;letter-spacing:.5px}' +
+      '.como{display:flex;gap:18px;flex-wrap:wrap;padding:0 28px 18px}.como div{flex:1;min-width:200px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:12px 14px;font-size:12.5px;color:#334155}' +
+      '.como b{color:#0f172a}' +
+      'footer{padding:14px 28px;background:#f8fafc;border-top:1px solid #e2e8f0;font-size:11.5px;color:#64748b;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center}' +
+      '.selo{display:inline-block;font-size:10px;font-weight:800;letter-spacing:1px;padding:2px 8px;border-radius:999px;vertical-align:middle}' +
+      '.selo.vencida{background:#fee2e2;color:#991b1b}.selo.aguardando{background:#fef3c7;color:#92400e}' +
+      'button{font:inherit;padding:8px 16px;border-radius:8px;border:1px solid #059669;background:#059669;color:#fff;cursor:pointer;font-weight:700}' +
+      '@media print{body{background:#fff}.folha{box-shadow:none;margin:0;max-width:none;border-radius:0}button{display:none}.parte{break-inside:avoid}.pix{break-inside:avoid}}' +
+      '@media (max-width:640px){.partes{grid-template-columns:1fr}.parte.pagador{border-right:none;border-bottom:1px dashed #cbd5e1}.pix{grid-template-columns:1fr}.qr{width:180px;height:180px}}' +
+      '</style></head><body><div class="folha">' +
+      '<header><div class="marca"><img src="' + esc(logoUrl) + '" alt="Nexus Financeiro Hub"><div><strong>NEXUS FINANCEIRO HUB</strong><span>Cobrança de assinatura mensal · Plano Mensal (30 dias)</span></div></div>' +
+      '<div class="doc-meta"><span class="doc-tipo">BOLETO PIX</span><small>Documento <b>' + esc(p.ref) + '</b> ' + selo + '</small><small>Emissão: ' + esc(emissao || '—') + '</small></div></header>' +
+      '<div class="faixa"><div class="valor"><small>Valor do documento</small><strong>' + esc(moeda(p.valor)) + '</strong><em>' + esc(valorPorExtenso(p.valor)) + '</em></div>' +
+      '<div class="venc"><small>Vencimento</small><strong>' + esc(venc) + '</strong></div></div>' +
+      '<div class="partes">' +
+      '<div class="parte pagador"><h4>PAGADOR</h4><p><strong>' + esc(p.nome || p.email) + '</strong><br><small>' + esc(p.email || '') + '</small>' +
+      (u.cpf ? '<br><small>CPF: ' + esc(cpfDoc(u.cpf)) + '</small>' : '') + (u.phone ? '<br><small>Tel/WhatsApp: ' + esc(telDoc(u.phone)) + '</small>' : '') + '</p></div>' +
+      '<div class="parte recebedor"><h4>RECEBEDOR</h4><p><strong>' + esc(favorecido) + '</strong><br><small>Chave Pix (' + esc(tipoChave) + '): <b style="color:#065f46">' + esc(chave) + '</b></small>' +
+      (cidade ? '<br><small>' + esc(cidade) + ' - GO</small>' : '') + '</p></div>' +
+      '</div>' +
+      '<section class="pix"><div class="qr"><img src="' + esc(origemBase + pix.qr_url) + '" alt="QR Code Pix da cobrança ' + esc(p.ref) + '"></div>' +
+      '<div><h4>PAGAMENTO VIA PIX</h4><p>Escaneie o QR Code com o app do seu banco ou use o código copia e cola abaixo. O valor já vai preenchido: basta confirmar.</p>' +
+      '<div class="linha">Ref. ' + esc(p.ref) + ' · Venc. ' + esc(venc) + ' · ' + esc(moeda(p.valor)) + '</div>' +
+      '<div class="cod">' + esc(pix.payload) + '</div>' +
+      '<p class="chave">Chave Pix: <b>' + esc(chave) + '</b> (' + esc(tipoChave) + ') · Favorecido: <b>' + esc(favorecido) + '</b></p></div></section>' +
+      '<div class="como"><div><b>1.</b> Abra o app do banco e escolha <b>Pix → QR Code</b> (ou Cola e paga).</div>' +
+      '<div><b>2.</b> Confira o favorecido <b>' + esc(favorecido) + '</b> e o valor <b>' + esc(moeda(p.valor)) + '</b> antes de confirmar.</div>' +
+      '<div><b>3.</b> Após pagar, o acesso é liberado assim que o recebimento for confirmado. Guarde o comprovante.</div></div>' +
+      '<footer><span>NEXUS FINANCEIRO HUB · Documento de cobrança gerado automaticamente. Este boleto é uma instrução de pagamento via Pix, não um boleto bancário registrado (FEBRABAN).</span><button onclick="window.print()">Imprimir / salvar em PDF</button></footer>' +
+      '</div></body></html>';
   }
   function reciboDocumento(p) {
     return docBase('Recibo ' + p.ref,

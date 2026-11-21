@@ -289,7 +289,7 @@ const PIX_CONFIG = {
   key: '+5562992345372',
   phone_raw: '62992345372',
   phone_formatted: '(62) 99234-5372',
-  name: 'PAULO LIMA',
+  name: 'PAULO DE LIMA PEREIRA',
   city: 'GOIANIA',
   type: 'Telefone Celular',
   key_display: '(62) 99234-5372',
@@ -535,16 +535,17 @@ function expirarAssinaturasVencidas() {
 
 // Cobrança mensal automática: todo dia COBRANCA_MENSAL_DIA o sistema gera a cobrança Pix (SUBSCRIPTION_MONTHLY_PRICE) de cada assinatura ativa.
 // As regras (quem recebe, não repetir no mês, substituir a antiga) estão em Pagamentos.gerarCobrancasMensais; aqui só se lê e se grava.
-// Cobrança gerada vence COBRANCA_MENSAL_PRAZO_DIAS depois; o acesso da conta continua dependendo do pagamento confirmado, não do vencimento.
+// Cobrança gerada vence COBRANCA_MENSAL_PRAZO_DIAS depois (mínimo de 5 dias: toda conta fica disponível para pagamento 5 dias antes do vencimento);
+// o acesso da conta continua dependendo do pagamento confirmado, não do vencimento.
 let COBRANCA_MENSAL_DIA = Pagamentos.COBRANCA_DIA_PADRAO;
-let COBRANCA_MENSAL_PRAZO_DIAS = 3;
+let COBRANCA_MENSAL_PRAZO_DIAS = Pagamentos.PRAZO_COBRANCA_MINIMO;
 
 // ==================== Configuração financeira (preço, Pix, cobrança mensal) ====================
 // O administrador altera estes valores em Pagamentos > Configurações. As regras de validação estão em Pagamentos.validarConfig; aqui ficam o arquivo
 // (local_financeiro_config.json: valores atuais + histórico de quem mudou o quê), a aplicação em tempo real nas variáveis acima e o recarregamento.
-// Sem arquivo (ou com arquivo inválido) valem os padrões de antes: R$ 18,00, Pix de Paulo Lima, cobrança todo dia 5 com vencimento em 3 dias.
+// Sem arquivo (ou com arquivo inválido) valem os padrões de antes: R$ 18,00, Pix de Paulo de Lima Pereira, cobrança todo dia 5 com vencimento em 5 dias.
 const LOCAL_FIN_CONFIG_PATH = path.join(RUNTIME_DATA_DIR, 'local_financeiro_config.json');
-const FIN_CONFIG_PADRAO = Object.freeze({ preco: 18, pix: { tipo: 'telefone', chave: '+5562992345372', nome: 'PAULO LIMA', cidade: 'GOIANIA' }, whatsapp: '62992345372', cobranca: { dia: 5, prazo_dias: 3 } });
+const FIN_CONFIG_PADRAO = Object.freeze({ preco: 18, pix: { tipo: 'telefone', chave: '+5562992345372', nome: 'PAULO DE LIMA PEREIRA', cidade: 'GOIANIA' }, whatsapp: '62992345372', cobranca: { dia: 5, prazo_dias: Pagamentos.PRAZO_COBRANCA_MINIMO } });
 const FIN_HISTORICO_MAX = 100;
 let finConfigAtual = JSON.parse(JSON.stringify(FIN_CONFIG_PADRAO));
 let finConfigAssinatura = ''; // JSON da configuração aplicada: o recarregamento só age se o arquivo mudou
@@ -17104,7 +17105,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
                       <span>Copiar</span>
                     </button>
                   </div>
-                  <div class="pw-key-meta">Favorecido: <strong>Paulo Lima</strong> &bull; Goiânia - GO</div>
+                  <div class="pw-key-meta">Favorecido: <strong>PAULO DE LIMA PEREIRA</strong> &bull; Goiânia - GO</div>
                 </div>
 
                 <div class="pw-code-block">
@@ -19213,7 +19214,7 @@ window.initTrialAndSubscription = async function() {
 
         if (data.is_subscribed) {
           window.__isPaywallLocked = false;
-          window.hideTrialDockWidget();
+          window.nexusAtualizarDockRenovacao(data);
           window.closeSubscriptionPaywall(true);
           return;
         }
@@ -19334,6 +19335,30 @@ window.showTrialDockExpired = function() {
   if (titleEl) titleEl.textContent = '🔒 Pagamento Necessário para Uso';
   if (labelEl) labelEl.textContent = 'BLOQUEADO';
   if (btnEl) btnEl.textContent = 'Pagar Agora';
+};
+
+// Renovação antecipada: faltando 5 dias ou menos para o vencimento, o atalho flutuante vira "Renovar agora"
+// em TODA conta de assinatura (o pagamento/boleto fica disponível antes do vencimento, não só depois dele).
+window.nexusAtualizarDockRenovacao = function(d) {
+  const widget = document.getElementById('trialDockWidget');
+  if (!d || !d.is_subscribed || !d.renovacao_disponivel) {
+    window.__dockRenovacao = false;
+    window.hideTrialDockWidget();
+    return;
+  }
+  window.__dockRenovacao = true;
+  const dias = Math.max(0, Number(d.dias_para_vencer) || 0);
+  const labelEl = document.getElementById('trialDockTime');
+  const titleEl = document.getElementById('trialDockTitle');
+  const btnEl = document.getElementById('trialDockBtn');
+  if (widget) {
+    widget.style.display = 'flex';
+    widget.classList.remove('trial-dock-locked');
+    widget.classList.add('trial-dock-urgent');
+  }
+  if (titleEl) titleEl.textContent = 'Assinatura vence em ' + dias + (dias === 1 ? ' dia' : ' dias');
+  if (labelEl) labelEl.textContent = dias === 0 ? 'Vence hoje' : 'Pague antes para não perder o acesso';
+  if (btnEl) btnEl.textContent = 'Renovar agora';
 };
 
 window.isUserAllowedToUnlockPaywall = function() {
@@ -19611,6 +19636,7 @@ if (!window.__paywallSyncPollInterval) {
             try { window.nexusAtualizarAssinaturaNaTela(); } catch (e) {}
           }
           if (d.is_subscribed) {
+            window.nexusAtualizarDockRenovacao(d);
             if (window.__isPaywallLocked) {
               window.unlockWithConfirmedReceipt({
                 plan: d.subscription_plan,
@@ -37169,6 +37195,7 @@ async function handleNexusRequest(req, res) {
     if (!user) return null;
     const now = Date.now();
     const TRIAL_DURATION_SECS = 24 * 60 * 60; // 1 dia de teste gratuito inicial (86.400 segundos)
+    const RENOVACAO_ANTECEDENCIA_MS = 5 * 24 * 60 * 60 * 1000; // pagamento/2ª via disponível 5 dias antes do vencimento
 
     // Normaliza subscription_expires_at
     let expiresAtMs = 0;
@@ -37245,6 +37272,9 @@ async function handleNexusRequest(req, res) {
       status = isTrialActive ? 'trial' : 'expired';
     }
 
+    // Renovação antecipada: toda conta de assinatura fica com o pagamento (Pix/boleto) disponível a partir de 5 dias antes do vencimento
+    const renovacaoDisponivel = isSubscribed && !isAdmin && !isLifetime && expiresAtMs > now && (expiresAtMs - now) <= RENOVACAO_ANTECEDENCIA_MS;
+
     return {
       success: true,
       email: user.email,
@@ -37256,6 +37286,9 @@ async function handleNexusRequest(req, res) {
       trial_started_at: trialStartedAt,
       subscription_plan: isLifetime ? 'vitalicio' : (user.subscription_plan || (isAdmin ? 'administrador_ilimitado' : null)),
       subscription_expires_at: (isLifetime || isAdmin) ? '2099-12-31T23:59:59Z' : (user.subscription_expires_at || null),
+      dias_para_vencer: (isSubscribed && !isAdmin && !isLifetime && expiresAtMs > now) ? Math.ceil((expiresAtMs - now) / 86400000) : null,
+      renovacao_antecedencia_dias: Math.round(RENOVACAO_ANTECEDENCIA_MS / 86400000),
+      renovacao_disponivel: renovacaoDisponivel,
       subscription_method: user.subscription_method || (isAdmin ? 'acesso_admin' : null),
       subscription_payment_id: user.subscription_payment_id || null,
       subscription_updated_at: user.subscription_updated_at || null,   // instante da última mudança (liberação, pagamento, bloqueio): a tela mostra data e hora reais
@@ -38074,7 +38107,7 @@ async function handleNexusRequest(req, res) {
   // O valor cobrado é SEMPRE SUBSCRIPTION_MONTHLY_PRICE: o navegador nunca decide o preço de uma cobrança.
   function pixDaCobranca(reg) {
     const payload = Pagamentos.pixPayload({ chave: PIX_CONFIG.key, nome: PIX_CONFIG.name, cidade: PIX_CONFIG.city, valor: reg.valor, txid: reg.ref });
-    return { payload, qr_url: '/api/pix/qr.svg?data=' + encodeURIComponent(payload), chave: PIX_CONFIG.key_display, tipo_chave: PIX_CONFIG.key_type_label, favorecido: PIX_CONFIG.name };
+    return { payload, qr_url: '/api/pix/qr.svg?data=' + encodeURIComponent(payload), chave: PIX_CONFIG.key_display, chave_digitos: PIX_CONFIG.key_copy, tipo_chave: PIX_CONFIG.key_type_label, favorecido: PIX_CONFIG.name, cidade: PIX_CONFIG.city };
   }
   // Configuração financeira em vigor + como ela aparece (chave formatada, preço em texto) + últimas alterações (quem, quando, o quê)
   function configFinanceiraPublica() {
@@ -38152,7 +38185,7 @@ async function handleNexusRequest(req, res) {
       if (String(alvo.subscription_plan || '').toLowerCase() === 'vitalicio') return sendJson(res, corsHeaders, 409, { success: false, error: 'Esta conta tem acesso vitalício: não há o que cobrar.' });
       let vencimento = Pagamentos.dataIsoValida(p.vencimento);
       if (p.vencimento && !vencimento) return sendJson(res, corsHeaders, 400, { success: false, error: 'Data de vencimento inválida.' });
-      if (!vencimento) vencimento = Pagamentos.diaDe(agora + 3 * Pagamentos.DIA);
+      if (!vencimento) vencimento = Pagamentos.diaDe(agora + Pagamentos.PRAZO_COBRANCA_MINIMO * Pagamentos.DIA);
       if (vencimento < Pagamentos.diaDe(agora)) return sendJson(res, corsHeaders, 400, { success: false, error: 'O vencimento não pode ser uma data que já passou.' });
       const por = { nome: admin.name || 'Administrador', email: String(admin.email || '').toLowerCase() };
       const livro = getLocalPagamentos();
@@ -39118,6 +39151,7 @@ async function handleNexusRequest(req, res) {
     '/nexus-sso.js': 'application/javascript; charset=utf-8',
     '/admin-liberacao.js': 'application/javascript; charset=utf-8',
     '/admin-visitas.js': 'application/javascript; charset=utf-8',
+    '/admin-pagamentos.js': 'application/javascript; charset=utf-8',
     '/favicon.svg': 'image/svg+xml',
     '/fonts.css': 'text/css',
     '/termos.html': 'text/html; charset=utf-8',
