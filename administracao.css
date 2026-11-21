@@ -474,15 +474,8 @@ html.adm-gaveta-aberta { overflow: hidden !important; }
   .adm-eu { padding: 4px !important; }
 }
 @media (max-width: 860px) {
-  /* Celular: a barra de abas continua visível (sem ela não há como trocar de Cadastros/Assinaturas/Pagamentos/Auditoria).
-     Fica compacta e com rolagem horizontal; o chip do usuário some (a identidade já está no cabeçalho do app). */
-  .adm-shell { --adm-top: 66px !important; --adm-tabs-h: 48px !important; }
-  .adm-tabs { padding: 5px !important; margin: 0 0 10px !important; border-radius: 14px !important; }
-  .adm-tabs-lista { gap: 4px !important; }
-  .adm-tab { height: 36px !important; padding: 0 12px !important; gap: 7px !important; border-radius: 10px !important; font-size: 14px !important; }
-  .adm-tab svg { width: 16px !important; height: 16px !important; }
-  .adm-tabs-dir { display: none !important; }
-  .adm-selbar, .adm-tabela thead th { top: calc(var(--adm-top) + var(--adm-tabs-h) + 10px) !important; }
+  .adm-tabs { display: none !important; }
+  .adm-selbar, .adm-tabela thead th { top: 72px !important; }
   .adm-cab-acoes { width: 100% !important; }
   .adm-cab-acoes .adm-btn { flex: 1 1 auto !important; }
   .adm-sinc { display: none !important; }

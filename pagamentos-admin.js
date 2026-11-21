@@ -722,14 +722,6 @@
   /* ---- servidor ---- */
   function api(metodo, caminho, corpo) {
     var opts = { method: metodo, headers: {} };
-    if (typeof root.nexusAuthHeaders === 'function') {
-      var h = root.nexusAuthHeaders();
-      for (var k in h) { if (h.hasOwnProperty(k)) opts.headers[k] = h[k]; }
-    } else if (typeof root.__nxGetToken === 'function' && root.__nxGetToken()) {
-      opts.headers['Authorization'] = 'Bearer ' + root.__nxGetToken();
-    } else if (typeof root.token === 'function' && root.token()) {
-      opts.headers['Authorization'] = 'Bearer ' + root.token();
-    }
     if (corpo !== undefined) { opts.headers['Content-Type'] = 'application/json'; opts.body = JSON.stringify(corpo); }
     return root.fetch(root.location.origin + caminho, opts).then(function (r) {
       return r.json().catch(function () { return {}; }).then(function (j) { j._status = r.status; return j; });
@@ -1090,16 +1082,7 @@
   function baixarCsv() {
     var filtrados = estado.dados ? filtrar(estado.dados.pagamentos, estado.filtro) : [];
     if (!filtrados.length) { toast('Não há registros para exportar com este filtro.'); return Promise.resolve(); }
-    var csvHeaders = { 'Content-Type': 'application/json' };
-    if (typeof root.nexusAuthHeaders === 'function') {
-      var h = root.nexusAuthHeaders();
-      for (var k in h) { if (h.hasOwnProperty(k)) csvHeaders[k] = h[k]; }
-    } else if (typeof root.__nxGetToken === 'function' && root.__nxGetToken()) {
-      csvHeaders['Authorization'] = 'Bearer ' + root.__nxGetToken();
-    } else if (typeof root.token === 'function' && root.token()) {
-      csvHeaders['Authorization'] = 'Bearer ' + root.token();
-    }
-    return root.fetch(root.location.origin + '/api/admin/pagamentos/csv', { method: 'POST', headers: csvHeaders, body: JSON.stringify({ ids: filtrados.map(function (p) { return p.id; }) }) })
+    return root.fetch(root.location.origin + '/api/admin/pagamentos/csv', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ids: filtrados.map(function (p) { return p.id; }) }) })
       .then(function (r) { if (!r.ok) throw new Error('csv'); return r.blob(); })
       .then(function (blob) {
         var a = root.document.createElement('a');
