@@ -30,6 +30,7 @@ const { qrSvg } = require('./qr-svg'); // QR Code do Pix gerado aqui (antes vinh
 const Assinatura = require('./assinatura'); // relógio da assinatura: qual versão vale entre a nuvem e o PC (liberar/bloquear/pagar não pode ser desfeito pelo outro servidor)
 const Acesso = require('./acesso'); // relógio do bloqueio da conta (active): o bloqueio feito na nuvem não pode ser desfeito pela linha antiga do SQL Server do PC
 const Credenciais = require('./credenciais'); // qual senha vale quando a conta existe na nuvem, no SQL Server do PC e no Supabase (vale a trocada por último)
+const SqlVigia = require('./sql-vigia'); // alteração feita DIRETO no SQL Server (SSMS) é reconhecida, carimbada e levada à nuvem e ao Supabase em vez de ser desfeita pelo ciclo de 10 s
 const Visitas = require('./visitas'); // registro de visitas ao site (pasta visitas/, IP completo só no arquivo e mascarado em qualquer resposta)
 
 const PORT = process.env.PORT || 3000;
@@ -1732,6 +1733,7 @@ async function attemptConnectDatabase() {
     if (!process.env.RENDER && process.env.IS_RENDER !== 'true') {
       startRenderCloudSyncWorker();
       syncWithRenderCloud().catch(() => {});
+      sqlVigia.iniciar();   // alteração feita direto no SQL Server (SSMS) passa a valer em todo lugar
     }
   } catch (err) {
     console.warn('[BANCO AVISO] Falha ao tentar conectar ao banco:', err.message);
@@ -38785,6 +38787,7 @@ function gracefulShutdown(signal) {
     }
   } catch(e){}
 
+  try { sqlVigia.parar(); } catch(e){}
   try { flushFileLogsNow(); } catch(e){}
   // Antes de sair, envia ao Supabase o que ainda estiver na fila (no máximo 4 s): num desligamento normal nada fica para trás
   SupabaseSync.flushAndStop(4000).catch(() => {}).then(() => process.exit(0));
@@ -38801,6 +38804,29 @@ const lastPushedFinancial = new Map();           // e-mail -> { hash, at } do ú
 const CLOUD_PUSH_REFRESH_MS = 5 * 60 * 1000;     // reenvio total periódico (autocura da nuvem)
 const deletedAccountCleanupDone = new Set();
 
+// ==================== Vigia do SQL Server: o que for alterado direto no banco vale em todo lugar ====================
+// Lê `usuarios` a cada 3 s; coluna que mudou por fora do app (SQL ≠ leitura anterior E ≠ espelho, igual em 2 leituras) é adotada e carimbada:
+// o espelho local segue para o Supabase (supabase-sync) e o passo D leva a mudança à nuvem. Sem isto o passo A/D a desfazia em até 10 s.
+const sqlVigia = SqlVigia.createVigia({
+  getPool: () => pool,
+  getLocalUsers,
+  saveLocalUsers,
+  paraIso: getBrasiliaIsoString,
+  nuvemOcupada: () => isCloudSyncRunning,
+  estadoPath: path.join(RUNTIME_DATA_DIR, 'sql_vigia_estado.json'),
+  log: (msg) => console.warn(msg),
+  aoEditar: (info) => {
+    const nomes = { acesso: 'bloqueio/ativação', assinatura: 'assinatura', senha: 'senha', perfil: 'dados do cadastro' };
+    const quais = Object.keys(info.mud).filter((k) => info.mud[k]).map((k) => nomes[k]).join(', ');
+    console.log(`⚡ [SQL SERVER -> NUVEM/SUPABASE] Alteração feita direto no banco adotada em ${info.email}: ${quais}`);
+    if (info.avisos.includes('senha_sem_hash')) console.warn(`[VIGIA SQL] A senha de ${info.email} foi trocada no SQL Server em texto puro: NÃO foi propagada (grave um hash do sistema ou troque pelo app).`);
+    try { recordSystemLog('Banco de dados', '', 'Alteração direta', 'SQL Server', `Conta ${info.email}: ${quais} alterado(a) direto no SQL Server e levado(a) à nuvem e ao Supabase`); } catch (e) {}
+    if (info.bloqueou) encerrarSessoesDaConta(info.email, 'blocked');
+    if (info.senha) encerrarSessoesDaConta(info.email, 'password');
+    setImmediate(() => { syncWithRenderCloud().catch(() => {}); });   // não espera os 10 s do ciclo; se ele já estiver rodando, o envio sai nele
+  }
+});
+
 function scheduleGitSyncDebounced(delay = 60000) {
   // A sincronização bidirecional em tempo real via API HTTP (3s) já garante a persistência contínua
   // entre o Render e o Microsoft SQL Server. Evitamos git push contínuo a cada 20 segundos
@@ -38815,6 +38841,8 @@ async function syncWithRenderCloud() {
 
   isCloudSyncRunning = true;
   try {
+    // 0. Alteração feita direto no SQL Server: registrada ANTES de A/D mexerem no SQL, para que nenhum dos dois a desfaça (sql-vigia.js)
+    try { await sqlVigia.tickUsuarios({ dentroDoCiclo: true }); } catch (vigiaErr) {}
     // 1. Puxar usuários da nuvem (Render) - Rápido, leve e garantido (~50ms)
     let deletedAccounts = getDeletedAccounts();
     try {
@@ -38978,6 +39006,9 @@ async function syncWithRenderCloud() {
             });
           }
         } else {
+          // Conta com alteração feita direto no SQL Server ainda sendo adotada, ou que a nuvem ainda não recebeu: a versão antiga da nuvem não pode
+          // sobrescrever o SQL agora (sql-vigia.js); o passo D leva o SQL à nuvem e, quando ela confirma, esta conta volta a ser importada normalmente
+          if (sqlVigia.perfilProtegido(cleanEmail)) continue;
           // Atualizar dados de perfil se fornecidos no Render
           const currentU = localCheck.rows[0];
           const updatedName = (cu.name && cu.name !== 'Usuário') ? cu.name : currentU.name;
@@ -39193,7 +39224,9 @@ async function syncWithRenderCloud() {
 
     // D) Enviar para o Render quaisquer usuários cadastrados localmente no SQL Server (PRESERVANDO SENHAS CRIPTOGRAFADAS E IDS)
     const localUsersRes = await pool.query('SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted, device_type, must_change_password, trial_started_at, subscription_plan, subscription_status, subscription_expires_at, subscription_method, subscription_payment_id FROM usuarios ORDER BY id ASC');
-    const syncableLocalUsers = (localUsersRes.rows || []).filter(u => !deletedEmailSet.has(String(u.email || '').toLowerCase().trim()));
+    // Conta com diferença do SQL esperando ficar estável (alteração direta no banco, sql-vigia.js) fica de fora deste ciclo: nem é reconciliada com o
+    // espelho nem enviada com o valor antigo; o vigia a adota em instantes, carimba, e o envio seguinte já leva a mudança
+    const syncableLocalUsers = (localUsersRes.rows || []).filter(u => !deletedEmailSet.has(String(u.email || '').toLowerCase().trim()) && !sqlVigia.emEdicao(u.email));
     if (syncableLocalUsers.length > 0) {
       // O SQL Server não tem a coluna password_changed_at: o relógio da troca de senha vem do espelho local, para a nuvem saber se este hash é mais novo que o dela
       const passwordClockByEmail = new Map(getLocalUsers().filter(m => m && m.email && m.password_changed_at).map(m => [String(m.email).toLowerCase().trim(), m.password_changed_at]));
@@ -39201,9 +39234,17 @@ async function syncWithRenderCloud() {
       // Assinatura: a mudança CARIMBADA do espelho (a mais recente que o PC conhece) vai com o carimbo; a nuvem decide por ele (assinatura.js).
       const subEspelhoPorEmail = new Map(getLocalUsers().filter(m => m && m.email).map(m => [String(m.email).toLowerCase().trim(), m]));
       const usersToSync = [];
+      const emAdocao = new Set();   // contas com alteração direta no SQL esperando ficar estável (sql-vigia.js)
       for (const u of syncableLocalUsers) {
         const chave = String(u.email || '').toLowerCase().trim();
         const espelho = subEspelhoPorEmail.get(chave);
+        if (espelho && sqlVigia.emEdicao(chave)) {
+          // Nem reconciliada com o espelho (desfaria a edição) nem enviada com o valor antigo: o vigia a adota em instantes, carimba, e o envio seguinte
+          // já leva a mudança. O espelho continua como está (mergeUsersMirror devolve só o que recebe: tirar a conta daqui a apagaria do espelho).
+          emAdocao.add(chave);
+          usersToSync.push(espelho);
+          continue;
+        }
         usersToSync.push(BackendUtils.userForCloud(u, getBrasiliaIsoString, passwordClockByEmail.get(chave), espelho));
         // Bloqueio carimbado no espelho que o SQL ainda não recebeu (o UPDATE falhou ou ainda não chegou): o SQL é reconciliado com o espelho
         if (espelho && Number.isFinite(Acesso.relogioMs(espelho)) && espelho.active !== undefined && Acesso.ativo(u.active) !== Acesso.ativo(espelho.active)) {
@@ -39222,11 +39263,12 @@ async function syncWithRenderCloud() {
         }
       }
       saveLocalUsers(BackendUtils.mergeUsersMirror(getLocalUsers(), usersToSync), true);
-      await fetchCloud('/api/users?overwrite=true', {
+      const pushUsers = await fetchCloud('/api/users?overwrite=true', {
         method: 'POST',
         headers: { 'X-Nexus-Sync-Token': SYNC_TOKEN },
-        body: JSON.stringify(usersToSync)
-      }).catch(() => {});
+        body: JSON.stringify(emAdocao.size ? usersToSync.filter(x => !emAdocao.has(String(x && x.email || '').toLowerCase().trim())) : usersToSync)
+      }).catch(() => null);
+      if (pushUsers && pushUsers.ok) sqlVigia.confirmarEnvio();   // a nuvem recebeu o SQL: a alteração direta no banco deixa de precisar de proteção
     }
 
     // E) Enviar para o Render dados financeiros cadastrados localmente (com forceEmpty: true para respeitar deleções na nuvem)

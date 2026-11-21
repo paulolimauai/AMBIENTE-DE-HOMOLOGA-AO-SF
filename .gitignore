@@ -73,3 +73,5 @@ site_backups/
 
 # Registro de visitas ao site (IP completo de quem acessou = dado pessoal): nunca versionar
 visitas/
+
+sql_vigia_estado.json
