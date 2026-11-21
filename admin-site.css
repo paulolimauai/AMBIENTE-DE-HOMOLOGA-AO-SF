@@ -145,15 +145,16 @@ body{
 .ads-drawer-head{display:none}
 .ads-overlay{display:none}
 @media (max-width:640px){
+  .ads-top{justify-content:flex-start}
   .ads-burger{display:inline-flex}
   .ads-actions{
-    position:fixed;top:0;right:0;bottom:0;width:min(290px,86vw);z-index:70;
+    position:fixed;top:0;left:0;bottom:0;width:min(290px,86vw);z-index:70;
     flex-direction:column;align-items:stretch;gap:.55rem;
-    background:#0B1120;border-left:1px solid rgba(148,163,184,.22);
+    background:#0B1120;border-right:1px solid rgba(148,163,184,.22);
     padding:1rem .9rem calc(1rem + env(safe-area-inset-bottom,0px));
-    overflow-y:auto;transform:translateX(105%);
+    overflow-y:auto;transform:translateX(-105%);
     transition:transform .26s cubic-bezier(.2,.8,.2,1);
-    box-shadow:-12px 0 40px rgba(0,0,0,.5);
+    box-shadow:12px 0 40px rgba(0,0,0,.5);
   }
   .ads-actions.open{transform:none}
   .ads-actions .ads-btn{width:100%;justify-content:flex-start}
