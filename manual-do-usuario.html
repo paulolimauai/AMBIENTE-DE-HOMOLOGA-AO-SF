@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-mode="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#060a1f">
+<meta name="color-scheme" content="dark light">
+<title>Manual do Usuário | Nexus Financeiro</title>
+<meta name="description" content="Manual autoexplicativo do Nexus Financeiro: cadastro, painel, lançamentos, contas e cartões, orçamentos, metas, relatórios, importação de extrato, documentos e Central de Serviços.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="preload" href="/images/fonts/jakarta-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/fonts.css">
+<link rel="stylesheet" href="/legal.css">
+<script>
+/* Mesma aparência do site: modo (nexus-modo) e cor da paleta (nexus:cores) escolhidos pelo visitante */
+(function(){
+  var r=document.documentElement;
+  function g(k){try{return localStorage.getItem(k)}catch(e){return null}}
+  var H={multicolor:265,aurora:250,oceano:224,'por-do-sol':18,esmeralda:155,rose:335,ouro:42,turquesa:176,carmesim:352,neon:85},h=224;
+  try{
+    var c=JSON.parse(g('nexus:cores')||'null');
+    if(c&&c.id==='custom'&&/^#[0-9a-f]{6}$/i.test(c.hex||'')){
+      var n=parseInt(c.hex.slice(1),16),R=(n>>16&255)/255,G=(n>>8&255)/255,B=(n&255)/255,mx=Math.max(R,G,B),mn=Math.min(R,G,B),d=mx-mn,x=0;
+      if(d){if(mx===R)x=((G-B)/d)%6;else if(mx===G)x=(B-R)/d+2;else x=(R-G)/d+4;x=Math.round(x*60+360)%360}
+      h=x;
+    }else if(c&&H[c.id]!=null)h=H[c.id];
+  }catch(e){}
+  r.style.setProperty('--h',String(h));
+  var m=g('nexus-modo'),hr=new Date().getHours();
+  r.setAttribute('data-mode',m==='claro'||(m!=='escuro'&&hr>=7&&hr<18)?'light':'dark');
+})();
+</script>
+<style>
+/* Impressão: o manual sai limpo em PDF, sem menus e botões */
+@media print{
+  .lg-top,.lg-foot,.manual-acoes,.lg-back,.skip{display:none!important}
+  body{background:#fff!important;color:#000!important}
+  .lg-doc h2{break-after:avoid}
+  .lg-doc li,.lg-doc p{break-inside:avoid}
+}
+.manual-acoes{display:flex;gap:.75rem;flex-wrap:wrap;margin:1.25rem 0 1.75rem}
+.manual-acoes .lg-btn{display:inline-flex;align-items:center;gap:.5rem;padding:.65rem 1.15rem;border-radius:.75rem;font-weight:700;text-decoration:none;border:1px solid color-mix(in srgb,var(--h) 55%,transparent);color:inherit;background:color-mix(in srgb,var(--h) 14%,transparent);cursor:pointer;font:inherit}
+.manual-acoes .lg-btn:hover{background:color-mix(in srgb,var(--h) 24%,transparent)}
+.lg-doc h3{margin:1.4rem 0 .4rem;font-size:1.02rem}
+.lg-doc table{width:100%;border-collapse:collapse;margin:.6rem 0 1rem;font-size:.92rem}
+.lg-doc th,.lg-doc td{border:1px solid rgba(127,127,127,.35);padding:.45rem .6rem;text-align:left;vertical-align:top}
+.lg-doc th{background:rgba(127,127,127,.12)}
+.lg-doc .dica{border-left:3px solid var(--h,#4f7cff);padding:.35rem .9rem;margin:.7rem 0;background:rgba(127,127,127,.08);border-radius:0 .5rem .5rem 0}
+</style>
+</head>
+<body>
+<a class="skip" href="#conteudo">Ir para o conteúdo</a>
+<header class="lg-top">
+  <div class="lg-top-in">
+    <a class="lg-logo" href="/inicio" aria-label="Nexus Financeiro, página inicial">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4f7cff"/><stop offset="1" stop-color="#7c5cff"/></linearGradient></defs><rect width="64" height="64" rx="14" fill="url(#lg)"/><path d="M22 44V20M42 44V20M22 20l20 24" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Nexus <small>Financeiro</small></span>
+    </a>
+    <a class="lg-btn" href="/inicio"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg><span>Voltar ao site</span></a>
+  </div>
+</header>
+
+<main id="conteudo">
+  <span class="lg-kicker">Documentação</span>
+  <h1>Manual do Usuário</h1>
+  <p class="lg-meta">Nexus Financeiro · novembro de 2026</p>
+  <p class="lg-intro">Este manual explica, passo a passo, como usar o Nexus Financeiro: do cadastro ao painel financeiro, passando por lançamentos, contas e cartões, orçamentos, metas, relatórios, importação de extrato e Central de Serviços. Leia uma vez e você já sabe operar tudo.</p>
+
+  <div class="manual-acoes">
+    <button type="button" class="lg-btn" onclick="window.print()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg><span>Baixar em PDF</span></button>
+    <a class="lg-btn" href="/manual-do-usuario.html" download="Manual_do_Usuario_Nexus_Financeiro.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg><span>Baixar versão HTML</span></a>
+  </div>
+
+  <nav class="lg-toc" aria-label="Neste documento">
+    <b>Neste documento</b>
+    <ol>
+      <li><a href="#s1">O que é o Nexus Financeiro</a></li>
+      <li><a href="#s2">Criar conta e entrar</a></li>
+      <li><a href="#s3">Teste grátis e assinatura</a></li>
+      <li><a href="#s4">Conhecendo o painel</a></li>
+      <li><a href="#s5">Lançamentos e transações</a></li>
+      <li><a href="#s6">Contas e cartões</a></li>
+      <li><a href="#s7">Planejamento: orçamentos e metas</a></li>
+      <li><a href="#s8">Relatórios e dashboards</a></li>
+      <li><a href="#s9">Importar extrato do banco</a></li>
+      <li><a href="#s10">Documentos e comprovantes</a></li>
+      <li><a href="#s11">Central de Serviços</a></li>
+      <li><a href="#s12">Personalizar a aparência</a></li>
+      <li><a href="#s13">Sair da conta e privacidade</a></li>
+      <li><a href="#s14">Perguntas frequentes</a></li>
+      <li><a href="#s15">Resolvendo problemas comuns</a></li>
+    </ol>
+  </nav>
+
+  <article class="lg-doc">
+    <h2 id="s1">1. O que é o Nexus Financeiro</h2>
+    <p>O Nexus Financeiro é um painel web de gestão financeira pessoal e empresarial. Ele reúne em um só lugar tudo o que você precisa para acompanhar seu dinheiro: lançamentos, contas bancárias, cartões de crédito, orçamentos por categoria, metas de economia, relatórios e gráficos. Além da parte financeira, o sistema tem uma Central de Serviços integrada para abrir chamados de suporte sem sair do painel.</p>
+    <ul>
+      <li><strong>Funciona no navegador:</strong> não precisa instalar nada. Acesse de computador, tablet ou celular.</li>
+      <li><strong>Dados na nuvem:</strong> suas informações ficam salvas na sua conta e acompanham você em qualquer aparelho.</li>
+      <li><strong>Um teste grátis:</strong> todo novo cadastro ganha 1 dia de teste completo, sem cartão de crédito.</li>
+    </ul>
+
+    <h2 id="s2">2. Criar conta e entrar</h2>
+    <h3>2.1 Criar uma conta</h3>
+    <ol>
+      <li>Acesse o site e clique em <strong>Criar conta grátis</strong> (ou vá direto ao login e escolha a aba de cadastro).</li>
+      <li>Preencha nome, e-mail, CPF, data de nascimento e escolha uma senha.</li>
+      <li>Confirme o cadastro. O acesso é liberado na hora e o teste grátis de 1 dia já começa a contar.</li>
+    </ol>
+    <div class="dica"><strong>Dica:</strong> use um e-mail que você acessa com frequência — é por ele que chegam avisos da conta e confirmações de pagamento.</div>
+    <h3>2.2 Entrar na conta</h3>
+    <ol>
+      <li>Na tela de entrada, informe seu e-mail (ou CPF) e senha.</li>
+      <li>Você cai direto no painel financeiro, com o menu lateral de módulos à esquerda.</li>
+    </ol>
+    <h3>2.3 Esqueci minha senha</h3>
+    <p>Na tela de entrada, clique em <strong>Esqueci minha senha</strong>. Confirme seus dados (e-mail ou CPF e data de nascimento). O sistema envia uma <strong>senha provisória</strong> e você define a nova senha no primeiro acesso.</p>
+
+    <h2 id="s3">3. Teste grátis e assinatura</h2>
+    <ul>
+      <li><strong>1 dia grátis:</strong> começa automaticamente no cadastro. Nenhum cartão é pedido e nada é cobrado sozinho.</li>
+      <li><strong>Plano mensal:</strong> quando o teste termina, o painel avisa e pede a assinatura para continuar. O pagamento é <strong>somente via Pix</strong>, dentro do próprio sistema.</li>
+      <li><strong>Como pagar:</strong> na tela de pagamento, o QR Code Pix e a chave são exibidos. Assim que o pagamento é conferido, o acesso é liberado na hora e o recibo fica disponível na sua conta.</li>
+      <li><strong>Sem cobrança automática:</strong> nada é debitado sem você gerar o Pix.</li>
+    </ul>
+
+    <h2 id="s4">4. Conhecendo o painel</h2>
+    <p>Depois de entrar, você vê o painel principal com uma visão geral do seu dinheiro:</p>
+    <ul>
+      <li><strong>Saldo geral:</strong> soma de todas as suas contas e cartões no período.</li>
+      <li><strong>Receitas e despesas:</strong> totais do mês e do período filtrado.</li>
+      <li><strong>Gráficos:</strong> evolução mês a mês, gastos por categoria e comparativos visuais.</li>
+      <li><strong>Alertas:</strong> avisos de orçamentos próximos do limite e de metas em andamento.</li>
+    </ul>
+    <p>O menu lateral dá acesso aos módulos: <strong>Lançamentos, Contas e Cartões, Planejamento Orçamentário, Metas, Relatórios, Importar Extrato, Documentos, Central de Serviços</strong> e <strong>Minha Conta</strong>.</p>
+
+    <h2 id="s5">5. Lançamentos e transações</h2>
+    <p>Lançamento é cada entrada ou saída de dinheiro registrada (salário, mercado, conta de luz etc.).</p>
+    <h3>5.1 Registrar um lançamento</h3>
+    <ol>
+      <li>Abra o módulo <strong>Lançamentos</strong> e clique em novo lançamento.</li>
+      <li>Informe descrição, valor, data, tipo (receita ou despesa) e a conta/cartão de origem.</li>
+      <li>Escolha a categoria — isso alimenta os gráficos e os orçamentos.</li>
+      <li>Anexe comprovante, se quiser, e salve.</li>
+    </ol>
+    <h3>5.2 Gerenciar lançamentos</h3>
+    <ul>
+      <li><strong>Filtrar:</strong> por período, conta, categoria ou tipo de transação.</li>
+      <li><strong>Editar ou excluir:</strong> cada lançamento pode ser corrigido ou removido a qualquer momento.</li>
+      <li><strong>Saldo:</strong> o saldo de cada conta é calculado automaticamente: saldo inicial + entradas − saídas.</li>
+    </ul>
+
+    <h2 id="s6">6. Contas e cartões</h2>
+    <p>Cadastre cada lugar onde seu dinheiro está guardado ou cobrado.</p>
+    <table>
+      <tr><th>Tipo</th><th>Para que serve</th></tr>
+      <tr><td>Conta corrente / poupança / investimento</td><td>Recebem lançamentos e acumulam saldo.</td></tr>
+      <tr><td>Cartão de crédito</td><td>Controlam gastos e faturas; o limite informado vira a base do saldo disponível.</td></tr>
+    </table>
+    <ol>
+      <li>Abra <strong>Contas e Cartões</strong> e cadastre nome, tipo, saldo inicial e limite (nos cartões).</li>
+      <li>A partir daí, todo lançamento escolhe uma dessas contas — o saldo atualiza sozinho.</li>
+      <li>Para cartão de crédito, o painel separa o que já foi pago do que está na fatura.</li>
+    </ol>
+
+    <h2 id="s7">7. Planejamento: orçamentos e metas</h2>
+    <h3>7.1 Orçamento por categoria</h3>
+    <ol>
+      <li>Em <strong>Planejamento Orçamentário</strong>, defina um limite mensal para cada categoria de gasto (mercado, transporte, lazer...).</li>
+      <li>Conforme você lança despesas, o sistema mostra quanto já foi usado do teto.</li>
+      <li>Quando o gasto se aproxima do limite, aparece um alerta no painel.</li>
+    </ol>
+    <h3>7.2 Metas de economia</h3>
+    <ol>
+      <li>Em <strong>Planejamento de Metas</strong>, crie uma meta com nome, valor alvo e prazo.</li>
+      <li>Associe as entradas que contam para a meta (ex.: reserva mensal).</li>
+      <li>A barra de progresso de cada meta mostra quanto falta e quanto tempo resta.</li>
+    </ol>
+
+    <h2 id="s8">8. Relatórios e dashboards</h2>
+    <ul>
+      <li><strong>Dashboard financeiro:</strong> visão consolidada de receitas, despesas, saldo e gráficos por mês e categoria.</li>
+      <li><strong>Filtros de período:</strong> semana, mês, ano ou intervalo personalizado.</li>
+      <li><strong>Relatórios:</strong> resumos para imprimir ou salvar, úteis para prestar contas ou planejar.</li>
+    </ul>
+
+    <h2 id="s9">9. Importar extrato do banco</h2>
+    <p>Em vez de digitar lançamento por lançamento, suba o extrato do banco.</p>
+    <ol>
+      <li>Abra <strong>Importar Extrato</strong>.</li>
+      <li>Envie o arquivo <strong>OFX ou CSV</strong> exportado do internet banking.</li>
+      <li>O sistema lê as transações e as traz para revisão: você confirma, ajusta categorias e vincula à conta certa antes de gravar.</li>
+    </ol>
+
+    <h2 id="s10">10. Documentos e comprovantes</h2>
+    <p>O módulo <strong>Gestão de Documentos</strong> guarda comprovantes, notas e arquivos ligados aos seus lançamentos — tudo dentro da sua conta, acessível de qualquer aparelho.</p>
+
+    <h2 id="s11">11. Central de Serviços</h2>
+    <p>Precisa de ajuda? A Central de Serviços funciona dentro do sistema e também pelo site.</p>
+    <ol>
+      <li>Clique em <strong>Central de Serviços</strong> (no painel) ou em <strong>Abrir um chamado</strong> no rodapé do site.</li>
+      <li>Escolha a categoria do problema e descreva com detalhes (prints ajudam).</li>
+      <li>Você recebe um <strong>protocolo</strong> e acompanha cada etapa do atendimento até a solução.</li>
+    </ol>
+
+    <h2 id="s12">12. Personalizar a aparência</h2>
+    <p>Em <strong>Minha Conta</strong> você ajusta tudo:</p>
+    <ul>
+      <li><strong>Cor:</strong> 10 paletas prontas ou a sua própria cor — a mesma escolha vale no site, no login e no painel.</li>
+      <li><strong>Tema:</strong> claro, escuro, preto ou automático (claro das 07h às 18h, escuro à noite).</li>
+      <li><strong>Tamanho da tela:</strong> escala de zoom para deixar o painel mais confortável.</li>
+    </ul>
+
+    <h2 id="s13">13. Sair da conta e privacidade</h2>
+    <ul>
+      <li>Use <strong>Sair</strong> no topo do painel quando terminar, principalmente em computadores compartilhados.</li>
+      <li>A sessão expira sozinha após um período sem uso.</li>
+      <li>Cada conta enxerga somente os próprios dados; o acesso administrativo é restrito e as operações ficam registradas em auditoria.</li>
+      <li>Detalhes completos em <a href="/privacidade.html">Política de Privacidade</a> e <a href="/termos.html">Termos de abertura de conta</a>.</li>
+    </ul>
+
+    <h2 id="s14">14. Perguntas frequentes</h2>
+    <h3>O teste grátis pede cartão?</h3>
+    <p>Não. O dia grátis começa no cadastro e o plano mensal só é pago via Pix, quando você decidir assinar.</p>
+    <h3>Esqueci minha senha. E agora?</h3>
+    <p>Use "Esqueci minha senha" na tela de entrada. Você recebe uma senha provisória e define a nova no primeiro acesso.</p>
+    <h3>Funciona no celular?</h3>
+    <p>Sim. O painel é totalmente responsivo em celulares, tablets, computadores e telas grandes.</p>
+    <h3>Alguém vê meus lançamentos?</h3>
+    <p>Não. Cada conta acessa somente os próprios dados, e o servidor confere o acesso em cada requisição.</p>
+    <h3>Como pago a assinatura?</h3>
+    <p>Somente via Pix, dentro do sistema. A tela de pagamento mostra o QR Code e a chave; ao confirmar, o acesso é liberado e o recibo fica na conta.</p>
+    <h3>Posso importar o extrato do banco?</h3>
+    <p>Sim. O módulo Importar Extrato aceita arquivos OFX e CSV, prontos para revisão antes de gravar.</p>
+
+    <h2 id="s15">15. Resolvendo problemas comuns</h2>
+    <table>
+      <tr><th>Situação</th><th>O que fazer</th></tr>
+      <tr><td>Não consigo entrar</td><td>Confira e-mail/CPF e senha; use "Esqueci minha senha" se necessário.</td></tr>
+      <tr><td>O dia grátis acabou</td><td>O painel pede a assinatura. Gere o Pix quando quiser continuar — nada é cobrado sozinho.</td></tr>
+      <tr><td>Lançamento com valor errado</td><td>Edite o lançamento na lista; o saldo da conta recalcula automaticamente.</td></tr>
+      <tr><td>Gráfico ou total não bate</td><td>Confira o período filtrado e se todos os lançamentos têm categoria e conta definidas.</td></tr>
+      <tr><td>Problema que não resolveu</td><td>Abra um chamado na Central de Serviços e guarde o protocolo.</td></tr>
+    </table>
+    <p>Este manual é atualizado junto com o sistema. Dúvidas ou sugestões: <a href="/suporte?entry=login">Central de Serviços</a>.</p>
+  </article>
+
+  <a class="lg-back" href="/inicio">← Voltar ao site</a>
+</main>
+
+<footer class="lg-foot">
+  <div class="lg-foot-in">
+    <p id="ano">© Nexus Financeiro. Todos os direitos reservados.</p>
+    <nav aria-label="Documentos e atalhos">
+      <a href="/termos.html">Termos de abertura de conta</a>
+      <a href="/privacidade.html">Política de privacidade</a>
+      <a href="/suporte">Central de Suporte</a>
+    </nav>
+  </div>
+</footer>
+<script>(function(){var a=document.getElementById('ano');if(a)a.textContent='© '+new Date().getFullYear()+' Nexus Financeiro. Todos os direitos reservados.'})();</script>
+</body>
+</html>

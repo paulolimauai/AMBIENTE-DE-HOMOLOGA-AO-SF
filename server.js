@@ -39225,11 +39225,13 @@ async function handleNexusRequest(req, res) {
     '/fonts.css': 'text/css',
     '/termos.html': 'text/html; charset=utf-8',
     '/privacidade.html': 'text/html; charset=utf-8',
+    '/manual-do-usuario.html': 'text/html; charset=utf-8',
     '/legal.css': 'text/css'
   };
   let staticFile = null;
-  // /admin-assinaturas-glpi (sem .html) é o endereço público do painel do administrador: serve o mesmo arquivo
-  const staticPathname = pathname === '/admin-assinaturas-glpi' ? '/admin-assinaturas-glpi.html' : pathname;
+  // /admin-assinaturas-glpi (sem .html) é o endereço público do painel do administrador: serve o mesmo arquivo.
+  // /manual é o endereço amigável do Manual do Usuário.
+  const staticPathname = pathname === '/admin-assinaturas-glpi' ? '/admin-assinaturas-glpi.html' : (pathname === '/manual' ? '/manual-do-usuario.html' : pathname);
   if (STATIC_EXACT_FILES[staticPathname]) {
     staticFile = { filePath: path.join(__dirname, staticPathname.slice(1)), contentType: STATIC_EXACT_FILES[staticPathname], isImage: false };
   } else if (pathname.startsWith('/images/')) {
