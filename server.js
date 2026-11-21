@@ -35345,12 +35345,9 @@ async function handleNexusRequest(req, res) {
           return res.end(JSON.stringify({ success: false, error: 'Usuário não encontrado.' }));
         }
 
-        // Este endpoint existe só para a troca obrigatória da senha temporária; a troca normal é feita em "Minha Conta"
-        const mustChangeFlag = user.must_change_password !== undefined ? user.must_change_password : changeAuthUser.must_change_password;
-        if (!(mustChangeFlag === 1 || mustChangeFlag === true || mustChangeFlag === '1')) {
-          res.writeHead(403, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ success: false, error: 'Esta conta não tem troca obrigatória de senha pendente.' }));
-        }
+        // Este endpoint existe para a troca obrigatória da senha temporária, mas a sessão válida já prova a identidade
+        // (mesma garantia de "Minha Conta"): se a marca must_change_password dessincronizar entre nuvem e SQL, a tela
+        // não pode travar a pessoa com "troca não pendente" — a senha nova é gravada e a marca é encerrada do mesmo jeito.
 
         if (verifyPassword(newPassword, user.password)) {
           res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
@@ -39061,7 +39058,7 @@ async function syncWithRenderCloud() {
       for (const cu of cloudUsers) {
         if (!cu || !cu.email) continue;
         const cleanEmail = cu.email.toLowerCase().trim();
-        const localCheck = await pool.query('SELECT id, name, cpf, phone, birth_date, last_login, password, active, trial_started_at, subscription_plan, subscription_status, subscription_expires_at, subscription_method, subscription_payment_id FROM usuarios WHERE LOWER(email) = LOWER($1)', [cleanEmail]);
+        const localCheck = await pool.query('SELECT id, name, cpf, phone, birth_date, last_login, password, active, must_change_password, trial_started_at, subscription_plan, subscription_status, subscription_expires_at, subscription_method, subscription_payment_id FROM usuarios WHERE LOWER(email) = LOWER($1)', [cleanEmail]);
         if (!localCheck.rows || localCheck.rows.length === 0) {
           // Se o usuário foi cadastrado pela web/nuvem (Render), grava diretamente no SQL Server
           const isRealUser = cu.name && cu.name.trim() !== '' && cleanEmail.includes('@');
@@ -39118,14 +39115,28 @@ async function syncWithRenderCloud() {
               { noClock: 'incoming' }
             );
             if (pwPick.source === 'incoming') {
+              // A marca de troca obrigatória viaja junto com a credencial: senha nova vinda da nuvem define o estado dela
+              // (senha provisória pendente = 1; senha definitiva já gravada = 0). Sem isto o PC reenviava 0 e a troca pendente sumia.
+              const cuMustChange = (cu.must_change_password === 1 || cu.must_change_password === true || cu.must_change_password === '1') ? 1 : 0;
               let sqlOk = true;
-              await pool.query('UPDATE usuarios SET password = $1 WHERE LOWER(email) = LOWER($2)', [cu.password, cleanEmail]).catch(() => { sqlOk = false; });
+              await pool.query('UPDATE usuarios SET password = $1, must_change_password = $2 WHERE LOWER(email) = LOWER($3)', [cu.password, cuMustChange, cleanEmail]).catch(() => { sqlOk = false; });
               if (sqlOk && mirrorIdx >= 0) {
                 mirrorList[mirrorIdx].password = cu.password;
+                mirrorList[mirrorIdx].must_change_password = cuMustChange === 1;
                 if (cu.password_changed_at) mirrorList[mirrorIdx].password_changed_at = cu.password_changed_at;
                 saveLocalUsers(mirrorList);
               }
             }
+          }
+          // "Esqueci a senha" feito NA NUVEM: a troca obrigatória pendente não pode ser desfeita pelo PC.
+          // O SQL não tem relógio para essa marca, então "pendente na nuvem + não pendente aqui" sempre adota o pendente.
+          const cuMustChangeFlag = (cu.must_change_password === 1 || cu.must_change_password === true || cu.must_change_password === '1');
+          const sqlMustChangeFlag = (currentU.must_change_password === 1 || currentU.must_change_password === true);
+          if (cuMustChangeFlag && !sqlMustChangeFlag) {
+            await pool.query('UPDATE usuarios SET must_change_password = 1 WHERE LOWER(email) = LOWER($1)', [cleanEmail]).catch(() => {});
+            const ml = getLocalUsers();
+            const mi = ml.findIndex(m => m && String(m.email || '').toLowerCase().trim() === cleanEmail);
+            if (mi >= 0) { ml[mi].must_change_password = true; saveLocalUsers(ml); }
           }
           if (updatedName !== currentU.name || updatedCpf !== currentU.cpf || updatedPhone !== currentU.phone || updatedBirth !== currentU.birth_date) {
             await pool.query(
